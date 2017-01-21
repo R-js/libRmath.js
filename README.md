@@ -1,5 +1,6 @@
 # libRmath.js
-Javascript Pure Implementation of Statistical R "core" numerical libRmath.so library
+Javascript Pure Implementation of Statistical R "core" numerical libRmath.so library found here
+https://svn.r-project.org/R/trunk/src/nmath/
 
 
 
