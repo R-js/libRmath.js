@@ -20,9 +20,21 @@
     "statistic"
   ],
   "author": "Jacob Bogers",
-  "license": "GPLv3",
+  "license": "GPL-3.0",
   "bugs": {
     "url": "https://github.com/jacobbogers/libRmath.js/issues"
   },
-  "homepage": "https://github.com/jacobbogers/libRmath.js#readme"
+  "homepage": "https://github.com/jacobbogers/libRmath.js#readme",
+  "devDependencies": {
+    "@types/node": "^7.0.1",
+    "browserify": "^13.3.0",
+    "gulp": "^3.9.1",
+    "gulp-autoprefixer": "^3.1.1",
+    "gulp-babel": "^6.1.2",
+    "gulp-cache": "^0.4.5",
+    "gulp-sass": "^3.1.0",
+    "gulp-sourcemaps": "^2.4.0",
+    "tsify": "^3.0.0",
+    "typescript": "^2.1.5"
+  }
 }

@@ -1,0 +1,21 @@
+{
+  "include": [
+    "lib/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ],
+
+  "compilerOptions": {
+    "strictNullChecks": true,
+    "noImplicitAny": true,
+    "target": "es5",
+    "lib": ["es6", "dom"],
+    "module": "commonjs",
+    "sourceMap": true,
+    "rootDir": "src",
+    "moduleResolution": "node",
+    /*outDir is overriden in the gulp file*/
+    "outDir": "dist/js"
+  }
+}

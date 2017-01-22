@@ -1,5 +1,5 @@
 # libRmath.js
-Javascript Pure Implementation of Statistical R "core" numerical libRmath.so library found here
+Javascript ( TypeScript ) Pure Implementation of Statistical R "core" numerical libRmath.so library found here
 https://svn.r-project.org/R/trunk/src/nmath/
 
 
@@ -7,19 +7,22 @@ https://svn.r-project.org/R/trunk/src/nmath/
 
 ## Progress (TODO)
 
+Work in progress (see list below), please considering helping out and bring R core functionality 
+to Javascript
+
 | original c module | ported to javascript? | tested | R - base functions |
 |------------------|--------------------|-------------|--------------------|
-bd0.c           | TODO | | |       
+bd0.c           | done ./lib/bd0.ts | no | hidden, used by modules dbinom.c ,dpois.c dt.c |       
 bessel_i.c           | TODO  |  | |
 bessel_j.c           | TODO | | |
 bessel_k.c           | TODO | | |
 bessel_y.c           | TODO | | |
-beta.c           |TODO | | |
-chebyshev.c           | TODO| | |
+beta.c           |one ./lib/beta.ts  | no | [beta](https://en.wikipedia.org/wiki/Beta_function) |
+chebyshev.c           | done ./lib/chebyshev.ts | no | chebyshev\_init , chebyshev\_eval |
 choose.c           |TODO | | |
-cospi.c           | TODO| | |
+cospi.c           | done ./lib/cospi.ts | no| cospi, sinpi, tanpi |
 d1mach.c           |TODO | | |
-dbeta.c           | TODO| | |
+dbeta.c           |  TODO |  | |
 dbinom.c           | TODO| | |
 dcauchy.c           | TODO| | |
 dchisq.c           | TODO| | |
@@ -47,15 +50,15 @@ fprec.c           |TODO | | |
 fround.c           |TODO | | |
 fsign.c           |TODO | | |
 ftrunc.c           | TODO| | |
-gamma.c           |TODO | | |
+gamma.c           |done  ./lib/gamma.ts | no [gammafn](https://en.wikipedia.org/wiki/Gamma_function) |
 gamma_cody.c           | TODO| | |
 gammalims.c           |TODO | | |
 i1mach.c           |TODO | | |
 imax2.c           |TODO | | |
 imin2.c           | TODO| | |
 lbeta.c           | TODO| | |
-lgamma.c           | TODO| | |
-lgammacor.c           |TODO | | |
+lgamma.c           | done ./lib/lgamma.ts| | logarithmic gamm [lgammafn](https://en.wikipedia.org/wiki/Gamma_function) |
+lgammacor.c           |done ./lib/lgammecor.ts  | no | lgammacor |
 log1p.c           |TODO | | |
 mlutils.c           |TODO | | |
 pbeta.c           |TODO | | |
@@ -126,7 +129,7 @@ sexp.c           |TODO | | |
 sign.c           | TODO| | |
 signrank.c           | TODO| | |
 snorm.c           | TODO| | |
-stirlerr.c           | TODO| | |
+stirlerr.c           | done ./lib/stirlerr | no | Computes the log of the error term in Stirling's formula ( _stirlerr_ ) |
 toms708.c           |TODO | | |
 wilcox.c           | TODO| | |
 
