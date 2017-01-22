@@ -27,7 +27,7 @@
  *  https://www.jacob-bogers/libRmath.js/Licenses/
  * 
  *  License for R statistical package
- * https://www.r-project.org/Licenses/
+ *  https://www.r-project.org/Licenses/
  * 
  * */
 
