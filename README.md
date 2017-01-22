@@ -7,7 +7,7 @@ https://svn.r-project.org/R/trunk/src/nmath/
 
 ## Progress (TODO)
 
-Work in progress (see list below), please considering helping out and bring R core functionality 
+Work in progress (see list below of all c modules that need to be ported), please considering helping out and bring R core functionality 
 to Javascript
 
 | original c module | ported to javascript? | tested | R - base functions |
@@ -17,7 +17,7 @@ bessel_i.c           | TODO  |  | |
 bessel_j.c           | TODO | | |
 bessel_k.c           | TODO | | |
 bessel_y.c           | TODO | | |
-beta.c           |one ./lib/beta.ts  | no | [beta](https://en.wikipedia.org/wiki/Beta_function) |
+beta.c           |done ./lib/beta.ts  | no | [beta](https://en.wikipedia.org/wiki/Beta_function) |
 chebyshev.c           | done ./lib/chebyshev.ts | no | chebyshev\_init , chebyshev\_eval |
 choose.c           |TODO | | |
 cospi.c           | done ./lib/cospi.ts | no| cospi, sinpi, tanpi |
