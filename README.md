@@ -50,14 +50,14 @@ fprec.c           |TODO | | |
 fround.c           |TODO | | |
 fsign.c           |TODO | | |
 ftrunc.c           | TODO| | |
-gamma.c           |done  ./lib/gamma.ts | no [gammafn](https://en.wikipedia.org/wiki/Gamma_function) |
+gamma.c           |done  ./lib/gamma.ts | no | [gammafn](https://en.wikipedia.org/wiki/Gamma_function) |
 gamma_cody.c           | TODO| | |
 gammalims.c           |TODO | | |
 i1mach.c           |TODO | | |
 imax2.c           |TODO | | |
 imin2.c           | TODO| | |
 lbeta.c           | TODO| | |
-lgamma.c           | done ./lib/lgamma.ts| | logarithmic gamm [lgammafn](https://en.wikipedia.org/wiki/Gamma_function) |
+lgamma.c           | done ./lib/lgamma.ts | no | logarithmic gamma [lgammafn](https://en.wikipedia.org/wiki/Gamma_function) |
 lgammacor.c           |done ./lib/lgammecor.ts  | no | lgammacor |
 log1p.c           |TODO | | |
 mlutils.c           |TODO | | |
