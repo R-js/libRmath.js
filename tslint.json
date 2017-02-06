@@ -1,0 +1,83 @@
+{
+  "rules": {
+    "quotemark": [
+      true,
+      "single",
+      "jsx-double",
+      "avoid-escape"
+    ],
+    "class-name": true,
+    "new-parens": true,
+    "variable-name": [
+      true,
+      "check-format",
+      "allow-leading-underscore",
+      "allow-pascal-case"
+    ],
+    "one-variable-per-declaration": [
+      true,
+      "ignore-for-loop"
+    ],
+    "space-before-function-paren": [
+      true,
+      {
+        "anonymous": "never",
+        "named": "never",
+        "asyncArrow": "always",
+        "method": "never",
+        "constructor": "never"
+      }
+    ],
+    "object-literal-key-quotes": [
+      true,
+      "as-needed"
+    ],
+    "arrow-parens": true,
+    "eofline": true,
+    "linebreak-style": [
+      true,
+      "LF"
+    ],
+    "no-var-keyword": true,
+    "switch-default": true,
+    "triple-equals": [
+      true,
+      "allow-null-check"
+    ],
+    "no-use-before-declare": true,
+    "no-construct": true,
+    "indent": [
+      true,
+      "spaces"
+    ],
+    "whitespace": [
+      true,
+      "check-branch",
+      "check-decl",
+      "check-operator",
+      "check-separator",
+      "check-module"
+    ],
+    "semicolon": [
+      true,
+      "always"
+    ],
+    "typedef-whitespace": [
+      true,
+      {
+        "call-signature": "nospace",
+        "index-signature": "nospace",
+        "parameter": "nospace",
+        "property-declaration": "nospace",
+        "variable-declaration": "nospace"
+      },
+      {
+        "call-signature": "onespace",
+        "index-signature": "onespace",
+        "parameter": "onespace",
+        "property-declaration": "onespace",
+        "variable-declaration": "onespace"
+      }
+    ]
+  }
+}

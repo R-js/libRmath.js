@@ -1,0 +1,61 @@
+// email from George Marsaglia
+
+good C random number generator
+
+From: George Marsaglia (geo@stat.fsu.edu) 
+Subject: Re: good C random number generator 
+Newsgroups: comp.lang.c 
+Date: 2003-05-13 08:55:05 PST 
+Organization: Florida State University 
+Lines: 89
+Most RNGs work by keeping a certain number, say k, of the most recently generated integers, then return the next integer as a function of those k. The initial k integers, the seeds, are assumed to be randomly chosen, usually 32-bits. The period of the RNG is related to the number of choices for seeds, usually 2^(32k), so to get longer periods you need to increase k.
+
+Probably the most common type has k=1, and needs a single seed, with each new integer a function of the previous one. An example is this congruential RNG, a form of which was the system RNG in VAXs for many years:
+
+   static unsigned long x=123456789; /* a random initial x to be       */
+                                     /* assigned by the calling program */
+   unsigned long cong(void )
+   { return (x=69069*x+362437);}
+Simple, k=1, RNGs can perform fairly well in tests of randomness such as those in the new version of Diehard,
+
+           csis.hku.hk/~diehard
+but experience has shown that better performances come from RNGs with k's ranging from 4 or 5 to as much as 4097.
+Here is an example with k=5, period about 2^160, one of the fastest long period RNGs, returns more than 120 million random 32-bit integers/second (1.8MHz CPU), seems to pass all tests:
+
+static unsigned long
+x=123456789,y=362436069,z=521288629,w=88675123,v=886756453;
+      /* replace defaults with five random seed values in calling program */
+unsigned long xorshift(void)
+{unsigned long t;
+ t=(x^(x>>7)); x=y; y=z; z=w; w=v;
+ v=(v^(v<<6))^(t^(t<<13)); return (y+y+1)*v;}
+Another example has k=257, period about 2^8222. Uses a static array Q[256] and an initial carry 'c', the Q array filled with 256 random 32-bit integers in the calling program and an initial carry c<809430660 for the multiply-with-carry operation. It is very fast and seems to pass all tests.
+
+static unsigned long Q[256],c=362436;  /* choose random initial c<809430660 and */
+                                       /* 256 random 32-bit integers for Q[]    */
+
+unsigned long MWC256(void){
+  unsigned long long t,a=809430660LL;
+  static unsigned char i=255;
+     t=a*Q[++i]+c; c=(t>>32);
+     return(Q[i]=t);      }
+The Mersenne Twister (check Google) is an excellent RNG, with k=624. But it requires an elaborate C program and is slower than many RNGs that do as well in tests, have comparable or longer periods and require only a few lines of code.
+
+Here is a complimentary-multiply-with-carry RNG with k=4097 and a near-record period, more than 10^33000 times as long as that of the Twister. (2^131104 vs. 2^19937)
+
+  static unsigned long Q[4096],c=362436; /* choose random initial c<809430660 and */
+                                         /* 4096 random 32-bit integers for Q[]   */
+  unsigned long CMWC4096(void){
+  unsigned long long t, a=18782LL;
+  static unsigned long i=4095;
+  unsigned long x,r=0xfffffffe;
+     i=(i+1)&4095;
+     t=a*Q[i]+c;
+     c=(t>>32); x=t+c; if(x<c){x++;c++;}
+     return(Q[i]=r-x);    }
+
+You will find several more CMWC RNGs and comments on
+choice of seeds in the May 2003 Communications of the ACM.
+
+
+George Marsaglia

@@ -1,3 +1,8 @@
 {
-    "typescript.tsdk": "./node_modules/typescript/lib"
-}
+    "typescript.tsdk": "./node_modules/typescript/lib",
+    "vsicons.presets.angular": false,
+    "editor.tabSize": 2,
+    "editor.renderWhitespace": "all",
+    "editor.cursorStyle": "block",
+    "editor.wrappingColumn": 100
+  }

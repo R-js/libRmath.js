@@ -7,15 +7,22 @@
   ],
 
   "compilerOptions": {
-    "strictNullChecks": true,
+     "strictNullChecks": true,
     "noImplicitAny": true,
     "target": "es5",
+    "jsx": "react",
     "lib": ["es6", "dom"],
     "module": "commonjs",
     "sourceMap": true,
-    "rootDir": "src",
+    "rootDir": "lib",
     "moduleResolution": "node",
+    "allowUnreachableCode": false,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "experimentalDecorators": true,
     /*outDir is overriden in the gulp file*/
     "outDir": "dist/js"
+
   }
 }
+
