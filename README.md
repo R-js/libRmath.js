@@ -123,7 +123,7 @@ rnchisq.c           | TODO| | |
 rnorm.c           |TODO | | |
 rpois.c           | TODO| | |
 rt.c           | TODO| | |
-runif.c           | TODO| done | implemented 3 RNG and native browser/node agnostic 64 RNG map to floating number |
+runif.c           | done| no | implemented 3 RNG and native browser/node agnostic 64 RNG map to floating number |
 rweibull.c           | TODO| | |
 sexp.c           |TODO | | |
 sign.c           | TODO| | |
