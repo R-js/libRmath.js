@@ -19,10 +19,12 @@ I first list the modules __DONE__ so far, lets start at a positive note)
 |------------------|--------------------|-------------|--------------------|
 |runif.c           | ./runif.ts| 4-feb-2017 | implemented 3 RNG and native browser/node agnostic 64 RNG map to floating number |
 |bd0.c           | ./lib/bd0.ts |23-jan-2017 | hidden, used by modules dbinom.c ,dpois.c dt.c |  
+|beta.c           |./lib/beta.ts  | 23-jan-2017 | [beta](https://en.wikipedia.org/wiki/Beta_function) |
 |chebyshev.c           | ./lib/chebyshev.ts | 23-jan-2017 | chebyshev\_init , chebyshev\_eval |
 |cospi.c           | ./lib/cospi.ts | 23-jan-2017 | cospi, sinpi, tanpi |
 |gamma.c           |./lib/gamma.ts | 23-jan-2017 | [gammafn] gamme function(https://en.wikipedia.org/wiki/Gamma_function) |
 |lgamma.c           | ./lib/lgamma.ts | 23-jan-2017 | logarithmic gamma [lgammafn](https://en.wikipedia.org/wiki/Gamma_function) |
+|lgammacor.c           |./lib/lgammecor.ts  | 23-jan-2017 | lgammacor |
 |stirlerr.c           | ./lib/stirlerr | 23-jan-2017 | Computes the log of the error term in Stirling's formula ( _stirlerr_ ) |
 
 
