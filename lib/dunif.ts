@@ -26,7 +26,6 @@
 
 import { ISNAN, log, R_D__0} from './general';
 
-import { unif_rand } from './general';
 
 
 export function dunif(x: number, a: number, b: number, giveLog: boolean): number {
