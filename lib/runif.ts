@@ -22,7 +22,7 @@
  *  https://www.jacob-bogers/libRmath.js/Licenses/
  * 
 */
-import { R_FINITE, ML_ERR_return_NAN } from './general';
+import { R_FINITE, ML_ERR_return_NAN } from './_general';
 import { random2_64StepsAsFloat } from './_unif_random';
 
 
