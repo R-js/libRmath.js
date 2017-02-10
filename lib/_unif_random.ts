@@ -112,3 +112,7 @@ export function xorshift32bit(seed?: number[]): number[] {
     let rc = [nextStep(0), nextStep(5)];
     return rc;
 }
+
+export function unif_rand(){
+    return random2_64StepsAsFloat();
+}

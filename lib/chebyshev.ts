@@ -52,8 +52,9 @@
 import { fabs, NaN } from "./general"
 
 export function chebyshev_init(dos: number[], nos: number, eta: number): number {
-    let i: number, ii: number,
-        err: number;
+    let i: number;
+    let ii: number;
+    let err: number;
 
 
     if (nos < 1)

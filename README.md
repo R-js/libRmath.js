@@ -17,6 +17,9 @@ I first list the modules __DONE__ so far, lets start at a positive note)
 
 | original c module | js/ts module name | port date | R - base functions |
 |------------------|--------------------|-------------|--------------------|
+|sexp.c           | ./sexp.ts| 8-feb-2017 | (Random variates from the standard exponential distribution) exp_rand (internally used) function  |
+|dunif.c           | ./dunif.ts| 8-feb-2017 | R "dunif" function  |
+|bessel_k.c           | ./bessel_k.ts| 8-feb-2017 | R "besselK" function http://www.netlib.org/specfun/rkbesl |
 |runif.c           | ./runif.ts| 4-feb-2017 | implemented 3 RNG and native browser/node agnostic 64 RNG map to floating number |
 |bd0.c           | ./lib/bd0.ts |23-jan-2017 | hidden, used by modules dbinom.c ,dpois.c dt.c |  
 |beta.c           |./lib/beta.ts  | 23-jan-2017 | [beta](https://en.wikipedia.org/wiki/Beta_function) |
@@ -35,7 +38,7 @@ I first list the modules __DONE__ so far, lets start at a positive note)
 bd0.c           | done ./lib/bd0.ts | no | hidden, used by modules dbinom.c ,dpois.c dt.c |       
 bessel_i.c           | TODO  |  | |
 bessel_j.c           | TODO | | |
-bessel_k.c           | TODO | | |
+bessel_k.c           | done | no | R "besselK" function http://www.netlib.org/specfun/rkbesl |
 bessel_y.c           | TODO | | |
 beta.c           |done ./lib/beta.ts  | no | [beta](https://en.wikipedia.org/wiki/Beta_function) |
 chebyshev.c           | done ./lib/chebyshev.ts | no | chebyshev\_init , chebyshev\_eval |
@@ -61,7 +64,7 @@ dnorm.c           |TODO | | |
 dnt.c           |TODO | | |
 dpois.c           | TODO| | |
 dt.c           |TODO | | |
-dunif.c           | TODO| | |
+dunif.c           | done| no | R "dunif" function  |
 dweibull.c           | TODO| | |
 expm1.c           |TODO | | |
 fmax2.c           |TODO | | |
@@ -145,7 +148,7 @@ rpois.c           | TODO| | |
 rt.c           | TODO| | |
 runif.c           | done| no | implemented 3 RNG and native browser/node agnostic 64 RNG map to floating number |
 rweibull.c           | TODO| | |
-sexp.c           |TODO | | |
+sexp.c           | done | no  | (Random variates from the standard exponential distribution) exp_rand (internally used) function  |
 sign.c           | TODO| | |
 signrank.c           | TODO| | |
 snorm.c           | TODO| | |

@@ -49,8 +49,8 @@
  *    is faster and cleaner, but is only defined "fast" for half integers.
  */
 
-import { ME, ML_ERROR, ML_ERR_return_NAN } from "./general"
-import { chebyshev_eval } from "./chebyshev"
+import { ME, ML_ERROR, ML_ERR_return_NAN } from './general'
+import { chebyshev_eval } from './chebyshev';
 
 const algmcs: number[] = [
     +.1666389480451863247205729650822e+0,
