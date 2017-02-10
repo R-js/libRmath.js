@@ -39,8 +39,8 @@
  *
  */
 
-import {M_LN_SQRT_2PI} from "./general"
-import {lgammafn} from "./lgamma"
+import {M_LN_SQRT_2PI} from './_general';
+import {lgammafn} from './lgamma';
 
 const sferr_halves: number[] = [
     0.0, // n=0 - wrong, place holder only 
@@ -76,11 +76,11 @@ const sferr_halves: number[] = [
     0.005554733551962801371038690  // 15.0  
 ];
 
-const S0 = 0.083333333333333333333       // 1/12 
-const S1 = 0.00277777777777777777778     // 1/360 
-const S2 = 0.00079365079365079365079365  // 1/1260 
-const S3 = 0.000595238095238095238095238 // 1/1680 
-const S4 = 0.0008417508417508417508417508// 1/1188 
+const S0 = 0.083333333333333333333;       // 1/12 
+const S1 = 0.00277777777777777777778;     // 1/360 
+const S2 = 0.00079365079365079365079365;  // 1/1260 
+const S3 = 0.000595238095238095238095238; // 1/1680 
+const S4 = 0.0008417508417508417508417508; // 1/1188 
 
 
 // stirlerr(n) = log(n!) - log( sqrt(2*pi*n)*(n/e)^n )
@@ -95,7 +95,7 @@ export function stirlerr(n: number): number {
 
 
     //  error for 0, 0.5, 1.0, 1.5, ..., 14.5, 15.0.
-    let nn:number;
+    let nn: number;
 
     if (n <= 15.0) {
         nn = n + n;

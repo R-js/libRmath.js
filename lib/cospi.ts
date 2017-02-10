@@ -26,7 +26,7 @@
  * 
  */
 
-import { ISNAN, R_FINITE, ME, ML_ERROR, ML_NAN, fabs, M_PI, fmod } from "./general";
+import { ISNAN, R_FINITE, ME, ML_ERROR, ML_NAN, fabs, M_PI, fmod } from "./_general";
 
 /* HAVE_COSPI etc will not be defined in standalone-use: the
    intention is to make the versions here available in that case.

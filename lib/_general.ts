@@ -21,6 +21,7 @@ export const R_D__0 = (log: boolean) => { return log ? ML_NEGINF : 0.0; };
 export const floor = Math.floor;
 export const trunc = Math.trunc;
 export const M_SQRT_2dPI = 0.797884560802865355879892119869; // sqrt(2/pi) 
+export const R_D_exp = (x: any, logP: any) => { return !!logP ? (x) : Math.exp(x); }; /* exp(x) */
 export enum ME {
     ME_NONE = 0, // no error
     ME_DOMAIN = 1, // argument out of domain

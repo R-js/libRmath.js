@@ -48,7 +48,7 @@
  *    MM specialized the case of  n!  for n < 50 - for even better precision
  */
 
-import { ISNAN, ML_ERROR, ME, ML_NAN, fabs, ML_POSINF, ML_NEGINF, M_PI, M_LN_SQRT_2PI, fmod, } from "./general";
+import { ISNAN, ML_ERROR, ME, ML_NAN, fabs, ML_POSINF, ML_NEGINF, M_PI, M_LN_SQRT_2PI, fmod, } from "./_general";
 import { chebyshev_eval } from "./chebyshev";
 import { stirlerr } from "./stirlerror";
 import { sinpi } from "./cospi";

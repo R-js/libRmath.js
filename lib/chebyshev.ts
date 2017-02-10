@@ -49,7 +49,7 @@
  *    Adapted from R. Broucke, Algorithm 446, CACM., 16, 254 (1973).
  */
 
-import { fabs, NaN } from "./general"
+import { fabs, NaN } from "./_general"
 
 export function chebyshev_init(dos: number[], nos: number, eta: number): number {
     let i: number;

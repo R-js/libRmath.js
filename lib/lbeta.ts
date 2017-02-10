@@ -33,10 +33,10 @@
  *    by W. Fullerton of Los Alamos Scientific Laboratory.
  */
 
-import { ISNAN, R_FINITE, ML_POSINF, ML_ERR_return_NAN, ML_NEGINF, M_LN_SQRT_2PI } from "./general"
-import { lgammacor } from "./lgammacor"
-import { lgammafn } from "./lgamma"
-import { gammafn } from "./gamma"
+import { ISNAN, R_FINITE, ML_POSINF, ML_ERR_return_NAN, ML_NEGINF, M_LN_SQRT_2PI } from './_general';
+import { lgammacor } from './lgammacor';
+import { lgammafn } from './lgamma';
+import { gammafn } from './gamma';
 
 
 export function lbeta(a: number, b: number): number {

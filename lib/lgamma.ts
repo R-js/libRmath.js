@@ -47,7 +47,7 @@
  *    library.
  */
 
-import {M_LN_SQRT_PId2, ISNAN, fmod,  ML_ERROR, ME, ML_POSINF, fabs, log, M_LN_SQRT_2PI,MATHLIB_WARNING,ML_ERR_return_NAN } from "./general"
+import {M_LN_SQRT_PId2, ISNAN, fmod,  ML_ERROR, ME, ML_POSINF, fabs, log, M_LN_SQRT_2PI,MATHLIB_WARNING,ML_ERR_return_NAN } from './_general';
 import {gammafn} from "./gamma"
 import {sinpi} from "./cospi"
 import {lgammacor} from "./lgammacor"

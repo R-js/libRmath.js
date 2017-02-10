@@ -51,7 +51,7 @@ import {
   MATHLIB_WARNING2,
   xmax_BESS_K,
   sqxmin_BESS_K
-} from './general';
+} from './_general';
 
 const min0 = (x: number, y: number): number => { return x <= y ? x : y; };
 const max0 = (x: number, y: number): number => { return x <= y ? y : x; };

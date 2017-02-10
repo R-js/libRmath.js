@@ -44,13 +44,13 @@
  */
 
 
-import {ISNAN, R_FINITE, ML_POSINF,ML_ERR_return_NAN, ML_ERROR, ME} from "./general"
+import {ISNAN, R_FINITE, ML_POSINF,ML_ERR_return_NAN, ML_ERROR, ME} from "./_general"
 import {gammafn} from "./gamma"
 import { lbeta } from "./lbeta"
 
-const xmin =  - 170.5674972726612
-const xmax =   171.61447887182298
-const lnsml = - 708.39641853226412
+//const xmin =  - 170.5674972726612;
+const xmax =   171.61447887182298;
+const lnsml = - 708.39641853226412;
    
 
 export function beta(a:number, b:number):number {
