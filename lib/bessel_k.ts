@@ -1,8 +1,7 @@
 /*
-
  *  AUTHOR
  *  Jacob Bogers, jkfbogers@gmail.com
- *  Januari 22, 2017
+ *  feb 10, 2017
  * 
  *  ORIGINAL AUTHOR
  *  Mathlib : A C Library of Special Functions
@@ -14,14 +13,17 @@
  *  the Free Software Foundation; either version 2 of the License, or
  *  (at your option) any later version.
  *
- *  This program is distributed in the hope that it will be useful,
+*  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, a copy is available at
- *  https://www.R-project.org/Licenses/
+ *  License for JS language implementation
+ *  https://www.jacob-bogers.com/libRmath.js/Licenses/
+ * 
+ * 
+ *  License for R statistical package
+ * https://www.r-project.org/Licenses/
  */
 
 /*  DESCRIPTION --> see below */
@@ -50,17 +52,10 @@ import {
   MATHLIB_WARNING4,
   MATHLIB_WARNING2,
   xmax_BESS_K,
-  sqxmin_BESS_K
+  sqxmin_BESS_K,
+  max0,
+  min0
 } from './_general';
-
-const min0 = (x: number, y: number): number => { return x <= y ? x : y; };
-const max0 = (x: number, y: number): number => { return x <= y ? y : x; };
-
-/*
-#define min0(x, y) (((x) <= (y)) ? (x) : (y))
-#define max0(x, y) (((x) <= (y)) ? (y) : (x))
-*/
-
 
 
 export function bessel_k(x: number, alpha: number, expo: number): number {

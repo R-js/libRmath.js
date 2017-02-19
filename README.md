@@ -17,6 +17,11 @@ I first list the modules __DONE__ so far, lets start at a positive note)
 
 | original c module | js/ts module name | port date | R - base functions |
 |------------------|--------------------|-------------|--------------------|
+|gamma_cody.c      | gamme_cody.ts| 19 feb 2017| GAMMA function using algo of  W. J. Cody, |
+|bessel_i.c           | bessel_i.ts  | 19 feb 2017 | besseli |
+|bessel_j.c           | bessel_j.ts | 19 feb 2017 | besselj  |
+|bessel_k.c           | bessel_k.ts | 19 feb 2017 | besselK |
+|bessel_y.c           | bessel_y.ts |  19 feb 2017 | bessely  |
 |sexp.c           | ./sexp.ts| 8-feb-2017 | (Random variates from the standard exponential distribution) exp_rand (internally used) function  |
 |dunif.c           | ./dunif.ts| 8-feb-2017 | R "dunif" function  |
 |bessel_k.c           | ./bessel_k.ts| 8-feb-2017 | R "besselK" function http://www.netlib.org/specfun/rkbesl |
@@ -36,10 +41,10 @@ I first list the modules __DONE__ so far, lets start at a positive note)
 | original c module | ported to javascript? | tested | R - base functions |
 |------------------|--------------------|-------------|--------------------|
 bd0.c           | done ./lib/bd0.ts | no | hidden, used by modules dbinom.c ,dpois.c dt.c |       
-bessel_i.c           | TODO  |  | |
-bessel_j.c           | TODO | | |
+bessel_i.c           | done  | no | R "besseli" Modified Bessel function of first kind. |
+bessel_j.c           | done | no | R "besselj" gives the Bessel function of the first kind.  |
 bessel_k.c           | done | no | R "besselK" function http://www.netlib.org/specfun/rkbesl |
-bessel_y.c           | TODO | | |
+bessel_y.c           | done | no | R "bessely" gives the Bessel function of the second kind . |
 beta.c           |done ./lib/beta.ts  | no | [beta](https://en.wikipedia.org/wiki/Beta_function) |
 chebyshev.c           | done ./lib/chebyshev.ts | no | chebyshev\_init , chebyshev\_eval |
 choose.c           |TODO | | |
@@ -74,7 +79,7 @@ fround.c           |TODO | | |
 fsign.c           |TODO | | |
 ftrunc.c           | TODO| | |
 gamma.c           |done  ./lib/gamma.ts | no | [gammafn](https://en.wikipedia.org/wiki/Gamma_function) |
-gamma_cody.c           | TODO| | |
+gamma_cody.c           | done| no | GAMMA function using algo of  W. J. Cody, |
 gammalims.c           |TODO | | |
 i1mach.c           |TODO | | |
 imax2.c           |TODO | | |

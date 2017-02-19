@@ -85,7 +85,7 @@ export function lgammacor(x: number) {
     if (x < 10)
         return ML_ERR_return_NAN()
     else if (x >= xmax) {
-        ML_ERROR(ME.ME_UNDERFLOW, "lgammacor");
+        ML_ERROR(ME.ME_UNDERFLOW, 'lgammacor');
         // allow to underflow below 
     }
     else if (x < xbig) {
