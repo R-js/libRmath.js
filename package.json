@@ -17,7 +17,10 @@
     "math",
     "regression",
     "distribution",
-    "statistic"
+    "statistic",
+    "special functions",
+    "bessel function",
+    "data science"
   ],
   "author": "Jacob Bogers",
   "license": "GPL-3.0",
