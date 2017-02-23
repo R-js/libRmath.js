@@ -44,16 +44,24 @@
  */
 
 
-import {ISNAN, R_FINITE, ML_POSINF,ML_ERR_return_NAN, ML_ERROR, ME} from "./_general"
-import {gammafn} from "./gamma"
-import { lbeta } from "./lbeta"
+import {
+    ISNAN,
+    R_FINITE,
+    ML_POSINF,
+    ML_ERR_return_NAN,
+    ML_ERROR,
+    ME
+} from './_general';
+
+import { gammafn } from './gamma';
+import { lbeta } from './lbeta';
 
 //const xmin =  - 170.5674972726612;
-const xmax =   171.61447887182298;
+const xmax = 171.61447887182298;
 const lnsml = - 708.39641853226412;
-   
 
-export function beta(a:number, b:number):number {
+
+export function beta(a: number, b: number): number {
 
     /*#ifdef NOMORE_FOR_THREADS
     static double xmin, xmax = 0;//-> typically = 171.61447887 for IEEE 
@@ -70,7 +78,7 @@ export function beta(a:number, b:number):number {
     //
     // NaNs propagated correctly 
     if (ISNAN(a) || ISNAN(b)) return a + b;
-   
+
     if (a < 0 || b < 0)
         return ML_ERR_return_NAN()
     else if (a == 0 || b == 0)
@@ -87,7 +95,7 @@ export function beta(a:number, b:number):number {
         //
         return (1 / gammafn(a + b)) * gammafn(a) * gammafn(b);
     } else {
-        let val:number = lbeta(a, b);
+        let val: number = lbeta(a, b);
         // underflow to 0 is not harmful per se;  exp(-999) also gives no warning
         //#ifndef IEEE_754
         if (val < lnsml) {

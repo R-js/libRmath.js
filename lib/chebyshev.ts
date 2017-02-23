@@ -49,7 +49,9 @@
  *    Adapted from R. Broucke, Algorithm 446, CACM., 16, 254 (1973).
  */
 
-import { fabs, NaN } from "./_general"
+
+
+import { NaN, fabs } from './_general';
 
 export function chebyshev_init(dos: number[], nos: number, eta: number): number {
     let i: number;
@@ -75,7 +77,10 @@ export function chebyshev_init(dos: number[], nos: number, eta: number): number 
 
 export function chebyshev_eval(x: number, a: number[], n: number): number {
 
-    let b0: number, b1: number, b2: number, twox: number;
+    let b0: number;
+    let  b1: number;
+    let  b2: number;
+    let  twox: number;
     let i: number;
 
     if (n < 1 || n > 1000) {

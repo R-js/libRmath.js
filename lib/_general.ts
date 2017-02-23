@@ -7,6 +7,7 @@ export const rtnsig_BESS = 1e-4;
 export const enten_BESS = 1e308;
 export const xlrg_BESS_IJ = 1e5;
 export const enmten_BESS = 8.9e-308;
+export const isInteger = Number.isInteger;
 export const sin = Math.sin;
 export const cos = Math.cos;
 export const pow = Math.pow;
@@ -24,6 +25,7 @@ export const ISNAN = Number.isNaN;
 export const thresh_BESS_Y = 16.;
 export const M_eps_sinc = 2.149e-8;
 export const ML_NAN = NaN;
+export const round = Math.round;
 export const ML_POSINF = Number.POSITIVE_INFINITY;
 export const ML_NEGINF = Number.NEGATIVE_INFINITY;
 export const M_PI = 3.14159265358979323846264338327950288;
@@ -105,3 +107,7 @@ export function fmax2(x: number, y: number) {
     }
     return (x < y) ? y : x;
 }
+
+export function isOdd(k: number) {
+    return (floor(k) % 2) === 1;
+} 
