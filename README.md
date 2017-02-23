@@ -17,6 +17,7 @@ I first list the modules __DONE__ so far, lets start at a positive note)
 
 | original c module | js/ts module name | port date | R - base functions |
 |------------------|--------------------|-------------|--------------------|
+|choose.c           | choose.ts | 21 feb 2017 | R "choose" function, C(n,k) binomial coefficients 
 |gamma_cody.c      | gamme_cody.ts| 19 feb 2017| GAMMA function using algo of  W. J. Cody, |
 |bessel_i.c           | bessel_i.ts  | 19 feb 2017 | besseli |
 |bessel_j.c           | bessel_j.ts | 19 feb 2017 | besselj  |
@@ -47,7 +48,7 @@ bessel_k.c           | done | no | R "besselK" function http://www.netlib.org/sp
 bessel_y.c           | done | no | R "bessely" gives the Bessel function of the second kind . |
 beta.c           |done ./lib/beta.ts  | no | [beta](https://en.wikipedia.org/wiki/Beta_function) |
 chebyshev.c           | done ./lib/chebyshev.ts | no | chebyshev\_init , chebyshev\_eval |
-choose.c           |TODO | | |
+choose.c           |done  | no | R "choose" function, C(n,k) binomial coefficients |
 cospi.c           | done ./lib/cospi.ts | no| cospi, sinpi, tanpi |
 d1mach.c           |TODO | | |
 dbeta.c           |  TODO |  | |
