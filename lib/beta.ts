@@ -53,7 +53,7 @@ import {
     ME
 } from './_general';
 
-import { gammafn } from './gamma';
+import { gammafn } from './gamma_fn';
 import { lbeta } from './lbeta';
 
 //const xmin =  - 170.5674972726612;

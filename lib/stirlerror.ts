@@ -40,7 +40,7 @@
  */
 
 import {M_LN_SQRT_2PI} from './_general';
-import {lgammafn} from './lgamma';
+import {lgammafn} from './lgamma_fn';
 
 const sferr_halves: number[] = [
     0.0, // n=0 - wrong, place holder only 

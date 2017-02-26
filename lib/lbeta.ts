@@ -51,7 +51,7 @@ import {
 
 import { lgammacor } from './lgammacor';
 import { lgammafn } from './lgamma_fn';
-import { gammafn } from './gamma';
+import { gammafn } from './gamma_fn';
 
 
 export function lbeta(a: number, b: number): number {

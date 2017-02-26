@@ -36,8 +36,8 @@ I first list the modules __DONE__ so far, lets start at a positive note)
 |beta.c           |./lib/beta.ts  | 23-jan-2017 | [beta](https://en.wikipedia.org/wiki/Beta_function) |
 |chebyshev.c           | ./lib/chebyshev.ts | 23-jan-2017 | chebyshev\_init , chebyshev\_eval |
 |cospi.c           | ./lib/cospi.ts | 23-jan-2017 | cospi, sinpi, tanpi |
-|gamma.c           |./lib/gamma.ts | 23-jan-2017 | [gammafn] gamme function(https://en.wikipedia.org/wiki/Gamma_function) |
-|lgamma.c           | ./lib/lgamma.ts | 23-jan-2017 | logarithmic gamma [lgammafn](https://en.wikipedia.org/wiki/Gamma_function) |
+|gamma.c           |./lib/gamma_fn.ts | 23-jan-2017 | [gammafn] gamme function(https://en.wikipedia.org/wiki/Gamma_function) |
+|lgamma.c           | ./lib/lgamma_fn.ts | 23-jan-2017 | logarithmic gamma [lgammafn](https://en.wikipedia.org/wiki/Gamma_function) |
 |lgammacor.c           |./lib/lgammecor.ts  | 23-jan-2017 | lgammacor |
 |stirlerr.c           | ./lib/stirlerr | 23-jan-2017 | Computes the log of the error term in Stirling's formula ( _stirlerr_ ) |
 
@@ -84,14 +84,14 @@ fprec.c           |TODO | | |
 fround.c           |TODO | | |
 fsign.c           |TODO | | |
 ftrunc.c           | TODO| | |
-gamma.c           |done  ./lib/gamma.ts | no | [gammafn](https://en.wikipedia.org/wiki/Gamma_function) |
+gamma.c           |done  ./lib/gamma_fn.ts | no | [gammafn](https://en.wikipedia.org/wiki/Gamma_function) |
 gamma_cody.c           | done| no | GAMMA function using algo of  W. J. Cody, |
 gammalims.c           |TODO | | |
 i1mach.c           |TODO | | |
 imax2.c           |TODO | | |
 imin2.c           | TODO| | |
 lbeta.c           | TODO| | |
-lgamma.c           | done ./lib/lgamma.ts | no | logarithmic gamma [lgammafn](https://en.wikipedia.org/wiki/Gamma_function) |
+lgamma.c           | done ./lib/lgamma_fn.ts | no | logarithmic gamma [lgammafn](https://en.wikipedia.org/wiki/Gamma_function) |
 lgammacor.c           |done ./lib/lgammecor.ts  | no | lgammacor |
 log1p.c           | done | no  | calculate log(1+x) with high accuracy for small x |
 mlutils.c           |TODO | | |
