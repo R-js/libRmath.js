@@ -51,7 +51,6 @@
 /* These are recursive, so we should do a stack check */
 
 import {
- 
   fabs,
   log,
   exp,
@@ -64,9 +63,8 @@ import {
 } from './_general';
 
 import { lbeta } from './lbeta';
-import { lgammafn_sign } from './lgamma';
+import { lgammafn_sign, lgammafn } from './lgamma_fn';
 
-import { lgammafn } from './lgamma';
 
 export function lfastchoose(n: number, k: number) {
   return -log(n + 1.) - lbeta(n - k + 1., k + 1.);

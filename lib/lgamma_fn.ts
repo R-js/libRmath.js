@@ -148,7 +148,7 @@ export function lgammafn_sign(x: number, sgn?: number[]): number {
 }
 
 export function lgammafn(x: number): number {
-    return lgammafn_sign(x, null);
+    return lgammafn_sign(x);
 }
 
 /*

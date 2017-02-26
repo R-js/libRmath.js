@@ -49,7 +49,7 @@
  *    is faster and cleaner, but is only defined "fast" for half integers.
  */
 
-import { ME, ML_ERROR, ML_ERR_return_NAN } from './_general'
+import { ME, ML_ERROR, ML_ERR_return_NAN } from './_general';
 import { chebyshev_eval } from './chebyshev';
 
 const algmcs: number[] = [
@@ -70,9 +70,9 @@ const algmcs: number[] = [
     +.1276642195630062933333333333333e-30
 ];
 
-const nalgm = 5
-const xbig = 94906265.62425156
-const xmax = 3.745194030963158e306
+const nalgm = 5;
+const xbig = 94906265.62425156;
+const xmax = 3.745194030963158e306;
 
 export function lgammacor(x: number) {
 
@@ -83,7 +83,7 @@ export function lgammacor(x: number) {
     //   xmax = DBL_MAX / 48 =  2^1020 / 3 
 
     if (x < 10)
-        return ML_ERR_return_NAN()
+        return ML_ERR_return_NAN();
     else if (x >= xmax) {
         ML_ERROR(ME.ME_UNDERFLOW, 'lgammacor');
         // allow to underflow below 

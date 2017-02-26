@@ -73,9 +73,6 @@ export interface JBesselProperties {
     ncalc: number;
 }
 
-
-
-
 // unused now from R
 function bessel_j(x: number, alpha: number): number {
 

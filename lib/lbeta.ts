@@ -1,7 +1,7 @@
 /*
  *  AUTHOR
  *  Jacob Bogers, jkfbogers@gmail.com
- *  Jan 23, 2017
+ *  jan 23, 2017
  * 
  *  ORIGINAL C-CODE AUTHOR (R Project)
  *  Mathlib : A C Library of Special Functions
@@ -50,7 +50,7 @@ import {
 } from './_general';
 
 import { lgammacor } from './lgammacor';
-import { lgammafn } from './lgamma';
+import { lgammafn } from './lgamma_fn';
 import { gammafn } from './gamma';
 
 
@@ -62,8 +62,8 @@ export function lbeta(a: number, b: number): number {
     if (ISNAN(a) || ISNAN(b))
         return a + b;
     p = q = a;
-    if (b < p) p = b;// := min(a,b) 
-    if (b > q) q = b;// := max(a,b) 
+    if (b < p) p = b; // := min(a,b) 
+    if (b > q) q = b; // := max(a,b) 
 
     // both arguments must be >= 0 
     if (p < 0)
