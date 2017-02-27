@@ -32,7 +32,7 @@ export const nearbyint = rround;
 export const R_forceint = nearbyint;
 export const R_rint = nearbyint;
 
-
+export const M_2PI = 6.283185307179586476925286766559;
 export const M_LN_2PI = 1.837877066409345483560659472811;
 export const sqrt = Math.sqrt;
 export const DBL_EPSILON = 1E-16; //true for javascript, this was tested
@@ -152,7 +152,6 @@ export const ML_ERROR = (x: ME, s: any) => {
 export function ML_ERR_return_NAN() {
     ML_ERROR(ME.ME_DOMAIN, '');
     return ML_NAN;
-
 }
 
 export function R_D_nonint_check(log: boolean, x: number) {
@@ -223,4 +222,6 @@ export function R_nonint(x: number) {
     return (fabs((x) - R_forceint(x)) > 1e-7 * fmax2(1., fabs(x)))
 }
 
-
+export function R_D_fexp(give_log: boolean, f: number, x: number): number {
+    return (give_log ? -0.5 * log(f) + (x) : exp(x) / sqrt(f));
+}
