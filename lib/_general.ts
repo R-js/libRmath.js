@@ -26,8 +26,10 @@ export function rround(x: number) {
 /* 
     nearbyint is C99, so all platforms should have it (and AFAIK, all do) 
 */
-
-
+export const DBL_MANT_DIG = 18;
+export const DBL_MIN_EXP = trunc(Math.log10(Number.MIN_VALUE));
+export const M_LN2 = 0.693147180559945309417232121458;	/* ln(2) */
+export const M_1_SQRT_2PI = 0.398942280401432677939946059934;
 export const nearbyint = rround;
 export const R_forceint = nearbyint;
 export const R_rint = nearbyint;
