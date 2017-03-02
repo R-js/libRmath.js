@@ -41,27 +41,22 @@ export const DBL_EPSILON = 1E-16; //true for javascript, this was tested
 export const sinh = Math.sinh;
 export const DBL_MAX = Number.MAX_VALUE;
 export const exp = Math.exp;
-export const rtnsig_BESS = 1e-4;
-export const enten_BESS = 1e308;
-export const xlrg_BESS_IJ = 1e5;
-export const enmten_BESS = 8.9e-308;
+
 export const isInteger = Number.isInteger;
 export const sin = Math.sin;
 export const cos = Math.cos;
 export const pow = Math.pow;
-export const ensig_BESS = 1e16;
+
 export const M_1_PI = 1.0 / Math.PI;
-export const sqxmin_BESS_K = 1.49e-154;
-export const xmax_BESS_K = 705.342;/* maximal x for UNscaled answer */
+
 export const R_FINITE = (x: number) => Number.isFinite(x);
 export const NaN = Number.NaN;
 export const FLT_MIN = 2.22507e-308; //10^24  larger then Number.MIN_VALUE
 export const DBL_MIN = FLT_MIN;
-export const xlrg_BESS_Y = 1e8;
+
 export const log = Math.log;
 export const ISNAN = Number.isNaN;
-export const thresh_BESS_Y = 16.;
-export const M_eps_sinc = 2.149e-8;
+
 export const ML_NAN = NaN;
 export const round = Math.round;
 export const ML_POSINF = Number.POSITIVE_INFINITY;
@@ -226,4 +221,144 @@ export function R_nonint(x: number) {
 
 export function R_D_fexp(give_log: boolean, f: number, x: number): number {
     return (give_log ? -0.5 * log(f) + (x) : exp(x) / sqrt(f));
+}
+
+
+/** bessel section */
+/** bessel section */
+/** bessel section */
+
+export const nsig_BESS = 16;
+export const ensig_BESS = 1e16;
+export const rtnsig_BESS = 1e-4;
+export const enmten_BESS = 8.9e-308;
+export const enten_BESS = 1e308;
+
+export const exparg_BESS = 709.;
+export const xlrg_BESS_IJ = 1e5;
+export const xlrg_BESS_Y = 1e8;
+export const thresh_BESS_Y = 16.;
+
+export const xmax_BESS_K = 705.342/* maximal x for UNscaled answer */
+
+
+/* sqrt(DBL_MIN) =	1.491668e-154 */
+export const sqxmin_BESS_K = 1.49e-154;
+
+/* x < eps_sinc	 <==>  sin(x)/x == 1 (particularly "==>");
+  Linux (around 2001-02) gives 2.14946906753213e-08
+  Solaris 2.5.1		 gives 2.14911933289084e-08
+*/
+export const M_eps_sinc = 2.149e-8;
+
+
+export function R_pow_di(x: number, n: number) {
+    let pow: number = 1.0;
+
+    if (ISNAN(x)) return x;
+    if (n != 0) {
+        if (!R_FINITE(x)) return R_pow(x, n);
+        if (n < 0) { n = -n; x = 1 / x; }
+        for (; ;) {
+            if (n & 1) pow *= x;
+            if (n >>= 1) x *= x; else break;
+        }
+    }
+    return pow;
+}
+
+export function R_pow(x: number, y: number): number { /* = x ^ y */
+
+    /* squaring is the most common of the specially handled cases so
+       check for it first. */
+    if (y == 2.0)
+        return x * x;
+    if (x == 1. || y == 0.)
+        return (1.);
+    if (x == 0.) {
+        if (y > 0.) return (0.);
+        else if (y < 0) return (ML_POSINF);
+        else return (y); /* NA or NaN, we assert */
+    }
+    if (R_FINITE(x) && R_FINITE(y)) {
+        /* There was a special case for y == 0.5 here, but
+           gcc 4.3.0 -g -O2 mis-compiled it.  Showed up with
+           100^0.5 as 3.162278, example(pbirthday) failed. */
+        return pow(x, y);
+    }
+    if (ISNAN(x) || ISNAN(y))
+        return (x + y);
+    if (!R_FINITE(x)) {
+        if (x > 0)               /* Inf ^ y */
+            return (y < 0.) ? 0. : ML_POSINF;
+        else {                  /* (-Inf) ^ y */
+            if (R_FINITE(y) && y == floor(y)) /* (-Inf) ^ n */
+                return (y < 0.) ? 0. : (myfmod(y, 2.) ? x : -x);
+        }
+    }
+    if (!R_FINITE(y)) {
+        if (x >= 0) {
+            if (y > 0)           /* y == +Inf */
+                return (x >= 1) ? R_PosInf : 0.;
+            else                /* y == -Inf */
+                return (x < 1) ? R_PosInf : 0.;
+        }
+    }
+    return R_NaN; // all other cases: (-Inf)^{+-Inf, non-int}; (neg)^{+-Inf}
+}
+
+
+export const R_finite = (x: number) => !Number.isFinite(x);
+
+/* C++ math header undefines any isnan macro. This file
+   doesn't get C++ headers and so is safe. */
+export const R_isnancpp = (x: number) => ISNAN(x);
+
+export function myfmod(x1: number, x2: number) {
+
+    let q = x1 / x2;
+    return x1 - floor(q) * x2;
+}
+
+
+export function R_powV(x: number, y: number): number /* = x ^ y */ {
+    if (x == 1. || y == 0.)
+        return (1.);
+    if (x == 0.) {
+        if (y > 0.) return (0.);
+	/* y < 0 */return (ML_POSINF);
+    }
+    if (R_FINITE(x) && R_FINITE(y))
+        return (pow(x, y));
+    if (ISNAN(x) || ISNAN(y)) {
+        return (x + y);
+    }
+    if (!R_FINITE(x)) {
+        if (x > 0)		/* Inf ^ y */
+            return ((y < 0.) ? 0. : ML_POSINF);
+        else {			/* (-Inf) ^ y */
+            if (R_FINITE(y) && y == floor(y)) /* (-Inf) ^ n */
+                return ((y < 0.) ? 0. : (myfmod(y, 2.) ? x : -x));
+        }
+    }
+    if (!R_FINITE(y)) {
+        if (x >= 0) {
+            if (y > 0)		/* y == +Inf */
+                return ((x >= 1) ? ML_POSINF : 0.);
+            else		/* y == -Inf */
+                return ((x < 1) ? ML_POSINF : 0.);
+        }
+    }
+    return (ML_NAN);		/* all other cases: (-Inf)^{+-Inf,
+				   non-int}; (neg)^{+-Inf} */
+}
+
+
+export const NA_REAL = ML_NAN;
+export const R_PosInf = ML_POSINF;
+export const R_NegInf = ML_NEGINF;
+
+export function REprintf(fmt: string) {
+    let args = Array.from(arguments);
+    console.error.call(console.error, fmt, args);
 }
