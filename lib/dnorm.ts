@@ -55,11 +55,12 @@ import {
     M_LN2,
     DBL_MIN_EXP,
     DBL_MANT_DIG,
-    R_forceint
-    
+    R_forceint,
+    ldexp
+
 } from './_general';
 
-import { ldexp } from './ldexp';
+export const dnorm = dnorm4;
 
 export function dnorm4(x: number, mu: number, sigma: number, give_log: boolean): number {
 
@@ -70,11 +71,11 @@ export function dnorm4(x: number, mu: number, sigma: number, give_log: boolean):
     if (!R_FINITE(sigma)) {
         return R_D__0(give_log);
     }
-    
+
     if (!R_FINITE(x) && mu == x) {
         return ML_NAN;/* x-mu is NaN */
     }
-    
+
     if (sigma <= 0) {
         if (sigma < 0) {
             return ML_ERR_return_NAN();
@@ -88,10 +89,10 @@ export function dnorm4(x: number, mu: number, sigma: number, give_log: boolean):
 
     x = fabs(x);
     if (x >= 2 * sqrt(DBL_MAX)) return R_D__0(give_log);
-    if (give_log)
+    if (give_log) {
         return -(M_LN_SQRT_2PI + 0.5 * x * x + log(sigma));
-   
-   
+    }
+
     if (x < 5) return M_1_SQRT_2PI * exp(-0.5 * x * x) / sigma;
 
     /* ELSE:
@@ -111,9 +112,12 @@ export function dnorm4(x: number, mu: number, sigma: number, give_log: boolean):
      *              =IEEE=  38.58601
      * [on one x86_64 platform, effective boundary a bit lower: 38.56804]
      */
-    if (x > sqrt(-2 * M_LN2 * (DBL_MIN_EXP + 1 - DBL_MANT_DIG))) return 0.;
+    if (x > sqrt(-2 * M_LN2 * (DBL_MIN_EXP + 1 - DBL_MANT_DIG))) {
+        return 0.;
+    }
 
     /* Now, to get full accurary, split x into two parts,
+   /* Now, to get full accurary, split x into two parts,
      *  x = x1+x2, such that |x2| <= 2^-16.
      * Assuming that we are using IEEE doubles, that means that
      * x1*x1 is error free for x<1024 (but we have x < 38.6 anyway).
@@ -122,7 +126,7 @@ export function dnorm4(x: number, mu: number, sigma: number, give_log: boolean):
      */
     let x1 = //  R_forceint(x * 65536) / 65536 =
         ldexp(R_forceint(ldexp(x, 16)), -16);
-    let  x2 = x - x1;
+    let x2 = x - x1;
     return M_1_SQRT_2PI / sigma *
         (exp(-0.5 * x1 * x1) * exp((-0.5 * x2 - x1) * x2));
-    }
+}

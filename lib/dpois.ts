@@ -1,5 +1,10 @@
 /*
  *  AUTHOR
+ *  Jacob Bogers, jkfbogers@gmail.com
+ *  March 4, 2017
+ *
+ *  ORIGINAL AUTHOR
+ *  AUTHOR
  *    Catherine Loader, catherine@research.bell-labs.com.
  *    October 23, 2000.
  *

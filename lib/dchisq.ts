@@ -39,6 +39,6 @@ import {
     dgamma
 } from './dgamma';
 
-function dchisq(x: number, df: number, give_log: boolean) {
+export function dchisq(x: number, df: number, give_log: boolean) {
     return dgamma(x, df / 2., 2., give_log);
 }

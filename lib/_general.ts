@@ -12,7 +12,11 @@
 
 */
 
+ 
+
+export const ceil = Math.ceil;
 export const trunc = Math.trunc;
+export const log10 = Math.log10;
 
 export function rround(x: number) {
 
@@ -304,7 +308,7 @@ export function R_pow(x: number, y: number): number { /* = x ^ y */
                 return (x < 1) ? R_PosInf : 0.;
         }
     }
-    return R_NaN; // all other cases: (-Inf)^{+-Inf, non-int}; (neg)^{+-Inf}
+    return NaN; // all other cases: (-Inf)^{+-Inf, non-int}; (neg)^{+-Inf}
 }
 
 
@@ -361,4 +365,19 @@ export const R_NegInf = ML_NEGINF;
 export function REprintf(fmt: string) {
     let args = Array.from(arguments);
     console.error.call(console.error, fmt, args);
+}
+
+
+//  return x * Math.pow(2,y)
+export function ldexp(x: number, y: number): number {
+
+
+    if (ISNAN(x) || ISNAN(y)) {
+        return (x + y);
+    }
+    if (!R_FINITE(x) || !R_FINITE(y)) {
+        return ML_POSINF;
+    }
+    return x * Math.pow(2, y);
+
 }

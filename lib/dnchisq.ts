@@ -29,32 +29,53 @@
  *    degrees of freedom and noncentrality parameter "ncp".
  */
 
-#include "nmath.h"
-#include "dpq.h"
+import {
 
-double dnchisq(double x, double df, double ncp, int give_log)
-{
-    const static double eps = 5e-15;
+    ISNAN,
+    R_FINITE,
+    ML_ERR_return_NAN,
+    R_D__0,
+    ML_POSINF,
+    ceil,
+    sqrt,
+    R_D_val
 
-    double i, ncp2, q, mid, dfmid, imax;
-    LDOUBLE sum, term;
+} from './_general';
 
-#ifdef IEEE_754
-    if (ISNAN(x) || ISNAN(df) || ISNAN(ncp))
+import { dchisq } from './dchisq';
+import { dpois_raw } from './dpois';
+
+export function dnchisq(x: number, df: number, ncp: number, give_log: boolean): number {
+
+    const eps = 5e-15;
+
+    let i: number;
+    let ncp2: number;
+    let q: number;
+    let mid: number;
+    let dfmid: number;
+    let imax: number;
+    let sum: number;
+    let term: number;
+
+
+    if (ISNAN(x) || ISNAN(df) || ISNAN(ncp)) {
         return x + df + ncp;
-#endif
+    }
 
-    if (!R_FINITE(df) || !R_FINITE(ncp) || ncp < 0 || df < 0)
-        ML_ERR_return_NAN;
+    if (!R_FINITE(df) || !R_FINITE(ncp) || ncp < 0 || df < 0) {
+        return ML_ERR_return_NAN();
+    }
 
-    if (x < 0)
-        return R_D__0;
+    if (x < 0) {
+        return R_D__0(give_log);
+    }
     if (x == 0 && df < 2.)
         return ML_POSINF;
     if (ncp == 0)
-        return (df > 0) ? dchisq(x, df, give_log) : R_D__0;
+        return (df > 0) ? dchisq(x, df, give_log) : R_D__0(give_log);
     if (x == ML_POSINF)
-        return R_D__0;
+        return R_D__0(give_log);
 
     ncp2 = 0.5 * ncp;
 
@@ -62,27 +83,25 @@ double dnchisq(double x, double df, double ncp, int give_log)
     imax = ceil((-(2 + df) + sqrt((2 - df) * (2 - df) + 4 * ncp * x)) / 4);
     if (imax < 0)
         imax = 0;
-    if (R_FINITE(imax))
-    {
+    if (R_FINITE(imax)) {
         dfmid = df + 2 * imax;
-        mid = dpois_raw(imax, ncp2, FALSE) * dchisq(x, dfmid, FALSE);
+        mid = dpois_raw(imax, ncp2, false) * dchisq(x, dfmid, false);
     }
-    else /* imax = Inf */
-        mid = 0;
+    else {/* imax = Inf */
+        // mid = 0;
+        // }
 
-    if (mid == 0)
-    {
+        // if (mid == 0) {
         /* underflow to 0 -- maybe numerically correct; maybe can be more accurate,
 	 * particularly when  give_log = TRUE */
         /* Use  central-chisq approximation formula when appropriate;
 	 * ((FIXME: the optimal cutoff also depends on (x,df);  use always here? )) */
-        if (give_log || ncp > 1000.)
-        {
-            double nl = df + ncp, ic = nl / (nl + ncp); /* = "1/(1+b)" Abramowitz & St.*/
+        if (give_log || ncp > 1000.) {
+            let nl = df + ncp, ic = nl / (nl + ncp); /* = "1/(1+b)" Abramowitz & St.*/
             return dchisq(x * ic, nl * ic, give_log);
         }
         else
-            return R_D__0;
+            return R_D__0(give_log);
     }
 
     sum = mid;
@@ -93,9 +112,8 @@ double dnchisq(double x, double df, double ncp, int give_log)
     term = mid;
     df = dfmid;
     i = imax;
-    double x2 = x * ncp2;
-    do
-    {
+    let x2 = x * ncp2;
+    do {
         i++;
         q = x2 / i / df;
         df += 2;
@@ -106,8 +124,7 @@ double dnchisq(double x, double df, double ncp, int give_log)
     term = mid;
     df = dfmid;
     i = imax;
-    while (i != 0)
-    {
+    while (i != 0) {
         df -= 2;
         q = i * df / x2;
         i--;
@@ -116,5 +133,5 @@ double dnchisq(double x, double df, double ncp, int give_log)
         if (q < 1 && term * q <= (1 - q) * eps)
             break;
     }
-    return R_D_val((double)sum);
+    return R_D_val(give_log,sum);
 }
