@@ -1,7 +1,6 @@
 /*
  *  Mathlib : A C Library of Special Functions
  *  Copyright (C) 1998 Ross Ihaka
- *  Copyright (C) 2013 The R Core Team
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -20,25 +19,16 @@
  *  SYNOPSIS
  *
  *    #include <Rmath.h>
- *    double ftrunc(double x);
+ *    int imin2(int x, int y);
  *
  *  DESCRIPTION
  *
- *    Truncation toward zero.
+ *    Compute minimum of two integers.
  */
 
 #include "nmath.h"
 
-#ifdef OLD
-double ftrunc(double x)
+int imin2(int x, int y)
 {
-	if(x >= 0) return floor(x);
-	else return ceil(x);
+    return (x < y) ? x : y;
 }
-#else
-// use C99 function
-double ftrunc(double x)
-{
-    return trunc(x);
-}
-#endif

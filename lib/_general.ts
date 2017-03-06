@@ -12,11 +12,16 @@
 
 */
 
- 
+
 
 export const ceil = Math.ceil;
 export const trunc = Math.trunc;
 export const log10 = Math.log10;
+export const LONG_MAX = Number.MAX_SAFE_INTEGER;
+export const DBL_MAX_10_EXP = Math.log10(Number.MAX_VALUE);
+export const MAX_DIGITS = DBL_MAX_10_EXP;
+export const INT_MAX = Number.MAX_SAFE_INTEGER;
+export const INT_MIN = Number.MIN_SAFE_INTEGER;
 
 export function rround(x: number) {
 
@@ -31,7 +36,7 @@ export function rround(x: number) {
     nearbyint is C99, so all platforms should have it (and AFAIK, all do) 
 */
 export const DBL_MANT_DIG = 18;
-export const DBL_MIN_EXP = trunc(Math.log10(Number.MIN_VALUE));
+export const FLT_MANT_DIG = DBL_MANT_DIG;
 export const M_LN2 = 0.693147180559945309417232121458;	/* ln(2) */
 export const M_1_SQRT_2PI = 0.398942280401432677939946059934;
 export const nearbyint = rround;
@@ -211,7 +216,7 @@ export function Rf_d1mach(i: number): number {
     }
 }
 
-export function F77_NAME(i: number): number {
+export function dF77_NAME(i: number): number {
     return Rf_d1mach(i);
 }
 
@@ -380,4 +385,46 @@ export function ldexp(x: number, y: number): number {
     }
     return x * Math.pow(2, y);
 
+}
+
+export const FLT_RADIX = 2;
+export const CHAR_BIT = 8;
+export const DBL_MAX_EXP = Math.log2(Number.MAX_VALUE);
+export const DBL_MIN_EXP = Math.log2(Number.MIN_VALUE);
+export const FLT_MAX_EXP = DBL_MAX_EXP;
+export const FLT_MIN_EXP = DBL_MIN_EXP;
+export const sizeofInt = 4 * Math.ceil(Math.log(Number.MAX_SAFE_INTEGER) / Math.log(2) / 4 / CHAR_BIT);
+
+export function Rf_i1mach(i: number): number {
+
+    switch (i) {
+        case 1: return 5;
+        case 2: return 6;
+        case 3: return 0;
+        case 4: return 0;
+
+        case 5: return CHAR_BIT * sizeofInt;
+        case 6: return sizeofInt;
+
+        case 7: return 2;
+        case 8: return CHAR_BIT * sizeofInt - 1;
+        case 9: return INT_MAX;
+
+        case 10: return FLT_RADIX;
+
+        case 11: return FLT_MANT_DIG;
+        case 12: return FLT_MIN_EXP;
+        case 13: return FLT_MAX_EXP;
+
+        case 14: return DBL_MANT_DIG;
+        case 15: return DBL_MIN_EXP;
+        case 16: return DBL_MAX_EXP;
+
+        default: return 0;
+    }
+}
+
+export function iF77_NAME(i: number)
+{
+    return Rf_i1mach(i);
 }
