@@ -1,4 +1,10 @@
 /*
+
+ *  AUTHOR
+ *  Jacob Bogers, jkfbogers@gmail.com
+ *  March 09, 2017
+ *
+ *  ORIGINAL AUTHOR
  *  Mathlib : A C Library of Special Functions
  *  Copyright (C) 2005-6 Morten Welinder <terra@gnome.org>
  *  Copyright (C) 2005-10 The R Foundation

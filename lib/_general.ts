@@ -14,6 +14,7 @@
 
 
 
+export const sqr = (x: number) => x * x;
 export const ceil = Math.ceil;
 export const trunc = Math.trunc;
 export const log10 = Math.log10;
@@ -82,11 +83,20 @@ export const R_D__1 = (log_p: boolean) => {
 export const R_D__0 = (log: boolean): number => {
     return log ? ML_NEGINF : 0.0;
 };
-export const R_DT_0 = (lower_tail: boolean, log: boolean, log_p: boolean): number => {
-    return lower_tail ? R_D__0(log) : R_D__1(log_p);
+
+
+
+export function R_P_bounds_01(lower_tail: boolean, log_p: boolean, x: number, x_min: number, x_max: number): number | undefined {
+    if (x <= x_min) return R_DT_0(lower_tail,  log_p);
+    if (x >= x_max) return R_DT_1(lower_tail,  log_p);
+    return undefined;
+}
+
+export const R_DT_0 = (lower_tail: boolean,log_p: boolean): number => {
+    return lower_tail ? R_D__0(log_p) : R_D__1(log_p);
 };
-export const R_DT_1 = (lower_tail: boolean, log: boolean, log_p: boolean): number => {
-    return lower_tail ? R_D__1(log) : R_D__0(log_p);
+export const R_DT_1 = (lower_tail: boolean, log_p: boolean): number => {
+    return lower_tail ? R_D__1(log_p) : R_D__0(log_p);
 };
 export const R_D_val = (log_p: boolean, x: number) => {
     return (log_p ? log(x) : (x));
@@ -335,7 +345,7 @@ export function R_powV(x: number, y: number): number /* = x ^ y */ {
         return (1.);
     if (x == 0.) {
         if (y > 0.) return (0.);
-	/* y < 0 */return (ML_POSINF);
+    /* y < 0 */return (ML_POSINF);
     }
     if (R_FINITE(x) && R_FINITE(y))
         return (pow(x, y));
@@ -359,7 +369,7 @@ export function R_powV(x: number, y: number): number /* = x ^ y */ {
         }
     }
     return (ML_NAN);		/* all other cases: (-Inf)^{+-Inf,
-				   non-int}; (neg)^{+-Inf} */
+                   non-int}; (neg)^{+-Inf} */
 }
 
 
@@ -367,9 +377,9 @@ export const NA_REAL = ML_NAN;
 export const R_PosInf = ML_POSINF;
 export const R_NegInf = ML_NEGINF;
 
-export function REprintf(fmt: string) {
-    let args = Array.from(arguments);
-    console.error.call(console.error, fmt, args);
+export function REprintf(fmt: string, ...args: any[]) {
+    let args2 = Array.from(args);//.slice(1);
+    console.error.call(console.error, fmt, args2);
 }
 
 
@@ -424,7 +434,7 @@ export function Rf_i1mach(i: number): number {
     }
 }
 
-export function iF77_NAME(i: number)
-{
+export function iF77_NAME(i: number) {
     return Rf_i1mach(i);
 }
+
