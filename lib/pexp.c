@@ -1,4 +1,9 @@
 /*
+ *  AUTHOR
+ *  Jacob Bogers, jkfbogers@gmail.com
+ *  March 14, 2017
+ * 
+ *  ORIGNINAL AUTHOR
  *  Mathlib : A C Library of Special Functions
  *  Copyright (C) 1998 Ross Ihaka
  *  Copyright (C) 2000-2015 The R Core Team
@@ -21,10 +26,8 @@
  *
  *	The distribution function of the exponential distribution.
  */
-#include "nmath.h"
-#include "dpq.h"
 
-double pexp(double x, double scale, int lower_tail, int log_p)
+export function pexp(double x, double scale, int lower_tail, int log_p)
 {
 #ifdef IEEE_754
     if (ISNAN(x) || ISNAN(scale))

@@ -1,4 +1,9 @@
 /*
+ *  AUTHOR
+ *  Jacob Bogers, jkfbogers@gmail.com
+ *  March 14, 2017
+ * 
+ *  ORIGNINAL AUTHOR
  *  Mathlib : A C Library of Special Functions
  *  Copyright (C) 1998 Ross Ihaka
  *  Copyright (C) 2000-2015 The R Core Team
@@ -21,24 +26,30 @@
  *
  *	The distribution function of the exponential distribution.
  */
-#include "nmath.h"
-#include "dpq.h"
 
-double pexp(double x, double scale, int lower_tail, int log_p)
-{
-#ifdef IEEE_754
+import {
+    ISNAN,
+    ML_ERR_return_NAN,
+    R_DT_0,
+    R_D_exp
+} from './_general';
+
+import { expm1, R_Log1_Exp } from './expm1';
+
+
+export function pexp(x: number, scale: number, lower_tail: boolean, log_p: boolean): number {
+
     if (ISNAN(x) || ISNAN(scale))
-	return x + scale;
-    if (scale < 0) ML_ERR_return_NAN;
-#else
-    if (scale <= 0) ML_ERR_return_NAN;
-#endif
+        return x + scale;
+    if (scale < 0) {
+        return ML_ERR_return_NAN();
+    }
 
     if (x <= 0.)
-	return R_DT_0;
+        return R_DT_0(lower_tail, log_p);
     /* same as weibull( shape = 1): */
     x = -(x / scale);
     return lower_tail
-	? (log_p ? R_Log1_Exp(x) : -expm1(x))
-	: R_D_exp(x);
+        ? (log_p ? R_Log1_Exp(x) : -expm1(x))
+        : R_D_exp(log_p, x);
 }

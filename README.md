@@ -17,6 +17,19 @@ I first list the modules __DONE__ so far, lets start at a positive note)
 
 | original c module | js/ts module name | port date | R - base functions |
 |------------------|--------------------|-------------|--------------------|
+|pnchisq.c    | ./lib/pnchisq.tc | 14 March  |  Algorithm AS275: Computing the non-central chi-squared distribution function. |
+pnbinom.c           | ./lib/pnbinom.ts | 14 March | The distribution function of the negative binomial distribution. |
+pnbeta.c           |./lib/pnbeta.ts |14 March |  pbeta  - incomplete-beta function {nowadays: pbeta_raw() -> bratio()} |
+plogis.c           | ./lib/plogis.ts| 14 March |  Compute  log(1 + exp(x))  without overflow (and fast for x > 18)  |
+plnorm.c     | ./lib/plnorm.ts | 14 March |n The lognormal distribution function. |
+|phyper.c    | ./lib/phyper.ts | 14 March | The distribution function of the geometric distribution. |
+|pgamma.c    | ./lib/pgamma.ts |  14 March | This function computes the distribution function for the gamma distribution  |
+|pgeom.c     | ./lib/pgeom.ts|  14 March |  The distribution function of the geometric distribution. |
+|pf.c   | ./lib/pf.ts | 14 March 2017 |  The distribution function of the F distribution. |
+|pexp.c           |./lib/pexp.ts| 14 March 2017 |The distribution function of the exponential distribution. |
+|pcauchy.c    | ./lib/pauchy.ts | 14 March 2017| The distribution function of the Cauchy distribution. |
+|pchisq.c     | ./lib/pschisq.ts | 14 March 2017| The distribution function of the chi-squared distribution. |
+| pbinom.c | ./lib/pbinom.ts | 14 March 2017 |   The distribution function of the binomial distribution. |
 | Toms708.java | ./lib/Toms708.ts | 14 March 2017 | from Java Version  James Curran (j.curran@auckland.ac.nz) (Java version)  |
 | pbeta.c | ./lib/pbeta.ts | 14 March 2017 | beta distribution function  |
 | pnorm.c| ./lib/pnorm.ts | 9 March 2017 |  Normal distribution function |
@@ -32,13 +45,21 @@ I first list the modules __DONE__ so far, lets start at a positive note)
 | dnorm.c | ./lib/dnorm.ts | 25 feb 2017 | Compute the density of the normal distribution. |
 | dnf.c | ./lib/dnt.ts | 25 feb 2017  | The density function of the non-central F distribution |
 | dnbinom.c | ./lib/dnbinom.ts | 25 feb 2017 | Computes the negative binomial distribution. |
-| dlogis.c | ./lib/dlogis.ts | 4 March 2017 | not sure what it does |
+| dlogis.c | ./lib/dlogis.ts | 4 March 2017 | The density of the Logistic Distribution  |
 | dlnorm.c | ./lib/dlnorm.ts |4 March 2017|The density of the lognormal distribution.|
 | dhyper.c | ./lib/dhyper.ts | 4 March 2017 |  The hypergeometric probability |
 | dgeom.c | ./lib/dgeom.ts | 4 March 2017 |   Computes the geometric probabilities, Pr(X=x) = p(1-p)^x. |
 | dnbeta.c | ./lib/dnbeta.ts | 4 March 2017 |  Computes the density of the noncentral beta distribution with |
 | pgamma.c | ./lib/pgamme.ts | 9 March 2017 | This function computes the distribution function for the gamma distribution |
+| dcauchy.c| ./lib/dcauchy.ts| 27 feb 2017  | The density of the Cauchy distribution. |
+| dexp.c | ./lib/dexp.ts | 27 feb 2017 | The density of the exponential distribution. |
+| df.c | ./lib/df.ts | 27 feb 2017  |  The density function of the F distribution.|
+| dchisq.c  | ./lib/dchisq.ts|  feb 27, 2017| The density of the chi-squared distribution. |
 | dgamma.c | ./lib/dgamma.ts | 27 feb 2017 |  Computes the density of the gamma distribution |
+| fmax2.c | part of ./lib/_general.ts |  25 jan 2017 | this function is moved to module ./lib/_general.ts |
+| fmin2.c  | part of ./lib/_general.ts| 25 jan 2017 |  this function is moved to module ./lib/_general.ts |
+| fsign.c |  ./lib/fsign.ts |    MArch 5, 2017 |  This function performs transfer of sign.  |
+| ftrunc.c | part of ./lib/_general.ts | March 5 2017  | floating point truncation |
 | lbeta.c | ./lib/lbeta.ts | March 2 2017 |  This function returns the value of the log beta function.|
 | C99 gamma function | ./lib/c99_gamma.ts | 25 feb 2017 | added C99 gamma and lgamma, |
 |dnbinom.c | ./lib/dnbinom.ts | 25 feb 2017 | negative binomial distribution.
@@ -69,7 +90,7 @@ I first list the modules __DONE__ so far, lets start at a positive note)
 
 | original c module | ported to javascript? | tested | R - base functions |
 |------------------|--------------------|-------------|--------------------|
-bd0.c           | done ./lib/bd0.ts | no | hidden, used by modules dbinom.c ,dpois.c dt.c |       
+bd0.c           | done ./lib/bd0.ts | no | hidden, used by modules dbinom.c ,dpois.c dt.c |
 bessel_i.c           | done  | no | R "besseli" Modified Bessel function of first kind. |
 bessel_j.c           | done | no | R "besselj" gives the Bessel function of the first kind.  |
 bessel_k.c           | done | no | R "besselK" function http://www.netlib.org/specfun/rkbesl |
@@ -81,18 +102,18 @@ cospi.c           | done ./lib/cospi.ts | no| cospi, sinpi, tanpi |
 d1mach.c           |done | no | included in ./_general.ts |
 dbeta.c           |  done | no  | distribution function of beta |
 dbinom.c           | done  | no | probability mass function of binomial distribution |
-dcauchy.c           | TODO| | |
-dchisq.c           | TODO| | |
-dexp.c           |TODO | | |
-df.c           | TODO| | |
+dcauchy.c           | done| no | The density of the Cauchy distribution. |
+dchisq.c           | done| no | The density of the chi-squared distribution. |
+dexp.c           |done | no  | The density of the exponential distribution. |
+df.c           | done | no  |  The density function of the F distribution.|
 dgamma.c           | done| no  |  Computes the density of the gamma distribution, |
 dgeom.c           |done |no  | Computes the geometric probabilities, Pr(X=x) = p(1-p)^x |
 dhyper.c           |done | no  |  The hypergeometric probability |
-dlnorm.c           |TODO | | |
-dlogis.c           | TODO| | |
+dlnorm.c           |done | no |   The density of the lognormal distribution. |
+dlogis.c           | done| no |  The density of the Logistic Distribution |
 dnbeta.c           |done | no |  Computes the density of the noncentral beta distribution with |
 dnbinom.c           |done | no  | negative binomial probability prob mass function |
-dnchisq.c           |TODO | | |
+dnchisq.c           |done | no |   The density of the noncentral chi-squared distribution with "df" |
 dnf.c           |done | no | The density function of the non-central F distribution |
 dnorm.c           |done  | no  |  Compute the density of the normal distribution. |
 dnt.c           |done | no | the non-central t density |
@@ -101,37 +122,37 @@ dt.c           |done | no |  The t density  |
 dunif.c           | done| no | R "dunif" function  |
 dweibull.c           | done| no  |  The density function of the Weibull distribution. |
 expm1.c           |done | no  | Compute the Exponential minus 1 |
-fmax2.c           |TODO | | |
-fmin2.c           | TODO| | |
+fmax2.c           |done | no | this function is moved to module ./lib/_general.ts |
+fmin2.c           | done| no |  this function is moved to module ./lib/_general.ts |
 fprec.c           |done  | no |  Returns the value of x rounded to "digits" significant  |
 fround.c           |done | no | fround function |
-fsign.c           |TODO | | |
-ftrunc.c           | TODO| | |
+fsign.c           |done | no |  This function performs transfer of sign.  |
+ftrunc.c           | done| no | floating point truncation |
 gamma.c           |done  ./lib/gamma_fn.ts | no | [gammafn](https://en.wikipedia.org/wiki/Gamma_function) |
 gamma_cody.c           | done| no | GAMMA function using algo of  W. J. Cody, |
 gammalims.c           |done | no | calculates legal bounds of gamma_fn |
-i1mach.c           |TODO | | |
-imax2.c           |TODO | | |
-imin2.c           | TODO| | |
+i1mach.c           |done | no | transferred to _general.ts |
+imax2.c           |done | no | transferred to _general.ts |
+imin2.c           | done| no |  transferred to _general.ts |
 lbeta.c           | done| no  |  This function returns the value of the log beta function. |
 lgamma.c           | done ./lib/lgamma_fn.ts | no | logarithmic gamma [lgammafn](https://en.wikipedia.org/wiki/Gamma_function) |
 lgammacor.c           |done ./lib/lgammecor.ts  | no | lgammacor |
 log1p.c           | done | no  | calculate log(1+x) with high accuracy for small x |
-mlutils.c           |TODO | | |
+mlutils.c           |done  | no  | moved to _general.ts |
 pbeta.c           |done | no  | pBeta distribution function |
-pbinom.c           |TODO | | |
-pcauchy.c           | TODO| | |
-pchisq.c           | TODO| | |
-pexp.c           | TODO| | |
-pf.c           |TODO | | |
-pgamma.c           |done | no  | 	This function computes the distribution function for the	gamma distribution  |
-pgeom.c           | TODO| | |
-phyper.c           |TODO | | |
-plnorm.c           | TODO| | |
-plogis.c           | TODO| | |
-pnbeta.c           |TODO | | |
-pnbinom.c           | TODO| | |
-pnchisq.c           | TODO| | |
+pbinom.c           |done | no |   The distribution function of the binomial distribution. |
+pcauchy.c           | done |no |The distribution function of the Cauchy distribution. |
+pchisq.c           | done | no |  The distribution function of the chi-squared distribution. |
+pexp.c           | done|no |The distribution function of the exponential distribution. |
+pf.c           |done |no |  The distribution function of the F distribution. |
+pgamma.c           |done | no  | This function computes the distribution function for the gamma distribution  |
+pgeom.c           | done| no |  The distribution function of the geometric distribution. |
+phyper.c           |done |no | The distribution function of the geometric distribution. |
+plnorm.c           | done|no  |  The lognormal distribution function. |
+plogis.c           | done| no |  Compute  log(1 + exp(x))  without overflow (and fast for x > 18)  |
+pnbeta.c           |done |no |  pbeta  - incomplete-beta function {nowadays: pbeta_raw() -> bratio()} |
+pnbinom.c           | done| no | The distribution function of the negative binomial distribution. |
+pnchisq.c           | done| no |  Algorithm AS275: Computing the non-central chi-squared distribution function. |
 pnf.c           |TODO | | |
 pnorm.c           | done| no  |  normal distribution function |
 pnt.c           | TODO| | |
@@ -152,13 +173,13 @@ qgeom.c           |TODO | | |
 qhyper.c           | TODO| | |
 qlnorm.c           | TODO| | |
 qlogis.c           | TODO| | |
-qnbeta.c           | TODO| | |
+qnbeta.c           | TODO| | | 
 qnbinom.c           | TODO| | |
 qnchisq.c           |TODO | | |
 qnf.c           |TODO | | |
 qnorm.c           | TODO| | |
 qnt.c           | TODO| | |
-qpois.c                           |TODO | | |                                                                                               
+qpois.c                           |TODO | | |
 qt.c           |TODO | | |
 qtukey.c           |TODO | | |
 qunif.c           | TODO| | |

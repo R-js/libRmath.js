@@ -1,4 +1,9 @@
 /*
+ *  AUTHOR
+ *  Jacob Bogers, jkfbogers@gmail.com
+ *  March 14, 2017
+ * 
+ *  ORIGNINAL AUTHOR
  *  Mathlib : A C Library of Special Functions
  *  Copyright (C) 1998	Ross Ihaka
  *  Copyright (C) 2000	The R Core Team
@@ -22,10 +27,10 @@
  *     The distribution function of the chi-squared distribution.
  */
 
-#include "nmath.h"
-#include "dpq.h"
+import {
+    pgamma
+} from './pgamma'
 
-double pchisq(double x, double df, int lower_tail, int log_p)
-{
-    return pgamma(x, df/2., 2., lower_tail, log_p);
+export function pchisq(x: number, df: number, lower_tail: boolean, log_p: boolean) {
+    return pgamma(x, df / 2., 2., lower_tail, log_p);
 }

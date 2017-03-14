@@ -1,4 +1,9 @@
 /*
+ *  AUTHOR
+ *  Jacob Bogers, jkfbogers@gmail.com
+ *  March 14, 2017
+ * 
+ *  ORIGNINAL AUTHOR
  *  Mathlib : A C Library of Special Functions
  *  Copyright (C) 1998 Ross Ihaka
  *  Copyright (C) 2000-8 The R Core Team
@@ -22,41 +27,58 @@
  *    The distribution function of the F distribution.
  */
 
-#include "nmath.h"
-#include "dpq.h"
+import {
+    ISNAN,
+    ML_ERR_return_NAN,
+    R_P_bounds_01,
+    ML_POSINF,
+    R_DT_0,
+    R_DT_1,
+    M_LN2,
+    ML_NAN,
+    ML_VALID
+} from './_general'
 
-double pf(double x, double df1, double df2, int lower_tail, int log_p)
-{
-#ifdef IEEE_754
+import { pchisq } from './pchisq';
+import { pbeta } from './pbeta';
+import { } from './';
+
+export function pf(x: number, df1: number, df2: number, lower_tail: boolean, log_p: boolean): number {
+
     if (ISNAN(x) || ISNAN(df1) || ISNAN(df2))
-	return x + df2 + df1;
-#endif
-    if (df1 <= 0. || df2 <= 0.) ML_ERR_return_NAN;
+        return x + df2 + df1;
 
-    R_P_bounds_01(x, 0., ML_POSINF);
+    if (df1 <= 0. || df2 <= 0.) {
+        return ML_ERR_return_NAN();
+    }
+
+    let rc = R_P_bounds_01(lower_tail, log_p, x, 0., ML_POSINF);
+    if (rc !== undefined) {
+        return rc;
+    }
 
     /* move to pchisq for very large values - was 'df1 > 4e5' in 2.0.x,
        now only needed for df1 = Inf or df2 = Inf {since pbeta(0,*)=0} : */
     if (df2 == ML_POSINF) {
-	if (df1 == ML_POSINF) {
-	    if(x <  1.) return R_DT_0;
-	    if(x == 1.) return (log_p ? -M_LN2 : 0.5);
-	    if(x >  1.) return R_DT_1;
-	}
+        if (df1 == ML_POSINF) {
+            if (x < 1.) return R_DT_0(lower_tail,log_p);
+            if (x == 1.) return (log_p ? -M_LN2 : 0.5);
+            if (x > 1.) return R_DT_1(lower_tail, log_p);
+        }
 
-	return pchisq(x * df1, df1, lower_tail, log_p);
+        return pchisq(x * df1, df1, lower_tail, log_p);
     }
 
     if (df1 == ML_POSINF)/* was "fudge"	'df1 > 4e5' in 2.0.x */
-	return pchisq(df2 / x , df2, !lower_tail, log_p);
+        return pchisq(df2 / x, df2, !lower_tail, log_p);
 
     /* Avoid squeezing pbeta's first parameter against 1 :  */
     if (df1 * x > df2)
-	x = pbeta(df2 / (df2 + df1 * x), df2 / 2., df1 / 2., 
-		  !lower_tail, log_p);
+        x = pbeta(df2 / (df2 + df1 * x), df2 / 2., df1 / 2.,
+            !lower_tail, log_p);
     else
-	x = pbeta(df1 * x / (df2 + df1 * x), df1 / 2., df2 / 2.,
-		  lower_tail, log_p);
+        x = pbeta(df1 * x / (df2 + df1 * x), df1 / 2., df2 / 2.,
+            lower_tail, log_p);
 
     return ML_VALID(x) ? x : ML_NAN;
 }

@@ -1,4 +1,9 @@
 /*
+ *  AUTHOR
+ *  Jacob Bogers, jkfbogers@gmail.com
+ *  March 14, 2017
+ * 
+ *  ORIGNINAL AUTHOR
  *  Mathlib : A C Library of Special Functions
  *  Copyright (C) 1998 Ross Ihaka
  *  Copyright (C) 2000-2015  The R Core Team
@@ -22,27 +27,40 @@
  *
  *    The distribution function of the binomial distribution.
  */
-#include "nmath.h"
-#include "dpq.h"
 
-double pbinom(double x, double n, double p, int lower_tail, int log_p)
-{
-#ifdef IEEE_754
+import {
+    ISNAN,
+    MATHLIB_WARNING,
+    R_nonint,
+    R_FINITE,
+    ML_ERR_return_NAN,
+    R_forceint,
+    R_DT_0,
+    floor,
+    R_DT_1
+} from './_general';
+
+
+import { pbeta } from './pbeta';
+
+export function pbinom(x: number, n: number, p: number, lower_tail: boolean, log_p: boolean): number {
+
     if (ISNAN(x) || ISNAN(n) || ISNAN(p))
-	return x + n + p;
-    if (!R_FINITE(n) || !R_FINITE(p)) ML_ERR_return_NAN;
+        return x + n + p;
+    if (!R_FINITE(n) || !R_FINITE(p)) {
+        return ML_ERR_return_NAN();
+    }
 
-#endif
-    if(R_nonint(n)) {
-	MATHLIB_WARNING(_("non-integer n = %f"), n);
-	ML_ERR_return_NAN;
+    if (R_nonint(n)) {
+        MATHLIB_WARNING(_("non-integer n = %f"), n);
+        ML_ERR_return_NAN;
     }
     n = R_forceint(n);
     /* PR#8560: n=0 is a valid value */
-    if(n < 0 || p < 0 || p > 1) ML_ERR_return_NAN;
+    if (n < 0 || p < 0 || p > 1) ML_ERR_return_NAN;
 
-    if (x < 0) return R_DT_0;
+    if (x < 0) return R_DT_0(lower_tail, log_p);
     x = floor(x + 1e-7);
-    if (n <= x) return R_DT_1;
+    if (n <= x) return R_DT_1(lower_tail, log_p);
     return pbeta(p, x + 1, n - x, !lower_tail, log_p);
 }

@@ -1,4 +1,10 @@
 /*
+
+ *  AUTHOR
+ *  Jacob Bogers, jkfbogers@gmail.com
+ *  March 14, 2017
+ *
+ *  ORIGINAL AUTHOR
  *  Mathlib : A C Library of Special Functions
  *  Copyright (C) 1998 Ross Ihaka
  *  Copyright (C) 2000-2006 The R Core Team
@@ -23,28 +29,40 @@
  *    The distribution function of the geometric distribution.
  */
 
-#include "nmath.h"
-#include "dpq.h"
+import {
+    ISNAN,
+    ML_ERR_return_NAN,
+    R_DT_0,
+    R_DT_1,
+    R_FINITE,
+    floor,
+    log,
+    exp
+} from './_general'
 
-double pgeom(double x, double p, int lower_tail, int log_p)
-{
-#ifdef IEEE_754
+import { log1p } from './log1p';
+import { expm1, R_DT_Clog } from './expm1';
+
+export function pgeom(x: number, p: number, lower_tail: boolean, log_p: boolean) {
+
     if (ISNAN(x) || ISNAN(p))
-	return x + p;
-#endif
-    if(p <= 0 || p > 1) ML_ERR_return_NAN;
+        return x + p;
 
-    if (x < 0.) return R_DT_0;
-    if (!R_FINITE(x)) return R_DT_1;
-    x = floor(x +1e-7);
+    if (p <= 0 || p > 1) {
+        return ML_ERR_return_NAN();
+    }
 
-    if(p == 1.) { /* we cannot assume IEEE */
-	x = lower_tail ? 1: 0;
-	return log_p ? log(x) : x;
+    if (x < 0.) return R_DT_0(lower_tail, log_p);
+    if (!R_FINITE(x)) return R_DT_1(lower_tail, log_p);
+    x = floor(x + 1e-7);
+
+    if (p == 1.) { /* we cannot assume IEEE */
+        x = lower_tail ? 1 : 0;
+        return log_p ? log(x) : x;
     }
     x = log1p(-p) * (x + 1);
     if (log_p)
-	return R_DT_Clog(x);
+        return R_DT_Clog(lower_tail, log_p, x);
     else
-	return lower_tail ? -expm1(x) : exp(x);
+        return lower_tail ? -expm1(x) : exp(x);
 }

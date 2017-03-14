@@ -50,7 +50,7 @@ import {
 
 import { dgamma } from './dgamma';
 
-import { dbinom_raw } from './dbinom_raw';
+import { dbinom_raw } from './dbinom';
 
 export function df(x: number, m: number, n: number, give_log: boolean): number {
    

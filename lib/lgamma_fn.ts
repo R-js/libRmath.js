@@ -62,7 +62,7 @@ import {
 
 } from './_general';
 
-import { gammafn } from './gamma';
+import { gammafn } from './gamma_fn';
 import { sinpi } from './cospi';
 import { lgammacor } from './lgammacor';
 

@@ -1,4 +1,9 @@
 /*
+ *  AUTHOR
+ *  Jacob Bogers, jkfbogers@gmail.com
+ *  March 14, 2017
+ *
+ *  ORIGINAL AUTHOR
  *  Mathlib : A C Library of Special Functions
  *  Copyright (C) 1998 Ross Ihaka
  *  Copyright (C) 2000-8 The R Core Team
@@ -22,18 +27,24 @@
  *    The lognormal distribution function.
  */
 
-#include "nmath.h"
-#include "dpq.h"
 
-double plnorm(double x, double meanlog, double sdlog, int lower_tail, int log_p)
-{
-#ifdef IEEE_754
+import {
+    ISNAN,
+    ML_ERR_return_NAN,
+    R_DT_0,
+    log
+} from './_general'
+
+import { pnorm } from './pnorm';
+
+export function plnorm(x: number, meanlog: number, sdlog: number, lower_tail: boolean, log_p: boolean): number {
+
     if (ISNAN(x) || ISNAN(meanlog) || ISNAN(sdlog))
-	return x + meanlog + sdlog;
-#endif
+        return x + meanlog + sdlog;
+
     if (sdlog < 0) ML_ERR_return_NAN;
 
     if (x > 0)
-	return pnorm(log(x), meanlog, sdlog, lower_tail, log_p);
-    return R_DT_0;
+        return pnorm(log(x), meanlog, sdlog, lower_tail, log_p);
+    return R_DT_0(lower_tail, log_p);
 }

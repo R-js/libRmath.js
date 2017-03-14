@@ -62,7 +62,9 @@ import {
     R_FINITE,
     ML_POSINF,
     fmax2,
-    fmin2
+    fmin2,
+    R_D_val
+    
 
 } from './_general';
 
@@ -202,4 +204,13 @@ export function hypot(a: number, b: number){
         }
     }
     return p;
+}
+
+export function R_D_Clog(log_p: boolean, p: number): number {
+    return (log_p ? log1p(-(p)) : (0.5 - (p) + 0.5)) /* [log](1-p) */
+}
+
+
+export function R_DT_val(lower_tail:boolean, log_p: boolean, x: number) {
+    return lower_tail ? R_D_val(log_p,x)  : R_D_Clog(log_p,x)
 }

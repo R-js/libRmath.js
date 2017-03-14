@@ -76,6 +76,7 @@ export const M_PI_2 = Math.PI / 2;
 export const M_LN_SQRT_PI = 0.5723649429247; // log(sqrt(pi)) 
 export const M_LN_SQRT_2PI = 0.918938533204672741780329736406; // log(sqrt(2*pi)) 
 export const M_LN_SQRT_PId2 = 0.225791352644727432363097614947;	// log(sqrt(pi/2)) 
+export const M_LN10 =  2.30258509299404568402	/* log_e 10 */
 
 export const R_D__1 = (log_p: boolean) => {
     return log_p ? 0. : 1.0;
@@ -85,15 +86,31 @@ export const R_D__0 = (log: boolean): number => {
     return log ? ML_NEGINF : 0.0;
 };
 
+export const ML_VALID = (x: number) => !ISNAN(x);
 
-
-export function R_P_bounds_01(lower_tail: boolean, log_p: boolean, x: number, x_min: number, x_max: number): number | undefined {
-    if (x <= x_min) return R_DT_0(lower_tail,  log_p);
-    if (x >= x_max) return R_DT_1(lower_tail,  log_p);
+export function R_P_bounds_Inf_01(lower_tail: boolean, log_p: boolean, x: number): number | undefined {
+    if (!R_FINITE(x)) {
+        if (x > 0) {
+            return R_DT_1(lower_tail, log_p);
+        }
+        return R_DT_0(lower_tail, log_p);
+    }
     return undefined;
 }
 
-export const R_DT_0 = (lower_tail: boolean,log_p: boolean): number => {
+
+
+export function R_D_Lval(lower_tail: boolean, p: number): number {
+    return (lower_tail ? (p) : (0.5 - (p) + 0.5))	/*  p  */
+}
+
+export function R_P_bounds_01(lower_tail: boolean, log_p: boolean, x: number, x_min: number, x_max: number): number | undefined {
+    if (x <= x_min) return R_DT_0(lower_tail, log_p);
+    if (x >= x_max) return R_DT_1(lower_tail, log_p);
+    return undefined;
+}
+
+export const R_DT_0 = (lower_tail: boolean, log_p: boolean): number => {
     return lower_tail ? R_D__0(log_p) : R_D__1(log_p);
 };
 export const R_DT_1 = (lower_tail: boolean, log_p: boolean): number => {
@@ -437,5 +454,17 @@ export function Rf_i1mach(i: number): number {
 
 export function iF77_NAME(i: number) {
     return Rf_i1mach(i);
+}
+
+
+export const ftrunc = trunc;
+
+export const atanpi = (x: number) => {
+    return Math.atan(x) / Math.PI;
+}
+
+
+export function R_D_log(log_p: boolean, p: number) {
+    return (log_p ? (p) : log(p))	/* log(p) */
 }
 

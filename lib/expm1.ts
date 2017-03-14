@@ -43,15 +43,18 @@
  */
 
 import {
-   fabs,
-   exp,
-   DBL_EPSILON
+    fabs,
+    exp,
+    DBL_EPSILON,
+    M_LN2,
+    log,
+    R_D_log
 } from './_general';
 
 import { log1p } from './log1p';
 
-export function expm1(x: number){
-    
+export function expm1(x: number) {
+
     let y: number;
     let a = fabs(x);
 
@@ -59,12 +62,33 @@ export function expm1(x: number){
     if (a > 0.697) return exp(x) - 1;  /* negligible cancellation */
 
     if (a > 1e-8)
-	y = exp(x) - 1;
+        y = exp(x) - 1;
     else /* Taylor expansion, more accurate in this range */
-	y = (x / 2 + 1) * x;
+        y = (x / 2 + 1) * x;
 
     /* Newton step for solving   log(1 + y) = x   for y : */
     /* WARNING: does not work for y ~ -1: bug in 1.5.0 */
-    y -= (1 + y) * (log1p (y) - x);
+    y -= (1 + y) * (log1p(y) - x);
     return y;
+}
+
+export function R_D_LExp(log_p: boolean, x: number): number {
+    return log_p ? R_Log1_Exp(x) : log1p(-x);
+}
+
+// log(1 - exp(x))  in more stable form than log1p(- R_D_qIv(x)) :
+export function R_Log1_Exp(x: number) {
+
+    if ((x) > -M_LN2) {
+        return log(-expm1(x));
+    }
+    return log1p(-exp(x));
+}
+export function R_DT_Clog(lower_tail: boolean, log_p: boolean, p: number): number {
+
+    return (lower_tail ? R_D_LExp(log_p, p) : R_D_log(log_p, p))/* log(1-p) in qF*/
+}
+
+export function R_DT_Log(lower_tail: boolean, log_p: boolean, p: number): number { /* log(p) in qF */
+    return (lower_tail ? R_D_log(log_p, p) : R_D_LExp(log_p, p));
 }

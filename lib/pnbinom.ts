@@ -1,4 +1,9 @@
 /*
+ *  AUTHOR
+ *  Jacob Bogers, jkfbogers@gmail.com
+ *  March 14, 2017
+ * 
+ *  ORGINAL AUTHOR
  *  Mathlib : A C Library of Special Functions
  *  Copyright (C) 1998 Ross Ihaka
  *  Copyright (C) 2000-2013 The R Core Team
@@ -26,21 +31,36 @@
  *	x = the number of failures before the n-th success
  */
 
-#include "nmath.h"
-#include "dpq.h"
+import {
+    ISNAN,
+    R_FINITE,
+    ML_ERR_return_NAN,
+    R_DT_1,
+    R_DT_0,
+    floor,
+    MATHLIB_WARNING
+} from './_general';
 
-double pnbinom(double x, double size, double prob, int lower_tail, int log_p)
-{
-#ifdef IEEE_754
+
+import { pbeta } from './pbeta';
+
+import { Toms708, NumberW } from './toms708';
+
+export function pnbinom(x: number, size: number, prob: number, lower_tail: boolean, log_p: boolean) {
+
     if (ISNAN(x) || ISNAN(size) || ISNAN(prob))
-	return x + size + prob;
-    if(!R_FINITE(size) || !R_FINITE(prob))	ML_ERR_return_NAN;
-#endif
-    if (size < 0 || prob <= 0 || prob > 1)	ML_ERR_return_NAN;
+        return x + size + prob;
+    if (!R_FINITE(size) || !R_FINITE(prob)) {
+        return ML_ERR_return_NAN();
+    }
+
+    if (size < 0 || prob <= 0 || prob > 1) {
+        return ML_ERR_return_NAN();
+    }
 
     /* limiting case: point mass at zero */
-    if (size == 0) 
-        return (x >= 0) ? R_DT_1 : R_DT_0; 
+    if (size == 0)
+        return (x >= 0) ? R_DT_1(lower_tail, log_p) : R_DT_0(lower_tail, log_p);
 
     if (x < 0) return R_DT_0;
     if (!R_FINITE(x)) return R_DT_1;
@@ -48,21 +68,20 @@ double pnbinom(double x, double size, double prob, int lower_tail, int log_p)
     return pbeta(prob, size, x + 1, lower_tail, log_p);
 }
 
-double pnbinom_mu(double x, double size, double mu, int lower_tail, int log_p)
-{
-#ifdef IEEE_754
+export function pnbinom_mu(x: number, size: number, mu: number, lower_tail: boolean, log_p: boolean): number {
+
     if (ISNAN(x) || ISNAN(size) || ISNAN(mu))
-	return x + size + mu;
-    if(!R_FINITE(size) || !R_FINITE(mu))	ML_ERR_return_NAN;
-#endif
-    if (size < 0 || mu < 0)	ML_ERR_return_NAN;
+        return x + size + mu;
+    if (!R_FINITE(size) || !R_FINITE(mu)) ML_ERR_return_NAN;
+
+    if (size < 0 || mu < 0) ML_ERR_return_NAN;
 
     /* limiting case: point mass at zero */
-    if (size == 0) 
-        return (x >= 0) ? R_DT_1 : R_DT_0; 
+    if (size == 0)
+        return (x >= 0) ? R_DT_1(lower_tail, log_p) : R_DT_0(lower_tail, log_p);
 
-    if (x < 0) return R_DT_0;
-    if (!R_FINITE(x)) return R_DT_1;
+    if (x < 0) return R_DT_0(lower_tail, log_p);
+    if (!R_FINITE(x)) return R_DT_1(lower_tail, log_p);
     x = floor(x + 1e-7);
     /* return
      * pbeta(pr, size, x + 1, lower_tail, log_p);  pr = size/(size + mu), 1-pr = mu/(size+mu)
@@ -72,11 +91,12 @@ double pnbinom_mu(double x, double size, double mu, int lower_tail, int log_p)
      *=  bratio (pin,  qin, x., 1-x., &w, &wc, &ierr, log_p),  and return w or wc ..
      *=  bratio (size, x+1, pr, 1-pr, &w, &wc, &ierr, log_p) */
     {
-	int ierr;
-	double w, wc;
-	bratio(size, x+1, size/(size+mu), mu/(size+mu), &w, &wc, &ierr, log_p);
-	if(ierr)
-	    MATHLIB_WARNING(_("pnbinom_mu() -> bratio() gave error code %d"), ierr);
-	return lower_tail ? w : wc;
+        let ierr = new NumberW(0);
+        let w = new NumberW(0);
+        let wc = new NumberW(0);
+        Toms708.bratio(size, x + 1, size / (size + mu), mu / (size + mu), w, wc, ierr, log_p);
+        if (ierr)
+            MATHLIB_WARNING('pnbinom_mu() -> bratio() gave error code %d', ierr.val);
+        return lower_tail ? w.val : wc.val;
     }
 }

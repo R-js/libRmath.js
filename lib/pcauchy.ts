@@ -1,4 +1,9 @@
 /*
+ *  AUTHOR
+ *  Jacob Bogers, jkfbogers@gmail.com
+ *  March 14, 2017
+ * 
+ *  ORIGNINAL AUTHOR
  *  Mathlib : A C Library of Special Functions
  *  Copyright (C) 1998 Ross Ihaka
  *  Copyright (C) 2000-2014 The R Core Team
@@ -23,47 +28,48 @@
  *	The distribution function of the Cauchy distribution.
  */
 
-#include <config.h>
+import {
+    atanpi,
+    ISNAN,
+    ML_ERR_return_NAN,
+    R_FINITE,
+    R_DT_0,
+    R_DT_1,
+    fabs,
+    R_D_val
+} from './_general';
 
-#ifdef HAVE_ATANPI
-double atanpi(double);
-#endif
+import { R_D_Clog } from './log1p';
 
-#include "nmath.h"
-#include "dpq.h"
+export function pcauchy(x: number, location: number, scale: number, lower_tail: boolean, log_p: boolean): number {
 
-double pcauchy(double x, double location, double scale,
-	       int lower_tail, int log_p)
-{
-#ifdef IEEE_754
     if (ISNAN(x) || ISNAN(location) || ISNAN(scale))
-	return x + location + scale;
-#endif
-    if (scale <= 0) ML_ERR_return_NAN;
+        return x + location + scale;
+
+    if (scale <= 0) {
+        return ML_ERR_return_NAN();
+    }
 
     x = (x - location) / scale;
-    if (ISNAN(x)) ML_ERR_return_NAN;
-#ifdef IEEE_754
-    if(!R_FINITE(x)) {
-	if(x < 0) return R_DT_0;
-	else return R_DT_1;
+    if (ISNAN(x)) {
+        return ML_ERR_return_NAN();
     }
-#endif
+
+    if (!R_FINITE(x)) {
+        if (x < 0) return R_DT_0(lower_tail, log_p);
+        else return R_DT_1(lower_tail, log_p);
+    }
+
     if (!lower_tail)
-	x = -x;
+        x = -x;
     /* for large x, the standard formula suffers from cancellation.
      * This is from Morten Welinder thanks to  Ian Smith's  atan(1/x) : */
-#ifdef HAVE_ATANPI
+
     if (fabs(x) > 1) {
-	double y = atanpi(1/x);
-	return (x > 0) ? R_D_Clog(y) : R_D_val(-y);
-    } else
-	return R_D_val(0.5 + atanpi(x));
-#else
-    if (fabs(x) > 1) {
-	double y = atan(1/x) / M_PI;
-	return (x > 0) ? R_D_Clog(y) : R_D_val(-y);
-    } else
-	return R_D_val(0.5 + atan(x) / M_PI);
-#endif
+        let y = atanpi(1 / x);
+        return (x > 0) ? R_D_Clog(log_p, y) : R_D_val(log_p, -y);
+    } else {
+        return R_D_val(log_p, 0.5 + atanpi(x));
+    }
+
 }
