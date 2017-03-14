@@ -27,7 +27,7 @@ I first list the modules __DONE__ so far, lets start at a positive note)
 | dweibull.c | ./lib/dweibull.ts | 4 march 2017  | The density function of the Weibull distribution.|
 | dt.c | ./lib/dt.ts| 4 March 2017 |  The t density |
 | dpois.c | ./lib/dpois.ts | 4 March 2017 |  dpois() computes the Poisson probability  lb^x exp(-lb) / x! |
-| dnchisq.c | ./lib/dnchisq.ts |  The density of the noncentral chi-squared distribution with "df" |
+| dnchisq.c | ./lib/dnchisq.ts | 4 March 2017|  The density of the noncentral chi-squared distribution with "df" |
 | dnt.c | ./lib/dnt.ts| 4 March 2017 |  Computes the density of the noncentral beta distribution with |
 | dnorm.c | ./lib/dnorm.ts | 25 feb 2017 | Compute the density of the normal distribution. |
 | dnf.c | ./lib/dnt.ts | 25 feb 2017  | The density function of the non-central F distribution |
@@ -40,7 +40,6 @@ I first list the modules __DONE__ so far, lets start at a positive note)
 | pgamma.c | ./lib/pgamme.ts | 9 March 2017 | This function computes the distribution function for the gamma distribution |
 | dgamma.c | ./lib/dgamma.ts | 27 feb 2017 |  Computes the density of the gamma distribution |
 | lbeta.c | ./lib/lbeta.ts | March 2 2017 |  This function returns the value of the log beta function.|
-
 | C99 gamma function | ./lib/c99_gamma.ts | 25 feb 2017 | added C99 gamma and lgamma, |
 |dnbinom.c | ./lib/dnbinom.ts | 25 feb 2017 | negative binomial distribution.
 |dbeta.c           |  ./lib/dbeta.ts | 25 feb 2017  | R "dbeta" beta distribution function  |
