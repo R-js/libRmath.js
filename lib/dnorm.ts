@@ -1,7 +1,7 @@
 /*
  *  AUTHOR
  *  Jacob Bogers, jkfbogers@gmail.com
- *  feb 10, 2017
+ *  feb 25, 2017
  * 
  *  ORIGINAL AUTHOR:
  *  Mathlib : A C Library of Special Functions

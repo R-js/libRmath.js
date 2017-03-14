@@ -1,7 +1,7 @@
 /*
  *  AUTHOR
  *  Jacob Bogers, jkfbogers@gmail.com
- *  jan 23, 2017
+ *  March 2, 2017
  * 
  *  ORIGINAL C-CODE AUTHOR (R Project)
  *  Mathlib : A C Library of Special Functions

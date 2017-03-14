@@ -73,6 +73,7 @@ export const ML_POSINF = Number.POSITIVE_INFINITY;
 export const ML_NEGINF = Number.NEGATIVE_INFINITY;
 export const M_PI = 3.14159265358979323846264338327950288;
 export const M_PI_2 = Math.PI / 2;
+export const M_LN_SQRT_PI = 0.5723649429247; // log(sqrt(pi)) 
 export const M_LN_SQRT_2PI = 0.918938533204672741780329736406; // log(sqrt(2*pi)) 
 export const M_LN_SQRT_PId2 = 0.225791352644727432363097614947;	// log(sqrt(pi/2)) 
 
