@@ -3,6 +3,7 @@
  *  Jacob Bogers, jkfbogers@gmail.com
  *  March 14, 2017
  * 
+ *  ORGINAL AUTHOR
  *  Algorithm AS 275 Appl.Statist. (1992), vol.41, no.2
  *  original  (C) 1992	     Royal Statistical Society
  *

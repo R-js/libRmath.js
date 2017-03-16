@@ -32,6 +32,10 @@ export function rround(x: number) {
     return trunc(x + 0.5);
 }
 
+export function imin2(x: number, y: number): number {
+    return (x < y) ? x : y;
+}
+
 
 /* 
     nearbyint is C99, so all platforms should have it (and AFAIK, all do) 

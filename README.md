@@ -17,6 +17,9 @@ I first list the modules __DONE__ so far, lets start at a positive note)
 
 | original c module | js/ts module name | port date | R - base functions |
 |------------------|--------------------|-------------|--------------------|
+polygamma.c           | ./lib/polygamma.c| 16 March |  Compute the derivatives of the psi function   and polygamma functions. |
+pnt.c           | ./lib/pnt.ts| | 16 March | Cumulative probability at t of the non-central t-distribution,  with df degrees of freedom (may be fractional) and non-centrality,  parameter delta.|
+pnf.c           |./lib/pnf.ts| 15 March |	The distribution function of the non-central F distribution.|
 |pnchisq.c    | ./lib/pnchisq.tc | 14 March  |  Algorithm AS275: Computing the non-central chi-squared distribution function. |
 pnbinom.c           | ./lib/pnbinom.ts | 14 March | The distribution function of the negative binomial distribution. |
 pnbeta.c           |./lib/pnbeta.ts |14 March |  pbeta  - incomplete-beta function {nowadays: pbeta_raw() -> bratio()} |
@@ -153,10 +156,10 @@ plogis.c           | done| no |  Compute  log(1 + exp(x))  without overflow (and
 pnbeta.c           |done |no |  pbeta  - incomplete-beta function {nowadays: pbeta_raw() -> bratio()} |
 pnbinom.c           | done| no | The distribution function of the negative binomial distribution. |
 pnchisq.c           | done| no |  Algorithm AS275: Computing the non-central chi-squared distribution function. |
-pnf.c           |TODO | | |
+pnf.c           |done | no | The distribution function of the non-central F distribution. |
 pnorm.c           | done| no  |  normal distribution function |
-pnt.c           | TODO| | |
-polygamma.c           | TODO| | |
+pnt.c           | done| | no | Cumulative probability at t of the non-central t-distribution,  with df degrees of freedom (may be fractional) and non-centrality,  parameter delta.
+polygamma.c           | done| no |  Compute the derivatives of the psi function   and polygamma functions. |
 ppois.c           | TODO| | |
 pt.c           |TODO | | |
 ptukey.c           | TODO| | |
