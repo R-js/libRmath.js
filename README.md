@@ -17,8 +17,11 @@ I first list the modules __DONE__ so far, lets start at a positive note)
 
 | original c module | js/ts module name | port date | R - base functions |
 |------------------|--------------------|-------------|--------------------|
+pnorm.c           | ./lib/pnorm.ts| 17 March 2017  |  normal distribution function |
+ppois.c           | ./lib/pois.ts | 17 March 2017 |  The distribution function of the Poisson distribution.  |
+pt.c           | ./lib/pt.ts | 16 March | t distrib. with n degrees of freedom).  |
 polygamma.c           | ./lib/polygamma.c| 16 March |  Compute the derivatives of the psi function   and polygamma functions. |
-pnt.c           | ./lib/pnt.ts| | 16 March | Cumulative probability at t of the non-central t-distribution,  with df degrees of freedom (may be fractional) and non-centrality,  parameter delta.|
+pnt.c           | ./lib/pnt.ts|  16 March | Cumulative probability at t of the non-central t-distribution,  with df degrees of freedom (may be fractional) and non-centrality,  parameter delta.|
 pnf.c           |./lib/pnf.ts| 15 March |	The distribution function of the non-central F distribution.|
 |pnchisq.c    | ./lib/pnchisq.tc | 14 March  |  Algorithm AS275: Computing the non-central chi-squared distribution function. |
 pnbinom.c           | ./lib/pnbinom.ts | 14 March | The distribution function of the negative binomial distribution. |
@@ -160,8 +163,8 @@ pnf.c           |done | no | The distribution function of the non-central F dist
 pnorm.c           | done| no  |  normal distribution function |
 pnt.c           | done| | no | Cumulative probability at t of the non-central t-distribution,  with df degrees of freedom (may be fractional) and non-centrality,  parameter delta.
 polygamma.c           | done| no |  Compute the derivatives of the psi function   and polygamma functions. |
-ppois.c           | TODO| | |
-pt.c           |TODO | | |
+ppois.c           | done | no |  The distribution function of the Poisson distribution.  |
+pt.c           |done | no | t distrib. with n degrees of freedom).  |
 ptukey.c           | TODO| | |
 punif.c           | TODO| | |
 pweibull.c           |TODO | | |

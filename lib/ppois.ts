@@ -1,4 +1,8 @@
-/*
+/*  AUTHOR
+ *  Jacob Bogers, jkfbogers@gmail.com
+ *  March 16, 2017
+ *
+ *  ORIGINAL AUTHOR
  *  Mathlib : A C Library of Special Functions
  *  Copyright (C) 1998 Ross Ihaka
  *  Copyright (C) 2000 The R Core Team
@@ -22,20 +26,32 @@
  *    The distribution function of the Poisson distribution.
  */
 
-#include "nmath.h"
-#include "dpq.h"
+import {
+    ISNAN,
+    R_FINITE,
+    ML_ERR_return_NAN,
+    R_DT_0,
+    R_DT_1,
+    floor
+} from './_general';
 
-double ppois(double x, double lambda, int lower_tail, int log_p)
-{
-#ifdef IEEE_754
+import {
+    pgamma
+} from './pgamma';
+
+export function ppois(x: number, lambda: number, lower_tail: boolean, log_p: boolean) {
+
     if (ISNAN(x) || ISNAN(lambda))
-	return x + lambda;
-#endif
-    if(lambda < 0.) ML_ERR_return_NAN;
-    if (x < 0)		return R_DT_0;
-    if (lambda == 0.)	return R_DT_1;
-    if (!R_FINITE(x))	return R_DT_1;
+        return x + lambda;
+
+    if (lambda < 0.) {
+        return ML_ERR_return_NAN();
+    }
+    if (x < 0) return R_DT_0;
+    if (lambda == 0.) return R_DT_1(lower_tail, log_p);
+    if (!R_FINITE(x)) return R_DT_1(lower_tail, log_p);
     x = floor(x + 1e-7);
 
     return pgamma(lambda, x + 1, 1., !lower_tail, log_p);
 }
+

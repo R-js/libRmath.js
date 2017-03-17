@@ -1,6 +1,6 @@
 /*  AUTHOR
 *  Jacob Bogers, jkfbogers@gmail.com
-*  March 14, 2017
+*  March 17, 2017
 * 
 *  ORGINAL AUTHOR
  *  Mathlib : A C Library of Special Functions
@@ -71,13 +71,36 @@ import {
     DBL_EPSILON,
     fabs,
     log,
-    M_SQRT_32
+    M_SQRT_32,
+    trunc,
+    exp,
+    M_1_SQRT_2PI,
+    R_D__1,
+    R_D__0
+
 } from './_general';
 
 import { NumberW } from './toms708';
 
+import { log1p } from './log1p';
 
 const SIXTEN = 16; /* Cutoff allowing exact "*" and "/" */
+
+
+function do_del(ccum: NumberW, cum: NumberW, log_p: boolean, X: number, temp: number, upper: boolean, lower: boolean, x: number): void {
+    let xsq = trunc(X * SIXTEN) / SIXTEN;
+    let del = (X - xsq) * (X + xsq);
+    if (log_p) {
+        cum.val = (-xsq * xsq * 0.5) + (-del * 0.5) + log(temp);
+        if ((lower && x > 0.) || (upper && x <= 0.))
+            ccum.val = log1p(-exp(-xsq * xsq * 0.5) * exp(-del * 0.5) * temp);
+    }
+    else {
+        cum.val = exp(-xsq * xsq * 0.5) * exp(-del * 0.5) * temp;
+        ccum.val = 1.0 - cum.val;
+    }
+}
+
 
 export function pnorm5(x: number, mu: number, sigma: number, lower_tail: boolean, log_p: boolean): number {
     let p = new NumberW(0);
@@ -107,19 +130,19 @@ export function pnorm5(x: number, mu: number, sigma: number, lower_tail: boolean
 }
 
 
-export function pnorm_both(x: number, cum: NumberW, ccum: NumberW, i_tail: boolean, log_p: boolean){
+export function pnorm_both(x: number, cum: NumberW, ccum: NumberW, i_tail: boolean, log_p: boolean) {
     /* i_tail in {0,1,2} means: "lower", "upper", or "both" :
        if(lower) return  *cum := P[X <= x]
        if(upper) return *ccum := P[X >  x] = 1 - P[X <= x]
     */
-    const  a = [
+    const a = [
         2.2352520354606839287,
         161.02823106855587881,
         1067.6894854603709582,
         18154.981253343561249,
         0.065682337918207449113
     ];
-    const  b = [
+    const b = [
         47.20258190468824187,
         976.09855173777669322,
         10260.932208618978205,
@@ -162,14 +185,14 @@ export function pnorm_both(x: number, cum: NumberW, ccum: NumberW, i_tail: boole
         7.29751555083966205e-5
     ];
 
-    let  xden, xnum, temp, del, eps, xsq, y;
-  
+    let xden, xnum, temp, eps, xsq, y;
+
     let min = DBL_MIN;
-  
-    let i, lower, upper;
-   
+
+    let i: number, lower: boolean, upper: boolean;
+
     if (ISNAN(x)) { cum.val = ccum.val = x; return; }
-   
+
     /* Consider changing these : */
     eps = DBL_EPSILON * 0.5;
 
@@ -190,10 +213,10 @@ export function pnorm_both(x: number, cum: NumberW, ccum: NumberW, i_tail: boole
         } else xnum = xden = 0.0;
 
         temp = x * (xnum + a[3]) / (xden + b[3]);
-        if (lower)  cum.val = 0.5 + temp;
+        if (lower) cum.val = 0.5 + temp;
         if (upper) ccum.val = 0.5 - temp;
         if (log_p) {
-            if (lower)  cum.val = log(cum.val);
+            if (lower) cum.val = log(cum.val);
             if (upper) ccum.val = log(ccum.val);
         }
     }
@@ -209,88 +232,96 @@ export function pnorm_both(x: number, cum: NumberW, ccum: NumberW, i_tail: boole
         }
         temp = (xnum + c[7]) / (xden + d[7]);
 
-        #define do_del(X)							\
-    xsq = trunc(X * SIXTEN) / SIXTEN;				\
-    del = (X - xsq) * (X + xsq);					\
-    if(log_p) {							\
-        *cum = (-xsq * xsq * 0.5) + (-del * 0.5) + log(temp);	\
-        if((lower && x > 0.) || (upper && x <= 0.))			\
-          *ccum = log1p(-exp(-xsq * xsq * 0.5) *		\
-                exp(-del * 0.5) * temp);		\
-    }								\
-    else {								\
-        *cum = exp(-xsq * xsq * 0.5) * exp(-del * 0.5) * temp;	\
-        *ccum = 1.0 - *cum;						\
+        //function do_del(ccum: NumberW, cum: NumberW, log_p: boolean, X: number, temp: number, upper: number, lower: number, x: number):
+        /*
+        #define swap_tail
+            if (x > 0.) {// swap  ccum <--> cum 
+                temp = *cum; if(lower) *cum = *ccum; *ccum = temp; \
+            }
+        */
+        do_del(ccum, cum, log_p, y, temp, upper, lower, x);
+        //swap_tail;
+        if (x > 0.) {// swap  ccum <--> cum 
+            temp = cum.val;
+            if (lower) {
+                cum.val = ccum.val;
+            }
+            ccum.val = temp;
+        }
     }
 
-#define swap_tail						\
-    if (x > 0.) {/* swap  ccum <--> cum */			\
-        temp = *cum; if(lower) *cum = *ccum; *ccum = temp;	\
-    }
-
-    do_del(y);
-    swap_tail;
-    }
-
-/* else	  |x| > sqrt(32) = 5.657 :
- * the next two case differentiations were really for lower=T, log=F
- * Particularly	 *not*	for  log_p !
-
- * Cody had (-37.5193 < x  &&  x < 8.2924) ; R originally had y < 50
- *
- * Note that we do want symmetry(0), lower/upper -> hence use y
- */
-    else if((log_p && y < 1e170) /* avoid underflow below */
-    /*  ^^^^^ MM FIXME: can speedup for log_p and much larger |x| !
-     * Then, make use of  Abramowitz & Stegun, 26.2.13, something like
-
-     xsq = x*x;
-
-     if(xsq * DBL_EPSILON < 1.)
-        del = (1. - (1. - 5./(xsq+6.)) / (xsq+4.)) / (xsq+2.);
-     else
-        del = 0.;
-     *cum = -.5*xsq - M_LN_SQRT_2PI - log(x) + log1p(-del);
-     *ccum = log1p(-exp(*cum)); /.* ~ log(1) = 0 *./
-
-      swap_tail;
-
-     [Yes, but xsq might be infinite.]
-
-    */
-        || (lower && -37.5193 < x  &&  x < 8.2924)
-        || (upper && -8.2924  < x  &&  x < 37.5193)
+    /* else	  |x| > sqrt(32) = 5.657 :
+     * the next two case differentiations were really for lower=T, log=F
+     * Particularly	 *not*	for  log_p !
+    
+     * Cody had (-37.5193 < x  &&  x < 8.2924) ; R originally had y < 50
+     *
+     * Note that we do want symmetry(0), lower/upper -> hence use y
+     */
+    else if ((log_p && y < 1e170) /* avoid underflow below */
+        /*  ^^^^^ MM FIXME: can speedup for log_p and much larger |x| !
+         * Then, make use of  Abramowitz & Stegun, 26.2.13, something like
+    
+         xsq = x*x;
+    
+         if(xsq * DBL_EPSILON < 1.)
+            del = (1. - (1. - 5./(xsq+6.)) / (xsq+4.)) / (xsq+2.);
+         else
+            del = 0.;
+         *cum = -.5*xsq - M_LN_SQRT_2PI - log(x) + log1p(-del);
+         *ccum = log1p(-exp(*cum)); /.* ~ log(1) = 0 *./
+    
+          swap_tail;
+    
+         [Yes, but xsq might be infinite.]
+    
+        */
+        || (lower && -37.5193 < x && x < 8.2924)
+        || (upper && -8.2924 < x && x < 37.5193)
     ) {
 
-    /* Evaluate pnorm for x in (-37.5, -5.657) union (5.657, 37.5) */
-    xsq = 1.0 / (x * x); /* (1./x)*(1./x) might be better */
-    xnum = p[5] * xsq;
-    xden = xsq;
-    for (i = 0; i < 4; ++i) {
-        xnum = (xnum + p[i]) * xsq;
-        xden = (xden + q[i]) * xsq;
-    }
-    temp = xsq * (xnum + p[4]) / (xden + q[4]);
-    temp = (M_1_SQRT_2PI - temp) / y;
-
-    do_del(x);
-    swap_tail;
+        /* Evaluate pnorm for x in (-37.5, -5.657) union (5.657, 37.5) */
+        xsq = 1.0 / (x * x); /* (1./x)*(1./x) might be better */
+        xnum = p[5] * xsq;
+        xden = xsq;
+        for (i = 0; i < 4; ++i) {
+            xnum = (xnum + p[i]) * xsq;
+            xden = (xden + q[i]) * xsq;
+        }
+        temp = xsq * (xnum + p[4]) / (xden + q[4]);
+        temp = (M_1_SQRT_2PI - temp) / y;
+        do_del(ccum, cum, log_p, x, temp, upper, lower, x);
+        //do_del(x);
+        //swap_tail;
+        if (x > 0.) {// swap  ccum <--> cum 
+            temp = cum.val;
+            if (lower) {
+                cum.val = ccum.val;
+            }
+            ccum.val = temp;
+        }
     } else { /* large x such that probs are 0 or 1 */
-    if(x > 0) {	*cum = R_D__1; *ccum = R_D__0;	}
-    else {	        *cum = R_D__0; *ccum = R_D__1;	}
+        if (x > 0) {
+            cum.val = R_D__1(log_p);
+            ccum.val = R_D__0(log_p);
+        }
+        else {
+            cum.val = R_D__0(log_p);
+            ccum.val = R_D__1(log_p);
+        }
     }
 
 
-#ifdef NO_DENORMS
+
     /* do not return "denormalized" -- we do in R */
-    if(log_p) {
-    if(*cum > -min)	 *cum = -0.;
-    if(*ccum > -min)*ccum = -0.;
+    if (log_p) {
+        if (cum.val > -min) cum.val = -0.;
+        if (ccum.val > -min) { ccum.val = -0. };
     }
     else {
-    if(*cum < min)	 *cum = 0.;
-    if(*ccum < min)	*ccum = 0.;
+        if (cum.val < min) cum.val = 0.;
+        if (ccum.val < min) ccum.val = 0.;
     }
-#endif
+
     return;
 }

@@ -1,6 +1,6 @@
 /*  AUTHOR
  *  Jacob Bogers, jkfbogers@gmail.com
- *  March 16, 2017
+ *  March 14, 2017
  *
  *  ORIGINAL AUTHOR
  *  Mathlib : A C Library of Special Functions
@@ -79,7 +79,7 @@ import {
 } from './pt';
 
 import {
-    pnorm
+    pnorm5 as pnorm
 } from './pnorm';
 
 import {

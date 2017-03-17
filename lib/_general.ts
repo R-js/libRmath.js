@@ -36,10 +36,21 @@ export function imin2(x: number, y: number): number {
     return (x < y) ? x : y;
 }
 
+/* Use 0.5 - p + 0.5 to perhaps gain 1 bit of accuracy */
+export function R_D_Lval(lower_tail: boolean, p: number): number {
+    return (lower_tail ? (p) : (0.5 - (p) + 0.5))	/*  p  */
+}
+
+export function R_D_Cval(lower_tail: boolean, p: number): number {
+    return (lower_tail ? (0.5 - (p) + 0.5) : (p))	/*  1 - p */
+}
+
 
 /* 
     nearbyint is C99, so all platforms should have it (and AFAIK, all do) 
 */
+
+export const M_SQRT_32 = 5.656854249492380195206754896838; /* sqrt(32) */
 export const DBL_MANT_DIG = 18;
 export const FLT_MANT_DIG = DBL_MANT_DIG;
 export const M_LN2 = 0.693147180559945309417232121458;	/* ln(2) */
@@ -80,14 +91,14 @@ export const M_PI_2 = Math.PI / 2;
 export const M_LN_SQRT_PI = 0.5723649429247; // log(sqrt(pi)) 
 export const M_LN_SQRT_2PI = 0.918938533204672741780329736406; // log(sqrt(2*pi)) 
 export const M_LN_SQRT_PId2 = 0.225791352644727432363097614947;	// log(sqrt(pi/2)) 
-export const M_LN10 =  2.30258509299404568402	/* log_e 10 */
+export const M_LN10 = 2.30258509299404568402	/* log_e 10 */
 
 export const R_D__1 = (log_p: boolean) => {
     return log_p ? 0. : 1.0;
 };
 
-export const R_D__0 = (log: boolean): number => {
-    return log ? ML_NEGINF : 0.0;
+export const R_D__0 = (log_p: boolean): number => {
+    return log_p ? ML_NEGINF : 0.0;
 };
 
 export const ML_VALID = (x: number) => !ISNAN(x);
@@ -103,10 +114,6 @@ export function R_P_bounds_Inf_01(lower_tail: boolean, log_p: boolean, x: number
 }
 
 
-
-export function R_D_Lval(lower_tail: boolean, p: number): number {
-    return (lower_tail ? (p) : (0.5 - (p) + 0.5))	/*  p  */
-}
 
 export function R_P_bounds_01(lower_tail: boolean, log_p: boolean, x: number, x_min: number, x_max: number): number | undefined {
     if (x <= x_min) return R_DT_0(lower_tail, log_p);
