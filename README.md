@@ -17,6 +17,10 @@ I first list the modules __DONE__ so far, lets start at a positive note)
 
 | original c module | js/ts module name | port date | R - base functions |
 |------------------|--------------------|-------------|--------------------|
+qbeta.c           | ./lib/qbeta.ts| 18 March 2017 |  inverse cummulative distribution function  |
+pweibull.c           |./lib/pweibull.ts |18 Match 2017  | The distribution function of the Weibull distribution. |
+punif.c           | ./lib/punif.ts | 18 Match 2017 |  The distribution function of the uniform distribution. |
+ptukey.c           |./lib/ptukey.ts| 18 March 2017 |Computes the probability that the maximum of rr studentized ranges, each based on cc means and with df degrees of freedom  for the standard error, is less than q. |
 pnorm.c           | ./lib/pnorm.ts| 17 March 2017  |  normal distribution function |
 ppois.c           | ./lib/pois.ts | 17 March 2017 |  The distribution function of the Poisson distribution.  |
 pt.c           | ./lib/pt.ts | 16 March | t distrib. with n degrees of freedom).  |
@@ -94,9 +98,11 @@ plnorm.c     | ./lib/plnorm.ts | 14 March |n The lognormal distribution function
 
 ### TODO
 
+
+
 | original c module | ported to javascript? | tested | R - base functions |
 |------------------|--------------------|-------------|--------------------|
-bd0.c           | done ./lib/bd0.ts | no | hidden, used by modules dbinom.c ,dpois.c dt.c |
+bd0.c           | done  | no | hidden, used by modules dbinom.c ,dpois.c dt.c |
 bessel_i.c           | done  | no | R "besseli" Modified Bessel function of first kind. |
 bessel_j.c           | done | no | R "besselj" gives the Bessel function of the first kind.  |
 bessel_k.c           | done | no | R "besselK" function http://www.netlib.org/specfun/rkbesl |
@@ -161,14 +167,14 @@ pnbinom.c           | done| no | The distribution function of the negative binom
 pnchisq.c           | done| no |  Algorithm AS275: Computing the non-central chi-squared distribution function. |
 pnf.c           |done | no | The distribution function of the non-central F distribution. |
 pnorm.c           | done| no  |  normal distribution function |
-pnt.c           | done| | no | Cumulative probability at t of the non-central t-distribution,  with df degrees of freedom (may be fractional) and non-centrality,  parameter delta.
+pnt.c           | done| no | Cumulative probability at t of the non-central t-distribution,  with df degrees of freedom (may be fractional) and non-centrality,  parameter delta.
 polygamma.c           | done| no |  Compute the derivatives of the psi function   and polygamma functions. |
 ppois.c           | done | no |  The distribution function of the Poisson distribution.  |
 pt.c           |done | no | t distrib. with n degrees of freedom).  |
-ptukey.c           | TODO| | |
-punif.c           | TODO| | |
-pweibull.c           |TODO | | |
-qbeta.c           | TODO| | |
+ptukey.c           | done| no |Computes the probability that the maximum of rr studentized ranges, each based on cc means and with df degrees of freedom  for the standard error, is less than q. |
+punif.c           | done| no |  The distribution function of the uniform distribution. |
+pweibull.c           |done |no | The distribution function of the Weibull distribution. |
+qbeta.c           | done| no |  inverse cummulative distribution function  |
 qbinom.c           | TODO| | |
 qcauchy.c           | TODO| | |
 qchisq.c           |TODO | | |
@@ -217,3 +223,5 @@ stirlerr.c           | done ./lib/stirlerr | no | Computes the log of the error 
 toms708.c           |NAP | no | ported instead Java Version  from James Curran (j.curran@auckland.ac.nz) (Java version) |
 wilcox.c           | TODO| | |
 
+Also:
+Examine the usage of  *R_DT_Log* and * R_DT_log* (note the one captial letter difference) functions in all codes

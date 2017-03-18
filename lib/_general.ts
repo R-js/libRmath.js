@@ -62,7 +62,7 @@ export const R_rint = nearbyint;
 export const M_2PI = 6.283185307179586476925286766559;
 export const M_LN_2PI = 1.837877066409345483560659472811;
 export const sqrt = Math.sqrt;
-export const DBL_EPSILON = 1E-16; //true for javascript, this was tested
+export const DBL_EPSILON = 6E-17; //true for javascript, this was tested
 export const sinh = Math.sinh;
 export const DBL_MAX = Number.MAX_VALUE;
 export const exp = Math.exp;
@@ -113,7 +113,9 @@ export function R_P_bounds_Inf_01(lower_tail: boolean, log_p: boolean, x: number
     return undefined;
 }
 
-
+export function R_D_half(log_p: boolean) {
+    return (log_p ? -M_LN2 : 0.5)		// 1/2 (lower- or upper tail)
+}
 
 export function R_P_bounds_01(lower_tail: boolean, log_p: boolean, x: number, x_min: number, x_max: number): number | undefined {
     if (x <= x_min) return R_DT_0(lower_tail, log_p);

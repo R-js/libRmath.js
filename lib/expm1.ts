@@ -48,10 +48,24 @@ import {
     DBL_EPSILON,
     M_LN2,
     log,
-    R_D_log
+    R_D_log,
+    R_D_Lval,
+    R_D_Cval
 } from './_general';
 
 import { log1p } from './log1p';
+
+
+
+export function R_DT_qIv(lower_tail: boolean, log_p: boolean, p: number) {
+    return (log_p ? (lower_tail ? exp(p) : - expm1(p)) : R_D_Lval(lower_tail, p));
+}
+
+export function R_DT_CIv(lower_tail: boolean, log_p: boolean, p: number) {
+    return (log_p ? (lower_tail ? -expm1(p) : exp(p)) : R_D_Cval(lower_tail, p));
+}
+
+
 
 export function expm1(x: number) {
 
@@ -89,6 +103,11 @@ export function R_DT_Clog(lower_tail: boolean, log_p: boolean, p: number): numbe
     return (lower_tail ? R_D_LExp(log_p, p) : R_D_log(log_p, p))/* log(1-p) in qF*/
 }
 
-export function R_DT_Log(lower_tail: boolean, log_p: boolean, p: number): number { /* log(p) in qF */
+export function R_DT_log(lower_tail: boolean, log_p: boolean, p: number): number { /* log(p) in qF */
     return (lower_tail ? R_D_log(log_p, p) : R_D_LExp(log_p, p));
+}
+
+
+export function R_DT_Log(lower_tail: boolean, log_p: boolean, p: number): number { /* log(p) in qF */
+    return (lower_tail ?  p : R_D_LExp(log_p, p));
 }
