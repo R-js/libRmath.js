@@ -518,3 +518,9 @@ export function R_Q_P01_check(log_p: boolean, p: number): number | undefined {
     }
     return undefined;
 }
+
+//#define R_D_qIv(p)	(log_p	? exp(p) : (p))		/*  p  in qF(p,..) */
+export function R_D_qIv(log_p: boolean, p: number) {
+    return log_p ? exp(p) : p;
+}
+

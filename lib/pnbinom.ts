@@ -46,7 +46,7 @@ import { pbeta } from './pbeta';
 
 import { Toms708, NumberW } from './toms708';
 
-export function pnbinom(x: number, size: number, prob: number, lower_tail: boolean, log_p: boolean) {
+export function pnbinom(x: number, size: number, prob: number, lower_tail: boolean, log_p: boolean): number {
 
     if (ISNAN(x) || ISNAN(size) || ISNAN(prob))
         return x + size + prob;
@@ -62,8 +62,8 @@ export function pnbinom(x: number, size: number, prob: number, lower_tail: boole
     if (size == 0)
         return (x >= 0) ? R_DT_1(lower_tail, log_p) : R_DT_0(lower_tail, log_p);
 
-    if (x < 0) return R_DT_0;
-    if (!R_FINITE(x)) return R_DT_1;
+    if (x < 0) return R_DT_0(lower_tail, log_p);
+    if (!R_FINITE(x)) return R_DT_1(lower_tail, log_p);
     x = floor(x + 1e-7);
     return pbeta(prob, size, x + 1, lower_tail, log_p);
 }

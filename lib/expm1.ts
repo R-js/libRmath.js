@@ -109,5 +109,5 @@ export function R_DT_log(lower_tail: boolean, log_p: boolean, p: number): number
 
 
 export function R_DT_Log(lower_tail: boolean, log_p: boolean, p: number): number { /* log(p) in qF */
-    return (lower_tail ?  p : R_D_LExp(log_p, p));
+    return (lower_tail ? p : R_D_LExp(log_p, p));
 }

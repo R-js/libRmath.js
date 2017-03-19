@@ -8,7 +8,7 @@ https://svn.r-project.org/R/trunk/src/nmath/
 ## Progress (DONE and TODO)
 
 
-Work in progress (see list below of all c modules that need to be ported), please considering helping out and bring R core functionality 
+Work in progress (see list below of all c modules that need to be ported), please considering helping out and bring R core functionality
 to Javascript.
 
 I first list the modules __DONE__ so far, lets start at a positive note)
@@ -17,6 +17,9 @@ I first list the modules __DONE__ so far, lets start at a positive note)
 
 | original c module | js/ts module name | port date | R - base functions |
 |------------------|--------------------|-------------|--------------------|
+qnchisq.c           | ./lib/qnchisq.ts | 19 March |the quantile function of the  noncentral chi-squared distribution  |
+qnf.c           | ./lib/qnf.ts  | 19 March  | The quantile function of the non-central F distribution.  |
+qnbinom.c           |./lib/qnbinom.ts  | 19 March 2017 | The quantile function of the negative binomial distribution. |
 qnbeta.c           | ./lib/qnbeta.ts| 19 March 2017 | the quantile function of the noncentral beta distribution |
 qlnorm.c           | ./lib/qlnorm.ts | 19 March 2017  |  This the lognormal quantile function. |
 qhyper.c           | ./lib/qhyper.ts | 19 March 2017|     The quantile function of the hypergeometric distribution. |
@@ -195,11 +198,11 @@ qgeom.c           |done | no |   The quantile function of the geometric distribu
 qhyper.c           | done| no |     The quantile function of the hypergeometric distribution. |
 qlnorm.c           | done| no  |  This the lognormal quantile function. |
 qlogis.c           | done | no |  The Logistic Distribution  quantile function. |
-qnbeta.c           | done| no  | the quantile function of the noncentral beta distribution | 
-qnbinom.c           |  | no | |
-qnchisq.c           |TODO | | |
-qnf.c           |TODO | | |
-qnorm.c           | TODO| | |
+qnbeta.c           | done| no  | the quantile function of the noncentral beta distribution |
+qnbinom.c           |done  | no | The quantile function of the negative binomial distribution. |
+qnchisq.c           |done | no |the quantile function of the  noncentral chi-squared distribution    |
+qnf.c           |done |no  | The quantile function of the non-central F distribution.  |
+qnorm.c           | done| no | Compute the quantile function for the normal distribution. |
 qnt.c           | TODO| | |
 qpois.c                           |TODO | | |
 qt.c           |TODO | | |

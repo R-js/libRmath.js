@@ -18,12 +18,14 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program; if not, a copy is available at
  *  https://www.R-project.org/Licenses/
+ *
+ * 
+ *  the quantile function of the  noncentral chi-squared distribution  
  */
 
-#include "nmath.h"
-#include "dpq.h"
 
-double qnchisq(double p, double df, double ncp, int lower_tail, int log_p)
+
+export functiondouble qnchisq(double p, double df, double ncp, int lower_tail, int log_p)
 {
     const static double accu = 1e-13;
     const static double racc = 4*DBL_EPSILON;
