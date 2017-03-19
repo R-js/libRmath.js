@@ -1,9 +1,11 @@
-/*
-/*
+/*  AUTHOR
+ *  Jacob Bogers, jkfbogers@gmail.com
+ *  March 18, 2017
+ *
+ *  ORIGINAL AUTHOR
  *  Mathlib : A C Library of Special Functions
  *  Copyright (C) 1998 Ross Ihaka
- *  Copyright (C) 2000-8 The R Core Team
- *  Copyright (C) 2005 The R Foundation
+ *  Copyright (C) 2000 The R Core Team
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -21,19 +23,27 @@
  *
  *  DESCRIPTION
  *
- *    This the lognormal quantile function.
+ *    The quantile function of the exponential distribution.
+ *
  */
 
-#include "nmath.h"
-#include "dpq.h"
+import { ISNAN, R_DT_0, ML_ERR_return_NAN, R_Q_P01_check } from './_general';
 
-double qlnorm(double p, double meanlog, double sdlog, int lower_tail, int log_p)
-{
-#ifdef IEEE_754
-    if (ISNAN(p) || ISNAN(meanlog) || ISNAN(sdlog))
-	return p + meanlog + sdlog;
-#endif
-    R_Q_P01_boundaries(p, 0, ML_POSINF);
+import { R_DT_Clog } from './expm1';
 
-    return exp(qnorm(p, meanlog, sdlog, lower_tail, log_p));
+export function qexp(p: number, scale: number, lower_tail: boolean, log_p: boolean): number {
+
+    if (ISNAN(p) || ISNAN(scale))
+        return p + scale;
+
+    if (scale < 0) return ML_ERR_return_NAN();
+
+    let rc = R_Q_P01_check(log_p, p);
+    if (rc !== undefined) {
+        return rc;
+    }
+    if (p == R_DT_0(lower_tail, log_p))
+        return 0;
+
+    return - scale * R_DT_Clog(lower_tail, log_p, p);
 }

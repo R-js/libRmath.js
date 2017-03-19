@@ -117,10 +117,10 @@ export function pnbeta2(x: number, o_x: number, a: number, b: number, ncp: numbe
         return (log_p ? log(ans) : ans);
     }
     else {
-        if (ans > 1. - 1e-10) ML_ERROR(ME.ME_PRECISION, "pnbeta");
+        if (ans > 1. - 1e-10) ML_ERROR(ME.ME_PRECISION, 'pnbeta');
         if (ans > 1.0) ans = 1.0;  /* Precaution */
         /* include standalone case */
-        return (log_p ? log1p((double) - ans) : (1. - ans));
+        return (log_p ? log1p( - ans) : (1. - ans));
 
     }
 }

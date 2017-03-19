@@ -1,8 +1,7 @@
 /*
-/*
  *  Mathlib : A C Library of Special Functions
  *  Copyright (C) 1998 Ross Ihaka
- *  Copyright (C) 2000-8 The R Core Team
+ *  Copyright (C) 2000 The R Core Team
  *  Copyright (C) 2005 The R Foundation
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -21,19 +20,21 @@
  *
  *  DESCRIPTION
  *
- *    This the lognormal quantile function.
+ *    The quantile function of the Weibull distribution.
  */
 
 #include "nmath.h"
 #include "dpq.h"
 
-double qlnorm(double p, double meanlog, double sdlog, int lower_tail, int log_p)
+double qweibull(double p, double shape, double scale, int lower_tail, int log_p)
 {
 #ifdef IEEE_754
-    if (ISNAN(p) || ISNAN(meanlog) || ISNAN(sdlog))
-	return p + meanlog + sdlog;
+    if (ISNAN(p) || ISNAN(shape) || ISNAN(scale))
+	return p + shape + scale;
 #endif
+    if (shape <= 0 || scale <= 0) ML_ERR_return_NAN;
+
     R_Q_P01_boundaries(p, 0, ML_POSINF);
 
-    return exp(qnorm(p, meanlog, sdlog, lower_tail, log_p));
+    return scale * pow(- R_DT_Clog(p), 1./shape) ;
 }

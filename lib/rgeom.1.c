@@ -1,6 +1,6 @@
 /*
  *  Mathlib : A C Library of Special Functions
- *  Copyright (C) 1998 Ross Ihaka
+ *  Copyright (C) 1998 Ross Ihaka and the R Core Team.
  *  Copyright (C) 2000 The R Core Team
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -17,26 +17,34 @@
  *  along with this program; if not, a copy is available at
  *  https://www.R-project.org/Licenses/
  *
+ *  SYNOPSIS
+ *
+ *    #include <Rmath.h>
+ *    double rgeom(double p);
+ *
  *  DESCRIPTION
  *
- *    The quantile function of the exponential distribution.
+ *    Random variates from the geometric distribution.
  *
+ *  NOTES
+ *
+ *    We generate lambda as exponential with scale parameter
+ *    p / (1 - p).  Return a Poisson deviate with mean lambda.
+ *    See Example 1.5 in Devroye (1986), Chapter 10, pages 488f.
+ *
+ *  REFERENCE
+ *
+ *    Devroye, L. (1986).
+ *    Non-Uniform Random Variate Generation.
+ *    New York: Springer-Verlag.
+ *    Pages 488f.
  */
 
 #include "nmath.h"
-#include "dpq.h"
 
-double qexp(double p, double scale, int lower_tail, int log_p)
+double rgeom(double p)
 {
-#ifdef IEEE_754
-    if (ISNAN(p) || ISNAN(scale))
-	return p + scale;
-#endif
-    if (scale < 0) ML_ERR_return_NAN;
+    if (!R_FINITE(p) || p <= 0 || p > 1) ML_ERR_return_NAN;
 
-    R_Q_P01_check(p);
-    if (p == R_DT_0)
-	return 0;
-
-    return - scale * R_DT_Clog(p);
+    return rpois(exp_rand() * ((1 - p) / p));
 }

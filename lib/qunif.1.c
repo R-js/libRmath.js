@@ -1,9 +1,7 @@
 /*
-/*
  *  Mathlib : A C Library of Special Functions
  *  Copyright (C) 1998 Ross Ihaka
- *  Copyright (C) 2000-8 The R Core Team
- *  Copyright (C) 2005 The R Foundation
+ *  Copyright (C) 2000-2006 The R Core Team
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -21,19 +19,26 @@
  *
  *  DESCRIPTION
  *
- *    This the lognormal quantile function.
+ *    The quantile function of the uniform distribution.
  */
 
 #include "nmath.h"
 #include "dpq.h"
 
-double qlnorm(double p, double meanlog, double sdlog, int lower_tail, int log_p)
+double qunif(double p, double a, double b, int lower_tail, int log_p)
 {
 #ifdef IEEE_754
-    if (ISNAN(p) || ISNAN(meanlog) || ISNAN(sdlog))
-	return p + meanlog + sdlog;
+    if (ISNAN(p) || ISNAN(a) || ISNAN(b))
+	return p + a + b;
 #endif
-    R_Q_P01_boundaries(p, 0, ML_POSINF);
+    R_Q_P01_check(p);
+    if (!R_FINITE(a) || !R_FINITE(b)) ML_ERR_return_NAN;
+    if (b < a) ML_ERR_return_NAN;
+    if (b == a) return a;
 
-    return exp(qnorm(p, meanlog, sdlog, lower_tail, log_p));
+    return a + R_DT_qIv(p) * (b - a);
 }
+
+
+
+

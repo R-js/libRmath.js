@@ -17,7 +17,15 @@ I first list the modules __DONE__ so far, lets start at a positive note)
 
 | original c module | js/ts module name | port date | R - base functions |
 |------------------|--------------------|-------------|--------------------|
-qbeta.c           | ./lib/qbeta.ts| 18 March 2017 |  inverse cummulative distribution function  |
+qhyper.c           | ./lib/qhyper.ts | 19 March 2017|     The quantile function of the hypergeometric distribution. |
+qgeom.c           | ./lib/qgeom.ts | 19 March 2017 |   The quantile function of the geometric distribution. |
+qgamma.c           |./lib/qgamma.ts | 18 March 2017 | Compute the quantile function of the gamma distribution. |
+qf.c           |./lib/qf.ts |  18 March 2017  |  The quantile function of the F distribution. |
+qexp.c           |./lib/qexp.ts| 18 March 2017  |    The quantile function of the exponential distribution.  |
+qcauchy.c           | ./lib/qcauchy.ts |  18 March 2017 |The quantile function of the Cauchy distribution. |
+qchisq.c           | ./lib/qchisq.ts | 18 Match 2017 | The quantile function of the chi-squared distribution. |
+qbinom.c           | ./lib/qbinom.ts|18 March 2017 | The quantile function of the binomial distribution. |
+qbeta.c           | ./lib/qbeta.ts| 18 March 2017 | The quantile function of the beta distribution.   |
 pweibull.c           |./lib/pweibull.ts |18 Match 2017  | The distribution function of the Weibull distribution. |
 punif.c           | ./lib/punif.ts | 18 Match 2017 |  The distribution function of the uniform distribution. |
 ptukey.c           |./lib/ptukey.ts| 18 March 2017 |Computes the probability that the maximum of rr studentized ranges, each based on cc means and with df degrees of freedom  for the standard error, is less than q. |
@@ -174,15 +182,15 @@ pt.c           |done | no | t distrib. with n degrees of freedom).  |
 ptukey.c           | done| no |Computes the probability that the maximum of rr studentized ranges, each based on cc means and with df degrees of freedom  for the standard error, is less than q. |
 punif.c           | done| no |  The distribution function of the uniform distribution. |
 pweibull.c           |done |no | The distribution function of the Weibull distribution. |
-qbeta.c           | done| no |  inverse cummulative distribution function  |
-qbinom.c           | TODO| | |
-qcauchy.c           | TODO| | |
-qchisq.c           |TODO | | |
-qexp.c           |TODO | | |
-qf.c           |TODO | | |
-qgamma.c           |TODO | | |
-qgeom.c           |TODO | | |
-qhyper.c           | TODO| | |
+qbeta.c           | done| no | The quantile function of the beta distribution. |
+qbinom.c           | done| no | The quantile function of the binomial distribution. |
+qcauchy.c           | done | no |The quantile function of the Cauchy distribution. |
+qchisq.c           | done | no | The quantile function of the chi-squared distribution. |
+qexp.c           |done|no |    The quantile function of the exponential distribution.  |
+qf.c           |done | no |  The quantile function of the F distribution. |
+qgamma.c           |done | no | Compute the quantile function of the gamma distribution. |
+qgeom.c           |done | no |   The quantile function of the geometric distribution. |
+qhyper.c           | done| no |     The quantile function of the hypergeometric distribution. |
 qlnorm.c           | TODO| | |
 qlogis.c           | TODO| | |
 qnbeta.c           | TODO| | | 

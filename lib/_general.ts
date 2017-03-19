@@ -155,12 +155,18 @@ export enum ME {
     ME_UNDERFLOW = 16 // and underflow occured (important for IEEE)
 }
 
+const lfastchoose = Rf_lfastchoose;
+
 export const MATHLIB_WARNING = function (fmt: string, x: any) {
     console.warn(fmt, x);
 };
 
 export const MATHLIB_WARNING2 = function (fmt: string, x: any, x2: any) {
     console.warn(fmt, x, x2);
+};
+
+export const MATHLIB_WARNING3 = function (fmt: string, x: any, x2: any, x3: any) {
+    console.warn(fmt, x, x2, x3);
 };
 
 export const MATHLIB_WARNING4 = function (fmt: string, x: any, x2: any, x3: any, x4: any) {
@@ -481,3 +487,34 @@ export function R_D_log(log_p: boolean, p: number) {
     return (log_p ? (p) : log(p))	/* log(p) */
 }
 
+export function R_Q_P01_boundaries(lower_tail: boolean, log_p: boolean, p: number, _LEFT_: number, _RIGHT_: number): number | undefined {
+    if (log_p) {
+        if (p > 0) {
+            return ML_ERR_return_NAN();
+        }
+        if (p == 0) /* upper bound*/
+            return lower_tail ? _RIGHT_ : _LEFT_;
+        if (p == ML_NEGINF)
+            return lower_tail ? _LEFT_ : _RIGHT_;
+    }
+    else { /* !log_p */
+        if (p < 0 || p > 1) {
+            return ML_ERR_return_NAN();
+        }
+        if (p == 0)
+            return lower_tail ? _LEFT_ : _RIGHT_;
+        if (p == 1)
+            return lower_tail ? _RIGHT_ : _LEFT_;
+    }
+    return undefined;
+}
+
+
+export function R_Q_P01_check(log_p: boolean, p: number): number | undefined {
+    if ((log_p && p > 0)
+        || (!log_p && (p < 0 || p > 1))
+    ) {
+        return ML_ERR_return_NAN();
+    }
+    return undefined;
+}

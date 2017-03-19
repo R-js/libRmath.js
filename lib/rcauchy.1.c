@@ -1,9 +1,7 @@
 /*
-/*
  *  Mathlib : A C Library of Special Functions
  *  Copyright (C) 1998 Ross Ihaka
- *  Copyright (C) 2000-8 The R Core Team
- *  Copyright (C) 2005 The R Foundation
+ *  Copyright (C) 2000--2008 The R Core Team
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -19,21 +17,24 @@
  *  along with this program; if not, a copy is available at
  *  https://www.R-project.org/Licenses/
  *
+ *  SYNOPSIS
+ *
+ *    #include <Rmath.h>
+ *    double rcauchy(double location, double scale);
+ *
  *  DESCRIPTION
  *
- *    This the lognormal quantile function.
+ *    Random variates from the Cauchy distribution.
  */
 
 #include "nmath.h"
-#include "dpq.h"
 
-double qlnorm(double p, double meanlog, double sdlog, int lower_tail, int log_p)
+double rcauchy(double location, double scale)
 {
-#ifdef IEEE_754
-    if (ISNAN(p) || ISNAN(meanlog) || ISNAN(sdlog))
-	return p + meanlog + sdlog;
-#endif
-    R_Q_P01_boundaries(p, 0, ML_POSINF);
-
-    return exp(qnorm(p, meanlog, sdlog, lower_tail, log_p));
+    if (ISNAN(location) || !R_FINITE(scale) || scale < 0)
+	ML_ERR_return_NAN;
+    if (scale == 0. || !R_FINITE(location))
+	return location;
+    else
+	return location + scale * tan(M_PI * unif_rand());
 }

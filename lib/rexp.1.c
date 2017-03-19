@@ -1,8 +1,7 @@
 /*
  *  Mathlib : A C Library of Special Functions
- *  Copyright (C) 1998 	     Ross Ihaka
- *  Copyright (C) 2000-12    The R Core Team
- *  Copyright (C) 2004--2005 The R Foundation
+ *  Copyright (C) 1998 Ross Ihaka
+ *  Copyright (C) 2000--2008 The R Core Team
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -18,26 +17,25 @@
  *  along with this program; if not, a copy is available at
  *  https://www.R-project.org/Licenses/
  *
+ *  SYNOPSIS
+ *
+ *    #include <Rmath.h>
+ *    double rexp(double scale)
+ *
  *  DESCRIPTION
  *
- *    The quantile function of the geometric distribution.
+ *    Random variates from the exponential distribution.
+ *
  */
 
 #include "nmath.h"
-#include "dpq.h"
 
-double qgeom(double p, double prob, int lower_tail, int log_p)
+double rexp(double scale)
 {
-    if (prob <= 0 || prob > 1) ML_ERR_return_NAN;
-
-    R_Q_P01_boundaries(p, 0, ML_POSINF);
-
-#ifdef IEEE_754
-    if (ISNAN(p) || ISNAN(prob))
-	return p + prob;
-#endif
-
-    if (prob == 1) return(0);
-/* add a fuzz to ensure left continuity, but value must be >= 0 */
-    return fmax2(0, ceil(R_DT_Clog(p) / log1p(- prob) - 1 - 1e-12));
+    if (!R_FINITE(scale) || scale <= 0.0) {
+	if(scale == 0.) return 0.;
+	/* else */
+	ML_ERR_return_NAN;
+    }
+    return scale * exp_rand(); // --> in ./sexp.c
 }

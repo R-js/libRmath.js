@@ -1,9 +1,7 @@
 /*
-/*
  *  Mathlib : A C Library of Special Functions
  *  Copyright (C) 1998 Ross Ihaka
- *  Copyright (C) 2000-8 The R Core Team
- *  Copyright (C) 2005 The R Foundation
+ *  Copyright (C) 2000-2008 The R Core Team
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -21,19 +19,25 @@
  *
  *  DESCRIPTION
  *
- *    This the lognormal quantile function.
+ *    Pseudo-random variates from a t distribution.
+ *
+ *  NOTES
+ *
+ *    This function calls rchisq and rnorm to do the real work.
  */
 
 #include "nmath.h"
-#include "dpq.h"
 
-double qlnorm(double p, double meanlog, double sdlog, int lower_tail, int log_p)
+double rt(double df)
 {
-#ifdef IEEE_754
-    if (ISNAN(p) || ISNAN(meanlog) || ISNAN(sdlog))
-	return p + meanlog + sdlog;
-#endif
-    R_Q_P01_boundaries(p, 0, ML_POSINF);
+    if (ISNAN(df) || df <= 0.0)	ML_ERR_return_NAN;
 
-    return exp(qnorm(p, meanlog, sdlog, lower_tail, log_p));
+    if(!R_FINITE(df))
+	return norm_rand();
+    else {
+/* Some compilers (including MW6) evaluated this from right to left
+	return norm_rand() / sqrt(rchisq(df) / df); */
+	double num = norm_rand();
+	return num / sqrt(rchisq(df) / df);
+    }
 }

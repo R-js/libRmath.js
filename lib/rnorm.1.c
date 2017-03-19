@@ -1,9 +1,7 @@
 /*
-/*
  *  Mathlib : A C Library of Special Functions
  *  Copyright (C) 1998 Ross Ihaka
- *  Copyright (C) 2000-8 The R Core Team
- *  Copyright (C) 2005 The R Foundation
+ *  Copyright (C) 2000 The R Core Team
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -19,21 +17,25 @@
  *  along with this program; if not, a copy is available at
  *  https://www.R-project.org/Licenses/
  *
+ *  SYNOPSIS
+ *
+ *    #include "Rnorm.h"
+ *    double rnorm(double mu, double sigma);
+ *
  *  DESCRIPTION
  *
- *    This the lognormal quantile function.
+ *    Random variates from the normal distribution.
+ *
  */
 
 #include "nmath.h"
-#include "dpq.h"
 
-double qlnorm(double p, double meanlog, double sdlog, int lower_tail, int log_p)
+double rnorm(double mu, double sigma)
 {
-#ifdef IEEE_754
-    if (ISNAN(p) || ISNAN(meanlog) || ISNAN(sdlog))
-	return p + meanlog + sdlog;
-#endif
-    R_Q_P01_boundaries(p, 0, ML_POSINF);
-
-    return exp(qnorm(p, meanlog, sdlog, lower_tail, log_p));
+    if (ISNAN(mu) || !R_FINITE(sigma) || sigma < 0.)
+	ML_ERR_return_NAN;
+    if (sigma == 0. || !R_FINITE(mu))
+	return mu; /* includes mu = +/- Inf with finite sigma */
+    else
+	return mu + sigma * norm_rand();
 }

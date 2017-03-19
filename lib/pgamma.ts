@@ -98,7 +98,7 @@ import { expm1 } from './expm1';
 import { dpois_raw } from './dpois';
 import { dnorm } from './dnorm';
 
-import { pnorm } from './pnorm';
+import { pnorm5 as pnorm } from './pnorm';
 
 export const scalefactor = sqr(sqr(sqr(4294967296.0)));
 

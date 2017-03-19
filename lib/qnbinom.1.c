@@ -1,8 +1,8 @@
 /*
  *  Mathlib : A C Library of Special Functions
  *  Copyright (C) 1998 Ross Ihaka
- *  Copyright (C) 2000-2009 The R Core Team
- *  Copyright (C) 2003-2009 The R Foundation
+ *  Copyright (C) 2000-2014 The R Core Team
+ *  Copyright (C) 2005 The R Foundation
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -18,9 +18,19 @@
  *  along with this program; if not, a copy is available at
  *  https://www.R-project.org/Licenses/
  *
+ *  SYNOPSIS
+ *
+ *	#include <Rmath.h>
+ *	double qnbinom(double p, double size, double prob,
+ *                     int lower_tail, int log_p)
+ *
  *  DESCRIPTION
  *
- *	The quantile function of the binomial distribution.
+ *	The quantile function of the negative binomial distribution.
+ *
+ *  NOTES
+ *
+ *	x = the number of failures before the n-th success
  *
  *  METHOD
  *
@@ -30,6 +40,7 @@
  *	1 or 2.	 A search is then conducted of values close to
  *	this initial start point.
  */
+
 #include "nmath.h"
 #include "dpq.h"
 
@@ -38,97 +49,85 @@ do_search(double y, double *z, double p, double n, double pr, double incr)
 {
     if(*z >= p) {
 			/* search to the left */
-#ifdef DEBUG_qbinom
-	REprintf("\tnew z=%7g >= p = %7g  --> search to left (y--) ..\n", z,p);
-#endif
 	for(;;) {
-	    double newz;
 	    if(y == 0 ||
-	       (newz = pbinom(y - incr, n, pr, /*l._t.*/TRUE, /*log_p*/FALSE)) < p)
+	       (*z = pnbinom(y - incr, n, pr, /*l._t.*/TRUE, /*log_p*/FALSE)) < p)
 		return y;
 	    y = fmax2(0, y - incr);
-	    *z = newz;
 	}
     }
     else {		/* search to the right */
-#ifdef DEBUG_qbinom
-	REprintf("\tnew z=%7g < p = %7g  --> search to right (y++) ..\n", z,p);
-#endif
+
 	for(;;) {
-	    y = fmin2(y + incr, n);
-	    if(y == n ||
-	       (*z = pbinom(y, n, pr, /*l._t.*/TRUE, /*log_p*/FALSE)) >= p)
+	    y = y + incr;
+	    if((*z = pnbinom(y, n, pr, /*l._t.*/TRUE, /*log_p*/FALSE)) >= p)
 		return y;
 	}
     }
 }
 
 
-double qbinom(double p, double n, double pr, int lower_tail, int log_p)
+double qnbinom(double p, double size, double prob, int lower_tail, int log_p)
 {
-    double q, mu, sigma, gamma, z, y;
+    double P, Q, mu, sigma, gamma, z, y;
 
 #ifdef IEEE_754
-    if (ISNAN(p) || ISNAN(n) || ISNAN(pr))
-	return p + n + pr;
+    if (ISNAN(p) || ISNAN(size) || ISNAN(prob))
+	return p + size + prob;
 #endif
-    if(!R_FINITE(n) || !R_FINITE(pr))
-	ML_ERR_return_NAN;
-    /* if log_p is true, p = -Inf is a legitimate value */
-    if(!R_FINITE(p) && !log_p)
-	ML_ERR_return_NAN;
 
-    if(n != floor(n + 0.5)) ML_ERR_return_NAN;
-    if (pr < 0 || pr > 1 || n < 0)
-	ML_ERR_return_NAN;
+    /* this happens if specified via mu, size, since
+       prob == size/(size+mu)
+    */
+    if (prob == 0 && size == 0) return 0;
 
-    R_Q_P01_boundaries(p, 0, n);
+    if (prob <= 0 || prob > 1 || size < 0) ML_ERR_return_NAN;
+ 
+    if (prob == 1 || size == 0) return 0;
 
-    if (pr == 0. || n == 0) return 0.;
+    R_Q_P01_boundaries(p, 0, ML_POSINF);
 
-    q = 1 - pr;
-    if(q == 0.) return n; /* covers the full range of the distribution */
-    mu = n * pr;
-    sigma = sqrt(n * pr * q);
-    gamma = (q - pr) / sigma;
+    Q = 1.0 / prob;
+    P = (1.0 - prob) * Q;
+    mu = size * P;
+    sigma = sqrt(size * P * Q);
+    gamma = (Q + P)/sigma;
 
-#ifdef DEBUG_qbinom
-    REprintf("qbinom(p=%7g, n=%g, pr=%7g, l.t.=%d, log=%d): sigm=%g, gam=%g\n",
-	     p,n,pr, lower_tail, log_p, sigma, gamma);
-#endif
     /* Note : "same" code in qpois.c, qbinom.c, qnbinom.c --
      * FIXME: This is far from optimal [cancellation for p ~= 1, etc]: */
     if(!lower_tail || log_p) {
 	p = R_DT_qIv(p); /* need check again (cancellation!): */
-	if (p == 0.) return 0.;
-	if (p == 1.) return n;
+	if (p == R_DT_0) return 0;
+	if (p == R_DT_1) return ML_POSINF;
     }
     /* temporary hack --- FIXME --- */
-    if (p + 1.01*DBL_EPSILON >= 1.) return n;
+    if (p + 1.01*DBL_EPSILON >= 1.) return ML_POSINF;
 
     /* y := approx.value (Cornish-Fisher expansion) :  */
     z = qnorm(p, 0., 1., /*lower_tail*/TRUE, /*log_p*/FALSE);
-    y = floor(mu + sigma * (z + gamma * (z*z - 1) / 6) + 0.5);
+    y = R_forceint(mu + sigma * (z + gamma * (z*z - 1) / 6));
 
-    if(y > n) /* way off */ y = n;
-
-#ifdef DEBUG_qbinom
-    REprintf("  new (p,1-p)=(%7g,%7g), z=qnorm(..)=%7g, y=%5g\n", p, 1-p, z, y);
-#endif
-    z = pbinom(y, n, pr, /*lower_tail*/TRUE, /*log_p*/FALSE);
+    z = pnbinom(y, size, prob, /*lower_tail*/TRUE, /*log_p*/FALSE);
 
     /* fuzz to ensure left continuity: */
     p *= 1 - 64*DBL_EPSILON;
 
-    if(n < 1e5) return do_search(y, &z, p, n, pr, 1);
+    /* If the C-F value is not too large a simple search is OK */
+    if(y < 1e5) return do_search(y, &z, p, size, prob, 1);
     /* Otherwise be a bit cleverer in the search */
     {
-	double incr = floor(n * 0.001), oldincr;
+	double incr = floor(y * 0.001), oldincr;
 	do {
 	    oldincr = incr;
-	    y = do_search(y, &z, p, n, pr, incr);
+	    y = do_search(y, &z, p, size, prob, incr);
 	    incr = fmax2(1, floor(incr/100));
-	} while(oldincr > 1 && incr > n*1e-15);
+	} while(oldincr > 1 && incr > y*1e-15);
 	return y;
     }
+}
+
+double qnbinom_mu(double p, double size, double mu, int lower_tail, int log_p)
+{
+/* FIXME!  Implement properly!! (not losing accuracy for very large size (prob ~= 1)*/
+    return qnbinom(p, size, /* prob = */ size/(size+mu), lower_tail, log_p);
 }

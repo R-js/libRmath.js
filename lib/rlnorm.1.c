@@ -1,7 +1,7 @@
 /*
  *  Mathlib : A C Library of Special Functions
  *  Copyright (C) 1998 Ross Ihaka
- *  Copyright (C) 2000 The R Core Team
+ *  Copyright (C) 2000--2001  The R Core Team
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -17,15 +17,22 @@
  *  along with this program; if not, a copy is available at
  *  https://www.R-project.org/Licenses/
  *
+ *  SYNOPSIS
+ *
+ *    #include <Rmath.h>
+ *    double rlnorm(double logmean, double logsd);
+ *
  *  DESCRIPTION
  *
- *	The quantile function of the chi-squared distribution.
+ *    Random variates from the lognormal distribution.
  */
 
 #include "nmath.h"
-#include "dpq.h"
 
-double qchisq(double p, double df, int lower_tail, int log_p)
+double rlnorm(double meanlog, double sdlog)
 {
-    return qgamma(p, 0.5 * df, 2.0, lower_tail, log_p);
+    if(ISNAN(meanlog) || !R_FINITE(sdlog) || sdlog < 0.)
+	ML_ERR_return_NAN;
+
+    return exp(rnorm(meanlog, sdlog));
 }
