@@ -17,6 +17,8 @@ I first list the modules __DONE__ so far, lets start at a positive note)
 
 | original c module | js/ts module name | port date | R - base functions |
 |------------------|--------------------|-------------|--------------------|
+qnbeta.c           | ./lib/qnbeta.ts| 19 March 2017 | the quantile function of the noncentral beta distribution |
+qlnorm.c           | ./lib/qlnorm.ts | 19 March 2017  |  This the lognormal quantile function. |
 qhyper.c           | ./lib/qhyper.ts | 19 March 2017|     The quantile function of the hypergeometric distribution. |
 qgeom.c           | ./lib/qgeom.ts | 19 March 2017 |   The quantile function of the geometric distribution. |
 qgamma.c           |./lib/qgamma.ts | 18 March 2017 | Compute the quantile function of the gamma distribution. |
@@ -191,10 +193,10 @@ qf.c           |done | no |  The quantile function of the F distribution. |
 qgamma.c           |done | no | Compute the quantile function of the gamma distribution. |
 qgeom.c           |done | no |   The quantile function of the geometric distribution. |
 qhyper.c           | done| no |     The quantile function of the hypergeometric distribution. |
-qlnorm.c           | TODO| | |
-qlogis.c           | TODO| | |
-qnbeta.c           | TODO| | | 
-qnbinom.c           | TODO| | |
+qlnorm.c           | done| no  |  This the lognormal quantile function. |
+qlogis.c           | done | no |  The Logistic Distribution  quantile function. |
+qnbeta.c           | done| no  | the quantile function of the noncentral beta distribution | 
+qnbinom.c           |  | no | |
 qnchisq.c           |TODO | | |
 qnf.c           |TODO | | |
 qnorm.c           | TODO| | |
