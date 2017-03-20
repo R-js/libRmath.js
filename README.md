@@ -17,6 +17,11 @@ I first list the modules __DONE__ so far, lets start at a positive note)
 
 | original c module | js/ts module name | port date | R - base functions |
 |------------------|--------------------|-------------|--------------------|
+qweibull.c           | ./lib/qweibull.ts | 20 March 2017 | The quantile function of the Weibull distribution. |
+qtukey.c           |./lib/qtukey.ts | 20 March 2017 | Computes the quantiles of the maximum of rr studentized ranges |
+qt.c           |./lib/qt.ts | 20 March 2017 | The "Student" t distribution quantile function.  |
+qpois.c    | ./lib/qpois.ts | 19 March 2017 | The quantile function of the Poisson distribution.|
+qnt.c           | ./lib/qnt.ts| 19 March 2017 |  quantily function of the commulative  probability of the non-central t-distribution |
 qnchisq.c           | ./lib/qnchisq.ts | 19 March |the quantile function of the  noncentral chi-squared distribution  |
 qnf.c           | ./lib/qnf.ts  | 19 March  | The quantile function of the non-central F distribution.  |
 qnbinom.c           |./lib/qnbinom.ts  | 19 March 2017 | The quantile function of the negative binomial distribution. |
@@ -203,12 +208,12 @@ qnbinom.c           |done  | no | The quantile function of the negative binomial
 qnchisq.c           |done | no |the quantile function of the  noncentral chi-squared distribution    |
 qnf.c           |done |no  | The quantile function of the non-central F distribution.  |
 qnorm.c           | done| no | Compute the quantile function for the normal distribution. |
-qnt.c           | TODO| | |
-qpois.c                           |TODO | | |
-qt.c           |TODO | | |
-qtukey.c           |TODO | | |
-qunif.c           | TODO| | |
-qweibull.c           | TODO| | |
+qnt.c           | done| no |  quantily function of the commulative  probability of the non-central t-distribution |
+qpois.c    |done | no | The quantile function of the Poisson distribution.|
+qt.c           |done | no | The "Student" t distribution quantile function.  |
+qtukey.c           |done | no | Computes the quantiles of the maximum of rr studentized ranges |
+qunif.c           | done| no |   The quantile function of the uniform distribution. |
+qweibull.c           | done| no | The quantile function of the Weibull distribution. |
 rbeta.c           | TODO| | |
 rbinom.c           |TODO | | |
 rcauchy.c           |TODO | | |

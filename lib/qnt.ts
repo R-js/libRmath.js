@@ -1,4 +1,8 @@
-/*
+/*  AUTHOR
+ *  Jacob Bogers, jkfbogers@gmail.com
+ *  March 19, 2017
+ *
+ *  ORIGINAL AUTHOR
  *  R : A Computer Language for Statistical Data Analysis
  *  Copyright (C) 2006-2015 The R Core Team
  *
@@ -15,53 +19,75 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program; if not, a copy is available at
  *  https://www.R-project.org/Licenses/
+ * 
+ *  quantily function of the commulative  probability of the non-central t-distribution
  */
 
-#include "nmath.h"
-#include "dpq.h"
+import {
+    ISNAN,
+    ML_ERR_return_NAN,
+    ML_NEGINF,
+    ML_POSINF,
+    R_Q_P01_boundaries,
+    R_FINITE,
+    fmin2,
+    fmax2,
+    DBL_EPSILON,
+    DBL_MAX,
+    fabs
+} from './_general';
 
-double qnt(double p, double df, double ncp, int lower_tail, int log_p)
-{
-    const static double accu = 1e-13;
-    const static double Eps = 1e-11; /* must be > accu */
+import { qnorm } from './qnorm';
 
-    double ux, lx, nx, pp;
+import { pnt } from './pnt';
 
-#ifdef IEEE_754
+import { qt } from './qt';
+
+import { R_DT_qIv } from './expm1';
+
+export function  qnt(p: number, df: number, ncp: number, lower_tail: boolean, log_p: boolean){
+    const accu = 1e-13;
+    const Eps = 1e-11; /* must be > accu */
+
+    let ux, lx, nx, pp;
+
+
     if (ISNAN(p) || ISNAN(df) || ISNAN(ncp))
 	return p + df + ncp;
-#endif
+
     /* Was
      * df = floor(df + 0.5);
      * if (df < 1 || ncp < 0) ML_ERR_return_NAN;
      */
-    if (df <= 0.0) ML_ERR_return_NAN;
+    if (df <= 0.0) return ML_ERR_return_NAN();
 
     if(ncp == 0.0 && df >= 1.0) return qt(p, df, lower_tail, log_p);
 
-    R_Q_P01_boundaries(p, ML_NEGINF, ML_POSINF);
-
+    let rc = R_Q_P01_boundaries(lower_tail, log_p, p, ML_NEGINF, ML_POSINF);
+    if (rc !== undefined){
+        return rc;
+    }
     if (!R_FINITE(df)) // df = Inf ==> limit N(ncp,1)
 	return qnorm(p, ncp, 1., lower_tail, log_p);
 
-    p = R_DT_qIv(p);
+    p = R_DT_qIv(lower_tail, log_p, p);
 
     /* Invert pnt(.) :
      * 1. finding an upper and lower bound */
     if(p > 1 - DBL_EPSILON) return ML_POSINF;
     pp = fmin2(1 - DBL_EPSILON, p * (1 + Eps));
     for(ux = fmax2(1., ncp);
-	ux < DBL_MAX && pnt(ux, df, ncp, TRUE, FALSE) < pp;
+	ux < DBL_MAX && pnt(ux, df, ncp, true, false) < pp;
 	ux *= 2);
     pp = p * (1 - Eps);
     for(lx = fmin2(-1., -ncp);
-	lx > -DBL_MAX && pnt(lx, df, ncp, TRUE, FALSE) > pp;
+	lx > -DBL_MAX && pnt(lx, df, ncp, true, false) > pp;
 	lx *= 2);
 
     /* 2. interval (lx,ux)  halving : */
     do {
 	nx = 0.5 * (lx + ux); // could be zero
-	if (pnt(nx, df, ncp, TRUE, FALSE) > p) ux = nx; else lx = nx;
+	if (pnt(nx, df, ncp, true, false) > p) ux = nx; else lx = nx;
     }
     while ((ux - lx) > accu * fmax2(fabs(lx), fabs(ux)));
 

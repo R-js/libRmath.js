@@ -1,8 +1,11 @@
-/*
+/*  AUTHOR
+ *  Jacob Bogers, jkfbogers@gmail.com
+ *  March 20, 2017
+ *
+ *  ORIGINAL AUTHOR
  *  Mathlib : A C Library of Special Functions
  *  Copyright (C) 1998 Ross Ihaka
- *  Copyright (C) 2000 The R Core Team
- *  Copyright (C) 2005 The R Foundation
+ *  Copyright (C) 2000-2006 The R Core Team
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -20,21 +23,36 @@
  *
  *  DESCRIPTION
  *
- *    The quantile function of the Weibull distribution.
+ *    The quantile function of the uniform distribution.
  */
 
-#include "nmath.h"
-#include "dpq.h"
+import {
+    ISNAN,
+    R_Q_P01_check,
+    R_FINITE,
+    ML_ERR_return_NAN
+} from './_general';
 
-double qweibull(double p, double shape, double scale, int lower_tail, int log_p)
-{
-#ifdef IEEE_754
-    if (ISNAN(p) || ISNAN(shape) || ISNAN(scale))
-	return p + shape + scale;
-#endif
-    if (shape <= 0 || scale <= 0) ML_ERR_return_NAN;
+import {
+    R_DT_qIv
+} from './expm1';
 
-    R_Q_P01_boundaries(p, 0, ML_POSINF);
+export function qunif(p: number, a: number, b: number, lower_tail: boolean, log_p: boolean): number {
 
-    return scale * pow(- R_DT_Clog(p), 1./shape) ;
+    if (ISNAN(p) || ISNAN(a) || ISNAN(b))
+        return p + a + b;
+
+    let rc = R_Q_P01_check(log_p, p);
+    if (rc !== undefined) {
+        return rc;
+    }
+    if (!R_FINITE(a) || !R_FINITE(b)) return ML_ERR_return_NAN();
+    if (b < a) return ML_ERR_return_NAN();
+    if (b == a) return a;
+
+    return a + R_DT_qIv(lower_tail, log_p, p) * (b - a);
 }
+
+
+
+

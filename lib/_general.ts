@@ -13,7 +13,7 @@
 */
 
 
-
+export const M_SQRT2 =	1.414213562373095048801688724210; /* sqrt(2) */
 export const sqr = (x: number) => x * x;
 export const ceil = Math.ceil;
 export const trunc = Math.trunc;
@@ -155,7 +155,6 @@ export enum ME {
     ME_UNDERFLOW = 16 // and underflow occured (important for IEEE)
 }
 
-const lfastchoose = Rf_lfastchoose;
 
 export const MATHLIB_WARNING = function (fmt: string, x: any) {
     console.warn(fmt, x);

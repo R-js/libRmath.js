@@ -1,11 +1,12 @@
 /*  AUTHOR
  *  Jacob Bogers, jkfbogers@gmail.com
- *  March 16, 2017
+ *  March 20, 2017
  *
  *  ORIGINAL AUTHOR
  *  Mathlib : A C Library of Special Functions
  *  Copyright (C) 1998 Ross Ihaka
  *  Copyright (C) 2000 The R Core Team
+ *  Copyright (C) 2005 The R Foundation
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -23,35 +24,30 @@
  *
  *  DESCRIPTION
  *
- *    The distribution function of the Poisson distribution.
+ *    The quantile function of the Weibull distribution.
  */
+
 
 import {
     ISNAN,
-    R_FINITE,
     ML_ERR_return_NAN,
-    R_DT_0,
-    R_DT_1,
-    floor
+    ML_POSINF,
+    R_Q_P01_boundaries,
+    pow
 } from './_general';
 
-import {
-    pgamma
-} from './pgamma';
+import { R_DT_Clog } from './expm1';
 
-export function ppois(x: number, lambda: number, lower_tail: boolean, log_p: boolean) : number{
+export function qweibull(p: number, shape: number, scale: number, lower_tail: boolean, log_p: boolean): number {
 
-    if (ISNAN(x) || ISNAN(lambda))
-        return x + lambda;
+    if (ISNAN(p) || ISNAN(shape) || ISNAN(scale))
+        return p + shape + scale;
 
-    if (lambda < 0.) {
-        return ML_ERR_return_NAN();
+    if (shape <= 0 || scale <= 0) return ML_ERR_return_NAN();
+
+    let rc = R_Q_P01_boundaries(lower_tail, log_p, p, 0, ML_POSINF);
+    if (rc !== undefined) {
+        return rc;
     }
-    if (x < 0) return R_DT_0(lower_tail, log_p);
-    if (lambda == 0.) return R_DT_1(lower_tail, log_p);
-    if (!R_FINITE(x)) return R_DT_1(lower_tail, log_p);
-    x = floor(x + 1e-7);
-
-    return pgamma(lambda, x + 1, 1., !lower_tail, log_p);
+    return scale * pow(- R_DT_Clog(lower_tail, log_p, p), 1. / shape);
 }
-
