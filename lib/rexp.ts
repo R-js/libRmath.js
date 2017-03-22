@@ -1,7 +1,11 @@
-/*
+/*  AUTHOR
+ *  Jacob Bogers, jkfbogers@gmail.com
+ *  March 20, 2017
+ * 
+ *  ORGINAL AUTHOR
  *  Mathlib : A C Library of Special Functions
  *  Copyright (C) 1998 Ross Ihaka
- *  Copyright (C) 2000 The R Core Team
+ *  Copyright (C) 2000--2008 The R Core Team
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -19,27 +23,27 @@
  *
  *  SYNOPSIS
  *
- *    #include "mathlib.h"
- *    double rf(double dfn, double dfd);
+ *    #include <Rmath.h>
+ *    double rexp(double scale)
  *
  *  DESCRIPTION
  *
- *    Pseudo-random variates from an F distribution.
+ *    Random variates from the exponential distribution.
  *
- *  NOTES
- *
- *    This function calls rchisq to do the real work
  */
 
-#include "nmath.h"
+import {
+    R_FINITE,
+    ML_ERR_return_NAN,
+} from './_general';
 
-double rf(double n1, double n2)
-{
-    double v1, v2;
-    if (ISNAN(n1) || ISNAN(n2) || n1 <= 0. || n2 <= 0.)
-	ML_ERR_return_NAN;
+import { exp_rand } from './sexp';
 
-    v1 = R_FINITE(n1) ? (rchisq(n1) / n1) : 1;
-    v2 = R_FINITE(n2) ? (rchisq(n2) / n2) : 1;
-    return v1 / v2;
+export function rexp(scale: number): number {
+    if (!R_FINITE(scale) || scale <= 0.0) {
+        if (scale == 0.) return 0.;
+        /* else */
+        return ML_ERR_return_NAN();
+    }
+    return scale * exp_rand(); // --> in ./sexp.c
 }

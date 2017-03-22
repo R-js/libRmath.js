@@ -1,6 +1,10 @@
-/*
+/*  AUTHOR
+ *  Jacob Bogers, jkfbogers@gmail.com
+ *  March 20, 2017
+ * 
+ *  ORGINAL AUTHOR
  *  Mathlib : A C Library of Special Functions
- *  Copyright (C) 1998 Ross Ihaka
+ *  Copyright (C) 1998 Ross Ihaka and the R Core Team.
  *  Copyright (C) 2000 The R Core Team
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -20,22 +24,41 @@
  *  SYNOPSIS
  *
  *    #include <Rmath.h>
- *    double rchisq(double df);
+ *    double rgeom(double p);
  *
  *  DESCRIPTION
  *
- *    Random variates from the chi-squared distribution.
+ *    Random variates from the geometric distribution.
  *
  *  NOTES
  *
- *    Calls rgamma to do the real work.
+ *    We generate lambda as exponential with scale parameter
+ *    p / (1 - p).  Return a Poisson deviate with mean lambda.
+ *    See Example 1.5 in Devroye (1986), Chapter 10, pages 488f.
+ *
+ *  REFERENCE
+ *
+ *    Devroye, L. (1986).
+ *    Non-Uniform Random Variate Generation.
+ *    New York: Springer-Verlag.
+ *    Pages 488f.
  */
 
-#include "nmath.h"
+import {
+    R_FINITE,
+    ML_ERR_return_NAN
+} from './_general';
 
-double rchisq(double df)
-{
-    if (!R_FINITE(df) || df < 0.0) ML_ERR_return_NAN;
+import {
+    rpois
+} from './rpois';
 
-    return rgamma(df / 2.0, 2.0);
+import {
+    exp_rand
+} from './sexp';
+
+export function rgeom(p: number): number {
+    if (!R_FINITE(p) || p <= 0 || p > 1) ML_ERR_return_NAN;
+
+    return rpois(exp_rand() * ((1 - p) / p));
 }

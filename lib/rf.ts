@@ -1,7 +1,11 @@
-/*
+/*  AUTHOR
+ *  Jacob Bogers, jkfbogers@gmail.com
+ *  March 20, 2017
+ * 
+ *  ORGINAL AUTHOR
  *  Mathlib : A C Library of Special Functions
  *  Copyright (C) 1998 Ross Ihaka
- *  Copyright (C) 2000--2008 The R Core Team
+ *  Copyright (C) 2000 The R Core Team
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -19,22 +23,36 @@
  *
  *  SYNOPSIS
  *
- *    #include <Rmath.h>
- *    double rcauchy(double location, double scale);
+ *    #include "mathlib.h"
+ *    double rf(double dfn, double dfd);
  *
  *  DESCRIPTION
  *
- *    Random variates from the Cauchy distribution.
+ *    Pseudo-random variates from an F distribution.
+ *
+ *  NOTES
+ *
+ *    This function calls rchisq to do the real work
  */
 
-#include "nmath.h"
+import {
+    ISNAN,
+    ML_ERR_return_NAN,
+    R_FINITE
+} from './_general';
 
-double rcauchy(double location, double scale)
-{
-    if (ISNAN(location) || !R_FINITE(scale) || scale < 0)
-	ML_ERR_return_NAN;
-    if (scale == 0. || !R_FINITE(location))
-	return location;
-    else
-	return location + scale * tan(M_PI * unif_rand());
+import { rchisq } from './rchisq';
+
+
+export function rf(n1: number, n2: number): number {
+    let v1;
+    let v2;
+    if (ISNAN(n1) || ISNAN(n2) || n1 <= 0. || n2 <= 0.){
+        return ML_ERR_return_NAN();
+    }
+
+    v1 = R_FINITE(n1) ? (rchisq(n1) / n1) : 1;
+    v2 = R_FINITE(n2) ? (rchisq(n2) / n2) : 1;
+    return v1 / v2;
 }
+

@@ -17,7 +17,13 @@ I first list the modules __DONE__ so far, lets start at a positive note)
 
 | original c module | js/ts module name | port date | R - base functions |
 |------------------|--------------------|-------------|--------------------|
-rbeta.c           | ./lib/rbeta| 21 march 2017 | Generating beta variates with nonintegral shape parameters. |
+rgeom.c           |./lib/rgeom.ts | 21 March 2017 |  Random variates from the geometric distribution. |
+rgamma.c           |./lib/rgamma.ts | 21 march 2017 |   Random variates from the gamma distribution. |
+rf.c           | ./lib/rf.ts| 21 march 2017 |  Pseudo-random variates from an F distribution. |
+rexp.c           |./lib/rexp.ts | 21 march 2017 |  Random variates from the exponential distribution. |
+rchisq.c           | ./lib/rchisq.ts |21 march 2017 |  Random variates from the chi-squared distribution. |
+rcauchy.c           |./lib/rcauchy.ts | 21 march 2017 | Random variates from the Cauchy distribution. |
+rbeta.c           | ./lib/rbeta.ts | 21 march 2017 | Generating beta variates with nonintegral shape parameters. |
 rbinom.c           |./lib/rbindom.ts | 21 March 2017  |	Random variates from the binomial distribution. |
 qweibull.c           | ./lib/qweibull.ts | 20 March 2017 | The quantile function of the Weibull distribution. |
 qtukey.c           |./lib/qtukey.ts | 20 March 2017 | Computes the quantiles of the maximum of rr studentized ranges |
@@ -218,12 +224,12 @@ qunif.c           | done| no |   The quantile function of the uniform distributi
 qweibull.c           | done| no | The quantile function of the Weibull distribution. |
 rbeta.c           | done|no | Generating beta variates with nonintegral shape parameters. |
 rbinom.c           |done |no  |	Random variates from the binomial distribution. |
-rcauchy.c           |TODO | | |
-rchisq.c           |TODO | | |
-rexp.c           |TODO | | |
-rf.c           | TODO| | |
-rgamma.c           |TODO | | |
-rgeom.c           |TODO | | |
+rcauchy.c           |done | no | Random variates from the Cauchy distribution. |
+rchisq.c           |done |no |  Random variates from the chi-squared distribution. |
+rexp.c           |done | no |  Random variates from the exponential distribution. |
+rf.c           | done| no |  Pseudo-random variates from an F distribution. |
+rgamma.c           |done | no |   Random variates from the gamma distribution. |
+rgeom.c           |done | no |  Random variates from the geometric distribution. |
 rhyper.c           | TODO| | |
 rlnorm.c           |TODO | | |
 rlogis.c           | TODO| | |

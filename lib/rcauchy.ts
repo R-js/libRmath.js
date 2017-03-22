@@ -1,7 +1,7 @@
 /*
  *  Mathlib : A C Library of Special Functions
- *  Copyright (C) 1998 Ross Ihaka and the R Core Team.
- *  Copyright (C) 2000 The R Core Team
+ *  Copyright (C) 1998 Ross Ihaka
+ *  Copyright (C) 2000--2008 The R Core Team
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -20,31 +20,29 @@
  *  SYNOPSIS
  *
  *    #include <Rmath.h>
- *    double rgeom(double p);
+ *    double rcauchy(double location, double scale);
  *
  *  DESCRIPTION
  *
- *    Random variates from the geometric distribution.
- *
- *  NOTES
- *
- *    We generate lambda as exponential with scale parameter
- *    p / (1 - p).  Return a Poisson deviate with mean lambda.
- *    See Example 1.5 in Devroye (1986), Chapter 10, pages 488f.
- *
- *  REFERENCE
- *
- *    Devroye, L. (1986).
- *    Non-Uniform Random Variate Generation.
- *    New York: Springer-Verlag.
- *    Pages 488f.
+ *    Random variates from the Cauchy distribution.
  */
 
-#include "nmath.h"
+import {
+    ISNAN,
+    R_FINITE,
+    ML_ERR_return_NAN,
+    M_PI
+} from './_general';
 
-double rgeom(double p)
-{
-    if (!R_FINITE(p) || p <= 0 || p > 1) ML_ERR_return_NAN;
+import { unif_rand } from './_unif_random';
 
-    return rpois(exp_rand() * ((1 - p) / p));
+
+export function rcauchy(location: number, scale: number): number {
+    if (ISNAN(location) || !R_FINITE(scale) || scale < 0) {
+        return ML_ERR_return_NAN();
+    }
+    if (scale === 0. || !R_FINITE(location))
+        return location;
+    else
+        return location + scale * Math.tan(M_PI * unif_rand());
 }

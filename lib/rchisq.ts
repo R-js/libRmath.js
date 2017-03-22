@@ -1,7 +1,7 @@
 /*
  *  Mathlib : A C Library of Special Functions
  *  Copyright (C) 1998 Ross Ihaka
- *  Copyright (C) 2000--2008 The R Core Team
+ *  Copyright (C) 2000 The R Core Team
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -20,22 +20,28 @@
  *  SYNOPSIS
  *
  *    #include <Rmath.h>
- *    double rexp(double scale)
+ *    double rchisq(double df);
  *
  *  DESCRIPTION
  *
- *    Random variates from the exponential distribution.
+ *    Random variates from the chi-squared distribution.
  *
+ *  NOTES
+ *
+ *    Calls rgamma to do the real work.
  */
 
-#include "nmath.h"
+import {
+    R_FINITE,
+    ML_ERR_return_NAN
+} from './_general';
 
-double rexp(double scale)
-{
-    if (!R_FINITE(scale) || scale <= 0.0) {
-	if(scale == 0.) return 0.;
-	/* else */
-	ML_ERR_return_NAN;
+import { rgamma  } from './rgamma';
+
+export function rchisq(df: number): number {
+
+    if (!R_FINITE(df) || df < 0.0) {
+        return ML_ERR_return_NAN();
     }
-    return scale * exp_rand(); // --> in ./sexp.c
+    return rgamma(df / 2.0, 2.0);
 }
