@@ -56,7 +56,7 @@ export function qgeom(p: number, prob: number, lower_tail: boolean, log_p: boole
         return p + prob;
 
 
-    if (prob == 1) return (0);
+    if (prob === 1) return (0);
     /* add a fuzz to ensure left continuity, but value must be >= 0 */
     return fmax2(0, ceil(R_DT_Clog(lower_tail, log_p, p) / log1p(- prob) - 1 - 1e-12));
 }

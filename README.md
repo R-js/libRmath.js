@@ -17,6 +17,8 @@ I first list the modules __DONE__ so far, lets start at a positive note)
 
 | original c module | js/ts module name | port date | R - base functions |
 |------------------|--------------------|-------------|--------------------|
+rbeta.c           | ./lib/rbeta| 21 march 2017 | Generating beta variates with nonintegral shape parameters. |
+rbinom.c           |./lib/rbindom.ts | 21 March 2017  |	Random variates from the binomial distribution. |
 qweibull.c           | ./lib/qweibull.ts | 20 March 2017 | The quantile function of the Weibull distribution. |
 qtukey.c           |./lib/qtukey.ts | 20 March 2017 | Computes the quantiles of the maximum of rr studentized ranges |
 qt.c           |./lib/qt.ts | 20 March 2017 | The "Student" t distribution quantile function.  |
@@ -214,8 +216,8 @@ qt.c           |done | no | The "Student" t distribution quantile function.  |
 qtukey.c           |done | no | Computes the quantiles of the maximum of rr studentized ranges |
 qunif.c           | done| no |   The quantile function of the uniform distribution. |
 qweibull.c           | done| no | The quantile function of the Weibull distribution. |
-rbeta.c           | TODO| | |
-rbinom.c           |TODO | | |
+rbeta.c           | done|no | Generating beta variates with nonintegral shape parameters. |
+rbinom.c           |done |no  |	Random variates from the binomial distribution. |
 rcauchy.c           |TODO | | |
 rchisq.c           |TODO | | |
 rexp.c           |TODO | | |

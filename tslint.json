@@ -36,7 +36,7 @@
     "eofline": true,
     "linebreak-style": [
       true,
-      "LF"
+      "CRLF"
     ],
     "no-var-keyword": true,
     "switch-default": true,

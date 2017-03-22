@@ -1,4 +1,7 @@
-/*
+/*  AUTHOR
+ *  Jacob Bogers, jkfbogers@gmail.com
+ *  March 20, 2017
+ *
  *  R : A Computer Language for Statistical Data Analysis
  *  Copyright (C) 1995, 1996  Robert Gentleman and Ross Ihaka
  *  Copyright (C) 2000--2010 The R Core Team
@@ -26,11 +29,9 @@
  * (Algorithms BB and BC)
  */
 
-#include "nmath.h"
+export const #define expmax(DBL_MAX_EXP *M_LN2) /* = log(DBL_MAX) */
 
-#define expmax	(DBL_MAX_EXP * M_LN2)/* = log(DBL_MAX) */
-
-double rbeta(double aa, double bb)
+    double rbeta(double aa, double bb)
 {
     if (aa < 0. || bb < 0.)
 	ML_ERR_return_NAN;
@@ -40,9 +41,9 @@ double rbeta(double aa, double bb)
 	return (unif_rand() < 0.5) ? 0. : 1.;
     // now, at least one of a, b is finite and positive
     if (!R_FINITE(aa) || bb == 0.)
-    	return 1.0;
+	return 1.0;
     if (!R_FINITE(bb) || aa == 0.)
-    	return 0.0;
+	return 0.0;
 
     double a, b, alpha;
     double r, s, t, u1, u2, v, w, y, z;
@@ -55,43 +56,56 @@ double rbeta(double aa, double bb)
 
     /* Test if we need new "initializing" */
     qsame = (olda == aa) && (oldb == bb);
-    if (!qsame) { olda = aa; oldb = bb; }
+    if (!qsame)
+    {
+	olda = aa;
+	oldb = bb;
+    }
 
     a = fmin2(aa, bb);
     b = fmax2(aa, bb); /* a <= b */
     alpha = a + b;
 
-#define v_w_from__u1_bet(AA) 			\
-	    v = beta * log(u1 / (1.0 - u1));	\
-	    if (v <= expmax) {			\
-		w = AA * exp(v);		\
-		if(!R_FINITE(w)) w = DBL_MAX;	\
-	    } else				\
-		w = DBL_MAX
+#define v_w_from__u1_bet(AA)         \
+    v = beta * log(u1 / (1.0 - u1)); \
+    if (v <= expmax)                 \
+    {                                \
+	w = AA * exp(v);             \
+	if (!R_FINITE(w))            \
+	    w = DBL_MAX;             \
+    }                                \
+    else                             \
+	w = DBL_MAX
 
-
-    if (a <= 1.0) {	/* --- Algorithm BC --- */
+    if (a <= 1.0)
+    { /* --- Algorithm BC --- */
 
 	/* changed notation, now also a <= b (was reversed) */
 
-	if (!qsame) { /* initialize */
+	if (!qsame)
+	{ /* initialize */
 	    beta = 1.0 / a;
 	    delta = 1.0 + b - a;
 	    k1 = delta * (0.0138889 + 0.0416667 * a) / (b * beta - 0.777778);
 	    k2 = 0.25 + (0.5 + 0.25 / delta) * a;
 	}
 	/* FIXME: "do { } while()", but not trivially because of "continue"s:*/
-	for(;;) {
+	for (;;)
+	{
 	    u1 = unif_rand();
 	    u2 = unif_rand();
-	    if (u1 < 0.5) {
+	    if (u1 < 0.5)
+	    {
 		y = u1 * u2;
 		z = u1 * y;
 		if (0.25 * u2 + z - y >= k1)
 		    continue;
-	    } else {
+	    }
+	    else
+	    {
 		z = u1 * u1 * u2;
-		if (z <= 0.25) {
+		if (z <= 0.25)
+		{
 		    v_w_from__u1_bet(b);
 		    break;
 		}
@@ -105,15 +119,17 @@ double rbeta(double aa, double bb)
 		break;
 	}
 	return (aa == a) ? a / (a + w) : w / (a + w);
-
     }
-    else {		/* Algorithm BB */
+    else
+    { /* Algorithm BB */
 
-	if (!qsame) { /* initialize */
+	if (!qsame)
+	{ /* initialize */
 	    beta = sqrt((alpha - 2.0) / (2.0 * a * b - alpha));
 	    gamma = a + 1.0 / beta;
 	}
-	do {
+	do
+	{
 	    u1 = unif_rand();
 	    u2 = unif_rand();
 
@@ -127,8 +143,7 @@ double rbeta(double aa, double bb)
 	    t = log(z);
 	    if (s > t)
 		break;
-	}
-	while (r + alpha * log(alpha / (b + w)) < t);
+	} while (r + alpha * log(alpha / (b + w)) < t);
 
 	return (aa != a) ? b / (b + w) : w / (b + w);
     }
