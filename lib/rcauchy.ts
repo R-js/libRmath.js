@@ -1,4 +1,8 @@
-/*
+/*  AUTHOR
+ *  Jacob Bogers, jkfbogers@gmail.com
+ *  March 20, 2017
+ * 
+ *  ORGINAL AUTHOR
  *  Mathlib : A C Library of Special Functions
  *  Copyright (C) 1998 Ross Ihaka
  *  Copyright (C) 2000--2008 The R Core Team

@@ -17,6 +17,7 @@ I first list the modules __DONE__ so far, lets start at a positive note)
 
 | original c module | js/ts module name | port date | R - base functions |
 |------------------|--------------------|-------------|--------------------|
+rhyper.c           | ./lib/rhyper.ts| 21 March 2017 | Random variates from the hypergeometric distribution. |
 rgeom.c           |./lib/rgeom.ts | 21 March 2017 |  Random variates from the geometric distribution. |
 rgamma.c           |./lib/rgamma.ts | 21 march 2017 |   Random variates from the gamma distribution. |
 rf.c           | ./lib/rf.ts| 21 march 2017 |  Pseudo-random variates from an F distribution. |
@@ -230,7 +231,7 @@ rexp.c           |done | no |  Random variates from the exponential distribution
 rf.c           | done| no |  Pseudo-random variates from an F distribution. |
 rgamma.c           |done | no |   Random variates from the gamma distribution. |
 rgeom.c           |done | no |  Random variates from the geometric distribution. |
-rhyper.c           | TODO| | |
+rhyper.c           | done| no | Random variates from the hypergeometric distribution. |
 rlnorm.c           |TODO | | |
 rlogis.c           | TODO| | |
 rmultinom.c           | TODO| | |

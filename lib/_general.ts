@@ -230,6 +230,8 @@ export function fmax2(x: number, y: number): number {
     return (x < y) ? y : x;
 }
 
+export const imax2 = fmax2;
+
 export function fmin2(x: number, y: number): number {
     if (ISNAN(x) || ISNAN(y)) {
         return x + y;
