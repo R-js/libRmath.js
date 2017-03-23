@@ -17,6 +17,9 @@ I first list the modules __DONE__ so far, lets start at a positive note)
 
 | original c module | js/ts module name | port date | R - base functions |
 |------------------|--------------------|-------------|--------------------|
+rmultinom.c           | ./lib/rmultinom.ts| 23 March 2017 | 	Random Vector from the multinomial distribution.|
+rlogis.c           | ./lib/rlogis.ts| 23 March 2017 |  random variates of the logistic distribution |
+rlnorm.c           |./lib.rlnorm | 23 March 2017 |  Random variates from the lognormal distribution. |
 rhyper.c           | ./lib/rhyper.ts| 21 March 2017 | Random variates from the hypergeometric distribution. |
 rgeom.c           |./lib/rgeom.ts | 21 March 2017 |  Random variates from the geometric distribution. |
 rgamma.c           |./lib/rgamma.ts | 21 march 2017 |   Random variates from the gamma distribution. |
@@ -232,9 +235,9 @@ rf.c           | done| no |  Pseudo-random variates from an F distribution. |
 rgamma.c           |done | no |   Random variates from the gamma distribution. |
 rgeom.c           |done | no |  Random variates from the geometric distribution. |
 rhyper.c           | done| no | Random variates from the hypergeometric distribution. |
-rlnorm.c           |TODO | | |
-rlogis.c           | TODO| | |
-rmultinom.c           | TODO| | |
+rlnorm.c           |done | no |  Random variates from the lognormal distribution. |
+rlogis.c           | done| no |  random variates of the logistic distribution |
+rmultinom.c           | done| no | 	Random Vector from the multinomial distribution.|
 rnbinom.c           |TODO | | |
 rnchisq.c           | TODO| | |
 rnorm.c           |TODO | | |

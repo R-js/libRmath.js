@@ -1,8 +1,4 @@
-/*  AUTHOR
- *  Jacob Bogers, jkfbogers@gmail.com
- *  March 19, 2017
- *
- *  ORIGINAL AUTHOR
+/*
  *  R : A Computer Language for Statistical Data Analysis
  *  Copyright (C) 2006 The R Core Team
  *
@@ -19,8 +15,8 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program; if not, a copy is available at
  *  https://www.R-project.org/Licenses/
+ *  
  * 
- *  the quantile function of the noncentral beta distribution |
  */
 
 import {

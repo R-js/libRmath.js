@@ -13,6 +13,7 @@
 */
 
 
+
 export const M_SQRT2 =	1.414213562373095048801688724210; /* sqrt(2) */
 export const sqr = (x: number) => x * x;
 export const ceil = Math.ceil;
@@ -171,6 +172,8 @@ export const MATHLIB_WARNING3 = function (fmt: string, x: any, x2: any, x3: any)
 export const MATHLIB_WARNING4 = function (fmt: string, x: any, x2: any, x3: any, x4: any) {
     console.warn(fmt, x, x2, x3, x4);
 };
+
+export const  MATHLIB_ERROR = console.error;
 
 export const min0 = (x: number, y: number): number => { return x <= y ? x : y; };
 export const max0 = (x: number, y: number): number => { return x <= y ? y : x; };
