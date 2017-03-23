@@ -17,6 +17,9 @@ I first list the modules __DONE__ so far, lets start at a positive note)
 
 | original c module | js/ts module name | port date | R - base functions |
 |------------------|--------------------|-------------|--------------------|
+rnorm.c           |./lib/rnorm.ts |23 March 2017 | Random variates from the normal distribution. |
+rnchisq.c           | ./lib/rnchisq.ts | 23 March 2017  |  Random variates from the NON CENTRAL chi-squared distribution.|
+rnbinom.c           |./lib/rnbinom.ts | 23 March 2017 |   Random variates from the negative binomial distribution. |
 rmultinom.c           | ./lib/rmultinom.ts| 23 March 2017 | 	Random Vector from the multinomial distribution.|
 rlogis.c           | ./lib/rlogis.ts| 23 March 2017 |  random variates of the logistic distribution |
 rlnorm.c           |./lib.rlnorm | 23 March 2017 |  Random variates from the lognormal distribution. |
@@ -238,9 +241,9 @@ rhyper.c           | done| no | Random variates from the hypergeometric distribu
 rlnorm.c           |done | no |  Random variates from the lognormal distribution. |
 rlogis.c           | done| no |  random variates of the logistic distribution |
 rmultinom.c           | done| no | 	Random Vector from the multinomial distribution.|
-rnbinom.c           |TODO | | |
-rnchisq.c           | TODO| | |
-rnorm.c           |TODO | | |
+rnbinom.c           |done | no |   Random variates from the negative binomial distribution. |
+rnchisq.c           | done|no  |  Random variates from the NON CENTRAL chi-squared distribution.|
+rnorm.c           |done |no | Random variates from the normal distribution. |
 rpois.c           | TODO| | |
 rt.c           | TODO| | |
 runif.c           | done| no | implemented 3 RNG and native browser/node agnostic 64 RNG map to floating number |
