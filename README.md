@@ -7,12 +7,13 @@ https://svn.r-project.org/R/trunk/src/nmath/
 Work in progress (see list below of all c modules that need to be ported), please considering helping out and bring R core functionality
 to Javascript.
 
-I first list the modules __DONE__ so far, lets start at a positive note)
+As of 26 March inital port has been done, now to write more significant tests and see how it compares with R output.
 
-### DONE
+
 
 | original c module | js/ts module name | port date | R - base functions |
 |------------------|--------------------|-------------|--------------------|
+snorm.c           | ./lib/snorm.ts| 26 March 2017 |  Random variates from the STANDARD normal distribution  N(0,1).|
 sign.c           | ./lib/sign.ts| 25 March 2017 |  This function computes the  'signum(.)' function: |
 rweibull.c           | ./lib/rweibull.ts| 25 March 2017 |  Random variates from the Weibull distribution. |
 wilcox.c           | ./lib/wilcox.ts| 25March 2017 | dwilcox: The density of the Wilcoxon distribution,   pwilcox: The distribution function of the Wilcoxon distribution, qwilcox:	The quantile function of the Wilcoxon distribution,  rwilcox:	Random variates from the Wilcoxon distribution.  |
@@ -133,7 +134,7 @@ plnorm.c     | ./lib/plnorm.ts | 14 March |n The lognormal distribution function
 
 ### TODO
 
-
+## All modules re-written in Typescript (JS), now testing must commence
 
 | original c module | ported to javascript? | tested | R - base functions |
 |------------------|--------------------|-------------|--------------------|
@@ -253,7 +254,7 @@ rweibull.c           | done| no |  Random variates from the Weibull distribution
 sexp.c           | done | no | (Random variates from the standard exponential distribution) exp_rand (internally used) function  |
 sign.c           | done| no | This function computes the  'signum(.)' function: |
 signrank.c           | done | no | dsignrank: The density of the Wilcoxon Signed Rank distribution, psignrank: The distribution function of the Wilcoxon Signed Rank distribution, qsignrank: The quantile function of the Wilcoxon Signed Rank distribution, rsignrank: Random variates from the Wilcoxon Signed Rank distribution. |
-snorm.c           | TODO| | |
+snorm.c           | done| no |  Random variates from the STANDARD normal distribution  N(0,1).|
 stirlerr.c           | done  | no | Computes the log of the error term in Stirling's formula ( _stirlerr_ ) |
 toms708.c           |NAP | no | ported instead Java Version  from James Curran (j.curran@auckland.ac.nz) (Java version) |
 wilcox.c           | node| no | dwilcox: The density of the Wilcoxon distribution, pwilcox: The distribution function of the Wilcoxon distribution, qwilcox: The quantile function of the Wilcoxon distribution,  rwilcox: Random variates from the Wilcoxon distribution. |
