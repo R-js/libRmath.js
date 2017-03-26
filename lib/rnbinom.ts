@@ -52,7 +52,7 @@ import {
 } from './_general'
 
 import { rpois } from './rpois';
-import { rgamma } frol './rgamma';
+import { rgamma } from './rgamma';
 
 export function rnbinom(size: number, prob: number): number {
     if (!R_FINITE(size) || !R_FINITE(prob) || size <= 0 || prob <= 0 || prob > 1) {

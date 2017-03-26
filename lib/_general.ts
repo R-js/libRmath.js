@@ -34,7 +34,7 @@ export function rround(x: number) {
 }
 
 export function imin2(x: number, y: number): number {
-    return (x < y) ? x : y;
+    return (x < y) ? trunc(x) : trunc(y);
 }
 
 /* Use 0.5 - p + 0.5 to perhaps gain 1 bit of accuracy */
@@ -233,7 +233,9 @@ export function fmax2(x: number, y: number): number {
     return (x < y) ? y : x;
 }
 
-export const imax2 = fmax2;
+export function imax2(x:number, y: number): number {
+    return trunc(fmax2(x,y));
+}
 
 export function fmin2(x: number, y: number): number {
     if (ISNAN(x) || ISNAN(y)) {

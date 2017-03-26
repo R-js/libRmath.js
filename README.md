@@ -2,11 +2,7 @@
 Javascript ( TypeScript ) Pure Implementation of Statistical R "core" numerical libRmath.so library found here
 https://svn.r-project.org/R/trunk/src/nmath/
 
-
-
-
 ## Progress (DONE and TODO)
-
 
 Work in progress (see list below of all c modules that need to be ported), please considering helping out and bring R core functionality
 to Javascript.
@@ -17,6 +13,12 @@ I first list the modules __DONE__ so far, lets start at a positive note)
 
 | original c module | js/ts module name | port date | R - base functions |
 |------------------|--------------------|-------------|--------------------|
+sign.c           | ./lib/sign.ts| 25 March 2017 |  This function computes the  'signum(.)' function: |
+rweibull.c           | ./lib/rweibull.ts| 25 March 2017 |  Random variates from the Weibull distribution. |
+wilcox.c           | ./lib/wilcox.ts| 25March 2017 | dwilcox: The density of the Wilcoxon distribution,   pwilcox: The distribution function of the Wilcoxon distribution, qwilcox:	The quantile function of the Wilcoxon distribution,  rwilcox:	Random variates from the Wilcoxon distribution.  |
+rt.c           | ./lib/rt.ts| 25March 2017 | Pseudo-random variates from a t distribution. |
+signrank.c           | ./lib/signrank.ts| 25 March 2017 | dsignrank: The density of the Wilcoxon Signed Rank distribution, psignrank: The distribution function of the Wilcoxon Signed Rank distribution, qsignrank: The quantile function of the Wilcoxon Signed Rank distribution, rsignrank: Random variates from the Wilcoxon Signed Rank distribution. |
+rpois.c           | ./lib/rpois.ts| 25 March 2017 | Random variates from the Poisson distribution. |
 rnorm.c           |./lib/rnorm.ts |23 March 2017 | Random variates from the normal distribution. |
 rnchisq.c           | ./lib/rnchisq.ts | 23 March 2017  |  Random variates from the NON CENTRAL chi-squared distribution.|
 rnbinom.c           |./lib/rnbinom.ts | 23 March 2017 |   Random variates from the negative binomial distribution. |
@@ -198,13 +200,13 @@ plogis.c           | done| no |  Compute  log(1 + exp(x))  without overflow (and
 pnbeta.c           |done |no |  pbeta  - incomplete-beta function {nowadays: pbeta_raw() -> bratio()} |
 pnbinom.c           | done| no | The distribution function of the negative binomial distribution. |
 pnchisq.c           | done| no |  Algorithm AS275: Computing the non-central chi-squared distribution function. |
-pnf.c           |done | no | The distribution function of the non-central F distribution. |
-pnorm.c           | done| no  |  normal distribution function |
-pnt.c           | done| no | Cumulative probability at t of the non-central t-distribution,  with df degrees of freedom (may be fractional) and non-centrality,  parameter delta.
-polygamma.c           | done| no |  Compute the derivatives of the psi function   and polygamma functions. |
-ppois.c           | done | no |  The distribution function of the Poisson distribution.  |
-pt.c           |done | no | t distrib. with n degrees of freedom).  |
-ptukey.c           | done| no |Computes the probability that the maximum of rr studentized ranges, each based on cc means and with df degrees of freedom  for the standard error, is less than q. |
+pnf.c   |done | no | The distribution function of the non-central F distribution. |
+pnorm.c  | done| no  |  normal distribution function |
+pnt.c    | done| no | Cumulative probability at t of the non-central t-distribution,  with df degrees of freedom (may be fractional) and non-centrality,  parameter delta.
+polygamma.c   | done| no |  Compute the derivatives of the psi function   and polygamma functions. |
+ppois.c     | done | no |  The distribution function of the Poisson distribution.  |
+pt.c       |done | no | t distrib. with n degrees of freedom).  |
+ptukey.c    | done| no |Computes the probability that the maximum of rr studentized ranges, each based on cc means and with df degrees of freedom  for the standard error, is less than q. |
 punif.c           | done| no |  The distribution function of the uniform distribution. |
 pweibull.c           |done |no | The distribution function of the Weibull distribution. |
 qbeta.c           | done| no | The quantile function of the beta distribution. |
@@ -240,21 +242,21 @@ rgeom.c           |done | no |  Random variates from the geometric distribution.
 rhyper.c           | done| no | Random variates from the hypergeometric distribution. |
 rlnorm.c           |done | no |  Random variates from the lognormal distribution. |
 rlogis.c           | done| no |  random variates of the logistic distribution |
-rmultinom.c           | done| no | 	Random Vector from the multinomial distribution.|
+rmultinom.c           | done| no | Random Vector from the multinomial distribution.|
 rnbinom.c           |done | no |   Random variates from the negative binomial distribution. |
 rnchisq.c           | done|no  |  Random variates from the NON CENTRAL chi-squared distribution.|
 rnorm.c           |done |no | Random variates from the normal distribution. |
-rpois.c           | TODO| | |
-rt.c           | TODO| | |
+rpois.c           | done| no | Random variates from the Poisson distribution. |
+rt.c           | done| no | Pseudo-random variates from a t distribution. |
 runif.c           | done| no | implemented 3 RNG and native browser/node agnostic 64 RNG map to floating number |
-rweibull.c           | TODO| | |
-sexp.c           | done | no  | (Random variates from the standard exponential distribution) exp_rand (internally used) function  |
-sign.c           | TODO| | |
-signrank.c           | TODO| | |
+rweibull.c           | done| no |  Random variates from the Weibull distribution. |
+sexp.c           | done | no | (Random variates from the standard exponential distribution) exp_rand (internally used) function  |
+sign.c           | done| no | This function computes the  'signum(.)' function: |
+signrank.c           | done | no | dsignrank: The density of the Wilcoxon Signed Rank distribution, psignrank: The distribution function of the Wilcoxon Signed Rank distribution, qsignrank: The quantile function of the Wilcoxon Signed Rank distribution, rsignrank: Random variates from the Wilcoxon Signed Rank distribution. |
 snorm.c           | TODO| | |
-stirlerr.c           | done ./lib/stirlerr | no | Computes the log of the error term in Stirling's formula ( _stirlerr_ ) |
+stirlerr.c           | done  | no | Computes the log of the error term in Stirling's formula ( _stirlerr_ ) |
 toms708.c           |NAP | no | ported instead Java Version  from James Curran (j.curran@auckland.ac.nz) (Java version) |
-wilcox.c           | TODO| | |
+wilcox.c           | node| no | dwilcox: The density of the Wilcoxon distribution, pwilcox: The distribution function of the Wilcoxon distribution, qwilcox: The quantile function of the Wilcoxon distribution,  rwilcox: Random variates from the Wilcoxon distribution. |
 
 Also:
 Examine the usage of  *R_DT_Log* and * R_DT_log* (note the one captial letter difference) functions in all codes

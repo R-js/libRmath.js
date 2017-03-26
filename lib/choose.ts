@@ -78,7 +78,7 @@ export function lfastchoose2(n: number, k: number, sChoose?: number[]) {
   return lgammafn(n + 1.) - lgammafn(k + 1.) - r;
 }
 
-function lchoose(n: number, k: number): number {
+export function lchoose(n: number, k: number): number {
   let k0 = k;
   k = Math.round(k);
   /* NaNs propagated correctly */
@@ -115,7 +115,7 @@ const k_small_max =  30;
 /* 30 is somewhat arbitrary: it is on the *safe* side:
  * both speed and precision are clearly improved for k < 30.
 */
-function choose(n: number, k: number): number {
+export function choose(n: number, k: number): number {
   let r: number;
   let k0 = k;
   k = round(k);

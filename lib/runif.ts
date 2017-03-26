@@ -2,7 +2,7 @@
  *  AUTHOR
  *  Jacob Bogers, jkfbogers@gmail.com
  *  Februari 5, 2017
- * 
+ *  ORIGNAL AUTHOR
  *  Using Node or Javascript Native implementation (when running in browser)
  *  
  *  Other RNG's by George Marsaglia from newshourp comp.lang.c 2003-May-13   
