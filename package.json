@@ -32,15 +32,19 @@
     "@types/node": "^7.0.8",
     "browserify": "^13.3.0",
     "crypto": "0.0.3",
+    "file-loader": "^0.10.1",
     "gulp": "^3.9.1",
     "gulp-autoprefixer": "^3.1.1",
     "gulp-babel": "^6.1.2",
     "gulp-cache": "^0.4.5",
     "gulp-sass": "^3.1.0",
     "gulp-sourcemaps": "^2.4.0",
+    "jshint": "^2.9.4",
+    "mocha": "^3.2.0",
     "tsify": "^3.0.0",
     "tslint": "^4.5.1",
     "tsutils": "^1.4.0",
-    "typescript": "^2.2.1"
+    "typescript": "^2.2.2",
+    "url-loader": "^0.5.8"
   }
 }
