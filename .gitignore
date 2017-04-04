@@ -2,6 +2,7 @@
 logs
 dist/
 *.log
+TODO
 npm-debug.log*
 
 .vscode/
