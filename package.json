@@ -21,7 +21,11 @@
     "statistic",
     "special functions",
     "bessel function",
-    "data science"
+    "data science",
+    "special functions",
+    "bessel",
+    "bessel_i"
+    
   ],
   "author": "Jacob Bogers",
   "license": "GPL-3.0",
