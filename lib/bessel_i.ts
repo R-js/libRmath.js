@@ -99,9 +99,9 @@ export function bessel_i(x: number, alpha: number, expo: number): number {
         /* Using Abramowitz & Stegun  9.6.2 & 9.6.6
          * this may not be quite optimal (CPU and accuracy wise) */
         return (bessel_i(x, -alpha, expo) +
-            ((alpha == na) ? /* sin(pi * alpha) = 0 */ 0 :
+            ((alpha === na) ? /* sin(pi * alpha) = 0 */ 0 :
                 bessel_k(x, -alpha, expo) *
-                ((ize == 1) ? 2. : 2. * exp(-2. * x)) / M_PI * sinpi(-alpha)));
+                ((ize === 1) ? 2. : 2. * exp(-2. * x)) / M_PI * sinpi(-alpha)));
     }
     nb = 1 + trunc(na);/* nb-1 <= alpha < nb */
     alpha -= (nb - 1);
@@ -109,7 +109,7 @@ export function bessel_i(x: number, alpha: number, expo: number): number {
     I_bessel(input);
     ({ x, alpha, nb, ize, bi, ncalc } = input);
 
-    if (ncalc != nb) {/* error input */
+    if (ncalc !== nb) {/* error input */
         if (ncalc < 0)
             MATHLIB_WARNING4('bessel_i(%g): ncalc (=%d) != nb (=%d); alpha=%g. Arg. out of range?\n',
                 x, ncalc, nb, alpha);
@@ -143,16 +143,16 @@ export function bessel_i_ex(x: number, alpha: number, expo: number, bi: number[]
         /* Using Abramowitz & Stegun  9.6.2 & 9.6.6
          * this may not be quite optimal (CPU and accuracy wise) */
         return (bessel_i_ex(x, -alpha, expo, bi) +
-            ((alpha == na) ? 0 :
+            ((alpha === na) ? 0 :
                 bessel_k_ex(x, -alpha, expo, bi) *
-                ((ize == 1) ? 2. : 2. * exp(-2. * x)) / M_PI * sinpi(-alpha)));
+                ((ize === 1) ? 2. : 2. * exp(-2. * x)) / M_PI * sinpi(-alpha)));
     }
-    nb = 1 + trunc(na);/* nb-1 <= alpha < nb */
+    nb = 1 + trunc(na); /* nb-1 <= alpha < nb */
     alpha -= (nb - 1);
     let input: IBesselInput = { x, alpha, nb, ize, bi, ncalc: 0 };
     I_bessel(input);
     ({ x, alpha, nb, ize, bi, ncalc } = input);
-    if (ncalc != nb) {/* error input */
+    if (ncalc !== nb) {/* error input */
         if (ncalc < 0)
             MATHLIB_WARNING4('bessel_i(%g): ncalc (=%d) != nb (=%d); alpha=%g. Arg. out of range?\n',
                 x, ncalc, nb, alpha);
@@ -260,7 +260,7 @@ function I_bessel(µ: IBesselInput) {
     /*-------------------------------------------------------------------
       Mathematical constants
       -------------------------------------------------------------------*/
-    const const__ = 1.585;
+    const _const = 1.585;
 
     /* Local variables */
     let nend: number;
@@ -301,17 +301,17 @@ function I_bessel(µ: IBesselInput) {
         (1 <= µ.ize && µ.ize <= 2)) {
 
         µ.ncalc = µ.nb;
-        if (µ.ize == 1 && µ.x > exparg_BESS) {
+        if (µ.ize === 1 && µ.x > exparg_BESS) {
             for (k = 1; k <= µ.nb; k++)
                 µ.bi[k - 1] = ML_POSINF; /* the limit *is* = Inf */
             return;
         }
-        if (µ.ize == 2 && µ.x > xlrg_BESS_IJ) {
+        if (µ.ize === 2 && µ.x > xlrg_BESS_IJ) {
             for (k = 1; k <= µ.nb; k++)
                 µ.bi[k - 1] = 0.; /* The limit exp(-x) * I_nu(x) --> 0 : */
             return;
         }
-        intx = trunc(µ.x);/* fine, since *x <= xlrg_BESS_IJ <<< LONG_MAX */
+        intx = trunc(µ.x); /* fine, since *x <= xlrg_BESS_IJ <<< LONG_MAX */
         let L120 = false;
         if (µ.x >= rtnsig_BESS) { /* "non-small" x ( >= 1e-4 ) */
             /* -------------------------------------------------------------------
@@ -329,7 +329,7 @@ function I_bessel(µ: IBesselInput) {
             if (intx << 1 > nsig_BESS * 5) {
                 test = sqrt(test * p);
             } else {
-                test /= R_pow_di(const__, intx);
+                test /= R_pow_di(_const, intx);
             }
             if (nbmx >= 3) {
                 /* --------------------------------------------------
@@ -464,10 +464,10 @@ function I_bessel(µ: IBesselInput) {
                         aa = en * bb / µ.x + cc;
                         em -= 1.;
                         emp2al -= 1.;
-                        if (n == 1) {
+                        if (n === 1) {
                             break;
                         }
-                        if (n == 2) {
+                        if (n === 2) {
                             emp2al = 1.;
                         }
                         empal -= 1.;
@@ -491,12 +491,12 @@ function I_bessel(µ: IBesselInput) {
                     en -= 2.;
                     µ.bi[n - 1] = en * aa / µ.x + bb;
 
-                    if (n == 1) {
+                    if (n === 1) {
                         L220 = true;
                     }
                     if (!L220) {
                         em -= 1.;
-                        if (n == 2)
+                        if (n === 2)
                             emp2al = 1.;
                         else
                             emp2al -= 1.;
@@ -519,7 +519,7 @@ function I_bessel(µ: IBesselInput) {
                         en -= 2.;
                         µ.bi[n - 1] = en * µ.bi[n + 1 - 1] / µ.x + µ.bi[n + 2 - 1];
                         em -= 1.;
-                        if (n == 2)
+                        if (n === 2)
                             emp2al = 1.;
                         else
                             emp2al -= 1.;
@@ -540,9 +540,9 @@ function I_bessel(µ: IBesselInput) {
             /* ---------------------------------------------------------
                Normalize.  Divide all BI[N] by sum.
                --------------------------------------------------------- */
-            if (nu != 0.)
+            if (nu !== 0.)
                 sum *= (Rf_gamma_cody(1. + nu) * pow(µ.x * .5, -nu));
-            if (µ.ize == 1)
+            if (µ.ize === 1)
                 sum *= exp(-(µ.x));
             aa = enmten_BESS;
             if (sum > 1.)
@@ -563,16 +563,16 @@ function I_bessel(µ: IBesselInput) {
             /* No need to check for underflow */
             halfx = .5 * µ.x;
 
-            if (nu != 0.)
+            if (nu !== 0.)
                 aa = pow(halfx, nu) / Rf_gamma_cody(empal);
-            if (µ.ize == 2)
+            if (µ.ize === 2)
                 aa *= exp(-(µ.x));
             bb = halfx * halfx;
             µ.bi[1 - 1] = aa + aa * bb / empal;
-            if (µ.x != 0. && µ.bi[1] == 0.)
+            if (µ.x !== 0. && µ.bi[1] === 0.)
                 µ.ncalc = 0;
             if (µ.nb > 1) {
-                if (µ.x == 0.) {
+                if (µ.x === 0.) {
                     for (n = 2; n <= µ.nb; ++n)
                         µ.bi[n] = 0.;
                 } else {
@@ -581,7 +581,7 @@ function I_bessel(µ: IBesselInput) {
                        ------------------------------------------------- */
                     cc = halfx;
                     tover = (enmten_BESS + enmten_BESS) / µ.x;
-                    if (bb != 0.)
+                    if (bb !== 0.)
                         tover = enmten_BESS / bb;
                     for (n = 2; n <= µ.nb; ++n) {
                         aa /= empal;
@@ -591,7 +591,7 @@ function I_bessel(µ: IBesselInput) {
                             µ.bi[n - 1] = aa = 0.;
                         else
                             µ.bi[n - 1] = aa + aa * bb / empal;
-                        if (µ.bi[n - 1] == 0. && µ.ncalc > n)
+                        if (µ.bi[n - 1] === 0. && µ.ncalc > n)
                             µ.ncalc = n - 1;
                     }
                 }
