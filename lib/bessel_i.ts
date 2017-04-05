@@ -103,7 +103,7 @@ export function bessel_i(x: number, alpha: number, expo: number): number {
                 bessel_k(x, -alpha, expo) *
                 ((ize === 1) ? 2. : 2. * exp(-2. * x)) / M_PI * sinpi(-alpha)));
     }
-    nb = 1 + trunc(na);/* nb-1 <= alpha < nb */
+    nb = 1 + trunc(na); /* nb-1 <= alpha < nb */
     alpha -= (nb - 1);
     let input: IBesselInput = { x, alpha, nb, ize, bi: [], ncalc: 0 };
     I_bessel(input);
