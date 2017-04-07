@@ -94,7 +94,7 @@ import {
 
 import { log1p } from './log1p';
 import { lgammafn } from './lgamma_fn';
-import { expm1 } from './expm1';
+import { expm1, R_Log1_Exp } from './expm1';
 import { dpois_raw } from './dpois';
 import { dnorm } from './dnorm';
 
@@ -309,10 +309,10 @@ export function logspace_sum(logx: number[], n: number): number {
 
 
 // log(1 - exp(x))  in more stable form than log1p(- R_D_qIv(x)) :
-export function R_Log1_Exp(x: number): number {
+/*export function R_Log1_Exp(x: number): number {
   return (
     x > -M_LN2 ? log(-expm1(x)) : log1p(-exp(x)));
-}
+}*/
 /* dpois_wrap (x__1, lambda) := dpois(x__1 - 1, lambda);  where
  * dpois(k, L) := exp(-L) L^k / gamma(k+1)  {the usual Poisson probabilities}
  *

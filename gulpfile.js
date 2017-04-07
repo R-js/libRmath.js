@@ -88,7 +88,7 @@ gulp.task('ts-mock', function () {
 
 gulp.task('ts', function () {
   let rc = browserify({
-    entries: ['src/main.ts'],
+    entries: ['./lib/index.ts'],
     debug: true
   })
     .plugin(tsify)

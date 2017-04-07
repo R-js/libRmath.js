@@ -54,12 +54,11 @@ import {
     M_LN_2PI,
     R_D_negInonint,
     R_forceint,
-    R_nonint,
-    MATHLIB_WARNING,
     R_D__0,
     log,
     R_D_exp,
-    R_D__1
+    R_D__1,
+    R_D_nonint_check
 } from './_general';
 
 import { bd0 } from './bd0';
@@ -110,7 +109,7 @@ export function dbinom(x: number, n: number, p: number, give_log: boolean) {
 
     if (p < 0 || p > 1 || R_D_negInonint(n))
         ML_ERR_return_NAN;
-    R_D_nonint_check(x);
+    R_D_nonint_check(give_log, x);
     if (x < 0 || !R_FINITE(x)) return R_D__0;
 
     n = R_forceint(n);
@@ -119,10 +118,4 @@ export function dbinom(x: number, n: number, p: number, give_log: boolean) {
     return dbinom_raw(x, n, p, 1 - p, give_log);
 }
 
-export function R_D_nonint_check(x: number) {
 
-    if (R_nonint(x)) {
-        MATHLIB_WARNING('non-integer x = %f', x);
-        return R_D__0;
-    }
-}

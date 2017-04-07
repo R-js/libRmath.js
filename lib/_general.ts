@@ -25,30 +25,7 @@ export const MAX_DIGITS = DBL_MAX_10_EXP;
 export const INT_MAX = Number.MAX_SAFE_INTEGER;
 export const INT_MIN = Number.MIN_SAFE_INTEGER;
 
-export function rround(x: number) {
-
-    if (x < 0) {
-        return trunc(x - 0.5);
-    }
-    return trunc(x + 0.5);
-}
-
-export function imin2(x: number, y: number): number {
-    return (x < y) ? trunc(x) : trunc(y);
-}
-
-/* Use 0.5 - p + 0.5 to perhaps gain 1 bit of accuracy */
-export function R_D_Lval(lower_tail: boolean, p: number): number {
-    return (lower_tail ? (p) : (0.5 - (p) + 0.5))	/*  p  */
-}
-
-export function R_D_Cval(lower_tail: boolean, p: number): number {
-    return (lower_tail ? (0.5 - (p) + 0.5) : (p))	/*  1 - p */
-}
-
-
-/* 
-    nearbyint is C99, so all platforms should have it (and AFAIK, all do) 
+/* nearbyint is C99, so all platforms should have it (and AFAIK, all do) 
 */
 
 export const M_SQRT_32 = 5.656854249492380195206754896838; /* sqrt(32) */
@@ -93,23 +70,56 @@ export const M_LN_SQRT_PI = 0.5723649429247; // log(sqrt(pi))
 export const M_LN_SQRT_2PI = 0.918938533204672741780329736406; // log(sqrt(2*pi)) 
 export const M_LN_SQRT_PId2 = 0.225791352644727432363097614947;	// log(sqrt(pi/2)) 
 export const M_LN10 = 2.30258509299404568402	/* log_e 10 */
-
-export const R_D__1 = (log_p: boolean) => {
-    return log_p ? 0. : 1.0;
-};
-
-export const R_D__0 = (log_p: boolean): number => {
-    return log_p ? ML_NEGINF : 0.0;
-};
-
 export const ML_VALID = (x: number) => !ISNAN(x);
 
-export function R_P_bounds_Inf_01(lower_tail: boolean, log_p: boolean, x: number): number | undefined {
+
+export const R_D__1 = (logP: boolean) => {
+    return logP ? 0. : 1.0;
+};
+
+export const R_D__0 = (logP: boolean): number => {
+    return logP ? ML_NEGINF : 0.0;
+};
+
+export const R_DT_0 = (lower_tail: boolean, log_p: boolean): number => {
+    return lower_tail ? R_D__0(log_p) : R_D__1(log_p);
+};
+export const R_DT_1 = (lower_tail: boolean, log_p: boolean): number => {
+    return lower_tail ? R_D__1(log_p) : R_D__0(log_p);
+};
+export const R_D_val = (log_p: boolean, x: number) => {
+    return (log_p ? log(x) : (x));
+};
+
+
+export function rround(x: number) {
+
+    if (x < 0) {
+        return trunc(x - 0.5);
+    }
+    return trunc(x + 0.5);
+}
+
+export function imin2(x: number, y: number): number {
+    return (x < y) ? trunc(x) : trunc(y);
+}
+
+/* Use 0.5 - p + 0.5 to perhaps gain 1 bit of accuracy */
+export function R_D_Lval(lowerTail: boolean, p: number): number {
+    return (lowerTail ? (p) : (0.5 - (p) + 0.5)); /*  p  */
+}
+
+export function R_D_Cval(lowerTail: boolean, p: number): number {
+    return (lowerTail ? (0.5 - (p) + 0.5) : (p));	/*  1 - p */
+}
+
+
+export function R_P_bounds_Inf_01(lowerTail: boolean, log_p: boolean, x: number): number | undefined {
     if (!R_FINITE(x)) {
         if (x > 0) {
-            return R_DT_1(lower_tail, log_p);
+            return R_DT_1(lowerTail, log_p);
         }
-        return R_DT_0(lower_tail, log_p);
+        return R_DT_0(lowerTail, log_p);
     }
     return undefined;
 }
@@ -124,15 +134,7 @@ export function R_P_bounds_01(lower_tail: boolean, log_p: boolean, x: number, x_
     return undefined;
 }
 
-export const R_DT_0 = (lower_tail: boolean, log_p: boolean): number => {
-    return lower_tail ? R_D__0(log_p) : R_D__1(log_p);
-};
-export const R_DT_1 = (lower_tail: boolean, log_p: boolean): number => {
-    return lower_tail ? R_D__1(log_p) : R_D__0(log_p);
-};
-export const R_D_val = (log_p: boolean, x: number) => {
-    return (log_p ? log(x) : (x));
-};
+
 
 
 export const R_D_exp = (log_p: boolean, x: number): number => {
@@ -216,6 +218,7 @@ export function R_D_nonint_check(log: boolean, x: number) {
     }
     return undefined;
 }
+
 
 
 export function fabs(x: number) {
@@ -490,7 +493,7 @@ export const atanpi = (x: number) => {
 
 
 export function R_D_log(log_p: boolean, p: number) {
-    return (log_p ? (p) : log(p))	/* log(p) */
+    return (log_p ? (p) : log(p)); 	/* log(p) */
 }
 
 export function R_Q_P01_boundaries(lower_tail: boolean, log_p: boolean, p: number, _LEFT_: number, _RIGHT_: number): number | undefined {
@@ -498,27 +501,27 @@ export function R_Q_P01_boundaries(lower_tail: boolean, log_p: boolean, p: numbe
         if (p > 0) {
             return ML_ERR_return_NAN();
         }
-        if (p == 0) /* upper bound*/
+        if (p === 0) /* upper bound*/
             return lower_tail ? _RIGHT_ : _LEFT_;
-        if (p == ML_NEGINF)
+        if (p === ML_NEGINF)
             return lower_tail ? _LEFT_ : _RIGHT_;
     }
     else { /* !log_p */
         if (p < 0 || p > 1) {
             return ML_ERR_return_NAN();
         }
-        if (p == 0)
+        if (p === 0)
             return lower_tail ? _LEFT_ : _RIGHT_;
-        if (p == 1)
+        if (p === 1)
             return lower_tail ? _RIGHT_ : _LEFT_;
     }
     return undefined;
 }
 
 
-export function R_Q_P01_check(log_p: boolean, p: number): number | undefined {
-    if ((log_p && p > 0)
-        || (!log_p && (p < 0 || p > 1))
+export function R_Q_P01_check(logP: boolean, p: number): number | undefined {
+    if ((logP && p > 0)
+        || (!logP && (p < 0 || p > 1))
     ) {
         return ML_ERR_return_NAN();
     }
@@ -526,7 +529,7 @@ export function R_Q_P01_check(log_p: boolean, p: number): number | undefined {
 }
 
 //#define R_D_qIv(p)	(log_p	? exp(p) : (p))		/*  p  in qF(p,..) */
-export function R_D_qIv(log_p: boolean, p: number) {
-    return log_p ? exp(p) : p;
+export function R_D_qIv(logP: boolean, p: number) {
+    return logP ? exp(p) : p;
 }
 

@@ -114,8 +114,8 @@ export function dnt(x: number, df: number, ncp: number, give_log: boolean): numb
     /* Consider two cases: x ~= 0 or not */
     if (fabs(x) > sqrt(df * DBL_EPSILON)) {
         u = log(df) - log(fabs(x)) +
-            log(fabs(pnt(x * sqrt((df + 2) / df), df + 2, ncp, 1, 0) -
-                pnt(x, df, ncp, 1, 0)));
+            log(fabs(pnt(x * sqrt((df + 2) / df), df + 2, ncp, true, false) -
+                pnt(x, df, ncp, true, false)));
         /* FIXME: the above still suffers from cancellation (but not horribly) */
     }
     else {  /* x ~= 0 : -> same value as for  x = 0 */

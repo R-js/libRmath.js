@@ -35,7 +35,7 @@ import {
     log
 } from './_general'
 
-import { pnorm } from './pnorm';
+import { pnorm5 as pnorm } from './pnorm';
 
 export function plnorm(x: number, meanlog: number, sdlog: number, lower_tail: boolean, log_p: boolean): number {
 

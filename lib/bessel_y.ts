@@ -59,7 +59,7 @@ import {
   M_eps_sinc
 } from './_general';
 
-import { bessel_j_ex } from './bessel_j';
+import { bessel_j_ex, bessel_j } from './bessel_j';
 
 import { cospi, sinpi } from './cospi';
 

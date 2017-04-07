@@ -61,21 +61,21 @@ import { qnorm } from './qnorm';
 
 import { R_DT_qIv } from './expm1';
 
-export function do_search(y: number, z: NumberW, p: number, lambda: number, incr: number): number {
+ function do_search(y: number, z: NumberW, p: number, lambda: number, incr: number): number {
     if (z.val >= p) {
-        /* search to the left */
+        // search to the left 
         for (; ;) {
-            if (y == 0 ||
-                (z.val = ppois(y - incr, lambda, /*l._t.*/true, /*log_p*/false)) < p)
+            if (y === 0 ||
+                (z.val = ppois(y - incr, lambda, true, false)) < p)
                 return y;
             y = fmax2(0, y - incr);
         }
     }
-    else {		/* search to the right */
+    else {	// search to the right 
 
         for (; ;) {
             y = y + incr;
-            if ((z.val = ppois(y, lambda, /*l._t.*/true, /*log_p*/false)) >= p)
+            if ((z.val = ppois(y, lambda, true, false)) >= p)
                 return y;
         }
     }

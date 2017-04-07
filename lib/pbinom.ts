@@ -52,7 +52,7 @@ export function pbinom(x: number, n: number, p: number, lower_tail: boolean, log
     }
 
     if (R_nonint(n)) {
-        MATHLIB_WARNING(_("non-integer n = %f"), n);
+        MATHLIB_WARNING('non-integer n = %f', n);
         ML_ERR_return_NAN;
     }
     n = R_forceint(n);

@@ -81,7 +81,8 @@ let w: number[][][];
 
 
 
-export function w_init_maybe(m: number, n: number): void {
+
+ function w_init_maybe(m: number, n: number): void {
     let i;
 
     if (m > n) {

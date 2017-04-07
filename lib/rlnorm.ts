@@ -38,7 +38,7 @@ import {
     exp
 } from './_general';
 
-import { rnorm } from './rnorm',
+import { rnorm } from './rnorm';
 
 export function  rlnorm(meanlog: number, sdlog: number): number {
     if(ISNAN(meanlog) || !R_FINITE(sdlog) || sdlog < 0.)

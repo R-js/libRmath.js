@@ -9,7 +9,7 @@
     "class-name": true,
     "new-parens": true,
     "variable-name": [
-      true,
+      false,
       "check-format",
       "allow-leading-underscore",
       "allow-pascal-case"

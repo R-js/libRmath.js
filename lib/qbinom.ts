@@ -56,7 +56,7 @@ import { R_DT_qIv } from './expm1';
 
 import { qnorm } from './qnorm';
 
-export function do_search(y: number, z: NumberW, p: number, n: number, pr: number, incr: number): number {
+function do_search(y: number, z: NumberW, p: number, n: number, pr: number, incr: number): number {
     if (z.val >= p) {
         /* search to the left */
 
@@ -77,7 +77,7 @@ export function do_search(y: number, z: NumberW, p: number, n: number, pr: numbe
 
         for (; ;) {
             y = fmin2(y + incr, n);
-            if (y == n ||
+            if (y === n ||
                 (z.val = pbinom(y, n, pr, /*l._t.*/true, /*log_p*/false)) >= p)
                 return y;
         }
@@ -138,7 +138,7 @@ export function qbinom(p: number, n: number, pr: number, lower_tail: boolean, lo
     if (p + 1.01 * DBL_EPSILON >= 1.) return n;
 
     /* y := approx.value (Cornish-Fisher expansion) :  */
-    z = qnorm(p, 0., 1., /*lower_tail*/true, /*log_p*/false);
+    z.val = qnorm(p, 0., 1., /*lower_tail*/true, /*log_p*/false);
     y = floor(mu + sigma * (z.val + gamma * (z.val * z.val - 1) / 6) + 0.5);
 
     if (y > n) /* way off */ y = n;

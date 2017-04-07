@@ -32,12 +32,15 @@ import {
     ML_ERR_return_NAN,
     R_DT_0,
     R_DT_1,
-    floor
+    floor,
+    fmax2
 } from './_general';
 
 import {
     pgamma
 } from './pgamma';
+
+import { NumberW } from './toms708';
 
 export function ppois(x: number, lambda: number, lower_tail: boolean, log_p: boolean) : number{
 
@@ -55,3 +58,24 @@ export function ppois(x: number, lambda: number, lower_tail: boolean, log_p: boo
     return pgamma(lambda, x + 1, 1., !lower_tail, log_p);
 }
 
+
+
+export function do_search(y: number, z: NumberW, p: number, lambda: number, incr: number): number {
+    if (z.val >= p) {
+        /* search to the left */
+        for (; ;) {
+            if (y == 0 ||
+                (z.val = ppois(y - incr, lambda, /*l._t.*/true, /*log_p*/false)) < p)
+                return y;
+            y = fmax2(0, y - incr);
+        }
+    }
+    else {		/* search to the right */
+
+        for (; ;) {
+            y = y + incr;
+            if ((z.val = ppois(y, lambda, /*l._t.*/true, /*log_p*/false)) >= p)
+                return y;
+        }
+    }
+}

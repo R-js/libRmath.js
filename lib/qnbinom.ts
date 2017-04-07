@@ -77,21 +77,31 @@ import {
 
 
 
-export function do_search(y: number, z: NumberW, p: number, n: number, pr: number, incr: number): number {
+ function do_search(y: number, z: NumberW, p: number, n: number, pr: number, incr: number): number {
     if (z.val >= p) {
-        /* search to the left */
+        //* search to the left 
         for (; ;) {
-            if (y == 0 ||
-                (z.val = pnbinom(y - incr, n, pr, /*l._t.*/true, /*log_p*/false)) < p)
+            if (y === 0 ||
+                (z.val = pnbinom(
+                    y - incr, 
+                    n, 
+                    pr, 
+                    true, ///log_p,
+                    false)) < p)
                 return y;
             y = fmax2(0, y - incr);
         }
     }
-    else {		/* search to the right */
+    else {		// search to the right 
 
         for (; ;) {
             y = y + incr;
-            if ((z.val = pnbinom(y, n, pr, /*l._t.*/true, /*log_p*/false)) >= p)
+            if ((z.val = pnbinom(
+                y, 
+                n, 
+                pr, //l._t.
+                true, 
+                false)) >= p)
                 return y;
         }
     }
