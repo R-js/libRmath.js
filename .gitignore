@@ -1,6 +1,7 @@
 # Logs
 logs
 dist/
+r-source-trunk/
 *.log
 TODO
 npm-debug.log*

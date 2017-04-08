@@ -1,6 +1,6 @@
 'use strict';
 
-var path = require('path'),
+const
   gulp = require('gulp'),
   watch = require('gulp-watch'),
   //sass = require('gulp-sass'),
@@ -28,34 +28,15 @@ gulp.task('clean:dist', function () {
 
 
 gulp.task('tsc', function () {
-  let tsResult = tsP.src().pipe(tsP());
+  let tsResult = tsP.src().pipe(tsP()).on('error', function (err) {
+    gutil.log('typescript transpile error:', err);
+    process.exit(1);
+  });
+
   return merge([
     tsResult.dts.pipe(gulp.dest('dist')),
     tsResult.js.pipe(gulp.dest('dist'))
   ]);
-
-});
-
-gulp.task('ts', function () {
-  let rc = browserify({
-    entries: ['./index.ts'],
-    debug: true
-  })
-    .plugin(tsify)
-    .bundle()
-    .on('error', function (err) {
-      gutil.log('Browserify error:', err);
-      process.exit(1);
-    })
-    .pipe(source('bundle.js'))
-    .pipe(buffer())
-    .pipe(sourcemaps.init({
-      loadMaps: true
-    }))
-    .pipe(uglify())
-    .pipe(sourcemaps.write('./'))
-    .pipe(gulp.dest('dist/'));
-  return rc;
 });
 
 

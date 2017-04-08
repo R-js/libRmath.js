@@ -12,8 +12,6 @@
 
 */
 
-
-
 export const M_SQRT2 =	1.414213562373095048801688724210; /* sqrt(2) */
 export const sqr = (x: number) => x * x;
 export const ceil = Math.ceil;
@@ -24,10 +22,6 @@ export const DBL_MAX_10_EXP = Math.log10(Number.MAX_VALUE);
 export const MAX_DIGITS = DBL_MAX_10_EXP;
 export const INT_MAX = Number.MAX_SAFE_INTEGER;
 export const INT_MIN = Number.MIN_SAFE_INTEGER;
-
-/* nearbyint is C99, so all platforms should have it (and AFAIK, all do) 
-*/
-
 export const M_SQRT_32 = 5.656854249492380195206754896838; /* sqrt(32) */
 export const DBL_MANT_DIG = 18;
 export const FLT_MANT_DIG = DBL_MANT_DIG;
@@ -36,7 +30,6 @@ export const M_1_SQRT_2PI = 0.398942280401432677939946059934;
 export const nearbyint = rround;
 export const R_forceint = nearbyint;
 export const R_rint = nearbyint;
-
 export const M_2PI = 6.283185307179586476925286766559;
 export const M_LN_2PI = 1.837877066409345483560659472811;
 export const sqrt = Math.sqrt;
@@ -44,22 +37,17 @@ export const DBL_EPSILON = 6E-17; //true for javascript, this was tested
 export const sinh = Math.sinh;
 export const DBL_MAX = Number.MAX_VALUE;
 export const exp = Math.exp;
-
 export const isInteger = Number.isInteger;
 export const sin = Math.sin;
 export const cos = Math.cos;
 export const pow = Math.pow;
-
 export const M_1_PI = 1.0 / Math.PI;
-
 export const R_FINITE = (x: number) => Number.isFinite(x);
 export const NaN = Number.NaN;
 export const FLT_MIN = 2.22507e-308; //10^24  larger then Number.MIN_VALUE
 export const DBL_MIN = FLT_MIN;
-
 export const log = Math.log;
 export const ISNAN = Number.isNaN;
-
 export const ML_NAN = NaN;
 export const round = Math.round;
 export const ML_POSINF = Number.POSITIVE_INFINITY;
@@ -69,9 +57,18 @@ export const M_PI_2 = Math.PI / 2;
 export const M_LN_SQRT_PI = 0.5723649429247; // log(sqrt(pi)) 
 export const M_LN_SQRT_2PI = 0.918938533204672741780329736406; // log(sqrt(2*pi)) 
 export const M_LN_SQRT_PId2 = 0.225791352644727432363097614947;	// log(sqrt(pi/2)) 
-export const M_LN10 = 2.30258509299404568402	/* log_e 10 */
+export const M_LN10 = 2.30258509299404568402;  /* log_e 10 */
 export const ML_VALID = (x: number) => !ISNAN(x);
-
+export const floor = Math.floor;
+export const M_SQRT_2dPI = 0.797884560802865355879892119869; // sqrt(2/pi) 
+export const M_LOG10_2 = 0.301029995663981195213738894724;
+export const FLT_RADIX = 2;
+export const CHAR_BIT = 8;
+export const DBL_MAX_EXP = Math.log2(Number.MAX_VALUE);
+export const DBL_MIN_EXP = Math.log2(Number.MIN_VALUE);
+export const FLT_MAX_EXP = DBL_MAX_EXP;
+export const FLT_MIN_EXP = DBL_MIN_EXP;
+export const sizeofInt = 4 * Math.ceil(Math.log(Number.MAX_SAFE_INTEGER) / Math.log(2) / 4 / CHAR_BIT);
 
 export const R_D__1 = (logP: boolean) => {
     return logP ? 0. : 1.0;
@@ -143,11 +140,7 @@ export const R_D_exp = (log_p: boolean, x: number): number => {
     /* exp(x) */
 }
 
-export const floor = Math.floor;
 
-export const M_SQRT_2dPI = 0.797884560802865355879892119869; // sqrt(2/pi) 
-
-export const M_LOG10_2 = 0.301029995663981195213738894724;
 
 export enum ME {
     ME_NONE = 0, // no error
@@ -304,7 +297,7 @@ export const xlrg_BESS_IJ = 1e5;
 export const xlrg_BESS_Y = 1e8;
 export const thresh_BESS_Y = 16.;
 
-export const xmax_BESS_K = 705.342/* maximal x for UNscaled answer */
+export const xmax_BESS_K = 705.342; /* maximal x for UNscaled answer */
 
 
 /* sqrt(DBL_MIN) =	1.491668e-154 */
@@ -443,13 +436,7 @@ export function ldexp(x: number, y: number): number {
 
 }
 
-export const FLT_RADIX = 2;
-export const CHAR_BIT = 8;
-export const DBL_MAX_EXP = Math.log2(Number.MAX_VALUE);
-export const DBL_MIN_EXP = Math.log2(Number.MIN_VALUE);
-export const FLT_MAX_EXP = DBL_MAX_EXP;
-export const FLT_MIN_EXP = DBL_MIN_EXP;
-export const sizeofInt = 4 * Math.ceil(Math.log(Number.MAX_SAFE_INTEGER) / Math.log(2) / 4 / CHAR_BIT);
+
 
 export function Rf_i1mach(i: number): number {
 
