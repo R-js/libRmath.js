@@ -26,13 +26,13 @@ import { R_FINITE, ML_ERR_return_NAN } from './_general';
 import { random2_64StepsAsFloat } from './_unif_random';
 
 
-enum RNG {
+export enum RNG {
     Native = 1
 
 
 }
 
-let select = RNG.Native; //default
+let select: RNG = RNG.Native; //default
 
 
 export function selectRNG(s: RNG) {

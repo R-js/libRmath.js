@@ -2,11 +2,12 @@
   "name": "lib-r-math.js",
   "version": "1.0.31",
   "description": "Javascript Pure Implementation of Statistical R \"core\" numerical libRmath.so",
-  "main": "index.js",
+  "main": "./dist/index.js",
   "scripts": {
     "build": "./node_modules/.bin/gulp",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "types": "./dist/index.d.ts",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/jacobbogers/libRmath.js.git"
@@ -26,7 +27,7 @@
     "bessel",
     "bessel_i"
   ],
-  "author": "Jacob Bogers",
+  "author": "Jacob K.F. Bogers",
   "license": "GPL-3.0",
   "bugs": {
     "url": "https://github.com/jacobbogers/libRmath.js/issues"
@@ -46,8 +47,11 @@
     "gulp-sass": "^3.1.0",
     "gulp-sourcemaps": "^2.5.1",
     "gulp-tslint": "^7.1.0",
+    "gulp-typescript": "^3.1.6",
+    "gulp-uglify": "^2.1.2",
     "gulp-watch": "^4.3.11",
     "jshint": "^2.9.4",
+    "merge2": "^1.0.3",
     "mocha": "^3.2.0",
     "tsify": "^3.0.1",
     "tslint": "^4.5.1",
@@ -56,6 +60,7 @@
     "url-loader": "^0.5.8",
     "vinyl": "^2.0.1",
     "vinyl-buffer": "^1.0.0",
-    "vinyl-source-stream": "^1.1.0"
+    "vinyl-source-stream": "^1.1.0",
+    "vinyl-transform": "^1.0.0"
   }
 }
