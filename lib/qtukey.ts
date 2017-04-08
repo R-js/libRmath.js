@@ -84,7 +84,10 @@ export function qinv(p: number, c: number, v: number): number {
     const c5 = 1.4142;
     const vmax = 120.0;
 
-    let ps, q, t, yi;
+    let ps;
+    let q;
+    let t;
+    let yi;
 
     ps = 0.5 - 0.5 * p;
     yi = sqrt(log(1.0 / (ps * ps)));
@@ -130,7 +133,7 @@ import {
     R_Q_P01_boundaries,
     fmax2,
     fabs
-} from './_general'
+} from './_general';
 
 import { R_DT_qIv } from './expm1';
 
@@ -141,7 +144,12 @@ export function qtukey(p: number, rr: number, cc: number, df: number,
     const eps = 0.0001;
     const maxiter = 50;
 
-    let ans = 0.0, valx0, valx1, x0, x1, xabs;
+    let ans = 0.0;
+    let valx0;
+    let valx1;
+    let x0;
+    let x1;
+    let xabs;
     let iter;
 
 

@@ -28,10 +28,10 @@
  */
 
 import {
-ISNAN,
-ML_POSINF,
-R_Q_P01_boundaries,
-exp,
+    ISNAN,
+    ML_POSINF,
+    R_Q_P01_boundaries,
+    exp,
 
 } from './_general';
 
@@ -39,10 +39,10 @@ import {
     qnorm
 } from './qnorm';
 
-export function  qlnorm(p: number, meanlog: number, sdlog: number, lower_tail: boolean, log_p: boolean): number {
+export function qlnorm(p: number, meanlog: number, sdlog: number, lower_tail: boolean, log_p: boolean): number {
 
     if (ISNAN(p) || ISNAN(meanlog) || ISNAN(sdlog))
-	return p + meanlog + sdlog;
+        return p + meanlog + sdlog;
 
     R_Q_P01_boundaries(lower_tail, log_p, p, 0, ML_POSINF);
 

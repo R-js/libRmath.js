@@ -71,7 +71,7 @@ import { norm_rand } from './snorm';
 export function rgamma(a: number, scale: number): number {
     /* Constants : */
     const sqrt32 = 5.656854;
-    const exp_m1 = 0.36787944117144232159;/* exp(-1) = 1/e */
+    const exp_m1 = 0.36787944117144232159; /* exp(-1) = 1/e */
 
     /* Coefficients q[k] - for q0 = sum(q[k]*a^(-k))
      * Coefficients a[k] - for q = q0+(t*t/2)*sum(a[k]*v^k)
@@ -98,7 +98,7 @@ export function rgamma(a: number, scale: number): number {
     let aaa = 0.;
     let s = 0;
     let s2 = 0;
-    let d = 0;;    /* no. 1 (step 1) */
+    let d = 0;   /* no. 1 (step 1) */
     let q0 = 0;
     let b = 0;
     let si = 0;
@@ -116,12 +116,12 @@ export function rgamma(a: number, scale: number): number {
     let ret_val = 0;
 
     if (!R_FINITE(a) || !R_FINITE(scale) || a < 0.0 || scale <= 0.0) {
-        if (scale == 0.) return 0.;
+        if (scale === 0.) return 0.;
         return ML_ERR_return_NAN();
     }
 
     if (a < 1.) { /* GS algorithm for parameters a < 1 */
-        if (a == 0)
+        if (a === 0)
             return 0.;
         e = 1.0 + exp_m1 * a;
         while (true) {
@@ -142,7 +142,7 @@ export function rgamma(a: number, scale: number): number {
     /* --- a >= 1 : GD algorithm --- */
 
     /* Step 1: Recalculations of s2, s, d if a has changed */
-    if (a != aa) {
+    if (a !== aa) {
         aa = a;
         s2 = a - 0.5;
         s = sqrt(s2);
@@ -165,7 +165,7 @@ export function rgamma(a: number, scale: number): number {
 
     /* Step 4: recalculations of q0, b, si, c if necessary */
 
-    if (a != aaa) {
+    if (a !== aaa) {
         aaa = a;
         r = 1.0 / a;
         q0 = ((((((q7 * r + q6) * r + q5) * r + q4) * r + q3) * r

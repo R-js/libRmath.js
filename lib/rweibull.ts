@@ -33,13 +33,13 @@ import {
     ML_ERR_return_NAN,
     pow,
     log
-} from './_general'
+} from './_general';
 
 import { unif_rand } from './_unif_random';
 
 export function rweibull(shape: number, scale: number): number {
     if (!R_FINITE(shape) || !R_FINITE(scale) || shape <= 0. || scale <= 0.) {
-        if (scale == 0.) return 0.;
+        if (scale === 0.) return 0.;
         /* else */
         return ML_ERR_return_NAN();
     }

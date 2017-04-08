@@ -49,7 +49,7 @@
 import {
     R_FINITE,
     ML_ERR_return_NAN
-} from './_general'
+} from './_general';
 
 import { rpois } from './rpois';
 import { rgamma } from './rgamma';
@@ -59,12 +59,12 @@ export function rnbinom(size: number, prob: number): number {
         /* prob = 1 is ok, PR#1218 */
         return ML_ERR_return_NAN();
     }
-    return (prob == 1) ? 0 : rpois(rgamma(size, (1 - prob) / prob));
+    return (prob === 1) ? 0 : rpois(rgamma(size, (1 - prob) / prob));
 }
 
 export function rnbinom_mu(size: number, mu: number): number {
     if (!R_FINITE(size) || !R_FINITE(mu) || size <= 0 || mu < 0) {
         return ML_ERR_return_NAN();
     }
-    return (mu == 0) ? 0 : rpois(rgamma(size, mu / size));
+    return (mu === 0) ? 0 : rpois(rgamma(size, mu / size));
 }

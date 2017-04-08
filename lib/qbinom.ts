@@ -62,9 +62,9 @@ function do_search(y: number, z: NumberW, p: number, n: number, pr: number, incr
 
         REprintf('\tnew z=%7g >= p = %7g  --> search to left (y--) ..\n', z.val, p);
 
-        for (; ;) {
+        while (true) {
             let newz: number;
-            if (y == 0 ||
+            if (y === 0 ||
                 (newz = pbinom(y - incr, n, pr, /*l._t.*/true, /*log_p*/false)) < p)
                 return y;
             y = fmax2(0, y - incr);
@@ -75,7 +75,7 @@ function do_search(y: number, z: NumberW, p: number, n: number, pr: number, incr
 
         REprintf('\tnew z=%7g < p = %7g  --> search to right (y++) ..\n', z.val, p);
 
-        for (; ;) {
+        while (true) {
             y = fmin2(y + incr, n);
             if (y === n ||
                 (z.val = pbinom(y, n, pr, /*l._t.*/true, /*log_p*/false)) >= p)
@@ -106,7 +106,7 @@ export function qbinom(p: number, n: number, pr: number, lower_tail: boolean, lo
     }
 
 
-    if (n != floor(n + 0.5)) ML_ERR_return_NAN;
+    if (n !== floor(n + 0.5)) ML_ERR_return_NAN;
     if (pr < 0 || pr > 1 || n < 0)
         ML_ERR_return_NAN;
 
@@ -115,24 +115,24 @@ export function qbinom(p: number, n: number, pr: number, lower_tail: boolean, lo
         return rc;
     }
 
-    if (pr == 0. || n == 0) return 0.;
+    if (pr === 0. || n === 0) return 0.;
 
     q = 1 - pr;
-    if (q == 0.) return n; /* covers the full range of the distribution */
+    if (q === 0.) return n; /* covers the full range of the distribution */
     mu = n * pr;
     sigma = sqrt(n * pr * q);
     gamma = (q - pr) / sigma;
 
 
-    REprintf("qbinom(p=%7g, n=%g, pr=%7g, l.t.=%d, log=%d): sigm=%g, gam=%g\n",
+    REprintf('qbinom(p=%7g, n=%g, pr=%7g, l.t.=%d, log=%d): sigm=%g, gam=%g\n',
         p, n, pr, lower_tail, log_p, sigma, gamma);
 
     /* Note : "same" code in qpois.c, qbinom.c, qnbinom.c --
      * FIXME: This is far from optimal [cancellation for p ~= 1, etc]: */
     if (!lower_tail || log_p) {
         p = R_DT_qIv(lower_tail, log_p, p); /* need check again (cancellation!): */
-        if (p == 0.) return 0.;
-        if (p == 1.) return n;
+        if (p === 0.) return 0.;
+        if (p === 1.) return n;
     }
     /* temporary hack --- FIXME --- */
     if (p + 1.01 * DBL_EPSILON >= 1.) return n;
@@ -154,7 +154,8 @@ export function qbinom(p: number, n: number, pr: number, lower_tail: boolean, lo
     if (n < 1e5) return do_search(y, z, p, n, pr, 1);
     /* Otherwise be a bit cleverer in the search */
     {
-        let incr = floor(n * 0.001), oldincr;
+        let incr = floor(n * 0.001);
+        let oldincr;
         do {
             oldincr = incr;
             y = do_search(y, z, p, n, pr, incr);

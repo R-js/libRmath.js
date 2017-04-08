@@ -41,7 +41,7 @@ import { exp_rand } from './sexp';
 
 export function rexp(scale: number): number {
     if (!R_FINITE(scale) || scale <= 0.0) {
-        if (scale == 0.) return 0.;
+        if (scale === 0.) return 0.;
         /* else */
         return ML_ERR_return_NAN();
     }

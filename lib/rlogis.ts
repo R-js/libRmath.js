@@ -46,7 +46,7 @@ export function rlogis(location: number, scale: number): number {
     }
 
 
-    if (scale == 0. || !R_FINITE(location))
+    if (scale === 0. || !R_FINITE(location))
         return location;
     else {
         let u = unif_rand();

@@ -55,7 +55,7 @@ export const ML_ERR_ret_NAN = (_k_: number, rN: number[]): void => {
     ML_ERROR(ME.ME_DOMAIN, 'rmultinom');
     rN[_k_] = -1;
     return;
-}
+};
 
 export function rmultinom(n: number, prob: number[], K: number, rN: number[]): void {
     /* `Return' vector  rN[1:K] {K := length(prob)}
@@ -92,13 +92,13 @@ export function rmultinom(n: number, prob: number[], K: number, rN: number[]): v
     if (fabs((p_tot - 1.)) > 1e-7)
         MATHLIB_ERROR('rbinom: probability sum should be 1, but is %g',
             p_tot);
-    if (n == 0) return;
-    if (K == 1 && p_tot == 0.) return;/* trivial border case: do as rbinom */
+    if (n === 0) return;
+    if (K === 1 && p_tot === 0.) return; /* trivial border case: do as rbinom */
 
     /* Generate the first K-1 obs. via binomials */
 
     for (k = 0; k < K - 1; k++) { /* (p_tot, n) are for "remaining binomial" */
-        if (prob[k] != 0.) {
+        if (prob[k] !== 0.) {
             pp = (prob[k] / p_tot);
             /* printf("[%d] %.17f\n", k+1, pp); */
             rN[k] = ((pp < 1.) ?  rbinom( n, pp) :

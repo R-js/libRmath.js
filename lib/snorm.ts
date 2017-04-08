@@ -54,6 +54,7 @@ import { unif_rand } from './_unif_random';
 import { qnorm as qnorm5 } from './qnorm';
 
 let BM_norm_keep = 0.0;
+const A = 2.216035867166471;
 
 /* Different kinds of "N(0,1)" generators :*/
 
@@ -68,7 +69,7 @@ export enum N01type {
 
 
 export let N01_kind: N01type = N01type.INVERSION;
-
+export const User_norm_fun = user_norm_fun_default;
 
 
 /*
@@ -147,7 +148,7 @@ export function norm_rand(): number {
     return (C1 * exp(-x * x / 2.0) - C2 * (A - x));
   }
 
-  const A = 2.216035867166471;
+
 
   let s;
   let u1;
@@ -174,9 +175,9 @@ export function norm_rand(): number {
       u1 = u1 + u1 - s;
       u1 *= 32.0;
       i = u1;
-      if (i == 32)
+      if (i === 32)
         i = 31;
-      if (i != 0) {// if 1
+      if (i !== 0) {// if 1
         u2 = u1 - i;
         aa = a[i - 1];
         while (u2 <= t[i - 1]) {
@@ -242,12 +243,12 @@ export function norm_rand(): number {
           }
           u1 = unif_rand();
         }
-        //jump: ; mmm jump and deliver goto labels are basicly the same position in the code
+          //jump: ; mmm jump and deliver goto labels are basicly the same position in the code
       } //else 1
 
       //deliver:
       y = aa + w;
-      return (s == 1.0) ? -y : y;
+      return (s === 1.0) ? -y : y;
 
     /*-----------------------------------------------------------*/
 
@@ -304,7 +305,7 @@ export function norm_rand(): number {
           return (u2 < u3) ? tt : -tt;
       }
     case N01type.BOX_MULLER:
-      if (BM_norm_keep != 0.0) { /* An exact test is intentional */
+      if (BM_norm_keep !== 0.0) { /* An exact test is intentional */
         s = BM_norm_keep;
         BM_norm_keep = 0.0;
         return s;
@@ -380,17 +381,19 @@ export function norm_rand(): number {
       }
     default:
       MATHLIB_ERROR('norm_rand(): invalid N01_kind: %d\n', N01_kind);
-      return 0.0;/*- -Wall */
+      return 0.0; /*- -Wall */
   }/*switch*/
 }
 
-export let User_norm_fun = user_norm_fun_default;
+
 
 
 let seed: number;
 
 export function user_norm_fun_default(): number {
-  let u, v, z;
+  let u;
+  let v;
+  let z;
   do {
     u = unif_rand();
     v = 0.857764 * (2. * unif_rand() - 1);

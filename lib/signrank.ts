@@ -70,7 +70,8 @@ let allocated_n: number;
 
 
 export function w_init_maybe(n: number): void {
-    let u, c;
+    let u;
+    let c;
 
     u = n * (n + 1) / 2;
     c = (u / 2);
@@ -84,7 +85,9 @@ export function w_init_maybe(n: number): void {
 
 export function csignrank(k: number, n: number): number {
 
-    let c, u, j;
+    let c;
+    let u;
+    let j;
 
     //R_CheckUserInterrupt();
 
@@ -97,14 +100,15 @@ export function csignrank(k: number, n: number): number {
     if (k > c)
         k = u - k;
 
-    if (n == 1)
+    if (n === 1)
         return 1.;
-    if (w[0] == 1.)
+    if (w[0] === 1.)
         return w[k];
 
     w[0] = w[1] = 1.;
     for (j = 2; j < n + 1; ++j) {
-        let i, end = imin2(j * (j + 1) / 2, c);
+        let i;
+        let end = imin2(j * (j + 1) / 2, c);
         for (i = end; i >= j; --i)
             w[i] += w[i - j];
     }
@@ -140,7 +144,8 @@ export function dsignrank(x: number, n: number, give_log: boolean): number {
 
 export function psignrank(x: number, n: number, lower_tail: boolean, log_p: boolean): number {
     let i;
-    let f, p;
+    let f;
+    let p;
 
 
     if (ISNAN(x) || ISNAN(n))
@@ -176,7 +181,8 @@ export function psignrank(x: number, n: number, lower_tail: boolean, log_p: bool
 
 export function qsignrank(x: number, n: number, lower_tail: boolean, log_p: boolean): number {
 
-    let f, p;
+    let f;
+    let p;
 
 
     if (ISNAN(x) || ISNAN(n)) {
@@ -194,9 +200,9 @@ export function qsignrank(x: number, n: number, lower_tail: boolean, log_p: bool
     if (n <= 0)
         ML_ERR_return_NAN;
 
-    if (x == R_DT_0(lower_tail, log_p))
+    if (x === R_DT_0(lower_tail, log_p))
         return (0);
-    if (x == R_DT_1(lower_tail, log_p))
+    if (x === R_DT_1(lower_tail, log_p))
         return (n * (n + 1) / 2);
 
     if (log_p || !lower_tail)
@@ -209,7 +215,7 @@ export function qsignrank(x: number, n: number, lower_tail: boolean, log_p: bool
     let q = 0;
     if (x <= 0.5) {
         x = x - 10 * DBL_EPSILON;
-        for (; ;) {
+        while (true) {
             p += csignrank(q, nn) * f;
             if (p >= x)
                 break;
@@ -218,7 +224,7 @@ export function qsignrank(x: number, n: number, lower_tail: boolean, log_p: bool
     }
     else {
         x = 1 - x + 10 * DBL_EPSILON;
-        for (; ;) {
+        while (true) {
             p += csignrank(q, nn) * f;
             if (p > x) {
                 q = trunc((n * (n + 1) / 2 - q));
@@ -232,7 +238,8 @@ export function qsignrank(x: number, n: number, lower_tail: boolean, log_p: bool
 }
 
 export function rsignrank(n: number): number {
-    let i, k;
+    let i;
+    let k;
     let r;
 
     /* NaNs propagated correctly */
@@ -240,11 +247,11 @@ export function rsignrank(n: number): number {
     n = R_forceint(n);
     if (n < 0) ML_ERR_return_NAN;
 
-    if (n == 0)
+    if (n === 0)
         return (0);
     r = 0.0;
     k = floor(n);
-    for (i = 0; i < k;) {
+    for (i = 0; i < k; /**/) {
         r += (++i) * floor(unif_rand() + 0.5);
     }
     return (r);

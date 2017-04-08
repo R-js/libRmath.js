@@ -80,7 +80,7 @@ import {
  function do_search(y: number, z: NumberW, p: number, n: number, pr: number, incr: number): number {
     if (z.val >= p) {
         //* search to the left 
-        for (; ;) {
+        while (true) {
             if (y === 0 ||
                 (z.val = pnbinom(
                     y - incr, 
@@ -94,7 +94,7 @@ import {
     }
     else {		// search to the right 
 
-        for (; ;) {
+        while (true) {
             y = y + incr;
             if ((z.val = pnbinom(
                 y, 
@@ -109,7 +109,12 @@ import {
 
 
 export function qnbinom(p: number, size: number, prob: number, lower_tail: boolean, log_p: boolean): number {
-    let P, Q, mu, sigma, gamma, y;
+    let P;
+    let Q;
+    let mu;
+    let sigma;
+    let gamma;
+    let y;
 
     let z: NumberW = new NumberW(0);
 
@@ -121,11 +126,11 @@ export function qnbinom(p: number, size: number, prob: number, lower_tail: boole
     /* this happens if specified via mu, size, since
        prob == size/(size+mu)
     */
-    if (prob == 0 && size == 0) return 0;
+    if (prob === 0 && size === 0) return 0;
 
     if (prob <= 0 || prob > 1 || size < 0) return ML_ERR_return_NAN();
 
-    if (prob == 1 || size == 0) return 0;
+    if (prob === 1 || size === 0) return 0;
 
     let rc = R_Q_P01_boundaries(lower_tail, log_p, p, 0, ML_POSINF);
     if (rc !== undefined) {
@@ -141,8 +146,8 @@ export function qnbinom(p: number, size: number, prob: number, lower_tail: boole
      * FIXME: This is far from optimal [cancellation for p ~= 1, etc]: */
     if (!lower_tail || log_p) {
         p = R_DT_qIv(lower_tail, log_p, p); /* need check again (cancellation!): */
-        if (p == R_DT_0(lower_tail, log_p)) return 0;
-        if (p == R_DT_1(lower_tail, log_p)) return ML_POSINF;
+        if (p === R_DT_0(lower_tail, log_p)) return 0;
+        if (p === R_DT_1(lower_tail, log_p)) return ML_POSINF;
     }
     /* temporary hack --- FIXME --- */
     if (p + 1.01 * DBL_EPSILON >= 1.) return ML_POSINF;
@@ -160,7 +165,8 @@ export function qnbinom(p: number, size: number, prob: number, lower_tail: boole
     if (y < 1e5) return do_search(y, z, p, size, prob, 1);
     /* Otherwise be a bit cleverer in the search */
     {
-        let incr = floor(y * 0.001), oldincr;
+        let incr = floor(y * 0.001);
+        let oldincr;
         do {
             oldincr = incr;
             y = do_search(y, z, p, size, prob, incr);

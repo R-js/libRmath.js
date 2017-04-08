@@ -70,8 +70,8 @@ export function rnchisq(df: number, lambda: number): number {
     if (!R_FINITE(df) || !R_FINITE(lambda) || df < 0. || lambda < 0.)
         ML_ERR_return_NAN;
 
-    if (lambda == 0.) {
-        return (df == 0.) ? 0. : rgamma(df / 2., 2.);
+    if (lambda === 0.) {
+        return (df === 0.) ? 0. : rgamma(df / 2., 2.);
     }
     else {
         let r = rpois(lambda / 2.);

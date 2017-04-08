@@ -48,7 +48,13 @@ import { lfastchoose } from './choose';
 export function qhyper(p: number, NR: number, NB: number, n: number,
     lower_tail: boolean, log_p: boolean): number {
     /* This is basically the same code as  ./phyper.c  *used* to be --> FIXME! */
-    let N, xstart, xend, xr, xb, sum, term;
+    let N;
+    let xstart;
+    let xend;
+    let xr;
+    let xb;
+    let sum;
+    let term;
     let small_N;
 
     if (ISNAN(p) || ISNAN(NR) || ISNAN(NB) || ISNAN(n))
@@ -76,7 +82,7 @@ export function qhyper(p: number, NR: number, NB: number, n: number,
         return rc;
     }
     xr = xstart;
-    xb = n - xr;/* always ( = #{black balls in sample} ) */
+    xb = n - xr; /* always ( = #{black balls in sample} ) */
 
     small_N = (N < 1000); /* won't have underflow in product below */
     /* if N is small,  term := product.ratio( bin.coef );

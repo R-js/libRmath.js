@@ -30,13 +30,13 @@
  */
 
 import {
-	ISNAN,
-	R_FINITE,
-	ML_POSINF,
-	ML_ERR_return_NAN,
-	exp,
-	ML_NEGINF,
-	R_Q_P01_check
+  ISNAN,
+  R_FINITE,
+  ML_POSINF,
+  ML_ERR_return_NAN,
+  exp,
+  ML_NEGINF,
+  R_Q_P01_check
 
 } from './_general';
 
@@ -46,44 +46,44 @@ import { tanpi } from './cospi';
 
 export function qcauchy(p: number, location: number, scale: number, lower_tail: boolean, log_p: boolean) {
 
-	if (ISNAN(p) || ISNAN(location) || ISNAN(scale))
-		return p + location + scale;
+  if (ISNAN(p) || ISNAN(location) || ISNAN(scale))
+    return p + location + scale;
 
-	let rc = R_Q_P01_check(log_p, p);
-	if (rc === undefined) {
-		return rc;
-	}
+  let rc = R_Q_P01_check(log_p, p);
+  if (rc === undefined) {
+    return rc;
+  }
 
-	if (scale <= 0 || !R_FINITE(scale)) {
-		if (scale == 0) return location;
-	/* else */ return ML_ERR_return_NAN();
-	}
+  if (scale <= 0 || !R_FINITE(scale)) {
+    if (scale === 0) return location;
+  /* else */ return ML_ERR_return_NAN();
+  }
 
-	const my_INF = location + (lower_tail ? scale : -scale) * ML_POSINF;
-	if (log_p) {
-		if (p > -1) {
-			/* when ep := exp(p),
-			 * tan(pi*ep)= -tan(pi*(-ep))= -tan(pi*(-ep)+pi) = -tan(pi*(1-ep)) =
-			 *		 = -tan(pi*(-expm1(p))
-			 * for p ~ 0, exp(p) ~ 1, tan(~0) may be better than tan(~pi).
-			 */
-			if (p == 0.) /* needed, since 1/tan(-0) = -Inf  for some arch. */
-				return my_INF;
-			lower_tail = !lower_tail;
-			p = -expm1(p);
-		} else
-			p = exp(p);
-	} else {
-		if (p > 0.5) {
-			if (p == 1.)
-				return my_INF;
-			p = 1 - p;
-			lower_tail = !lower_tail;
-		}
-	}
+  const my_INF = location + (lower_tail ? scale : -scale) * ML_POSINF;
+  if (log_p) {
+    if (p > -1) {
+      /* when ep := exp(p),
+       * tan(pi*ep)= -tan(pi*(-ep))= -tan(pi*(-ep)+pi) = -tan(pi*(1-ep)) =
+       *		 = -tan(pi*(-expm1(p))
+       * for p ~ 0, exp(p) ~ 1, tan(~0) may be better than tan(~pi).
+       */
+      if (p === 0.) /* needed, since 1/tan(-0) = -Inf  for some arch. */
+        return my_INF;
+      lower_tail = !lower_tail;
+      p = -expm1(p);
+    } else
+      p = exp(p);
+  } else {
+    if (p > 0.5) {
+      if (p === 1.)
+        return my_INF;
+      p = 1 - p;
+      lower_tail = !lower_tail;
+    }
+  }
 
-	if (p == 0.5) return location; // avoid 1/Inf below
-	if (p == 0.) return location + (lower_tail ? scale : -scale) * ML_NEGINF; // p = 1. is handled above
-	return location + (lower_tail ? -scale : scale) / tanpi(p);
-	/*	-1/tan(pi * p) = -cot(pi * p) = tan(pi * (p - 1/2))  */
+  if (p === 0.5) return location; // avoid 1/Inf below
+  if (p === 0.) return location + (lower_tail ? scale : -scale) * ML_NEGINF; // p = 1. is handled above
+  return location + (lower_tail ? -scale : scale) / tanpi(p);
+  /*	-1/tan(pi * p) = -cot(pi * p) = tan(pi * (p - 1/2))  */
 }

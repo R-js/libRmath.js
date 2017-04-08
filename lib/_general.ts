@@ -12,7 +12,7 @@
 
 */
 
-export const M_SQRT2 =	1.414213562373095048801688724210; /* sqrt(2) */
+export const M_SQRT2 = 1.414213562373095048801688724210; /* sqrt(2) */
 export const sqr = (x: number) => x * x;
 export const ceil = Math.ceil;
 export const trunc = Math.trunc;
@@ -122,7 +122,7 @@ export function R_P_bounds_Inf_01(lowerTail: boolean, log_p: boolean, x: number)
 }
 
 export function R_D_half(log_p: boolean) {
-    return (log_p ? -M_LN2 : 0.5)		// 1/2 (lower- or upper tail)
+    return (log_p ? -M_LN2 : 0.5); // 1/2 (lower- or upper tail)
 }
 
 export function R_P_bounds_01(lower_tail: boolean, log_p: boolean, x: number, x_min: number, x_max: number): number | undefined {
@@ -138,7 +138,7 @@ export const R_D_exp = (log_p: boolean, x: number): number => {
 
     return (log_p ? (x) : exp(x));
     /* exp(x) */
-}
+};
 
 
 
@@ -152,23 +152,23 @@ export enum ME {
 }
 
 
-export const MATHLIB_WARNING = function (fmt: string, x: any) {
+export const MATHLIB_WARNING = (fmt: string, x: any) => {
     console.warn(fmt, x);
 };
 
-export const MATHLIB_WARNING2 = function (fmt: string, x: any, x2: any) {
+export const MATHLIB_WARNING2 =  (fmt: string, x: any, x2: any) => {
     console.warn(fmt, x, x2);
 };
 
-export const MATHLIB_WARNING3 = function (fmt: string, x: any, x2: any, x3: any) {
+export const MATHLIB_WARNING3 = (fmt: string, x: any, x2: any, x3: any) => {
     console.warn(fmt, x, x2, x3);
 };
 
-export const MATHLIB_WARNING4 = function (fmt: string, x: any, x2: any, x3: any, x4: any) {
+export const MATHLIB_WARNING4 = (fmt: string, x: any, x2: any, x3: any, x4: any) => {
     console.warn(fmt, x, x2, x3, x4);
 };
 
-export const  MATHLIB_ERROR = console.error;
+export const MATHLIB_ERROR = console.error;
 
 export const min0 = (x: number, y: number): number => { return x <= y ? x : y; };
 export const max0 = (x: number, y: number): number => { return x <= y ? y : x; };
@@ -197,7 +197,7 @@ export const ML_ERROR = (x: ME, s: any) => {
         }
         MATHLIB_WARNING(msg, s);
     }
-}
+};
 
 export function ML_ERR_return_NAN() {
     ML_ERROR(ME.ME_DOMAIN, '');
@@ -229,8 +229,8 @@ export function fmax2(x: number, y: number): number {
     return (x < y) ? y : x;
 }
 
-export function imax2(x:number, y: number): number {
-    return trunc(fmax2(x,y));
+export function imax2(x: number, y: number): number {
+    return trunc(fmax2(x, y));
 }
 
 export function fmin2(x: number, y: number): number {
@@ -274,8 +274,8 @@ export function R_D_negInonint(x: number) {
 }
 
 export function R_nonint(x: number) {
-    return (fabs((x) - R_forceint(x)) > 1e-7 * fmax2(1., fabs(x)))
-}
+    return (fabs((x) - R_forceint(x)) > 1e-7 * fmax2(1., fabs(x)));
+};
 
 export function R_D_fexp(give_log: boolean, f: number, x: number): number {
     return (give_log ? -0.5 * log(f) + (x) : exp(x) / sqrt(f));
@@ -314,10 +314,10 @@ export function R_pow_di(x: number, n: number) {
     let pow: number = 1.0;
 
     if (ISNAN(x)) return x;
-    if (n != 0) {
+    if (n !== 0) {
         if (!R_FINITE(x)) return R_pow(x, n);
         if (n < 0) { n = -n; x = 1 / x; }
-        for (; ;) {
+        for ( ; ; ) {
             if (n & 1) pow *= x;
             if (n >>= 1) x *= x; else break;
         }
@@ -325,15 +325,19 @@ export function R_pow_di(x: number, n: number) {
     return pow;
 }
 
+export const NA_REAL = ML_NAN;
+export const R_PosInf = ML_POSINF;
+export const R_NegInf = ML_NEGINF;
+
 export function R_pow(x: number, y: number): number { /* = x ^ y */
 
     /* squaring is the most common of the specially handled cases so
        check for it first. */
-    if (y == 2.0)
+    if (y === 2.0)
         return x * x;
-    if (x == 1. || y == 0.)
+    if (x === 1. || y === 0.)
         return (1.);
-    if (x == 0.) {
+    if (x === 0.) {
         if (y > 0.) return (0.);
         else if (y < 0) return (ML_POSINF);
         else return (y); /* NA or NaN, we assert */
@@ -350,7 +354,7 @@ export function R_pow(x: number, y: number): number { /* = x ^ y */
         if (x > 0)               /* Inf ^ y */
             return (y < 0.) ? 0. : ML_POSINF;
         else {                  /* (-Inf) ^ y */
-            if (R_FINITE(y) && y == floor(y)) /* (-Inf) ^ n */
+            if (R_FINITE(y) && y === floor(y)) /* (-Inf) ^ n */
                 return (y < 0.) ? 0. : (myfmod(y, 2.) ? x : -x);
         }
     }
@@ -380,9 +384,9 @@ export function myfmod(x1: number, x2: number) {
 
 
 export function R_powV(x: number, y: number): number /* = x ^ y */ {
-    if (x == 1. || y == 0.)
+    if (x === 1. || y === 0.)
         return (1.);
-    if (x == 0.) {
+    if (x === 0.) {
         if (y > 0.) return (0.);
     /* y < 0 */return (ML_POSINF);
     }
@@ -395,7 +399,7 @@ export function R_powV(x: number, y: number): number /* = x ^ y */ {
         if (x > 0)		/* Inf ^ y */
             return ((y < 0.) ? 0. : ML_POSINF);
         else {			/* (-Inf) ^ y */
-            if (R_FINITE(y) && y == floor(y)) /* (-Inf) ^ n */
+            if (R_FINITE(y) && y === floor(y)) /* (-Inf) ^ n */
                 return ((y < 0.) ? 0. : (myfmod(y, 2.) ? x : -x));
         }
     }
@@ -412,12 +416,10 @@ export function R_powV(x: number, y: number): number /* = x ^ y */ {
 }
 
 
-export const NA_REAL = ML_NAN;
-export const R_PosInf = ML_POSINF;
-export const R_NegInf = ML_NEGINF;
+
 
 export function REprintf(fmt: string, ...args: any[]) {
-    let args2 = Array.from(args);//.slice(1);
+    let args2 = Array.from(args); //.slice(1);
     console.error.call(console.error, fmt, args2);
 }
 
@@ -476,7 +478,7 @@ export const ftrunc = trunc;
 
 export const atanpi = (x: number) => {
     return Math.atan(x) / Math.PI;
-}
+};
 
 
 export function R_D_log(log_p: boolean, p: number) {

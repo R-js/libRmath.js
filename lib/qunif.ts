@@ -48,7 +48,7 @@ export function qunif(p: number, a: number, b: number, lower_tail: boolean, log_
     }
     if (!R_FINITE(a) || !R_FINITE(b)) return ML_ERR_return_NAN();
     if (b < a) return ML_ERR_return_NAN();
-    if (b == a) return a;
+    if (b === a) return a;
 
     return a + R_DT_qIv(lower_tail, log_p, p) * (b - a);
 }

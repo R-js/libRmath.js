@@ -1233,7 +1233,7 @@ export class Toms708 {
       v = e - Math.log(y / y0);
     }
 
-    let z = Math.exp(-(a * u + b * v));;
+    let z = Math.exp(-(a * u + b * v));
     return Const * Math.sqrt(b * x0) * z * Math.exp(- Toms708.bcorr(a, b));
 
   }
@@ -1444,7 +1444,7 @@ export class Toms708 {
           // C  PROCEDURE FOR A0 .LT. 1 AND B0 <= 1
           // C
           dResult = Math.pow(x, a);
-          if (dResult == 0.0) {
+          if (dResult === 0.0) {
             return 0;
           }
           // 

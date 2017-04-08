@@ -42,7 +42,7 @@ export function qexp(p: number, scale: number, lower_tail: boolean, log_p: boole
     if (rc !== undefined) {
         return rc;
     }
-    if (p == R_DT_0(lower_tail, log_p))
+    if (p === R_DT_0(lower_tail, log_p))
         return 0;
 
     return - scale * R_DT_Clog(lower_tail, log_p, p);

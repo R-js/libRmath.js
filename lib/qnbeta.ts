@@ -38,7 +38,10 @@ export function qnbeta(p: number, a: number, b: number, ncp: number,
     const accu = 1e-15;
     const Eps = 1e-14; /* must be > accu */
 
-    let ux, lx, nx, pp;
+    let ux;
+    let lx;
+    let nx;
+    let pp;
 
     if (ISNAN(p) || ISNAN(a) || ISNAN(b) || ISNAN(ncp))
         return p + a + b + ncp;

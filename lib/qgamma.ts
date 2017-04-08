@@ -84,8 +84,15 @@ export function qchisq_appr(p: number, nu: number, g: number /* = log Gamma(nu/2
     const C9 = 6.73;
     const C10 = 13.32;
 
-    let alpha, a, c, ch, p1;
-    let p2, q, t, x;
+    let alpha;
+    let a;
+    let c;
+    let ch;
+    let p1;
+    let p2;
+    let q;
+    let t;
+    let x;
 
     /* test arguments and initialise */
 
@@ -101,7 +108,7 @@ export function qchisq_appr(p: number, nu: number, g: number /* = log Gamma(nu/2
         return ML_ERR_return_NAN();
     }
 
-    alpha = 0.5 * nu;/* = [pq]gamma() shape */
+    alpha = 0.5 * nu; /* = [pq]gamma() shape */
     c = alpha - 1;
 
     if (nu < (-1.24) * (p1 = R_DT_log(lower_tail, log_p, p))) {	/* for small chi-squared */
@@ -151,9 +158,9 @@ export function qgamma(p: number, alpha: number, scale: number, lower_tail: bool
 
     /*			shape = alpha */
     const EPS1 = 1e-2;
-    const EPS2 = 5e-7;/* final precision of AS 91 */
+    const EPS2 = 5e-7; /* final precision of AS 91 */
     const EPS_N = 1e-15; /* precision of Newton step / iterations */
-    
+
     // LN_EPS unused
     //const LN_EPS = -36.043653389117156; /* = log(.Machine$double.eps) iff IEEE_754 */
 
@@ -166,9 +173,25 @@ export function qgamma(p: number, alpha: number, scale: number, lower_tail: bool
     const i2520 = 1. / 2520.;
     const i5040 = 1. / 5040;
 
-    let p_, a, b, c, g, ch, ch0, p1;
-    let p2, s1, s2, s3, s4, s5, s6, t, x;
-    let i, max_it_Newton = 1;
+    let p_;
+    let a;
+    let b;
+    let c;
+    let g;
+    let ch;
+    let ch0;
+    let p1;
+    let p2;
+    let s1;
+    let s2;
+    let s3;
+    let s4;
+    let s5;
+    let s6;
+    let t;
+    let x;
+    let i;
+    let max_it_Newton = 1;
 
     let q: number = 0;
 
@@ -185,7 +208,7 @@ export function qgamma(p: number, alpha: number, scale: number, lower_tail: bool
     }
     if (alpha < 0 || scale <= 0) ML_ERR_return_NAN;
 
-    if (alpha == 0) /* all mass at 0 : */ return 0.;
+    if (alpha === 0) /* all mass at 0 : */ return 0.;
 
     if (alpha < 1e-10) {
         /* Warning seems unnecessary now: */
@@ -193,16 +216,16 @@ export function qgamma(p: number, alpha: number, scale: number, lower_tail: bool
         MATHLIB_WARNING('value of shape (%g) is extremely small: results may be unreliable',
             alpha);
 
-        max_it_Newton = 7;/* may still be increased below */
+        max_it_Newton = 7; /* may still be increased below */
     }
 
-    p_ = R_DT_qIv(lower_tail, log_p, p);/* lower_tail prob (in any case) */
+    p_ = R_DT_qIv(lower_tail, log_p, p); /* lower_tail prob (in any case) */
 
 
     REprintf('qgamma(p=%7g, alpha=%7g, scale=%7g, l.t.=%2d, log_p=%2d): ',
         p, alpha, scale, lower_tail, log_p);
 
-    g = lgammafn(alpha);/* log Gamma(v/2) */
+    g = lgammafn(alpha); /* log Gamma(v/2) */
 
     /*----- Phase I : Starting Approximation */
     ch = qchisq_appr(p, /* nu= 'df' =  */ 2 * alpha, /* lgamma(nu/2)= */ g,
@@ -233,7 +256,7 @@ export function qgamma(p: number, alpha: number, scale: number, lower_tail: bool
     }
 
     if (goto_END === false) {
-        REprintf("\t==> ch = %10g:", ch);
+        REprintf('\t==> ch = %10g:', ch);
 
 
         /*----- Phase II: Iteration
@@ -242,14 +265,14 @@ export function qgamma(p: number, alpha: number, scale: number, lower_tail: bool
         c = alpha - 1;
         s6 = (120 + c * (346 + 127 * c)) * i5040; /* used below, is "const" */
 
-        ch0 = ch;/* save initial approx. */
+        ch0 = ch; /* save initial approx. */
         for (i = 1; i <= MAXIT; i++) {
             q = ch;
             p1 = 0.5 * ch;
             p2 = p_ - pgamma_raw(p1, alpha, /*lower_tail*/true, /*log_p*/false);
 
-            if (i == 1) REprintf(" Ph.II iter; ch=%g, p2=%g\n", ch, p2);
-            if (i >= 2) REprintf("     it=%d,  ch=%g, p2=%g\n", i, ch, p2);
+            if (i === 1) REprintf(' Ph.II iter; ch=%g, p2=%g\n', ch, p2);
+            if (i >= 2) REprintf('     it=%d,  ch=%g, p2=%g\n', i, ch, p2);
 
 
             if (!R_FINITE(p2) || ch <= 0) {
@@ -281,7 +304,7 @@ export function qgamma(p: number, alpha: number, scale: number, lower_tail: bool
         }
         /* no convergence in MAXIT iterations -- but we add Newton now... */
 
-        MATHLIB_WARNING3("qgamma(%g) not converged in %d iterations; rel.ch=%g\n",
+        MATHLIB_WARNING3('qgamma(%g) not converged in %d iterations; rel.ch=%g\n',
             p, MAXIT, ch / fabs(q - ch));
 
         /* was
@@ -305,7 +328,7 @@ export function qgamma(p: number, alpha: number, scale: number, lower_tail: bool
             p = log(p);
             log_p = true;
         }
-        if (x == 0) {
+        if (x === 0) {
             const _1_p = 1. + 1e-7;
             const _1_m = 1. - 1e-7;
             x = DBL_MIN;
@@ -317,11 +340,11 @@ export function qgamma(p: number, alpha: number, scale: number, lower_tail: bool
         }
         else
             p_ = pgamma(x, alpha, scale, lower_tail, log_p);
-        if (p_ == ML_NEGINF) return 0; /* PR#14710 */
+        if (p_ === ML_NEGINF) return 0; /* PR#14710 */
         for (i = 1; i <= max_it_Newton; i++) {
             p1 = p_ - p;
 
-            if (i == 1) REprintf('\n it=%d: p=%g, x = %g, p.=%g; p1=d{p}=%g\n',
+            if (i === 1) REprintf('\n it=%d: p=%g, x = %g, p.=%g; p1=d{p}=%g\n',
                 i, p, x, p_, p1);
             if (i >= 2) REprintf('          x{it= %d} = %g, p.=%g, p1=d{p}=%g\n',
                 i, x, p_, p1);
@@ -331,7 +354,7 @@ export function qgamma(p: number, alpha: number, scale: number, lower_tail: bool
             /* else */
             g = dgamma(x, alpha, scale, log_p);
             if (g === R_D__0(log_p)) {
-                if (i == 1) REprintf('no final Newton step because dgamma(*)== 0!\n');
+                if (i === 1) REprintf('no final Newton step because dgamma(*)== 0!\n');
                 break;
             }
             /* else :
@@ -339,15 +362,15 @@ export function qgamma(p: number, alpha: number, scale: number, lower_tail: bool
              * if(log_p) f(x) := log P(x) - p; f'(x) = d/dx log P(x) = P' / P
              * ==> f(x)/f'(x) = f*P / P' = f*exp(p_) / P' (since p_ = log P(x))
              */
-            t = log_p ? p1 * exp(p_ - g) : p1 / g;/* = "delta x" */
+            t = log_p ? p1 * exp(p_ - g) : p1 / g; /* = "delta x" */
             t = lower_tail ? x - t : x + t;
             p_ = pgamma(t, alpha, scale, lower_tail, log_p);
             if (fabs(p_ - p) > fabs(p1) ||
-                (i > 1 && fabs(p_ - p) == fabs(p1)) /* <- against flip-flop */) {
+                (i > 1 && fabs(p_ - p) === fabs(p1)) /* <- against flip-flop */) {
                 /* no improvement */
 
-                if (i == 1 && max_it_Newton > 1)
-                    REprintf("no Newton step done since delta{p} >= last delta\n");
+                if (i === 1 && max_it_Newton > 1)
+                    REprintf('no Newton step done since delta{p} >= last delta\n');
 
                 break;
             } /* else : */

@@ -41,5 +41,5 @@ import {
 export function sign(x: number): number {
     if (ISNAN(x))
         return x;
-    return ((x > 0) ? 1 : ((x == 0) ? 0 : -1));
+    return ((x > 0) ? 1 : ((x === 0) ? 0 : -1));
 }

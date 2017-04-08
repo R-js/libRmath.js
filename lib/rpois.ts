@@ -100,16 +100,28 @@ export function rpois(mu: number): number {
     let d = 0;
     let omega = 0;
     let big_l = 0;		     /* integer "w/o overflow" */
-    let muprev = 0., muprev2 = 0.; /*, muold	 = 0.*/
+    let muprev = 0.;
+    let muprev2 = 0.; /*, muold	 = 0.*/
 
     /* Local Vars  [initialize some for -Wall]: */
-    let del, difmuk = 0., E = 0., fk = 0., fx, fy, g, px, py;
+    let del;
+    let difmuk = 0.;
+    let E = 0.;
+    let fk = 0.;
+    let fx;
+    let fy;
+    let g;
+    let px;
+    let py;
     let t = 0;
-    let u = 0., v, x;
+    let u = 0.;
+    let v;
+    let x;
     let pois = -1.;
     let k;
     let kflag = 0;
-    let big_mu, new_big_mu = false;
+    let big_mu;
+    let new_big_mu = false;
 
     if (!R_FINITE(mu) || mu < 0)
         return ML_ERR_return_NAN();
@@ -121,7 +133,7 @@ export function rpois(mu: number): number {
     if (big_mu)
         new_big_mu = false;
 
-    if (!(big_mu && mu == muprev)) { /* maybe compute new persistent par.s */
+    if (!(big_mu && mu === muprev)) { /* maybe compute new persistent par.s */
 
         if (big_mu) {
             new_big_mu = true;
@@ -140,7 +152,7 @@ export function rpois(mu: number): number {
             /* Case B. (start new table and calculate p0 if necessary) */
 
             /*muprev = 0.;-* such that next time, mu != muprev ..*/
-            if (mu != muprev) {
+            if (mu !== muprev) {
                 muprev = mu;
                 m = imax2(1, trunc(mu));
                 l = 0; /* pp[] is already ok up to pp[l] */
@@ -156,11 +168,11 @@ export function rpois(mu: number): number {
                 /* Step T. table comparison until the end pp[l] of the
                    pp-table of cumulative poisson probabilities
                    (0.458 > ~= pp[9](= 0.45792971447) for mu=10 ) */
-                if (l != 0) {
+                if (l !== 0) {
                     for (k = (u <= 0.458) ? 1 : imin2(l, m); k <= l; k++)
                         if (u <= pp[k])
                             return k;
-                    if (l == 35) /* u > pp[35] */
+                    if (l === 35) /* u > pp[35] */
                         continue;
                 }
                 /* Step C. creation of new poisson
@@ -202,7 +214,7 @@ export function rpois(mu: number): number {
     /* Step P. preparations for steps Q and H.
        (recalculations of parameters if necessary) */
 
-    if (new_big_mu || mu != muprev2) {
+    if (new_big_mu || mu !== muprev2) {
         /* Careful! muprev2 is not always == muprev
            because one might have exited in step I or S
            */

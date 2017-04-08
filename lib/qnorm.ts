@@ -65,7 +65,10 @@ import {
 import { R_DT_qIv, R_DT_CIv } from './expm1';
 
 export function qnorm(p: number, mu: number, sigma: number, lower_tail: boolean, log_p: boolean): number {
-    let p_, q, r, val;
+    let p_;
+    let q;
+    let r;
+    let val;
 
 
     if (ISNAN(p) || ISNAN(mu) || ISNAN(sigma))
@@ -76,13 +79,13 @@ export function qnorm(p: number, mu: number, sigma: number, lower_tail: boolean,
         return rc;
     }
     if (sigma < 0) return ML_ERR_return_NAN();
-    if (sigma == 0) return mu;
+    if (sigma === 0) return mu;
 
-    p_ = R_DT_qIv(lower_tail, log_p, p);/* real lower_tail prob. p */
+    p_ = R_DT_qIv(lower_tail, log_p, p); /* real lower_tail prob. p */
     q = p_ - 0.5;
 
 
-    REprintf("qnorm(p=%10.7g, m=%g, s=%g, l.t.= %d, log= %d): q = %g\n",
+    REprintf('qnorm(p=%10.7g, m=%g, s=%g, l.t.= %d, log= %d): q = %g\n',
         p, mu, sigma, lower_tail, log_p, q);
 
 
@@ -114,9 +117,9 @@ export function qnorm(p: number, mu: number, sigma: number, lower_tail: boolean,
 
         /* r = min(p, 1-p) < 0.075 */
         if (q > 0)
-            r = R_DT_CIv(lower_tail, log_p, p);/* 1-p */
+            r = R_DT_CIv(lower_tail, log_p, p); /* 1-p */
         else
-            r = p_;/* = R_DT_Iv(p) ^=  p */
+            r = p_; /* = R_DT_Iv(p) ^=  p */
 
         r = sqrt(- ((log_p &&
             ((lower_tail && q <= 0) || (!lower_tail && q > 0))) ?

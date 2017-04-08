@@ -50,7 +50,7 @@ export function qlogis(p: number, location: number, scale: number, lower_tail: b
     if (scale < 0.) {
         return ML_ERR_return_NAN();
     }
-    if (scale == 0.) return location;
+    if (scale === 0.) return location;
 
     /* p := logit(p) = log( p / (1-p) )	 : */
     if (log_p) {

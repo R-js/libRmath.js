@@ -36,7 +36,7 @@ import {
     sqrt
 } from './_general';
 
-import { norm_rand } from './snorm'
+import { norm_rand } from './snorm';
 
 import { rchisq } from './rchisq';
 

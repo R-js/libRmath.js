@@ -64,7 +64,7 @@ import { R_DT_qIv } from './expm1';
  function do_search(y: number, z: NumberW, p: number, lambda: number, incr: number): number {
     if (z.val >= p) {
         // search to the left 
-        for (; ;) {
+        while (true) {
             if (y === 0 ||
                 (z.val = ppois(y - incr, lambda, true, false)) < p)
                 return y;
@@ -73,7 +73,7 @@ import { R_DT_qIv } from './expm1';
     }
     else {	// search to the right 
 
-        for (; ;) {
+        while (true) {
             y = y + incr;
             if ((z.val = ppois(y, lambda, true, false)) >= p)
                 return y;
@@ -83,7 +83,10 @@ import { R_DT_qIv } from './expm1';
 
 export function qpois(p: number, lambda: number, lower_tail: boolean, log_p: boolean): number {
 
-    let mu, sigma, gamma, y;
+    let mu;
+    let sigma;
+    let gamma;
+    let y;
     let z = new NumberW(0);
 
     if (ISNAN(p) || ISNAN(lambda))
@@ -93,7 +96,7 @@ export function qpois(p: number, lambda: number, lower_tail: boolean, log_p: boo
         return ML_ERR_return_NAN();
     }
     if (lambda < 0) ML_ERR_return_NAN;
-    if (lambda == 0) return 0;
+    if (lambda === 0) return 0;
 
     let rc = R_Q_P01_boundaries(lower_tail, log_p, p, 0, ML_POSINF);
     if (rc !== undefined) {
@@ -109,8 +112,8 @@ export function qpois(p: number, lambda: number, lower_tail: boolean, log_p: boo
      * FIXME: This is far from optimal [cancellation for p ~= 1, etc]: */
     if (!lower_tail || log_p) {
         p = R_DT_qIv(lower_tail, log_p, p); /* need check again (cancellation!): */
-        if (p == 0.) return 0;
-        if (p == 1.) return ML_POSINF;
+        if (p === 0.) return 0;
+        if (p === 1.) return ML_POSINF;
     }
     /* temporary hack --- FIXME --- */
     if (p + 1.01 * DBL_EPSILON >= 1.) return ML_POSINF;
@@ -129,7 +132,8 @@ export function qpois(p: number, lambda: number, lower_tail: boolean, log_p: boo
     if (lambda < 1e5) return do_search(y, z, p, lambda, 1);
     /* Otherwise be a bit cleverer in the search */
     {
-        let incr = floor(y * 0.001), oldincr;
+        let incr = floor(y * 0.001);
+        let oldincr;
         do {
             oldincr = incr;
             y = do_search(y, z, p, lambda, incr);

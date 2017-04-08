@@ -133,7 +133,7 @@ export function rbinom(nin: number, pp: number): number {
        -- use as little (thread globals) as possible
     */
     let gotoL_np_small = false;
-    if (pp != psave || n != nsave) {
+    if (pp !== psave || n !== nsave) {
         psave = pp;
         nsave = n;
         if (np < 30.0) {
@@ -205,7 +205,7 @@ export function rbinom(nin: number, pp: number): number {
             if (m < ix) {
                 for (i = m + 1; i <= ix; i++)
                     f *= (g / i - r);
-            } else if (m != ix) {
+            } else if (m !== ix) {
                 for (i = ix + 1; i <= m; i++)
                     f /= (g / i - r);
             }
@@ -236,7 +236,7 @@ export function rbinom(nin: number, pp: number): number {
                 f2 = f1 * f1;
                 w2 = w * w;
                 if (alv <= xm * log(f1 / x1) + (n - m + 0.5) * log(z / w) + (ix - m) * log(w * p / (x1 * q)) + (13860.0 - (462.0 - (132.0 - (99.0 - 140.0 / f2) / f2) / f2) / f2) / f1 / 166320.0 + (13860.0 - (462.0 - (132.0 - (99.0 - 140.0 / z2) / z2) / z2) / z2) / z / 166320.0 + (13860.0 - (462.0 - (132.0 - (99.0 - 140.0 / x2) / x2) / x2) / x2) / x1 / 166320.0 + (13860.0 - (462.0 - (132.0 - (99.0 - 140.0 / w2) / w2) / w2) / w2) / w / 166320.) {
-                    gotoFinis = true;// finis;
+                    gotoFinis = true; // finis;
                     break;
                 }
             }
