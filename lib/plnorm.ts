@@ -33,7 +33,7 @@ import {
     ML_ERR_return_NAN,
     R_DT_0,
     log
-} from './_general'
+} from './_general';
 
 import { pnorm5 as pnorm } from './pnorm';
 

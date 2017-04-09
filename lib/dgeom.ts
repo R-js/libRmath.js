@@ -46,26 +46,26 @@ import {
 } from './dbinom';
 
 
-export function dgeom(x: number, p: number, give_log: boolean): number { 
+export function dgeom(x: number, p: number, give_log: boolean): number {
     let prob: number;
 
     if (ISNAN(x) || ISNAN(p)) return x + p;
 
     if (p <= 0 || p > 1) {
-      return  ML_ERR_return_NAN();
+        return ML_ERR_return_NAN();
     }
-    
-    let rc = R_D_nonint_check(give_log,x);
-    if (rc !== undefined){
+
+    let rc = R_D_nonint_check(give_log, x);
+    if (rc !== undefined) {
         return rc;
     }
-    if (x < 0 || !R_FINITE(x) || p == 0) {
+    if (x < 0 || !R_FINITE(x) || p === 0) {
         return R_D__0(give_log);
     }
     x = R_forceint(x);
 
     /* prob = (1-p)^x, stable for small p */
-    prob = dbinom_raw(0.,x, p,1-p, give_log);
+    prob = dbinom_raw(0., x, p, 1 - p, give_log);
 
-    return((give_log) ? log(p) + prob : p*prob);
+    return ((give_log) ? log(p) + prob : p * prob);
 }

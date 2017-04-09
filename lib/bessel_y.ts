@@ -154,8 +154,8 @@ export function bessel_y_ex(x: number, alpha: number, by: number[]): number {
   Y_bessel(input);
   //unwind
   ({ x, alpha, nb, by, ncalc } = input);
-  if (ncalc != nb) {/* error input */
-    if (ncalc == -1)
+  if (ncalc !== nb) {/* error input */
+    if (ncalc === -1)
       return ML_POSINF;
     else if (ncalc < -1)
       MATHLIB_WARNING4('bessel_y(%g): ncalc (=%d) != nb (=%d); alpha=%g. Arg. out of range?\n',

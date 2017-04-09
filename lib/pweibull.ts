@@ -37,7 +37,7 @@ import {
 import {
     expm1,
     R_Log1_Exp
-} from './expm1'
+} from './expm1';
 
 export function pweibull(x: number, shape: number, scale: number, lower_tail: boolean, log_p: boolean): number {
 

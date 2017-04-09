@@ -91,7 +91,7 @@ export function dbeta(x: number, a: number, b: number, give_log: boolean): numbe
         if (a < 1) return (ML_POSINF);
     /* a == 1 : */ return (R_D_val(give_log, b));
     }
-    if (x == 1) {
+    if (x === 1) {
         if (b > 1) return R_D__0(give_log);
         if (b < 1) return (ML_POSINF);
     /* b == 1 : */ return (R_D_val(give_log , a));

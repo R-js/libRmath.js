@@ -59,7 +59,7 @@ export function pnbinom(x: number, size: number, prob: number, lower_tail: boole
     }
 
     /* limiting case: point mass at zero */
-    if (size == 0)
+    if (size === 0)
         return (x >= 0) ? R_DT_1(lower_tail, log_p) : R_DT_0(lower_tail, log_p);
 
     if (x < 0) return R_DT_0(lower_tail, log_p);
@@ -77,7 +77,7 @@ export function pnbinom_mu(x: number, size: number, mu: number, lower_tail: bool
     if (size < 0 || mu < 0) ML_ERR_return_NAN;
 
     /* limiting case: point mass at zero */
-    if (size == 0)
+    if (size === 0)
         return (x >= 0) ? R_DT_1(lower_tail, log_p) : R_DT_0(lower_tail, log_p);
 
     if (x < 0) return R_DT_0(lower_tail, log_p);

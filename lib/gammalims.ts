@@ -47,7 +47,7 @@ import {
     ML_ERROR,
     ME,
     fmax2
-} from './_general'
+} from './_general';
 
 
 
@@ -59,7 +59,7 @@ export function gammalims(input: { xmin: number, xmax: number }, IEEE_754?: bool
     */
     if (IEEE_754) {
         input.xmin = -170.5674972726612;
-        input.xmax = 171.61447887182298;/*(3 Intel/Sparc architectures)*/
+        input.xmax = 171.61447887182298; /*(3 Intel/Sparc architectures)*/
         return;
     }
 

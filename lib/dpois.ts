@@ -64,28 +64,28 @@ export function dpois_raw(x: number, lambda: number, give_log: boolean): number 
     /*       x >= 0 ; integer for dpois(), but not e.g. for pgamma()!
         lambda >= 0
     */
-    if (lambda == 0) return ((x == 0) ? R_D__1(give_log) : R_D__0(give_log));
+    if (lambda === 0) return ((x === 0) ? R_D__1(give_log) : R_D__0(give_log));
     if (!R_FINITE(lambda)) return R_D__0(give_log);
     if (x < 0) return (R_D__0(give_log));
-    if (x <= lambda * DBL_MIN) return (R_D_exp(give_log,-lambda));
+    if (x <= lambda * DBL_MIN) return (R_D_exp(give_log, -lambda));
     if (lambda < x * DBL_MIN) return (R_D_exp(give_log, -lambda + x * log(lambda) - lgammafn(x + 1)));
     return (R_D_fexp(give_log, M_2PI * x, -stirlerr(x) - bd0(x, lambda)));
 }
 
-export function  dpois(x: number, lambda: number, give_log: boolean){
-    
-    if (ISNAN(x) || ISNAN(lambda)){
+export function dpois(x: number, lambda: number, give_log: boolean) {
+
+    if (ISNAN(x) || ISNAN(lambda)) {
         return x + lambda;
     }
-   
+
     if (lambda < 0) {
         return ML_ERR_return_NAN();
     }
     let rc = R_D_nonint_check(give_log, x);
-    if (rc !== undefined){
+    if (rc !== undefined) {
         return rc;
     }
-    if (x < 0 || !R_FINITE(x)){
+    if (x < 0 || !R_FINITE(x)) {
         return R_D__0;
     }
 

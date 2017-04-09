@@ -47,6 +47,7 @@
  then this code can take a while. Not longer than the old code, though.
 
  -- Thanks to Ian Smith for ideas.
+
 */
 
 
@@ -60,18 +61,14 @@ import {
     R_DT_0,
     R_DT_1,
     R_D_Lval
-
-
 } from './_general';
 
 import { R_DT_Log } from './expm1';
-
 import { dhyper } from './dhyper';
-
 import { log1p } from './log1p';
 
-
 export function pdhyper(x: number, NR: number, NB: number, n: number, log_p: boolean): number {
+    
     /*
      * Calculate
      *
@@ -84,6 +81,7 @@ export function pdhyper(x: number, NR: number, NB: number, n: number, log_p: boo
      *     x * (NR + NB) <= n * NR
      *
      */
+
     let sum = 0;
     let term = 1;
 

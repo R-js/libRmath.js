@@ -49,21 +49,29 @@ export function pnbeta_raw(x: number, o_x: number, a: number, b: number, ncp: nu
      * original (AS 226, R84) had  (errmax; itrmax) = (1e-6; 100) */
     const errmax = 1.0e-9;
     const itrmax = 10000;  /* 100 is not enough for pf(ncp=200)
-				     see PR#11277 */
+                     see PR#11277 */
 
-    let a0, lbeta, c, errbd, x0;
+    let a0;
+    let lbeta;
+    let c;
+    let errbd;
+    let x0;
     let temp = new NumberW(0);
     let tmp_c = new NumberW(0);
     let ierr = new NumberW(0);
 
-    let ans, ax, gx, q, sumq;
+    let ans;
+    let ax;
+    let gx;
+    let q;
+    let sumq;
 
     if (ncp < 0. || a <= 0. || b <= 0.) {
         return ML_ERR_return_NAN();
     }
 
-    if (x < 0. || o_x > 1. || (x == 0. && o_x == 1.)) return 0.;
-    if (x > 1. || o_x < 0. || (x == 1. && o_x == 0.)) return 1.;
+    if (x < 0. || o_x > 1. || (x === 0. && o_x === 1.)) return 0.;
+    if (x > 1. || o_x < 0. || (x === 1. && o_x === 0.)) return 1.;
 
     c = ncp / 2.;
 
@@ -120,19 +128,19 @@ export function pnbeta2(x: number, o_x: number, a: number, b: number, ncp: numbe
         if (ans > 1. - 1e-10) ML_ERROR(ME.ME_PRECISION, 'pnbeta');
         if (ans > 1.0) ans = 1.0;  /* Precaution */
         /* include standalone case */
-        return (log_p ? log1p( - ans) : (1. - ans));
+        return (log_p ? log1p(- ans) : (1. - ans));
 
     }
 }
 
-export function  pnbeta(x: number, a: number, b: number, ncp: number,lower_tail: boolean, log_p: boolean){
-    
+export function pnbeta(x: number, a: number, b: number, ncp: number, lower_tail: boolean, log_p: boolean) {
+
     if (ISNAN(x) || ISNAN(a) || ISNAN(b) || ISNAN(ncp))
         return x + a + b + ncp;
-    
 
-    let rc =  R_P_bounds_01(lower_tail, log_p,x, 0., 1.);
-    if (rc !== undefined){
+
+    let rc = R_P_bounds_01(lower_tail, log_p, x, 0., 1.);
+    if (rc !== undefined) {
         return rc;
     }
     return pnbeta2(x, 1 - x, a, b, ncp, lower_tail, log_p);

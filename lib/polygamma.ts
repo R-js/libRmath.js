@@ -73,13 +73,13 @@
  *	x     - argument, x > 0.
  *
  *	n     - first member of the sequence, 0 <= n <= 100
- *		n == 0 gives ans(1) = -psi(x)	    for kode=1
+ *		n === 0 gives ans(1) = -psi(x)	    for kode=1
  *				      -psi(x)+ln(x) for kode=2
  *
  *	kode  - selection parameter
- *		kode == 1 returns scaled derivatives of the
+ *		kode === 1 returns scaled derivatives of the
  *		psi function.
- *		kode == 2 returns scaled derivatives of the
+ *		kode === 2 returns scaled derivatives of the
  *		psi function except when n=0. In this case,
  *		ans(1) = -psi(x) + ln(x) is returned.
  *
@@ -92,8 +92,8 @@
  *		scaled according to kode.
  *
  *	nz    - underflow flag
- *		nz == 0, a normal return
- *		nz != 0, underflow, last nz components of ans are
+ *		nz === 0, a normal return
+ *		nz !== 0, underflow, last nz components of ans are
  *			 set to zero, ans(m-k+1)=0.0, k=1,...,nz
  *
  *	ierr  - error flag
@@ -200,11 +200,43 @@ export function dpsifn(x: number, n: number, kode: number, m: number, ans: Array
     let nx: number;
     let xinc = 0 as number;
     let xdmln = 0 as number;
-    let i, j, k, mm, mx, nn, np, fn;
-    let arg, den, elim, eps, fln, fx, rln, rxsq,
-        r1m4, r1m5, s, slope, t, ta, tk, tol, tols, tss, tst,
-        tt, t1, t2, wdtol, xdmy = 0, xln = 0.0 /* -Wall */,
-        xm, xmin, xq, yint;
+    let i;
+    let j;
+    let k;
+    let mm;
+    let mx;
+    let nn;
+    let np;
+    let fn;
+    let arg;
+    let den;
+    let elim;
+    let eps;
+    let fln;
+    let fx;
+    let rln;
+    let rxsq;
+    let r1m4;
+    let r1m5;
+    let s;
+    let slope;
+    let t;
+    let ta;
+    let tk;
+    let tol;
+    let tols;
+    let tss;
+    let tst;
+    let tt;
+    let t1;
+    let t2;
+    let wdtol;
+    let xdmy = 0;
+    let xln = 0.0; /* -Wall */
+    let xm;
+    let xmin;
+    let xq;
+    let yint;
     let trm = new Array(23);
     trm.fill(0);
     let trmr = new Array(n_max + 1);
@@ -219,7 +251,7 @@ export function dpsifn(x: number, n: number, kode: number, m: number, ans: Array
         /* use	Abramowitz & Stegun 6.4.7 "Reflection Formula"
          *	psi(k, x) = (-1)^k psi(k, 1-x)	-  pi^{n+1} (d/dx)^n cot(x)
          */
-        if (x == round(x)) {
+        if (x === round(x)) {
             /* non-positive integer : +Inf or NaN depends on n */
             for (j = 0; j < m; j++) /* k = j + n : */
                 ans[j] = ((j + n) % 2) ? ML_POSINF : ML_NAN;
@@ -227,7 +259,7 @@ export function dpsifn(x: number, n: number, kode: number, m: number, ans: Array
         }
         /* This could cancel badly */
         dpsifn(1. - x, n, /*kode = */ 1, m, ans, nz, ierr);
-        /* ans[j] == (-1)^(k+1) / gamma(k+1) * psi(k, 1 - x)
+        /* ans[j] === (-1)^(k+1) / gamma(k+1) * psi(k, 1 - x)
          *	     for j = 0:(m-1) ,	k = n + j
          */
 
@@ -237,31 +269,31 @@ export function dpsifn(x: number, n: number, kode: number, m: number, ans: Array
             ierr.val = 4; return;
         }
         x *= M_PI; /* pi * x */
-        if (n == 0)
+        if (n === 0)
             tt = cos(x) / sin(x);
-        else if (n == 1)
+        else if (n === 1)
             tt = -1 / R_pow_di(sin(x), 2);
-        else if (n == 2)
+        else if (n === 2)
             tt = 2 * cos(x) / R_pow_di(sin(x), 3);
-        else if (n == 3)
+        else if (n === 3)
             tt = -2 * (2 * R_pow_di(cos(x), 2) + 1.) / R_pow_di(sin(x), 4);
         else /* can not happen! */
             tt = ML_NAN;
         /* end cheat */
 
-        s = (n % 2) ? -1. : 1.;/* s = (-1)^n */
+        s = (n % 2) ? -1. : 1.; /* s = (-1)^n */
         /* t := pi^(n+1) * d_n(x) / gamma(n+1)	, where
          *		   d_n(x) := (d/dx)^n cot(x)*/
         t1 = t2 = s = 1.;
         for (k = 0, j = k - n; j < m; k++ , j++ , s = -s) {
-            /* k == n+j , s = (-1)^k */
-            t1 *= M_PI;/* t1 == pi^(k+1) */
+            /* k === n+j , s = (-1)^k */
+            t1 *= M_PI; /* t1 === pi^(k+1) */
             if (k >= 2)
-                t2 *= k;/* t2 == k! == gamma(k+1) */
+                t2 *= k; /* t2 === k! === gamma(k+1) */
             if (j >= 0) /* by cheat above,  tt === d_k(x) */
                 ans[j] = s * (ans[j] + t1 / t2 * tt);
         }
-        if (n == 0 && kode == 2) /* unused from R, but "wrong": xln === 0 :*/
+        if (n === 0 && kode === 2) /* unused from R, but "wrong": xln === 0 :*/
             ans[0] += xln;
         return;
     } /* x <= 0 */
@@ -269,27 +301,27 @@ export function dpsifn(x: number, n: number, kode: number, m: number, ans: Array
     /* else :  x > 0 */
     nz.val = 0;
     xln = log(x);
-    if (kode == 1 && m == 1) {/* the R case  ---  for very large x: */
+    if (kode === 1 && m === 1) { /* the R case  ---  for very large x: */
         let lrg = 1 / (2. * DBL_EPSILON);
-        if (n == 0 && x * xln > lrg) {
+        if (n === 0 && x * xln > lrg) {
             ans[0] = -xln;
             return;
         }
         else if (n >= 1 && x > n * lrg) {
-            ans[0] = exp(-n * xln) / n; /* == x^-n / n  ==  1/(n * x^n) */
+            ans[0] = exp(-n * xln) / n; /* === x^-n / n  ===  1/(n * x^n) */
             return;
         }
     }
     mm = m;
-    nx = imin2(-Rf_i1mach(15), Rf_i1mach(16));/* = 1021 */
+    nx = imin2(-Rf_i1mach(15), Rf_i1mach(16)); /* = 1021 */
     r1m5 = Rf_d1mach(5);
     r1m4 = Rf_d1mach(4) * 0.5;
     wdtol = fmax2(r1m4, 0.5e-18); /* 1.11e-16 */
 
     /* elim = approximate exponential over and underflow limit */
-    elim = 2.302 * (nx * r1m5 - 3.0);/* = 700.6174... */
+    elim = 2.302 * (nx * r1m5 - 3.0); /* = 700.6174... */
     let L10 = false;
-    for (; ;) {
+    while (true) {
         nn = n + mm - 1;
         fn = nn;
         t = (fn + 1) * xln;
@@ -306,11 +338,11 @@ export function dpsifn(x: number, n: number, kode: number, m: number, ans: Array
         else {
             if (x < wdtol) {
                 ans[0] = R_pow_di(x, -n - 1);
-                if (mm != 1) {
+                if (mm !== 1) {
                     for (k = 1; k < mm; k++)
                         ans[k] = ans[k - 1] / x;
                 }
-                if (n == 0 && kode == 2)
+                if (n === 0 && kode === 2)
                     ans[0] += xln;
                 return;
             }
@@ -325,7 +357,7 @@ export function dpsifn(x: number, n: number, kode: number, m: number, ans: Array
             xm = yint + slope * fn;
             mx = xm + 1;
             xmin = mx;
-            if (n != 0) {
+            if (n !== 0) {
                 xm = -2.302 * rln - fmin2(0.0, xln);
                 arg = xm / n;
                 arg = fmin2(0.0, arg);
@@ -362,7 +394,7 @@ export function dpsifn(x: number, n: number, kode: number, m: number, ans: Array
         nz.val++; /* underflow */
         mm--;
         ans[mm] = 0.;
-        if (mm == 0) {
+        if (mm === 0) {
             return;
         }
     } /* end{for()} */
@@ -379,10 +411,10 @@ export function dpsifn(x: number, n: number, kode: number, m: number, ans: Array
             s += trm[i];
         }
         ans[0] = s;
-        if (n == 0 && kode == 2)
+        if (n === 0 && kode === 2)
             ans[0] = s + xln;
 
-        if (mm != 1) { /* generate higher derivatives, j > n */
+        if (mm !== 1) { /* generate higher derivatives, j > n */
 
             tol = wdtol / 5.0;
             for (j = 1; j < mm; j++) {
@@ -407,7 +439,7 @@ export function dpsifn(x: number, n: number, kode: number, m: number, ans: Array
     tt = 0.5 / xdmy;
     t1 = tt;
     tst = wdtol * tt;
-    if (nn != 0)
+    if (nn !== 0)
         t1 = tt + 1.0 / fn;
     rxsq = 1.0 / (xdmy * xdmy);
     ta = 0.5 * rxsq;
@@ -425,7 +457,7 @@ export function dpsifn(x: number, n: number, kode: number, m: number, ans: Array
         }
     }
     s = (s + t1) * tss;
-    if (xinc != 0.0) {
+    if (xinc !== 0.0) {
 
         /* backward recur from xdmy to x */
 
@@ -463,7 +495,7 @@ export function dpsifn(x: number, n: number, kode: number, m: number, ans: Array
                 fn--;
                 tss *= xdmy;
                 t1 = tt;
-                if (fn != 0)
+                if (fn !== 0)
                     t1 = tt + 1.0 / fn;
                 t = (fn + 1) * ta;
                 s = t * bvalues[2];
@@ -478,8 +510,8 @@ export function dpsifn(x: number, n: number, kode: number, m: number, ans: Array
                     }
                 }
                 s = (s + t1) * tss;
-                if (xinc != 0.0) {
-                    if (fn == 0) {
+                if (xinc !== 0.0) {
+                    if (fn === 0) {
                         L20 = true;
                         break;
                     }
@@ -493,7 +525,7 @@ export function dpsifn(x: number, n: number, kode: number, m: number, ans: Array
                     }
                 }
                 ans[mm - j] = s;
-                if (fn == 0) {
+                if (fn === 0) {
                     L30 = true;
                     break;
                     //goto L30;
@@ -512,9 +544,9 @@ export function dpsifn(x: number, n: number, kode: number, m: number, ans: Array
         }
     }
     //L30:
-    if (kode != 2) /* always */
+    if (kode !== 2) /* always */
         ans[0] = s - xdmln;
-    else if (xdmy != x) {
+    else if (xdmy !== x) {
         xq = xdmy / x;
         ans[0] = s - log(xq);
     }
@@ -524,24 +556,25 @@ export function dpsifn(x: number, n: number, kode: number, m: number, ans: Array
 /*
 #ifdef MATHLIB_STANDALONE
 # define ML_TREAT_psigam(_IERR_)	\
-    if(_IERR_ != 0) {			\
+    if(_IERR_ !== 0) {			\
     errno = EDOM;			\
     return ML_NAN;			\
     }
 #else
 # define ML_TREAT_psigam(_IERR_)	\
-    if(_IERR_ != 0)			\
+    if(_IERR_ !== 0)			\
     return ML_NAN
 #endif
 */
 
 export function psigamma(x: number, deriv: number): number {
-    /* n-th derivative of psi(x);  e.g., psigamma(x,0) == digamma(x) */
+    /* n-th derivative of psi(x);  e.g., psigamma(x,0) === digamma(x) */
     let ans = new Array<number>(1);
     ans[0] = 0;
     let nz = new NumberW(0);
     let ierr = new NumberW(0);
-    let k, n;
+    let k;
+    let n;
 
     if (ISNAN(x))
         return x;
@@ -553,14 +586,14 @@ export function psigamma(x: number, deriv: number): number {
     }
     dpsifn(x, n, 1, 1, ans, nz, ierr);
     if (ierr.val !== 0) {
-        return ML_NAN
+        return ML_NAN;
     }
 
-    /* Now, ans ==  A := (-1)^(n+1) / gamma(n+1) * psi(n, x) */
+    /* Now, ans ===  A := (-1)^(n+1) / gamma(n+1) * psi(n, x) */
     ans[0] = -ans[0]; /* = (-1)^(0+1) * gamma(0+1) * A */
     for (k = 1; k <= n; k++)
-        ans[0] *= (-k);/* = (-1)^(k+1) * gamma(k+1) * A */
-    return ans[0];/* = psi(n, x) */
+        ans[0] *= (-k); /* = (-1)^(k+1) * gamma(k+1) * A */
+    return ans[0]; /* = psi(n, x) */
 }
 
 export function digamma(x: number): number {

@@ -51,7 +51,8 @@ export function pt(x: number, n: number, lower_tail: boolean, log_p: boolean): n
     
      *	--> ./pnt.c for NON-central
      */
-    let val, nx;
+    let val;
+    let nx;
 
     if (ISNAN(x) || ISNAN(n))
         return x + n;

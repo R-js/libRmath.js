@@ -64,7 +64,7 @@ import {
     fmax2,
     fmin2,
     R_D_val
-    
+
 
 } from './_general';
 
@@ -168,8 +168,8 @@ export function log1p(x: number): number {
  *		without overflow or destructive underflow.
  */
 
-export function hypot(a: number, b: number){
-    
+export function hypot(a: number, b: number) {
+
     let p: number;
     let r: number;
     let s: number;
@@ -189,7 +189,7 @@ export function hypot(a: number, b: number){
         /* r = (min(|a|,|b|) / p) ^2 */
         tmp = fmin2(fabs(a), fabs(b)) / p;
         r = tmp * tmp;
-        for (; ;) {
+        while (true) {
             t = 4.0 + r;
             /* This was a test of 4.0 + r == 4.0, but optimizing
             compilers nowadays infinite loop on that. */
@@ -207,10 +207,10 @@ export function hypot(a: number, b: number){
 }
 
 export function R_D_Clog(log_p: boolean, p: number): number {
-    return (log_p ? log1p(-(p)) : (0.5 - (p) + 0.5)) /* [log](1-p) */
+    return (log_p ? log1p(-(p)) : (0.5 - (p) + 0.5)); /* [log](1-p) */
 }
 
 
-export function R_DT_val(lower_tail:boolean, log_p: boolean, x: number) {
-    return lower_tail ? R_D_val(log_p,x)  : R_D_Clog(log_p,x)
+export function R_DT_val(lower_tail: boolean, log_p: boolean, x: number) {
+    return lower_tail ? R_D_val(log_p, x) : R_D_Clog(log_p, x);
 }

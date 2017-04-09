@@ -37,7 +37,7 @@ import {
     M_LN2,
     ML_NAN,
     ML_VALID
-} from './_general'
+} from './_general';
 
 import { pchisq } from './pchisq';
 import { pbeta } from './pbeta';
@@ -59,17 +59,17 @@ export function pf(x: number, df1: number, df2: number, lower_tail: boolean, log
 
     /* move to pchisq for very large values - was 'df1 > 4e5' in 2.0.x,
        now only needed for df1 = Inf or df2 = Inf {since pbeta(0,*)=0} : */
-    if (df2 == ML_POSINF) {
-        if (df1 == ML_POSINF) {
-            if (x < 1.) return R_DT_0(lower_tail,log_p);
-            if (x == 1.) return (log_p ? -M_LN2 : 0.5);
+    if (df2 === ML_POSINF) {
+        if (df1 === ML_POSINF) {
+            if (x < 1.) return R_DT_0(lower_tail, log_p);
+            if (x === 1.) return (log_p ? -M_LN2 : 0.5);
             if (x > 1.) return R_DT_1(lower_tail, log_p);
         }
 
         return pchisq(x * df1, df1, lower_tail, log_p);
     }
 
-    if (df1 == ML_POSINF)/* was "fudge"	'df1 > 4e5' in 2.0.x */
+    if (df1 === ML_POSINF)/* was "fudge"	'df1 > 4e5' in 2.0.x */
         return pchisq(df2 / x, df2, !lower_tail, log_p);
 
     /* Avoid squeezing pbeta's first parameter against 1 :  */

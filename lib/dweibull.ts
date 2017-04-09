@@ -38,7 +38,7 @@ import {
     exp
 } from './_general';
 
-export function dweibull(x: number, shape: number, scale: number, give_log: boolean) {
+export function dweibull(x: number, shape: number, scale: number, give_log: boolean): number {
 
     let tmp1;
     let tmp2;
@@ -46,10 +46,10 @@ export function dweibull(x: number, shape: number, scale: number, give_log: bool
         return x + shape + scale;
     if (shape <= 0 || scale <= 0) ML_ERR_return_NAN;
 
-    if (x < 0) return R_D__0;
-    if (!R_FINITE(x)) return R_D__0;
+    if (x < 0) return R_D__0(give_log);
+    if (!R_FINITE(x)) return R_D__0(give_log);
     /* need to handle x == 0 separately */
-    if (x == 0 && shape < 1) return ML_POSINF;
+    if (x === 0 && shape < 1) return ML_POSINF;
     tmp1 = pow(x / scale, shape - 1);
     tmp2 = tmp1 * (x / scale);
     /* These are incorrect if tmp1 == 0 */

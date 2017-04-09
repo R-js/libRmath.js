@@ -77,10 +77,11 @@ export function dt(x: number, n: number, give_log: boolean): number {
     }
 
     let u: number;
-    let t = -bd0(n / 2., (n + 1) / 2.) + stirlerr((n + 1) / 2.) - stirlerr(n / 2.),
-        x2n = x * x / n, // in  [0, Inf]
-        ax = 0., // <- -Wpedantic
-        l_x2n; // := log(sqrt(1 + x2n)) = log(1 + x2n)/2
+    let t = -bd0(n / 2., (n + 1) / 2.) + stirlerr((n + 1) / 2.) - stirlerr(n / 2.);
+    let  x2n = x * x / n;
+     // in  [0, Inf]
+    let    ax = 0.; // <- -Wpedantic
+    let    l_x2n; // := log(sqrt(1 + x2n)) = log(1 + x2n)/2
     let lrg_x2n: boolean = (x2n > 1. / DBL_EPSILON);
     if (lrg_x2n) { // large x^2/n :
         ax = fabs(x);

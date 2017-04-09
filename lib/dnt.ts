@@ -96,7 +96,7 @@ export function dnt(x: number, df: number, ncp: number, give_log: boolean): numb
     /* If non-positive df then error */
     if (df <= 0.0) ML_ERR_return_NAN;
 
-    if (ncp == 0.0) return dt(x, df, give_log);
+    if (ncp === 0.0) return dt(x, df, give_log);
 
     /* If x is infinite then return 0 */
     if (!R_FINITE(x))

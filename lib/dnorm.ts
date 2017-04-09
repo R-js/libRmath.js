@@ -72,8 +72,8 @@ export function dnorm4(x: number, mu: number, sigma: number, give_log: boolean):
         return R_D__0(give_log);
     }
 
-    if (!R_FINITE(x) && mu == x) {
-        return ML_NAN;/* x-mu is NaN */
+    if (!R_FINITE(x) && mu === x) {
+        return ML_NAN; /* x-mu is NaN */
     }
 
     if (sigma <= 0) {

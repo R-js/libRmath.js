@@ -77,16 +77,19 @@ export function beta(a: number, b: number): number {
     //    lnsml = log(DBL_MIN) = log(2 ^ -1022) = -1022 * log(2)
     //
     // NaNs propagated correctly 
+
     if (ISNAN(a) || ISNAN(b)) return a + b;
 
     if (a < 0 || b < 0)
-        return ML_ERR_return_NAN()
-    else if (a == 0 || b == 0)
+        return ML_ERR_return_NAN();
+    else if (a === 0 || b === 0)
         return ML_POSINF;
     else if (!R_FINITE(a) || !R_FINITE(b))
         return 0;
 
-    if (a + b < xmax) {// ~= 171.61 for IEEE 
+    if (a + b < xmax) {
+        //
+        // ~= 171.61 for IEEE 
         //	return gammafn(a) * gammafn(b) / gammafn(a+b);
         // All the terms are positive, and all can be large for large
         //   or small arguments.  They are never much less than one.
@@ -100,69 +103,10 @@ export function beta(a: number, b: number): number {
         //#ifndef IEEE_754
         if (val < lnsml) {
             // a and/or b so big that beta underflows 
-            ML_ERROR(ME.ME_UNDERFLOW, "beta");
+            ML_ERROR(ME.ME_UNDERFLOW, 'beta');
             // return ML_UNDERFLOW; pointless giving incorrect value 
         }
         //#endif
         return Math.exp(val);
     }
 }
-
-/*
-#include "nmath.h"
-
-double beta(double a, double b)
-{
-    #ifdef NOMORE_FOR_THREADS
-    static double xmin, xmax = 0;//-> typically = 171.61447887 for IEEE 
-    static double lnsml = 0;//-> typically = -708.3964185 
-
-    if (xmax == 0) {
-        gammalims(&xmin, &xmax);
-        lnsml = log(d1mach(1));
-    }
-    #else
-    // For IEEE double precision DBL_EPSILON = 2^-52 = 2.220446049250313e-16 :
-    //    xmin, xmax : see ./gammalims.c
-    //    lnsml = log(DBL_MIN) = log(2 ^ -1022) = -1022 * log(2)
-    //
-    # define xmin  - 170.5674972726612
-    # define xmax   171.61447887182298
-    # define lnsml - 708.39641853226412
-    #endif
-
-
-    #ifdef IEEE_754
-    // NaNs propagated correctly 
-    if (ISNAN(a) || ISNAN(b)) return a + b;
-    #endif
-
-    if (a < 0 || b < 0)
-        ML_ERR_return_NAN
-    else if (a == 0 || b == 0)
-        return ML_POSINF;
-    else if (!R_FINITE(a) || !R_FINITE(b))
-        return 0;
-
-    if (a + b < xmax) {// ~= 171.61 for IEEE 
-        //	return gammafn(a) * gammafn(b) / gammafn(a+b);
-        // All the terms are positive, and all can be large for large
-        //   or small arguments.  They are never much less than one.
-        //   gammafn(x) can still overflow for x ~ 1e-308,
-        //   but the result would too.
-        //
-        return (1 / gammafn(a + b)) * gammafn(a) * gammafn(b);
-    } else {
-        double val = lbeta(a, b);
-        // underflow to 0 is not harmful per se;  exp(-999) also gives no warning
-        #ifndef IEEE_754
-        if (val < lnsml) {
-            // a and/or b so big that beta underflows 
-            ML_ERROR(ME_UNDERFLOW, "beta");
-            // return ML_UNDERFLOW; pointless giving incorrect value 
-        }
-        #endif
-        return exp(val);
-    }
-}
-*/

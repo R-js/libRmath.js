@@ -125,7 +125,7 @@ export function pnt(t: number, df: number, ncp: number, lower_tail: boolean, log
     const errmax = 1.e-12;
 
     if (df <= 0.0) return ML_ERR_return_NAN();
-    if (ncp == 0.0) return pt(t, df, lower_tail, log_p);
+    if (ncp === 0.0) return pt(t, df, lower_tail, log_p);
 
     if (!R_FINITE(t))
         return (t < 0) ? R_DT_0(lower_tail, log_p) : R_DT_1(lower_tail, log_p);
@@ -149,29 +149,29 @@ export function pnt(t: number, df: number, ncp: number, lower_tail: boolean, log
 
         return pnorm((tt * (1. - s)), del,
             sqrt((1. + tt * tt * 2. * s)),
-            lower_tail != negdel, log_p);
+            lower_tail !== negdel, log_p);
     }
 
     /* initialize twin series */
     /* Guenther, J. (1978). Statist. Computn. Simuln. vol.6, 199. */
 
     x = t * t;
-    rxb = df / (x + df);/* := (1 - x) {x below} -- but more accurately */
-    x = x / (x + df);/* in [0,1) */
+    rxb = df / (x + df); /* := (1 - x) {x below} -- but more accurately */
+    x = x / (x + df); /* in [0,1) */
 
-    REprintf("pnt(t=%7g, df=%7g, ncp=%7g) ==> x= %10g:", t, df, ncp, x);
+    REprintf('pnt(t=%7g, df=%7g, ncp=%7g) ==> x= %10g:', t, df, ncp, x);
 
     if (x > 0.) {/* <==>  t != 0 */
         lambda = del * del;
         p = .5 * exp(-.5 * lambda);
 
-        REprintf("\t p=%10Lg\n", p);
+        REprintf('\t p=%10Lg\n', p);
 
-        if (p == 0.) { /* underflow! */
+        if (p === 0.) { /* underflow! */
 
             /*========== really use an other algorithm for this case !!! */
-            ML_ERROR(ME.ME_UNDERFLOW, "pnt");
-            ML_ERROR(ME.ME_RANGE, "pnt"); /* |ncp| too large */
+            ML_ERROR(ME.ME_UNDERFLOW, 'pnt');
+            ML_ERROR(ME.ME_RANGE, 'pnt'); /* |ncp| too large */
             return R_DT_0(lower_tail, log_p);
         }
 
@@ -198,7 +198,7 @@ export function pnt(t: number, df: number, ncp: number, lower_tail: boolean, log
         geven = tnc * rxb;
         tnc = p * xodd + q * xeven;
 
-        let finis = false
+        let finis = false;
 
         /* repeat until convergence or iteration limit */
         for (it = 1; it <= itrmax; it++) {
@@ -225,11 +225,11 @@ export function pnt(t: number, df: number, ncp: number, lower_tail: boolean, log
             }
             errbd = (2. * s * (xodd - godd));
 
-            REprintf("%3d %#9.4g %#9.4g|%#11.4Lg %#11.4Lg %#11.4Lg %#14.10Lg %#9.4g\n",
+            REprintf('%3d %#9.4g %#9.4g|%#11.4Lg %#11.4Lg %#11.4Lg %#14.10Lg %#9.4g\n',
                 it, 1e5 * godd, 1e5 * geven, p, q, s, tnc, errbd);
 
             if (fabs(errbd) < errmax) {
-                finis = true;/*convergence*/
+                finis = true; /*convergence*/
                 break;
             }
         }//for
@@ -243,7 +243,7 @@ export function pnt(t: number, df: number, ncp: number, lower_tail: boolean, log
     }
     tnc += pnorm(- del, 0., 1., /*lower*/true, /*log_p*/false);
 
-    lower_tail = lower_tail != negdel; /* xor */
+    lower_tail = lower_tail !== negdel; /* xor */
     if (tnc > 1 - 1e-10 && lower_tail)
         ML_ERROR(ME.ME_PRECISION, 'pnt{final}');
 

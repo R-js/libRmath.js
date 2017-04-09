@@ -113,9 +113,9 @@ export function pnorm5(x: number, mu: number, sigma: number, lower_tail: boolean
     if (ISNAN(x) || ISNAN(mu) || ISNAN(sigma))
         return x + mu + sigma;
 
-    if (!R_FINITE(x) && mu == x) return ML_NAN;/* x-mu is NaN */
+    if (!R_FINITE(x) && mu === x) return ML_NAN; /* x-mu is NaN */
     if (sigma <= 0) {
-        if (sigma < 0) ML_ERR_return_NAN;
+        if (sigma < 0) return ML_ERR_return_NAN();
         /* sigma = 0 : */
         return (x < mu) ? R_DT_0(lower_tail, log_p) : R_DT_1(lower_tail, log_p);
     }
@@ -185,11 +185,18 @@ export function pnorm_both(x: number, cum: NumberW, ccum: NumberW, i_tail: boole
         7.29751555083966205e-5
     ];
 
-    let xden, xnum, temp, eps, xsq, y;
+    let xden;
+    let xnum;
+    let temp;
+    let eps;
+    let xsq;
+    let y;
 
     let min = DBL_MIN;
 
-    let i: number, lower: boolean, upper: boolean;
+    let i: number;
+    let lower: boolean;
+    let upper: boolean;
 
     if (ISNAN(x)) { cum.val = ccum.val = x; return; }
 
@@ -197,8 +204,8 @@ export function pnorm_both(x: number, cum: NumberW, ccum: NumberW, i_tail: boole
     eps = DBL_EPSILON * 0.5;
 
     /* i_tail in {0,1,2} =^= {lower, upper, both} */
-    lower = i_tail != true;
-    upper = i_tail != false;
+    lower = i_tail !== true;
+    upper = i_tail !== false;
 
     y = fabs(x);
     if (y <= 0.67448975) { /* qnorm(3/4) = .6744.... -- earlier had 0.66291 */
@@ -316,7 +323,7 @@ export function pnorm_both(x: number, cum: NumberW, ccum: NumberW, i_tail: boole
     /* do not return "denormalized" -- we do in R */
     if (log_p) {
         if (cum.val > -min) cum.val = -0.;
-        if (ccum.val > -min) { ccum.val = -0. };
+        if (ccum.val > -min) { ccum.val = -0.; };
     }
     else {
         if (cum.val < min) cum.val = 0.;

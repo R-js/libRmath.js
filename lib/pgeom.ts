@@ -38,7 +38,7 @@ import {
     floor,
     log,
     exp
-} from './_general'
+} from './_general';
 
 import { log1p } from './log1p';
 import { expm1, R_DT_Clog } from './expm1';
@@ -56,7 +56,7 @@ export function pgeom(x: number, p: number, lower_tail: boolean, log_p: boolean)
     if (!R_FINITE(x)) return R_DT_1(lower_tail, log_p);
     x = floor(x + 1e-7);
 
-    if (p == 1.) { /* we cannot assume IEEE */
+    if (p === 1.) { /* we cannot assume IEEE */
         x = lower_tail ? 1 : 0;
         return log_p ? log(x) : x;
     }

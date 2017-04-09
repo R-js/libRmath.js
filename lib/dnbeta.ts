@@ -92,18 +92,18 @@ export function dnbeta(x: number, a: number, b: number, ncp: number, give_log: b
 
     if (ISNAN(x) || ISNAN(a) || ISNAN(b) || ISNAN(ncp))
         return x + a + b + ncp;
-    if (ncp < 0 || a <= 0 || b <= 0){
-       return  ML_ERR_return_NAN();
+    if (ncp < 0 || a <= 0 || b <= 0) {
+        return ML_ERR_return_NAN();
     }
 
-    if (!R_FINITE(a) || !R_FINITE(b) || !R_FINITE(ncp)){
-      return ML_ERR_return_NAN();
+    if (!R_FINITE(a) || !R_FINITE(b) || !R_FINITE(ncp)) {
+        return ML_ERR_return_NAN();
     }
 
     if (x < 0 || x > 1) {
         return R_D__0(give_log);
     }
-    if (ncp == 0){
+    if (ncp === 0) {
         return dbeta(x, a, b, give_log);
     }
     /* New algorithm, starting with *largest* term : */
@@ -121,8 +121,8 @@ export function dnbeta(x: number, a: number, b: number, ncp: number, give_log: b
     /* The starting "middle term" --- first look at it's log scale: */
     term = dbeta(x, a + kMax, b, /* log = */ true);
     p_k = dpois_raw(kMax, ncp2, true);
-    if (x == 0. || !R_FINITE(term) || !R_FINITE(p_k)){ /* if term = +Inf */
-        return R_D_exp(give_log,p_k + term);
+    if (x === 0. || !R_FINITE(term) || !R_FINITE(p_k)) { /* if term = +Inf */
+        return R_D_exp(give_log, p_k + term);
     }
 
     /* Now if s_k := p_k * t_k  {here = exp(p_k + term)} would underflow,
@@ -151,6 +151,6 @@ export function dnbeta(x: number, a: number, b: number, ncp: number, give_log: b
         sum += term;
     } while (term > sum * eps);
 
-    return R_D_exp(give_log,(p_k + log(sum)));
-  
+    return R_D_exp(give_log, (p_k + log(sum)));
+
 }

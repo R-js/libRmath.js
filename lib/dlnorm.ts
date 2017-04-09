@@ -50,7 +50,7 @@ export function dlnorm(x: number, meanlog: number, sdlog: number, give_log: bool
             return ML_ERR_return_NAN();
         }
         // sdlog == 0 :
-        return (log(x) == meanlog) ? ML_POSINF : R_D__0(give_log);
+        return (log(x) === meanlog) ? ML_POSINF : R_D__0(give_log);
     }
     if (x <= 0) {
         return R_D__0(give_log);

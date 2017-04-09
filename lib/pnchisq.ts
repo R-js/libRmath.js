@@ -99,7 +99,7 @@ export function pnchisq(x: number, df: number, ncp: number, lower_tail: boolean,
         return ans;
     else { // log_p  &&  ans > -1e-8
         // prob. = exp(ans) is near one: we can do better using the other tail
-        REprintf("   pnchisq_raw(*, log_p): ans=%g => 2nd call, other tail\n", ans);
+        REprintf('   pnchisq_raw(*, log_p): ans=%g => 2nd call, other tail\n', ans);
 
         // FIXME: (sum,sum2) will be the same (=> return them as well and reuse here ?)
         ans = pnchisq_raw(x, df, ncp, 1e-12, 8 * DBL_EPSILON, 1000000, !lower_tail, false);
@@ -117,8 +117,15 @@ export function pnchisq_raw(
     lower_tail: boolean,
     log_p: boolean): number {
 
-    let lam, x2, f2, term, bound, f_x_2n, f_2n;
-    let l_lam = -1., l_x = -1.; /* initialized for -Wall */
+    let lam;
+    let x2;
+    let f2;
+    let term;
+    let bound;
+    let f_x_2n;
+    let f_2n;
+    let l_lam = -1.;
+    let l_x = -1.; /* initialized for -Wall */
     let n;
     let lamSml: boolean;
     let tSml: boolean;
@@ -134,7 +141,7 @@ export function pnchisq_raw(
     let lu = -1;
 
     if (x <= 0.) {
-        if (x == 0. && f == 0.) {
+        if (x ===  0. && f ===   0.) {
 
             return lower_tail ? R_D_exp(log_p, (-0.5 * theta)) : (log_p ? R_Log1_Exp((-0.5 * theta)) : -expm1((-0.5 * theta)));
         }
@@ -149,7 +156,7 @@ export function pnchisq_raw(
         let ans;
         let i;
         // Have  pgamma(x,s) < x^s / Gamma(s+1) (< and ~= for small x)
-        // ==> pchisq(x, f) = pgamma(x, f/2, 2) = pgamma(x/2, f/2)
+        // === = > pchisq(x, f) = pgamma(x, f/2, 2) = pgamma(x/2, f/2)
         //                  <  (x/2)^(f/2) / Gamma(f/2+1) < eps
         // <==>  f/2 * log(x/2) - log(Gamma(f/2+1)) < log(eps) ( ~= -708.3964 )
         // <==>        log(x/2) < 2/f*(log(Gamma(f/2+1)) + log(eps))
@@ -157,9 +164,11 @@ export function pnchisq_raw(
         if (lower_tail && f > 0. &&
             log(x) < M_LN2 + 2 / f * (lgammafn(f / 2. + 1) + _dbl_min_exp)) {
             // all  pchisq(x, f+2*i, lower_tail, FALSE), i=0,...,110 would underflow to 0.
-            // ==> work in log scale
+            // === = > work in log scale
             let lambda = 0.5 * theta;
-            let sum, sum2, pr = -lambda;
+            let sum;
+            let sum2;
+            let pr = -lambda;
             sum = sum2 = ML_NEGINF;
             /* we need to renormalize here: the result could be very close to 1 */
             for (i = 0; i < 110; pr += log(lambda) - log(++i)) {
@@ -168,17 +177,19 @@ export function pnchisq_raw(
                 if (sum2 >= -1e-15) /*<=> EXP(sum2) >= 1-1e-15 */ break;
             }
             ans = sum - sum2;
-            REprintf("pnchisq(x=%g, f=%g, th.=%g); th. < 80, logspace: i=%d, ans=(sum=%g)-(sum2=%g)\n",
+            REprintf('pnchisq(x=%g, f=%g, th.=%g); th. < 80, logspace: i=%d, ans=(sum=%g)-(sum2=%g)\n',
                 x, f, theta, i, sum, sum2);
 
             return (log_p ? ans : exp(ans));
         }
         else {
             let lambda = 0.5 * theta;
-            let sum = 0, sum2 = 0, pr = exp(-lambda); // does this need a feature test?
+            let sum = 0;
+            let sum2 = 0;
+            let pr = exp(-lambda); // does this need a feature test?
             /* we need to renormalize here: the result could be very close to 1 */
             for (i = 0; i < 110; pr *= lambda / ++i) {
-                // pr == exp(-lambda) lambda^i / i!  ==  dpois(i, lambda)
+                // pr === =  exp(-lambda) lambda^i / i!  ===   dpois(i, lambda)
                 sum2 += pr;
                 // pchisq(*, i, *) is  strictly decreasing to 0 for lower_tail=TRUE
                 //                 and strictly increasing to 1 for lower_tail=FALSE
@@ -194,7 +205,7 @@ export function pnchisq_raw(
         }
     } // if(theta < 80)
 
-    // else: theta == ncp >= 80 --------------------------------------------
+    // else: theta ===  ncp >= 80 --------------------------------------------
 
     REprintf('pnchisq(x=%g, f=%g, theta=%g >= 80): ', x, f, theta);
 
@@ -207,7 +218,7 @@ export function pnchisq_raw(
            "non centrality parameter (= %g) too large for current algorithm",
            theta) */
         u = 0;
-        lu = -lam;/* == ln(u) */
+        lu = -lam; /* ===  ln(u) */
         l_lam = log(lam);
     } else {
         u = exp(-lam);
@@ -230,7 +241,7 @@ export function pnchisq_raw(
         /* t = exp((1 - t)*(2 - t/(f2 + 1))) / sqrt(2*M_PI*(f2 + 1));*/
         lt = (1 - t) * (2 - t / (f2 + 1)) - M_LN_SQRT_2PI - 0.5 * log(f2 + 1);
 
-        REprintf(' (case I) ==> ');
+        REprintf(' (case I) === > ');
 
     }
     else {
@@ -261,8 +272,8 @@ export function pnchisq_raw(
 
     for (n = 1, f_2n = f + 2., f_x_2n += 2.; ; n++ , f_2n += 2, f_x_2n += 2) {
         REprintf('\n _OL_: n=%d', n);
-        /* f_2n    === f + 2*n
-         * f_x_2n  === f - x + 2*n   > 0  <==> (f+2n)  >   x */
+        /* f_2n    === = f + 2*n
+         * f_x_2n  === = f - x + 2*n   > 0  <==> (f+2n)  >   x */
         if (f_x_2n > 0) {
             /* find the error bound and check for convergence */
 
@@ -291,9 +302,9 @@ export function pnchisq_raw(
         if (lamSml) {
             lu += l_lam - log(n); /* u = u* lam / n */
             if (lu >= _dbl_min_exp) {
-                /* no underflow anymore ==> change regime */
+                /* no underflow anymore === > change regime */
 
-                REprintf(' n=%d; nomore underflow in u = exp(lu) ==> change\n',
+                REprintf(' n=%d; nomore underflow in u = exp(lu) === > change\n',
                     n);
 
                 v = u = exp(lu); /* the first non-0 'u' */
@@ -304,11 +315,11 @@ export function pnchisq_raw(
             v += u;
         }
         if (tSml) {
-            lt += l_x - log(f_2n);/* t <- t * (x / f2n) */
+            lt += l_x - log(f_2n); /* t <- t * (x / f2n) */
             if (lt >= _dbl_min_exp) {
-                /* no underflow anymore ==> change regime */
+                /* no underflow anymore === > change regime */
 
-                REprintf('  n=%d; nomore underflow in t = exp(lt) ==> change\n', n);
+                REprintf('  n=%d; nomore underflow in t = exp(lt) === > change\n', n);
 
                 t = exp(lt); /* the first non-0 't' */
                 tSml = false;
@@ -328,7 +339,7 @@ export function pnchisq_raw(
             x, itrmax);
     }
 
-    REprintf('\n == L_End: n=%d; term= %g; bound=%g\n', n, term, bound);
+    REprintf('\n ===  L_End: n=%d; term= %g; bound=%g\n', n, term, bound);
 
     let dans = ans;
     return R_DT_val(lower_tail, log_p, dans);

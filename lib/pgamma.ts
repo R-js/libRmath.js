@@ -104,7 +104,7 @@ export const scalefactor = sqr(sqr(sqr(4294967296.0)));
 
 
 /* If |x| > |k| * M_cutoff,  then  log[ exp(-x) * k^x ]	 =~=  -x */
-export const M_cutoff = M_LN2 * DBL_MAX_EXP / DBL_EPSILON;/*=3.196577e18*/
+export const M_cutoff = M_LN2 * DBL_MAX_EXP / DBL_EPSILON; /*=3.196577e18*/
 
 /* Continued fraction for calculation of
  *    1/i + x/(i+d) + x^2/(i+2*d) + x^3/(i+3*d) + ... = sum_{k=0}^Inf x^k/(i+k*d)
@@ -167,7 +167,8 @@ export function log1pmx(x: number) {
       * ---------------------------------------------
       * S(y) = 1/3 + y/5 + y^2/7 + ... = \sum_{k=0}^\infty  y^k / (2k + 3)
      */
-    let r = x / (2 + x), y = r * r;
+    let r = x / (2 + x);
+    let y = r * r;
     if (fabs(x) < 1e-2) {
       let two = 2;
       return r * ((((two / 9 * y + two / 7) * y + two / 5) * y +
@@ -188,8 +189,8 @@ export function lgamma1p(a: number) {
   /* coeffs[i] holds (zeta(i+2)-1)/(i+2) , i = 0:(N-1), N = 40 : */
   const N = 40;
   const coeffs = [
-    0.3224670334241132182362075833230126e-0,/* = (zeta(2)-1)/2 */
-    0.6735230105319809513324605383715000e-1,/* = (zeta(3)-1)/3 */
+    0.3224670334241132182362075833230126e-0, /* = (zeta(2)-1)/2 */
+    0.6735230105319809513324605383715000e-1, /* = (zeta(3)-1)/3 */
     0.2058080842778454787900092413529198e-1,
     0.7385551028673985266273097291406834e-2,
     0.2890510330741523285752988298486755e-2,
@@ -227,10 +228,10 @@ export function lgamma1p(a: number) {
     0.9573630387838555763782200936508615e-13,
     0.4664076026428374224576492565974577e-13,
     0.2273736960065972320633279596737272e-13,
-    0.1109139947083452201658320007192334e-13/* = (zeta(40+1)-1)/(40+1) */
+    0.1109139947083452201658320007192334e-13  /* = (zeta(40+1)-1)/(40+1) */
   ];
 
-  const c = 0.2273736845824652515226821577978691e-12;/* zeta(N+2)-1 */
+  const c = 0.2273736845824652515226821577978691e-12; /* zeta(N+2)-1 */
   const tol_logcf = 1e-14;
   let lgam;
   let i;
@@ -293,9 +294,9 @@ export function logspace_sub(logx: number, logy: number) {
  */
 
 export function logspace_sum(logx: number[], n: number): number {
-  if (n == 0) return ML_NEGINF; // = log( sum(<empty>) )
-  if (n == 1) return logx[0];
-  if (n == 2) return logspace_add(logx[0], logx[1]);
+  if (n === 0) return ML_NEGINF; // = log( sum(<empty>) )
+  if (n === 1) return logx[0];
+  if (n === 2) return logspace_add(logx[0], logx[1]);
   // else (n >= 3) :
   let i;
   // Mx := max_i log(x_i)
@@ -341,6 +342,7 @@ export function dpois_wrap(x_plus_1: number, lambda: number, give_log: boolean):
 /*
  * Abramowitz and Stegun 6.5.29 [right]
  */
+
 export function pgamma_smallx(x: number, alph: number, lower_tail: boolean, log_p: boolean): number {
   let sum = 0;
   let c = alph;
@@ -374,7 +376,7 @@ export function pgamma_smallx(x: number, alph: number, lower_tail: boolean, log_
     else
       f2 = pow(x, alph) / exp(lgamma1p(alph));
 
-    REprintf(" (f1,f2)= (%g,%g)\n", f1, f2);
+    REprintf(' (f1,f2)= (%g,%g)\n', f1, f2);
     return log_p ? f1 + f2 : f1 * f2;
   } else {
     let lf2 = alph * log(x) - lgamma1p(alph);
@@ -416,15 +418,23 @@ export function pd_upper_series(x: number, y: number, log_p: boolean): number {
  */
 export function pd_lower_cf(y: number, d: number): number {
 
-  let f = 0.0 /* -Wall */, of, f0;
-  let i, c2, c3, c4, a1, b1, a2, b2;
+  let f = 0.0; /* -Wall */;
+  let of;
+  let f0;
+  let i; 
+  let c2; 
+  let c3;
+  let c4;
+  let a1;
+  let b1;
+  let a2;
+  let b2;
 
   const max_it = 200000;
 
-
   REprintf('pd_lower_cf(y=%.14g, d=%.14g)', y, d);
 
-  if (y == 0) return 0;
+  if (y === 0) return 0;
 
   f0 = y / d;
   /* Needed, e.g. for  pgamma(10^c(100,295), shape= 1.1, log=TRUE): */
@@ -462,26 +472,27 @@ export function pd_lower_cf(y: number, d: number): number {
 
 
 
-    if (b2 != 0) {
+    if (b2 !== 0) {
       f = a2 / b2;
       /* convergence check: relative; "absolute" for very small f : */
       if (fabs(f - of) <= DBL_EPSILON * fmax2(f0, fabs(f))) {
-        REprintf(" %g iter.\n", i);
+        REprintf(' %g iter.\n', i);
         return f;
       }
       of = f;
     }
   }
 
-  MATHLIB_WARNING(" ** NON-convergence in pgamma()'s pd_lower_cf() f= %g.\n",
+  MATHLIB_WARNING(' ** NON-convergence in pgamma()\'s pd_lower_cf() f= %g.\n',
     f);
-  return f;/* should not happen ... */
+  return f; /* should not happen ... */
 } /* pd_lower_cf() */
 
 
 
 export function pd_lower_series(lambda: number, y: number): number {
-  let term = 1, sum = 0;
+  let term = 1;
+  let sum = 0;
 
 
   REprintf('pd_lower_series(lam=%.14g, y=%.14g) ...', lambda, y);
@@ -498,7 +509,7 @@ export function pd_lower_series(lambda: number, y: number): number {
 
   REprintf(' done: term=%g, sum=%g, y= %g\n', term, sum, y);
 
-  if (y != floor(y)) {
+  if (y !== floor(y)) {
     /*
      * The series does not converge as the terms start getting
      * bigger (besides flipping sign) for y < -lambda.
@@ -674,7 +685,7 @@ export function pgamma_raw(x: number, alph: number, lower_tail: boolean, log_p: 
     res = pgamma_smallx(x, alph, lower_tail, log_p);
   } else if (x <= alph - 1 && x < 0.8 * (alph + 50)) {
     /* incl. large alph compared to x */
-    let sum = pd_upper_series(x, alph, log_p);/* = x/alph + o(x/alph) */
+    let sum = pd_upper_series(x, alph, log_p); /* = x/alph + o(x/alph) */
     let d = dpois_wrap(alph, x, log_p);
     REprintf(' alph "large": sum=pd_upper*()= %.12g, d=dpois_w(*)= %.12g\n',
       sum, d);
@@ -699,7 +710,7 @@ export function pgamma_raw(x: number, alph: number, lower_tail: boolean, log_p: 
         sum = log_p ? log(f) : f;
       }
     } else {
-      sum = pd_lower_series(x, alph - 1);/* = (alph-1)/x + o((alph-1)/x) */
+      sum = pd_lower_series(x, alph - 1); /* = (alph-1)/x + o((alph-1)/x) */
       sum = log_p ? log1p(sum) : 1 + sum;
     }
 
@@ -710,8 +721,10 @@ export function pgamma_raw(x: number, alph: number, lower_tail: boolean, log_p: 
       res = log_p
         ? R_Log1_Exp(d + sum)
         : 1 - d * sum;
-  } else { /* x >= 1 and x fairly near alph. */
+  } else {
 
+    /* x >= 1 and x fairly near alph. */
+    
     REprintf(' using ppois_asymp()\n');
     res = ppois_asymp(alph - 1, x, !lower_tail, log_p);
   }
@@ -742,7 +755,7 @@ export function pgamma(x: number, alph: number, scale: number, lower_tail: boole
 
   if (ISNAN(x)) /* eg. original x = scale = +Inf */
     return x;
-  if (alph == 0.) /* limit case; useful e.g. in pnchisq() */
+  if (alph === 0.) /* limit case; useful e.g. in pnchisq() */
     return (x <= 0) ? R_DT_0(lower_tail, log_p) : R_DT_1(lower_tail, log_p); /* <= assert  pgamma(0,0) ==> 0 */
   return pgamma_raw(x, alph, lower_tail, log_p);
 }

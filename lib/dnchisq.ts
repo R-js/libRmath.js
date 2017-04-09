@@ -70,11 +70,11 @@ export function dnchisq(x: number, df: number, ncp: number, give_log: boolean): 
     if (x < 0) {
         return R_D__0(give_log);
     }
-    if (x == 0 && df < 2.)
+    if (x === 0 && df < 2.)
         return ML_POSINF;
-    if (ncp == 0)
+    if (ncp === 0)
         return (df > 0) ? dchisq(x, df, give_log) : R_D__0(give_log);
-    if (x == ML_POSINF)
+    if (x === ML_POSINF)
         return R_D__0(give_log);
 
     ncp2 = 0.5 * ncp;
@@ -91,13 +91,14 @@ export function dnchisq(x: number, df: number, ncp: number, give_log: boolean): 
         // mid = 0;
         // }
 
-        // if (mid == 0) {
+        // if (mid === 0) {
         /* underflow to 0 -- maybe numerically correct; maybe can be more accurate,
 	 * particularly when  give_log = TRUE */
         /* Use  central-chisq approximation formula when appropriate;
 	 * ((FIXME: the optimal cutoff also depends on (x,df);  use always here? )) */
         if (give_log || ncp > 1000.) {
-            let nl = df + ncp, ic = nl / (nl + ncp); /* = "1/(1+b)" Abramowitz & St.*/
+            let nl = df + ncp;
+            let ic = nl / (nl + ncp); /* = "1/(1+b)" Abramowitz & St.*/
             return dchisq(x * ic, nl * ic, give_log);
         }
         else
@@ -124,7 +125,7 @@ export function dnchisq(x: number, df: number, ncp: number, give_log: boolean): 
     term = mid;
     df = dfmid;
     i = imax;
-    while (i != 0) {
+    while (i !== 0) {
         df -= 2;
         q = i * df / x2;
         i--;
@@ -133,5 +134,5 @@ export function dnchisq(x: number, df: number, ncp: number, give_log: boolean): 
         if (q < 1 && term * q <= (1 - q) * eps)
             break;
     }
-    return R_D_val(give_log,sum);
+    return R_D_val(give_log, sum);
 }

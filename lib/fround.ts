@@ -34,6 +34,7 @@
  */
 
 import {
+
     nearbyint as R_rint,
     LONG_MAX,
     DBL_EPSILON,
@@ -54,8 +55,8 @@ export function private_rint(x: number) {
     let sgn = 1.0;
     let ltmp: number;
 
-    if (x != x) {
-        return x;			/* NaN */
+    if (x !== x) {
+        return x;   /* NaN */
     }
 
     if (x < 0.0) {
@@ -67,7 +68,7 @@ export function private_rint(x: number) {
         ltmp = x + 0.5;
         /* implement round to even */
         if (fabs(x + 0.5 - ltmp) < 10 * DBL_EPSILON
-            && (ltmp % 2 == 1)) ltmp--;
+            && (ltmp % 2 === 1)) ltmp--;
         tmp = ltmp;
     } else {
         /* ignore round to even: too small a point to bother */
@@ -80,6 +81,7 @@ export function fround(x: number, digits: number) {
 
     /* = 308 (IEEE); was till R 0.99: (DBL_DIG - 1) */
     /* Note that large digits make sense for very small numbers */
+    
     let pow10: number;
     let sgn: number;
     let intx: number;
@@ -99,7 +101,7 @@ export function fround(x: number, digits: number) {
         x = -x;
     } else
         sgn = 1.;
-    if (dig == 0) {
+    if (dig === 0) {
         return (sgn * R_rint(x));
     } else if (dig > 0) {
         pow10 = R_pow_di(10., dig);

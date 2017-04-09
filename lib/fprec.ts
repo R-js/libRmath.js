@@ -94,7 +94,7 @@ export function fprec(x: number, digits: number): number {
         if (digits > 0.0) return x;
         else digits = 1.0;
     }
-    if (x == 0) return x;
+    if (x === 0) return x;
     dig = round(digits);
     if (dig > MAX_DIGITS) {
         return x;
@@ -115,7 +115,7 @@ export function fprec(x: number, digits: number): number {
             e10 = max10e;
         }
         if (e10 > 0) { /* Try always to have pow >= 1
-			 and so exactly representable */
+             and so exactly representable */
             pow10 = R_pow_di(10., e10);
             return (sgn * (R_rint((x * pow10) * p10) / pow10) / p10);
         } else {

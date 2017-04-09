@@ -127,7 +127,7 @@ export function choose(n: number, k: number): number {
     let j: number;
     if (n - k < k && n >= 0 && isInteger(n)) k = n - k; /* <- Symmetry */
     if (k < 0) return 0.;
-    if (k == 0) return 1.;
+    if (k === 0) return 1.;
     /* else: k >= 1 */
     r = n;
     for (j = 2; j <= k; j++)
