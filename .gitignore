@@ -6,7 +6,8 @@ r-source-trunk/
 TODO
 npm-debug.log*
 
-./.vscode/
+.*
+!/.gitignore
 
 # Runtime data
 pids
