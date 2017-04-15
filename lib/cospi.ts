@@ -82,7 +82,11 @@ export function tanpi(x: number): number {
     }
     x = fmod(x, 1.); // tan(pi(x + k)) == tan(pi x)  for all integer k
     // map (-1,1) --> (-1/2, 1/2] :
-    if (x <= -0.5) x++; else if (x > 0.5) x--;
+    if (x <= -0.5) { 
+        x++; 
+    } else if (x > 0.5) { 
+        x--;
+    }
     return (x === 0.) ? 0. : ((x === 0.5) ? ML_NAN : Math.tan(M_PI * x));
 }
 

@@ -4,8 +4,36 @@
   "description": "Javascript Pure Implementation of Statistical R \"core\" numerical libRmath.so",
   "main": "./dist/index.js",
   "scripts": {
-    "build": "./node_modules/.bin/gulp",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "prepublish": "echo 'prepublish'",
+    "prepare": "echo 'prepare'",
+    "prepublishOnly": "echo prepublishOnly",
+    "publish": "echo publish",
+    "preinstall": "echo preinstall",
+    "install": "echo install",
+    "postinstall": "echo postinstall",
+    "preuninstall": "echo preuninstall",
+    "uninstall": "echo uninstall",
+    "postuninstall": "echo postuninstall",
+    "preversion": "echo preversion",
+    "version": "echo version",
+    "postversion": "echo postversion",
+    "pretest": "echo pretest",
+    "test": "echo test",
+    "posttest": "echo posttest",
+    "prestop": "echo prestop",
+    "stop": "echo stop",
+    "poststop": "echo poststop",
+    "prestart": "echo prestart",
+    "start": "echo start",
+    "poststart": "echo poststart",
+    "prerestart": "echo prerestart",
+    "restart": "echo restart",
+    "postrestart": "echo postrestart",
+    "preshrinkwrap": "echo preshrinkwrap",
+    "shrinkwrap": "echo shrinkwrap",
+    "postshrinkwrap": "echo postshrinkwrap",
+    "build": "./node_modules/.bin/gulp"
+    
   },
   "types": "./dist/index.d.ts",
   "repository": {
@@ -25,7 +53,8 @@
     "data science",
     "special functions",
     "bessel",
-    "bessel_i"
+    "bessel_i",
+    "cospi sinpi tanpi"
   ],
   "author": "Jacob K.F. Bogers",
   "license": "GPL-3.0",
@@ -35,6 +64,7 @@
   "homepage": "https://github.com/jacobbogers/libRmath.js#readme",
   "devDependencies": {
     "@types/node": "^7.0.8",
+    "chai": "^3.5.0",
     "gulp": "github:gulpjs/gulp#4.0",
     "gulp-clean": "^0.3.2",
     "gulp-tslint": "^7.1.0",

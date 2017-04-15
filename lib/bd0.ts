@@ -29,6 +29,17 @@
  *  License for R statistical package
  *  https://www.r-project.org/Licenses/
  * 
+ *  
+ *  DESCRIPTION
+ *	Evaluates the "deviance part"
+ *	bd0(x,M) :=  M * D0(x/M) = M*[ x/M * log(x/M) + 1 - (x/M) ] =
+ *		  =  x * log(x/M) + M - x
+ *	where M = E[X] = n*p (or = lambda), for	  x, M > 0
+ *
+ *	in a manner that should be stable (with small relative error)
+ *	for all x and M=np. In particular for x/np close to 1, direct
+ *	evaluation fails, and evaluation is based on the Taylor series
+ *	of log((1+v)/(1-v)) with v = (x-M)/(x+M) = (x-np)/(x+np).
  * */
 
 import { R_FINITE, NaN, fabs, DBL_MIN, log } from './_general';
