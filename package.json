@@ -1,6 +1,6 @@
 {
   "name": "lib-r-math.js",
-  "version": "1.0.34",
+  "version": "1.0.35",
   "description": "Javascript Pure Implementation of Statistical R \"core\" numerical libRmath.so",
   "main": "./dist/index.js",
   "scripts": {
@@ -33,7 +33,6 @@
     "shrinkwrap": "echo shrinkwrap",
     "postshrinkwrap": "echo postshrinkwrap",
     "build": "./node_modules/.bin/gulp"
-    
   },
   "types": "./dist/index.d.ts",
   "repository": {
