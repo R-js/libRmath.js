@@ -1,6 +1,7 @@
 {
   "files": [
-    "./index.ts"
+    "./index.ts",
+    "./tests/all-tests.ts"
   ],
   "include": [
     "lib/**/*.ts"

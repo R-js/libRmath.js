@@ -33,13 +33,23 @@ export const R_rint = nearbyint;
 export const M_2PI = 6.283185307179586476925286766559;
 export const M_LN_2PI = 1.837877066409345483560659472811;
 export const sqrt = Math.sqrt;
-export const DBL_EPSILON = 6E-17; //true for javascript, this was tested
+export const asin = Math.asin;
+export const acos = Math.acos;
+export const atan = Math.atan;
+export const atan2 = Math.atan2;
+
+/* 
+   6.0E-17, we used the comments in the nmath lib to find epsilon that fullfills x == x-epsilon
+   this does not cover the internal accurace of build in functions in Math.cos, Math.sin etc
+*/
+export const DBL_EPSILON = Number.EPSILON;
 export const sinh = Math.sinh;
 export const DBL_MAX = Number.MAX_VALUE;
 export const exp = Math.exp;
 export const isInteger = Number.isInteger;
 export const sin = Math.sin;
 export const cos = Math.cos;
+export const tan = Math.tan;
 export const pow = Math.pow;
 export const M_1_PI = 1.0 / Math.PI;
 export const R_FINITE = (x: number) => Number.isFinite(x);
@@ -156,7 +166,7 @@ export const MATHLIB_WARNING = (fmt: string, x: any) => {
     console.warn(fmt, x);
 };
 
-export const MATHLIB_WARNING2 =  (fmt: string, x: any, x2: any) => {
+export const MATHLIB_WARNING2 = (fmt: string, x: any, x2: any) => {
     console.warn(fmt, x, x2);
 };
 
@@ -245,6 +255,25 @@ export function isOdd(k: number) {
 }
 
 
+export function epsilonNear(x: number, target: number): number {
+    if (ISNAN(x)) return x;
+    if (!isFinite(x)) return x;
+    if (ISNAN(target)) return x;
+    if (!isFinite(target)) return x;
+
+    let diff = x - target;
+    if (diff > DBL_EPSILON || diff < -DBL_EPSILON) {
+        return x;
+    }
+    return target;
+}
+
+export function isEpsilonNear(x: number, target: number): boolean {
+    if (isFinite(x) && isFinite(target))
+        return epsilonNear(x, target) === target;
+    return false;    
+}
+
 export function Rf_d1mach(i: number): number {
 
     switch (i) {
@@ -317,7 +346,7 @@ export function R_pow_di(x: number, n: number) {
     if (n !== 0) {
         if (!R_FINITE(x)) return R_pow(x, n);
         if (n < 0) { n = -n; x = 1 / x; }
-        for ( ; ; ) {
+        while (true) {
             if (n & 1) pow *= x;
             if (n >>= 1) x *= x; else break;
         }

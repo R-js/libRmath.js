@@ -44,4 +44,4 @@ gulp.task('lint', function () {
 
 gulp.task('js', gulp.series('lint', 'tsc'));
 gulp.task('build', gulp.series('clean:dist', 'js'))
-gulp.task('default', gulp.series('clean:dist', 'js'));
+gulp.task('default', gulp.series('build'));

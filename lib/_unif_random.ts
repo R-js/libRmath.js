@@ -2,8 +2,8 @@
 
 import * as nodeCrypto from 'crypto';
 
-const isBrowser = process && process.versions && typeof process.versions.node === 'string';
-
+const isBrowser = !(process && process.versions && typeof process.versions.node === 'string');
+console.log('isbrowser', isBrowser);
 /**
  * The crypto.randomBytes() method will block until there is sufficient entropy.
  * This should normally never take longer than a few milliseconds.
@@ -13,7 +13,7 @@ const isBrowser = process && process.versions && typeof process.versions.node ==
  * 
  */
 
-
+const _window: any = this.window ? this.window : {} as any;
 const MAX_INT_64 = Math.pow(2, 64);
 
 function random_32bit_node(length: number): Uint32Array {
@@ -24,7 +24,7 @@ function random_32bit_node(length: number): Uint32Array {
 
 function random_32bit_browser(length: number): Uint32Array {
     let rng = new Uint32Array(length * Uint32Array.BYTES_PER_ELEMENT);
-    window.crypto.getRandomValues(rng);
+    _window.crypto.getRandomValues(rng);
     return rng;
 }
 
@@ -113,6 +113,6 @@ export function xorshift32bit(seed?: number[]): number[] {
     return rc;
 }
 
-export function unif_rand(){
+export function unif_rand() {
     return random2_64StepsAsFloat();
 }

@@ -60,7 +60,7 @@ export function cospi(x: number): number {
 export function sinpi(x: number): number {
     if (ISNAN(x)) return x;
     if (!R_FINITE(x)) {
-        ML_ERROR(ME.ME_DOMAIN, '');
+        ML_ERROR(ME.ME_DOMAIN, 'sinpi not finite');
         return ML_NAN;
     }
     x = fmod(x, 2.); // sin(pi(x + 2k)) == sin(pi x)  for all integer k
