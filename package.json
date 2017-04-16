@@ -1,6 +1,6 @@
 {
   "name": "lib-r-math.js",
-  "version": "1.0.35",
+  "version": "1.0.36",
   "description": "Javascript Pure Implementation of Statistical R \"core\" numerical libRmath.so",
   "main": "./dist/index.js",
   "scripts": {
