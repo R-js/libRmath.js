@@ -14,8 +14,6 @@ npm install --save lib-r-math.js
 npm test
 ```
 
-
-
 # Documentation (work in progress)
 
 ## Table of Contents
@@ -28,22 +26,22 @@ npm test
 
 ### espilonNear, isEpsilonNear, DBL_EPSILON
 
-Check if 2 floating point numbers are indistinqguisbale close to each other, by checking if their difference is smaller then
+Check if 2 floating point numbers are indistinguishable close to each other, by checking if their difference is smaller then
 Number.EPSILON.
 
 
 ```typescript
 
-   import { 
+   import {
      isEpsilonNear, epsilonNear, DBL_EPSLILON
    } from 'lib-r-math.js';
-   
+
    let x: number = 1.0;
    let y: number = 1.0 + DBL_EPSILON;
    let z: number = 1.0 + 2 * DBL_ESPLION;
    let yn = epsilonNear( y ,x ); // yn will be set to x
    let zn = epsilonNear ( z, x); // zn will be set to z ( absolute distance from x greater then DBL_EPSILON)
-  
+
    isEpsilonNear(y,x); //true
    isEpsilonNear(z,x); //false
 ```
@@ -68,7 +66,7 @@ They respectively compute the cosine, sine, tangent, arc-cosine, arc-sine, arc-t
 
 ## Progress (DONE and TODO)
 
-As of 26 March inital port has been done, now to implement tests (chai, mocha) 
+As of 26 March initial port has been done, now to implement tests ( CHAI, MOCHA) 
 
 | original c module | js/ts module name | port date | date added to test-suite | R -base functions |
 |-------------|--------------------|-------------|--|--------------------|
@@ -215,12 +213,12 @@ dexp.c           |done | no  | The density of the exponential distribution. |
 df.c           | done | no  |  The density function of the F distribution.|
 dgamma.c           | done| no  |  Computes the density of the gamma distribution, |
 dgeom.c           |done |no  | Computes the geometric probabilities, Pr(X=x) = p(1-p)^x |
-dhyper.c           |done | no  |  The hypergeometric probability |
-dlnorm.c           |done | no |   The density of the lognormal distribution. |
+dhyper.c           |done | no  |  The hyper-geometric probability |
+dlnorm.c           |done | no |   The density of the log-normal distribution. |
 dlogis.c           | done| no |  The density of the Logistic Distribution |
-dnbeta.c           |done | no |  Computes the density of the noncentral beta distribution with |
+dnbeta.c           |done | no |  Computes the density of the non-central beta distribution with |
 dnbinom.c           |done | no  | negative binomial probability prob mass function |
-dnchisq.c           |done | no |   The density of the noncentral chi-squared distribution with "df" |
+dnchisq.c           |done | no |   The density of the non-central chi-squared distribution with "df" |
 dnf.c           |done | no | The density function of the non-central F distribution |
 dnorm.c           |done  | no  |  Compute the density of the normal distribution. |
 dnt.c           |done | no | the non-central t density |
@@ -265,7 +263,7 @@ pnorm.c  | done| no  |  normal distribution function |
 pnt.c    | done| no | Cumulative probability at t of the non-central t-distribution,  with df degrees of freedom (may be fractional) and non-centrality,  parameter delta.
 polygamma.c   | done| no |  Compute the derivatives of the psi function   and polygamma functions. |
 ppois.c     | done | no |  The distribution function of the Poisson distribution.  |
-pt.c       |done | no | t distrib. with n degrees of freedom).  |
+pt.c       |done | no | t distribution. with n degrees of freedom).  |
 ptukey.c    | done| no |Computes the probability that the maximum of rr studentized ranges, each based on cc means and with df degrees of freedom  for the standard error, is less than q. |
 punif.c           | done| no |  The distribution function of the uniform distribution. |
 pweibull.c           |done |no | The distribution function of the Weibull distribution. |
@@ -277,15 +275,15 @@ qexp.c           |done|no |    The quantile function of the exponential distribu
 qf.c           |done | no |  The quantile function of the F distribution. |
 qgamma.c           |done | no | Compute the quantile function of the gamma distribution. |
 qgeom.c           |done | no |   The quantile function of the geometric distribution. |
-qhyper.c           | done| no |     The quantile function of the hypergeometric distribution. |
-qlnorm.c           | done| no  |  This the lognormal quantile function. |
+qhyper.c           | done| no |     The quantile function of the hyper-geometric distribution. |
+qlnorm.c           | done| no  |  This the log-normal quantile function. |
 qlogis.c           | done | no |  The Logistic Distribution  quantile function. |
-qnbeta.c           | done| no  | the quantile function of the noncentral beta distribution |
+qnbeta.c           | done| no  | the quantile function of the non-central beta distribution |
 qnbinom.c           |done  | no | The quantile function of the negative binomial distribution. |
 qnchisq.c           |done | no |the quantile function of the  noncentral chi-squared distribution    |
 qnf.c           |done |no  | The quantile function of the non-central F distribution.  |
 qnorm.c           | done| no | Compute the quantile function for the normal distribution. |
-qnt.c           | done| no |  quantily function of the commulative  probability of the non-central t-distribution |
+qnt.c           | done| no |  quantile function of the cumulative  probability of the non-central t-distribution |
 qpois.c    |done | no | The quantile function of the Poisson distribution.|
 qt.c           |done | no | The "Student" t distribution quantile function.  |
 qtukey.c           |done | no | Computes the quantiles of the maximum of rr studentized ranges |
@@ -299,8 +297,8 @@ rexp.c           |done | no |  Random variates from the exponential distribution
 rf.c           | done| no |  Pseudo-random variates from an F distribution. |
 rgamma.c           |done | no |   Random variates from the gamma distribution. |
 rgeom.c           |done | no |  Random variates from the geometric distribution. |
-rhyper.c           | done| no | Random variates from the hypergeometric distribution. |
-rlnorm.c           |done | no |  Random variates from the lognormal distribution. |
+rhyper.c           | done| no | Random variates from the hyper-geometric distribution. |
+rlnorm.c           |done | no |  Random variates from the log-normal distribution. |
 rlogis.c           | done| no |  random variates of the logistic distribution |
 rmultinom.c           | done| no | Random Vector from the multinomial distribution.|
 rnbinom.c           |done | no |   Random variates from the negative binomial distribution. |
@@ -319,4 +317,4 @@ toms708.c           |NAP | no | ported instead Java Version  from James Curran (
 wilcox.c           | node| no | dwilcox: The density of the Wilcoxon distribution, pwilcox: The distribution function of the Wilcoxon distribution, qwilcox: The quantile function of the Wilcoxon distribution,  rwilcox: Random variates from the Wilcoxon distribution. |
 
 Also:
-Examine the usage of  *R_DT_Log* and * R_DT_log* (note the one captial letter difference) functions in all codes
+Examine the usage of  *R_DT_Log* and * R_DT_log* (note the one capital letter difference) functions in all codes
