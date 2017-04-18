@@ -33,12 +33,12 @@ Number.EPSILON.
 ```typescript
 
    import {
-     isEpsilonNear, epsilonNear, DBL_EPSLILON
+     isEpsilonNear, epsilonNear, DBL_EPSILON
    } from 'lib-r-math.js';
 
    let x: number = 1.0;
    let y: number = 1.0 + DBL_EPSILON;
-   let z: number = 1.0 + 2 * DBL_ESPLION;
+   let z: number = 1.0 + 2 * DBL_EPSILON;
    let yn = epsilonNear( y ,x ); // yn will be set to x
    let zn = epsilonNear ( z, x); // zn will be set to z ( absolute distance from x greater then DBL_EPSILON)
 
@@ -318,3 +318,5 @@ wilcox.c           | node| no | dwilcox: The density of the Wilcoxon distributio
 
 Also:
 Examine the usage of  *R_DT_Log* and * R_DT_log* (note the one capital letter difference) functions in all codes
+
+![equation](http://latex.codecogs.com/gif.latex?Concentration%3D%5Cfrac%7BTotalTemplate%7D%7BTotalVolume%7D)
