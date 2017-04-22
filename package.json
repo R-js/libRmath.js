@@ -4,7 +4,7 @@
   "description": "Javascript Pure Implementation of Statistical R \"core\" numerical libRmath.so",
   "main": "./dist/index.js",
   "scripts": {
-    "prepublish": "echo 'prepublish'",
+    "prepublish": "npm run build",
     "prepare": "echo 'prepare'",
     "prepublishOnly": "echo prepublishOnly",
     "publish": "echo publish",
