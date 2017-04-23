@@ -77,7 +77,7 @@ import { sinpi } from './cospi';
 
 
 
-/* .Internal(besselI(*)) : */
+/** .Internal(besselI(*)) : */
 export function bessel_i(x: number, alpha: number, expo: number): number {
 
     let nb: number;
