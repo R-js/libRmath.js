@@ -59,9 +59,9 @@ import {
     pow
 
 
-} from './_general';
+} from '~common';
 
-import { Rf_gamma_cody } from './gamma_cody';
+import { Rf_gamma_cody } from '~gamma';
 
 interface IBesselInput {
     x: number;
@@ -73,7 +73,7 @@ interface IBesselInput {
 }
 
 import { bessel_k, bessel_k_ex } from './bessel_k';
-import { sinpi } from './cospi';
+import { sinpi } from '~trigonometry';
 
 
 

@@ -44,7 +44,7 @@ import {
   exp,
   log,
   fabs
-} from './_general';
+} from '~_general';
 
 export function gamma_c99(x: number): number {
 
@@ -104,7 +104,6 @@ export function gamma_c99(x: number): number {
 
     // denominator coefficients for approximation over the interval (1,2)
     const q = [
-
       -3.08402300119738975254353E+1,
       3.15350626979604161529144E+2,
       -1.01515636749021914166146E+3,

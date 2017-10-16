@@ -1,6 +1,6 @@
 /*
  *  AUTHOR
- *    Claus Ekstrøm, ekstrom@dina.kvl.dk
+ *    Claus Ekstrï¿½m, ekstrom@dina.kvl.dk
  *    July 15, 2003.
  *
  *  Merge in to R:
@@ -28,7 +28,6 @@
  *	lgammafn(x)	- log gamma function
  *	pnt(x, df, ncp) - the distribution function for
  *			  the non-central t distribution
- *
  *
  * DESCRIPTION
  *

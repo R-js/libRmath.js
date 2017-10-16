@@ -53,9 +53,9 @@ import {
     ML_POSINF,
     log
 
-} from './_general';
+} from '~common';
 
-import { dpois_raw } from './dpois';
+import { dpois_raw } from '~poisson';
 
 export function dgamma(x: number, shape: number, scale: number, give_log: boolean): number {
 

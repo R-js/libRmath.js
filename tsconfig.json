@@ -1,34 +1,107 @@
 {
-  "files": [
-    "./index.ts",
-    "./tests/all-tests.ts"
-  ],
-  "include": [
-    "lib/**/*.ts"
-  ],
-  "exclude": [
-    "node_modules"
-  ],
   "compilerOptions": {
-    "alwaysStrict": true,
+    "allowUnreachableCode": true,
+    "baseUrl": ".",
     "declaration": true,
-    
-    "strictNullChecks": true,
-    "noImplicitAny": true,
-    "target": "es5",
+    "experimentalDecorators": true,
     "jsx": "react",
     "lib": [
       "es6",
-      "dom"
+      "dom",
+      "esnext.asynciterable"
     ],
     "module": "commonjs",
-    "sourceMap": true,
-    "rootDir": "./",
     "moduleResolution": "node",
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "experimentalDecorators": true,
-    /*outDir is overriden in the gulp file*/
-    "outDir": "dist/js"
-  }
+    "outDir": "dist",
+    "paths": {
+      "~bessel": [
+        "src/lib/bessel/index.ts"
+      ],
+      "~beta": [
+        "src/lib/beta/index.ts"
+      ],
+      "~binomial": [
+        "src/lib/binomial/index.ts"
+      ],
+      "~cauchy": [
+        "src/lib/cauchy/index.ts"
+      ],
+      "~chebyshev": [
+        "src/chebyshev/index.ts"
+      ],
+      "~chi-2": [
+        "src/lib/chi-2/index.ts"
+      ],
+      "~common": [
+        "src/lib/common/index.ts"
+      ],
+      "~deviance": [
+        "src/lib/deviance/index.ts"
+      ],
+      "~exp": [
+        "src/lib/exp/index.ts"
+      ],
+      "~f-distro": [
+        "src/lib/f-distro/index.ts"
+      ],
+      "~gamma": [
+        "src/lib/f-distro/index.ts"
+      ],
+      "~geometric": [
+        "src/lib/geometric/index.ts"
+      ],
+      "~log": [
+        "src/lib/log/index.ts"
+      ],
+      "~logis": [
+        "src/lib/logis/index.ts"
+      ],
+      "~multinom": [
+        "src/lib/multinom/index.ts"
+      ],
+      "~normal": [
+        "src/lib/normal/index.ts"
+      ],
+      "~poisson": [
+        "src/lib/poisson/index.ts"
+      ],
+      "~signrank": [
+        "src/lib/signrank/index.ts"
+      ],
+      "~stirling": [
+        "src/lib/stirling/index.ts"
+      ],
+      "~student-t": [
+        "src/lib/student-t/index.ts"
+      ],
+      "~trigonometry": [
+        "src/lib/trigonometry/index.ts"
+      ],
+      "~tukey": [
+        "src/lib/tucky/index.ts"
+      ],
+      "~uniform": [
+        "src/lib/uniform/index.ts"
+      ],
+      "~weibull": [
+        "src/lib/weibull/index.ts"
+      ],
+      "~wilcox": [
+        "src/lib/wilcox/index.ts"
+      ]
+    },
+    "rootDir": "./",
+    "sourceMap": true,
+    "strict": true,
+    "target": "es2017"
+  },
+  "exclude": [
+    "node_modules"
+  ],
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "test/**/*.ts",
+    "test/**/*.tsx"
+  ]
 }

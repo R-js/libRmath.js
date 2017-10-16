@@ -25,6 +25,7 @@
  *  SYNOPSIS
  *
  *    #include <Rmath.h>
+ * 
  *    double fround(double x, double digits);
  *
  *  DESCRIPTION

@@ -37,10 +37,16 @@
  *	where M = E[X] = n*p (or = lambda), for	  x, M > 0
  *
  *	in a manner that should be stable (with small relative error)
+
  *	for all x and M=np. In particular for x/np close to 1, direct
+
  *	evaluation fails, and evaluation is based on the Taylor series
+
  *	of log((1+v)/(1-v)) with v = (x-M)/(x+M) = (x-np)/(x+np).
+
  * */
+
+
 
 import { R_FINITE, NaN, fabs, DBL_MIN, log } from './_general';
 
@@ -48,32 +54,118 @@ import { R_FINITE, NaN, fabs, DBL_MIN, log } from './_general';
 
 export function bd0(x: number, np: number): number {
 
-
   let ej: number;
+
+
   let s: number;
+
+
+
   let s1: number;
+
+
+
   let v: number;
+
+
+
   let j: number;
 
+
+
+
+
+
+
   if (R_FINITE(x) || !R_FINITE(np) || np === 0.0) {
+
+
+
     return NaN;
+
+
+
   }
+
+
+
   if (fabs(x - np) < 0.1 * (x + np)) {
-    v = (x - np) / (x + np);  // might underflow to 0
+
+
+
+    v = (x - np) / (x + np); // might underflow to 0
+
+
+
     s = (x - np) * v; // s using v -- change by MM
+
+
+
     if (fabs(s) < DBL_MIN) return s;
+
+
+
     ej = 2 * x * v;
+
+
+
     v = v * v;
+
+
+
     for (j = 1; j < 1000; j++) {
+
+
+
       // Taylor series; 1000: no infinite loop
-      //				as |v| < .1,  v^2000 is "zero" 
+
+
+
+      //				as |v| < .1,  v^2000 is "zero"
+
+
+
       ej *= v; // = v^(2j+1)
+
+
+
       s1 = s + ej / ((j << 1) + 1);
-      if (s1 === s) //* last term was effectively 0 
+
+
+
+      if (s1 === s)
+
+
+
+        //* last term was effectively 0
+
+
+
         return s1;
+
+
+
       s = s1;
+
+
+
     }
+
+
+
   }
-  // else:  | x - np |  is not too small  
-  return (x * log(x / np) + np - x);
+
+
+
+  // else:  | x - np |  is not too small
+
+
+
+  return x * log(x / np) + np - x;
+
+
+
 }
+
+
+

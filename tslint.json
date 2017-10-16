@@ -35,8 +35,8 @@
     "arrow-parens": true,
     "eofline": true,
     "linebreak-style": [
-      true,
-      "CRLF"
+      false,
+      "LF"
     ],
     "no-var-keyword": true,
     "switch-default": true,
