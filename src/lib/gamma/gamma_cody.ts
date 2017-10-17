@@ -38,10 +38,10 @@ import {
   ML_POSINF,
   trunc,
  
-} from './_general';
+} from '~common';
 
 
-import {sinpi} from './cospi';
+import { sinpi } from '~trigonometry';
 
 export function Rf_gamma_cody(x: number){
  /*

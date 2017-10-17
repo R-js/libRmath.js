@@ -54,16 +54,16 @@ import {
     sin,
     pow,
     cos
-} from './_general';
+} from '~common';
 
 import {
     cospi,
     sinpi,
-} from './cospi';
+} from '~trigonometry';
 
 import { bessel_y, bessel_y_ex } from './bessel_y';
 
-import { Rf_gamma_cody } from './gamma_cody';
+import { Rf_gamma_cody } from '~gamma';
 
 export interface JBesselProperties {
     x: number;

@@ -45,7 +45,7 @@
         "src/lib/f-distro/index.ts"
       ],
       "~gamma": [
-        "src/lib/f-distro/index.ts"
+        "src/lib/gamma/index.ts"
       ],
       "~geometric": [
         "src/lib/geometric/index.ts"

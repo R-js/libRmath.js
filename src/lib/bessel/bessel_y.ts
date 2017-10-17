@@ -57,11 +57,11 @@ import {
   pow,
   cos,
   M_eps_sinc
-} from './_general';
+} from '~common';
 
 import { bessel_j_ex, bessel_j } from './bessel_j';
 
-import { cospi, sinpi } from './cospi';
+import { cospi, sinpi } from '~trigonometry';
 
 
 interface YBesselProperties {

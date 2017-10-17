@@ -55,7 +55,7 @@ import {
   sqxmin_BESS_K,
   max0,
   min0
-} from './_general';
+} from '~common';
 
 
 export function bessel_k(x: number, alpha: number, expo: number): number {
@@ -456,7 +456,7 @@ export function K_bessel(input: KBesselProps): void {
         wminf = estf[0] * ex + estf[1];
       }
     } else if (DBL_EPSILON * ex > 1.) {
-	    /* -------------------------------------------------
+/* -------------------------------------------------
 	       X > 1./EPS
 	       ------------------------------------------------- */
       input.ncalc = input.nb;

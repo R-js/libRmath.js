@@ -51,9 +51,9 @@ import {
     ML_ERR_return_NAN,
     ML_ERROR,
     ME
-} from './_general';
+} from '~common';
 
-import { gammafn } from './gamma_fn';
+import { gammafn } from '~gamma';
 import { lbeta } from './lbeta';
 
 //const xmin =  - 170.5674972726612;
