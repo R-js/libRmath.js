@@ -61,11 +61,11 @@ import {
     R_DT_0,
     R_DT_1,
     R_D_Lval
-} from './_general';
+} from '~common';
 
-import { R_DT_Log } from './expm1';
-import { dhyper } from './dhyper';
-import { log1p } from './log1p';
+import { R_DT_Log } from '~exp';
+import { dhyper } from '~geometric';
+import { log1p } from '~log';
 
 export function pdhyper(x: number, NR: number, NB: number, n: number, log_p: boolean): number {
     

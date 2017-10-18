@@ -46,13 +46,13 @@ import {
     sqrt,
     DBL_EPSILON,
     R_Q_P01_boundaries
-} from './_general';
+} from '~common';
 
 import { NumberW } from './Toms708';
 
 import { pbinom } from './pbinom';
 
-import { R_DT_qIv } from './expm1';
+import { R_DT_qIv } from '~exp';
 
 import { qnorm } from './qnorm';
 

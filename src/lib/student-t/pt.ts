@@ -34,15 +34,15 @@ import {
     R_DT_1,
     M_LN2,
     R_D_Cval
-} from './_general';
+} from '~common';
 
 import { pnorm5 as pnorm } from './pnorm';
 
 import { lbeta } from './lbeta';
 
-import { pbeta } from './pbeta';
+import { pbeta } from '~beta';
 
-import { log1p } from './log1p';
+import { log1p } from '~log';
 
 
 export function pt(x: number, n: number, lower_tail: boolean, log_p: boolean): number {

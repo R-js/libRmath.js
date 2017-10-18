@@ -62,19 +62,19 @@ import {
     DBL_MIN,
     ML_NEGINF,
     R_D__0
-} from './_general';
+} from '~common';
 
-import { R_DT_log, R_DT_Clog, R_DT_qIv } from './expm1';
+import { R_DT_log, R_DT_Clog, R_DT_qIv } from '~exp';
 
-import { lgamma1p } from './pgamma';
+import { lgamma1p } from '~gamma';
 
 import { qnorm } from './qnorm';
 
-import { lgammafn } from './lgamma_fn';
+import { lgammafn } from '~gamma';
 
-import { pgamma_raw, pgamma } from './pgamma';
+import { pgamma_raw, pgamma } from '~gamma';
 
-import { dgamma } from './dgamma';
+import { dgamma } from '~gamma';
 
 export function qchisq_appr(p: number, nu: number, g: number /* = log Gamma(nu/2) */,
     lower_tail: boolean, log_p: boolean, tol: number /* EPS1 */): number {

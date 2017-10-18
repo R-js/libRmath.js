@@ -36,7 +36,7 @@
 
 import {
     ISNAN
-} from './_general';
+} from '~common';
 
 export function sign(x: number): number {
     if (ISNAN(x))

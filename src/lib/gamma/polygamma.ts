@@ -165,7 +165,7 @@ import {
     pow,
     R_forceint,
     MATHLIB_WARNING2
-} from './_general';
+} from '~common';
 
 import {
     NumberW

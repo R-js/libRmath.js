@@ -60,13 +60,13 @@ import {
     sqrt,
     ML_ERROR,
     ME
-} from './_general';
+} from '~common';
 
 import { pnorm5 as pnorm } from './pnorm';
 
-import { lgammafn } from './lgamma_fn';
+import { lgammafn } from '~gamma';
 
-import { R_DT_val } from './log1p';
+import { R_DT_val } from '~log';
 
 export function wprob(w: number, rr: number, cc: number): number {
     /*  wprob() :

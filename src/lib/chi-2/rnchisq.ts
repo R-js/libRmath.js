@@ -60,10 +60,10 @@
 import {
     R_FINITE,
     ML_ERR_return_NAN
-} from './_general';
+} from '~common';
 
-import { rgamma } from './rgamma';
-import { rpois } from './rpois';
+import { rgamma } from '~gamma';
+import { rpois } from '~poisson';
 import { rchisq } from './rchisq';
 
 export function rnchisq(df: number, lambda: number): number {

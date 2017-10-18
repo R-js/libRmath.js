@@ -53,12 +53,12 @@ import {
     trunc,
     imax2,
 
-} from './_general';
+} from '~common';
 
-import { unif_rand } from './_unif_random';
-import { norm_rand } from './snorm';
-import { exp_rand } from './sexp';
-import { fsign } from './fsign';
+import { unif_rand } from '~uniform';
+import { norm_rand } from '~normal';
+import { exp_rand } from '~exp';
+import { fsign } from '~signrank';
 
 const a0 = -0.5;
 const a1 = 0.3333333;

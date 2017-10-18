@@ -75,13 +75,13 @@ import {
     exp,
     M_LN_SQRT_PI,
     DBL_EPSILON
-} from './_general';
+} from '~common';
 
 import { dt } from './dt';
 
 import { dnorm } from './dnorm';
 
-import { lgammafn } from './lgamma_fn';
+import { lgammafn } from '~gamma';
 
 import { pnt } from './pnt';
 

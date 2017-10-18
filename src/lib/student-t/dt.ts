@@ -51,7 +51,7 @@ import {
     M_1_SQRT_2PI,
 
 
-} from './_general';
+} from '~common';
 
 import { bd0 } from './bd0';
 
@@ -59,7 +59,7 @@ import { stirlerr } from './stirlerror';
 
 import { dnorm } from './dnorm';
 
-import { log1p } from './log1p';
+import { log1p } from '~log';
 
 export function dt(x: number, n: number, give_log: boolean): number {
 

@@ -51,9 +51,9 @@ import {
     R_D_log,
     R_D_Lval,
     R_D_Cval
-} from './_general';
+} from '~common';
 
-import { log1p } from './log1p';
+import { log1p } from '~log';
 
 
 

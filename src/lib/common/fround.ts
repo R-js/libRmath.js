@@ -48,7 +48,7 @@ import {
     ML_NEGINF,
     R_pow_di
 
-} from './_general';
+} from '~common';
 
 /* also used potentially in fprec.c and main/format.c */
 export function private_rint(x: number) {

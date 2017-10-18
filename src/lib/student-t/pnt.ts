@@ -72,7 +72,7 @@ import {
     fabs,
     fmin2
 
-} from './_general';
+} from '~common';
 
 import {
     pt
@@ -84,19 +84,19 @@ import {
 
 import {
     expm1
-} from './expm1';
+} from '~exp';
 
 import {
     lgammafn
-} from './lgamma_fn';
+} from '~gamma';
 
 import {
     pbeta
-} from './pbeta';
+} from '~beta';
 
 import {
     R_DT_val
-} from './log1p';
+} from '~log';
 
 export function pnt(t: number, df: number, ncp: number, lower_tail: boolean, log_p: boolean): number {
     let albeta: number;

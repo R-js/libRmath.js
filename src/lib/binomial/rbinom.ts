@@ -52,7 +52,7 @@ import {
     log,
 
 
-} from './_general';
+} from '~common';
 
 import { qbinom } from './qbinom';
 import { unif_rand } from './_unif_random';

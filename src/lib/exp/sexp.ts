@@ -42,7 +42,7 @@
 
 
 
-import { unif_rand } from './_unif_random';
+import { unif_rand } from '~uniform';
 
 export function exp_rand(): number {
 

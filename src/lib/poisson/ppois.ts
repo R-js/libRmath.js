@@ -34,13 +34,13 @@ import {
     R_DT_1,
     floor,
     fmax2
-} from './_general';
+} from '~common';
 
 import {
     pgamma
-} from './pgamma';
+} from '~gamma';
 
-import { NumberW } from './toms708';
+import { NumberW } from '~common';
 
 export function ppois(x: number, lambda: number, lower_tail: boolean, log_p: boolean): number {
 

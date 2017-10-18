@@ -24,7 +24,7 @@
  * 
  * */
 
-import { ISNAN, log, R_D__0} from './_general';
+import { ISNAN, log, R_D__0} from '~common';
 
 
 

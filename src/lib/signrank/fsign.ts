@@ -36,7 +36,7 @@
 import {
     ISNAN,
     fabs
-} from './_general';
+} from '~common';
 
 
 export function fsign(x: number, y: number) {

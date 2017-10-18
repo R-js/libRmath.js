@@ -35,11 +35,11 @@ import {
     fmax2,
     ceil,
 
-} from './_general';
+} from '~common';
 
-import { R_DT_Clog } from './expm1';
+import { R_DT_Clog } from '~exp';
 
-import { log1p } from './log1p';
+import { log1p } from '~log';
 
 export function qgeom(p: number, prob: number, lower_tail: boolean, log_p: boolean): number {
     if (prob <= 0 || prob > 1) {

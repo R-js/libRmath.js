@@ -60,11 +60,11 @@ import {
     MATHLIB_WARNING,
     ML_ERR_return_NAN
 
-} from './_general';
+} from '~common';
 
-import { gammafn } from './gamma_fn';
+import { gammafn } from '~gamma';
 import { sinpi } from './cospi';
-import { lgammacor } from './lgammacor';
+import { lgammacor } from '~gamma';
 
 const xmax = 2.5327372760800758e+305;
 const dxrel = 1.490116119384765625e-8;

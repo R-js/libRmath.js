@@ -45,7 +45,7 @@ import {
    log1p,
    exp
 
-} from './_general';
+} from '~common';
 
 double dt(double x, double n, int give_log)
 {

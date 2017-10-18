@@ -60,9 +60,9 @@ import {
     REprintf,
     sqrt,
     log
-} from './_general';
+} from '~common';
 
-import { R_DT_qIv, R_DT_CIv } from './expm1';
+import { R_DT_qIv, R_DT_CIv } from '~exp';
 
 export function qnorm(p: number, mu: number, sigma: number, lower_tail: boolean, log_p: boolean): number {
     let p_;

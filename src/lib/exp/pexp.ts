@@ -32,9 +32,9 @@ import {
     ML_ERR_return_NAN,
     R_DT_0,
     R_D_exp
-} from './_general';
+} from '~common';
 
-import { expm1, R_Log1_Exp } from './expm1';
+import { expm1, R_Log1_Exp } from '~exp';
 
 
 export function pexp(x: number, scale: number, lower_tail: boolean, log_p: boolean): number {

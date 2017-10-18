@@ -45,9 +45,9 @@ import {
     R_FINITE,
     fabs,
     MATHLIB_ERROR
-} from './_general';
+} from '~common';
 
-import  { rbinom } from './rbinom';
+import  { rbinom } from '~binomial';
 
 //#define ML_ERR_ret_NAN(_k_) {ML_ERROR(ME_DOMAIN, "rmultinom"); rN[_k_]=-1; return;}
 

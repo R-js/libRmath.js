@@ -48,11 +48,11 @@
  *    MM specialized the case of  n!  for n < 50 - for even better precision
  */
 
-import { ISNAN, ML_ERROR, ME, ML_NAN, fabs, ML_POSINF, ML_NEGINF, M_PI, M_LN_SQRT_2PI } from './_general';
+import { ISNAN, ML_ERROR, ME, ML_NAN, fabs, ML_POSINF, ML_NEGINF, M_PI, M_LN_SQRT_2PI } from '~common';
 import { chebyshev_eval } from './chebyshev';
 import { stirlerr } from './stirlerror';
 import { sinpi } from './cospi';
-import { lgammacor } from './lgammacor';
+import { lgammacor } from '~gamma';
 
 const gamcs: number[] = [
     +.8571195590989331421920062399942e-2,

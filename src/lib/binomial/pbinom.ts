@@ -38,10 +38,10 @@ import {
     R_DT_0,
     floor,
     R_DT_1
-} from './_general';
+} from '~common';
 
 
-import { pbeta } from './pbeta';
+import { pbeta } from '~beta';
 
 export function pbinom(x: number, n: number, p: number, lower_tail: boolean, log_p: boolean): number {
 

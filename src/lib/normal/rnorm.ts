@@ -36,7 +36,7 @@ import {
     ISNAN,
     R_FINITE,
     ML_ERR_return_NAN
-} from './_general';
+} from '~common';
 
 import { norm_rand } from './snorm';
 

@@ -59,14 +59,14 @@ import {
     R_D_exp,
     R_D__1,
     R_D_nonint_check
-} from './_general';
+} from '~common';
 
-import { bd0 } from './bd0';
-//import {  log1p } from './log1p';
+import { bd0 } from '~deviance';
+//import {  log1p } from '~log';
 
-import { log1p } from './log1p';
+import { log1p } from '~log';
 
-import { stirlerr } from './stirlerror';
+import { stirlerr } from '~stirling';
 
 export function dbinom_raw(x: number, n: number, p: number, q: number, give_log: boolean): number {
 

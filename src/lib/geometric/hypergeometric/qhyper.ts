@@ -39,11 +39,11 @@ import {
     log,
     DBL_EPSILON,
     
-} from './_general';
+} from '~common';
 
-import { R_DT_qIv } from './expm1';
+import { R_DT_qIv } from '~exp';
 
-import { lfastchoose } from './choose';
+import { lfastchoose } from '~common';
 
 export function qhyper(p: number, NR: number, NB: number, n: number,
     lower_tail: boolean, log_p: boolean): number {

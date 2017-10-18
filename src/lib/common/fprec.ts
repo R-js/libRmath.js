@@ -51,7 +51,7 @@ import {
     floor,
     fabs,
     R_pow_di
-} from './_general';
+} from '~common';
 
 
 /* Improvements by Martin Maechler, May 1997;

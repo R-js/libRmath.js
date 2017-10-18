@@ -37,11 +37,12 @@ import {
     M_LN2,
     ML_NAN,
     ML_VALID
-} from './_general';
+} from '~common';
 
-import { pchisq } from './pchisq';
-import { pbeta } from './pbeta';
-import { } from './';
+import { pchisq } from '~chi-2';
+import { pbeta } from '~beta';
+
+
 
 export function pf(x: number, df1: number, df2: number, lower_tail: boolean, log_p: boolean): number {
 

@@ -47,15 +47,15 @@
 import {
     R_FINITE,
     ML_ERR_return_NAN
-} from './_general';
+} from '~common';
 
 import {
     rpois
-} from './rpois';
+} from '~poisson';
 
 import {
     exp_rand
-} from './sexp';
+} from '~exp';
 
 export function rgeom(p: number): number {
     if (!R_FINITE(p) || p <= 0 || p > 1) ML_ERR_return_NAN;

@@ -29,8 +29,8 @@ export class NumberW {
 
 
 
-import { log } from './_general';
-import { log1p } from './log1p';
+import { log } from '~common';
+import { log1p } from '~log';
 
 
 /**

@@ -51,11 +51,11 @@ import {
     R_D_nonint_check,
     R_forceint
 
-} from './_general';
+} from '~common';
 
-import { bd0 } from './bd0';
-import { lgammafn } from './lgamma_fn';
-import { stirlerr } from './stirlerror';
+import { bd0 } from '~deviance';
+import { lgammafn } from '~gamma';
+import { stirlerr } from '~stirling';
 
 
 

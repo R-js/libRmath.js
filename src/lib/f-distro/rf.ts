@@ -39,9 +39,9 @@ import {
     ISNAN,
     ML_ERR_return_NAN,
     R_FINITE
-} from './_general';
+} from '~common';
 
-import { rchisq } from './rchisq';
+import { rchisq } from '~chi-2';
 
 
 export function rf(n1: number, n2: number): number {

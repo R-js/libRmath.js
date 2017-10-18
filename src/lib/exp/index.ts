@@ -1,5 +1,5 @@
 export * from './dexp';
-export * from './expm1';
+export * from '~exp';
 export * from './pexp';
 export * from './qexp';
 export * from './rexp';

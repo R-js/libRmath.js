@@ -31,10 +31,10 @@ import {
     R_FINITE,
     ML_POSINF,
     R_Q_P01_boundaries
-} from './_general';
+} from '~common';
 
-import { qnchisq } from './qnchisq';
-import { qnbeta } from './qnbeta';
+import { qnchisq } from '~chi-2';
+import { qnbeta } from '~beta';
 
 export function qnf(p: number, df1: number, df2: number, ncp: number, lower_tail: boolean, log_p: boolean) {
     let y;

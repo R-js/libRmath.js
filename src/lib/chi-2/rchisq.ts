@@ -38,9 +38,9 @@
 import {
     R_FINITE,
     ML_ERR_return_NAN
-} from './_general';
+} from '~common';
 
-import { rgamma  } from './rgamma';
+import { rgamma  } from '~gamma';
 
 export function rchisq(df: number): number {
 

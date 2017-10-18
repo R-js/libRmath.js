@@ -42,9 +42,9 @@ import {
     DBL_MAX,
     exp,
     sqrt
-} from './_general';
+} from '~common';
 
-import { unif_rand } from './_unif_random';
+import { unif_rand } from '~uniform';
 
 export const expmax = DBL_MAX_EXP * M_LN2; /* = log(DBL_MAX) */
 

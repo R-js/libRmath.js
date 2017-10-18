@@ -27,9 +27,9 @@ import {
     DBL_EPSILON,
     fmin2,
     DBL_MIN
-} from './_general';
+} from '~common';
 
-import { R_DT_qIv } from './expm1';
+import { R_DT_qIv } from '~exp';
 
 import { pnbeta } from './pnbeta';
 

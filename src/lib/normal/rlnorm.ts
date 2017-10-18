@@ -36,7 +36,7 @@ import {
     R_FINITE,
     ML_ERR_return_NAN,
     exp
-} from './_general';
+} from '~common';
 
 import { rnorm } from './rnorm';
 

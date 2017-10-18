@@ -27,7 +27,7 @@
         "src/lib/cauchy/index.ts"
       ],
       "~chebyshev": [
-        "src/chebyshev/index.ts"
+        "src/lib/chebyshev/index.ts"
       ],
       "~chi-2": [
         "src/lib/chi-2/index.ts"

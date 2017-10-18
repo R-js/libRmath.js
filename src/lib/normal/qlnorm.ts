@@ -33,7 +33,7 @@ import {
     R_Q_P01_boundaries,
     exp,
 
-} from './_general';
+} from '~common';
 
 import {
     qnorm

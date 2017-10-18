@@ -33,7 +33,7 @@ import {
     R_DT_1,
     R_DT_0,
     R_D_val
-} from './_general';
+} from '~common';
 
 
 

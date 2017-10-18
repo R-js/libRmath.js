@@ -54,11 +54,11 @@ import {
     R_D_exp,
 
 
-} from './_general';
+} from '~common'
 
-import { dbinom_raw } from './dbinom';
+import { dbinom_raw } from '~binomial';
 
-import { log1p } from './log1p';
+import { log1p } from '~log';
 
 import { lgamma_c99 } from './c99_gamma';
 

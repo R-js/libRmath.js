@@ -38,10 +38,10 @@ import {
     floor,
     log,
     exp
-} from './_general';
+} from '~common';
 
-import { log1p } from './log1p';
-import { expm1, R_DT_Clog } from './expm1';
+import { log1p } from '~log';
+import { expm1, R_DT_Clog } from '~exp';
 
 export function pgeom(x: number, p: number, lower_tail: boolean, log_p: boolean) {
 

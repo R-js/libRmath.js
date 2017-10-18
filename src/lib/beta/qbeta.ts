@@ -61,15 +61,16 @@ import {
     fmin2,
     MATHLIB_WARNING2,
     MATHLIB_WARNING
-} from './_general';
+} from '~common';
 
-import { R_DT_qIv, R_DT_CIv, R_DT_Clog, R_DT_log, expm1, R_Log1_Exp } from './expm1';
+import { R_DT_qIv, R_DT_CIv, R_DT_Clog, R_DT_log, expm1, R_Log1_Exp
+ } from '~exp';
 
 import { lbeta } from './lbeta';
 
-import { log1p } from './log1p';
+import { log1p } from '~log';
 
-import { pbeta_raw } from './pbeta';
+import { pbeta_raw } from '~beta';
 
 
 const R_ifDEBUG_printf = REprintf;

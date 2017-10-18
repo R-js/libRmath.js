@@ -38,12 +38,12 @@ import {
   ME,
   fmin2,
   DBL_MIN
-} from './_general';
+} from '~common';
 
-import { qchisq } from './qchisq';
+import { qchisq } from '~chi-2';
 import { pnchisq_raw } from './pnchisq';
 
-import { expm1  } from './expm1';
+import { expm1  } from '~exp';
 
 export function qnchisq(p: number, df: number, ncp: number, lower_tail: boolean, log_p: boolean): number {
   const accu = 1e-13;

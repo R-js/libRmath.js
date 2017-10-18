@@ -40,10 +40,10 @@ import {
     sqrt,
     R_D_val
 
-} from './_general';
+} from '~common';
 
-import { dchisq } from './dchisq';
-import { dpois_raw } from './dpois';
+import { dchisq } from '~chi-2';
+import { dpois_raw } from '~poisson';
 
 export function dnchisq(x: number, df: number, ncp: number, give_log: boolean): number {
 

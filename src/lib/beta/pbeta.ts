@@ -48,9 +48,9 @@ import {
     M_LN2,
     MATHLIB_WARNING4
 
-} from './_general';
+} from '~common';
 
-import { Toms708, NumberW } from './Toms708';
+import { Toms708, NumberW } from '~common';
 
 export function pbeta_raw(x: number, a: number, b: number, lower_tail: boolean, log_p: boolean): number {
     // treat limit cases correctly here:

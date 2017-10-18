@@ -32,12 +32,12 @@ import {
     R_DT_0,
     R_D_exp,
     pow
-} from './_general';
+} from '~common';
 
 import {
     expm1,
     R_Log1_Exp
-} from './expm1';
+} from '~exp';
 
 export function pweibull(x: number, shape: number, scale: number, lower_tail: boolean, log_p: boolean): number {
 

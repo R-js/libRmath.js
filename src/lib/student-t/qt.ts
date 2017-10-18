@@ -70,9 +70,9 @@ import {
   M_LN2,
   R_D_log,
   M_SQRT2
-} from './_general';
+} from '~common';
 
-import { R_DT_qIv, expm1, R_D_LExp } from './expm1';
+import { R_DT_qIv, expm1, R_D_LExp } from '~exp';
 
 import { pt } from './pt';
 

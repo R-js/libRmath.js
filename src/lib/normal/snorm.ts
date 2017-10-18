@@ -46,10 +46,10 @@ import {
   MATHLIB_ERROR,
   M_PI,
   trunc
-} from './_general';
+} from '~common';
 
 
-import { unif_rand } from './_unif_random';
+import { unif_rand } from '~uniform';
 
 import { qnorm as qnorm5 } from './qnorm';
 
@@ -65,7 +65,7 @@ export enum N01type {
   USER_NORM,
   INVERSION,
   KINDERMAN_RAMAGE
-};
+}
 
 
 export let N01_kind: N01type = N01type.INVERSION;

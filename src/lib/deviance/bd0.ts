@@ -48,7 +48,7 @@
 
 
 
-import { R_FINITE, NaN, fabs, DBL_MIN, log } from './_general';
+import { R_FINITE, NaN, fabs, DBL_MIN, log } from '~common';
 
 
 

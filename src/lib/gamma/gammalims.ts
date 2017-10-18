@@ -47,7 +47,7 @@ import {
     ML_ERROR,
     ME,
     fmax2
-} from './_general';
+} from '~common';
 
 
 

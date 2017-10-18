@@ -35,7 +35,7 @@ import {
     DBL_EPSILON,
     DBL_MAX,
     fabs
-} from './_general';
+} from '~common';
 
 import { qnorm } from './qnorm';
 
@@ -43,7 +43,7 @@ import { pnt } from './pnt';
 
 import { qt } from './qt';
 
-import { R_DT_qIv } from './expm1';
+import { R_DT_qIv } from '~exp';
 
 export function qnt(p: number, df: number, ncp: number, lower_tail: boolean, log_p: boolean) {
     const accu = 1e-13;

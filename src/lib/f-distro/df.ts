@@ -46,11 +46,11 @@ import {
     R_FINITE,
     log,
    
-} from './_general';
+} from '~common';
 
-import { dgamma } from './dgamma';
+import { dgamma } from '~gamma';
 
-import { dbinom_raw } from './dbinom';
+import { dbinom_raw } from '~binomial';
 
 export function df(x: number, m: number, n: number, give_log: boolean): number {
    

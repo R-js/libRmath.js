@@ -50,9 +50,9 @@ import {
     ML_ERR_return_NAN,
     R_D__0,
     R_D__1
-} from './_general';
+} from '~common';
 
-import { dbinom_raw } from './dbinom';
+import { dbinom_raw } from '~binomial';
 
 
 export function dhyper(x: number, r: number, b: number, n: number, give_log: boolean): number {

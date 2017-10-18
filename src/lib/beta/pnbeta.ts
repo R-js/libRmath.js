@@ -33,13 +33,13 @@ import {
     ISNAN,
     R_P_bounds_01
 
-} from './_general';
+} from '~common';
 
-import { log1p } from './log1p';
+import { log1p } from '~log';
 
-import { lgammafn } from './lgamma_fn';
+import { lgammafn } from '~gamma';
 
-import { Toms708, NumberW } from './toms708';
+import { Toms708, NumberW } from '~common';
 
 export function pnbeta_raw(x: number, o_x: number, a: number, b: number, ncp: number) {
 

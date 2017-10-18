@@ -34,7 +34,7 @@ import {
     ML_ERR_return_NAN,
     R_FINITE,
     sqrt
-} from './_general';
+} from '~common';
 
 import { norm_rand } from './snorm';
 

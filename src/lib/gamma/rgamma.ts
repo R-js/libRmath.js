@@ -58,9 +58,9 @@ import {
     log,
     fabs,
     sqrt
-} from './_general';
+} from '~common';
 
-import { expm1 } from './expm1';
+import { expm1 } from '~exp';
 
 import { exp_rand } from './sexp';
 

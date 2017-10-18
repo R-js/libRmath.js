@@ -64,7 +64,7 @@
 import {
     sqrt,
     log
-} from './_general';
+} from '~common';
 
 export function qinv(p: number, c: number, v: number): number {
     const p0 = 0.322232421088;
@@ -133,9 +133,9 @@ import {
     R_Q_P01_boundaries,
     fmax2,
     fabs
-} from './_general';
+} from '~common';
 
-import { R_DT_qIv } from './expm1';
+import { R_DT_qIv } from '~exp';
 
 import { ptukey } from './ptukey';
 

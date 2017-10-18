@@ -35,7 +35,7 @@
 import {
     R_FINITE,
     ML_ERR_return_NAN,
-} from './_general';
+} from '~common';
 
 import { exp_rand } from './sexp';
 

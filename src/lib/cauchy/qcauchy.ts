@@ -38,9 +38,9 @@ import {
   ML_NEGINF,
   R_Q_P01_check
 
-} from './_general';
+} from '~common'
 
-import { expm1 } from './expm1';
+import { expm1 } from '~exp';
 
 import { tanpi } from './cospi';
 

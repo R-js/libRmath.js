@@ -66,9 +66,9 @@ import {
     R_D_val
 
 
-} from './_general';
+} from '~common';
 
-import { chebyshev_eval } from './chebyshev';
+import { chebyshev_eval } from '~chebyshev';
 
 
 export function log1p(x: number): number {

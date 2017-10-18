@@ -33,7 +33,7 @@ import {
     ML_ERR_return_NAN,
     pow,
     log
-} from './_general';
+} from '~common';
 
 import { unif_rand } from './_unif_random';
 

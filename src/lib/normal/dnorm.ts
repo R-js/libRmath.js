@@ -58,7 +58,7 @@ import {
     R_forceint,
     ldexp
 
-} from './_general';
+} from '~common';
 
 export const dnorm = dnorm4;
 

@@ -58,13 +58,13 @@ import {
     REprintf,
     exp,
     sqrt
-} from './_general';
+} from '~common';
 
-import { rbinom } from './rbinom';
+import { rbinom } from '~binomial';
 
-import { unif_rand } from './_unif_random';
+import { unif_rand } from '~uniform';
 
-import { qhyper } from './qhyper';
+import { qhyper } from '~geometric';
 
 
 

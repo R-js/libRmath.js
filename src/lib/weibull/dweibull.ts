@@ -36,7 +36,7 @@ import {
     R_D__0,
     log,
     exp
-} from './_general';
+} from '~common';
 
 export function dweibull(x: number, shape: number, scale: number, give_log: boolean): number {
 

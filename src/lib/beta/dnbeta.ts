@@ -63,7 +63,7 @@ import {
     sqrt,
     R_D_exp,
     log
-} from './_general';
+} from '~common';
 
 
 import {
@@ -72,7 +72,7 @@ import {
 
 import {
     dpois_raw
-} from './dpois';
+} from '~poisson';
 
 export function dnbeta(x: number, a: number, b: number, ncp: number, give_log: boolean): number {
 

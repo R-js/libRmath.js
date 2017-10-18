@@ -90,12 +90,12 @@ import {
   R_DT_0,
   R_DT_1,
   ISNAN
-} from './_general';
+} from '~common';
 
-import { log1p } from './log1p';
-import { lgammafn } from './lgamma_fn';
-import { expm1, R_Log1_Exp } from './expm1';
-import { dpois_raw } from './dpois';
+import { log1p } from '~log';
+import { lgammafn } from '~gamma';
+import { expm1, R_Log1_Exp } from '~exp';
+import { dpois_raw } from '~poisson';
 import { dnorm } from './dnorm';
 
 import { pnorm5 as pnorm } from './pnorm';

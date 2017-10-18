@@ -32,10 +32,10 @@ import {
     ML_ERR_return_NAN,
     R_P_bounds_01,
     ML_POSINF
-} from './_general';
+} from '~common';
 
-import { pnchisq } from './pnchisq';
-import { pnbeta2 } from './pnbeta';
+import { pnchisq } from '~chi-2';
+import { pnbeta2 } from '~beta';
 
 export function pnf(x: number, df1: number, df2: number, ncp: number,
     lower_tail: boolean, log_p: boolean): number {

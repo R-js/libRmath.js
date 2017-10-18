@@ -47,11 +47,11 @@ import {
     ML_NEGINF, 
     M_LN_SQRT_2PI 
 
-} from './_general';
+} from '~common';
 
-import { lgammacor } from './lgammacor';
-import { lgammafn } from './lgamma_fn';
-import { gammafn } from './gamma_fn';
+import { lgammacor } from '~gamma';
+import { lgammafn } from '~gamma';
+import { gammafn } from '~gamma';
 
 
 export function lbeta(a: number, b: number): number {

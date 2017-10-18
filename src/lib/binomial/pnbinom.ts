@@ -39,10 +39,10 @@ import {
     R_DT_0,
     floor,
     MATHLIB_WARNING
-} from './_general';
+} from '~common';
 
 
-import { pbeta } from './pbeta';
+import { pbeta } from '~beta';
 
 import { Toms708, NumberW } from './toms708';
 

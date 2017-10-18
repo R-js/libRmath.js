@@ -56,17 +56,17 @@ import {
     M_LN_SQRT_2PI,
     MATHLIB_WARNING2
 
-} from './_general';
+} from '~common';
 
-import { log1p, R_DT_val } from './log1p';
+import { log1p, R_DT_val } from '~log';
 
-import { expm1, R_Log1_Exp } from './expm1';
+import { expm1, R_Log1_Exp } from '~exp';
 
-import { lgammafn } from './lgamma_fn';
+import { lgammafn } from '~gamma';
 
-import { logspace_add } from './pgamma';
+import { logspace_add } from '~gamma';
 
-import { pchisq } from './pchisq';
+import { pchisq } from '~chi-2';
 
 export const _dbl_min_exp = M_LN2 * DBL_MIN_EXP;
 /*= -708.3964 for IEEE double precision */

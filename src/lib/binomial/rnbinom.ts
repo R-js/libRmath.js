@@ -49,10 +49,10 @@
 import {
     R_FINITE,
     ML_ERR_return_NAN
-} from './_general';
+} from '~common';
 
-import { rpois } from './rpois';
-import { rgamma } from './rgamma';
+import { rpois } from '~poisson';
+import { rgamma } from '~gamma';
 
 export function rnbinom(size: number, prob: number): number {
     if (!R_FINITE(size) || !R_FINITE(prob) || size <= 0 || prob <= 0 || prob > 1) {

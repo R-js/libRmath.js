@@ -38,7 +38,7 @@ import {
     ML_ERR_return_NAN,
     M_PI,
     log
-} from './_general';
+} from '~common';
 
 
 export function dcauchy(x: number, location: number, scale: number, give_log: boolean) {

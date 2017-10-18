@@ -57,7 +57,7 @@ import {
     DBL_EPSILON,
     R_forceint,
     floor
-} from './_general';
+} from '~common';
 
 import {
     NumberW
@@ -69,7 +69,7 @@ import {
 
 import { 
     R_DT_qIv
-} from './expm1';
+} from '~exp';
 
 import {
     qnorm

@@ -32,11 +32,11 @@ import {
     ML_ERR_return_NAN,
     ISNAN,
     log
-} from './_general';
+} from '~common';
 
 import {
     unif_rand
-} from './_unif_random';
+} from '~uniform';
 
 
 

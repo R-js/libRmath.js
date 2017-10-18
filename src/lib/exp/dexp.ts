@@ -38,7 +38,7 @@ import {
     R_D__0,
     log,
     exp
-} from './_general';
+} from '~common';
 
 export function dexp(x: number, scale: number, give_log: boolean): number {
     /* NaNs propagated correctly */

@@ -57,11 +57,11 @@ import {
     R_D_val,
     log,
     R_D_exp
-} from './_general';
+} from '~common';
 
-import { log1p } from './log1p';
+import { log1p } from '~log';
 import { lbeta } from './lbeta';
-import { dbinom_raw }  from './dbinom';
+import { dbinom_raw }  from '~binomial';
 
 export function dbeta(x: number, a: number, b: number, give_log: boolean): number {
 

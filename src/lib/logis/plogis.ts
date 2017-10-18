@@ -35,9 +35,9 @@ import {
     ISNAN,
     ML_ERR_return_NAN,
     R_P_bounds_Inf_01
-} from './_general';
+} from '~common';
 
-import { log1p } from './log1p';
+import { log1p } from '~log';
 
 
 export function Rf_log1pexp(x: number): number {

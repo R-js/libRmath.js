@@ -45,12 +45,12 @@ import {
     R_FINITE,
     ML_POSINF,
     log
-} from './_general';
+} from '~common';
 
-import { dnchisq } from './dnchisq';
-import { dgamma } from './dgamma';
-import { log1p } from './log1p';
-import { dnbeta } from './dnbeta';
+import { dnchisq } from '~chi-2';
+import { dgamma } from '~gamma';
+import { log1p } from '~log';
+import { dnbeta } from '~beta';
 
 export function dnf(x: number, df1: number, df2: number, ncp: number, give_log: boolean): number {
     let y: number;

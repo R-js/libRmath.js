@@ -1,5 +1,5 @@
-export * from './dpois';
+export * from '~poisson';
 export * from './ppois';
-export * from './rpois';
+export * from '~poisson';
 export * from './qpois';
 

@@ -31,11 +31,11 @@ import {
     R_Q_P01_check,
     R_FINITE,
     ML_ERR_return_NAN
-} from './_general';
+} from '~common';
 
 import {
     R_DT_qIv
-} from './expm1';
+} from '~exp';
 
 export function qunif(p: number, a: number, b: number, lower_tail: boolean, log_p: boolean): number {
 

@@ -60,10 +60,10 @@ import {
   isOdd,
   isInteger,
   round
-} from './_general';
+} from '~common';
 
 import { lbeta } from './lbeta';
-import { lgammafn_sign, lgammafn } from './lgamma_fn';
+import { lgammafn_sign, lgammafn } from '~gamma';
 
 
 export function lfastchoose(n: number, k: number) {

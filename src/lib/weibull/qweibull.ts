@@ -34,9 +34,9 @@ import {
     ML_POSINF,
     R_Q_P01_boundaries,
     pow
-} from './_general';
+} from '~common';
 
-import { R_DT_Clog } from './expm1';
+import { R_DT_Clog } from '~exp';
 
 export function qweibull(p: number, shape: number, scale: number, lower_tail: boolean, log_p: boolean): number {
 

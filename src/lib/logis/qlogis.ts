@@ -33,9 +33,9 @@ import {
     ML_POSINF,
     ML_ERR_return_NAN,
     log
-} from './_general';
+} from '~common';
 
-import { R_Log1_Exp } from './expm1';
+import { R_Log1_Exp } from '~exp';
 
 export function qlogis(p: number, location: number, scale: number, lower_tail: boolean, log_p: boolean): number {
 

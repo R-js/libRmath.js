@@ -36,7 +36,7 @@ import {
     M_LN_SQRT_2PI,
     exp,
     M_1_SQRT_2PI
-} from './_general';
+} from '~common';
 
 
 export function dlnorm(x: number, meanlog: number, sdlog: number, give_log: boolean) {

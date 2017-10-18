@@ -78,11 +78,11 @@ import {
     R_D__1,
     R_D__0
 
-} from './_general';
+} from '~common';
 
-import { NumberW } from './toms708';
+import { NumberW } from '~common';
 
-import { log1p } from './log1p';
+import { log1p } from '~log';
 
 const SIXTEN = 16; /* Cutoff allowing exact "*" and "/" */
 
@@ -323,7 +323,7 @@ export function pnorm_both(x: number, cum: NumberW, ccum: NumberW, i_tail: boole
     /* do not return "denormalized" -- we do in R */
     if (log_p) {
         if (cum.val > -min) cum.val = -0.;
-        if (ccum.val > -min) { ccum.val = -0.; };
+        if (ccum.val > -min) { ccum.val = -0.; }
     }
     else {
         if (cum.val < min) cum.val = 0.;

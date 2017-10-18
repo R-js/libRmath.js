@@ -51,7 +51,7 @@
 
 
 
-import { NaN, fabs } from './_general';
+import { NaN, fabs } from '~common';
 
 export function chebyshev_init(dos: number[], nos: number, eta: number): number {
     let i: number;

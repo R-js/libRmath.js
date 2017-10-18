@@ -27,9 +27,9 @@
  *
  */
 
-import { ISNAN, R_DT_0, ML_ERR_return_NAN, R_Q_P01_check } from './_general';
+import { ISNAN, R_DT_0, ML_ERR_return_NAN, R_Q_P01_check } from '~common';
 
-import { R_DT_Clog } from './expm1';
+import { R_DT_Clog } from '~exp';
 
 export function qexp(p: number, scale: number, lower_tail: boolean, log_p: boolean): number {
 

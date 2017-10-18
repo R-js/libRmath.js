@@ -45,11 +45,11 @@ import {
     DBL_EPSILON,
     nearbyint,
     floor
-} from './_general';
+} from '~common';
 
 import {
     NumberW
-} from './toms708';
+} from '~common';
 
 import {
     ppois
@@ -57,9 +57,9 @@ import {
 } from './ppois';
 
 
-import { qnorm } from './qnorm';
+import { qnorm } from '~normal';
 
-import { R_DT_qIv } from './expm1';
+import { R_DT_qIv } from '~exp';
 
  function do_search(y: number, z: NumberW, p: number, lambda: number, incr: number): number {
     if (z.val >= p) {

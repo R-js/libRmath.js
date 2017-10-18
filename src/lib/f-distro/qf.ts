@@ -35,10 +35,10 @@ import {
     ML_VALID,
     ML_POSINF,
     R_Q_P01_boundaries
-} from './_general';
+} from '~common';
 
-import { qbeta } from './qbeta';
-import { qchisq } from './qchisq';
+import { qbeta } from '~beta';
+import { qchisq } from '~chi-2';
 
 export function qf(p: number, df1: number, df2: number, lower_tail: boolean, log_p: boolean): number {
 

@@ -39,11 +39,11 @@ import {
     R_D__0,
     R_D_nonint_check,
     log
-} from './_general';
+} from '~common';
 
 import {
     dbinom_raw
-} from './dbinom';
+} from '~binomial';
 
 
 export function dgeom(x: number, p: number, give_log: boolean): number {
