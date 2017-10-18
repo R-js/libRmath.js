@@ -36,9 +36,9 @@ import {
     sqrt
 } from '~common';
 
-import { norm_rand } from './snorm';
+import { norm_rand } from '~normal';
 
-import { rchisq } from './rchisq';
+import { rchisq } from '~chi-2';
 
 export function rt(df: number): number {
     if (ISNAN(df) || df <= 0.0) {

@@ -64,10 +64,10 @@ import {
     MATHLIB_ERROR
 } from '~common';
 
-import { choose, lchoose } from './choose';
+import { choose, lchoose } from '~common';
 import { R_DT_val } from '~log';
 import { R_DT_qIv } from '~exp';
-import { unif_rand } from './_unif_random';
+import { unif_rand } from '~uniform';
 
 
 

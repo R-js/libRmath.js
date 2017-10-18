@@ -9,10 +9,10 @@ const { flatten } = require('./tools');
 module.exports = {
     target: 'node',
     entry: {
-        server: resolve('src/server/index.ts')
+        server: resolve('src/lib/index.ts')
     },
     output: {
-        path: resolve('dist/server'),
+        path: resolve('dist/lib'),
         filename: '[name].js'
     },
     node: {
@@ -29,5 +29,5 @@ module.exports = {
 // Server files live in <projectRoot>/src/{server,lib}
 for (const rule of module.exports.module.rules){
     rule.include = rule.include || [];
-    rule.include.push(resolve('src/server'), resolve('src/lib'));
+    rule.include.push(resolve('src/lib'));
 }

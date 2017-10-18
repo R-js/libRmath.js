@@ -76,11 +76,11 @@ import { R_DT_qIv, expm1, R_D_LExp } from '~exp';
 
 import { pt } from './pt';
 
-import { qnorm } from './qnorm';
+import { qnorm } from '~normal';
 
 import { dt } from './dt';
 
-import { tanpi } from './cospi';
+import { tanpi } from '~trigonometry';
 
 export function qt(p: number, ndf: number, lower_tail: boolean, log_p: boolean): number {
   const eps = 1.e-12;

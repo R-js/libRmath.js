@@ -37,7 +37,7 @@ import {
     fabs
 } from '~common';
 
-import { qnorm } from './qnorm';
+import { qnorm } from '~normal';
 
 import { pnt } from './pnt';
 

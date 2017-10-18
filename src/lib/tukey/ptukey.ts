@@ -62,7 +62,7 @@ import {
     ME
 } from '~common';
 
-import { pnorm5 as pnorm } from './pnorm';
+import { pnorm5 as pnorm } from '~normal';
 
 import { lgammafn } from '~gamma';
 

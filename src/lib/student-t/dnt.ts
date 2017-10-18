@@ -79,7 +79,7 @@ import {
 
 import { dt } from './dt';
 
-import { dnorm } from './dnorm';
+import { dnorm } from '~normal';
 
 import { lgammafn } from '~gamma';
 

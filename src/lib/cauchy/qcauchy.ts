@@ -38,7 +38,7 @@ import {
   ML_NEGINF,
   R_Q_P01_check
 
-} from '~common'
+} from '~common';
 
 import { expm1 } from '~exp';
 

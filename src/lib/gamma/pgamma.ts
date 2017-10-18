@@ -418,7 +418,7 @@ export function pd_upper_series(x: number, y: number, log_p: boolean): number {
  */
 export function pd_lower_cf(y: number, d: number): number {
 
-  let f = 0.0; /* -Wall */;
+  let f = 0.0; /* -Wall */
   let of;
   let f0;
   let i; 

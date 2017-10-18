@@ -36,9 +36,9 @@ import {
     R_D_Cval
 } from '~common';
 
-import { pnorm5 as pnorm } from './pnorm';
+import { pnorm5 as pnorm } from '~normal';
 
-import { lbeta } from './lbeta';
+import { lbeta } from '~beta';
 
 import { pbeta } from '~beta';
 

@@ -35,7 +35,7 @@ import {
     log
 } from '~common';
 
-import { unif_rand } from './_unif_random';
+import { unif_rand } from '~uniform';
 
 export function rweibull(shape: number, scale: number): number {
     if (!R_FINITE(shape) || !R_FINITE(scale) || shape <= 0. || scale <= 0.) {

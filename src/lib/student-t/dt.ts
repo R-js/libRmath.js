@@ -53,11 +53,11 @@ import {
 
 } from '~common';
 
-import { bd0 } from './bd0';
+import { bd0 } from '~deviance';
 
-import { stirlerr } from './stirlerror';
+import { stirlerr } from '~stirling';
 
-import { dnorm } from './dnorm';
+import { dnorm } from '~normal';
 
 import { log1p } from '~log';
 

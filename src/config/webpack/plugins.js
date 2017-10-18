@@ -35,7 +35,7 @@ const sharedProd = !p ? [] : [
     })
 ];
 
-const html = new (require('html-webpack-plugin'))({
+/*const html = new (require('html-webpack-plugin'))({
     title: 'BookBarter',
     filename: 'index.html',
     template: require('html-webpack-template'),
@@ -62,7 +62,7 @@ const html = new (require('html-webpack-plugin'))({
     links: [
         'https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css',
         'https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700',
-        /*'https://s3-us-west-2.amazonaws.com/s.cdpn.io/594328/fonts.css'*/
+        //'https://s3-us-west-2.amazonaws.com/s.cdpn.io/594328/fonts.css'
     ],
     meta: [
         {
@@ -96,8 +96,8 @@ clientProd = !p ? [] : [
         name: 'webpackManifest'
     })
 ];
-
-const client = flatten(cleanClient, sharedProd, html, clientProd);
+*/
+const client = flatten(cleanClient, sharedProd /*, html, clientProd*/);
 const server = flatten(cleanServer, sharedProd);
 
 

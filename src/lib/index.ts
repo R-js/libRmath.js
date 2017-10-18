@@ -10,7 +10,6 @@ export * from '~exp';
 export * from '~f-distro';
 export * from '~gamma';
 export * from '~geometric';
-export * from '~geometry';
 export * from '~log';
 
 

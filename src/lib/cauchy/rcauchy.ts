@@ -36,7 +36,7 @@ import {
     R_FINITE,
     ML_ERR_return_NAN,
     M_PI
-} from '~common'
+} from '~common';
 
 import { unif_rand } from './_unif_random';
 

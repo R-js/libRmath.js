@@ -54,13 +54,13 @@ import {
     R_D_exp,
 
 
-} from '~common'
+} from '~common';
 
 import { dbinom_raw } from '~binomial';
 
 import { log1p } from '~log';
 
-import { lgamma_c99 } from './c99_gamma';
+import { lgamma_c99 } from '~gamma';
 
 
 export function dnbinom(x: number, size: number, prob: number, give_log: boolean): number {

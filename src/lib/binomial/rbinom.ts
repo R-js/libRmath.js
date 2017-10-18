@@ -55,7 +55,7 @@ import {
 } from '~common';
 
 import { qbinom } from './qbinom';
-import { unif_rand } from './_unif_random';
+import { unif_rand } from '~uniform';
 
 export function rbinom(nin: number, pp: number): number {
     /* FIXME: These should become THREAD_specific globals : */

@@ -76,11 +76,11 @@ import {
 
 import {
     pt
-} from './pt';
+} from '~pt';
 
 import {
     pnorm5 as pnorm
-} from './pnorm';
+} from '~normal';
 
 import {
     expm1

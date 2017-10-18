@@ -23,7 +23,7 @@
  * 
 */
 import { R_FINITE, ML_ERR_return_NAN } from '~common';
-import { random2_64StepsAsFloat } from './_unif_random';
+import { random2_64StepsAsFloat } from '~uniform';
 
 
 export enum RNG {

@@ -48,7 +48,7 @@ import {
     R_Q_P01_boundaries
 } from '~common';
 
-import { NumberW } from './Toms708';
+import { NumberW } from '~common';
 
 import { pbinom } from './pbinom';
 

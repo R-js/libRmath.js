@@ -61,7 +61,7 @@ import {
 
 import {
     NumberW
-} from './toms708';
+} from '~common';
 
 import {
     pnbinom
@@ -73,7 +73,7 @@ import {
 
 import {
     qnorm
-} from './qnorm';
+} from '~normal';
 
 
 
