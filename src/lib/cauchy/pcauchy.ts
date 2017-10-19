@@ -37,9 +37,9 @@ import {
     R_DT_1,
     fabs,
     R_D_val
-} from '~_general';
+} from '~common';
 
-import { R_D_Clog } from '~log1p';
+import { R_D_Clog } from '~log';
 
 export function pcauchy(x: number, location: number, scale: number, lower_tail: boolean, log_p: boolean): number {
 

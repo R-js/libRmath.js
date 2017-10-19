@@ -42,7 +42,7 @@ import {
 
 import { expm1 } from '~exp';
 
-import { tanpi } from './cospi';
+import { tanpi } from '~trigonometry';
 
 export function qcauchy(p: number, location: number, scale: number, lower_tail: boolean, log_p: boolean) {
 

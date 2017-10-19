@@ -44,7 +44,7 @@ import {
 
 import { pbeta } from '~beta';
 
-import { Toms708, NumberW } from './toms708';
+import { Toms708, NumberW } from '~common';
 
 export function pnbinom(x: number, size: number, prob: number, lower_tail: boolean, log_p: boolean): number {
 

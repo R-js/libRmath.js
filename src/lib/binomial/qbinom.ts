@@ -54,7 +54,7 @@ import { pbinom } from './pbinom';
 
 import { R_DT_qIv } from '~exp';
 
-import { qnorm } from './qnorm';
+import { qnorm } from '~normal';
 
 function do_search(y: number, z: NumberW, p: number, n: number, pr: number, incr: number): number {
     if (z.val >= p) {

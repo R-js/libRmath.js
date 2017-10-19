@@ -62,7 +62,7 @@ import {
   round
 } from '~common';
 
-import { lbeta } from './lbeta';
+import { lbeta } from '~beta';
 import { lgammafn_sign, lgammafn } from '~gamma';
 
 
