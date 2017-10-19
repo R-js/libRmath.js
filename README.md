@@ -319,4 +319,6 @@ wilcox.c           | node| no | dwilcox: The density of the Wilcoxon distributio
 Also:
 Examine the usage of  *R_DT_Log* and * R_DT_log* (note the one capital letter difference) functions in all codes
 
+[some info random generation:](https://stat.ethz.ch/R-manual/R-devel/library/base/html/Random-user.html)
+
 ![equation](http://latex.codecogs.com/gif.latex?Concentration%3D%5Cfrac%7BTotalTemplate%7D%7BTotalVolume%7D)
