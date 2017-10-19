@@ -169,7 +169,7 @@ import {
 
 import {
     NumberW
-} from './Toms708';
+} from '~common';
 
 /* From R, currently only used for kode = 1, m = 1 : */
 export function dpsifn(x: number, n: number, kode: number, m: number, ans: Array<number>, nz: NumberW, ierr: NumberW): void {

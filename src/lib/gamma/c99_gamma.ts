@@ -44,7 +44,7 @@ import {
   exp,
   log,
   fabs
-} from '~_general';
+} from '~common';
 
 export function gamma_c99(x: number): number {
 

@@ -13,7 +13,7 @@ console.log('isbrowser', isBrowser);
  * 
  */
 
-const _window: any = this.window ? this.window : {} as any;
+
 const MAX_INT_64 = Math.pow(2, 64);
 
 function random_32bit_node(length: number): Uint32Array {
@@ -24,7 +24,7 @@ function random_32bit_node(length: number): Uint32Array {
 
 function random_32bit_browser(length: number): Uint32Array {
     let rng = new Uint32Array(length * Uint32Array.BYTES_PER_ELEMENT);
-    _window.crypto.getRandomValues(rng);
+    crypto.getRandomValues(rng);
     return rng;
 }
 

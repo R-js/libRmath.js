@@ -68,7 +68,7 @@ import { R_DT_log, R_DT_Clog, R_DT_qIv } from '~exp';
 
 import { lgamma1p } from '~gamma';
 
-import { qnorm } from './qnorm';
+import { qnorm } from '~normal';
 
 import { lgammafn } from '~gamma';
 

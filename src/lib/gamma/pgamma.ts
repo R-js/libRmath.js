@@ -96,9 +96,9 @@ import { log1p } from '~log';
 import { lgammafn } from '~gamma';
 import { expm1, R_Log1_Exp } from '~exp';
 import { dpois_raw } from '~poisson';
-import { dnorm } from './dnorm';
+import { dnorm } from '~normal';
 
-import { pnorm5 as pnorm } from './pnorm';
+import { pnorm5 as pnorm } from '~normal';
 
 export const scalefactor = sqr(sqr(sqr(4294967296.0)));
 

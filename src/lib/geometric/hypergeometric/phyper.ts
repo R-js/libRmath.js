@@ -64,7 +64,7 @@ import {
 } from '~common';
 
 import { R_DT_Log } from '~exp';
-import { dhyper } from '~geometric';
+import { dhyper } from './dhyper';
 import { log1p } from '~log';
 
 export function pdhyper(x: number, NR: number, NB: number, n: number, log_p: boolean): number {

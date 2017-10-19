@@ -60,7 +60,7 @@ import {
     floor
 } from '~common';
 
-import { unif_rand } from './_unif_random';
+import { unif_rand } from '~uniform';
 
 import { R_DT_val } from '~log';
 import { R_DT_qIv } from '~exp';

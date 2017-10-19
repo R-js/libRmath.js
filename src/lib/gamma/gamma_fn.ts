@@ -49,9 +49,9 @@
  */
 
 import { ISNAN, ML_ERROR, ME, ML_NAN, fabs, ML_POSINF, ML_NEGINF, M_PI, M_LN_SQRT_2PI } from '~common';
-import { chebyshev_eval } from './chebyshev';
-import { stirlerr } from './stirlerror';
-import { sinpi } from './cospi';
+import { chebyshev_eval } from '~chebyshev';
+import { stirlerr } from '~stirling';
+import { sinpi } from '~trigonometry';
 import { lgammacor } from '~gamma';
 
 const gamcs: number[] = [

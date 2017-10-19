@@ -50,7 +50,7 @@
  */
 
 import { ME, ML_ERROR, ML_ERR_return_NAN } from '~common';
-import { chebyshev_eval } from './chebyshev';
+import { chebyshev_eval } from '~chebyshev';
 
 const algmcs: number[] = [
     +.1666389480451863247205729650822e+0,

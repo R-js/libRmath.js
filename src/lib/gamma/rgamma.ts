@@ -62,11 +62,11 @@ import {
 
 import { expm1 } from '~exp';
 
-import { exp_rand } from './sexp';
+import { exp_rand } from '~exp';
 
-import { unif_rand } from './_unif_random';
+import { unif_rand } from '~uniform';
 
-import { norm_rand } from './snorm';
+import { norm_rand } from '~normal';
 
 export function rgamma(a: number, scale: number): number {
     /* Constants : */

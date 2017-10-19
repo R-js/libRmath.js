@@ -63,7 +63,7 @@ import {
 } from '~common';
 
 import { gammafn } from '~gamma';
-import { sinpi } from './cospi';
+import { sinpi } from '~trigonometry';
 import { lgammacor } from '~gamma';
 
 const xmax = 2.5327372760800758e+305;

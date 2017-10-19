@@ -38,7 +38,7 @@ import {
     M_PI
 } from '~common';
 
-import { unif_rand } from './_unif_random';
+import { unif_rand } from '~uniform';
 
 
 export function rcauchy(location: number, scale: number): number {
