@@ -16,6 +16,7 @@ export const M_SQRT2 = 1.414213562373095048801688724210; /* sqrt(2) */
 export const sqr = (x: number) => x * x;
 export const ceil = Math.ceil;
 export const trunc = Math.trunc;
+export const frac = ( x: number ) => x - trunc( x );
 export const log10 = Math.log10;
 export const LONG_MAX = Number.MAX_SAFE_INTEGER;
 export const DBL_MAX_10_EXP = Math.log10(Number.MAX_VALUE);
