@@ -62,21 +62,21 @@ const RNGTable: IRNGTab[] = [
     {
         kind: IRNGType.KNUTH_TAOCP,
         Nkind: IN01Type.BUGGY_KINDERMAN_RAMAGE,
-        name: "Knuth-TAOCP",
+        name: 'Knuth-TAOCP',
         n_seed: 1 + 100, // literal copy from R-source, I will keep it like this
         i_seed: []
     },
     {
         kind: IRNGType.USER_UNIF,
         Nkind: IN01Type.BUGGY_KINDERMAN_RAMAGE,
-        name: "User-supplied",
+        name: 'User-supplied',
         n_seed: 0,
         i_seed: []
     },
     {
         kind: IRNGType.KNUTH_TAOCP2,
         Nkind: IN01Type.BUGGY_KINDERMAN_RAMAGE,
-        name: "Knuth-TAOCP-2002",
+        name: 'Knuth-TAOCP-2002',
         n_seed: 1 + 100, // literal copy from R-source, I will keep it like this
         i_seed: []
     },
@@ -124,7 +124,7 @@ function unif_rand(): number {
                 return p;
             }, 0);
 
-            return fixup(frac(value));/* in [0,1) */
+            return fixup(frac(value)); /* in [0,1) */
 
         case IRNGType.MARSAGLIA_MULTICARRY:/* 0177777(octal) == 65535(decimal)*/
             {
@@ -168,7 +168,7 @@ function unif_rand(): number {
 
               
                 p1 = a12 * trunc(  seeds[1] ) 
-                    - a13n * trunc( seeds[1] )
+                    - a13n * trunc( seeds[1] );
                 /* p1 % m1 would surely do */
                 k = trunc( p1 / m1 );
                 p1 -= k * m1;
@@ -194,60 +194,60 @@ function unif_rand(): number {
 
 /* we must mask global variable here, as I1-I3 hide RNG_kind
    and we want the argument */
-   static void FixupSeeds(RNGtype RNG_kind, int initial)
+   static void FixupSeeds(RNGtype RNG_kind, int initial);
    {
    /* Depending on RNG, set 0 values to non-0, etc. */
    
-       int j, notallzero = 0;
+       int; j, notallzero = 0;
    
        /* Set 0 to 1 :
           for(j = 0; j <= RNG_Table[RNG_kind].n_seed - 1; j++)
           if(!RNG_Table[RNG_kind].i_seed[j]) RNG_Table[RNG_kind].i_seed[j]++; */
    
-       switch(RNG_kind) {
+       switch (RNG_kind) {
        case WICHMANN_HILL:
        I1 = I1 % 30269; I2 = I2 % 30307; I3 = I3 % 30323;
    
        /* map values equal to 0 mod modulus to 1. */
-       if(I1 == 0) I1 = 1;
-       if(I2 == 0) I2 = 1;
-       if(I3 == 0) I3 = 1;
+       if (I1 === 0) I1 = 1;
+       if (I2 === 0) I2 = 1;
+       if (I3 === 0) I3 = 1;
        return;
    
        case SUPER_DUPER:
-       if(I1 == 0) I1 = 1;
+       if (I1 === 0) I1 = 1;
        /* I2 = Congruential: must be ODD */
        I2 |= 1;
        break;
    
        case MARSAGLIA_MULTICARRY:
-       if(I1 == 0) I1 = 1;
-       if(I2 == 0) I2 = 1;
+       if (I1 === 0) I1 = 1;
+       if (I2 === 0) I2 = 1;
        break;
    
        case MERSENNE_TWISTER:
-       if(initial) I1 = 624;
+       if (initial) I1 = 624;
         /* No action unless user has corrupted .Random.seed */
-       if(I1 <= 0) I1 = 624;
+       if (I1 <= 0) I1 = 624;
        /* check for all zeroes */
        for (j = 1; j <= 624; j++)
-           if(RNG_Table[RNG_kind].i_seed[j] != 0) {
+           if (RNG_Table[RNG_kind].i_seed[j] !== 0) {
            notallzero = 1;
            break;
            }
-       if(!notallzero) Randomize(RNG_kind);
+       if (!notallzero) Randomize(RNG_kind);
        break;
    
        case KNUTH_TAOCP:
        case KNUTH_TAOCP2:
-       if(KT_pos <= 0) KT_pos = 100;
+       if (KT_pos <= 0) KT_pos = 100;
        /* check for all zeroes */
        for (j = 0; j < 100; j++)
-           if(RNG_Table[RNG_kind].i_seed[j] != 0) {
+           if (RNG_Table[RNG_kind].i_seed[j] !== 0) {
            notallzero = 1;
            break;
            }
-       if(!notallzero) Randomize(RNG_kind);
+       if (!notallzero) Randomize(RNG_kind);
        break;
        case USER_UNIF:
        break;
@@ -255,24 +255,24 @@ function unif_rand(): number {
        /* first set: not all zero, in [0, m1)
           second set: not all zero, in [0, m2) */
        {
-       unsigned int tmp;
-       int allOK = 1;
+       unsigned; int; tmp;
+       int; allOK = 1;
        for (j = 0; j < 3; j++) {
            tmp = RNG_Table[RNG_kind].i_seed[j];
-           if(tmp != 0) notallzero = 1;
+           if (tmp !== 0) notallzero = 1;
            if (tmp >= m1) allOK = 0;
        }
-       if(!notallzero || !allOK) Randomize(RNG_kind);
+       if (!notallzero || !allOK) Randomize(RNG_kind);
        for (j = 3; j < 6; j++) {
            tmp = RNG_Table[RNG_kind].i_seed[j];
-           if(tmp != 0) notallzero = 1;
+           if (tmp !== 0) notallzero = 1;
            if (tmp >= m2) allOK = 0;
        }
-       if(!notallzero || !allOK) Randomize(RNG_kind);
+       if (!notallzero || !allOK) Randomize(RNG_kind);
        }
        break;
        default:
-       error(_("FixupSeeds: unimplemented RNG kind %d"), RNG_kind);
+       error(_('FixupSeeds: unimplemented RNG kind %d'), RNG_kind);
        }
    }
    
@@ -282,13 +282,13 @@ function unif_rand(): number {
 function GetRNGstate(void);
 void PutRNGstate(void);
 
-double unif_rand(void);
-double R_unif_index(double);
+double; unif_rand(void);
+double; R_unif_index(double);
 /* These are also defined in Rmath.h */
-double norm_rand(void);
-double exp_rand(void);
+double; norm_rand(void);
+double; exp_rand(void);
 
-typedef unsigned int Int32;
+typedef; unsigned; int; Int32;
 double * user_unif_rand(void);
 void user_unif_init(Int32);
 int * user_unif_nseed(void);
