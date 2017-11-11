@@ -7,4 +7,4 @@ export enum IRNGType {
     USER_UNIF,
     KNUTH_TAOCP2,
     LECUYER_CMRG
-};
+}

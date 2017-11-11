@@ -54,7 +54,7 @@ export function plogis(x: number, location: number, scale: number, lower_tail: b
 
     if (scale <= 0.0) {
         return ML_ERR_return_NAN();
-    };
+    }
 
     x = (x - location) / scale;
     if (ISNAN(x)) {

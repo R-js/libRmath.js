@@ -5,4 +5,4 @@ export enum IN01Type {
     USER_NORM,
     INVERSION,
     KINDERMAN_RAMAGE
-};
+}
