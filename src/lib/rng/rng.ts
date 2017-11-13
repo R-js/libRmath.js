@@ -713,11 +713,12 @@ double; R_unif_index(double);
 
 //double * user_norm_rand(void);
 
-function PutRNGstate(seed: number[], pUnifKind: string, pNormKind: string) {
+function PutRNGstate(pUnifKind: string, pNormKind: string, seed: number[]) {
   let uniform = EnumValues.getNames(IRNGType);
   let normal = EnumValues.getNames(IN01Type);
   let errors = 0;
 
+  seed = seed || [];
   const unifKind = pUnifKind.toLocaleUpperCase();
   const normKind = pNormKind.toLocaleUpperCase();
 
@@ -738,52 +739,24 @@ function PutRNGstate(seed: number[], pUnifKind: string, pNormKind: string) {
     (rec: IRNGTab) => rec.kind === su && rec.Nkind === sn
   );
 
-  if (select) {
-    //
-    if (select.n_seed !== seed.length) {
-      warning(`${unifKind}Incorrect seedlength`);
+  if (select && seed.length > select.n_seed ) {
+      warning(`${unifKind}:Incorrect seedlength, re-initialize`);
       Randomize(su);
-    } else {
-      select.i_seed.set(seed);
-    }
+      return;
+  }
+
+  if (select && seed.length === 0) {
+     Randomize(su);
+     return;
+  }
+
+  if (select) {
+    select.i_seed.set(seed);
     return;
   }
 
   error(`Ìnternal Error, cannot find record; for RNG[${unifKind}, ${normKind}`);
 }
 
-function RNGkind(newkind?: IRNGType) {
-  // Choose a new kind of RNG.
-  // Initialize its seed by calling the old RNG's unif_rand()
 
-  if (newkind === undefined) {
-    // it's query
-    return cloneDeep(RNGTable[RNG_kind]);
-  }
-
-  const { pow } = Math;
-  switch (newkind) {
-    case IRNGType.WICHMANN_HILL:
-    case IRNGType.MARSAGLIA_MULTICARRY:
-    case IRNGType.SUPER_DUPER:
-    case IRNGType.MERSENNE_TWISTER:
-    case IRNGType.KNUTH_TAOCP:
-    //case IRNGType.USER_UNIF:
-    case IRNGType.KNUTH_TAOCP2:
-    case IRNGType.LECUYER_CMRG:
-      break;
-    default:
-      error(`RNGkind: unimplemented RNG kind ${newkind}`);
-  }
-  // TODO: GetRNGstate();
-  // precaution against corruption as per package randtoolbox
-  let u = unif_rand();
-  if (u < 0.0 || u > 1.0) {
-    warning('someone corrupted the random-number generator: re-initializing');
-    Randomize(newkind);
-  } else {
-    RNG_Init(newkind, trunc(u * pow(2, 32) - 1));
-  }
-  RNG_kind = newkind;
-  //TODO: PutRNGstate();
-}
+// TODO: static void Norm_kind(N01type kind)..
