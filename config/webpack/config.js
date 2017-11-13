@@ -22,7 +22,7 @@ module.exports = [{
     externals: [...require('./externals')],
     module: {
         rules: [
-            //lint(),
+            lint(),
             tsc()
         ]
     },

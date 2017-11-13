@@ -1,107 +1,113 @@
 {
-  "compilerOptions": {
-    "allowUnreachableCode": true,
-    "baseUrl": ".",
-    "declaration": true,
-    "experimentalDecorators": true,
-    "jsx": "react",
-    "lib": [
-      "es6",
-      "dom",
-      "esnext.asynciterable"
-    ],
-    "module": "commonjs",
-    "moduleResolution": "node",
-    "outDir": "dist",
-    "paths": {
-      "~bessel": [
-        "src/lib/bessel/index.ts"
-      ],
-      "~beta": [
-        "src/lib/beta/index.ts"
-      ],
-      "~binomial": [
-        "src/lib/binomial/index.ts"
-      ],
-      "~cauchy": [
-        "src/lib/cauchy/index.ts"
-      ],
-      "~chebyshev": [
-        "src/lib/chebyshev/index.ts"
-      ],
-      "~chi-2": [
-        "src/lib/chi-2/index.ts"
-      ],
-      "~common": [
-        "src/lib/common/index.ts"
-      ],
-      "~deviance": [
-        "src/lib/deviance/index.ts"
-      ],
-      "~exp": [
-        "src/lib/exp/index.ts"
-      ],
-      "~f-distro": [
-        "src/lib/f-distro/index.ts"
-      ],
-      "~gamma": [
-        "src/lib/gamma/index.ts"
-      ],
-      "~geometric": [
-        "src/lib/geometric/index.ts"
-      ],
-      "~log": [
-        "src/lib/log/index.ts"
-      ],
-      "~logis": [
-        "src/lib/logis/index.ts"
-      ],
-      "~multinom": [
-        "src/lib/multinom/index.ts"
-      ],
-      "~normal": [
-        "src/lib/normal/index.ts"
-      ],
-      "~poisson": [
-        "src/lib/poisson/index.ts"
-      ],
-      "~signrank": [
-        "src/lib/signrank/index.ts"
-      ],
-      "~stirling": [
-        "src/lib/stirling/index.ts"
-      ],
-      "~student-t": [
-        "src/lib/student-t/index.ts"
-      ],
-      "~trigonometry": [
-        "src/lib/trigonometry/index.ts"
-      ],
-      "~tukey": [
-        "src/lib/tucky/index.ts"
-      ],
-      "~uniform": [
-        "src/lib/uniform/index.ts"
-      ],
-      "~weibull": [
-        "src/lib/weibull/index.ts"
-      ],
-      "~wilcox": [
-        "src/lib/wilcox/index.ts"
-      ]
+    "compilerOptions": {
+        "allowUnreachableCode": true,
+        "baseUrl": ".",
+        "declaration": true,
+        "experimentalDecorators": true,
+        "jsx": "react",
+        "lib": [
+            "es6",
+            "dom",
+            "esnext.asynciterable"
+        ],
+        "module": "commonjs",
+        "moduleResolution": "node",
+        "outDir": "dist",
+        "paths": {
+            "~R": [
+                "src/lib/r-func.ts"
+            ],
+            "~logging": [
+                "src/lib/_logging/index.ts"
+            ],
+            "~bessel": [
+                "src/lib/bessel/index.ts"
+            ],
+            "~beta": [
+                "src/lib/beta/index.ts"
+            ],
+            "~binomial": [
+                "src/lib/binomial/index.ts"
+            ],
+            "~cauchy": [
+                "src/lib/cauchy/index.ts"
+            ],
+            "~chebyshev": [
+                "src/lib/chebyshev/index.ts"
+            ],
+            "~chi-2": [
+                "src/lib/chi-2/index.ts"
+            ],
+            "~common": [
+                "src/lib/common/index.ts"
+            ],
+            "~deviance": [
+                "src/lib/deviance/index.ts"
+            ],
+            "~exp": [
+                "src/lib/exp/index.ts"
+            ],
+            "~f-distro": [
+                "src/lib/f-distro/index.ts"
+            ],
+            "~gamma": [
+                "src/lib/gamma/index.ts"
+            ],
+            "~geometric": [
+                "src/lib/geometric/index.ts"
+            ],
+            "~log": [
+                "src/lib/log/index.ts"
+            ],
+            "~logis": [
+                "src/lib/logis/index.ts"
+            ],
+            "~multinom": [
+                "src/lib/multinom/index.ts"
+            ],
+            "~normal": [
+                "src/lib/normal/index.ts"
+            ],
+            "~poisson": [
+                "src/lib/poisson/index.ts"
+            ],
+            "~signrank": [
+                "src/lib/signrank/index.ts"
+            ],
+            "~stirling": [
+                "src/lib/stirling/index.ts"
+            ],
+            "~student-t": [
+                "src/lib/student-t/index.ts"
+            ],
+            "~trigonometry": [
+                "src/lib/trigonometry/index.ts"
+            ],
+            "~tukey": [
+                "src/lib/tucky/index.ts"
+            ],
+            "~uniform": [
+                "src/lib/uniform/index.ts"
+            ],
+            "~weibull": [
+                "src/lib/weibull/index.ts"
+            ],
+            "~wilcox": [
+                "src/lib/wilcox/index.ts"
+            ]
+        },
+        "rootDir": "./",
+        "sourceMap": true,
+        "strict": true,
+        "target": "es2017"
     },
-    "rootDir": "./",
-    "sourceMap": true,
-    "strict": true,
-    "target": "es2017"
-  },
-  "exclude": [
-    "node_modules"
-  ],
-  "include": [
-    "src/**/*.ts",
-    "src/**/*.tsx",
-    "test/**/*.ts",
-    "test/**/*.tsx"
-  ]
+    "exclude": [
+        "node_modules"
+    ],
+    "include": [
+        "src/**/*.ts",
+        "src/**/*.tsx",
+        "test/**/*.ts",
+        "test/**/*.tsx"
+    ]
 }

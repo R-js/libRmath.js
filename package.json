@@ -7,7 +7,10 @@
     },
     "dependencies": {
         "circular-json": "^0.3.1",
+        "enum-values": "^1.2.0",
+        "lodash.clonedeep": "^4.5.0",
         "lodash.defaults": "^4.2.0",
+        "lodash.includes": "^4.3.0",
         "lodash.merge": "^4.6.0",
         "moment": "^2.18.1"
     },
@@ -15,6 +18,8 @@
     "devDependencies": {
         "@types/chai": "^3.5.2",
         "@types/clone": "^0.1.30",
+        "@types/lodash.clonedeep": "^4.5.3",
+        "@types/lodash.includes": "^4.3.3",
         "@types/node": "^6.0.85",
         "awesome-typescript-loader": "^3.2.2",
         "babel-core": "^6.24.1",
@@ -26,7 +31,6 @@
         "cpr": "^2.2.0",
         "cross-env": "^5.1.0",
         "mocha": "^3.5.0",
-        "node-ts": "^2.1.2",
         "ts-node": "^3.3.0",
         "tsconfig-paths": "^2.3.0",
         "tslint": "^5.5.0",

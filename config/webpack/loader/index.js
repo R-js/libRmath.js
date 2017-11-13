@@ -8,7 +8,8 @@ const proto = {
             configFile: resolve('tslint.json'),
             emitErrors: true,
             failOnHint: true,
-            typeCheck: true,
+            //https://github.com/wbuchwalter/tslint-loader/issues/76
+            typeCheck: false,
             fix: true,
             tsConfigFile: resolve('tsconfig.json')
         }, o)

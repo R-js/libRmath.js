@@ -12,6 +12,10 @@
 
 */
 
+export const pow = Math.pow;
+export const now = Date.now; 
+export const log2 = Math.log2;
+export const min = Math.min;
 export const M_SQRT2 = 1.414213562373095048801688724210; /* sqrt(2) */
 export const sqr = (x: number) => x * x;
 export const ceil = Math.ceil;
@@ -51,7 +55,6 @@ export const isInteger = Number.isInteger;
 export const sin = Math.sin;
 export const cos = Math.cos;
 export const tan = Math.tan;
-export const pow = Math.pow;
 export const M_1_PI = 1.0 / Math.PI;
 export const R_FINITE = (x: number) => Number.isFinite(x);
 export const NaN = Number.NaN;

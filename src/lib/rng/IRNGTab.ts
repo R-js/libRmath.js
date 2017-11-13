@@ -6,5 +6,7 @@ export interface IRNGTab {
     Nkind: IN01Type;
     name: string; /* print name */
     n_seed: number; /* length of seed vector */
-    i_seed: number[]; /* this is a pointer to an [Int32], see how we do this */
+    i_seed: Uint32Array; /* this is a pointer to an [Int32], see how we do this */
 }
+
+
