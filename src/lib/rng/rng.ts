@@ -170,6 +170,7 @@ function ran_array(
   for (i = 0; i < LL; i++, j++) ran_x[i] = mod_diff(aa[j - KK], aa[j - LL]);
   for (; i < KK; i++, j++) ran_x[i] = mod_diff(aa[j - KK], ran_x[i - LL]);
 }
+
 function ran_arr_cycle(): number {
   ran_array(ran_arr_buf, QUALITY);
   ran_arr_buf[KK] = -1;
@@ -282,10 +283,10 @@ function unif_rand(): number {
       ); /* in [0,1) ,  ^ means XOR */
     }
     case IRNGType.MERSENNE_TWISTER:
-    // TODO: return fixup( MT_genrand() );
+      return fixup( MT_genrand() );
     case IRNGType.KNUTH_TAOCP:
     case IRNGType.KNUTH_TAOCP2:
-    // TODO: return fixup( KT_next() * KT );
+       return fixup( KT_next() * KT );
     //case IRNGType.USER_UNIF:
     // TODO: return UserUnif();
     case IRNGType.LECUYER_CMRG: {
@@ -486,201 +487,47 @@ function MT_sgenrand(seed: number) {
    can take any values except all zeros. 
 */
 
-/*
+function MT_genrand() {
+  let y: number;
+  let mag01: number[] = [0x0, MATRIX_A];
+  /* mag01[x] = x * MATRIX_A  for x=0,1 */
+  // ran_x points to the common buffer
+  const dummy = ran_x;
 
-   
-   static void GetRNGkind(SEXP seeds);
-   {
-       // Load RNG_kind, N01_kind from .Random.seed if present 
-       int; tmp,                                                                                                                               * is;
-       RNGtype; newRNG; N01type; newN01;
-   
-       if (isNull(seeds))
-       seeds = GetSeedsFromVar();
-       if (seeds === R_UnboundValue) return;
-       if (!isInteger(seeds)) {
-       if (seeds === R_MissingArg) // How can this happen? 
-           error(_("'.Random.seed' is a missing argument with no default"));
-       warning(_("'.Random.seed' is not an integer vector but of type '%s', so ignored"),
-           type2char(TYPEOF(seeds)));
-       goto; invalid;
-       }
-       is = INTEGER(seeds);
-       tmp = is[0];
-       // avoid overflow here: max current value is 705 
-       if (tmp === NA_INTEGER || tmp < 0 || tmp > 1000) {
-       warning(_("'.Random.seed[1]' is not a valid integer, so ignored"));
-       goto; invalid;
-       }
-       newRNG = (RNGtype) (tmp % 100);
-       newN01 = (N01type) (tmp / 100);
-       if (newN01 > KINDERMAN_RAMAGE) {
-       warning(_("'.Random.seed[1]' is not a valid Normal type, so ignored"));
-       goto; invalid;
-       }
-       switch (newRNG) {
-       case WICHMANN_HILL:
-       case MARSAGLIA_MULTICARRY:
-       case SUPER_DUPER:
-       case MERSENNE_TWISTER:
-       case KNUTH_TAOCP:
-       case KNUTH_TAOCP2:
-       case LECUYER_CMRG:
-       break;
-       case USER_UNIF:
-       if (!User_unif_fun) {
-           warning(_("'.Random.seed[1] = 5' but no user-supplied generator, so ignored"));
-           goto; invalid;
-       }
-       break;
-       default:
-       warning(_("'.Random.seed[1]' is not a valid RNG kind so ignored"));
-       goto; invalid;
-       }
-       RNG_kind = newRNG; N01_kind = newN01;
-       return;
-   invalid:
-       RNG_kind = RNG_DEFAULT; N01_kind = N01_DEFAULT;
-       Randomize(RNG_kind);
-       return;
-   }
-   
-   
-   void GetRNGstate();
-   {
-       // Get  .Random.seed  into proper variables 
-       int; len_seed;
-       SEXP; seeds;
-   
-       // look only in the workspace 
-       seeds = GetSeedsFromVar();
-       if (seeds === R_UnboundValue) {
-       Randomize(RNG_kind);
-       } else {
-       GetRNGkind(seeds);
-       len_seed = RNG_Table[RNG_kind].n_seed;
-       // Not sure whether this test is needed: wrong for USER_UNIF 
-       if (LENGTH(seeds) > 1 && LENGTH(seeds) < len_seed + 1)
-           error(_("'.Random.seed' has wrong length"));
-       if (LENGTH(seeds) === 1 && RNG_kind !== USER_UNIF)
-           Randomize(RNG_kind);
-       else {
-           int; j,                                                                                                                                           * is; = INTEGER(seeds);
-           for (j = 1; j <= len_seed; j++)
-           RNG_Table[RNG_kind].i_seed[j - 1] = is[j];
-           FixupSeeds(RNG_kind, 0);
-       }
-       }
-   }
-   
-   void PutRNGstate();
-   {
-       // Copy out seeds to  .Random.seed  
-       int; len_seed, j;
-       SEXP; seeds;
-   
-       if (RNG_kind > LECUYER_CMRG || N01_kind > KINDERMAN_RAMAGE) {
-       warning('Internal .Random.seed is corrupt: not saving');
-       return;
-       }
-   
-       len_seed = RNG_Table[RNG_kind].n_seed;
-   
-       PROTECT(seeds = allocVector(INTSXP, len_seed + 1));
-   
-       INTEGER(seeds)[0] = RNG_kind + 100 * N01_kind;
-       for (j = 0; j < len_seed; j++)
-       INTEGER(seeds)[j + 1] = RNG_Table[RNG_kind].i_seed[j];
-   
-       // assign only in the workspace 
-       defineVar(R_SeedsSymbol, seeds, R_GlobalEnv);
-       UNPROTECT(1);
-   }
-   
-   
-   static void Norm_kind(N01type kind);
-   {
-       // N01type is an enumeration type, so this will probably get
-       //   mapped to an unsigned integer type. 
-       if (kind === (N01type) - 1) kind = N01_DEFAULT;
-       if (kind > KINDERMAN_RAMAGE)
-       error(_("invalid Normal type in 'RNGkind'"));
-       if (kind === USER_NORM) {
-       User_norm_fun = R_FindSymbol('user_norm_rand', '', NULL);
-       if (!User_norm_fun) error(_("'user_norm_rand' not in load table"));
-       }
-       GetRNGstate(); // might not be initialized 
-       if (kind === BOX_MULLER)
-       BM_norm_keep = 0.0; // zap Box-Muller history
-       N01_kind = kind;
-       PutRNGstate();
-   }
-   
-   
-   //------ .Internal interface ------------------------
-   
-   SEXP; attribute_hidden; do_RNGkind (SEXP call, SEXP op, SEXP args, SEXP env);
-   {
-       SEXP; ans, rng, norm;
-   
-       checkArity(op, args);
-       GetRNGstate(); // might not be initialized 
-       PROTECT(ans = allocVector(INTSXP, 2));
-       INTEGER(ans)[0] = RNG_kind;
-       INTEGER(ans)[1] = N01_kind;
-       rng = CAR(args);
-       norm = CADR(args);
-       GetRNGkind(R_NilValue); // pull from .Random.seed if present 
-       if (!isNull(rng)) { // set a new RNG kind 
-       RNGkind((RNGtype) asInteger(rng));
-       }
-       if (!isNull(norm)) { // set a new normal kind 
-       Norm_kind((N01type) asInteger(norm));
-       }
-       UNPROTECT(1);
-       return ans;
-   }
-   
-   
-   SEXP; attribute_hidden; do_setseed (SEXP call, SEXP op, SEXP args, SEXP env);
-   {
-       SEXP; skind, nkind;
-       int; seed;
-   
-       checkArity(op, args);
-       if (!isNull(CAR(args))) {
-       seed = asInteger(CAR(args));
-       if (seed === NA_INTEGER)
-           error(_('supplied seed is not a valid integer'));
-       } else seed = TimeToSeed();
-       skind = CADR(args);
-       nkind = CADDR(args);
-       GetRNGkind(R_NilValue); // pull RNG_kind, N01_kind from
-                      //.Random.seed if present 
-       if (!isNull(skind)) RNGkind((RNGtype) asInteger(skind));
-       if (!isNull(nkind)) Norm_kind((N01type) asInteger(nkind));
-       RNG_Init(RNG_kind, (Int32) seed); // zaps BM history 
-       PutRNGstate();
-       return R_NilValue;
-   }
-   
-   
-   // S COMPATIBILITY 
-   
-   // The following entry points provide compatibility with S. 
-   // These entry points should not be used by new R code. 
-   
-   void seed_in(long * ignored);
-   {
-       GetRNGstate();
-   }
-   
-   void seed_out(long * ignored);
-   {
-       PutRNGstate();
-   }
-   
-  */
+  mti = dummy[0];
+
+  if (mti >= N) {
+    /* generate N words at one time */
+    let kk;
+
+    if (mti === N + 1)
+      /* if sgenrand() has not been called, */
+      MT_sgenrand(4357); /* a default initial seed is used   */
+
+    for (kk = 0; kk < N - M; kk++) {
+      y = (mt[kk] & UPPER_MASK) | (mt[kk + 1] & LOWER_MASK);
+      mt[kk] = mt[kk + M] ^ (y >> 1) ^ mag01[y & 0x1];
+    }
+    for (; kk < N - 1; kk++) {
+      y = (mt[kk] & UPPER_MASK) | (mt[kk + 1] & LOWER_MASK);
+      mt[kk] = mt[kk + (M - N)] ^ (y >> 1) ^ mag01[y & 0x1];
+    }
+    y = (mt[N - 1] & UPPER_MASK) | (mt[0] & LOWER_MASK);
+    mt[N - 1] = mt[M - 1] ^ (y >> 1) ^ mag01[y & 0x1];
+
+    mti = 0;
+  }
+
+  y = mt[mti++];
+  y ^= TEMPERING_SHIFT_U(y);
+  y ^= TEMPERING_SHIFT_S(y) & TEMPERING_MASK_B;
+  y ^= TEMPERING_SHIFT_T(y) & TEMPERING_MASK_C;
+  y ^= TEMPERING_SHIFT_L(y);
+  dummy[0] = mti;
+
+  return y * 2.3283064365386963e-10; /* reals: [0,1)-interval */
+}
+
 
 function KT_next() {
   if (KT_pos() >= 100) {
@@ -696,24 +543,6 @@ export function RNG_Init_R_KT(seed: number): number[] {
   KT_pos(100);
 }
 
-/*
-
-function GetRNGstate(void);
-void PutRNGstate(void);
-
-double; unif_rand(void);
-double; R_unif_index(double);
-/* These are also defined in Rmath.h */
-//double; norm_rand(void);
-//double; exp_rand(void);
-
-//typedef; unsigned; int; Int32;
-//double * user_unif_rand(void);
-//void user_unif_init(Int32);
-//int * user_unif_nseed(void);
-//int * user_unif_seedloc(void);
-
-//double * user_norm_rand(void);
 
 function findPartial(target: string) {
   return (str: string) => str.toLocaleUpperCase().startsWith(target);
@@ -725,17 +554,15 @@ interface IPutRNGStateArgs {
 }
 
 function PutRNGstate({ pUnifKind, seed }: IPutRNGStateArgs) {
- 
   let errors = 0;
 
   seed = seed || [];
-  
-  let select = RNGTable.find(
-    (rec: IRNGTab) => rec.kind === pUnifKind
-  );
+
+  let select = RNGTable.find((rec: IRNGTab) => rec.kind === pUnifKind);
 
   if (select && (seed.length > select.n_seed || seed.length === 0)) {
-    seed.length && warning(`${select.kind}:Incorrect seedlength, re - initialize`);
+    seed.length &&
+      warning(`${select.kind}:Incorrect seedlength, re - initialize`);
     Randomize(select.kind);
     return;
   }
@@ -745,11 +572,10 @@ function PutRNGstate({ pUnifKind, seed }: IPutRNGStateArgs) {
     return;
   }
 
-  error(`Ìnternal Error, cannot find record; for RNG[${pUnifKind}`);
+  error(`Internal Error, cannot find record; for RNG[${pUnifKind}`);
 }
 
 function RNGkind(newUniformKind?: string) {
-  
   let uniform = EnumValues.getNames(IRNGType);
 
   if (newUniformKind) {
@@ -774,7 +600,6 @@ function RNGkind(newUniformKind?: string) {
   };
 }
 
-
 function N01kind(newNormKind?: string) {
   let norm = EnumValues.getNames(IN01Type);
 
@@ -790,8 +615,10 @@ function N01kind(newNormKind?: string) {
 
     N01_kind = sn; //set new global value
     RNGTable[RNG_kind].Nkind = sn;
+    if (sn === IN01Type.BOX_MULLER){
+        BM_norm_keep = 0;
+    }
     PutRNGstate({ pUnifKind: RNG_kind }); // set seeds, but give user to adjust after
-    
   }
   return (seed?: number[]) => {
     if (seed) {
@@ -800,4 +627,3 @@ function N01kind(newNormKind?: string) {
     return cloneDeep(RNGTable[RNG_kind]);
   };
 }
-

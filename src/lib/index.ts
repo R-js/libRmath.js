@@ -11,5 +11,6 @@ export * from './f-distro';
 export * from './gamma';
 export * from './geometric';
 export * from './log';
+export * from './rng';
 
 
