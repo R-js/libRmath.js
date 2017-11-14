@@ -38,6 +38,7 @@ import { TAOCP1997init } from './knuth_taocp';
 
 const commonBuffer = new ArrayBuffer(625 * 4); //uint32
 const ran_x = new Uint32Array(commonBuffer);
+let BM_norm_keep: number = 0; //Box Muller
 
 const RNGTable: IRNGTab[] = [
   {
@@ -139,6 +140,7 @@ const TEMPERING_SHIFT_L = (y: number) => y >> 18;
 // Mersenne Twister  Ends
 // Mersenne Twister  Ends
 let RNG_kind: IRNGType = IRNGType.MERSENNE_TWISTER;
+let N01_kind: IN01Type;
 
 const KT_pos = (s?: number) => {
   if (s === undefined) {
@@ -321,12 +323,12 @@ function unif_rand(): number {
 
 /* we must mask global variable here, as I1-I3 hide RNG_kind
    and we want the argument */
-function FixupSeeds(RNG_kind: IRNGType, initial: number): void {
+function FixupSeeds(kind: IRNGType, initial: number): void {
   /* Depending on RNG, set 0 values to non-0, etc. */
 
   let j: number;
   let notallzero = 0;
-  const seeds = RNGTable[RNG_kind].i_seed;
+  const seeds = RNGTable[kind].i_seed;
 
   /* Set 0 to 1 :
           for(j = 0; j <= RNG_Table[RNG_kind].n_seed - 1; j++)
@@ -360,13 +362,13 @@ function FixupSeeds(RNG_kind: IRNGType, initial: number): void {
       /* No action unless user has corrupted .Random.seed */
       if (seeds[0] <= 0) seeds[0] = 624;
       /* check for all zeroes */
-      if (seeds.slice(1).find(v => !!v)) Randomize(RNG_kind);
+      if (seeds.slice(1).find(v => !!v)) Randomize(kind);
       break;
     case IRNGType.KNUTH_TAOCP:
     case IRNGType.KNUTH_TAOCP2:
       if (seeds[100] <= 0) seeds[100] = 100;
       /* check for all zeroes */
-      if (seeds.find(v => !!v)) Randomize(RNG_kind);
+      if (seeds.find(v => !!v)) Randomize(kind);
       break;
     // case IRNGType.USER_UNIF:
     // break;
@@ -381,23 +383,23 @@ function FixupSeeds(RNG_kind: IRNGType, initial: number): void {
           if (tmp !== 0) notallzero = 1;
           if (tmp >= m1) allOK = 0;
         }
-        if (!notallzero || !allOK) Randomize(RNG_kind);
+        if (!notallzero || !allOK) Randomize(kind);
         for (j = 3; j < 6; j++) {
           tmp = seeds[j];
           if (tmp !== 0) notallzero = 1;
           if (tmp >= m2) allOK = 0;
         }
-        if (!notallzero || !allOK) Randomize(RNG_kind);
+        if (!notallzero || !allOK) Randomize(kind);
       }
       break;
     default:
-      throw error(`FixupSeeds: unimplemented RNG kind ${IRNGType[RNG_kind]}`);
+      throw error(`FixupSeeds: unimplemented RNG kind (ordinal): ${kind}`);
   }
 }
 
 function RNG_Init(kind: IRNGType, seed: number) {
-  let BM_norm_keep = 0.0; /* zap Box-Muller history */
-  const seeds = RNGTable[RNG_kind].i_seed;
+  BM_norm_keep = 0.0; /* zap Box-Muller history */
+  const seeds = RNGTable[kind].i_seed;
 
   /* Initial scrambling */
   for (let j = 0; j < 50; j++) {
@@ -432,7 +434,7 @@ function RNG_Init(kind: IRNGType, seed: number) {
       //TODO:
       break;
     default:
-      error(`RNG_Init: unimplemented RNG ${IRNGType[kind]} `);
+      error(`RNG_Init: unimplemented RNG (ordinal):${kind}`);
   }
 }
 
@@ -713,41 +715,29 @@ double; R_unif_index(double);
 
 //double * user_norm_rand(void);
 
-function PutRNGstate(pUnifKind: string, pNormKind: string, seed: number[]) {
-  let uniform = EnumValues.getNames(IRNGType);
-  let normal = EnumValues.getNames(IN01Type);
+function findPartial(target: string) {
+  return (str: string) => str.toLocaleUpperCase().startsWith(target);
+}
+
+interface IPutRNGStateArgs {
+  pUnifKind?: IRNGType;
+  seed?: number[];
+}
+
+function PutRNGstate({ pUnifKind, seed }: IPutRNGStateArgs) {
+ 
   let errors = 0;
 
   seed = seed || [];
-  const unifKind = pUnifKind.toLocaleUpperCase();
-  const normKind = pNormKind.toLocaleUpperCase();
-
-  function findPartial(target: string) {
-    return (str: string) => str.toLocaleUpperCase().startsWith(target);
-  }
-
-  if (!uniform.find(findPartial(unifKind))) {
-    return error(`Uniform random Generator Unkown:[${unifKind}`);
-  }
-  if (!normal.find(findPartial(normKind))) {
-    return error(`Normal random Generator Unkown:[${unifKind}`);
-  }
-  let su: IRNGType = IRNGType[unifKind as any] as any;
-  let sn: IN01Type = IN01Type[normKind as any] as any;
-
+  
   let select = RNGTable.find(
-    (rec: IRNGTab) => rec.kind === su && rec.Nkind === sn
+    (rec: IRNGTab) => rec.kind === pUnifKind
   );
 
-  if (select && seed.length > select.n_seed ) {
-      warning(`${unifKind}:Incorrect seedlength, re-initialize`);
-      Randomize(su);
-      return;
-  }
-
-  if (select && seed.length === 0) {
-     Randomize(su);
-     return;
+  if (select && (seed.length > select.n_seed || seed.length === 0)) {
+    seed.length && warning(`${select.kind}:Incorrect seedlength, re - initialize`);
+    Randomize(select.kind);
+    return;
   }
 
   if (select) {
@@ -755,8 +745,59 @@ function PutRNGstate(pUnifKind: string, pNormKind: string, seed: number[]) {
     return;
   }
 
-  error(`Ìnternal Error, cannot find record; for RNG[${unifKind}, ${normKind}`);
+  error(`Ìnternal Error, cannot find record; for RNG[${pUnifKind}`);
+}
+
+function RNGkind(newUniformKind?: string) {
+  
+  let uniform = EnumValues.getNames(IRNGType);
+
+  if (newUniformKind) {
+    const unifKind = newUniformKind.toLocaleUpperCase();
+    const found = uniform.find(findPartial(unifKind));
+
+    if (!found) {
+      return error(`Uniform random Generator is Unknown:[${unifKind}`);
+    }
+
+    let su: IRNGType = IRNGType[found as any] as any;
+
+    PutRNGstate({ pUnifKind: su }); // set seeds, but give user to adjust after
+    RNG_kind = su; //set new global value
+  }
+
+  return (seed?: number[]) => {
+    if (seed) {
+      PutRNGstate({ pUnifKind: RNG_kind, seed });
+    }
+    return cloneDeep(RNGTable[RNG_kind]);
+  };
 }
 
 
-// TODO: static void Norm_kind(N01type kind)..
+function N01kind(newNormKind?: string) {
+  let norm = EnumValues.getNames(IN01Type);
+
+  if (newNormKind) {
+    const normKind = newNormKind.toLocaleUpperCase();
+    const found = norm.find(findPartial(normKind));
+
+    if (!found) {
+      return error(`Normal random Generator, Unknown:[${normKind}`);
+    }
+
+    let sn: IN01Type = IN01Type[found as any] as any;
+
+    N01_kind = sn; //set new global value
+    RNGTable[RNG_kind].Nkind = sn;
+    PutRNGstate({ pUnifKind: RNG_kind }); // set seeds, but give user to adjust after
+    
+  }
+  return (seed?: number[]) => {
+    if (seed) {
+      PutRNGstate({ pUnifKind: RNG_kind, seed });
+    }
+    return cloneDeep(RNGTable[RNG_kind]);
+  };
+}
+
