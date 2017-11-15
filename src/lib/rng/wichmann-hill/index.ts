@@ -28,10 +28,7 @@
  */
 
 const { trunc } = Math;
-const frac = (x: number) => {
- // const tr = new Uint32Array([x]);
-  return x - trunc(x);
-};
+const frac = (x: number) => x - trunc(x);
 
 import { warning, error } from '../../_logging';
 import { IRNGType } from '../IRNGType';
@@ -66,14 +63,14 @@ export function unif_rand(): number {
 }
 
 function FixupSeeds(): void {
-  const seeds = WICHMANN_HILL.seed;
-  seeds[0] = seeds[0] % 30269;
-  seeds[1] = seeds[1] % 30307;
-  seeds[2] = seeds[2] % 30323;
+  const s = WICHMANN_HILL.seed;
+  s[0] = s[0] % 30269;
+  s[1] = s[1] % 30307;
+  s[2] = s[2] % 30323;
 
-  if (seeds[0] === 0) seeds[0] = 1;
-  if (seeds[1] === 0) seeds[1] = 1;
-  if (seeds[2] === 0) seeds[2] = 1;
+  if (s[0] === 0) s[0] = 1;
+  if (s[1] === 0) s[1] = 1;
+  if (s[2] === 0) s[2] = 1;
   return;
 }
 
@@ -85,16 +82,11 @@ export function init(seed: number) {
   for (let j = 0; j < 50; j++) {
     s[0] = (69069 * s[0] + 1);
   }
-  //console.log('seed after step1:', s);
   for (let j = 0; j < seeds.length; j++) {
     s[0] = (69069 * s[0] + 1);
     seeds[j] = s[0];
   }
-  //console.log('seed after step2:', s);
-  
-  //console.log(`init seeds:${Array.from(seeds)}`);
   FixupSeeds();
-  //console.log(`init seed after fixup:${Array.from(seeds)}`);
 }
 
 export function setSeed(seed: number[]) {
