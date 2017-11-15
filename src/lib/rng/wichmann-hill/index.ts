@@ -28,7 +28,10 @@
  */
 
 const { trunc } = Math;
-const frac = (x: number) => x - trunc(x);
+const frac = (x: number) => {
+ // const tr = new Uint32Array([x]);
+  return x - trunc(x);
+};
 
 import { warning, error } from '../../_logging';
 import { IRNGType } from '../IRNGType';
@@ -52,16 +55,13 @@ function fixup(x: number) {
 }
 
 export function unif_rand(): number {
-  const seeds = WICHMANN_HILL.seed;
-  seeds[0] *= 171 % 30269;
-  seeds[1] *= 172 % 30307;
-  seeds[2] *= 170 % 30323;
+  const s = WICHMANN_HILL.seed;
+  s[0] = s[0] * 171 % 30269;
+  s[1] = s[1] * 172 % 30307;
+  s[2] = s[2] * 170 % 30323;
 
-  let value = [30269.0, 30307.0, 30323.0].reduce((p, v, i) => {
-    p = p + seeds[i] / v;
-    return p;
-  }, 0);
-
+  let value = s[0] / 30269.0 + s[1] / 30307.0 + s[2] / 30323.0;
+ 
   return fixup(frac(value)); /* in [0,1) */
 }
 
@@ -80,15 +80,21 @@ function FixupSeeds(): void {
 export function init(seed: number) {
   const seeds = WICHMANN_HILL.seed;
   /* Initial scrambling */
-
+  const s = new Uint32Array([0]);
+  s[0] = seed;
   for (let j = 0; j < 50; j++) {
-    seed = 69069 * seed + 1;
+    s[0] = (69069 * s[0] + 1);
   }
+  console.log('seed after step1:', s);
   for (let j = 0; j < seeds.length; j++) {
-    seed = 69069 * seed + 1;
-    seeds[j] = seed;
+    s[0] = (69069 * s[0] + 1);
+    seeds[j] = s[0];
   }
+  console.log('seed after step2:', s);
+  
+  console.log(`init seeds:${Array.from(seeds)}`);
   FixupSeeds();
+  console.log(`init seed after fixup:${Array.from(seeds)}`);
 }
 
 export function setSeed(seed: number[]) {

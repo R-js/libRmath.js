@@ -37,7 +37,7 @@ import { timeseed } from './timeseed';
 import { TAOCP1997init } from './knuth_taocp';
 
 const commonBuffer = new ArrayBuffer(625 * 4); //uint32
-const ran_x = new Uint32Array(commonBuffer);
+const ran_x = new Int32Array(commonBuffer);
 let BM_norm_keep: number = 0; //Box Muller
 
 const RNGTable: IRNGTab[] = [
@@ -254,7 +254,8 @@ function unif_rand(): number {
       seeds[1] *= 172 % 30307;
       seeds[2] *= 170 % 30323;
 
-      let value = [30269.0, 30307.0, 30323.0].reduce((p, v, i) => {
+      let value = [30269.0, 30307.0, 30323.0]
+      .reduce((p, v, i) => {
         p = p + seeds[i] / v;
         return p;
       }, 0);
@@ -330,10 +331,6 @@ function FixupSeeds(kind: IRNGType, initial: number): void {
   let j: number;
   let notallzero = 0;
   const seeds = RNGTable[kind].i_seed;
-
-  /* Set 0 to 1 :
-          for(j = 0; j <= RNG_Table[RNG_kind].n_seed - 1; j++)
-          if(!RNG_Table[RNG_kind].i_seed[j]) RNG_Table[RNG_kind].i_seed[j]++; */
 
   switch (RNG_kind) {
     case IRNGType.WICHMANN_HILL:
