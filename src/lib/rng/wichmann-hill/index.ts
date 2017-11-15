@@ -85,16 +85,16 @@ export function init(seed: number) {
   for (let j = 0; j < 50; j++) {
     s[0] = (69069 * s[0] + 1);
   }
-  console.log('seed after step1:', s);
+  //console.log('seed after step1:', s);
   for (let j = 0; j < seeds.length; j++) {
     s[0] = (69069 * s[0] + 1);
     seeds[j] = s[0];
   }
-  console.log('seed after step2:', s);
+  //console.log('seed after step2:', s);
   
-  console.log(`init seeds:${Array.from(seeds)}`);
+  //console.log(`init seeds:${Array.from(seeds)}`);
   FixupSeeds();
-  console.log(`init seed after fixup:${Array.from(seeds)}`);
+  //console.log(`init seed after fixup:${Array.from(seeds)}`);
 }
 
 export function setSeed(seed: number[]) {
