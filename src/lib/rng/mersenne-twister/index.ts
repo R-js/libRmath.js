@@ -74,7 +74,7 @@ const MERSENNE_TWISTER = {
 /* helpers */
 const N = 624;
 const M = 397;
-const mt = new Int32Array(buf, 1);
+const mt = new Int32Array(buf, 4);
 let mti = N + 1;
 const MATRIX_A = 0x9908b0df; /* constant vector a */
 const UPPER_MASK = 0x80000000; /* most significant w-r bits */
@@ -103,15 +103,15 @@ function MT_sgenrand(seed: number) {
     for (let i = 0; i < N; i++) {
       mt[i] = seed & 0xffff0000;
       seed = 69069 * seed + 1;
-      mt[i] |= (seed & 0xffff0000) >> 16;
+      mt[i] |= (seed & 0xffff0000) >>> 16;
       seed = 69069 * seed + 1;
     }
     mti = N;
   }
 
 function MT_genrand() {
-    let y: number;
-    let mag01: number[] = [0x0, MATRIX_A];
+    let y = new Int32Array(1);
+    let mag01 = new Int32Array([0x0, MATRIX_A]);
     /* mag01[x] = x * MATRIX_A  for x=0,1 */
     // ran_x points to the common buffer
     const dummy = MERSENNE_TWISTER.seed;
@@ -127,27 +127,27 @@ function MT_genrand() {
         MT_sgenrand(4357); /* a default initial seed is used   */
   
       for (kk = 0; kk < N - M; kk++) {
-        y = (mt[kk] & UPPER_MASK) | (mt[kk + 1] & LOWER_MASK);
-        mt[kk] = mt[kk + M] ^ (y >> 1) ^ mag01[y & 0x1];
+        y[0] = (mt[kk] & UPPER_MASK) | (mt[kk + 1] & LOWER_MASK);
+        mt[kk] = mt[kk + M] ^ (y[0] >>> 1) ^ mag01[y[0] & 0x1];
       }
       for (; kk < N - 1; kk++) {
-        y = (mt[kk] & UPPER_MASK) | (mt[kk + 1] & LOWER_MASK);
-        mt[kk] = mt[kk + (M - N)] ^ (y >> 1) ^ mag01[y & 0x1];
+        y[0] = (mt[kk] & UPPER_MASK) | (mt[kk + 1] & LOWER_MASK);
+        mt[kk] = mt[kk + (M - N)] ^ (y[0] >>> 1) ^ mag01[y[0] & 0x1];
       }
-      y = (mt[N - 1] & UPPER_MASK) | (mt[0] & LOWER_MASK);
-      mt[N - 1] = mt[M - 1] ^ (y >> 1) ^ mag01[y & 0x1];
+      y[0] = (mt[N - 1] & UPPER_MASK) | (mt[0] & LOWER_MASK);
+      mt[N - 1] = mt[M - 1] ^ (y[0] >>> 1) ^ mag01[y[0] & 0x1];
   
       mti = 0;
     }
   
-    y = mt[mti++];
-    y ^= TEMPERING_SHIFT_U(y);
-    y ^= TEMPERING_SHIFT_S(y) & TEMPERING_MASK_B;
-    y ^= TEMPERING_SHIFT_T(y) & TEMPERING_MASK_C;
-    y ^= TEMPERING_SHIFT_L(y);
+    y[0] = mt[mti++];
+    y[0] ^=  y[0] >>> 11;
+    y[0] ^=  y[0] << 7 & TEMPERING_MASK_B;
+    y[0] ^=  y[0] << 15 & TEMPERING_MASK_C;
+    y[0] ^=  y[0] >>> 18;
     dummy[0] = mti;
   
-    return y * 2.3283064365386963e-10; /* reals: [0,1)-interval */
+    return new Uint32Array(y.buffer)[0] * 2.3283064365386963e-10; /* reals: [0,1)-interval */
   }
 
 export function unif_rand(): number {
@@ -160,10 +160,10 @@ function FixupSeeds(): void {
   /* No action unless user has corrupted .Random.seed */
   if (s[0] <= 0) s[0] = 624;
   /* check for all zeroes */
-  if (s.slice(1).find(v => !!v)) {
+  // note mt is equal to s.slice(1)
+  if (mt.find(v => !v) !== undefined) {
       init(timeseed());
   }
- 
   return;
 }
 
@@ -195,3 +195,7 @@ export function setSeed(seed: number[]) {
 export function getSeed() {
   return Array.from(MERSENNE_TWISTER.seed);
 }
+
+
+//kickOff
+FixupSeeds();
