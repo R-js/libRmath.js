@@ -161,7 +161,7 @@ function FixupSeeds(): void {
   if (s[0] <= 0) s[0] = 624;
   /* check for all zeroes */
   // note mt is equal to s.slice(1)
-  if (mt.find(v => !v) !== undefined) {
+  if (mt.find(v => !!v) === undefined) {
       init(timeseed());
   }
   return;

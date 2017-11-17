@@ -34,7 +34,7 @@ import { frac, trunc } from '~common';
 
 import { warning, error } from '~logging';
 import { timeseed } from './timeseed';
-import { TAOCP1997init } from './knuth_taocp';
+import { TAOCP1997init } from './knuth_taocp/taocp-1997-init';
 
 const commonBuffer = new ArrayBuffer(625 * 4); //uint32
 const ran_x = new Int32Array(commonBuffer);
