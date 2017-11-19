@@ -41,9 +41,8 @@ const MM = 1 << 30; /* the modulus */
 const KK = 100; /* the long lag */
 const LL = 37; /* the short lag */
 const QUALITY = 1009; /* recommended quality level for high-res use */
-const qualityBuffer = new ArrayBuffer(QUALITY);
+const qualityBuffer = new ArrayBuffer(QUALITY * 4);
 const ran_arr_buf = new Uint32Array(qualityBuffer); //uint32
-let ran_arr_ptr: Uint32Array | undefined; /* the next random number, or -1 */
 const KT = 9.31322574615479e-10; /* = 2^-30 */
 
 const mod_diff = (x: number, y: number) => (x - y) & (MM - 1);
@@ -65,8 +64,6 @@ function ran_array(
 function ran_arr_cycle(): number {
   ran_array(ran_arr_buf, QUALITY);
   ran_arr_buf[KK] = -1;
-  ran_arr_ptr = new Uint32Array(qualityBuffer);
-
   return ran_arr_buf[0];
 }
 
@@ -79,9 +76,10 @@ function KT_next() {
   return s[KNUTH_TAOCP.KT_pos++];
 }
 
-function RNG_Init_R_KT(seed: number): number[] {
-    return TAOCP1997init(seed % 1073741821).slice(0, 100);
-    KNUTH_TAOCP.KT_pos = 100;
+function RNG_Init_R_KT(seed: number) {
+  KNUTH_TAOCP.seed.set(TAOCP1997init(seed % 1073741821));
+  KNUTH_TAOCP.KT_pos = 100;
+  FixupSeeds();
 }
 
 function fixup(x: number) {
@@ -97,15 +95,22 @@ export function unif_rand(): number {
 }
 
 function FixupSeeds(): void {
-  const s = KNUTH_TAOCP.seed;
-  if (s[100] <= 0) s[100] = 100;
+  if (KNUTH_TAOCP.KT_pos <= 0) KNUTH_TAOCP.KT_pos = 100;
   /* check for all zeroes */
+  const s = KNUTH_TAOCP.seed;
   if (s.find(v => !!v) === undefined) init(timeseed());
   return;
 }
 
 export function init(seed: number) {
-    RNG_Init_R_KT(seed);
+
+  /* Initial scrambling */
+  const s = new Uint32Array([0]);
+  s[0] = seed;
+  for (let j = 0; j < 50; j++) {
+    s[0] = (69069 * s[0] + 1);
+  }
+  RNG_Init_R_KT(s[0]);
 }
 
 export function setSeed(seed: number[]) {

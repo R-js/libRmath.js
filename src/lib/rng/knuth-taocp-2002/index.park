@@ -1,153 +1,28 @@
 'use strict';
 
-/*
- *  Javascript conversion by Jacob Bogers Nov 2017
- *  jkfbogers@gmail.com
- * 
- *  R : A Computer Language for Statistical Data Analysis
- *  Copyright (C) 1995, 1996  Robert Gentleman and Ross Ihaka
- *  Copyright (C) 1997--2016  The R Core Team
- *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, a copy is available at
- *  https://www.R-project.org/Licenses/
- */
+const { trunc } = Math;
+const frac = (x: number) => x - trunc(x);
 
-import { EnumValues } from 'enum-values';
-import includes = require('lodash.includes');
-import cloneDeep = require('lodash.clonedeep');
+import { warning, error } from '../../_logging';
+import { IRNGType } from '../IRNGType';
+import { timeseed } from '../timeseed';
+//import { TAOCP1997init } from './taocp-1997-init';
 
-import { IN01Type } from './IN01Type';
-import { IRNGType } from './IRNGType';
-import { IRNGTab } from './IRNGTab';
-import { frac, trunc } from '~common';
+const SEED_LEN = 101;
+const buf = new ArrayBuffer(SEED_LEN * 4);
 
-import { warning, error } from '~logging';
-import { timeseed } from './timeseed';
-import { TAOCP1997init } from './knuth_taocp/taocp-1997-init';
-
-const commonBuffer = new ArrayBuffer(625 * 4); //uint32
-const ran_x = new Int32Array(commonBuffer);
-let BM_norm_keep: number = 0; //Box Muller
-
-const RNGTable: IRNGTab[] = [
-  {
-    kind: IRNGType.WICHMANN_HILL,
-    Nkind: IN01Type.BUGGY_KINDERMAN_RAMAGE,
-    name: 'Wichmann-Hill',
-    n_seed: 3,
-    i_seed: new Uint32Array(commonBuffer, 0, 3 * 4).fill(0)
+const KNUTH_TAOCP = {
+  kind: IRNGType.KNUTH_TAOCP2002,
+  name: 'Knuth-TAOCP-2002',
+  seed: new Int32Array(buf).fill(0),
+  get KT_pos() {
+    return this.seed[100];
   },
-  {
-    kind: IRNGType.MARSAGLIA_MULTICARRY,
-    Nkind: IN01Type.BUGGY_KINDERMAN_RAMAGE,
-    name: 'Marsaglia-MultiCarry',
-    n_seed: 2,
-    i_seed: new Uint32Array(commonBuffer, 0, 2 * 4).fill(0)
-  },
-  {
-    kind: IRNGType.SUPER_DUPER,
-    Nkind: IN01Type.BUGGY_KINDERMAN_RAMAGE,
-    name: 'Super-Duper',
-    n_seed: 2,
-    i_seed: new Uint32Array(commonBuffer, 0, 2 * 4).fill(0)
-  },
-  {
-    kind: IRNGType.MERSENNE_TWISTER,
-    Nkind: IN01Type.BUGGY_KINDERMAN_RAMAGE,
-    name: 'Mersenne-Twister',
-    n_seed: 1 + 624, // literal copy from R-source, I will keep it like this
-    i_seed: new Uint32Array(commonBuffer, 0, 625 * 4).fill(0)
-  },
-  {
-    kind: IRNGType.KNUTH_TAOCP2002,
-    Nkind: IN01Type.BUGGY_KINDERMAN_RAMAGE,
-    name: 'Knuth-TAOCP',
-    n_seed: 1 + 100, // literal copy from R-source, I will keep it like this
-    i_seed: new Uint32Array(commonBuffer, 0, 101 * 4).fill(0)
-  },
-  /* {
-    kind: IRNGType.USER_UNIF,
-    Nkind: IN01Type.BUGGY_KINDERMAN_RAMAGE,
-    name: 'User-supplied',
-    n_seed: 0,
-    i_seed: new Uint32Array(commonBuffer, 0, 0 * 4).fill(0)
-  },*/
-  {
-    kind: IRNGType.KNUTH_TAOCP2002,
-    Nkind: IN01Type.BUGGY_KINDERMAN_RAMAGE,
-    name: 'Knuth-TAOCP-2002',
-    n_seed: 1 + 100, // literal copy from R-source, I will keep it like this
-    i_seed: new Uint32Array(commonBuffer, 0, 101 * 4).fill(0)
-  },
-  {
-    kind: IRNGType.LECUYER_CMRG,
-    Nkind: IN01Type.BUGGY_KINDERMAN_RAMAGE,
-    name: "L'Ecuyer-CMRG",
-    n_seed: 6,
-    i_seed: new Uint32Array(commonBuffer, 0, 6 * 4).fill(0)
+  set KT_pos(v: number) {
+    this.seed[100] = v;
   }
-];
-
-const d2_32 = 4294967296; /* = (double) */
-const i2_32m1 = 2.328306437080797e-10; /* = 1/(2^32 - 1) */
-const KT = 9.31322574615479e-10; /* = 2^-30 */
-const m1 = 4294967087;
-const m2 = 4294944443;
-const normc = 2.328306549295727688e-10;
-const a12 = 1403580;
-const a13n = 810728;
-const a21 = 527612;
-const a23n = 1370589;
-
-const KK = 100; /* the long lag */
-const LL = 37; /* the short lag */
-const MM = 1 << 30; /* the modulus */
-const TT = 70; /* guaranteed separation between streams */
-
-//Mersenne Twister
-//Mersenne Twister
-//Mersenne Twister
-
-/* From http://www.math.keio.ac.jp/~matumoto/emt.html */
-/* Period parameters */
-
-const N = 624;
-const M = 397;
-const MATRIX_A = 0x9908b0df; /* constant vector a */
-const UPPER_MASK = 0x80000000; /* most significant w-r bits */
-const LOWER_MASK = 0x7fffffff; /* least significant r bits */
-
-/* Tempering parameters */
-const TEMPERING_MASK_B = 0x9d2c5680;
-const TEMPERING_MASK_C = 0xefc60000;
-const TEMPERING_SHIFT_U = (y: number) => y >> 11;
-const TEMPERING_SHIFT_S = (y: number) => y << 7;
-const TEMPERING_SHIFT_T = (y: number) => y << 15;
-const TEMPERING_SHIFT_L = (y: number) => y >> 18;
-
-// Mersenne Twister  Ends
-// Mersenne Twister  Ends
-// Mersenne Twister  Ends
-let RNG_kind: IRNGType = IRNGType.MERSENNE_TWISTER;
-let N01_kind: IN01Type;
-
-const KT_pos = (s?: number) => {
-  if (s === undefined) {
-    return RNGTable[IRNGType.KNUTH_TAOCP].i_seed[100];
-  }
-  return (RNGTable[IRNGType.KNUTH_TAOCP].i_seed[100] = 0);
 };
+
 
 const mod_diff = (x: number, y: number) => (x - y) & (MM - 1);
 const is_odd = (x: number) => x & 1; /* units bit of x */
@@ -244,158 +119,18 @@ function RNG_Init_KT2(seed: number) {
 }
 
 function unif_rand(): number {
-  const seeds = RNGTable[RNG_kind].i_seed;
-
-  switch (RNG_kind) {
-    default:
-      throw error(`unif_rand: unimplemented RNG kind ${IRNGType[RNG_kind]}`);
-    case IRNGType.WICHMANN_HILL:
-      seeds[0] *= 171 % 30269;
-      seeds[1] *= 172 % 30307;
-      seeds[2] *= 170 % 30323;
-
-      let value = [30269.0, 30307.0, 30323.0]
-      .reduce((p, v, i) => {
-        p = p + seeds[i] / v;
-        return p;
-      }, 0);
-
-      return fixup(frac(value)); /* in [0,1) */
-
-    case IRNGType.MARSAGLIA_MULTICARRY /* 0177777(octal) == 65535(decimal)*/: {
-      seeds[0] = 36969 * (seeds[0] & 65535) + (seeds[0] >> 16);
-      seeds[1] = 18000 * (seeds[1] & 65535) + (seeds[1] >> 16);
-
-      return fixup(
-        ((seeds[0] << 16) ^ (seeds[1] & 65535)) * i2_32m1
-      ); /* in [0,1) */
-    }
-    case IRNGType.SUPER_DUPER: {
-      /* This is Reeds et al (1984) implementation;
-             * modified using __unsigned__	seeds instead of signed ones
-             */
-
-      seeds[0] ^=
-        (seeds[0] >> 15) & 0x1ffff; /* ) 0377777 = 0x1FFFF Tausworthe */
-      seeds[0] ^= seeds[0] << 17;
-      seeds[1] *= 69069; /* Congruential */
-      return fixup(
-        (seeds[0] ^ seeds[1]) * i2_32m1
-      ); /* in [0,1) ,  ^ means XOR */
-    }
-    case IRNGType.MERSENNE_TWISTER:
-      return fixup( MT_genrand() );
-    case IRNGType.KNUTH_TAOCP:
-    case IRNGType.KNUTH_TAOCP2002:
        return fixup( KT_next() * KT );
-    //case IRNGType.USER_UNIF:
-    // TODO: return UserUnif();
-    case IRNGType.LECUYER_CMRG: {
-      /* Based loosely on the GPL-ed version of
-                   http://www.iro.umontreal.ca/~lecuyer/myftp/streams00/c2010/RngStream.c
-                   but using int_least64_t, which C99 guarantees.
-                */
-      let k: number;
-      let p1: number;
-      let p2: number;
-
-      const seeds = RNGTable[RNG_kind].i_seed;
-
-      p1 = a12 * trunc(seeds[1]) - a13n * trunc(seeds[1]);
-      /* p1 % m1 would surely do */
-      k = trunc(p1 / m1);
-      p1 -= k * m1;
-      if (p1 < 0.0) p1 += m1;
-      seeds[0] = seeds[1];
-      seeds[1] = seeds[2];
-      seeds[2] = trunc(p1);
-
-      p2 = a21 * trunc(seeds[5]) - a23n * trunc(seeds[2]);
-      k = trunc(p2 / m2);
-      p2 -= k * m2;
-      if (p2 < 0.0) p2 += m2;
-      seeds[2] = seeds[3];
-      seeds[3] = seeds[4];
-      seeds[4] = p2;
-
-      return (p1 > p2 ? p1 - p2 : p1 - p2 + m1) * normc;
-    }
-  }
 }
 
 /* we must mask global variable here, as I1-I3 hide RNG_kind
    and we want the argument */
 function FixupSeeds(kind: IRNGType, initial: number): void {
-  /* Depending on RNG, set 0 values to non-0, etc. */
-
-  let j: number;
-  let notallzero = 0;
-  const seeds = RNGTable[kind].i_seed;
-
-  switch (RNG_kind) {
-    case IRNGType.WICHMANN_HILL:
-      seeds[0] = seeds[0] % 30269;
-      seeds[1] = seeds[1] % 30307;
-      seeds[2] = seeds[2] % 30323;
-
-      /* map values equal to 0 mod modulus to 1. */
-      if (seeds[0] === 0) seeds[0] = 1;
-      if (seeds[1] === 0) seeds[1] = 1;
-      if (seeds[2] === 0) seeds[2] = 1;
-      return;
-
-    case IRNGType.SUPER_DUPER:
-      if (seeds[0] === 0) seeds[0] = 1;
-      /* I2 = Congruential: must be ODD */
-      seeds[1] |= 1;
-      break;
-
-    case IRNGType.MARSAGLIA_MULTICARRY:
-      if (seeds[0] === 0) seeds[0] = 1;
-      if (seeds[1] === 0) seeds[1] = 1;
-      break;
-
-    case IRNGType.MERSENNE_TWISTER:
-      if (initial) seeds[0] = 624;
-      /* No action unless user has corrupted .Random.seed */
-      if (seeds[0] <= 0) seeds[0] = 624;
-      /* check for all zeroes */
-      if (seeds.slice(1).find(v => !!v)) Randomize(kind);
-      break;
-    case IRNGType.KNUTH_TAOCP:
-    case IRNGType.KNUTH_TAOCP2002:
       if (seeds[100] <= 0) seeds[100] = 100;
       /* check for all zeroes */
-      if (seeds.find(v => !!v)) Randomize(kind);
-      break;
-    // case IRNGType.USER_UNIF:
-    // break;
-    case IRNGType.LECUYER_CMRG:
-      /* first set: not all zero, in [0, m1)
-          second set: not all zero, in [0, m2) */
-      {
-        let tmp: number;
-        let allOK = 1;
-        for (j = 0; j < 3; j++) {
-          tmp = seeds[j];
-          if (tmp !== 0) notallzero = 1;
-          if (tmp >= m1) allOK = 0;
-        }
-        if (!notallzero || !allOK) Randomize(kind);
-        for (j = 3; j < 6; j++) {
-          tmp = seeds[j];
-          if (tmp !== 0) notallzero = 1;
-          if (tmp >= m2) allOK = 0;
-        }
-        if (!notallzero || !allOK) Randomize(kind);
-      }
-      break;
-    default:
-      throw error(`FixupSeeds: unimplemented RNG kind (ordinal): ${kind}`);
-  }
+      if (seeds.find(v => !!v)) Randomize(kind);    
 }
 
-function RNG_Init(kind: IRNGType, seed: number) {
+function RNG_Init( seed: number) {
   BM_norm_keep = 0.0; /* zap Box-Muller history */
   const seeds = RNGTable[kind].i_seed;
 
@@ -418,7 +153,7 @@ function RNG_Init(kind: IRNGType, seed: number) {
     case IRNGType.KNUTH_TAOCP:
       RNG_Init_R_KT(seed);
       break;
-    case IRNGType.KNUTH_TAOCP2002:
+    case IRNGType.KNUTH_TAOCP2:
       RNG_Init_KT2(seed);
       break;
     case IRNGType.LECUYER_CMRG:
@@ -536,7 +271,9 @@ function KT_next() {
 }
 
 export function RNG_Init_R_KT(seed: number) {
- TAOCP1997init(seed % 1073741821).slice(0, 100);
+  ran_x.set(
+    TAOCP1997init(seed % 1073741821).slice(0, 100)
+  );
   KT_pos(100);
 }
 
@@ -568,7 +305,6 @@ function PutRNGstate({ pUnifKind, seed }: IPutRNGStateArgs) {
     select.i_seed.set(seed);
     return;
   }
-
   error(`Internal Error, cannot find record; for RNG[${pUnifKind}`);
 }
 

@@ -12,5 +12,5 @@ export * from './gamma';
 export * from './geometric';
 export * from './log';
 export * from './rng';
-
+export * from './r-func';
 
