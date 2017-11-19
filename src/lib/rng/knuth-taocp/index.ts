@@ -97,7 +97,7 @@ export function unif_rand(): number {
 function FixupSeeds(): void {
   if (KNUTH_TAOCP.KT_pos <= 0) KNUTH_TAOCP.KT_pos = 100;
   /* check for all zeroes */
-  const s = KNUTH_TAOCP.seed;
+  const s = KNUTH_TAOCP.seed.slice(0, 100);
   if (s.find(v => !!v) === undefined) init(timeseed());
   return;
 }

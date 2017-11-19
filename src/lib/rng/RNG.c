@@ -727,14 +727,18 @@ static void ran_start(long seed)
 {
   register int t,j;
   long x[KK+KK-1];              /* the preparation buffer */
+  
   register long ss=(seed+2)&(MM-2);
+  
   for (j=0;j<KK;j++) {
     x[j]=ss;                      /* bootstrap the buffer */
     ss<<=1; if (ss>=MM) ss-=MM-2; /* cyclic shift 29 bits */
   }
+
   x[1]++;              /* make x[1] (and only x[1]) odd */
   for (ss=seed&(MM-1),t=TT-1; t; ) {
-    for (j=KK-1;j>0;j--) x[j+j]=x[j], x[j+j-1]=0; /* "square" */
+    for (j=KK-1;j>0;j--) 
+     x[j+j]=x[j], x[j+j-1]=0; /* "square" */
     for (j=KK+KK-2;j>=KK;j--)
       x[j-(KK-LL)]=mod_diff(x[j-(KK-LL)],x[j]),
       x[j-KK]=mod_diff(x[j-KK],x[j]);
