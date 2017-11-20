@@ -79,7 +79,7 @@ function ran_array(
 function ran_arr_cycle() {
   ran_array(ran_arr_buf, QUALITY);
   ran_arr_buf[KK] = -1;
-  //return ran_arr_buf[0];
+ 
 }
 
 function ran_start(_seed: number) {
