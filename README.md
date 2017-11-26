@@ -24,45 +24,7 @@ npm test
 
 ## Utility Functions
 
-### espilonNear, isEpsilonNear, DBL_EPSILON
-
-Check if 2 floating point numbers are indistinguishable close to each other, by checking if their difference is smaller then
-Number.EPSILON.
-
-
-```typescript
-
-   import {
-     isEpsilonNear, epsilonNear, DBL_EPSILON
-   } from 'lib-r-math.js';
-
-   let x: number = 1.0;
-   let y: number = 1.0 + DBL_EPSILON;
-   let z: number = 1.0 + 2 * DBL_EPSILON;
-   let yn = epsilonNear( y ,x ); // yn will be set to x
-   let zn = epsilonNear ( z, x); // zn will be set to z ( absolute distance from x greater then DBL_EPSILON)
-
-   isEpsilonNear(y,x); //true
-   isEpsilonNear(z,x); //false
-```
-
 ## Trigonometric Functions
-
-[R-reference](https://www.rdocumentation.org/packages/base/versions/3.3.3/topics/Trig)
-
-These functions give the obvious trigonometric functions. 
-They respectively compute the cosine, sine, tangent, arc-cosine, arc-sine, arc-tangent, and the two-argument arc-tangent.
-
-```typescript
- import { 
-   cos, sin,tan, // alias for Math.cos, Math.sin, Math.tan
-   acos, asin,atan, atan2, // alias for Math.acos, Math.atan, Math.atan2
-   cospi, sinpi, tanpi  //ported from libRmath.so
- } from 'lib-r-math.js';
- 
- let theta = cospi(0.5); // is 0
- theta = cospi(1);// is -1 
-```
 
 ## Progress (DONE and TODO)
 
