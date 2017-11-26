@@ -138,7 +138,6 @@ double unif_rand(void)
 
     case USER_UNIF:
 	return *((double *) User_unif_fun());
-
     case LECUYER_CMRG:
     {
 	/* Based loosely on the GPL-ed version of

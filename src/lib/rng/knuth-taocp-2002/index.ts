@@ -178,6 +178,7 @@ export function init(seed: number) {
   for (let j = 0; j < 50; j++) {
     s[0] = 69069 * s[0] + 1;
   }
+  console.log('after scrambling knuth', s);
   RNG_Init_KT2(s[0]);
 }
 
