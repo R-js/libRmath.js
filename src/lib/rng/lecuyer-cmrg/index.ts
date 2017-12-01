@@ -3,6 +3,8 @@
 const { trunc } = Math;
 const frac = (x: number) => x - trunc(x);
 
+
+
 import { warning, error } from '../../_logging';
 import { IRNGType } from '../IRNGType';
 import { timeseed } from '../timeseed';
@@ -15,8 +17,9 @@ const LECUYER_CMRG = {
   seed: new Int32Array(SEED_LEN).fill(0),
 };
 
-const a12 = 1403580; //least 64 bits
 const II =  LECUYER_CMRG.seed;
+
+const a12 = 1403580; //least 64 bits
 const a13n = 810728;
 const m2 = 4294944443;
 const m1 = 4294967087;
@@ -35,46 +38,41 @@ function fixup(x: number) {
   if (1.0 - x <= 0.0) return 1.0 - 0.5 * i2_32m1;
   return x;
 }
-/*
-#define II(i) (RNG_Table[RNG_kind].i_seed[i])
-#define m1    4294967087
-*/
-
-/*
-#define normc  2.328306549295727688e-10
-#define a12     (int_least64_t)1403580
-#define a13n    (int_least64_t)810728;
-#define a21     (int_least64_t)527612
-#define a23n    (int_least64_t)1370589
-*/
 
 export function unif_rand(): number {
 
-
-
-  const { trunc } = Math;
-
-  let k;
-  let p1; // least 64 bits
-  let p2; // least 64 bits
+  const { trunc, pow } = Math;
+  const pp2 = pow.bind(pow, 2);
+  const break32 = pp2(32);
   
-  p1 = a12 * II[1] - a13n * II[0];
-  /* p1 % m1 would surely do */
-  k =  trunc (p1 / m1);
-  p1 -= k * m1;
+  let k;
+  let p1;
+  let p2;
+  
+  p1 = a12 * new Uint32Array( [ II[1] ] )[0] 
+       - a13n * new Uint32Array( [ II[0] ] )[0];
+  //here, p1 is around 50 bits, worst case     
+  k  =  new Int32Array([p1 / m1])[0];
+  // here because k is capped to be 32 bits signed
+  
+  p1 -= k * m1; 
+  // here k*m1 is around 32*32 is 64 bits
+  
   if (p1 < 0.0) p1 += m1;
 
-  II[0] = II[1]; 
+  II[0] = II[1];
   II[1] = II[2];
-  II[2] = p1;
+  II[2] = new Int32Array([p1])[0];
 
-  p2 = a21 * II[5] - a23n * II[3];
-  k = trunc(p2 / m2);
+  p2 = a21 * new Uint32Array( [II[5]] )[0]
+        - a23n * new Uint32Array([II[3]])[0];
+  
+  k =  new Int32Array([p2 / m2])[0];
   p2 -= k * m2;
   if (p2 < 0.0) p2 += m2;
   II[3] = II[4]; 
   II[4] = II[5];
-  II[5] = trunc (p2);
+  II[5] = new Int32Array([p2])[0];
 
   return ( (p1 > p2) ? (p1 - p2) : (p1 - p2 + m1)) * normc;
 }
@@ -99,16 +97,16 @@ export function init(se: number) {
   for (let j = 0; j < 50; j++) {
     s[0] = 69069 * s[0] + 1;
   }
-  console.log('after scrambling', s);
+ 
   const seed = LECUYER_CMRG.seed;
 
   for (let j = 0; j < LECUYER_CMRG.seed.length; j++) {
     s[0] = (69069 * s[0] + 1);
     while (s[0] >= m2) {
-      console.log('looping,', s);
+    
       s[0] = (69069 * s[0] + 1);
     }
-    console.log('setting,', s);
+   
     seed[j] = s[0];
   }
 }

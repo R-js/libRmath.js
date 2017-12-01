@@ -12,7 +12,8 @@
         "lodash.defaults": "^4.2.0",
         "lodash.includes": "^4.3.0",
         "lodash.merge": "^4.6.0",
-        "moment": "^2.18.1"
+        "moment": "^2.18.1",
+        "n64": "0.0.18"
     },
     "description": "Javascript Pure Implementation of Statistical R \"core\" numerical libRmath.so",
     "devDependencies": {

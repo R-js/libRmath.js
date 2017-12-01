@@ -94,7 +94,6 @@ function ran_start(_seed: number) {
   //
   ss[0] = (se[0] + 2) & (MM - 2);
   //
-  console.log({ _seed, ss, se });
   for (j = 0; j < KK; j++) {
     x[j] = ss[0]; /* bootstrap the buffer */
     ss[0] = ss[0] << 1;
@@ -106,8 +105,6 @@ function ran_start(_seed: number) {
   //
   //
   x[1]++; /* make x[1] (and only x[1]) odd */
- // console.log(x);
-  //return;
   for (ss[0] = se[0] & (MM - 1), t = TT - 1; t; ) {
     for (j = KK - 1; j > 0; j--) {
       x[j + j] = x[j];
@@ -178,7 +175,7 @@ export function init(seed: number) {
   for (let j = 0; j < 50; j++) {
     s[0] = 69069 * s[0] + 1;
   }
-  console.log('after scrambling knuth', s);
+ 
   RNG_Init_KT2(s[0]);
 }
 
