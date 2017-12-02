@@ -4,10 +4,6 @@
  *  Javascript conversion by Jacob Bogers Nov 2017
  *  jkfbogers@gmail.com
  * 
- *  The Wichmann–Hill generator has a cycle length of 6.9536e12
- *  (= prod(p-1)/4, see Applied Statistics (1984) 33,
- *  123 which corrects the original article).
- * 
  *  R : A Computer Language for Statistical Data Analysis
  *  Copyright (C) 1995, 1996  Robert Gentleman and Ross Ihaka
  *  Copyright (C) 1997--2016  The R Core Team

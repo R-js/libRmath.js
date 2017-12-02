@@ -1,6 +1,19 @@
 # libRmath.js
-Javascript ( TypeScript ) Pure Implementation of Statistical R "core" numerical libRmath.so library found here
+
+Javascript ( TypeScript ) Pure Implementation of Statistical R "core" numerical `libRmath.so` library found here 
 https://svn.r-project.org/R/trunk/src/nmath/
+
+### Summary
+
+Porting `R` core is a daunting task, we want to achieve R fidelity on all functions that are ported from `R` to ```javascript``` by using static fixtures (generated in R language) to guarantee exact output replication of the ported functions.
+
+All functions in lib-R-core has been re-written to `Javascript` (`Typescript`).
+We are now in process of testing against fixture files generated from R and to prove
+fidelity with `R`.
+
+#### Node and Web
+
+The module is an umd The build process will package everything into a final file which can be used in a `<script>` tag or included with your favorite build system (webpack).
 
 ## Installation
 
@@ -8,26 +21,324 @@ https://svn.r-project.org/R/trunk/src/nmath/
 npm install --save lib-r-math.js
 ```
 
-## run tests
+# Table of Contents
+1. [Probability Random Number Generators](#1.-Probability-functions-Random-Number-Generators.)
+2. [Probability Distributions](#probability-distributions)
+3. [Special Functions](#special-functions)
+4. [Work Done](#work-done)
+5. [Road Map](#road-map)
 
-```bash
-npm test
+# 1. Probability functions Random Number Generators.
+
+#### Summary
+In 'R' numerous random number generators are documented with their particular distributions.
+For example `rt` (_random generator having a distribution of Student-T_) is documented with all functions related to the student-T distribution, like `qt` (quantile function), `pt` (cumulative probability function), `dt` (probability density function).
+
+The setup in `libRMath.js` will deviate slightly from this grouping. There random generators will still be grouped according to their respective distributions as in R, but also grouped separately into `lib-r-math/rng/<distribution name>`.
+
+## 1.1 The 7 samurai of Uniform Random Number Generators.
+
+#### Summary
+Uniform random generators are `the source off other random generator distributions`. So `R` has made 7 of them with their respective strength and weaknesses. Type in your R-console the command `?RNGkind` for an overview.
+
+All 7 random generators have been ported and tested to yield exactly the same as their R counterpart.
+
+#### Improvements.
+In R it is impossible to use different types of uniform random generators at the same time because of a global shared seed buffer. In our port every random generator has its own buffer and can therefore be used at the same time.
+
+#### General Usage.
+All uniform random generator export the same functions:
+1. `init`: set the random generator seed (it will be pre-scrambled)
+2. `getSeed`: get the current seed values as an array.
+3. `setSeed`: set the seed values directly with an array.
+4. `unif_random`: get a random value, same as `runif(1)` in R
+
+#### 1. "Mersenne Twister".
+From Matsumoto and Nishimura (1998). A twisted GFSR with period `2^19937 - 1` and equidistribution in 623 consecutive dimensions (over the whole period). The _`seed`_ is a 624-dimensional set of 32-bit integers plus a current position in that set.
+
+usage example:
+```javascript
+  const libR = require('lib-r-math');
+  
+  const rng = libR.rng.MersenneTwister;
+
+  const { init, unif_rand, getSeed, setSeed } = rng;
+  // R will show the exact same results,
+  // with the same seed values
+  init(0);
+  // get internal seed buffer of 625 32 bit ints
+  let s = getSeed(0);
+/*
+  [ 624,
+  1280795612,
+  -169270483,
+  -442010614,
+  -603558397,
+  .
+  .
+  .]
+*/
+
+  unif_rand(); // get a value between 0 and 1
+  //0.8966972001362592
+  unif_rand()
+  //0.2655086631421
+  unif_rand()
+  //0.37212389963679016
+  unif_rand()
+  //0.5728533633518964
+  unif_rand()
+  //0.9082077899947762
+
+```
+_in R console_:
+```R
+  > RNGkind("Mersenne-Twister")
+  > set.seed(0)
+  > runif(5)
+[1] 0.8966972 0.2655087 0.3721239 0.5728534
+[5] 0.9082078
 ```
 
-# Documentation (work in progress)
+#### 2. "Wichmann-Hill".
+The seed, is an integer vector of length 3,
+where each element is in `1:(p[i] - 1)`, where p is the length 3 vector of primes, `p = (30269, 30307, 30323)`. The `Wichmann–Hill` generator has a cycle length of `6.9536e12 = ( 30269 * 30307 * 30323 )`, see Applied Statistics (1984) 33, 123 which corrects the original article).
 
-## Table of Contents
+usage example:
+```javascript
+  const libR = require('lib-r-math');
+  const rng = libR.rng.WichMannHill;
+  const { init, unif_rand, getSeed, setSeed } = rng;
 
-### [Utility Functions](#utility-functions)
 
-### [Trigonometric Functions](#trigonometric-functions)
+ init(0)
+ seed = getSeed();
+//[ 2882, 21792, 10079 ]
+ unif_rand()
+//0.4625531507458778
+ unif_rand()
+//0.2658267503314409
+unif_rand()
+//0.5772107804324318
+ unif_rand()
+//0.5107932055258312
+ unif_rand()
+//0.33756055865261403
 
-## Utility Functions
+```
 
-## Trigonometric Functions
+_in R console_:
+```R
+> RNGkind("Wichmann-Hill")
+> set.seed(0)
+> runif(5)
+[1] 0.4625532 0.2658268 0.5772108 0.5107932
+[5] 0.3375606
+```
 
-## Progress (DONE and TODO)
+#### 3. "Marsaglia-Multicarry":
+A multiply-with-carry RNG is used, as recommended by George Marsaglia in his post to the mailing list ‘sci.stat.math’. It has a period of more than 2^60 and has passed all tests (according to Marsaglia). The seed is two integers (all values allowed).
 
+usage example:
+```javascript
+  const libR = require('lib-r-math');
+  const rng = libR.rng.Marsaglia;
+  const { init, unif_rand, getSeed, setSeed } = rng;
+  init(0);
+  seed = getSeed();
+//[ -835792825, 1280795612 ]
+unif_rand();
+//0.16915375533726848
+unif_rand();
+//0.5315435299490446
+unif_rand();
+//0.5946052972214773
+unif_rand();
+//0.23331540595584438
+unif_rand();
+//0.45765617989414736
+```
+
+_in R console_:
+```R
+> RNGkind("Marsaglia-Multicarry")
+> set.seed(0)
+> runif(5)
+[1] 0.1691538 0.5315435 0.5946053 0.2333154
+[5] 0.4576562
+```
+
+#### 4. "Super Duper":
+Marsaglia's famous Super-Duper from the 70's. This is the original version which does not pass the MTUPLE test of the Diehard battery. It has a period of about 4.6*10^18 for most initial seeds. The seed is two integers (all values allowed for the first seed: the second must be odd).
+
+_We use the implementation by Reeds et al (1982–84)._
+
+usage example:
+```javascript
+  const libR = require('lib-r-math');
+  const rng = libR.rng.Superduper;
+  const { init, unif_rand, getSeed, setSeed } = rng;
+  init(0);
+  seed = getSeed();
+//[ -835792825, 1280795613 ]
+ unif_rand();
+//0.6404035621416762
+ unif_rand();
+//0.5927312545461418
+ unif_rand();
+//0.41296871248934613
+ unif_rand();
+//0.18772939946216746
+ unif_rand();
+//0.26790581137591635
+
+```
+_in R console_:
+```R
+> RNGkind("Super-Duper")
+> set.seed(0)
+> runif(5)
+[1] 0.6404036 0.5927313 0.4129687 0.1877294
+[5] 0.2679058
+
+```
+
+#### 5. "Knuth TAOCP":
+An earlier version from Knuth (1997).
+
+The 2002 version was not backwards compatible with the earlier version: the initialization of the GFSR from the seed was altered. R did not allow you to choose consecutive seeds, the reported ‘weakness’, and already scrambled the seeds.
+
+usage example:
+```javascript
+  const libR = require('lib-r-math');
+  const rng = libR.rng.KnuthTAOCP;
+  const { init, unif_rand, getSeed, setSeed } = rng;
+  init(0);
+  seed = getSeed();
+// 101 unsigned integer array
+//[ 673666444,
+//  380305043,
+//  1062889978,
+//  926003693,
+//  711138356,
+// .
+// .
+unif_rand()
+//0.6274007670581344
+unif_rand()
+//0.35418667178601043
+unif_rand()
+//0.9898934308439498
+unif_rand()
+//0.8624081434682015
+unif_rand()
+//0.6622992046177391
+unif_rand()
+//0.07780042290687564
+```
+_in R console_:
+```R
+> RNGkind("Super-Duper")
+> set.seed(0)
+> runif(5)
+[1] 0.6404036 0.5927313 0.4129687 0.1877294
+[5] 0.2679058
+```
+
+#### 6. "Knuth TAOCP 2002":
+A 32-bit integer GFSR using lagged Fibonacci sequences with subtraction. That is, the recurrence used is
+```R
+X[j] = (X[j-100] - X[j-37]) mod 2^30
+```
+and the ‘seed’ is the set of the 100 last numbers (actually recorded as 101 numbers, the last being a cyclic shift of the buffer). The period is around 2^129.
+
+usage example:
+```javascript
+  const libR = require('lib-r-math');
+  const rng = libR.rng.KnuthTAOCP2002;
+  const { init, unif_rand, getSeed, setSeed } = rng;
+  init(0);
+  seed = getSeed();
+// 101 unsigned integer array
+//[ 481970911,
+//  634898052,
+//  994481106,
+//  607894626,
+//  1044251579,
+//  763229919,
+//  638368738,
+// .
+// .
+ unif_rand()
+//0.19581903796643027
+ unif_rand()
+//0.7538668839260939
+  unif_rand()
+//0.47241124697029613 
+  unif_rand()
+//0.19316043704748162
+  unif_rand()
+//0.19501840975135573
+```
+
+_in R console_:
+```R
+> RNGkind("Knuth-TAOCP-2002")
+> set.seed(0)
+> runif(5)
+[1] 0.1958190 0.7538669 0.4724112 0.1931604
+[5] 0.1950184
+```
+#### 7. "L'Ecuyer-CMRG":
+
+A ‘combined multiple-recursive generator’ from L'Ecuyer (1999), each element of which is a feedback multiplicative generator with three integer elements: thus the seed is a (signed) integer vector of length 6. The period is around 2^191.
+
+The 6 elements of the seed are internally regarded as 32-bit unsigned integers. Neither the first three nor the last three should be all zero, and they are limited to less than 4294967087 and 4294944443 respectively.
+
+This is not particularly interesting of itself, but provides the basis for the multiple streams used in package parallel.
+
+
+usage example:
+```javascript
+  const libR = require('lib-r-math');
+  const rng = libR.rng.LecuyerCMRG;
+  const { init, unif_rand, getSeed, setSeed } = rng;
+  init(0);
+  seed = getSeed();
+// 6 unsigned integer array
+//[ -835792825,
+ // 1280795612,
+ // -169270483,
+ // -442010614,
+ // -603558397,
+ // -222347416 ]
+ unif_rand()
+//0.33292749227232266
+ unif_rand()
+//0.890352617994264
+ unif_rand()
+//0.1639634410628108
+ unif_rand()
+//0.29905082406536015
+ unif_rand()
+//0.3952390917599507
+```
+_in R console_:
+```R
+> RNGkind("L'Ecuyer-CMRG")
+> set.seed(0)
+> .Random.seed[2:7]  #show the seeds
+[1] -835792825 1280795612 -169270483 -442010614
+[5] -603558397 -222347416
+
+#pick 6 random numbers
+#same numbers as generated in javascript
+> runif(6)
+[1] 0.3329275 0.8903526 0.1639634 0.2990508
+[5] 0.3952391 0.3601516
+```
+
+# Current State
 As of 26 March initial port has been done, now to implement tests ( CHAI, MOCHA) 
 
 | original c module | js/ts module name | port date | date added to test-suite | R -base functions |
