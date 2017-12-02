@@ -13,7 +13,11 @@ fidelity with `R`.
 
 #### Node and Web
 
+<<<<<<< HEAD
 The module is an umd The build process will package everything into a final file which can be used in a `<script>` tag or included with your favorite build system (webpack).
+=======
+The module is an umd The build process will package everything into a final file which can be used in other any build system or placed on 
+>>>>>>> 3f64aceebfb54d49929793831ca2b55d42f0aeb1
 
 ## Installation
 
