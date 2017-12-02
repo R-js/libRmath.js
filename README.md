@@ -1,11 +1,11 @@
 # libRmath.js
 
-Javascript ( TypeScript ) Pure Implementation of Statistical R "core" numerical `libRmath.so` library found here 
+Javascript ( TypeScript ) Pure Implementation of Statistical R "core" numerical `libRmath.so` library found here
 https://svn.r-project.org/R/trunk/src/nmath/
 
 ### Summary
 
-Porting `R` core is a daunting task, we want to achieve R fidelity on all functions that are ported from `R` to ```javascript``` by using static fixtures (generated in R language) to guarantee exact output replication of the ported functions.
+Porting `R` core is a daunting task, we want to *VERIFY* fidelity with `R` on all functions that are ported from `R` to ```javascript``` by using static fixtures (generated in R language) to guarantee exact output replication of the ported functions.
 
 All functions in lib-R-core has been re-written to `Javascript` (`Typescript`).
 We are now in process of testing against fixture files generated from R and to prove
@@ -22,7 +22,7 @@ npm install --save lib-r-math.js
 ```
 
 # Table of Contents
-1. [Probability Random Number Generators](#1.-Probability-functions-Random-Number-Generators.)
+1. [Probability Random Number Generators](#1-Probability-functions-Random-Number-Generators.)
 2. [Probability Distributions](#probability-distributions)
 3. [Special Functions](#special-functions)
 4. [Work Done](#work-done)
@@ -54,12 +54,11 @@ All uniform random generator export the same functions:
 4. `unif_random`: get a random value, same as `runif(1)` in R
 
 #### 1. "Mersenne Twister".
-From Matsumoto and Nishimura (1998). A twisted GFSR with period `2^19937 - 1` and equidistribution in 623 consecutive dimensions (over the whole period). The _`seed`_ is a 624-dimensional set of 32-bit integers plus a current position in that set.
+From Matsumoto and Nishimura (1998). A twisted GFSR with period `2^19937 - 1` and equi-distribution in 623 consecutive dimensions (over the whole period). The _`seed`_ is a 624-dimensional set of 32-bit integers plus a current position in that set.
 
 usage example:
 ```javascript
   const libR = require('lib-r-math');
-  
   const rng = libR.rng.MersenneTwister;
 
   const { init, unif_rand, getSeed, setSeed } = rng;

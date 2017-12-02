@@ -23,7 +23,6 @@
  * 
 */
 import { R_FINITE, ML_ERR_return_NAN } from '~common';
-import { random2_64StepsAsFloat } from '~uniform';
 
 
 export enum RNG {
@@ -35,20 +34,12 @@ export enum RNG {
 let select: RNG = RNG.Native; //default
 
 
-export function selectRNG(s: RNG) {
-    select = s;
-}
-
 export function runif(a: number, b: number) {
     if (!(R_FINITE(a) && R_FINITE(b) && b > a)) {
         return ML_ERR_return_NAN();
     }
-    let s;
-    switch (select) {
-        default:
-        case RNG.Native:
-            s = random2_64StepsAsFloat();
-    }
+    let s = 0;
+   
     return (b - a) * s + a;
 }
 

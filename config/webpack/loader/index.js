@@ -17,10 +17,18 @@ const proto = {
     atl: o => ({
         loader: 'awesome-typescript-loader',
         options: merge({
+            configFileName: resolve('tsconfig.json'),
             // Babel configuration
             babelOptions: {
+                babelrc: false,
                 presets: [
-                    ['env', { loose: true, modules: false }],
+                    ['env',
+                        {
+                            loose: true,
+                            modules: false,
+                            "targets": "last 2 versions, ie 11"
+                        }
+                    ],
                     'stage-0'
                 ]
             },

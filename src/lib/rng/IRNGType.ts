@@ -4,7 +4,6 @@ export enum IRNGType {
     SUPER_DUPER,
     MERSENNE_TWISTER,
     KNUTH_TAOCP,
-   // USER_UNIF,
     KNUTH_TAOCP2002,
     LECUYER_CMRG
 }

@@ -1,16 +1,19 @@
 {
     "compilerOptions": {
+        "noImplicitAny": true,
+        "removeComments": true,
         "allowUnreachableCode": true,
         "baseUrl": ".",
         "declaration": true,
         "experimentalDecorators": true,
         "jsx": "react",
         "lib": [
-            "es6",
-            "dom",
-            "esnext.asynciterable"
+            "es2015",
+            "dom"
+            /*"esnext.asynciterable"*/
         ],
         "module": "commonjs",
+        "target": "es5",
         "moduleResolution": "node",
         "outDir": "dist",
         "paths": {
@@ -98,8 +101,7 @@
         },
         "rootDir": "./",
         "sourceMap": true,
-        "strict": true,
-        "target": "es2017"
+        "strict": true
     },
     "exclude": [
         "node_modules"

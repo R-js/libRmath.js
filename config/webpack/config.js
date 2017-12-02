@@ -2,11 +2,12 @@
 
 const { resolve } = require('path');
 const { lint, tsc } = require('./module/rules')
+const { rm, uglify } = require('./plugins');
 
 module.exports = [{
-    target: 'node',
     entry: {
-        index: resolve('src/lib/index.ts')
+        libR: resolve('src/lib/index.ts'),
+        "libR.min": resolve('src/lib/index.ts')
     },
     output: {
         path: resolve('dist/lib'),
@@ -18,15 +19,18 @@ module.exports = [{
         __dirname: false,
         __filename: false,
     },
-    devtool: false,
+    devtool: 'source-map',
     externals: [...require('./externals')],
     module: {
         rules: [
             lint(),
-            tsc()
+            tsc({ declaration: false })
         ]
     },
-    plugins: require('./plugin'),
+    plugins: [
+        rm({ paths: ['lib'] }),
+        uglify()
+    ],
     resolve: require('./resolve'),
 }];
 

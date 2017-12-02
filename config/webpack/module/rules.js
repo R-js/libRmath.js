@@ -1,7 +1,7 @@
 const { resolve } = require('path');
 const exclude = [];
 const { atl, tslint } = require('../loader')
-var defaults = require('lodash.defaults');
+const defaults = require('lodash.defaults');
 
 const rules = {
     lint: (lo, ro) => defaults({
