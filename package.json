@@ -6,15 +6,7 @@
         "url": "https://github.com/jacobbogers/libRmath.js/issues"
     },
     "dependencies": {
-        "circular-json": "^0.3.1",
-        "debug": "^3.1.0",
-        "enum-values": "^1.2.0",
-        "lodash.clonedeep": "^4.5.0",
-        "lodash.defaults": "^4.2.0",
-        "lodash.includes": "^4.3.0",
-        "lodash.merge": "^4.6.0",
-        "moment": "^2.18.1",
-        "n64": "0.0.18"
+        "debug": "^3.1.0"
     },
     "description": "Javascript Pure Implementation of Statistical R \"core\" numerical libRmath.so",
     "devDependencies": {
@@ -33,7 +25,11 @@
         "codecov": "^2.3.1",
         "cpr": "^2.2.0",
         "cross-env": "^5.1.0",
+        "lodash.clonedeep": "^4.5.0",
+        "lodash.defaults": "^4.2.0",
         "lodash.defaultsdeep": "^4.6.0",
+        "lodash.includes": "^4.3.0",
+        "lodash.merge": "^4.6.0",
         "mocha": "^3.5.0",
         "ts-node": "^3.3.0",
         "tsconfig-paths": "^2.3.0",
