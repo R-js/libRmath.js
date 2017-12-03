@@ -1,0 +1,10 @@
+./src
+./docs
+./extra
+./config
+# everything except the package.json i hope
+.*
+./scripts
+./test
+./node_modules
+
