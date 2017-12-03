@@ -40,7 +40,7 @@ export class MarsagliaMultiCarry extends IRNG {
   private name: string;
   private m_seed: Int32Array;
 
-  private FixupSeeds(): void {
+  private fixupSeeds(): void {
     const s = this.m_seed;
     if (s[0] === 0) s[0] = 1;
     if (s[1] === 0) s[1] = 1;
@@ -61,7 +61,7 @@ export class MarsagliaMultiCarry extends IRNG {
       s[0] = 69069 * s[0] + 1;
       this.m_seed[j] = s[0];
     }
-    this.FixupSeeds();
+    this.fixupSeeds();
   }
 
   public _setup() {

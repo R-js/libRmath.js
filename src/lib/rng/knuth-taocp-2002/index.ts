@@ -148,13 +148,6 @@ export class KnuthTAOCP2002 extends IRNG {
     this.KT_pos = 100;
   }
 
-  private FixupSeeds(): void {
-    if (this.KT_pos <= 0) this.KT_pos = 100;
-    /* check for all zeroes */
-    const s = this.m_seed.slice(0, 100);
-    if (s.find(v => !!v) === undefined) this.init(timeseed());
-  }
-
   private KT_next() {
     if (this.KT_pos >= 100) {
       this.ran_arr_cycle();

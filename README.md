@@ -49,24 +49,26 @@ In R it is impossible to use different types of uniform random generators at the
 #### General Usage.
 All uniform random generator export the same functions:
 1. `init`: set the random generator seed (it will be pre-scrambled)
-2. `getSeed`: get the current seed values as an array.
-3. `setSeed`: set the seed values directly with an array.
-4. `unif_random`: get a random value, same as `runif(1)` in R
+2. `seed (read/write property)`: get/set the current seed values as an array.
+3. `unif_random`: get a random value, same as `runif(1)` in R
 
 #### 1. "Mersenne Twister".
+
 From Matsumoto and Nishimura (1998). A twisted GFSR with period `2^19937 - 1` and equi-distribution in 623 consecutive dimensions (over the whole period). The _`seed`_ is a 624-dimensional set of 32-bit integers plus a current position in that set.
 
 usage example:
-```javascript
-  const libR = require('lib-r-math');
-  const rng = libR.rng.MersenneTwister;
 
-  const { init, unif_rand, getSeed, setSeed } = rng;
+```javascript
+
+  const libR = require('lib-r-math');
+  const { MersenneTwister } = libR.rng;
+
+  const mt = new MersenneTwister(0); // initialize with seed = 1
   // R will show the exact same results,
   // with the same seed values
-  init(0);
+  mt.init(0); // change seeding to 0
   // get internal seed buffer of 625 32 bit ints
-  let s = getSeed(0);
+  let s = lt.seed;
 /*
   [ 624,
   1280795612,
@@ -78,19 +80,20 @@ usage example:
   .]
 */
 
-  unif_rand(); // get a value between 0 and 1
+  mt.unif_rand(); // get a value between 0 and 1
   //0.8966972001362592
-  unif_rand()
+  mt.unif_rand()
   //0.2655086631421
-  unif_rand()
+  mt.unif_rand()
   //0.37212389963679016
-  unif_rand()
+  mt.unif_rand()
   //0.5728533633518964
-  unif_rand()
+  mt.unif_rand()
   //0.9082077899947762
-
 ```
+
 _in R console_:
+
 ```R
   > RNGkind("Mersenne-Twister")
   > set.seed(0)
@@ -100,28 +103,29 @@ _in R console_:
 ```
 
 #### 2. "Wichmann-Hill".
+
 The seed, is an integer vector of length 3,
 where each element is in `1:(p[i] - 1)`, where p is the length 3 vector of primes, `p = (30269, 30307, 30323)`. The `Wichmann–Hill` generator has a cycle length of `6.9536e12 = ( 30269 * 30307 * 30323 )`, see Applied Statistics (1984) 33, 123 which corrects the original article).
 
 usage example:
 ```javascript
   const libR = require('lib-r-math');
-  const rng = libR.rng.WichMannHill;
-  const { init, unif_rand, getSeed, setSeed } = rng;
-
-
- init(0)
- seed = getSeed();
+  const { WichmannHill } = libR.rng;
+ 
+  const wh = new WichmannHill(0);// initialize with zero
+ 
+ wh.init(0); // re-initialize at any time (again to zero)
+ wh.seed;
 //[ 2882, 21792, 10079 ]
- unif_rand()
+ wh.unif_rand()
 //0.4625531507458778
- unif_rand()
+ wh.unif_rand()
 //0.2658267503314409
-unif_rand()
+wh.unif_rand()
 //0.5772107804324318
- unif_rand()
+ wh.unif_rand()
 //0.5107932055258312
- unif_rand()
+ wh.unif_rand()
 //0.33756055865261403
 
 ```

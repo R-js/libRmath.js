@@ -23,15 +23,6 @@ export class LecuyerCMRG extends IRNG {
   private name: string;
   private m_seed: Int32Array;
 
-  private FixupSeeds(): void {
-    let tmp: number;
-    let allOK: boolean = true;
-
-    const nonZeroOrLargerM2found = this.m_seed.find(f => f !== 0 || f >= m2);
-    if (nonZeroOrLargerM2found) {
-      this.init(timeseed());
-    }
-  }
 
   constructor(_seed: number = timeseed()) {
     super(_seed);

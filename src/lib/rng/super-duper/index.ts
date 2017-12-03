@@ -66,7 +66,7 @@ export class SuperDuper extends IRNG {
     return fixup(un[0] * fixup.prototype.i2_32m1); /* in [0,1) */
   }
 
-  private FixupSeeds(): void {
+  private fixupSeeds(): void {
     const s = this.m_seed;
     if (s[0] === 0) s[0] = 1;
     /* I2 = Congruential: must be ODD */
@@ -84,7 +84,7 @@ export class SuperDuper extends IRNG {
       s[0] = 69069 * s[0] + 1;
       this.m_seed[j] = s[0];
     }
-    this.FixupSeeds();
+    this.fixupSeeds();
   }
 
   public set seed(_seed: number[]) {
@@ -100,5 +100,5 @@ export class SuperDuper extends IRNG {
   public get seed() {
     return Array.from(this.m_seed);
   }
-  
+
 }
