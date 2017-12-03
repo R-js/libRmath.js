@@ -1,10 +1,12 @@
 {
     "compilerOptions": {
+        "listEmittedFiles": true,
+        "declarationDir": "dist",
+        "declaration": true,
         "noImplicitAny": true,
         "removeComments": true,
         "allowUnreachableCode": true,
         "baseUrl": ".",
-        "declaration": true,
         "experimentalDecorators": true,
         "jsx": "react",
         "lib": [
@@ -12,7 +14,7 @@
             "dom"
             /*"esnext.asynciterable"*/
         ],
-        "module": "commonjs",
+        "module": "UMD",
         "target": "es5",
         "moduleResolution": "node",
         "outDir": "dist",

@@ -24,7 +24,7 @@ module.exports = [{
     module: {
         rules: [
             lint(),
-            tsc({ declaration: false })
+            tsc({ declaration: true })
         ]
     },
     plugins: [

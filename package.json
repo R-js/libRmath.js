@@ -73,7 +73,7 @@
     },
     "scripts": {
         "DISABLEDstart": "cross-env DEBUGx=express-session,cookie node dist/server/server.js",
-        "build": "webpack --config config/webpack/config || tsc && tsc -m es6 --outDir lib-esm",
+        "build": "webpack --config config/webpack/config",
         "cleanup": "rimraf ./dist ./.nyc_output ./coverage ./.awcache ./report.txt",
         "coverage": "npm run coverage:test && npm run coverage:view",
         "coverage:codecov": "nyc report --reporter=text-lcov > coverage.lcov && codecov",
@@ -112,6 +112,6 @@
         "uninstall": "echo uninstall",
         "version": "echo version"
     },
-    "types": "/dist/lib/types.d.ts",
+    "types": "/dist/src/lib/index.d.ts",
     "version": "1.0.39"
 }
