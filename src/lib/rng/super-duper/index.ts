@@ -29,76 +29,76 @@ const frac = (x: number) => x - trunc(x);
 import { warning, error } from '../../_logging';
 import { IRNGType } from '../IRNGType';
 import { timeseed } from '../timeseed';
+import { IRNG } from '../IRNG';
+import { fixup } from '../fixup';
 
 const SEED_LEN = 2;
 const buf = new ArrayBuffer(SEED_LEN * 4);
 
-const SUPER_DUPER = {
-  kind: IRNGType.SUPER_DUPER,
-  name: 'Super-Duper',
-  seed: new Int32Array(buf).fill(0)
-};
+export class SuperDuper extends IRNG {
+  private kind: IRNGType;
+  private name: string;
+  private m_seed: Int32Array;
 
-const i2_32m1 = 2.328306437080797e-10; /* = 1/(2^32 - 1) */
-
-function fixup(x: number) {
-  /* ensure 0 and 1 are never returned */
-  if (x <= 0.0) return 0.5 * i2_32m1;
-  if (1.0 - x <= 0.0) return 1.0 - 0.5 * i2_32m1;
-  return x;
-}
-
-export function unif_rand(): number {
-  const s = SUPER_DUPER.seed;
-  /* This is Reeds et al (1984) implementation;
-             * modified using __unsigned__	seeds instead of signed ones
-             */
-
-  s[0] ^= (s[0] >>> 15) & 0x1ffff; /* ) 0377777 = 0x1FFFF Tausworthe */
-  s[0] ^= s[0] << 17;
-  s[1] *= 69069; /* Congruential */
-  const un = new Uint32Array(SEED_LEN);
-  un[0] = s[0];
-  un[1] = s[1];
-  un[0] = un[0] ^ un[1];
-  return fixup(
-    un[0] * i2_32m1
-  ); /* in [0,1) */
-}
-
-function FixupSeeds(): void {
-  const s = SUPER_DUPER.seed;
-  if (s[0] === 0) s[0] = 1;
-  /* I2 = Congruential: must be ODD */
-  s[1] |= 1;
-  return;
-}
-
-export function init(seed: number) {
-  const seeds = SUPER_DUPER.seed;
-  /* Initial scrambling */
-  const s = new Uint32Array([0]);
-  s[0] = seed;
-  for (let j = 0; j < 50; j++) {
-    s[0] = 69069 * s[0] + 1;
+  constructor(_seed: number = timeseed()) {
+    super(_seed);
   }
-  for (let j = 0; j < seeds.length; j++) {
-    s[0] = 69069 * s[0] + 1;
-    seeds[j] = s[0];
+
+  public _setup() {
+    this.kind = IRNGType.SUPER_DUPER;
+    this.name = 'Super-Duper';
+    this.m_seed = new Int32Array(buf).fill(0);
   }
-  FixupSeeds();
-}
 
-export function setSeed(seed: number[]) {
-  let errors = 0;
+  public unif_rand(): number {
+    const s = this.m_seed;
+    /* This is Reeds et al (1984) implementation;
+               * modified using __unsigned__	seeds instead of signed ones
+               */
 
-  if (seed.length > SUPER_DUPER.seed.length || seed.length === 0) {
-    init(timeseed());
+    s[0] ^= (s[0] >>> 15) & 0x1ffff; /* ) 0377777 = 0x1FFFF Tausworthe */
+    s[0] ^= s[0] << 17;
+    s[1] *= 69069; /* Congruential */
+    const un = new Uint32Array(SEED_LEN);
+    un[0] = s[0];
+    un[1] = s[1];
+    un[0] = un[0] ^ un[1];
+    return fixup(un[0] * fixup.prototype.i2_32m1); /* in [0,1) */
+  }
+
+  private FixupSeeds(): void {
+    const s = this.m_seed;
+    if (s[0] === 0) s[0] = 1;
+    /* I2 = Congruential: must be ODD */
+    s[1] |= 1;
     return;
   }
-  SUPER_DUPER.seed.set(seed);
-}
 
-export function getSeed() {
-  return Array.from(SUPER_DUPER.seed);
+  public init(_seed: number) {
+    /* Initial scrambling */
+    const s = new Uint32Array([_seed]);
+    for (let j = 0; j < 50; j++) {
+      s[0] = 69069 * s[0] + 1;
+    }
+    for (let j = 0; j < this.m_seed.length; j++) {
+      s[0] = 69069 * s[0] + 1;
+      this.m_seed[j] = s[0];
+    }
+    this.FixupSeeds();
+  }
+
+  public set seed(_seed: number[]) {
+    let errors = 0;
+
+    if (_seed.length > this.m_seed.length || _seed.length === 0) {
+      this.init(timeseed());
+      return;
+    }
+    this.m_seed.set(_seed);
+  }
+
+  public get seed() {
+    return Array.from(this.m_seed);
+  }
+  
 }

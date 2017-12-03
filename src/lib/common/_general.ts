@@ -1,7 +1,5 @@
 // find more constants of the kind M_XX_XX here
 // https://svn.r-project.org/R/trunk/src/include/Rmath.h0.in
-
-
 /*
 
   WHY DO WE USE CUSTOM ROUND INSTEAD OF Javascript "Math.round" ?
@@ -9,8 +7,12 @@
   https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Math/round
 
   Note that this differs from many languages' round() functions, which often round this case to the next integer away from zero, instead (giving a different result in the case of negative numbers with a fractional part of exactly 0.5).
-
 */
+
+import  * as debug from 'debug';
+
+const debug_R_Q_P01_boundaries = debug('R_Q_P01_boundaries');
+const debug_R_Q_P01_check = debug('R_Q_P01_check');
 
 export const pow = Math.pow;
 export const now = Date.now; 
@@ -42,7 +44,6 @@ export const asin = Math.asin;
 export const acos = Math.acos;
 export const atan = Math.atan;
 export const atan2 = Math.atan2;
-
 /* 
    6.0E-17, we used the comments in the nmath lib to find epsilon that fullfills x == x-epsilon
    this does not cover the internal accurace of build in functions in Math.cos, Math.sin etc
@@ -102,7 +103,6 @@ export const R_D_val = (log_p: boolean, x: number) => {
     return (log_p ? log(x) : (x));
 };
 
-
 export function rround(x: number) {
 
     if (x < 0) {
@@ -124,7 +124,6 @@ export function R_D_Cval(lowerTail: boolean, p: number): number {
     return (lowerTail ? (0.5 - (p) + 0.5) : (p));	/*  1 - p */
 }
 
-
 export function R_P_bounds_Inf_01(lowerTail: boolean, log_p: boolean, x: number): number | undefined {
     if (!R_FINITE(x)) {
         if (x > 0) {
@@ -145,16 +144,11 @@ export function R_P_bounds_01(lower_tail: boolean, log_p: boolean, x: number, x_
     return undefined;
 }
 
-
-
-
 export const R_D_exp = (log_p: boolean, x: number): number => {
 
     return (log_p ? (x) : exp(x));
     /* exp(x) */
 };
-
-
 
 export enum ME {
     ME_NONE = 0, // no error
@@ -164,7 +158,6 @@ export enum ME {
     ME_PRECISION = 8, //does not have "full" precision 
     ME_UNDERFLOW = 16 // and underflow occured (important for IEEE)
 }
-
 
 export const MATHLIB_WARNING = (fmt: string, x: any) => {
     console.warn(fmt, x);
@@ -187,34 +180,24 @@ export const MATHLIB_ERROR = console.error;
 export const min0 = (x: number, y: number): number => { return x <= y ? x : y; };
 export const max0 = (x: number, y: number): number => { return x <= y ? y : x; };
 
-export const ML_ERROR = (x: ME, s: any) => {
-    if (x > ME.ME_DOMAIN) {
-        let msg: string;
-        switch (x) {
-            case ME.ME_DOMAIN:
-                msg = "argument out of domain in '%s'\n";
-                break;
-            case ME.ME_RANGE:
-                msg = "value out of range in '%s'\n";
-                break;
-            case ME.ME_NOCONV:
-                msg = "convergence failed in '%s'\n";
-                break;
-            case ME.ME_PRECISION:
-                msg = "full precision may not have been achieved in '%s'\n";
-                break;
-            case ME.ME_UNDERFLOW:
-                msg = "underflow occurred in '%s'\n";
-                break;
-            default:
-                msg = '';
-        }
-        MATHLIB_WARNING(msg, s);
+export const mapErr = new Map([
+    [ME.ME_NONE, 'No error\n'],
+    [ME.ME_DOMAIN, "argument out of domain in '%s'\n" ],
+    [ME.ME_RANGE, "argument out of domain in '%s'\n"],
+    [ME.ME_NOCONV, "convergence failed in '%s'\n"],
+    [ME.ME_PRECISION, "full precision may not have been achieved in '%s'\n"],
+    [ME.ME_UNDERFLOW, "underflow occurred in '%s'\n"]
+]);
+
+export const ML_ERROR = (x: ME, s: any, printer: debug.IDebugger ) => {
+    const str = mapErr.get(x);
+    if (str){
+       printer( str, s);
     }
 };
 
-export function ML_ERR_return_NAN() {
-    ML_ERROR(ME.ME_DOMAIN, '');
+export function ML_ERR_return_NAN(printer: debug.IDebugger) {
+    ML_ERROR(ME.ME_DOMAIN, '', printer);
     return ML_NAN;
 }
 
@@ -225,8 +208,6 @@ export function R_D_nonint_check(log: boolean, x: number) {
     }
     return undefined;
 }
-
-
 
 export function fabs(x: number) {
     return (x < 0 ? -x : x);
@@ -257,7 +238,6 @@ export function fmin2(x: number, y: number): number {
 export function isOdd(k: number) {
     return (floor(k) % 2) === 1;
 }
-
 
 export function epsilonNear(x: number, target: number): number {
     if (ISNAN(x)) return x;
@@ -314,7 +294,6 @@ export function R_D_fexp(give_log: boolean, f: number, x: number): number {
     return (give_log ? -0.5 * log(f) + (x) : exp(x) / sqrt(f));
 }
 
-
 /** bessel section */
 /** bessel section */
 /** bessel section */
@@ -331,7 +310,6 @@ export const xlrg_BESS_Y = 1e8;
 export const thresh_BESS_Y = 16.;
 
 export const xmax_BESS_K = 705.342; /* maximal x for UNscaled answer */
-
 
 /* sqrt(DBL_MIN) =	1.491668e-154 */
 export const sqxmin_BESS_K = 1.49e-154;
@@ -518,10 +496,12 @@ export function R_D_log(log_p: boolean, p: number) {
     return (log_p ? (p) : log(p)); 	/* log(p) */
 }
 
+
+
 export function R_Q_P01_boundaries(lower_tail: boolean, log_p: boolean, p: number, _LEFT_: number, _RIGHT_: number): number | undefined {
     if (log_p) {
         if (p > 0) {
-            return ML_ERR_return_NAN();
+            return ML_ERR_return_NAN(debug_R_Q_P01_boundaries);
         }
         if (p === 0) /* upper bound*/
             return lower_tail ? _RIGHT_ : _LEFT_;
@@ -530,7 +510,7 @@ export function R_Q_P01_boundaries(lower_tail: boolean, log_p: boolean, p: numbe
     }
     else { /* !log_p */
         if (p < 0 || p > 1) {
-            return ML_ERR_return_NAN();
+            return ML_ERR_return_NAN(debug_R_Q_P01_boundaries);
         }
         if (p === 0)
             return lower_tail ? _LEFT_ : _RIGHT_;
@@ -545,7 +525,7 @@ export function R_Q_P01_check(logP: boolean, p: number): number | undefined {
     if ((logP && p > 0)
         || (!logP && (p < 0 || p > 1))
     ) {
-        return ML_ERR_return_NAN();
+        return ML_ERR_return_NAN(debug_R_Q_P01_check);
     }
     return undefined;
 }

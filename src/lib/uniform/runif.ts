@@ -22,24 +22,18 @@
  *  https://www.jacob-bogers/libRmath.js/Licenses/
  * 
 */
-import { R_FINITE, ML_ERR_return_NAN } from '~common';
 
+import * as debug from 'debug';
 
-export enum RNG {
-    Native = 1
+import { ML_ERR_return_NAN } from '~common';
 
+const { isFinite: R_FINITE } = Number;
+const printer = debug('runif');
 
-}
-
-let select: RNG = RNG.Native; //default
-
-
-export function runif(a: number, b: number) {
+export function runif(a: number, b: number , unif_rand: () => number) {
     if (!(R_FINITE(a) && R_FINITE(b) && b > a)) {
-        return ML_ERR_return_NAN();
+        return ML_ERR_return_NAN(printer);
     }
-    let s = 0;
-   
+    let s = unif_rand();
     return (b - a) * s + a;
 }
-

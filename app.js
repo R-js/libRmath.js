@@ -1,2 +1,2 @@
- const l = require('./dist/lib');
- const { init, getSeed, unif_rand, setSeed } = l.rng.LecuyerCMRG;
+ const l = require('./dist/lib/libR');
+ var kn = l.rng.KnuthTAOCP2002;

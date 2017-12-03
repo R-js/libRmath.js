@@ -25,28 +25,29 @@
  *
  *    The distribution function of the uniform distribution.
  */
+import * as debug from 'debug';
 
 import {
-    ISNAN,
-    R_FINITE,
     ML_ERR_return_NAN,
     R_DT_1,
     R_DT_0,
     R_D_val
 } from '~common';
 
-
+const { isNaN: ISNAN, isFinite: R_FINITE } = Number;
+const printer = debug('punif');
 
 export function punif(x: number, a: number, b: number, lower_tail: boolean, log_p: boolean): number {
 
-    if (ISNAN(x) || ISNAN(a) || ISNAN(b))
+    if (ISNAN(x) || ISNAN(a) || ISNAN(b)){
         return x + a + b;
+    }
 
     if (b < a) {
-        return ML_ERR_return_NAN();
+        return ML_ERR_return_NAN(printer);
     }
     if (!R_FINITE(a) || !R_FINITE(b)) {
-        return ML_ERR_return_NAN();
+        return ML_ERR_return_NAN(printer);
     }
 
     if (x >= b) {

@@ -29,72 +29,73 @@ const frac = (x: number) => x - trunc(x);
 import { warning, error } from '../../_logging';
 import { IRNGType } from '../IRNGType';
 import { timeseed } from '../timeseed';
+import { IRNG } from '../IRNG';
+import { fixup } from '../fixup';
 
 const SEED_LEN = 2;
 const buf = new ArrayBuffer(SEED_LEN * 4);
 
-const MARSAGLIA_MULTICARRY = {
-  kind: IRNGType.MARSAGLIA_MULTICARRY,
-  name: 'Marsaglia-MultiCarry',
-  seed: new Int32Array(buf).fill(0)
-};
-const i2_32m1 = 2.328306437080797e-10; /* = 1/(2^32 - 1) */
+export class MarsagliaMultiCarry extends IRNG {
+  private kind: IRNGType;
+  private name: string;
+  private m_seed: Int32Array;
 
-function fixup(x: number) {
-  /* ensure 0 and 1 are never returned */
-  if (x <= 0.0) return 0.5 * i2_32m1;
-  if (1.0 - x <= 0.0) return 1.0 - 0.5 * i2_32m1;
-  return x;
-}
-
-export function unif_rand(): number {
-  const s = MARSAGLIA_MULTICARRY.seed;
-  s[0] = 36969 * (s[0] & 65535) + (s[0] >>> 16);
-  s[1] = 18000 * (s[1] & 65535) + (s[1] >>> 16);
-
-  const un = new Uint32Array(SEED_LEN);
-  un[0] = s[0] << 16;
-  un[1] = s[1] & 0xFFFF;
-  un[0] = un[0] ^ un[1];
-  return fixup(
-    un[0] * i2_32m1
-  ); /* in [0,1) */
-}
-
-
-function FixupSeeds(): void {
-  const s = MARSAGLIA_MULTICARRY.seed;
-  if (s[0] === 0) s[0] = 1;
-  if (s[1] === 0) s[1] = 1;
-  return;
-}
-
-export function init(seed: number) {
-  const seeds = MARSAGLIA_MULTICARRY.seed;
-  /* Initial scrambling */
-  const s = new Int32Array([0]);
-  s[0] = seed;
-  for (let j = 0; j < 50; j++) {
-    s[0] = (69069 * s[0] + 1);
-  }
-  for (let j = 0; j < seeds.length; j++) {
-    s[0] = (69069 * s[0] + 1);
-    seeds[j] = s[0];
-  }
-  FixupSeeds();
-}
-
-export function setSeed(seed: number[]) {
-  let errors = 0;
-
-  if (seed.length > MARSAGLIA_MULTICARRY.seed.length || seed.length === 0) {
-    init(timeseed());
+  private FixupSeeds(): void {
+    const s = this.m_seed;
+    if (s[0] === 0) s[0] = 1;
+    if (s[1] === 0) s[1] = 1;
     return;
   }
-  MARSAGLIA_MULTICARRY.seed.set(seed);
-}
 
-export function getSeed() {
-  return Array.from(MARSAGLIA_MULTICARRY.seed);
-}
+  public constructor(_seed: number = timeseed()) {
+    super(_seed);
+  }
 
+  public init(_seed: number) {
+    /* Initial scrambling */
+    const s = new Int32Array([_seed]);
+    for (let j = 0; j < 50; j++) {
+      s[0] = 69069 * s[0] + 1;
+    }
+    for (let j = 0; j < this.m_seed.length; j++) {
+      s[0] = 69069 * s[0] + 1;
+      this.m_seed[j] = s[0];
+    }
+    this.FixupSeeds();
+  }
+
+  public _setup() {
+    this.kind = IRNGType.MARSAGLIA_MULTICARRY;
+    this.name = 'Marsaglia-MultiCarry';
+    this.m_seed = new Int32Array(buf).fill(0);
+  }
+
+  public unif_rand(): number {
+    const s = this.m_seed;
+    s[0] = 36969 * (s[0] & 65535) + (s[0] >>> 16);
+    s[1] = 18000 * (s[1] & 65535) + (s[1] >>> 16);
+
+    const un = new Uint32Array(SEED_LEN);
+    un[0] = s[0] << 16;
+    un[1] = s[1] & 0xffff;
+    un[0] = un[0] ^ un[1];
+
+    //const i2_32m1 = 2.328306437080797e-10; /* = 1/(2^32 - 1) */
+
+    return fixup(un[0] * fixup.prototype.i2_32m1); /* in [0,1) */
+  }
+
+  public set seed(_seed: number[]) {
+    let errors = 0;
+
+    if (_seed.length > this.m_seed.length || _seed.length === 0) {
+      this.init(timeseed());
+      return;
+    }
+    this.m_seed.set(_seed);
+  }
+
+  public get seed() {
+    return Array.from(this.m_seed);
+  }
+}

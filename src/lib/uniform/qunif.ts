@@ -27,9 +27,7 @@
  */
 
 import {
-    ISNAN,
     R_Q_P01_check,
-    R_FINITE,
     ML_ERR_return_NAN
 } from '~common';
 
@@ -37,7 +35,15 @@ import {
     R_DT_qIv
 } from '~exp';
 
-export function qunif(p: number, a: number, b: number, lower_tail: boolean, log_p: boolean): number {
+const { isNaN: ISNAN, isFinite:R_FINITE } = Number;
+const printer = require('debug')('qunif');
+
+export function qunif(
+    p: number, 
+    a: number = 0, 
+    b: number = 1, 
+    lower_tail: boolean = true, 
+    log_p: boolean = false): number {
 
     if (ISNAN(p) || ISNAN(a) || ISNAN(b))
         return p + a + b;
@@ -46,13 +52,9 @@ export function qunif(p: number, a: number, b: number, lower_tail: boolean, log_
     if (rc !== undefined) {
         return rc;
     }
-    if (!R_FINITE(a) || !R_FINITE(b)) return ML_ERR_return_NAN();
-    if (b < a) return ML_ERR_return_NAN();
+    if (!R_FINITE(a) || !R_FINITE(b)) return ML_ERR_return_NAN(printer);
+    if (b < a) return ML_ERR_return_NAN(printer);
     if (b === a) return a;
 
     return a + R_DT_qIv(lower_tail, log_p, p) * (b - a);
 }
-
-
-
-
