@@ -30,7 +30,7 @@ module.exports = [{
     },
     plugins: [
         rm({ paths: ['lib'] }),
-        uglify()
+        //uglify()
     ],
     resolve: require('./resolve'),
 }];

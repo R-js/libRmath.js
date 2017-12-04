@@ -11,8 +11,8 @@ import * as F from './f-distro';
 import * as Gamma from './gamma';
 import * as Geometric from './geometric';
 import * as Log from './log';*/
-import { SuperDuper as s } from './rng';
-export const SuperDuper = s;
+import { SuperDuper } from  './rng/super-duper/index';
+//export const SuperDuper = s;
 //export { uniform } from './uniform';
 /*export {
   SuperDuper,

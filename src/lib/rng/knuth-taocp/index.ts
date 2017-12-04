@@ -16,7 +16,7 @@ import { IRNGType } from '../irng-type';
 import { timeseed } from '../timeseed';
 import { TAOCP1997init } from './taocp-1997-init';
 import { fixup } from '../fixup';
-import { IRNG } from '../IRNG';
+import { IRNG } from '../irng';
 /* helpers */
 /* helpers */
 /* helpers */
