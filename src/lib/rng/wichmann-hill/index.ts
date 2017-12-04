@@ -31,9 +31,9 @@ const { trunc } = Math;
 const frac = (x: number) => x - trunc(x);
 
 import { warning, error } from '../../_logging';
-import { IRNGType } from '../IRNGType';
+import { IRNGType } from '../irng-type';
 import { timeseed } from '../timeseed';
-import { IRNG } from '../IRNG';
+import { IRNG } from '../irng';
 import { fixup } from '../fixup';
 
 const SEED_LEN = 3;

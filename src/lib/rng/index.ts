@@ -5,4 +5,4 @@ export { MersenneTwister } from './mersenne-twister';
 export { KnuthTAOCP } from './knuth-taocp';
 export { KnuthTAOCP2002 } from './knuth-taocp-2002';
 export { LecuyerCMRG } from './lecuyer-cmrg';
-export { IRNG } from './IRNG';
+export { IRNG } from './irng';
