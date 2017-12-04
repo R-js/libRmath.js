@@ -1,4 +1,4 @@
-export * from './dlnorm';
+export * from './lognormal/dlnorm';
 export * from './dnorm';
 export * from './plnorm';
 export * from './pnorm';

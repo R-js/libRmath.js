@@ -26,11 +26,12 @@
  *    The distribution function of the uniform distribution.
  */
 import * as debug from 'debug';
+const printer = debug('punif');
 
 import { ML_ERR_return_NAN, R_DT_1, R_DT_0, R_D_val } from '~common';
 
 const { isNaN: ISNAN, isFinite: R_FINITE } = Number;
-const printer = debug('punif');
+
 const { isArray } = Array;
 
 export function punif(

@@ -28,38 +28,46 @@
  */
 
 import {
-    ISNAN,
-    ML_ERR_return_NAN,
-    log,
-    ML_POSINF,
-    R_D__0,
-    M_LN_SQRT_2PI,
-    exp,
-    M_1_SQRT_2PI
+  ML_ERR_return_NAN,
+  ML_POSINF,
+  R_D__0,
+  M_LN_SQRT_2PI,
+  M_1_SQRT_2PI
 } from '~common';
 
+import * as debug from 'debug';
+const printer = debug('dlnorm');
+const { isArray } = Array;
+const { isNaN: ISNAN } = Number;
+const { log, exp } = Math;
 
-export function dlnorm(x: number, meanlog: number, sdlog: number, give_log: boolean) {
-    let y: number;
+export function dlnorm(
+  x: number | number[],
+  meanlog: number,
+  sdlog: number,
+  give_log: boolean
+): number | number[] {
+  let fa = (() => (isArray(x) && x) || [x])();
 
-    if (ISNAN(x) || ISNAN(meanlog) || ISNAN(sdlog)) {
-        return x + meanlog + sdlog;
+  let result = fa.map(fx => {
+    if (ISNAN(fx) || ISNAN(meanlog) || ISNAN(sdlog)) {
+      return fx + meanlog + sdlog;
     }
     if (sdlog <= 0) {
-        if (sdlog < 0) {
-            return ML_ERR_return_NAN();
-        }
-        // sdlog == 0 :
-        return (log(x) === meanlog) ? ML_POSINF : R_D__0(give_log);
+      if (sdlog < 0) {
+        return ML_ERR_return_NAN(printer);
+      }
+      // sdlog == 0 :
+      return log(fx) === meanlog ? ML_POSINF : R_D__0(give_log);
     }
-    if (x <= 0) {
-        return R_D__0(give_log);
+    if (fx <= 0) {
+      return R_D__0(give_log);
     }
-
-    y = (log(x) - meanlog) / sdlog;
-    return (give_log ?
-        -(M_LN_SQRT_2PI + 0.5 * y * y + log(x * sdlog)) :
-        M_1_SQRT_2PI * exp(-0.5 * y * y) / (x * sdlog));
+    let y = (log(fx) - meanlog) / sdlog;
+    return give_log
+      ? -(M_LN_SQRT_2PI + 0.5 * y * y + log(fx * sdlog))
+      : M_1_SQRT_2PI * exp(-0.5 * y * y) / (fx * sdlog);
     /* M_1_SQRT_2PI = 1 / sqrt(2 * pi) */
-
+  });
+  return result.length === 1 ? result[0] : result;
 }

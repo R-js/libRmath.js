@@ -39,19 +39,18 @@
  */
 
 import {
-    ISNAN,
-    R_FINITE,
+
     R_D__0,
     ML_NAN,
     ML_ERR_return_NAN,
     ML_POSINF,
     fabs,
     DBL_MAX,
-    sqrt,
+   
     M_LN_SQRT_2PI,
     log,
     M_1_SQRT_2PI,
-    exp,
+   
     M_LN2,
     DBL_MIN_EXP,
     DBL_MANT_DIG,
@@ -59,6 +58,9 @@ import {
     ldexp
 
 } from '~common';
+
+const { isNaN: ISNAN, isFinite: R_FINITE } = Number;
+const { sqrt , exp, } = Math; 
 
 export const dnorm = dnorm4;
 
