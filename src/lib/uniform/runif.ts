@@ -30,10 +30,16 @@ import { ML_ERR_return_NAN } from '~common';
 const { isFinite: R_FINITE } = Number;
 const printer = debug('runif');
 
-export function runif(a: number, b: number , unif_rand: () => number) {
+export function runif(n: number = 1, a: number = 0, b: number= 1 , unif_rand: () => number): number|number[] {
+    
     if (!(R_FINITE(a) && R_FINITE(b) && b > a)) {
         return ML_ERR_return_NAN(printer);
     }
-    let s = unif_rand();
-    return (b - a) * s + a;
+    
+    let result = new Array(n).fill(0).map( m => {
+        const s = unif_rand();
+        return (b - a) * s + a;
+    });
+
+    return result.length === 1 ? result[0] : result;
 }

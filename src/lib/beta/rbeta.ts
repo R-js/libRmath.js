@@ -44,11 +44,9 @@ import {
     sqrt
 } from '~common';
 
-import { unif_rand } from '~uniform';
-
 export const expmax = DBL_MAX_EXP * M_LN2; /* = log(DBL_MAX) */
 
-export function rbeta(aa: number, bb: number): number {
+export function rbeta(aa: number, bb: number, unif_rand: () => number ): number {
     if (aa < 0. || bb < 0.) {
         return ML_ERR_return_NAN();
     }

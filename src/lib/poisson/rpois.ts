@@ -55,7 +55,6 @@ import {
 
 } from '~common';
 
-import { unif_rand } from '~uniform';
 import { norm_rand } from '~normal';
 import { exp_rand } from '~exp';
 import { fsign } from '~signrank';
@@ -75,7 +74,7 @@ const one_24 = 0.0416666666666666667;
 
 
 
-export function rpois(mu: number): number {
+export function rpois(mu: number, unif_rand: () => number): number {
     /* Factorial Table (0:9)! */
     const fact = [
 
@@ -196,7 +195,7 @@ export function rpois(mu: number): number {
     /* Only if mu >= 10 : ----------------------- */
 
     /* Step N. normal sample */
-    g = mu + s * norm_rand(); /* norm_rand() ~ N(0,1), standard normal */
+    g = mu + s * norm_rand(unif_rand); /* norm_rand() ~ N(0,1), standard normal */
 
     if (g >= 0.) {
         pois = floor(g);
@@ -250,7 +249,7 @@ export function rpois(mu: number): number {
 
             /* Step E. Exponential Sample */
 
-            E = exp_rand(); /* ~ Exp(1) (standard exponential) */
+            E = exp_rand(unif_rand); /* ~ Exp(1) (standard exponential) */
 
             /*  sample t from the laplace 'hat'
                 (if t <= -0.6744 then pk < fk for all mu >= 10.) */

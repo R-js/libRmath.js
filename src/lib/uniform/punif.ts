@@ -27,39 +27,44 @@
  */
 import * as debug from 'debug';
 
-import {
-    ML_ERR_return_NAN,
-    R_DT_1,
-    R_DT_0,
-    R_D_val
-} from '~common';
+import { ML_ERR_return_NAN, R_DT_1, R_DT_0, R_D_val } from '~common';
 
 const { isNaN: ISNAN, isFinite: R_FINITE } = Number;
 const printer = debug('punif');
+const { isArray } = Array;
 
-export function punif(x: number, a: number, b: number, lower_tail: boolean, log_p: boolean): number {
+export function punif(
+  x: number | number[],
+  a: number = 0,
+  b: number = 1,
+  lower_tail: boolean = true,
+  log_p: boolean = false
+): number | number[] {
+  let fa = (() => (isArray(x) && x) || [x])();
 
-    if (ISNAN(x) || ISNAN(a) || ISNAN(b)){
-        return x + a + b;
+  let result = fa.map(fx => {
+    if (ISNAN(fx) || ISNAN(a) || ISNAN(b)) {
+      return fx + a + b;
     }
 
     if (b < a) {
-        return ML_ERR_return_NAN(printer);
+      return ML_ERR_return_NAN(printer);
     }
     if (!R_FINITE(a) || !R_FINITE(b)) {
-        return ML_ERR_return_NAN(printer);
+      return ML_ERR_return_NAN(printer);
     }
 
-    if (x >= b) {
-        return R_DT_1(lower_tail, log_p);
+    if (fx >= b) {
+      return R_DT_1(lower_tail, log_p);
     }
-    if (x <= a){
-        return R_DT_0(lower_tail, log_p);
+    if (fx <= a) {
+      return R_DT_0(lower_tail, log_p);
     }
     if (lower_tail) {
-        return R_D_val(log_p, (x - a) / (b - a));
+      return R_D_val(log_p, (fx - a) / (b - a));
     }
-    else {
-        return R_D_val(log_p, (b - x) / (b - a));
-    }
+    return R_D_val(log_p, (b - fx) / (b - a));
+  });
+
+  return result.length === 1 ? result[0] : result;
 }

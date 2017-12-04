@@ -26,35 +26,37 @@
  *    The quantile function of the uniform distribution.
  */
 
-import {
-    R_Q_P01_check,
-    ML_ERR_return_NAN
-} from '~common';
+import { R_Q_P01_check, ML_ERR_return_NAN } from '~common';
 
-import {
-    R_DT_qIv
-} from '~exp';
+import { R_DT_qIv } from '~exp';
+import * as debug from 'debug';
 
-const { isNaN: ISNAN, isFinite:R_FINITE } = Number;
-const printer = require('debug')('qunif');
+const { isNaN: ISNAN, isFinite: R_FINITE } = Number;
+const printer = debug('qunif');
+const { isArray } = Array;
 
 export function qunif(
-    p: number, 
-    a: number = 0, 
-    b: number = 1, 
-    lower_tail: boolean = true, 
-    log_p: boolean = false): number {
+  p: number | number[],
+  a: number = 0,
+  b: number = 1,
+  lower_tail: boolean = true,
+  log_p: boolean = false
+): number| number[] {
+  let fa = (() => (isArray(p) && p) || [p])();
 
-    if (ISNAN(p) || ISNAN(a) || ISNAN(b))
-        return p + a + b;
+  let result = fa.map(fp => {
+    if (ISNAN(fp) || ISNAN(a) || ISNAN(b)) return fp + a + b;
 
-    let rc = R_Q_P01_check(log_p, p);
+    let rc = R_Q_P01_check(log_p, fp);
     if (rc !== undefined) {
-        return rc;
+      return rc;
     }
     if (!R_FINITE(a) || !R_FINITE(b)) return ML_ERR_return_NAN(printer);
     if (b < a) return ML_ERR_return_NAN(printer);
     if (b === a) return a;
 
-    return a + R_DT_qIv(lower_tail, log_p, p) * (b - a);
+    return a + R_DT_qIv(lower_tail, log_p, fp) * (b - a);
+  });
+
+  return result.length === 1 ? result[0] : result;
 }

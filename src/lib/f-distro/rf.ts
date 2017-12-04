@@ -42,17 +42,18 @@ import {
 } from '~common';
 
 import { rchisq } from '~chi-2';
+import { uniform } from 'src/lib/uniform';
 
 
-export function rf(n1: number, n2: number): number {
+export function rf(n1: number, n2: number, unif_rand: () => number): number {
     let v1;
     let v2;
     if (ISNAN(n1) || ISNAN(n2) || n1 <= 0. || n2 <= 0.){
         return ML_ERR_return_NAN();
     }
 
-    v1 = R_FINITE(n1) ? (rchisq(n1) / n1) : 1;
-    v2 = R_FINITE(n2) ? (rchisq(n2) / n2) : 1;
+    v1 = R_FINITE(n1) ? (rchisq(n1, unif_rand) / n1) : 1;
+    v2 = R_FINITE(n2) ? (rchisq(n2, unif_rand) / n2) : 1;
     return v1 / v2;
 }
 

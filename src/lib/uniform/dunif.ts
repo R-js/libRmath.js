@@ -28,14 +28,25 @@ import { R_D__0 } from '~common';
 
 const { isNaN: ISNAN } = Number;
 const { log } = Math;
+const { isArray } = Array;
 
-export function dunif(x: number, a: number = 0, b: number = 1, giveLog: boolean = false): number {
-  if (ISNAN(x) || ISNAN(a) || ISNAN(b)) {
-    return x + a + b;
-  }
-  if (a <= x && x <= b) {
-    return giveLog ? -log(b - a) : 1 / (b - a);
-  }
-  return R_D__0(giveLog); // return logP ? ML_NEGINF : 0.0;
+export function dunif(
+  x: number | number[],
+  a: number = 0,
+  b: number = 1,
+  giveLog: boolean = false
+): number|number[] {
+  
+  let fa = ( () => (isArray(x) && x) || [x])(); 
+
+  const result = fa.map(fx => {
+    if (ISNAN(fx) || ISNAN(a) || ISNAN(b)) {
+      return fx + a + b;
+    }
+    if (a <= fx && fx <= b) {
+      return giveLog ? -log(b - a) : 1 / (b - a);
+    }
+    return R_D__0(giveLog); // return logP ? ML_NEGINF : 0.0;
+  });
+  return result.length === 1 ? result[0] : result;
 }
-

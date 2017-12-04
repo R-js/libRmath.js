@@ -42,10 +42,10 @@ import {
 
 import { rgamma  } from '~gamma';
 
-export function rchisq(df: number): number {
+export function rchisq(df: number, unif_rand: () => number): number {
 
     if (!R_FINITE(df) || df < 0.0) {
         return ML_ERR_return_NAN();
     }
-    return rgamma(df / 2.0, 2.0);
+    return rgamma(df / 2.0, 2.0, unif_rand);
 }

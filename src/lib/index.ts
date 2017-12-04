@@ -11,14 +11,25 @@ import * as F from './f-distro';
 import * as Gamma from './gamma';
 import * as Geometric from './geometric';
 import * as Log from './log';*/
-import { rng } from './rng';
+import { SuperDuper as s } from './rng';
+export const SuperDuper = s;
+//export { uniform } from './uniform';
+/*export {
+  SuperDuper,
+  KnuthTAOCP,
+  KnuthTAOCP2002,
+  WichmannHill,
+  LecuyerCMRG,
+  MersenneTwister,
+  MarsagliaMultiCarry,
+  IRNG
+} from './rng';*/
 //import * as rfunc from './r-func';
 
 //https://github.com/Microsoft/TypeScript/pull/19852
 //Fix declaration emit for imported export alias specifiers
 
-// tslint:disable-next-line
-export { rng };
+
 /*
 export * from './bessel';
 export * from './beta';

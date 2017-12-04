@@ -5,6 +5,7 @@ const { lint, tsc } = require('./module/rules')
 const { rm, uglify } = require('./plugins');
 
 module.exports = [{
+    target: "node",
     entry: {
         libR: resolve('src/lib/index.ts'),
         "libR.min": resolve('src/lib/index.ts')
@@ -12,13 +13,13 @@ module.exports = [{
     output: {
         path: resolve('dist/lib'),
         filename: '[name].js',
-        libraryTarget: 'umd',
-        library: 'libRMath'
+        //libraryTarget: 'umd2',
+        //library: 'libRMath'
     },
-    node: {
-        __dirname: false,
-        __filename: false,
-    },
+    /* node: {
+         __dirname: false,
+         __filename: false,
+     },*/
     devtool: 'source-map',
     externals: [...require('./externals')],
     module: {

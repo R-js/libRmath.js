@@ -64,11 +64,10 @@ import { expm1 } from '~exp';
 
 import { exp_rand } from '~exp';
 
-import { unif_rand } from '~uniform';
 
 import { norm_rand } from '~normal';
 
-export function rgamma(a: number, scale: number): number {
+export function rgamma(a: number, scale: number, unif_rand: () => number): number {
     /* Constants : */
     const sqrt32 = 5.656854;
     const exp_m1 = 0.36787944117144232159; /* exp(-1) = 1/e */
@@ -128,11 +127,11 @@ export function rgamma(a: number, scale: number): number {
             p = e * unif_rand();
             if (p >= 1.0) {
                 x = -log((e - p) / a);
-                if (exp_rand() >= (1.0 - a) * log(x))
+                if (exp_rand( unif_rand) >= (1.0 - a) * log(x))
                     break;
             } else {
                 x = exp(log(p) / a);
-                if (exp_rand() >= x)
+                if (exp_rand( unif_rand ) >= x)
                     break;
             }
         }
@@ -152,7 +151,7 @@ export function rgamma(a: number, scale: number): number {
                x = (s,1/2) -normal deviate. */
 
     /* immediate acceptance (i) */
-    t = norm_rand();
+    t = norm_rand(unif_rand);
     x = s + 0.5 * t;
     ret_val = x * x;
     if (t >= 0.0)
@@ -210,7 +209,7 @@ export function rgamma(a: number, scale: number): number {
         /* Step 8: e = standard exponential deviate
          *	u =  0,1 -uniform deviate
          *	t = (b,si)-double exponential (laplace) sample */
-        e = exp_rand();
+        e = exp_rand( unif_rand);
         u = unif_rand();
         u = u + u - 1.0;
         if (u < 0.0)

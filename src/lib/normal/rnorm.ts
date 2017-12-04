@@ -40,13 +40,13 @@ import {
 
 import { norm_rand } from './snorm';
 
-export function rnorm(mu: number, sigma: number): number {
+export function rnorm(mu: number, sigma: number, unif_rand: () => number): number {
     if (ISNAN(mu) || !R_FINITE(sigma) || sigma < 0.)
         return ML_ERR_return_NAN();
     if (sigma === 0. || !R_FINITE(mu))
         return mu; /* includes mu = +/- Inf with finite sigma */
     else
-        return mu + sigma * norm_rand();
+        return mu + sigma * norm_rand(unif_rand);
 }
 
 

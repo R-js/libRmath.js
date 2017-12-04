@@ -67,9 +67,6 @@ import {
 import { choose, lchoose } from '~common';
 import { R_DT_val } from '~log';
 import { R_DT_qIv } from '~exp';
-import { unif_rand } from '~uniform';
-
-
 
 const WILCOX_MAX = 50;
 
@@ -288,7 +285,7 @@ export function qwilcox(x: number, m: number, n: number, lower_tail: boolean, lo
     return (q);
 }
 
-export function rwilcox(m: number, n: number): number {
+export function rwilcox(m: number, n: number, unif_rand: () => number): number {
     let i;
     let j;
     let k;

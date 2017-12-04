@@ -34,13 +34,9 @@ import {
     log
 } from '~common';
 
-import {
-    unif_rand
-} from '~uniform';
 
 
-
-export function rlogis(location: number, scale: number): number {
+export function rlogis(location: number, scale: number, unif_rand: () => number): number {
     if (ISNAN(location) || !R_FINITE(scale)) {
         return ML_ERR_return_NAN();
     }

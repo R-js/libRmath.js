@@ -38,10 +38,9 @@ import {
     M_PI
 } from '~common';
 
-import { unif_rand } from '~uniform';
 
 
-export function rcauchy(location: number, scale: number): number {
+export function rcauchy(location: number, scale: number, unif_rand: () => number): number {
     if (ISNAN(location) || !R_FINITE(scale) || scale < 0) {
         return ML_ERR_return_NAN();
     }

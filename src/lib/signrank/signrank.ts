@@ -60,7 +60,6 @@ import {
     floor
 } from '~common';
 
-import { unif_rand } from '~uniform';
 
 import { R_DT_val } from '~log';
 import { R_DT_qIv } from '~exp';
@@ -237,7 +236,7 @@ export function qsignrank(x: number, n: number, lower_tail: boolean, log_p: bool
     return (q);
 }
 
-export function rsignrank(n: number): number {
+export function rsignrank(n: number, unif_rand: () => number): number {
     let i;
     let k;
     let r;

@@ -189,14 +189,14 @@ export const mapErr = new Map([
     [ME.ME_UNDERFLOW, "underflow occurred in '%s'\n"]
 ]);
 
-export const ML_ERROR = (x: ME, s: any, printer: debug.IDebugger ) => {
+export const ML_ERROR = (x: ME, s: any, printer?: debug.IDebugger ) => {
     const str = mapErr.get(x);
     if (str){
-       printer( str, s);
+       printer && printer( str, s);
     }
 };
 
-export function ML_ERR_return_NAN(printer: debug.IDebugger) {
+export function ML_ERR_return_NAN(printer?: debug.IDebugger) {
     ML_ERROR(ME.ME_DOMAIN, '', printer);
     return ML_NAN;
 }

@@ -42,9 +42,8 @@
 
 
 
-import { unif_rand } from '~uniform';
 
-export function exp_rand(): number {
+export function exp_rand( unif_rand: () => number): number {
 
   const q: number[] = [
     0.6931471805599453 ,

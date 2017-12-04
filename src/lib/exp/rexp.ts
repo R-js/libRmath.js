@@ -39,11 +39,11 @@ import {
 
 import { exp_rand } from './sexp';
 
-export function rexp(scale: number): number {
+export function rexp(scale: number, unif_rand: () => number): number {
     if (!R_FINITE(scale) || scale <= 0.0) {
         if (scale === 0.) return 0.;
         /* else */
         return ML_ERR_return_NAN();
     }
-    return scale * exp_rand(); // --> in ./sexp.c
+    return scale * exp_rand(unif_rand); // --> in ./sexp.c
 }

@@ -62,8 +62,6 @@ import {
 
 import { rbinom } from '~binomial';
 
-import { unif_rand } from '~uniform';
-
 import { qhyper } from '~geometric';
 
 
@@ -103,7 +101,7 @@ export function afc(i: number): number {
 }
 
 //     rhyper(NR, NB, n) -- NR 'red', NB 'blue', n drawn, how many are 'red'
-export function rhyper(nn1in: number, nn2in: number, kkin: number): number {
+export function rhyper(nn1in: number, nn2in: number, kkin: number, unif_rand: () => number): number {
     /* extern double afc(int); */
 
     let nn1 = 0;
@@ -158,7 +156,7 @@ export function rhyper(nn1in: number, nn2in: number, kkin: number): number {
         // FIXME: Much faster to give rbinom() approx when appropriate; -> see Kuensch(1989)
         // Johnson, Kotz,.. p.258 (top) mention the *four* different binomial approximations
         if (kkin === 1.) { // Bernoulli
-            return rbinom(kkin, nn1in / (nn1in + nn2in));
+            return rbinom(kkin, nn1in / (nn1in + nn2in), unif_rand);
         }
         // Slow, but safe: return  F^{-1}(U)  where F(.) = phyper(.) and  U ~ U[0,1]
         return qhyper(unif_rand(), nn1in, nn2in, kkin, false, false);

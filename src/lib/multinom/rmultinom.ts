@@ -57,7 +57,7 @@ export const ML_ERR_ret_NAN = (_k_: number, rN: number[]): void => {
     return;
 };
 
-export function rmultinom(n: number, prob: number[], K: number, rN: number[]): void {
+export function rmultinom(n: number, prob: number[], K: number, rN: number[], unif_rand: () => number): void {
     /* `Return' vector  rN[1:K] {K := length(prob)}
      *  where rN[j] ~ Bin(n, prob[j]) ,  sum_j rN[j] == n,  sum_j prob[j] == 1,
      */
@@ -101,7 +101,7 @@ export function rmultinom(n: number, prob: number[], K: number, rN: number[]): v
         if (prob[k] !== 0.) {
             pp = (prob[k] / p_tot);
             /* printf("[%d] %.17f\n", k+1, pp); */
-            rN[k] = ((pp < 1.) ?  rbinom( n, pp) :
+            rN[k] = ((pp < 1.) ?  rbinom( n, pp, unif_rand) :
             /*>= 1; > 1 happens because of rounding */
             n);
             n -= rN[k];

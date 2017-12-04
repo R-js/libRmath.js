@@ -48,9 +48,6 @@ import {
   trunc
 } from '~common';
 
-
-import { unif_rand } from '~uniform';
-
 import { qnorm as qnorm5 } from './qnorm';
 
 let BM_norm_keep = 0.0;
@@ -83,7 +80,7 @@ export const User_norm_fun = user_norm_fun_default;
  *    The definitions of the constants a[k], d[k], t[k] and
  *    h[k] are according to the abovementioned article
  */
-export function norm_rand(): number {
+export function norm_rand( unif_rand: () => number): number {
 
   const a = [
 
@@ -317,7 +314,7 @@ export function norm_rand(): number {
       }
 
     case N01type.USER_NORM:
-      return User_norm_fun();
+      return User_norm_fun(unif_rand);
 
     case N01type.INVERSION:
       const BIG = 134217728; /* 2^27 */
@@ -390,7 +387,7 @@ export function norm_rand(): number {
 
 let seed: number;
 
-export function user_norm_fun_default(): number {
+export function user_norm_fun_default( unif_rand: () => number): number {
   let u;
   let v;
   let z;

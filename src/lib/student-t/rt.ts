@@ -40,17 +40,17 @@ import { norm_rand } from '~normal';
 
 import { rchisq } from '~chi-2';
 
-export function rt(df: number): number {
+export function rt(df: number, unif_rand: () => number): number {
     if (ISNAN(df) || df <= 0.0) {
         return ML_ERR_return_NAN();
     }
 
     if (!R_FINITE(df))
-        return norm_rand();
+        return norm_rand(unif_rand);
     else {
         /* Some compilers (including MW6) evaluated this from right to left
             return norm_rand() / sqrt(rchisq(df) / df); */
-        let num = norm_rand();
-        return num / sqrt(rchisq(df) / df);
+        let num = norm_rand(unif_rand);
+        return num / sqrt(rchisq(df, unif_rand) / df);
     }
 }

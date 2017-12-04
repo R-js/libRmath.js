@@ -57,8 +57,8 @@ import {
     exp_rand
 } from '~exp';
 
-export function rgeom(p: number): number {
+export function rgeom(p: number, unif_rand: () => number): number {
     if (!R_FINITE(p) || p <= 0 || p > 1) ML_ERR_return_NAN;
 
-    return rpois(exp_rand() * ((1 - p) / p));
+    return rpois(exp_rand(unif_rand) * ((1 - p) / p), unif_rand);
 }
