@@ -1,16 +1,6 @@
-
-
+'use strict';
 export { uniform } from './uniform';
-export {
-  SuperDuper,
-  KnuthTAOCP,
-  KnuthTAOCP2002,
-  WichmannHill,
-  LecuyerCMRG,
-  MersenneTwister,
-  MarsagliaMultiCarry,
-  IRNG
-} from './rng';
+export { rng, IRNG } from './rng';
 //export * as rfunc from './r-func';
 
 //https://github.com/Microsoft/TypeScript/pull/19852

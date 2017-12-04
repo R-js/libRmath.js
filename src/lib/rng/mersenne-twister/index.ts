@@ -158,7 +158,8 @@ export class MersenneTwister extends IRNG {
   }
 
   public unif_rand(): number {
-    return fixup(this.MT_genrand());
+    let rc = this.MT_genrand();
+    return fixup(rc);
   }
 
   public set seed(_seed: number[]) {

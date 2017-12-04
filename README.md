@@ -13,7 +13,7 @@ fidelity with `R`.
 
 #### Node and Web
 
-The module is an umd The build process will package everything into a final file which can be used in a `<script>` tag or included with your favorite build system (webpack).
+No node specific features are used, you can either deploy for client web or server.
 
 ## Installation
 
@@ -22,8 +22,8 @@ npm install --save lib-r-math.js
 ```
 
 # Table of Contents
-1. [Probability Random Number Generators](#1-Probability-functions-Random-Number-Generators.)
-2. [Probability Distributions](#probability-distributions)
+1. [Probability Random Number Generators](#1-probability-functions-random-number-generators)
+2. [Probability Distributions](#2-probability-distributions)
 3. [Special Functions](#special-functions)
 4. [Work Done](#work-done)
 5. [Road Map](#road-map)
@@ -60,7 +60,7 @@ usage example:
 
 ```javascript
 
-  const libR = require('lib-r-math');
+  const libR = require('lib-r-math.js');
   const { MersenneTwister } = libR.rng;
 
   const mt = new MersenneTwister(0); // initialize with seed = 1
@@ -109,7 +109,7 @@ where each element is in `1:(p[i] - 1)`, where p is the length 3 vector of prime
 
 usage example:
 ```javascript
-  const libR = require('lib-r-math');
+  const libR = require('lib-r-math.js');
   const { WichmannHill } = libR.rng;
  
   const wh = new WichmannHill(0);// initialize with zero
@@ -145,7 +145,7 @@ A multiply-with-carry RNG is used, as recommended by George Marsaglia in his pos
 usage example:
 
 ```javascript
-  const libR = require('lib-r-math');
+  const libR = require('lib-r-math.js');
   const { MarsagliaMultiCarry } = libR.rng;
   const mmc = new MarsagliaMultiCarry(0);
  
@@ -179,7 +179,7 @@ _We use the implementation by Reeds et al (1982–84)._
 
 usage example:
 ```javascript
-  const libR = require('lib-r-math');
+  const libR = require('lib-r-math.js');
   const { SuperDuper } = libR.rng;
   const sd = new SuperDuper(0);
  
@@ -218,7 +218,7 @@ usage example:
 
 ```javascript
 
-  const libR = require('lib-r-math');
+  const libR = require('lib-r-math.js');
   const { KnuthTAOCP } = libR.rng;
   const kt = new KnuthTAOCP(0);
 
@@ -267,7 +267,7 @@ usage example:
 
 ```javascript
 
-  const libR = require('lib-r-math');
+  const libR = require('lib-r-math.js');
   const { KnuthTAOCP2002 } = libR.rng;
   const kt2002 = new KnuthTAOCP2002(0);
 
@@ -317,10 +317,10 @@ This is not particularly interesting of itself, but provides the basis for the m
 usage example:
 
 ```javascript
-  const libR = require('lib-r-math');
+  const libR = require('lib-r-math.js');
   const { LecuyerCMRG } = libR.rng;
   const lc = new LecuyerCMRG(0);
-  
+
   lc.init(0);// at any time re-initialize with any value (in this case 0)
   lc.seed;
 // 6 unsigned integer array
@@ -356,6 +356,84 @@ _in R console_:
 > runif(6)
 [1] 0.3329275 0.8903526 0.1639634 0.2990508
 [5] 0.3952391 0.3601516
+```
+
+## 2. Probability Distributions
+
+#### Summary
+
+In the Section [1](#1-probability-functions-random-number-generators)
+the RNG classes can be used by themselves but mostly intended to be consumed to generate random numbers with a particular distribution (like `Gamma`, `Weibull`, `Chi-square` etc).
+
+_It is also possible to provide your own uniform random source (example: real random numbers fetched from services over the internet). How to create your own PRNG to be consumed by probability distribution simulators is discussed in the [Appendix](#appendix)._
+
+#### Uniform distribution 
+
+`dunif, qunif, punif, runif`
+
+_Naming follows close to R counter part_ 
+
+Usage:
+
+```javascript
+   const libR = require('lib-r-math.js');
+
+   // get the suite of functions working with uniform distributions
+   const { uniform } = libR;
+
+   // prepare PRNG 
+   const { SuperDuper } = libR.rng;
+
+   // initialize PRNG with seed (`0` and `1234`) and create R instance of uniform functions working with this PRNG
+   const Runif = uniform( new SuperDuper(0) );
+   const Runif2 = uniform( new SuperDuper(1234) );
+
+   // for documentation purpose we strip R uniform equivalents
+   const { runif, dunif, punif, quinf } = Runif;
+
+   // Get 15 uniformly distributed numbers between 0 and 1
+   runif(15);
+
+   // Get 5 uniformly distributed numbers between 4 and 9
+   runif(5, 4, 9)
+
+   // get the envelope of the uniform distributions
+   // dunif(x, min = 0, max = 1, log = FALSE)
+   // x could be an Array of numbers of a scalar
+   dunif([-1, 0, 0.4 ,1, 2])
+   // [ 0, 1, 1, 1, 0 ]  Everythin is 1 for inputs between 0 and 1
+   dunif([-1, 0, 0.4 ,1, 2], 0, 2)
+   // [ 0, 0.5, 0.5, 0.5, 0.5 ]
+   dunif([-1, 0, 0.4 ,1, 2], 0, 2, true)
+   /*[
+  -Infinity,
+  -0.6931471805599453,
+  -0.6931471805599453,
+  -0.6931471805599453,
+  -0.6931471805599453
+  ]
+  */
+  // cummumative distribution R
+  // punif(q, min = 0, max = 1, lower.tail = TRUE, log.p = FALSE)
+  punif(0.25)
+  // 0.25
+
+  punif([-2, 0.25, 0.75, 2])
+  // 0, 0.25, 0.75, 1
+
+  punif([-2, 0.25, 0.75, 2], 0, 1, false)
+  // 1, 0.75, 0.25, 0 
+
+  punif([-2, 0.25, 0.75, 2], 0, 2, false, true)
+  //[ 0, -0.13353139262452263, -0.4700036292457356, -Infinity ]
+
+  punif([-2, 0.25, 0.75, 2], 0, 2, false, true)
+  //[ 0, -0.13353139262452263, -0.4700036292457356, -Infinity ]
+
+  // inverse of the cummumative propbabilty
+  // qunif(p, min = 0, max = 1, lower.tail = TRUE, log.p = FALSE)
+  qunif( [  0, 0.25, 0.75, 0.9 , 1 ], 0, 4, true)
+  //qunif( [  0, 0.25, 0.75, 0.9 , 1 ], 0, 4, true)
 ```
 
 # Current State

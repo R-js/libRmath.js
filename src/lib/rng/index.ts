@@ -1,8 +1,20 @@
-export { WichmannHill } from './wichmann-hill';
-export { MarsagliaMultiCarry } from './marsaglia-multicarry';
-export { SuperDuper } from './super-duper';
-export { MersenneTwister } from './mersenne-twister';
-export { KnuthTAOCP } from './knuth-taocp';
-export { KnuthTAOCP2002 } from './knuth-taocp-2002';
-export { LecuyerCMRG } from './lecuyer-cmrg';
-export { IRNG } from './irng';
+import { WichmannHill } from './wichmann-hill';
+import { MarsagliaMultiCarry } from './marsaglia-multicarry';
+import { SuperDuper } from './super-duper';
+import { MersenneTwister } from './mersenne-twister';
+import { KnuthTAOCP } from './knuth-taocp';
+import { KnuthTAOCP2002 } from './knuth-taocp-2002';
+import { LecuyerCMRG } from './lecuyer-cmrg';
+import { IRNG } from './irng';
+
+export const rng = {
+    SuperDuper,
+    KnuthTAOCP,
+    KnuthTAOCP2002,
+    WichmannHill,
+    LecuyerCMRG,
+    MersenneTwister,
+    MarsagliaMultiCarry,
+};
+
+export { IRNG };

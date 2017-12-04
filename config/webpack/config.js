@@ -13,8 +13,8 @@ module.exports = [{
     output: {
         path: resolve('dist/lib'),
         filename: '[name].js',
-        //libraryTarget: 'umd2',
-        //library: 'libRMath'
+        libraryTarget: 'umd2',
+        library: 'libRMath'
     },
     node: {
         __dirname: false,
