@@ -3,7 +3,7 @@
 const { resolve } = require('path');
 const { lint, tsc } = require('./module/rules')
 const { rm, uglify } = require('./plugins');
-
+const { extensions, plugins } = require('./resolve');
 module.exports = [{
     target: "node",
     entry: {
@@ -16,10 +16,10 @@ module.exports = [{
         //libraryTarget: 'umd2',
         //library: 'libRMath'
     },
-    /* node: {
-         __dirname: false,
-         __filename: false,
-     },*/
+    node: {
+        __dirname: false,
+        __filename: false,
+    },
     devtool: 'source-map',
     externals: [...require('./externals')],
     module: {
@@ -32,7 +32,10 @@ module.exports = [{
         rm({ paths: ['lib'] }),
         //uglify()
     ],
-    resolve: require('./resolve'),
+    resolve: {
+        extensions,
+        plugins
+    },
 }];
 
 // Server files live in <projectR{oot>/src/{server,lib}

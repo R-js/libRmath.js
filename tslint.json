@@ -44,7 +44,8 @@
             true,
             "allow-null-check"
         ],
-        "no-use-before-declare": true,
+        //"no-use-before-declare": true,
+        //"no-unused-variable": true,
         "no-construct": true,
         "indent": [
             true,

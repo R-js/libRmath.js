@@ -1,20 +1,7 @@
-//export * from './bessel';
-//export * from './beta';
-//export * from './binomial';
-/*import * as Cauchy from './cauchy';
-import * as Chebyshev from './chebyshev';
-import * as Chi2 from './chi-2';
-import * as Common from './common';
-import * as Devicance from './deviance';
-import * as Exp from './exp';
-import * as F from './f-distro';
-import * as Gamma from './gamma';
-import * as Geometric from './geometric';
-import * as Log from './log';*/
-import { SuperDuper } from  './rng/super-duper/index';
-//export const SuperDuper = s;
-//export { uniform } from './uniform';
-/*export {
+
+
+export { uniform } from './uniform';
+export {
   SuperDuper,
   KnuthTAOCP,
   KnuthTAOCP2002,
@@ -23,14 +10,14 @@ import { SuperDuper } from  './rng/super-duper/index';
   MersenneTwister,
   MarsagliaMultiCarry,
   IRNG
-} from './rng';*/
-//import * as rfunc from './r-func';
+} from './rng';
+//export * as rfunc from './r-func';
 
 //https://github.com/Microsoft/TypeScript/pull/19852
-//Fix declaration emit for imported export alias specifiers
+//Fix declaration emit for exported export alias specifiers
 
 
-/*
+
 export * from './bessel';
 export * from './beta';
 export * from './binomial';
@@ -47,4 +34,7 @@ export * from './log';
 export * from './rng';
 export * from './r-func';
 
-*/
+export * from './bessel';
+export * from './beta';
+export * from './binomial';
+
