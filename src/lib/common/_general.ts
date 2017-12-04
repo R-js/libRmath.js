@@ -438,7 +438,6 @@ export function REprintf(fmt: string, ...args: any[]) {
 //  return x * Math.pow(2,y)
 export function ldexp(x: number, y: number): number {
 
-
     if (ISNAN(x) || ISNAN(y)) {
         return (x + y);
     }
@@ -446,7 +445,6 @@ export function ldexp(x: number, y: number): number {
         return ML_POSINF;
     }
     return x * Math.pow(2, y);
-
 }
 
 

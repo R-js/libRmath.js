@@ -36,9 +36,10 @@ import {
 
 import { pnchisq } from '~chi-2';
 import { pnbeta2 } from '~beta';
+import { INormal } from '~normal';
 
 export function pnf(x: number, df1: number, df2: number, ncp: number,
-    lower_tail: boolean, log_p: boolean): number {
+    lower_tail: boolean, log_p: boolean, normal: INormal): number {
     let y;
 
     if (ISNAN(x) || ISNAN(df1) || ISNAN(df2) || ISNAN(ncp))
@@ -54,7 +55,7 @@ export function pnf(x: number, df1: number, df2: number, ncp: number,
         return rc;
     }
     if (df2 > 1e8) /* avoid problems with +Inf and loss of accuracy */
-        return pnchisq(x * df1, df1, ncp, lower_tail, log_p);
+        return pnchisq(x * df1, df1, ncp, lower_tail, log_p, normal);
 
     y = (df1 / df2) * x;
     return pnbeta2(y / (1. + y), 1. / (1. + y), df1 / 2., df2 / 2.,

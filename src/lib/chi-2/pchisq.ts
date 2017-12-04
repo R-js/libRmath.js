@@ -31,6 +31,8 @@ import {
     pgamma
 } from '~gamma';
 
-export function pchisq(x: number, df: number, lower_tail: boolean, log_p: boolean) {
-    return pgamma(x, df / 2., 2., lower_tail, log_p);
+import { INormal } from '~normal';
+
+export function pchisq(x: number, df: number, lower_tail: boolean, log_p: boolean, normal: INormal) {
+    return pgamma(x, df / 2., 2., lower_tail, log_p, normal);
 }

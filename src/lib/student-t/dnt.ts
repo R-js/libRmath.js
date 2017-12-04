@@ -65,64 +65,72 @@
  */
 
 import {
-    ISNAN,
-    R_FINITE,
-    R_D__0,
-    ML_ERR_return_NAN,
-    fabs,
-    sqrt,
-    log,
-    exp,
-    M_LN_SQRT_PI,
-    DBL_EPSILON
+  ISNAN,
+  R_FINITE,
+  R_D__0,
+  ML_ERR_return_NAN,
+  fabs,
+  sqrt,
+  log,
+  exp,
+  M_LN_SQRT_PI,
+  DBL_EPSILON
 } from '~common';
 
 import { dt } from './dt';
 
-import { dnorm } from '~normal';
+import { INormal } from '~normal';
 
 import { lgammafn } from '~gamma';
 
 import { pnt } from './pnt';
 
-export function dnt(x: number, df: number, ncp: number, give_log: boolean): number {
+export function dnt(
+  x: number,
+  df: number,
+  ncp: number,
+  give_log: boolean,
+  normal: INormal
+): number {
+  let u: number;
 
-    let u: number;
+  if (ISNAN(x) || ISNAN(df)) return x + df;
 
-    if (ISNAN(x) || ISNAN(df))
-        return x + df;
+  /* If non-positive df then error */
+  if (df <= 0.0) ML_ERR_return_NAN;
 
+  if (ncp === 0.0) return dt(x, df, give_log, normal);
 
-    /* If non-positive df then error */
-    if (df <= 0.0) ML_ERR_return_NAN;
+  /* If x is infinite then return 0 */
+  if (!R_FINITE(x)) return R_D__0(give_log);
 
-    if (ncp === 0.0) return dt(x, df, give_log);
-
-    /* If x is infinite then return 0 */
-    if (!R_FINITE(x))
-        return R_D__0(give_log);
-
-    /* If infinite df then the density is identical to a
+  /* If infinite df then the density is identical to a
        normal distribution with mean = ncp.  However, the formula
        loses a lot of accuracy around df=1e9
     */
-    if (!R_FINITE(df) || df > 1e8)
-        return dnorm(x, ncp, 1., give_log);
+  if (!R_FINITE(df) || df > 1e8) return normal.dnorm(x, ncp, 1, give_log);
 
-    /* Do calculations on log scale to stabilize */
+  /* Do calculations on log scale to stabilize */
 
-    /* Consider two cases: x ~= 0 or not */
-    if (fabs(x) > sqrt(df * DBL_EPSILON)) {
-        u = log(df) - log(fabs(x)) +
-            log(fabs(pnt(x * sqrt((df + 2) / df), df + 2, ncp, true, false) -
-                pnt(x, df, ncp, true, false)));
-        /* FIXME: the above still suffers from cancellation (but not horribly) */
-    }
-    else {  /* x ~= 0 : -> same value as for  x = 0 */
-        u = lgammafn((df + 1) / 2) - lgammafn(df / 2)
-            - (M_LN_SQRT_PI + .5 * (log(df) + ncp * ncp));
-    }
+  /* Consider two cases: x ~= 0 or not */
+  if (fabs(x) > sqrt(df * DBL_EPSILON)) {
+    u =
+      log(df) -
+      log(fabs(x)) +
+      log(
+        fabs(
+          pnt(x * sqrt((df + 2) / df), df + 2, ncp, true, false, normal) -
+            pnt(x, df, ncp, true, false, normal)
+        )
+      );
+    /* FIXME: the above still suffers from cancellation (but not horribly) */
+  } else {
+    /* x ~= 0 : -> same value as for  x = 0 */
+    u =
+      lgammafn((df + 1) / 2) -
+      lgammafn(df / 2) -
+      (M_LN_SQRT_PI + 0.5 * (log(df) + ncp * ncp));
+  }
 
-    return (give_log ? u : exp(u));
+  return give_log ? u : exp(u);
 }
-

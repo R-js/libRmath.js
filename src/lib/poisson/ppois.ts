@@ -27,55 +27,66 @@
  */
 
 import {
-    ISNAN,
-    R_FINITE,
-    ML_ERR_return_NAN,
-    R_DT_0,
-    R_DT_1,
-    floor,
-    fmax2
+  ISNAN,
+  R_FINITE,
+  ML_ERR_return_NAN,
+  R_DT_0,
+  R_DT_1,
+  floor,
+  fmax2
 } from '~common';
 
-import {
-    pgamma
-} from '~gamma';
+import { pgamma } from '~gamma';
 
 import { NumberW } from '~common';
 
-export function ppois(x: number, lambda: number, lower_tail: boolean, log_p: boolean): number {
+import { INormal } from '~normal';
 
-    if (ISNAN(x) || ISNAN(lambda))
-        return x + lambda;
+export function ppois(
+  x: number,
+  lambda: number,
+  lower_tail: boolean,
+  log_p: boolean,
+  normal: INormal
+): number {
+  if (ISNAN(x) || ISNAN(lambda)) return x + lambda;
 
-    if (lambda < 0.) {
-        return ML_ERR_return_NAN();
-    }
-    if (x < 0) return R_DT_0(lower_tail, log_p);
-    if (lambda === 0.) return R_DT_1(lower_tail, log_p);
-    if (!R_FINITE(x)) return R_DT_1(lower_tail, log_p);
-    x = floor(x + 1e-7);
+  if (lambda < 0) {
+    return ML_ERR_return_NAN();
+  }
+  if (x < 0) return R_DT_0(lower_tail, log_p);
+  if (lambda === 0) return R_DT_1(lower_tail, log_p);
+  if (!R_FINITE(x)) return R_DT_1(lower_tail, log_p);
+  x = floor(x + 1e-7);
 
-    return pgamma(lambda, x + 1, 1., !lower_tail, log_p);
+  return pgamma(lambda, x + 1, 1, !lower_tail, log_p, normal);
 }
 
-
-
-export function do_search(y: number, z: NumberW, p: number, lambda: number, incr: number): number {
-    if (z.val >= p) {
-        /* search to the left */
-        while (true) {
-            if (y === 0 ||
-                (z.val = ppois(y - incr, lambda, /*l._t.*/true, /*log_p*/false)) < p)
-                return y;
-            y = fmax2(0, y - incr);
-        }
+export function do_search(
+  y: number,
+  z: NumberW,
+  p: number,
+  lambda: number,
+  incr: number,
+  normal: INormal
+): number {
+  if (z.val >= p) {
+    /* search to the left */
+    while (true) {
+      if (
+        y === 0 ||
+        (z.val = ppois(y - incr, lambda, /*l._t.*/ true, /*log_p*/ false, normal)) < p
+      )
+        return y;
+      y = fmax2(0, y - incr);
     }
-    else {		/* search to the right */
+  } else {
+    /* search to the right */
 
-        while (true) {
-            y = y + incr;
-            if ((z.val = ppois(y, lambda, /*l._t.*/true, /*log_p*/false)) >= p)
-                return y;
-        }
+    while (true) {
+      y = y + incr;
+      if ((z.val = ppois(y, lambda, /*l._t.*/ true, /*log_p*/ false, normal)) >= p)
+        return y;
     }
+  }
 }

@@ -38,11 +38,11 @@ import {
     exp
 } from '~common';
 
-import { rnorm } from '../rnorm';
+import { INormal } from '~normal';
 
-export function rlnorm(meanlog: number, sdlog: number, unif_rand: () => number): number {
+export function rlnorm(meanlog: number, sdlog: number, normal: INormal): number {
     if (ISNAN(meanlog) || !R_FINITE(sdlog) || sdlog < 0.)
         return ML_ERR_return_NAN();
 
-    return exp(rnorm(meanlog, sdlog, unif_rand));
+    return exp(normal.rnorm(1, meanlog, sdlog) as number);
 }

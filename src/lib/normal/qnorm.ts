@@ -50,19 +50,19 @@
  *      Applied Statistics, 37, 477-484.
  */
 
+import * as debug from 'debug';
+
 import {
-    ISNAN,
-    ML_NEGINF,
-    ML_POSINF,
     R_Q_P01_boundaries,
-    ML_ERR_return_NAN,
-    fabs,
-    REprintf,
-    sqrt,
-    log
+    ML_ERR_return_NAN
 } from '~common';
 
 import { R_DT_qIv, R_DT_CIv } from '~exp';
+
+const printer = debug('qnorm');
+
+const { isNaN: ISNAN, NEGATIVE_INFINITY: ML_NEGINF, POSITIVE_INFINITY: ML_POSINF } = Number;
+const {  log, sqrt, abs:fabs } = Math;
 
 export function qnorm(p: number, mu: number, sigma: number, lower_tail: boolean, log_p: boolean): number {
     let p_;
@@ -78,17 +78,14 @@ export function qnorm(p: number, mu: number, sigma: number, lower_tail: boolean,
     if (rc !== undefined) {
         return rc;
     }
-    if (sigma < 0) return ML_ERR_return_NAN();
+    if (sigma < 0) return ML_ERR_return_NAN(printer);
     if (sigma === 0) return mu;
 
     p_ = R_DT_qIv(lower_tail, log_p, p); /* real lower_tail prob. p */
     q = p_ - 0.5;
 
-
-    REprintf('qnorm(p=%10.7g, m=%g, s=%g, l.t.= %d, log= %d): q = %g\n',
+    printer('qnorm(p=%d, m=%d, s=%d, l.t.= %s, log= %s): q = %d', 
         p, mu, sigma, lower_tail, log_p, q);
-
-
 
     /*-- use AS 241 --- */
     /* double ppnd16_(double *p, long *ifault)*/
@@ -125,9 +122,8 @@ export function qnorm(p: number, mu: number, sigma: number, lower_tail: boolean,
             ((lower_tail && q <= 0) || (!lower_tail && q > 0))) ?
             p : /* else */ log(r)));
         /* r = sqrt(-log(r))  <==>  min(p, 1-p) = exp( - r^2 ) */
-     
-        REprintf('\t close to 0 or 1: r = %7g\n', r);
-     
+
+        printer('close to 0 or 1: r = %7d', r);
 
         if (r <= 5.) { /* <==> min(p,1-p) >= exp(-25) ~= 1.3888e-11 */
             r += -1.6;

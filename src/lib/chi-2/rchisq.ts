@@ -41,11 +41,12 @@ import {
 } from '~common';
 
 import { rgamma  } from '~gamma';
+import { INormal } from '~normal';
 
-export function rchisq(df: number, unif_rand: () => number): number {
+export function rchisq(df: number, normal: INormal): number {
 
     if (!R_FINITE(df) || df < 0.0) {
         return ML_ERR_return_NAN();
     }
-    return rgamma(df / 2.0, 2.0, unif_rand);
+    return rgamma(df / 2.0, 2.0, normal);
 }

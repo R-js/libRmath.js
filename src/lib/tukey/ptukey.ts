@@ -62,13 +62,13 @@ import {
     ME
 } from '~common';
 
-import { pnorm5 as pnorm } from '~normal';
+import { INormal } from '~normal';
 
 import { lgammafn } from '~gamma';
 
 import { R_DT_val } from '~log';
 
-export function wprob(w: number, rr: number, cc: number): number {
+export function wprob(w: number, rr: number, cc: number, normal: INormal): number {
     /*  wprob() :
     
         This function calculates probability integral of Hartley's
@@ -159,7 +159,7 @@ export function wprob(w: number, rr: number, cc: number): number {
     /* find (f(w/2) - 1) ^ cc */
     /* (first term in integral of hartley's form). */
 
-    pr_w = 2 * pnorm(qsqz, 0., 1., true, false) - 1.; /* erf(qsqz / M_SQRT2) */
+    pr_w = 2 * normal.pnorm(qsqz, 0., 1., true, false) - 1.; /* erf(qsqz / M_SQRT2) */
     /* if pr_w ^ cc < 2e-22 then set pr_w = 0 */
     if (pr_w >= exp(C2 / cc))
         pr_w = pow(pr_w, cc);
@@ -216,8 +216,8 @@ export function wprob(w: number, rr: number, cc: number): number {
             if (qexpo > C3)
                 break;
 
-            pplus = 2 * pnorm(ac, 0., 1., true, false);
-            pminus = 2 * pnorm(ac, w, 1., true, false);
+            pplus = 2 * normal.pnorm(ac, 0., 1., true, false);
+            pminus = 2 * normal.pnorm(ac, w, 1., true, false);
 
             /* if rinsum ^ (cc-1) < 9e-14, */
             /* then doesn't contribute to integral */
@@ -246,7 +246,14 @@ export function wprob(w: number, rr: number, cc: number): number {
 } /* wprob() */
 
 
-export function ptukey(q: number, rr: number, cc: number, df: number, lower_tail: boolean, log_p: boolean) {
+export function ptukey(
+    q: number, 
+    rr: number, 
+    cc: number, 
+    df: number, 
+    lower_tail: boolean, 
+    log_p: boolean, 
+    normal: INormal) {
     /*  function ptukey() [was qprob() ]:
     
         q = value of studentized range
@@ -377,7 +384,7 @@ export function ptukey(q: number, rr: number, cc: number, df: number, lower_tail
         return R_DT_1(lower_tail, log_p);
 
     if (df > dlarg)
-        return R_DT_val(lower_tail, log_p, wprob(q, rr, cc));
+        return R_DT_val(lower_tail, log_p, wprob(q, rr, cc, normal));
 
     /* calculate leading constant */
 
@@ -432,7 +439,7 @@ export function ptukey(q: number, rr: number, cc: number, df: number, lower_tail
 
                 /* call wprob to find integral of range portion */
 
-                wprb = wprob(qsqz, rr, cc);
+                wprb = wprob(qsqz, rr, cc, normal);
                 rotsum = (wprb * alegq[j]) * exp(t1);
                 otsum += rotsum;
             }

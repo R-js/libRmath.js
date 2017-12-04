@@ -32,21 +32,29 @@
  *
  */
 
-import {
-    ISNAN,
-    R_FINITE,
-    ML_ERR_return_NAN
-} from '~common';
+import * as debug from 'debug';
 
-import { norm_rand } from './snorm';
+import { ML_ERR_return_NAN } from '~common';
 
-export function rnorm(mu: number, sigma: number, unif_rand: () => number): number {
-    if (ISNAN(mu) || !R_FINITE(sigma) || sigma < 0.)
-        return ML_ERR_return_NAN();
-    if (sigma === 0. || !R_FINITE(mu))
-        return mu; /* includes mu = +/- Inf with finite sigma */
-    else
-        return mu + sigma * norm_rand(unif_rand);
+const { isNaN: ISNAN, isFinite: R_FINITE } = Number;
+
+const printer = debug('rnorm');
+
+export function rnorm(
+  n: number = 1,
+  mu: number = 0,
+  sigma: number = 1,
+  norm_rand: () => number
+): number | number[] {
+  let result = new Array(n).fill(0).map(() => {
+    if (ISNAN(mu) || !R_FINITE(sigma) || sigma < 0) {
+      return ML_ERR_return_NAN(printer);
+    }
+    if (sigma === 0 || !R_FINITE(mu)) {
+      return mu; /* includes mu = +/- Inf with finite sigma */
+    }
+    return mu + sigma * norm_rand();
+  });
+
+  return result.length === 1 ? result[0] : result;
 }
-
-

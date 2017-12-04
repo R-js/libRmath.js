@@ -57,11 +57,11 @@ import { bd0 } from '~deviance';
 
 import { stirlerr } from '~stirling';
 
-import { dnorm } from '~normal';
+import { INormal } from '~normal';
 
 import { log1p } from '~log';
 
-export function dt(x: number, n: number, give_log: boolean): number {
+export function dt(x: number, n: number, give_log: boolean, normal: INormal): number {
 
     if (ISNAN(x) || ISNAN(n)) {
         return x + n;
@@ -73,7 +73,7 @@ export function dt(x: number, n: number, give_log: boolean): number {
         return R_D__0(give_log);
     }
     if (!R_FINITE(n)) {
-        return dnorm(x, 0., 1., give_log);
+        return normal.dnorm(x, 0., 1., give_log);
     }
 
     let u: number;

@@ -96,9 +96,12 @@ import { log1p } from '~log';
 import { lgammafn } from '~gamma';
 import { expm1, R_Log1_Exp } from '~exp';
 import { dpois_raw } from '~poisson';
-import { dnorm } from '~normal';
 
-import { pnorm5 as pnorm } from '~normal';
+import {
+  INormal
+} from '~normal';
+
+
 
 export const scalefactor = sqr(sqr(sqr(4294967296.0)));
 
@@ -539,7 +542,7 @@ export function pd_lower_series(lambda: number, y: number): number {
  *
  * Abramowitz & Stegun 26.2.12
  */
-export function dpnorm(x: number, lower_tail: boolean, lp: number): number {
+export function dpnorm(x: number, lower_tail: boolean, lp: number, normal: INormal): number {
   /*
    * So as not to repeat a pnorm call, we expect
    *
@@ -567,7 +570,7 @@ export function dpnorm(x: number, lower_tail: boolean, lp: number): number {
 
     return 1 / sum;
   } else {
-    let d = dnorm(x, 0., 1., false);
+    let d = normal.dnorm(x, 0., 1., false);
     return d / exp(lp);
   }
 }
@@ -578,7 +581,7 @@ export function dpnorm(x: number, lower_tail: boolean, lp: number): number {
  * Various assertions about this are made (without proof) at
  * http://members.aol.com/iandjmsmith/PoissonApprox.htm
  */
-export function ppois_asymp(x: number, lambda: number, lower_tail: boolean, log_p: boolean): number {
+export function ppois_asymp(x: number, lambda: number, lower_tail: boolean, log_p: boolean, normal: INormal): number {
   const coefs_a = [
     -1e99, /* placeholder used for 1-indexing */
     2 / 3.,
@@ -650,15 +653,15 @@ export function ppois_asymp(x: number, lambda: number, lower_tail: boolean, log_
 
   f = res12 / elfb;
 
-  np = pnorm(s2pt, 0.0, 1.0, !lower_tail, log_p);
+  np = normal.pnorm(s2pt, 0.0, 1.0, !lower_tail, log_p);
 
   if (log_p) {
-    let n_d_over_p = dpnorm(s2pt, !lower_tail, np);
+    let n_d_over_p = dpnorm(s2pt, !lower_tail, np, normal);
     REprintf('pp*_asymp(): f=%.14g	 np=e^%.14g  nd/np=%.14g  f*nd/np=%.14g\n',
       f, np, n_d_over_p, f * n_d_over_p);
     return np + log1p(f * n_d_over_p);
   } else {
-    let nd = dnorm(s2pt, 0., 1., log_p);
+    let nd = normal.dnorm(s2pt, 0., 1., log_p);
 
     REprintf('pp*_asymp(): f=%.14g	 np=%.14g  nd=%.14g  f*nd=%.14g\n', f, np, nd, f * nd);
     return np + f * nd;
@@ -666,7 +669,7 @@ export function ppois_asymp(x: number, lambda: number, lower_tail: boolean, log_
 } /* ppois_asymp() */
 
 
-export function pgamma_raw(x: number, alph: number, lower_tail: boolean, log_p: boolean): number {
+export function pgamma_raw(x: number, alph: number, lower_tail: boolean, log_p: boolean, normal: INormal): number {
 
   /* Here, assume that  (x,alph) are not NA  &  alph > 0 . */
 
@@ -726,7 +729,7 @@ export function pgamma_raw(x: number, alph: number, lower_tail: boolean, log_p: 
     /* x >= 1 and x fairly near alph. */
     
     REprintf(' using ppois_asymp()\n');
-    res = ppois_asymp(alph - 1, x, !lower_tail, log_p);
+    res = ppois_asymp(alph - 1, x, !lower_tail, log_p, normal);
   }
 
   /*
@@ -738,13 +741,13 @@ export function pgamma_raw(x: number, alph: number, lower_tail: boolean, log_p: 
     /* with(.Machine, double.xmin / double.eps) #|-> 1.002084e-292 */
 
     REprintf(' very small res=%.14g; -> recompute via log\n', res);
-    return exp(pgamma_raw(x, alph, lower_tail, true));
+    return exp(pgamma_raw(x, alph, lower_tail, true, normal));
   } else
     return res;
 }
 
 
-export function pgamma(x: number, alph: number, scale: number, lower_tail: boolean, log_p: boolean) {
+export function pgamma(x: number, alph: number, scale: number, lower_tail: boolean, log_p: boolean, normal: INormal) {
 
   if (ISNAN(x) || ISNAN(alph) || ISNAN(scale))
     return x + alph + scale;
@@ -757,7 +760,7 @@ export function pgamma(x: number, alph: number, scale: number, lower_tail: boole
     return x;
   if (alph === 0.) /* limit case; useful e.g. in pnchisq() */
     return (x <= 0) ? R_DT_0(lower_tail, log_p) : R_DT_1(lower_tail, log_p); /* <= assert  pgamma(0,0) ==> 0 */
-  return pgamma_raw(x, alph, lower_tail, log_p);
+  return pgamma_raw(x, alph, lower_tail, log_p, normal);
 }
 /* From: terra@gnome.org (Morten Welinder)
  * To: R-bugs@biostat.ku.dk

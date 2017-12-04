@@ -36,7 +36,7 @@ export function runif(n: number = 1, a: number = 0, b: number= 1 , unif_rand: ()
         return ML_ERR_return_NAN(printer);
     }
     
-    let result = new Array(n).fill(0).map( m => {
+    let result = new Array(n).fill(0).map( () => {
         const s = unif_rand();
         return (b - a) * s + a;
     });

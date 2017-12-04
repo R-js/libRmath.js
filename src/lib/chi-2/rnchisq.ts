@@ -65,19 +65,20 @@ import {
 import { rgamma } from '~gamma';
 import { rpois } from '~poisson';
 import { rchisq } from './rchisq';
+import { INormal } from '~normal';
 //import { unwatchFile } from 'fs';
 
-export function rnchisq(df: number, lambda: number, unif_rand: () => number): number {
+export function rnchisq(df: number, lambda: number, normal: INormal): number {
     if (!R_FINITE(df) || !R_FINITE(lambda) || df < 0. || lambda < 0.)
         ML_ERR_return_NAN;
 
     if (lambda === 0.) {
-        return (df === 0.) ? 0. : rgamma(df / 2., 2., unif_rand);
+        return (df === 0.) ? 0. : rgamma(df / 2., 2., normal);
     }
     else {
-        let r = rpois(lambda / 2., unif_rand);
-        if (r > 0.) r = rchisq(2. * r, unif_rand);
-        if (df > 0.) r += rgamma(df / 2., 2., unif_rand);
+        let r = rpois(lambda / 2., normal);
+        if (r > 0.) r = rchisq(2. * r, normal);
+        if (df > 0.) r += rgamma(df / 2., 2., normal);
         return r;
     }
 }

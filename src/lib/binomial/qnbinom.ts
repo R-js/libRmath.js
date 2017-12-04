@@ -71,10 +71,7 @@ import {
     R_DT_qIv
 } from '~exp';
 
-import {
-    qnorm
-} from '~normal';
-
+import { INormal } from '~normal';
 
 
  function do_search(y: number, z: NumberW, p: number, n: number, pr: number, incr: number): number {
@@ -108,7 +105,14 @@ import {
 }
 
 
-export function qnbinom(p: number, size: number, prob: number, lower_tail: boolean, log_p: boolean): number {
+export function qnbinom(
+    p: number, 
+    size: number, 
+    prob: number, 
+    lower_tail: boolean, 
+    log_p: boolean,
+    normal: INormal
+): number {
     let P;
     let Q;
     let mu;
@@ -153,7 +157,7 @@ export function qnbinom(p: number, size: number, prob: number, lower_tail: boole
     if (p + 1.01 * DBL_EPSILON >= 1.) return ML_POSINF;
 
     /* y := approx.value (Cornish-Fisher expansion) :  */
-    z.val = qnorm(p, 0., 1., /*lower_tail*/true, /*log_p*/true);
+    z.val = normal.qnorm(p, 0., 1., /*lower_tail*/true, /*log_p*/true);
     y = R_forceint(mu + sigma * (z.val + gamma * (z.val * z.val - 1) / 6));
 
     z.val = pnbinom(y, size, prob, /*lower_tail*/true, /*log_p*/false);
@@ -176,7 +180,7 @@ export function qnbinom(p: number, size: number, prob: number, lower_tail: boole
     }
 }
 
-export function qnbinom_mu(p: number, size: number, mu: number, lower_tail: boolean, log_p: boolean){
+export function qnbinom_mu(p: number, size: number, mu: number, lower_tail: boolean, log_p: boolean, normal: INormal){
     /* FIXME!  Implement properly!! (not losing accuracy for very large size (prob ~= 1)*/
-    return qnbinom(p, size, /* prob = */ size / (size + mu), lower_tail, log_p);
+    return qnbinom(p, size, /* prob = */ size / (size + mu), lower_tail, log_p, normal);
 }

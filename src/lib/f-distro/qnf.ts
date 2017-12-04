@@ -26,33 +26,43 @@
  */
 
 import {
-    ISNAN,
-    ML_ERR_return_NAN,
-    R_FINITE,
-    ML_POSINF,
-    R_Q_P01_boundaries
+  ISNAN,
+  ML_ERR_return_NAN,
+  R_FINITE,
+  ML_POSINF,
+  R_Q_P01_boundaries
 } from '~common';
 
 import { qnchisq } from '~chi-2';
 import { qnbeta } from '~beta';
+import { INormal } from '~normal';
 
-export function qnf(p: number, df1: number, df2: number, ncp: number, lower_tail: boolean, log_p: boolean) {
-    let y;
+export function qnf(
+  p: number,
+  df1: number,
+  df2: number,
+  ncp: number,
+  lower_tail: boolean,
+  log_p: boolean,
+  normal: INormal
+) {
+  let y;
 
-    if (ISNAN(p) || ISNAN(df1) || ISNAN(df2) || ISNAN(ncp))
-        return p + df1 + df2 + ncp;
+  if (ISNAN(p) || ISNAN(df1) || ISNAN(df2) || ISNAN(ncp))
+    return p + df1 + df2 + ncp;
 
-    if (df1 <= 0. || df2 <= 0. || ncp < 0) ML_ERR_return_NAN;
-    if (!R_FINITE(ncp)) ML_ERR_return_NAN;
-    if (!R_FINITE(df1) && !R_FINITE(df2)) ML_ERR_return_NAN;
-    let rc = R_Q_P01_boundaries(lower_tail, log_p, p, 0, ML_POSINF);
-    if (rc !== undefined) {
-        return rc;
-    }
+  if (df1 <= 0 || df2 <= 0 || ncp < 0) ML_ERR_return_NAN;
+  if (!R_FINITE(ncp)) ML_ERR_return_NAN;
+  if (!R_FINITE(df1) && !R_FINITE(df2)) ML_ERR_return_NAN;
+  let rc = R_Q_P01_boundaries(lower_tail, log_p, p, 0, ML_POSINF);
+  if (rc !== undefined) {
+    return rc;
+  }
 
-    if (df2 > 1e8) /* avoid problems with +Inf and loss of accuracy */
-        return qnchisq(p, df1, ncp, lower_tail, log_p) / df1;
+  if (df2 > 1e8)
+    /* avoid problems with +Inf and loss of accuracy */
+    return qnchisq(p, df1, ncp, lower_tail, log_p, normal) / df1;
 
-    y = qnbeta(p, df1 / 2., df2 / 2., ncp, lower_tail, log_p);
-    return y / (1 - y) * (df2 / df1);
+  y = qnbeta(p, df1 / 2, df2 / 2, ncp, lower_tail, log_p);
+  return y / (1 - y) * (df2 / df1);
 }

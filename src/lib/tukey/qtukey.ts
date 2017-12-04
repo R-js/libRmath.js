@@ -44,7 +44,6 @@
  *	Vol.30, pp.1-15, 1988.
  */
 
-
 /* qinv() :
  *	this function finds percentage point of the studentized range
  *	which is used as initial estimate for the secant method.
@@ -61,42 +60,41 @@
  *	is treated as infinity.
  */
 
-import {
-    sqrt,
-    log
-} from '~common';
+import { sqrt, log } from '~common';
 
 export function qinv(p: number, c: number, v: number): number {
-    const p0 = 0.322232421088;
-    const q0 = 0.993484626060e-01;
-    const p1 = -1.0;
-    const q1 = 0.588581570495;
-    const p2 = -0.342242088547;
-    const q2 = 0.531103462366;
-    const p3 = -0.204231210125;
-    const q3 = 0.103537752850;
-    const p4 = -0.453642210148e-04;
-    const q4 = 0.38560700634e-02;
-    const c1 = 0.8832;
-    const c2 = 0.2368;
-    const c3 = 1.214;
-    const c4 = 1.208;
-    const c5 = 1.4142;
-    const vmax = 120.0;
+  const p0 = 0.322232421088;
+  const q0 = 0.99348462606e-1;
+  const p1 = -1.0;
+  const q1 = 0.588581570495;
+  const p2 = -0.342242088547;
+  const q2 = 0.531103462366;
+  const p3 = -0.204231210125;
+  const q3 = 0.10353775285;
+  const p4 = -0.453642210148e-4;
+  const q4 = 0.38560700634e-2;
+  const c1 = 0.8832;
+  const c2 = 0.2368;
+  const c3 = 1.214;
+  const c4 = 1.208;
+  const c5 = 1.4142;
+  const vmax = 120.0;
 
-    let ps;
-    let q;
-    let t;
-    let yi;
+  let ps;
+  let q;
+  let t;
+  let yi;
 
-    ps = 0.5 - 0.5 * p;
-    yi = sqrt(log(1.0 / (ps * ps)));
-    t = yi + ((((yi * p4 + p3) * yi + p2) * yi + p1) * yi + p0)
-        / ((((yi * q4 + q3) * yi + q2) * yi + q1) * yi + q0);
-    if (v < vmax) t += (t * t * t + t) / v / 4.0;
-    q = c1 - c2 * t;
-    if (v < vmax) q += -c3 / v + c4 * t / v;
-    return t * (q * log(c - 1.0) + c5);
+  ps = 0.5 - 0.5 * p;
+  yi = sqrt(log(1.0 / (ps * ps)));
+  t =
+    yi +
+    ((((yi * p4 + p3) * yi + p2) * yi + p1) * yi + p0) /
+      ((((yi * q4 + q3) * yi + q2) * yi + q1) * yi + q0);
+  if (v < vmax) t += (t * t * t + t) / v / 4.0;
+  q = c1 - c2 * t;
+  if (v < vmax) q += -c3 / v + c4 * t / v;
+  return t * (q * log(c - 1.0) + c5);
 }
 
 /*
@@ -125,96 +123,101 @@ export function qinv(p: number, c: number, v: number): number {
  */
 
 import {
-    ISNAN,
-    ML_ERROR,
-    ME,
-    ML_ERR_return_NAN,
-    ML_POSINF,
-    R_Q_P01_boundaries,
-    fmax2,
-    fabs
+  ISNAN,
+  ML_ERROR,
+  ME,
+  ML_ERR_return_NAN,
+  ML_POSINF,
+  R_Q_P01_boundaries,
+  fmax2,
+  fabs
 } from '~common';
 
 import { R_DT_qIv } from '~exp';
 
 import { ptukey } from './ptukey';
 
-export function qtukey(p: number, rr: number, cc: number, df: number,
-    lower_tail: boolean, log_p: boolean): number {
-    const eps = 0.0001;
-    const maxiter = 50;
+import { INormal } from '~normal';
 
-    let ans = 0.0;
-    let valx0;
-    let valx1;
-    let x0;
-    let x1;
-    let xabs;
-    let iter;
+export function qtukey(
+  p: number,
+  rr: number,
+  cc: number,
+  df: number,
+  lower_tail: boolean,
+  log_p: boolean,
+  normal: INormal
+): number {
+  const eps = 0.0001;
+  const maxiter = 50;
 
+  let ans = 0.0;
+  let valx0;
+  let valx1;
+  let x0;
+  let x1;
+  let xabs;
+  let iter;
 
-    if (ISNAN(p) || ISNAN(rr) || ISNAN(cc) || ISNAN(df)) {
-        ML_ERROR(ME.ME_DOMAIN, 'qtukey');
-        return p + rr + cc + df;
+  if (ISNAN(p) || ISNAN(rr) || ISNAN(cc) || ISNAN(df)) {
+    ML_ERROR(ME.ME_DOMAIN, 'qtukey');
+    return p + rr + cc + df;
+  }
+
+  /* df must be > 1 ; there must be at least two values */
+  if (df < 2 || rr < 1 || cc < 2) return ML_ERR_return_NAN();
+
+  let rc = R_Q_P01_boundaries(lower_tail, log_p, p, 0, ML_POSINF);
+  if (rc !== undefined) {
+    return rc;
+  }
+
+  p = R_DT_qIv(lower_tail, log_p, p); /* lower_tail,non-log "p" */
+
+  /* Initial value */
+
+  x0 = qinv(p, cc, df);
+
+  /* Find prob(value < x0) */
+
+  valx0 = ptukey(x0, rr, cc, df, /*LOWER*/ true, /*LOG_P*/ false, normal) - p;
+
+  /* Find the second iterate and prob(value < x1). */
+  /* If the first iterate has probability value */
+  /* exceeding p then second iterate is 1 less than */
+  /* first iterate; otherwise it is 1 greater. */
+
+  if (valx0 > 0.0) x1 = fmax2(0.0, x0 - 1.0);
+  else x1 = x0 + 1.0;
+  valx1 = ptukey(x1, rr, cc, df, /*LOWER*/ true, /*LOG_P*/ false, normal) - p;
+
+  /* Find new iterate */
+
+  for (iter = 1; iter < maxiter; iter++) {
+    ans = x1 - valx1 * (x1 - x0) / (valx1 - valx0);
+    valx0 = valx1;
+
+    /* New iterate must be >= 0 */
+
+    x0 = x1;
+    if (ans < 0.0) {
+      ans = 0.0;
+      valx1 = -p;
     }
+    /* Find prob(value < new iterate) */
 
+    valx1 =
+      ptukey(ans, rr, cc, df, /*LOWER*/ true, /*LOG_P*/ false, normal) - p;
+    x1 = ans;
 
-    /* df must be > 1 ; there must be at least two values */
-    if (df < 2 || rr < 1 || cc < 2) return ML_ERR_return_NAN();
+    /* If the difference between two successive */
+    /* iterates is less than eps, stop */
 
-    let rc = R_Q_P01_boundaries(lower_tail, log_p, p, 0, ML_POSINF);
-    if (rc !== undefined) {
-        return rc;
-    }
+    xabs = fabs(x1 - x0);
+    if (xabs < eps) return ans;
+  }
 
-    p = R_DT_qIv(lower_tail, log_p, p); /* lower_tail,non-log "p" */
-
-    /* Initial value */
-
-    x0 = qinv(p, cc, df);
-
-    /* Find prob(value < x0) */
-
-    valx0 = ptukey(x0, rr, cc, df, /*LOWER*/true, /*LOG_P*/false) - p;
-
-    /* Find the second iterate and prob(value < x1). */
-    /* If the first iterate has probability value */
-    /* exceeding p then second iterate is 1 less than */
-    /* first iterate; otherwise it is 1 greater. */
-
-    if (valx0 > 0.0)
-        x1 = fmax2(0.0, x0 - 1.0);
-    else
-        x1 = x0 + 1.0;
-    valx1 = ptukey(x1, rr, cc, df, /*LOWER*/true, /*LOG_P*/false) - p;
-
-    /* Find new iterate */
-
-    for (iter = 1; iter < maxiter; iter++) {
-        ans = x1 - ((valx1 * (x1 - x0)) / (valx1 - valx0));
-        valx0 = valx1;
-
-        /* New iterate must be >= 0 */
-
-        x0 = x1;
-        if (ans < 0.0) {
-            ans = 0.0;
-            valx1 = -p;
-        }
-        /* Find prob(value < new iterate) */
-
-        valx1 = ptukey(ans, rr, cc, df, /*LOWER*/true, /*LOG_P*/false) - p;
-        x1 = ans;
-
-        /* If the difference between two successive */
-        /* iterates is less than eps, stop */
-
-        xabs = fabs(x1 - x0);
-        if (xabs < eps)
-            return ans;
-    }
-
-    /* The process did not converge in 'maxiter' iterations */
-    ML_ERROR(ME.ME_NOCONV, 'qtukey');
-    return ans;
+  /* The process did not converge in 'maxiter' iterations */
+  ML_ERROR(ME.ME_NOCONV, 'qtukey');
+  return ans;
 }

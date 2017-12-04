@@ -37,34 +37,32 @@
  *
  *	Compute the density of the normal distribution.
  */
-
+import * as debug from 'debug';
 import {
-
     R_D__0,
     ML_NAN,
     ML_ERR_return_NAN,
     ML_POSINF,
-    fabs,
     DBL_MAX,
-   
     M_LN_SQRT_2PI,
     log,
     M_1_SQRT_2PI,
-   
     M_LN2,
     DBL_MIN_EXP,
     DBL_MANT_DIG,
-    R_forceint,
     ldexp
-
 } from '~common';
 
 const { isNaN: ISNAN, isFinite: R_FINITE } = Number;
-const { sqrt , exp, } = Math; 
+const { sqrt , exp, abs:fabs, round:R_forceint } = Math; 
+const printer = debug('dnorm4');
 
-export const dnorm = dnorm4;
 
-export function dnorm4(x: number, mu: number, sigma: number, give_log: boolean): number {
+export function dnorm4(
+    x: number, 
+    mu: number, 
+    sigma: number, 
+    give_log: boolean): number {
 
     if (ISNAN(x) || ISNAN(mu) || ISNAN(sigma)) {
         return x + mu + sigma;
@@ -80,7 +78,7 @@ export function dnorm4(x: number, mu: number, sigma: number, give_log: boolean):
 
     if (sigma <= 0) {
         if (sigma < 0) {
-            return ML_ERR_return_NAN();
+            return ML_ERR_return_NAN(printer);
         }
         /* sigma == 0 */
         return (x === mu) ? ML_POSINF : R_D__0(give_log);

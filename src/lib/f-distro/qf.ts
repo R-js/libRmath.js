@@ -28,45 +28,53 @@
 */
 
 import {
-    ISNAN,
-    ML_ERR_return_NAN,
-    R_FINITE,
-    ML_NAN,
-    ML_VALID,
-    ML_POSINF,
-    R_Q_P01_boundaries
+  ISNAN,
+  ML_ERR_return_NAN,
+  R_FINITE,
+  ML_NAN,
+  ML_VALID,
+  ML_POSINF,
+  R_Q_P01_boundaries
 } from '~common';
 
 import { qbeta } from '~beta';
 import { qchisq } from '~chi-2';
+import { INormal } from '~normal';
 
-export function qf(p: number, df1: number, df2: number, lower_tail: boolean, log_p: boolean): number {
+export function qf(
+  p: number,
+  df1: number,
+  df2: number,
+  lower_tail: boolean,
+  log_p: boolean,
+  normal: INormal
+): number {
+  if (ISNAN(p) || ISNAN(df1) || ISNAN(df2)) return p + df1 + df2;
 
-    if (ISNAN(p) || ISNAN(df1) || ISNAN(df2))
-        return p + df1 + df2;
+  if (df1 <= 0 || df2 <= 0) ML_ERR_return_NAN;
 
-    if (df1 <= 0. || df2 <= 0.) ML_ERR_return_NAN;
+  let rc = R_Q_P01_boundaries(lower_tail, log_p, p, 0, ML_POSINF);
+  if (rc !== undefined) {
+    return rc;
+  }
 
-    let rc = R_Q_P01_boundaries(lower_tail, log_p, p, 0, ML_POSINF);
-    if (rc !== undefined) {
-        return rc;
-    }
-
-    /* fudge the extreme DF cases -- qbeta doesn't do this well.
+  /* fudge the extreme DF cases -- qbeta doesn't do this well.
        But we still need to fudge the infinite ones.
      */
 
-    if (df1 <= df2 && df2 > 4e5) {
-        if (!R_FINITE(df1)) /* df1 == df2 == Inf : */
-            return 1.;
-        /* else */
-        return qchisq(p, df1, lower_tail, log_p) / df1;
-    }
-    if (df1 > 4e5) { /* and so  df2 < df1 */
-        return df2 / qchisq(p, df2, !lower_tail, log_p);
-    }
+  if (df1 <= df2 && df2 > 4e5) {
+    if (!R_FINITE(df1))
+      /* df1 == df2 == Inf : */
+      return 1;
+    /* else */
+    return qchisq(p, df1, lower_tail, log_p, normal) / df1;
+  }
+  if (df1 > 4e5) {
+    /* and so  df2 < df1 */
+    return df2 / qchisq(p, df2, !lower_tail, log_p, normal);
+  }
 
-    // FIXME: (1/qb - 1) = (1 - qb)/qb; if we know qb ~= 1, should use other tail
-    p = (1. / qbeta(p, df2 / 2, df1 / 2, !lower_tail, log_p) - 1.) * (df2 / df1);
-    return ML_VALID(p) ? p : ML_NAN;
+  // FIXME: (1/qb - 1) = (1 - qb)/qb; if we know qb ~= 1, should use other tail
+  p = (1 / qbeta(p, df2 / 2, df1 / 2, !lower_tail, log_p) - 1) * (df2 / df1);
+  return ML_VALID(p) ? p : ML_NAN;
 }

@@ -42,9 +42,16 @@ import {
 import { pchisq } from '~chi-2';
 import { pbeta } from '~beta';
 
+import { INormal } from '~normal';
 
-
-export function pf(x: number, df1: number, df2: number, lower_tail: boolean, log_p: boolean): number {
+export function pf(
+    x: number, 
+    df1: number, 
+    df2: number, 
+    lower_tail: boolean, 
+    log_p: boolean,
+    normal: INormal
+): number {
 
     if (ISNAN(x) || ISNAN(df1) || ISNAN(df2))
         return x + df2 + df1;
@@ -67,11 +74,11 @@ export function pf(x: number, df1: number, df2: number, lower_tail: boolean, log
             if (x > 1.) return R_DT_1(lower_tail, log_p);
         }
 
-        return pchisq(x * df1, df1, lower_tail, log_p);
+        return pchisq(x * df1, df1, lower_tail, log_p, normal);
     }
 
     if (df1 === ML_POSINF)/* was "fudge"	'df1 > 4e5' in 2.0.x */
-        return pchisq(df2 / x, df2, !lower_tail, log_p);
+        return pchisq(df2 / x, df2, !lower_tail, log_p, normal);
 
     /* Avoid squeezing pbeta's first parameter against 1 :  */
     if (df1 * x > df2)

@@ -53,18 +53,19 @@ import {
 
 import { rpois } from '~poisson';
 import { rgamma } from '~gamma';
+import { INormal } from '~normal';
 
-export function rnbinom(size: number, prob: number, unif_rand: () => number): number {
+export function rnbinom(size: number, prob: number, normal: INormal): number {
     if (!R_FINITE(size) || !R_FINITE(prob) || size <= 0 || prob <= 0 || prob > 1) {
         /* prob = 1 is ok, PR#1218 */
         return ML_ERR_return_NAN();
     }
-    return (prob === 1) ? 0 : rpois( rgamma(size, (1 - prob) / prob, unif_rand), unif_rand);
+    return (prob === 1) ? 0 : rpois( rgamma(size, (1 - prob) / prob, normal), normal);
 }
 
-export function rnbinom_mu(size: number, mu: number, unif_rand: () => number): number {
+export function rnbinom_mu(size: number, mu: number, normal: INormal): number {
     if (!R_FINITE(size) || !R_FINITE(mu) || size <= 0 || mu < 0) {
         return ML_ERR_return_NAN();
     }
-    return (mu === 0) ? 0 : rpois(rgamma(size, mu / size, unif_rand), unif_rand);
+    return (mu === 0) ? 0 : rpois(rgamma(size, mu / size, normal), normal);
 }
