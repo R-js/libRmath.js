@@ -1,12 +1,12 @@
-/*  AUTHOR
+/*
+ *  AUTHOR
  *  Jacob Bogers, jkfbogers@gmail.com
- *  March 19, 2017
+ *  March 14, 2017
  *
  *  ORIGINAL AUTHOR
  *  Mathlib : A C Library of Special Functions
  *  Copyright (C) 1998 Ross Ihaka
  *  Copyright (C) 2000-8 The R Core Team
- *  Copyright (C) 2005 The R Foundation
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -24,27 +24,27 @@
  *
  *  DESCRIPTION
  *
- *    This the lognormal quantile function.
+ *    The lognormal distribution function.
  */
+
 
 import {
     ISNAN,
-    ML_POSINF,
-    R_Q_P01_boundaries,
-    exp,
-
+    ML_ERR_return_NAN,
+    R_DT_0,
+    log
 } from '~common';
 
-import {
-    qnorm
-} from './qnorm';
+import { pnorm5 as pnorm } from '../pnorm';
 
-export function qlnorm(p: number, meanlog: number, sdlog: number, lower_tail: boolean, log_p: boolean): number {
+export function plnorm(x: number, meanlog: number, sdlog: number, lower_tail: boolean, log_p: boolean): number {
 
-    if (ISNAN(p) || ISNAN(meanlog) || ISNAN(sdlog))
-        return p + meanlog + sdlog;
+    if (ISNAN(x) || ISNAN(meanlog) || ISNAN(sdlog))
+        return x + meanlog + sdlog;
 
-    R_Q_P01_boundaries(lower_tail, log_p, p, 0, ML_POSINF);
+    if (sdlog < 0) ML_ERR_return_NAN;
 
-    return exp(qnorm(p, meanlog, sdlog, lower_tail, log_p));
+    if (x > 0)
+        return pnorm(log(x), meanlog, sdlog, lower_tail, log_p);
+    return R_DT_0(lower_tail, log_p);
 }

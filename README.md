@@ -389,7 +389,7 @@ Usage:
    const Runif2 = uniform( new SuperDuper(1234) );
 
    // for documentation purpose we strip R uniform equivalents
-   const { runif, dunif, punif, quinf } = Runif;
+   const { runif, dunif, punif, quninf } = Runif;
 
    // Get 15 uniformly distributed numbers between 0 and 1
    runif(15);

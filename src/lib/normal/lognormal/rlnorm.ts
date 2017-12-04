@@ -1,12 +1,11 @@
-/*
- *  AUTHOR
+/*  AUTHOR
  *  Jacob Bogers, jkfbogers@gmail.com
- *  March 14, 2017
- *
- *  ORIGINAL AUTHOR
+ *  March 23, 2017
+ * 
+ *  ORGINAL AUTHOR
  *  Mathlib : A C Library of Special Functions
  *  Copyright (C) 1998 Ross Ihaka
- *  Copyright (C) 2000-8 The R Core Team
+ *  Copyright (C) 2000--2001  The R Core Team
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -22,29 +21,28 @@
  *  along with this program; if not, a copy is available at
  *  https://www.R-project.org/Licenses/
  *
+ *  SYNOPSIS
+ *
+ *    #include <Rmath.h>
+ *    double rlnorm(double logmean, double logsd);
+ *
  *  DESCRIPTION
  *
- *    The lognormal distribution function.
+ *    Random variates from the lognormal distribution.
  */
-
 
 import {
     ISNAN,
+    R_FINITE,
     ML_ERR_return_NAN,
-    R_DT_0,
-    log
+    exp
 } from '~common';
 
-import { pnorm5 as pnorm } from './pnorm';
+import { rnorm } from '../rnorm';
 
-export function plnorm(x: number, meanlog: number, sdlog: number, lower_tail: boolean, log_p: boolean): number {
+export function rlnorm(meanlog: number, sdlog: number, unif_rand: () => number): number {
+    if (ISNAN(meanlog) || !R_FINITE(sdlog) || sdlog < 0.)
+        return ML_ERR_return_NAN();
 
-    if (ISNAN(x) || ISNAN(meanlog) || ISNAN(sdlog))
-        return x + meanlog + sdlog;
-
-    if (sdlog < 0) ML_ERR_return_NAN;
-
-    if (x > 0)
-        return pnorm(log(x), meanlog, sdlog, lower_tail, log_p);
-    return R_DT_0(lower_tail, log_p);
+    return exp(rnorm(meanlog, sdlog, unif_rand));
 }
