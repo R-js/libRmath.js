@@ -1,13 +1,39 @@
+import { INormal } from 'src/lib/normal';
 
+export type MessageType = 'INIT';
 
 export abstract class IRNG {
- 
-  constructor(_seed: number) { this._setup(); this.init(_seed); }
+
+  private notify: Set<{ event: MessageType, handler: () => void }>;
+
+  constructor(_seed: number) { 
+    this.notify = new Set();
+    this.emit = this.emit.bind(this);
+    this.register = this.register.bind(this);
+    this._setup(); 
+    this.init(_seed);
+  }
   
   public abstract _setup(): void;
-  public abstract init(_seed: number): void;
+
+  public init(_seed: number): void{
+    this.emit('INIT');
+  }
+
   public abstract set seed(_seed: number[]);
   
   public abstract unif_rand(): number ;
   public abstract get seed(): number[];
+  // event stuff
+  public register(event: MessageType, handler: () => void){
+     this.notify.add({event, handler});
+  }
+
+  public emit(event: MessageType){
+     this.notify.forEach( r => {
+       if (r.event === event){
+         r.handler();
+       }
+     });
+  }
 }

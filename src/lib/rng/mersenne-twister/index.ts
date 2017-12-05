@@ -155,6 +155,7 @@ export class MersenneTwister extends IRNG {
       this.m_seed[j] = s[0];
     }
     this.fixupSeeds();
+    super.init(_seed);
   }
 
   public unif_rand(): number {

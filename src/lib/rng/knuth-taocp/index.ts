@@ -104,6 +104,7 @@ export class KnuthTAOCP extends IRNG {
       s[0] = 69069 * s[0] + 1;
     }
     this.RNG_Init_R_KT(s[0]);
+    super.init(_seed);
   }
 
   public set seed(_seed: number[]) {

@@ -148,7 +148,7 @@ double norm_rand(void)
 		u1 = unif_rand();
 		w = u1 * (a[i] - aa);
 		tt = (w * 0.5 + aa) * w;
-		repeat {
+		for(;;) {
 		    if (u2 > tt)
 			goto deliver;
 		    u1 = unif_rand();
@@ -164,7 +164,7 @@ double norm_rand(void)
 	else {
 	    i = 6;
 	    aa = a[31];
-	    repeat {
+	    for(;;) {
 		u1 = u1 + u1;
 		if (u1 >= 1.0)
 		    break;
@@ -172,10 +172,10 @@ double norm_rand(void)
 		i = i + 1;
 	    }
 	    u1 = u1 - 1.0;
-	    repeat {
+	    for(;;) {
 		w = u1 * d[i - 1];
 		tt = (w * 0.5 + aa) * w;
-		repeat {
+		for(;;) {
 		    u2 = unif_rand();
 		    if (u2 > tt)
 			goto jump;
@@ -206,7 +206,7 @@ double norm_rand(void)
 	}
 
 	if(u1 >= 0.973310954173898) { /* tail: */
-	    repeat {
+	    for(;;) {
 		u2 = unif_rand();
 		u3 = unif_rand();
 		tt = (A*A-2*log(u3));
@@ -216,7 +216,7 @@ double norm_rand(void)
 	}
 
 	if(u1 >= 0.958720824790463) { /* region3: */
-	    repeat {
+	    for(;;) {
 		u2 = unif_rand();
 		u3 = unif_rand();
 		tt = A - 0.630834801921960* fmin2(u2,u3);
@@ -228,7 +228,7 @@ double norm_rand(void)
 	}
 
 	if(u1 >= 0.911312780288703) { /* region2: */
-	    repeat {
+	    for(;;) {
 		u2 = unif_rand();
 		u3 = unif_rand();
 		tt = 0.479727404222441+1.105473661022070*fmin2(u2,u3);
@@ -240,7 +240,7 @@ double norm_rand(void)
 	}
 
 	/* ELSE	 region1: */
-	repeat {
+	for(;;) {
 	    u2 = unif_rand();
 	    u3 = unif_rand();
 	    tt = 0.479727404222441-0.595507138015940*fmin2(u2,u3);
@@ -278,7 +278,7 @@ double norm_rand(void)
 	}
 
 	if(u1 >= 0.973310954173898) { /* tail: */
-	    repeat {
+	    for(;;) {
 		u2 = unif_rand();
 		u3 = unif_rand();
 		tt = (A*A-2*log(u3));
@@ -288,7 +288,7 @@ double norm_rand(void)
 	}
 
 	if(u1 >= 0.958720824790463) { /* region3: */
-	    repeat {
+	    for(;;) {
 		u2 = unif_rand();
 		u3 = unif_rand();
 		tt = A - 0.630834801921960* fmin2(u2,u3);
@@ -300,7 +300,7 @@ double norm_rand(void)
 	}
 
 	if(u1 >= 0.911312780288703) { /* region2: */
-	    repeat {
+	    for(;;) {
 		u2 = unif_rand();
 		u3 = unif_rand();
 		tt = 0.479727404222441+1.105473661022070*fmin2(u2,u3);
@@ -312,7 +312,7 @@ double norm_rand(void)
 	}
 
 	/* ELSE	 region1: */
-	repeat {
+	for(;;) {
 	    u2 = unif_rand();
 	    u3 = unif_rand();
 	    tt = 0.479727404222441-0.595507138015940*fmin2(u2,u3);

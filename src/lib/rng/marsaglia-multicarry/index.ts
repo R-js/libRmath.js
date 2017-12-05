@@ -62,6 +62,7 @@ export class MarsagliaMultiCarry extends IRNG {
       this.m_seed[j] = s[0];
     }
     this.fixupSeeds();
+    super.init(_seed);
   }
 
   public _setup() {

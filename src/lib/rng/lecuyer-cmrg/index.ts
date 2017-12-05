@@ -50,6 +50,7 @@ export class LecuyerCMRG extends IRNG {
 
       this.m_seed[j] = s[0];
     }
+    super.init(se);
   }
 
   public unif_rand(): number {

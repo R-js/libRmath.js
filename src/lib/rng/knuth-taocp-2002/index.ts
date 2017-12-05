@@ -182,6 +182,7 @@ export class KnuthTAOCP2002 extends IRNG {
     }
 
     this.RNG_Init_KT2(s[0]);
+    super.init(_seed);
   }
   public set seed(_seed: number[]) {
     let errors = 0;

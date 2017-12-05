@@ -85,6 +85,7 @@ export class SuperDuper extends IRNG {
       this.m_seed[j] = s[0];
     }
     this.fixupSeeds();
+    super.init(_seed);
   }
 
   public set seed(_seed: number[]) {

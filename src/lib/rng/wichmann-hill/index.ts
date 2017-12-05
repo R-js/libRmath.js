@@ -1,5 +1,4 @@
 'use strict';
-
 /*
  *  Javascript conversion by Jacob Bogers Nov 2017
  *  jkfbogers@gmail.com
@@ -89,6 +88,7 @@ export class WichmannHill extends IRNG {
       this.m_seed[j] = s[0];
     }
     this.fixupSeeds();
+    super.init(seed);
   }
 
   public set seed(_seed: number[]) {
