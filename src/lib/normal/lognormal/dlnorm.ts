@@ -42,12 +42,13 @@ const { isNaN: ISNAN } = Number;
 const { log, exp } = Math;
 
 export function dlnorm(
-  x: number | number[],
+  x: number|number[],
   meanlog: number,
   sdlog: number,
   give_log: boolean
-): number | number[] {
-  let fa = (() => (isArray(x) && x) || [x])();
+): number|number[] {
+
+  let fa: number[] = (() => (isArray(x) && x) || [x])() as any;
 
   let result = fa.map(fx => {
     if (ISNAN(fx) || ISNAN(meanlog) || ISNAN(sdlog)) {
@@ -69,5 +70,5 @@ export function dlnorm(
       : M_1_SQRT_2PI * exp(-0.5 * y * y) / (fx * sdlog);
     /* M_1_SQRT_2PI = 1 / sqrt(2 * pi) */
   });
-  return result.length === 1 ? result[0] : result;
+  return (result.length === 1 ? result[0] : result) as any;
 }

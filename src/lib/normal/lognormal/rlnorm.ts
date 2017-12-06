@@ -31,18 +31,24 @@
  *    Random variates from the lognormal distribution.
  */
 
-import {
-    ISNAN,
-    R_FINITE,
-    ML_ERR_return_NAN,
-    exp
-} from '~common';
+import { ISNAN, R_FINITE, ML_ERR_return_NAN, exp } from '~common';
 
 import { INormal } from '~normal';
+import * as debug from 'debug';
 
-export function rlnorm(meanlog: number, sdlog: number, normal: INormal): number {
-    if (ISNAN(meanlog) || !R_FINITE(sdlog) || sdlog < 0.)
-        return ML_ERR_return_NAN();
+const printer = debug('rlnorm');
 
+export function rlnorm(
+  n: number = 1,
+  meanlog: number,
+  sdlog: number,
+  normal: INormal
+): number|number[] {
+  const result = new Array(n).fill(0).map(() => {
+    if (ISNAN(meanlog) || !R_FINITE(sdlog) || sdlog < 0) {
+      return ML_ERR_return_NAN(printer);
+    }
     return exp(normal.rnorm(1, meanlog, sdlog) as number);
+  });
+  return result.length === 1 ? result[0] : result;
 }

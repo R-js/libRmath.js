@@ -27,24 +27,30 @@
  *    The lognormal distribution function.
  */
 
-
-import {
-    ISNAN,
-    ML_ERR_return_NAN,
-    R_DT_0,
-    log
-} from '~common';
+import { ISNAN, ML_ERR_return_NAN, R_DT_0, log } from '~common';
 
 import { pnorm5 as pnorm } from '../pnorm';
 
-export function plnorm(x: number, meanlog: number, sdlog: number, lower_tail: boolean, log_p: boolean): number {
+const { isArray } = Array;
 
-    if (ISNAN(x) || ISNAN(meanlog) || ISNAN(sdlog))
-        return x + meanlog + sdlog;
+export function plnorm(
+  x: number | number[],
+  meanlog: number,
+  sdlog: number,
+  lower_tail: boolean,
+  log_p: boolean
+): number | number[] {
+
+  let fa: number[] = (() => (isArray(x) && x) || [x])();
+
+  let result = fa.map(fx => {
+    if (ISNAN(fx) || ISNAN(meanlog) || ISNAN(sdlog))
+      return fx + meanlog + sdlog;
 
     if (sdlog < 0) ML_ERR_return_NAN;
 
-    if (x > 0)
-        return pnorm(log(x), meanlog, sdlog, lower_tail, log_p);
+    if (fx > 0) return pnorm(log(fx), meanlog, sdlog, lower_tail, log_p);
     return R_DT_0(lower_tail, log_p);
+  });
+  return result.length === 1 ? result[0] : result;
 }

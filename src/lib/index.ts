@@ -1,6 +1,7 @@
 'use strict';
 export { uniform } from './uniform';
 export { normal } from './normal';
+export { logNormal } from './normal/lognormal';
 export { rng, IRNG } from './rng';
 //export * as rfunc from './r-func';
 
