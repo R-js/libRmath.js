@@ -664,7 +664,7 @@ PRNG to be consumed by probability distribution simulators is discussed in the
 
 `dunif, qunif, punif, runif`
 
-_Naming follows close to R counter part_
+[_Naming follows exactly their R counter part_](http://stat.ethz.ch/R-manual/R-patched/library/stats/html/Uniform.html) 
 
 Usage:
 
@@ -727,6 +727,184 @@ punif([-2, 0.25, 0.75, 2], 0, 2, false, true);
 // qunif(p, min = 0, max = 1, lower.tail = TRUE, log.p = FALSE)
 qunif([0, 0.25, 0.75, 0.9, 1], 0, 4, true);
 //qunif( [  0, 0.25, 0.75, 0.9 , 1 ], 0, 4, true)
+```
+
+#### Normal distribution
+
+`dnorm, qnorm, pnorm, rnorm`
+[_Naming follows exactly their R counter part_](http://stat.ethz.ch/R-manual/R-patched/library/stats/html/Normal.html)
+
+Usage:
+
+`dnorm ( x: number|number[], mean: number = 0, sigma: number = 1, logP: boolean=false )`
+_gives values of the value of the probability density function at position(s) x_
+```javascript
+const libR = require('lib-r-math.js');
+
+// create generator with normal distribution
+const marsM = new libR.rng.MarsagliaMultiCarry(0);
+const bm = new libR.rng.normal.BoxMuller(marsM);
+
+// create an instance of normal functions using selected PRNG.
+const n = libR.normal(bm);
+//
+//  dnorm ( x= x values, mean, sigma, log )
+//
+// dnorm(0) == 1/sqrt(2*pi)
+// dnorm(1) == exp(-1/2)/sqrt(2*pi)
+
+n.dnorm(0); // probability distribution, peek value at null
+//0.3989422804014327
+n.dnorm(3,4,2); // value at x = 3, with mean=4 and sigma=2
+//
+n.dnorm(-10,0,1); // of course the gaussian is almost zero 10 sigmas from the mean
+//7.69459862670642e-23
+
+n.dnorm([Number.NEGATIVE_INFINITY, -4,-3,-2,-1,0,Number.NaN,1,2,3,4, Number.POSITIVE_INFINITY]);
+/*[ 0,
+  0.00013383022576488537,
+  0.0044318484119380075,
+  0.05399096651318806,
+  0.24197072451914337,
+  0.3989422804014327,
+  NaN,
+  0.24197072451914337,
+  0.05399096651318806,
+  0.0044318484119380075,
+  0.00013383022576488537,
+  0 ]
+*/
+```
+_Equivalence in R console_
+
+```R
+> dnorm(c(-Inf, -4,-3,-2,-1,0,NaN,1,2,3,4, Inf));
+ [1] 0.0000000000 0.0001338302 0.0044318484 0.0539909665 0.2419707245 0.3989422804          NaN 0.2419707245
+ [9] 0.0539909665 0.0044318484 0.0001338302 0.0000000000
+```
+`Another Javascript Example:`
+
+```javascript
+n.dnorm([Number.NEGATIVE_INFINITY, -4,-3,-2,-1,0,Number.NaN,1,2,3,4, Number.POSITIVE_INFINITY], 0,1,true)
+[ -Infinity,
+  -8.918938533204672,
+  -5.418938533204673,
+  -2.9189385332046727,
+  -1.4189385332046727,
+  -0.9189385332046728,
+  NaN,
+  -1.4189385332046727,
+  -2.9189385332046727,
+  -5.418938533204673,
+  -8.918938533204672,
+  -Infinity ]
+```
+
+_Equivalence in R console_
+
+```R
+ >dnorm(c(-Inf, -4,-3,-2,-1,0,NaN,1,2,3,4, Inf), 0,1, TRUE);
+ [1]       -Inf -8.9189385 -5.4189385 -2.9189385 -1.4189385 -0.9189385        NaN -1.4189385 -2.9189385 -5.4189385
+[11] -8.9189385       -Inf
+```
+
+`qnorm(p: number|number[], mean: number = 0, sigma: number =1, lowerTail: boolean = true, logP: boolean= false)`
+```javascript
+ //
+ // 10% probability is at quantile position -1.281552
+ n.qnorm(0.1);
+ //  -1.281552
+ //
+ n.qnorm([ 0, 0.05, 0.25 ,0.5 , 0.75, 0.95, 1 ]);
+/*[
+  -Infinity,
+  -1.6448536269514726,
+  -0.6744897501960817,
+  0,
+  0.6744897501960817,
+  1.6448536269514715,
+  Infinity
+  ]
+  */
+```
+_R equivalent_
+
+```R
+#R console
+> qnorm( c( 0, 0.05, 0.25 ,0.5 , 0.75, 0.95, 1));
+[1] -Inf -1.6448536 -0.6744898  0.0000000  0.6744898  1.6448536 Inf
+```
+
+`pnorm(q: number|number[], mean = 0, sigma = 1, lowerTail = TRUE, logP = FALSE)`
+_(cumulative distribution function)_
+```javascript
+n.pnorm([Number.NEGATIVE_INFINITY,-4,-3,-2,-1,0, 1,2,3,4])
+/*[ 0,
+  0.000031671241833119924,
+  0.0013498980316300946,
+  0.022750131948179212,
+  0.15865525393145705,
+  0.5,
+  0.8413447460685429,
+  0.9772498680518208,
+  0.9986501019683699,
+  0.9999683287581669 ]
+*/
+```
+_R equivalent_
+
+```R
+#R console
+> qnorm( c( 0, 0.05, 0.25 ,0.5 , 0.75, 0.95, 1));
+[1] -Inf -1.6448536 -0.6744898  0.0000000  0.6744898  1.6448536 Inf
+```
+pnorm with `logp = true`
+```javascript
+ n.pnorm([Number.NEGATIVE_INFINITY,-4,-3,-2,-1,0], 0, 1, true, true)
+/*[ -Infinity,
+  -10.360101486527292,
+  -6.607726221510349,
+  -3.7831843336820317,
+  -1.8410216450092636,
+  -0.6931471805599453 ]*/
+```
+_R equivalent_
+
+```R
+> pnorm(c(-Inf,-4,-3,-2,-1,0), 0, 1, log.p=TRUE)
+[1]        -Inf -10.3601015  -6.6077262  -3.7831843  -1.8410216  -0.6931472
+```
+
+`rnorm(n, mean = 0, sigma = 1)`
+
+```javascript
+ n.rnorm(5)
+/*[ -0.6499284414442905,
+  -0.7896970173309513,
+  -1.5623487035106534,
+  0.9510909335228415,
+  -0.1333623579729381 ]
+ */
+```
+_R equivalent_
+```R
+> rnorm(5)
+[1] -0.6499284 -0.7896970 -1.5623487  0.9510909 -0.1333624
+```
+`Another Javascript Example:`
+```javascript
+  sd.init(0) // make sure to reset SuperDuper to get the same answers below in R
+  n.rnorm(5,2,3)
+/*[ 0.05021467566712845,
+  -0.3690910519928541,
+  -2.68704611053196,
+  4.853272800568524,
+  1.5999129260811857 ]*/
+```
+_R equivalent_
+```R
+> rnorm(5,2,3)
+[1]  0.05021468 -0.36909105 -2.68704611  4.85327280  1.59991293
 ```
 
 # Current State
