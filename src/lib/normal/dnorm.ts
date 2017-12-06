@@ -39,61 +39,64 @@
  */
 import * as debug from 'debug';
 import {
-    R_D__0,
-    ML_NAN,
-    ML_ERR_return_NAN,
-    ML_POSINF,
-    DBL_MAX,
-    M_LN_SQRT_2PI,
-    log,
-    M_1_SQRT_2PI,
-    M_LN2,
-    DBL_MIN_EXP,
-    DBL_MANT_DIG,
-    ldexp
+  R_D__0,
+  ML_NAN,
+  ML_ERR_return_NAN,
+  ML_POSINF,
+  DBL_MAX,
+  M_LN_SQRT_2PI,
+  log,
+  M_1_SQRT_2PI,
+  M_LN2,
+  DBL_MIN_EXP,
+  DBL_MANT_DIG,
+  ldexp
 } from '~common';
 
 const { isNaN: ISNAN, isFinite: R_FINITE } = Number;
-const { sqrt , exp, abs:fabs, round:R_forceint } = Math; 
+const { sqrt, exp, abs: fabs, round: R_forceint } = Math;
 const printer = debug('dnorm4');
+const { isArray } = Array;
 
+export function dnorm4<T>(
+  x: T,
+  mu: number = 0,
+  sigma: number = 1,
+  give_log: boolean = false
+): T {
+  let fa: number[] = (() => (isArray(x) && x) || [x])() as any;
 
-export function dnorm4(
-    x: number, 
-    mu: number = 0, 
-    sigma: number = 1, 
-    give_log: boolean = false): number {
-
-    if (ISNAN(x) || ISNAN(mu) || ISNAN(sigma)) {
-        return x + mu + sigma;
+  let result = fa.map(fx => {
+    if (ISNAN(fx) || ISNAN(mu) || ISNAN(sigma)) {
+      return fx + mu + sigma;
     }
 
     if (!R_FINITE(sigma)) {
-        return R_D__0(give_log);
+      return R_D__0(give_log);
     }
 
-    if (!R_FINITE(x) && mu === x) {
-        return ML_NAN; /* x-mu is NaN */
+    if (!R_FINITE(fx) && mu === fx) {
+      return ML_NAN; /* x-mu is NaN */
     }
 
     if (sigma <= 0) {
-        if (sigma < 0) {
-            return ML_ERR_return_NAN(printer);
-        }
-        /* sigma == 0 */
-        return (x === mu) ? ML_POSINF : R_D__0(give_log);
+      if (sigma < 0) {
+        return ML_ERR_return_NAN(printer);
+      }
+      /* sigma == 0 */
+      return fx === mu ? ML_POSINF : R_D__0(give_log);
     }
-    x = (x - mu) / sigma;
+    fx = (fx - mu) / sigma;
 
-    if (!R_FINITE(x)) return R_D__0(give_log);
+    if (!R_FINITE(fx)) return R_D__0(give_log);
 
-    x = fabs(x);
-    if (x >= 2 * sqrt(DBL_MAX)) return R_D__0(give_log);
+    fx = fabs(fx);
+    if (fx >= 2 * sqrt(DBL_MAX)) return R_D__0(give_log);
     if (give_log) {
-        return -(M_LN_SQRT_2PI + 0.5 * x * x + log(sigma));
+      return -(M_LN_SQRT_2PI + 0.5 * fx * fx + log(sigma));
     }
 
-    if (x < 5) return M_1_SQRT_2PI * exp(-0.5 * x * x) / sigma;
+    if (fx < 5) return M_1_SQRT_2PI * exp(-0.5 * fx * fx) / sigma;
 
     /* ELSE:
 
@@ -112,8 +115,8 @@ export function dnorm4(
      *              =IEEE=  38.58601
      * [on one x86_64 platform, effective boundary a bit lower: 38.56804]
      */
-    if (x > sqrt(-2 * M_LN2 * (DBL_MIN_EXP + 1 - DBL_MANT_DIG))) {
-        return 0.;
+    if (fx > sqrt(-2 * M_LN2 * (DBL_MIN_EXP + 1 - DBL_MANT_DIG))) {
+      return 0;
     }
 
     /* Now, to get full accurary, split x into two parts,
@@ -124,9 +127,12 @@ export function dnorm4(
 
      * If we do not have IEEE this is still an improvement over the naive formula.
      */
-    let x1 = //  R_forceint(x * 65536) / 65536 =
-        ldexp(R_forceint(ldexp(x, 16)), -16);
-    let x2 = x - x1;
-    return M_1_SQRT_2PI / sigma *
-        (exp(-0.5 * x1 * x1) * exp((-0.5 * x2 - x1) * x2));
+    let x1 = ldexp(R_forceint(ldexp(fx, 16)), -16); //  R_forceint(x * 65536) / 65536 =
+    let x2 = fx - x1;
+    return (
+      M_1_SQRT_2PI / sigma * (exp(-0.5 * x1 * x1) * exp((-0.5 * x2 - x1) * x2))
+    );
+  });
+
+  return (result.length === 1 ? result[0] : result) as any;
 }

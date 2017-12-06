@@ -50,18 +50,21 @@
 import { IRNGNormal } from './inormal-rng';
 import { IRNG } from '../';
 import { qnorm } from '../../normal/qnorm';
+
 const BIG = 134217728; /* 2^27 */
 
+const { isArray } = Array;
 export class Inversion extends IRNGNormal {
   constructor(_rng: IRNG) {
     super(_rng);
   }
 
-  public norm_rand() {
+  public norm_rand(): number {
     let u1;
     /* unif_rand() alone is not of high enough precision */
     u1 = this.rng.unif_rand();
     u1 = new Int32Array([BIG * u1])[0] + this.rng.unif_rand();
-    return qnorm(u1 / BIG, 0.0, 1.0, !!1, !!0);
+    const result = qnorm(u1 / BIG, 0.0, 1.0, !!1, !!0);
+    return isArray(result) ? result[0] : result;
   }
 }

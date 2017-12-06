@@ -75,9 +75,10 @@ import {
   R_D__0
 } from '~common';
 
-const { isNaN: ISNAN, isFinite: R_FINITE , EPSILON: DBL_EPSILON} = Number;
+const { isNaN: ISNAN, isFinite: R_FINITE, EPSILON: DBL_EPSILON } = Number;
 
 const { trunc, log, exp, abs: fabs, log1p } = Math;
+const { isArray } = Array;
 
 import { NumberW } from '~common';
 
@@ -106,36 +107,41 @@ function do_del(
   }
 }
 
-export function pnorm5(
-  x: number,
+export function pnorm5<T>(
+  x: T,
   mu: number = 0,
   sigma: number = 1,
   lower_tail: boolean = true,
   log_p: boolean = false
-): number {
-  let p = new NumberW(0);
-  let cp = new NumberW(0);
+): T {
+  let fa: number[] = (() => (isArray(x) && x) || [x])() as any;
 
-  /* Note: The structure of these checks has been carefully thought through.
+  let result = fa.map(fx => {
+    let p = new NumberW(0);
+    let cp = new NumberW(0);
+
+    /* Note: The structure of these checks has been carefully thought through.
      * For example, if x == mu and sigma == 0, we get the correct answer 1.
      */
 
-  if (ISNAN(x) || ISNAN(mu) || ISNAN(sigma)) return x + mu + sigma;
+    if (ISNAN(fx) || ISNAN(mu) || ISNAN(sigma)) return fx + mu + sigma;
 
-  if (!R_FINITE(x) && mu === x) return ML_NAN; /* x-mu is NaN */
-  if (sigma <= 0) {
-    if (sigma < 0) return ML_ERR_return_NAN(printer);
-    /* sigma = 0 : */
-    return x < mu ? R_DT_0(lower_tail, log_p) : R_DT_1(lower_tail, log_p);
-  }
-  p.val = (x - mu) / sigma;
-  if (!R_FINITE(p.val))
-    return x < mu ? R_DT_0(lower_tail, log_p) : R_DT_1(lower_tail, log_p);
-  x = p.val;
+    if (!R_FINITE(fx) && mu === fx) return ML_NAN; /* x-mu is NaN */
+    if (sigma <= 0) {
+      if (sigma < 0) return ML_ERR_return_NAN(printer);
+      /* sigma = 0 : */
+      return fx < mu ? R_DT_0(lower_tail, log_p) : R_DT_1(lower_tail, log_p);
+    }
+    p.val = (fx - mu) / sigma;
+    if (!R_FINITE(p.val))
+      return fx < mu ? R_DT_0(lower_tail, log_p) : R_DT_1(lower_tail, log_p);
+    fx = p.val;
 
-  pnorm_both(x, p, cp, !lower_tail, log_p);
+    pnorm_both(fx, p, cp, !lower_tail, log_p);
 
-  return lower_tail ? p.val : cp.val;
+    return lower_tail ? p.val : cp.val;
+  });
+  return (result.length === 1 ? result[0] : result) as any;
 }
 
 export function pnorm_both(
