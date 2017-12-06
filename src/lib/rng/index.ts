@@ -12,7 +12,7 @@ import {
     BuggyKindermanRamage, 
     BoxMuller, 
     AhrensDieter,
-    KindermanRamage 
+    KindermanRamage
 } from './normal';
 
 export const rng = {

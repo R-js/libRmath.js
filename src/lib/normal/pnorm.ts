@@ -64,27 +64,23 @@
 import * as debug from 'debug';
 
 import {
-  ISNAN,
-  R_FINITE,
   ML_ERR_return_NAN,
   R_DT_0,
   R_DT_1,
   ML_NAN,
   DBL_MIN,
-  DBL_EPSILON,
-  fabs,
-  log,
   M_SQRT_32,
-  trunc,
-  exp,
   M_1_SQRT_2PI,
   R_D__1,
   R_D__0
 } from '~common';
 
+const { isNaN: ISNAN, isFinite: R_FINITE , EPSILON: DBL_EPSILON} = Number;
+
+const { trunc, log, exp, abs: fabs, log1p } = Math;
+
 import { NumberW } from '~common';
 
-const { log1p } = Math;
 const SIXTEN = 16; /* Cutoff allowing exact "*" and "/" */
 const printer = debug('pnorm5');
 
@@ -112,10 +108,10 @@ function do_del(
 
 export function pnorm5(
   x: number,
-  mu: number,
-  sigma: number,
-  lower_tail: boolean,
-  log_p: boolean
+  mu: number = 0,
+  sigma: number = 1,
+  lower_tail: boolean = true,
+  log_p: boolean = false
 ): number {
   let p = new NumberW(0);
   let cp = new NumberW(0);
@@ -137,7 +133,7 @@ export function pnorm5(
     return x < mu ? R_DT_0(lower_tail, log_p) : R_DT_1(lower_tail, log_p);
   x = p.val;
 
-  pnorm_both(x, p, cp, !!lower_tail, log_p);
+  pnorm_both(x, p, cp, !lower_tail, log_p);
 
   return lower_tail ? p.val : cp.val;
 }
@@ -212,7 +208,7 @@ export function pnorm_both(
 
   let min = DBL_MIN;
 
-  let i: number;
+  let i = new Int32Array([0]);
   let lower: boolean;
   let upper: boolean;
 
@@ -235,9 +231,9 @@ export function pnorm_both(
       xsq = x * x;
       xnum = a[4] * xsq;
       xden = xsq;
-      for (i = 0; i < 3; ++i) {
-        xnum = (xnum + a[i]) * xsq;
-        xden = (xden + b[i]) * xsq;
+      for (i[0] = 0; i[0] < 3; ++i[0]) {
+        xnum = (xnum + a[i[0]]) * xsq;
+        xden = (xden + b[i[0]]) * xsq;
       }
     } else xnum = xden = 0.0;
 
@@ -253,9 +249,9 @@ export function pnorm_both(
 
     xnum = c[8] * y;
     xden = y;
-    for (i = 0; i < 7; ++i) {
-      xnum = (xnum + c[i]) * y;
-      xden = (xden + d[i]) * y;
+    for (i[0] = 0; i[0] < 7; ++i[0]) {
+      xnum = (xnum + c[i[0]]) * y;
+      xden = (xden + d[i[0]]) * y;
     }
     temp = (xnum + c[7]) / (xden + d[7]);
 
@@ -310,9 +306,9 @@ export function pnorm_both(
     xsq = 1.0 / (x * x); /* (1./x)*(1./x) might be better */
     xnum = p[5] * xsq;
     xden = xsq;
-    for (i = 0; i < 4; ++i) {
-      xnum = (xnum + p[i]) * xsq;
-      xden = (xden + q[i]) * xsq;
+    for (i[0] = 0; i[0] < 4; ++i[0]) {
+      xnum = (xnum + p[i[0]]) * xsq;
+      xden = (xden + q[i[0]]) * xsq;
     }
     temp = xsq * (xnum + p[4]) / (xden + q[4]);
     temp = (M_1_SQRT_2PI - temp) / y;

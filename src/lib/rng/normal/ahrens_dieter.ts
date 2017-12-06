@@ -244,15 +244,14 @@ export class AhrensDieter extends IRNGNormal {
         i[0] = i[0] + 1;
       }
       u1 = u1 - 1.0;
-      jump: // used to be a goto
-      for (;;) {
+      // used to be a goto
+      jump: for (;;) {
         w = u1 * d[i[0] - 1];
         tt = (w * 0.5 + aa) * w;
         for (;;) {
           u2 = this.rng.unif_rand();
-          if (u2 > tt)
-            break jump;
-            u1 = this.rng.unif_rand();
+          if (u2 > tt) break jump;
+          u1 = this.rng.unif_rand();
           if (u2 < u1) break;
           tt = u1;
         }
