@@ -60,13 +60,13 @@ import {
     sqrt
 } from '~common';
 
-import { expm1 } from '~exp';
-
-import { exp_rand } from '~exp';
+import { exp_rand } from '~exp-tools';
 
 import {
     INormal
 } from '~normal';
+
+const { expm1 } = Math;
 
 export function rgamma(a: number, scale: number, normal: INormal): number {
     /* Constants : */

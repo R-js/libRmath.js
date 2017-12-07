@@ -76,7 +76,7 @@ import { pt } from './pt';
 
 import { INormal } from '~normal';
 
-import { expm1 } from '~exp';
+const { expm1 } = Math;
 
 import { lgammafn } from '~gamma';
 

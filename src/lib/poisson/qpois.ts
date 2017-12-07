@@ -53,7 +53,7 @@ import { ppois } from './ppois';
 
 import { INormal } from '~normal';
 
-import { R_DT_qIv } from '~exp';
+import { R_DT_qIv } from '~exp-tools';
 
 function do_search(
   y: number,

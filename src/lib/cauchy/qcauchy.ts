@@ -40,7 +40,7 @@ import {
 
 } from '~common';
 
-import { expm1 } from '~exp';
+const { expm1 }  = Math;
 
 import { tanpi } from '~trigonometry';
 

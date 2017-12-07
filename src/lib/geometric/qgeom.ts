@@ -37,7 +37,7 @@ import {
 
 } from '~common';
 
-import { R_DT_Clog } from '~exp';
+import { R_DT_Clog } from '~exp-tools';
 
 import { log1p } from '~log';
 

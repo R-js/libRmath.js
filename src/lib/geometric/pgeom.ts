@@ -41,7 +41,9 @@ import {
 } from '~common';
 
 import { log1p } from '~log';
-import { expm1, R_DT_Clog } from '~exp';
+import { R_DT_Clog } from '~exp-tools';
+
+const { expm1 } = Math;
 
 export function pgeom(x: number, p: number, lower_tail: boolean, log_p: boolean) {
 

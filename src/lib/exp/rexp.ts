@@ -32,18 +32,23 @@
  *
  */
 
-import {
-    R_FINITE,
-    ML_ERR_return_NAN,
-} from '~common';
+import { R_FINITE, ML_ERR_return_NAN } from '~common';
 
 import { exp_rand } from './sexp';
+import { IRNG } from '../rng/IRNG';
+import * as debug from 'debug';
 
-export function rexp(scale: number, unif_rand: () => number): number {
+const printer = debug('rexp');
+
+export function rexp(n: number = 1, scale: number = 1, rng: IRNG): number|number[] {
+  const result = new Array(n).fill(0).map(m => {
     if (!R_FINITE(scale) || scale <= 0.0) {
-        if (scale === 0.) return 0.;
-        /* else */
-        return ML_ERR_return_NAN();
+      if (scale === 0) return 0;
+      /* else */
+      return ML_ERR_return_NAN(printer);
     }
-    return scale * exp_rand(unif_rand); // --> in ./sexp.c
+    return scale * exp_rand(rng.unif_rand); // --> in ./sexp.c
+  });
+  
+  return result.length === 1 ? result[0] : result;
 }

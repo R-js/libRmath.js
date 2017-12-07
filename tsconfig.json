@@ -52,6 +52,9 @@
             "~exp": [
                 "src/lib/exp/index.ts"
             ],
+            "~exp-tools": [
+                "src/lib/exp/expm1.ts"
+            ],
             "~f-distro": [
                 "src/lib/f-distro/index.ts"
             ],

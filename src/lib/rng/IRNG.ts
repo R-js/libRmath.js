@@ -10,6 +10,8 @@ export abstract class IRNG {
     this.notify = new Set();
     this.emit = this.emit.bind(this);
     this.register = this.register.bind(this);
+    this.unif_rand = this.unif_rand.bind(this);
+    this.init = this.init.bind(this);
     this._setup(); 
     this.init(_seed);
   }

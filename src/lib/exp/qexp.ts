@@ -26,24 +26,35 @@
  *    The quantile function of the exponential distribution.
  *
  */
+import * as debug from 'debug';
+import { R_DT_0, ML_ERR_return_NAN, R_Q_P01_check } from '~common';
 
-import { ISNAN, R_DT_0, ML_ERR_return_NAN, R_Q_P01_check } from '~common';
+import { R_DT_Clog } from './expm1';
 
-import { R_DT_Clog } from '~exp';
+const { isArray } = Array;
+const { isNaN: ISNAN } = Number;
+const printer = debug('qexp');
 
-export function qexp(p: number, scale: number, lower_tail: boolean, log_p: boolean): number {
+export function qexp(
+  _p: number | number[],
+  scale: number = 1,
+  lower_tail: boolean = true,
+  log_p: boolean = false
+): number | number[] {
+  let fa: number[] = (() => (isArray(_p) && _p) || [_p])();
 
-    if (ISNAN(p) || ISNAN(scale))
-        return p + scale;
+  let result = fa.map(p => {
+    if (ISNAN(p) || ISNAN(scale)) return p + scale;
 
-    if (scale < 0) return ML_ERR_return_NAN();
+    if (scale < 0) return ML_ERR_return_NAN(printer);
 
     let rc = R_Q_P01_check(log_p, p);
     if (rc !== undefined) {
-        return rc;
+      return rc;
     }
-    if (p === R_DT_0(lower_tail, log_p))
-        return 0;
+    if (p === R_DT_0(lower_tail, log_p)) return 0;
 
-    return - scale * R_DT_Clog(lower_tail, log_p, p);
+    return -scale * R_DT_Clog(lower_tail, log_p, p);
+  });
+  return result.length === 1 ? result[0] : result;
 }

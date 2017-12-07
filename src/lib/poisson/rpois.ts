@@ -56,7 +56,7 @@ import {
 } from '~common';
 
 import { INormal } from '~normal';
-import { exp_rand } from '~exp';
+import { exp_rand } from '~exp-tools';
 import { fsign } from '~signrank';
 
 const a0 = -0.5;

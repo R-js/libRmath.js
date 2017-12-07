@@ -57,7 +57,7 @@ import {
 
 import { log1p, R_DT_val } from '~log';
 
-import { expm1, R_Log1_Exp } from '~exp';
+import { R_Log1_Exp } from '~exp-tools';
 
 import { lgammafn } from '~gamma';
 
@@ -69,6 +69,7 @@ import { INormal } from '~normal';
 
 export const _dbl_min_exp = M_LN2 * DBL_MIN_EXP;
 /*= -708.3964 for IEEE double precision */
+const { expm1 } = Math;
 
 export function pnchisq(
   x: number,

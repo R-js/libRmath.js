@@ -55,7 +55,7 @@ import {
 
 import {
     exp_rand
-} from '~exp';
+} from '~exp-tools';
 
 import { INormal } from '~normal';
 

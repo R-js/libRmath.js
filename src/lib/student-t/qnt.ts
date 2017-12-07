@@ -43,7 +43,7 @@ import { pnt } from './pnt';
 
 import { qt } from './qt';
 
-import { R_DT_qIv } from '~exp';
+import { R_DT_qIv } from '~exp-tools';
 
 export function qnt(
   p: number,

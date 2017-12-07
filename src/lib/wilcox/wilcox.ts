@@ -66,7 +66,7 @@ import {
 
 import { choose, lchoose } from '~common';
 import { R_DT_val } from '~log';
-import { R_DT_qIv } from '~exp';
+import { R_DT_qIv } from '~exp-tools';
 
 const WILCOX_MAX = 50;
 

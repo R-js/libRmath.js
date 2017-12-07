@@ -54,7 +54,7 @@ import * as debug from 'debug';
 
 import { R_Q_P01_boundaries, ML_ERR_return_NAN } from '~common';
 
-import { R_DT_qIv, R_DT_CIv } from '~exp';
+import { R_DT_qIv, R_DT_CIv } from '~exp-tools';
 
 const printer = debug('qnorm');
 

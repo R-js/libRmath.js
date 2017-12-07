@@ -10,9 +10,8 @@ const { MersenneTwister } = rng;
 
 export function uniform(rng: IRNG = new MersenneTwister()) {
   
-  const unif_rand = rng.unif_rand.bind(rng);
   return {
-    runif: (n: number = 1, a: number = 0, b: number= 1 ) => runif(n, a, b, unif_rand),
+    runif: (n: number = 1, a: number = 0, b: number= 1 ) => runif(n, a, b, rng.unif_rand),
     dunif,
     punif,
     qunif,

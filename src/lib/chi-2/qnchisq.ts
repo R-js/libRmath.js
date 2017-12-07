@@ -42,9 +42,9 @@ import {
 
 import { qchisq } from '~chi-2';
 import { pnchisq_raw } from './pnchisq';
-
-import { expm1  } from '~exp';
 import { INormal } from '~normal';
+
+const { expm1 } = Math;
 
 export function qnchisq(
   p: number, 

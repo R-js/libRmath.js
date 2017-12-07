@@ -94,14 +94,14 @@ import {
 
 import { log1p } from '~log';
 import { lgammafn } from '~gamma';
-import { expm1, R_Log1_Exp } from '~exp';
+import { R_Log1_Exp } from '~exp-tools';
 import { dpois_raw } from '~poisson';
 
 import {
   INormal
 } from '~normal';
 
-
+const { expm1 } = Math;
 
 export const scalefactor = sqr(sqr(sqr(4294967296.0)));
 

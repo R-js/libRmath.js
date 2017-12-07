@@ -63,7 +63,7 @@ import {
     R_D_Lval
 } from '~common';
 
-import { R_DT_Log } from '~exp';
+import { R_DT_log } from '~exp-tools';
 import { dhyper } from './dhyper';
 import { log1p } from '~log';
 
@@ -136,5 +136,5 @@ export function phyper(x: number, NR: number, NB: number, n: number, lower_tail:
     d = dhyper(x, NR, NB, n, log_p);
     pd = pdhyper(x, NR, NB, n, log_p);
 
-    return log_p ? R_DT_Log(lower_tail, log_p, d + pd) : R_D_Lval(lower_tail, d * pd);
+    return log_p ? R_DT_log(lower_tail, log_p, d + pd) : R_D_Lval(lower_tail, d * pd);
 }

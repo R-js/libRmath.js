@@ -64,7 +64,7 @@ import {
     R_D__0
 } from '~common';
 
-import { R_DT_log, R_DT_Clog, R_DT_qIv } from '~exp';
+import { R_DT_log, R_DT_Clog, R_DT_qIv } from '~exp-tools';
 
 import { lgamma1p } from '~gamma';
 

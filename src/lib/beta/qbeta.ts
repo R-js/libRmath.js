@@ -63,8 +63,10 @@ import {
     MATHLIB_WARNING
 } from '~common';
 
-import { R_DT_qIv, R_DT_CIv, R_DT_Clog, R_DT_log, expm1, R_Log1_Exp
- } from '~exp';
+import { R_DT_qIv, R_DT_CIv, R_DT_Clog, R_DT_log, R_Log1_Exp
+ } from '~exp-tools';
+
+ const { expm1 } = Math;
 
 import { lbeta } from './lbeta';
 

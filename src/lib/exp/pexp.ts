@@ -27,29 +27,36 @@
  *	The distribution function of the exponential distribution.
  */
 
-import {
-    ISNAN,
-    ML_ERR_return_NAN,
-    R_DT_0,
-    R_D_exp
-} from '~common';
+import { ML_ERR_return_NAN, R_DT_0, R_D_exp } from '~common';
 
-import { expm1, R_Log1_Exp } from '~exp';
+import { R_Log1_Exp } from './expm1';
+import * as debug from 'debug';
 
+const { expm1 } = Math;
+const { isNaN: ISNAN } = Number;
+const { isArray } = Array;
+const printer = debug('pexp');
 
-export function pexp(x: number, scale: number, lower_tail: boolean, log_p: boolean): number {
+export function pexp(
+  x: number | number[],
+  scale: number = 1,
+  lower_tail: boolean = true,
+  log_p: boolean = false
+): number | number[] {
+  let fa: number[] = (() => (isArray(x) && x) || [x])();
 
-    if (ISNAN(x) || ISNAN(scale))
-        return x + scale;
+  let result = fa.map(fx => {
+    if (ISNAN(fx) || ISNAN(scale)) return fx + scale;
     if (scale < 0) {
-        return ML_ERR_return_NAN();
+      return ML_ERR_return_NAN();
     }
 
-    if (x <= 0.)
-        return R_DT_0(lower_tail, log_p);
+    if (fx <= 0) return R_DT_0(lower_tail, log_p);
     /* same as weibull( shape = 1): */
-    x = -(x / scale);
+    fx = -(fx / scale);
     return lower_tail
-        ? (log_p ? R_Log1_Exp(x) : -expm1(x))
-        : R_D_exp(log_p, x);
+      ? log_p ? R_Log1_Exp(fx) : -expm1(fx)
+      : R_D_exp(log_p, fx);
+  });
+  return result.length === 1 ? result[0] : result;
 }

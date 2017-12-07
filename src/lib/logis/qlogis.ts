@@ -35,7 +35,7 @@ import {
     log
 } from '~common';
 
-import { R_Log1_Exp } from '~exp';
+import { R_Log1_Exp } from '~exp-tools';
 
 export function qlogis(p: number, location: number, scale: number, lower_tail: boolean, log_p: boolean): number {
 

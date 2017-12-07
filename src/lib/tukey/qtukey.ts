@@ -133,7 +133,7 @@ import {
   fabs
 } from '~common';
 
-import { R_DT_qIv } from '~exp';
+import { R_DT_qIv } from '~exp-tools';
 
 import { ptukey } from './ptukey';
 
