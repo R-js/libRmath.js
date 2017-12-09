@@ -32,25 +32,23 @@
  *
  *
  */
-
+import * as debug from 'debug';
 // Note that the functions Gamma and LogGamma are mutually dependent.
 import {
   ML_ERROR,
   ME,
-  ML_NAN,
   MATHLIB_WARNING,
-  floor,
-  DBL_MAX,
-  exp,
-  log,
-  fabs
 } from '~common';
 
-export function gamma_c99(x: number): number {
+const { floor, exp, log, abs:fabs} = Math;
+const  { MAX_VALUE: DBL_MAX, NaN: ML_NAN } = Number;
+const printer = debug('gamma_c99');
+
+export function tgamma(x: number): number {
 
   if (x <= 0.0) {
-    ML_ERROR(ME.ME_DOMAIN, 'gamma');
-    MATHLIB_WARNING('Argument %f must be positive', x);
+    ML_ERROR(ME.ME_DOMAIN, 'gamma', printer);
+    printer('Argument %d must be positive', x);
     return ML_NAN;
   }
 
@@ -163,7 +161,7 @@ export function lgamma_c99(x: number) {
 
 
   if (x < 12.0) {
-    return log(fabs(gamma_c99(x)));
+    return log(fabs(tgamma(x)));
   }
 
   // Abramowitz and Stegun 6.1.41

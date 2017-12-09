@@ -26,7 +26,22 @@
  * 
  */
 
-import { ISNAN, R_FINITE, ME, ML_ERROR, ML_NAN, fabs, M_PI, fmod } from '~common';
+import {
+  ME,
+  ML_ERROR,
+  fmod
+} from '~common';
+
+const  { 
+    abs: fabs, 
+    PI: M_PI
+} = Math;
+
+const { 
+    NaN: ML_NAN,
+    isNaN: ISNAN,  
+    isFinite: R_FINITE  
+} = Number;
 
 /* HAVE_COSPI etc will not be defined in standalone-use: the
    intention is to make the versions here available in that case.
@@ -34,59 +49,55 @@ import { ISNAN, R_FINITE, ME, ML_ERROR, ML_NAN, fabs, M_PI, fmod } from '~common
    The __cospi etc variants are from OS X (and perhaps other BSD-based systems).
 */
 
-
 // cos(pi * x)  -- exact when x = k/2  for all integer k
 
-
-
 export function cospi(x: number): number {
-    // NaNs propagated correctly 
-    if (ISNAN(x)) return x;
-    if (!R_FINITE(x)) {
-        ML_ERROR(ME.ME_DOMAIN, '');
-        return ML_NAN;
-    }
+  // NaNs propagated correctly
+  if (ISNAN(x)) return x;
+  if (!R_FINITE(x)) {
+    ML_ERROR(ME.ME_DOMAIN, '');
+    return ML_NAN;
+  }
 
-    x = fmod(fabs(x), 2.); // cos() symmetric; cos(pi(x + 2k)) == cos(pi x) for all integer k
-    if (fmod(x, 1.) === 0.5) return 0.;
-    if (x === 1.) return -1.;
-    if (x === 0.) return 1.;
-    // otherwise
-    return Math.cos(M_PI * x);
+  x = fmod(fabs(x), 2); // cos() symmetric; cos(pi(x + 2k)) == cos(pi x) for all integer k
+  if (fmod(x, 1) === 0.5) return 0;
+  if (x === 1) return -1;
+  if (x === 0) return 1;
+  // otherwise
+  return Math.cos(M_PI * x);
 }
-
 
 // sin(pi * x)  -- exact when x = k/2  for all integer k
 export function sinpi(x: number): number {
-    if (ISNAN(x)) return x;
-    if (!R_FINITE(x)) {
-        ML_ERROR(ME.ME_DOMAIN, 'sinpi not finite');
-        return ML_NAN;
-    }
-    x = fmod(x, 2.); // sin(pi(x + 2k)) == sin(pi x)  for all integer k
-    // map (-2,2) --> (-1,1] :
-    if (x <= -1) x += 2.; else if (x > 1.) x -= 2.;
-    if (x === 0. || x === 1.) return 0.;
-    if (x === 0.5) return 1.;
-    if (x === -0.5) return -1.;
-    // otherwise
-    return Math.sin(M_PI * x);
+  if (ISNAN(x)) return x;
+  if (!R_FINITE(x)) {
+    ML_ERROR(ME.ME_DOMAIN, 'sinpi not finite');
+    return ML_NAN;
+  }
+  x = fmod(x, 2); // sin(pi(x + 2k)) == sin(pi x)  for all integer k
+  // map (-2,2) --> (-1,1] :
+  if (x <= -1) x += 2;
+  else if (x > 1) x -= 2;
+  if (x === 0 || x === 1) return 0;
+  if (x === 0.5) return 1;
+  if (x === -0.5) return -1;
+  // otherwise
+  return Math.sin(M_PI * x);
 }
 
 // tan(pi * x)  -- exact when x = k/2  for all integer k
 export function tanpi(x: number): number {
-    if (ISNAN(x)) return x;
-    if (!R_FINITE(x)) {
-        ML_ERROR(ME.ME_DOMAIN, '');
-        return ML_NAN;
-    }
-    x = fmod(x, 1.); // tan(pi(x + k)) == tan(pi x)  for all integer k
-    // map (-1,1) --> (-1/2, 1/2] :
-    if (x <= -0.5) { 
-        x++; 
-    } else if (x > 0.5) { 
-        x--;
-    }
-    return (x === 0.) ? 0. : ((x === 0.5) ? ML_NAN : Math.tan(M_PI * x));
+  if (ISNAN(x)) return x;
+  if (!R_FINITE(x)) {
+    ML_ERROR(ME.ME_DOMAIN, '');
+    return ML_NAN;
+  }
+  x = fmod(x, 1); // tan(pi(x + k)) == tan(pi x)  for all integer k
+  // map (-1,1) --> (-1/2, 1/2] :
+  if (x <= -0.5) {
+    x++;
+  } else if (x > 0.5) {
+    x--;
+  }
+  return x === 0 ? 0 : x === 0.5 ? ML_NAN : Math.tan(M_PI * x);
 }
-

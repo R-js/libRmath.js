@@ -68,7 +68,11 @@ import {
 
 const { expm1 } = Math;
 
-export function rgamma(a: number, scale: number, normal: INormal): number {
+export function rgamma(
+    a: number, 
+    scale: number, 
+    normal: INormal): number {
+
     /* Constants : */
     const sqrt32 = 5.656854;
     const exp_m1 = 0.36787944117144232159; /* exp(-1) = 1/e */
@@ -94,6 +98,7 @@ export function rgamma(a: number, scale: number, normal: INormal): number {
     const a7 = 0.1233795;
 
     /* State variables [FIXME for threading!] :*/
+    
     let aa = 0.;
     let aaa = 0.;
     let s = 0;

@@ -43,17 +43,15 @@
  */
 
 import {
-    ISNAN,
-    ML_ERR_return_NAN,
-    R_D_nonint_check,
-    R_FINITE,
-    R_D__0,
-    R_D__1,
-    R_forceint,
-    log,
-    R_D_exp,
-
-
+  ISNAN,
+  ML_ERR_return_NAN,
+  R_D_nonint_check,
+  R_FINITE,
+  R_D__0,
+  R_D__1,
+  R_forceint,
+  log,
+  R_D_exp
 } from '~common';
 
 import { dbinom_raw } from '~binomial';
@@ -62,94 +60,111 @@ import { log1p } from '~log';
 
 import { lgamma_c99 } from '~gamma';
 
+export function dnbinom(
+  x: number,
+  size: number,
+  prob: number,
+  give_log: boolean
+): number {
+  let ans: number;
+  let p: number;
 
-export function dnbinom(x: number, size: number, prob: number, give_log: boolean): number {
+  if (ISNAN(x) || ISNAN(size) || ISNAN(prob)) {
+    return x + size + prob;
+  }
 
-    let ans: number;
-    let p: number;
+  if (prob <= 0 || prob > 1 || size < 0) {
+    return ML_ERR_return_NAN();
+  }
+  let rc = R_D_nonint_check(give_log, x);
+  if (rc !== undefined) {
+    return rc;
+  }
 
-    if (ISNAN(x) || ISNAN(size) || ISNAN(prob)) {
-        return x + size + prob;
-    }
+  if (x < 0 || !R_FINITE(x)) {
+    return R_D__0(give_log);
+  }
+  /* limiting case as size approaches zero is point mass at zero */
+  if (x === 0 && size === 0) {
+    return R_D__1(give_log);
+  }
 
-    if (prob <= 0 || prob > 1 || size < 0) {
-        return ML_ERR_return_NAN();
-    }
-    let rc = R_D_nonint_check(give_log, x);
-    if (rc !== undefined) {
-        return rc;
-    }
+  x = R_forceint(x);
 
-    if (x < 0 || !R_FINITE(x)) {
-        return R_D__0(give_log);
-    }
-    /* limiting case as size approaches zero is point mass at zero */
-    if (x === 0 && size === 0) {
-        return R_D__1(give_log);
-    }
+  ans = dbinom_raw(size, x + size, prob, 1 - prob, give_log);
 
-    x = R_forceint(x);
+  p = size / (size + x);
 
-    ans = dbinom_raw(size, x + size, prob, 1 - prob, give_log);
-
-    p = (size) / (size + x);
-
-    return ((give_log) ? log(p) + ans : p * ans);
+  return give_log ? log(p) + ans : p * ans;
 }
 
-export function dnbinom_mu(x: number, size: number, mu: number, give_log: boolean) {
-    /* originally, just set  prob :=  size / (size + mu)  and called dbinom_raw(),
+export function dnbinom_mu(
+  x: number,
+  size: number,
+  mu: number,
+  give_log: boolean
+) {
+  /* originally, just set  prob :=  size / (size + mu)  and called dbinom_raw(),
      * but that suffers from cancellation when   mu << size  */
-    let ans: number;
-    let p: number;
+  let ans: number;
+  let p: number;
 
-    if (ISNAN(x) || ISNAN(size) || ISNAN(mu)) {
-        return x + size + mu;
-    }
+  if (ISNAN(x) || ISNAN(size) || ISNAN(mu)) {
+    return x + size + mu;
+  }
 
-    if (mu < 0 || size < 0) {
-        return ML_ERR_return_NAN();
-    }
+  if (mu < 0 || size < 0) {
+    return ML_ERR_return_NAN();
+  }
 
-    let rc = R_D_nonint_check(give_log, x);
-    if (rc !== undefined) {
-        return rc;
-    }
+  let rc = R_D_nonint_check(give_log, x);
+  if (rc !== undefined) {
+    return rc;
+  }
 
-    if (x < 0 || !R_FINITE(x)) {
-        return R_D__0(give_log);
-    }
+  if (x < 0 || !R_FINITE(x)) {
+    return R_D__0(give_log);
+  }
 
-    /* limiting case as size approaches zero is point mass at zero,
+  /* limiting case as size approaches zero is point mass at zero,
      * even if mu is kept constant. limit distribution does not
      * have mean mu, though.
      */
-    if (x === 0 && size === 0) {
-        return R_D__1(give_log);
-    }
+  if (x === 0 && size === 0) {
+    return R_D__1(give_log);
+  }
 
-    x = R_forceint(x);
-    if (x === 0) {/* be accurate, both for n << mu, and n >> mu :*/
-        // old code   size * (size < mu ? log(size / (size + mu)) : log1p(- mu / (size + mu))));
-        let llogx: number;
-        if (size < mu) {
-            llogx = log(size / (size + mu));
-        }
-        else {
-            llogx = log1p(- mu / (size + mu));
-        }
-        return R_D_exp(give_log, size * llogx);
+  x = R_forceint(x);
+  if (x === 0) {
+    /* be accurate, both for n << mu, and n >> mu :*/
+    // old code   size * (size < mu ? log(size / (size + mu)) : log1p(- mu / (size + mu))));
+    let llogx: number;
+    if (size < mu) {
+      llogx = log(size / (size + mu));
+    } else {
+      llogx = log1p(-mu / (size + mu));
     }
-    if (x < 1e-10 * size) { /* don't use dbinom_raw() but MM's formula: */
-        /* FIXME --- 1e-8 shows problem; rather use algdiv() from ./toms708.c */
-        p = (size < mu ? log(size / (1 + size / mu)) : log(mu / (1 + mu / size)));
-        return R_D_exp(give_log, x * p - mu - lgamma_c99(x + 1) +
-            log1p(x * (x - 1) / (2 * size)));
-    }
-    /* else: no unnecessary cancellation inside dbinom_raw, when
+    return R_D_exp(give_log, size * llogx);
+  }
+  if (x < 1e-10 * size) {
+    /* don't use dbinom_raw() but MM's formula: */
+    /* FIXME --- 1e-8 shows problem; rather use algdiv() from ./toms708.c */
+    p = size < mu ? log(size / (1 + size / mu)) : log(mu / (1 + mu / size));
+    return R_D_exp(
+      give_log,
+      x * p - mu - lgamma_c99(x + 1) + log1p(x * (x - 1) / (2 * size))
+    );
+  }
+  /* else: no unnecessary cancellation inside dbinom_raw, when
      * x_ = size and n_ = x+size are so close that n_ - x_ loses accuracy
      */
-    ans = dbinom_raw(size, x + size, size / (size + mu), mu / (size + mu), give_log);
-    p = (size) / (size + x);
-    return ((give_log) ? log(p) + ans : p * ans);
+  ans = dbinom_raw(
+    size,
+    x + size,
+    size / (size + mu),
+    mu / (size + mu),
+    give_log
+  );
+  p = size / (size + x);
+  return give_log ? log(p) + ans : p * ans;
 }

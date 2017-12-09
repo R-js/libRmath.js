@@ -214,7 +214,9 @@ export function fabs(x: number) {
 }
 
 export function fmod(x: number, y: number): number {
-    return x % y;
+    // 4.2 % 0.1 gives 0.099999999
+    // this is wong so...
+    return x - trunc(x / y) * y;
 }
 
 export function fmax2(x: number, y: number): number {

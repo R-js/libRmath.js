@@ -5,7 +5,7 @@ r-source-trunk/
 *.log
 TODO
 npm-debug.log*
-
+*.pem
 .*
 !/.gitignore
 !/.npmignore
