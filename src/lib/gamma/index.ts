@@ -10,7 +10,3 @@ export * from './polygamma';
 export * from './qgamma';
 export * from './rgamma';
 export { gammafn };
-
-export const gamma = {
-    gamma: gammafn
-};
