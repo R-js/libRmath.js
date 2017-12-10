@@ -26,15 +26,11 @@
  *    The distribution function of the Poisson distribution.
  */
 
-import {
-  ISNAN,
-  R_FINITE,
-  ML_ERR_return_NAN,
-  R_DT_0,
-  R_DT_1,
-  floor,
-  fmax2
-} from '~common';
+import { ML_ERR_return_NAN, R_DT_0, R_DT_1 } from '~common';
+
+const { isNaN: ISNAN, isFinite: R_FINITE } = Number;
+const { isArray } = Array;
+const { floor, max: fmax2 } = Math;
 
 import { pgamma } from '~gamma';
 
@@ -42,24 +38,30 @@ import { NumberW } from '~common';
 
 import { INormal } from '~normal';
 
-export function ppois(
-  x: number,
+export function ppois<T>(
+  _x: T,
   lambda: number,
   lower_tail: boolean,
   log_p: boolean,
   normal: INormal
-): number {
-  if (ISNAN(x) || ISNAN(lambda)) return x + lambda;
+): T {
+  const fa: number[] = isArray(_x) ? _x : [_x] as any;
 
-  if (lambda < 0) {
-    return ML_ERR_return_NAN();
-  }
-  if (x < 0) return R_DT_0(lower_tail, log_p);
-  if (lambda === 0) return R_DT_1(lower_tail, log_p);
-  if (!R_FINITE(x)) return R_DT_1(lower_tail, log_p);
-  x = floor(x + 1e-7);
+  const result = fa.map(x => {
+    if (ISNAN(x) || ISNAN(lambda)) return x + lambda;
 
-  return pgamma(lambda, x + 1, 1, !lower_tail, log_p, normal);
+    if (lambda < 0) {
+      return ML_ERR_return_NAN();
+    }
+    if (x < 0) return R_DT_0(lower_tail, log_p);
+    if (lambda === 0) return R_DT_1(lower_tail, log_p);
+    if (!R_FINITE(x)) return R_DT_1(lower_tail, log_p);
+    x = floor(x + 1e-7);
+
+    return pgamma(lambda, x + 1, 1, !lower_tail, log_p, normal);
+  });
+
+  return result.length === 1 ? result[0] : result as any;
 }
 
 export function do_search(
@@ -75,7 +77,13 @@ export function do_search(
     while (true) {
       if (
         y === 0 ||
-        (z.val = ppois(y - incr, lambda, /*l._t.*/ true, /*log_p*/ false, normal)) < p
+        (z.val = ppois(
+          y - incr,
+          lambda,
+          /*l._t.*/ true,
+          /*log_p*/ false,
+          normal
+        )) < p
       )
         return y;
       y = fmax2(0, y - incr);
@@ -85,7 +93,9 @@ export function do_search(
 
     while (true) {
       y = y + incr;
-      if ((z.val = ppois(y, lambda, /*l._t.*/ true, /*log_p*/ false, normal)) >= p)
+      if (
+        (z.val = ppois(y, lambda, /*l._t.*/ true, /*log_p*/ false, normal)) >= p
+      )
         return y;
     }
   }

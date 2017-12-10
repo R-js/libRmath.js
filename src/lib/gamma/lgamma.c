@@ -68,7 +68,8 @@ double lgammafn_sign(double x, int *sgn)
     if(ISNAN(x)) return x;
 #endif
 
-    if (sgn != NULL && x < 0 && fmod(floor(-x), 2.) == 0)
+    if (sgn != NULL && x < 0 
+    && fmod(floor(-x), 2.) == 0)
 	*sgn = -1;
 
     if (x <= 0 && x == trunc(x)) { /* Negative integer argument */

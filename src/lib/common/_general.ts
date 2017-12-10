@@ -289,7 +289,7 @@ export function R_D_negInonint(x: number) {
 }
 
 export function R_nonint(x: number) {
-    return (fabs((x) - R_forceint(x)) > 1e-7 * fmax2(1., fabs(x)));
+    return (fabs( x - R_forceint(x) ) > 1e-7 * fmax2(1., fabs(x)));
 }
 
 export function R_D_fexp(give_log: boolean, f: number, x: number): number {

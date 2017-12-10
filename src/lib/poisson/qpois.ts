@@ -34,18 +34,15 @@
  *	this initial start point.
  */
 
-import {
-  fmax2,
-  ISNAN,
-  R_FINITE,
-  ML_ERR_return_NAN,
-  ML_POSINF,
-  R_Q_P01_boundaries,
-  sqrt,
-  DBL_EPSILON,
-  nearbyint,
-  floor
-} from '~common';
+import { ML_ERR_return_NAN, R_Q_P01_boundaries } from '~common';
+
+const { max: fmax2, sqrt, floor, round: nearbyint } = Math;
+const {
+  isNaN: ISNAN,
+  EPSILON: DBL_EPSILON,
+  POSITIVE_INFINITY: ML_POSINF,
+  isFinite: R_FINITE
+} = Number;
 
 import { NumberW } from '~common';
 
@@ -80,7 +77,23 @@ function do_search(
   }
 }
 
-export function qpois(
+const { isArray } = Array;
+
+export function qpois<T>(
+  p: T,
+  lambda: number = 1,
+  lower_tail: boolean = true,
+  log_p: boolean = false,
+  normal: INormal
+): T {
+  const fp: number[] = isArray(p) ? p : ([p] as any);
+  const result = fp.map(x => {
+    return _qpois(x, lambda, lower_tail, log_p, normal);
+  });
+  return result.length === 1 ? result[0] : (result as any);
+}
+
+function _qpois(
   p: number,
   lambda: number,
   lower_tail: boolean,
@@ -126,7 +139,7 @@ export function qpois(
 
   y = nearbyint(mu + sigma * (z.val + gamma * (z.val * z.val - 1) / 6));
 
-  z.val = ppois(y, lambda, /*lower_tail*/ true, /*log_p*/ false, normal );
+  z.val = ppois(y, lambda, /*lower_tail*/ true, /*log_p*/ false, normal);
 
   /* fuzz to ensure left continuity; 1 - 1e-7 may lose too much : */
   p *= 1 - 64 * DBL_EPSILON;

@@ -114,7 +114,19 @@ const gamcs: number[] = [
   -0.5793070335782135784625493333333e-31
 ];
 
-export function gammafn(x: number): number {
+const { isArray } = Array;
+
+export function gammafn<T>(x: T): T {
+  const fx: number[] = isArray(x) ? x : [x] as any;
+
+  const result = fx.map(fx => {
+    return _gammafn(fx);
+  });
+
+  return result.length === 1 ? result[0] : result as any;
+}
+
+function _gammafn(x: number): number {
   let i: number;
   let n: number;
   let y: number;

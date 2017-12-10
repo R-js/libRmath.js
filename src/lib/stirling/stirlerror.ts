@@ -42,6 +42,8 @@
 import { M_LN_SQRT_2PI } from '~common';
 import { lgammafn } from '~gamma';
 
+const { trunc , log } = Math;
+
 const sferr_halves: number[] = [
     0.0, // n=0 - wrong, place holder only 
     0.1534264097200273452913848,  // 0.5 
@@ -99,8 +101,8 @@ export function stirlerr(n: number): number {
 
     if (n <= 15.0) {
         nn = n + n;
-        if (nn === Math.trunc(nn)) return (sferr_halves[Math.trunc(nn)]);
-        return (lgammafn(n + 1.) - (n + 0.5) * Math.log(n) + n - M_LN_SQRT_2PI);
+        if (nn === trunc(nn)) return (sferr_halves[trunc(nn)]);
+        return (lgammafn(n + 1.) - (n + 0.5) * log(n) + n - M_LN_SQRT_2PI);
     }
 
     nn = n * n;

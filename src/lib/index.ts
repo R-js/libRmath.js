@@ -3,10 +3,11 @@ export { uniform } from './uniform';
 export { normal } from './normal';
 export { logNormal } from './normal/lognormal';
 export { rng, IRNG } from './rng';
-import { gammafn } from '~gamma';
+import { gammafn, lgammafn } from '~gamma';
 
 export const special = {
-  gamma: gammafn
+  gamma: gammafn,
+  lgamma: lgammafn
 };
 
 //export * as rfunc from './r-func';
@@ -29,7 +30,7 @@ export * from './geometric';
 export * from './log';
 export * from './rng';
 export * from './r-func';
-
 export * from './bessel';
 export * from './beta';
 export * from './binomial';
+export * from './poisson';

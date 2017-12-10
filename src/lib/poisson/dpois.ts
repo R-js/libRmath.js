@@ -37,20 +37,15 @@
  *
  */
 
-import {
-    R_FINITE,
-    R_D__0,
-    R_D__1,
-    DBL_MIN,
-    R_D_fexp,
-    M_2PI,
-    log,
-    R_D_exp,
-    ISNAN,
-    ML_ERR_return_NAN,
-    R_D_nonint_check,
-    R_forceint
+import * as debug from 'debug';
 
+import {
+  R_D__0,
+  R_D__1,
+  R_D_fexp,
+  R_D_exp,
+  ML_ERR_return_NAN,
+  R_D_nonint_check
 } from '~common';
 
 import { bd0 } from '~deviance';
@@ -58,38 +53,53 @@ import { lgammafn } from '~gamma';
 import { stirlerr } from '~stirling';
 
 
+const { round: R_forceint, log, PI } = Math;
+const { isNaN: ISNAN, isFinite: R_FINITE, MIN_VALUE: DBL_MIN } = Number;
+const M_2PI = 2 * PI;
+const printer = debug('dpois');
+const { isArray } = Array;
 
-export function dpois_raw(x: number, lambda: number, give_log: boolean): number {
-
-    /*       x >= 0 ; integer for dpois(), but not e.g. for pgamma()!
+export function dpois_raw(
+  x: number,
+  lambda: number,
+  give_log: boolean
+): number {
+  /*       x >= 0 ; integer for dpois(), but not e.g. for pgamma()!
         lambda >= 0
     */
-    if (lambda === 0) return ((x === 0) ? R_D__1(give_log) : R_D__0(give_log));
-    if (!R_FINITE(lambda)) return R_D__0(give_log);
-    if (x < 0) return (R_D__0(give_log));
-    if (x <= lambda * DBL_MIN) return (R_D_exp(give_log, -lambda));
-    if (lambda < x * DBL_MIN) return (R_D_exp(give_log, -lambda + x * log(lambda) - lgammafn(x + 1)));
-    return (R_D_fexp(give_log, M_2PI * x, -stirlerr(x) - bd0(x, lambda)));
+  if (lambda === 0) return x === 0 ? R_D__1(give_log) : R_D__0(give_log);
+  if (!R_FINITE(lambda)) return R_D__0(give_log);
+  if (x < 0) return R_D__0(give_log);
+  if (x <= lambda * DBL_MIN) return R_D_exp(give_log, -lambda);
+  if (lambda < x * DBL_MIN)
+    return R_D_exp(give_log, -lambda + x * log(lambda) - lgammafn(x + 1));
+
+    return R_D_fexp(give_log, M_2PI * x, -stirlerr(x) - bd0(x, lambda));
 }
 
-export function dpois(x: number, lambda: number, give_log: boolean) {
-
+export function dpois(
+  _x: number | number[],
+  lambda: number,
+  give_log: boolean = false
+): number | number[] {
+  const fx: number[] = isArray(_x) ? _x : ([_x] as any);
+  const result = fx.map(x => {
     if (ISNAN(x) || ISNAN(lambda)) {
-        return x + lambda;
+      return x + lambda;
     }
 
     if (lambda < 0) {
-        return ML_ERR_return_NAN();
+      return ML_ERR_return_NAN(printer);
     }
     let rc = R_D_nonint_check(give_log, x);
     if (rc !== undefined) {
-        return rc;
+      return rc;
     }
     if (x < 0 || !R_FINITE(x)) {
-        return R_D__0;
+      return R_D__0(give_log);
     }
-
     x = R_forceint(x);
-
-    return (dpois_raw(x, lambda, give_log));
+    return dpois_raw(x, lambda, give_log);
+  });
+  return result.length === 1 ? result[0] : (result as any);
 }

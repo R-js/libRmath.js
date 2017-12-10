@@ -47,35 +47,38 @@
  *    library.
  */
 
-import {
-    M_LN_SQRT_PId2,
-    ISNAN,
-    fmod,
-    ML_ERROR,
-    ME,
-    ML_POSINF,
-    fabs,
-    log,
-    M_LN_SQRT_2PI,
-    MATHLIB_WARNING,
-    ML_ERR_return_NAN
+import * as debug from 'debug';
 
+import {
+  M_LN_SQRT_PId2,
+  fmod,
+  ML_ERROR,
+  ME,
+  M_LN_SQRT_2PI,
+  MATHLIB_WARNING,
+  ML_ERR_return_NAN
 } from '~common';
 
-import { gammafn } from '~gamma';
+import { gammafn } from './gamma_fn';
 import { sinpi } from '~trigonometry';
-import { lgammacor } from '~gamma';
+import { lgammacor } from './lgammacor';
 
-const xmax = 2.5327372760800758e+305;
+const { isNaN: ISNAN, POSITIVE_INFINITY: ML_POSINF } = Number;
+const { log, abs: fabs, floor, trunc } = Math;
+const { isArray } = Array;
+
+const printer_sign = debug('lgammafn_sign');
+
+const xmax = 2.5327372760800758e305;
 const dxrel = 1.490116119384765625e-8;
 
 export function lgammafn_sign(x: number, sgn?: number[]): number {
+  let ans: number;
+  let y: number;
+  let sinpiy: number;
 
-    let ans: number;
-    let y: number;
-    let sinpiy: number;
-
-    /*#ifdef NOMORE_FOR_THREADS
+  /*
+  #ifdef NOMORE_FOR_THREADS
     static double xmax = 0.;
     static double dxrel = 0.;
 
@@ -84,69 +87,76 @@ export function lgammafn_sign(x: number, sgn?: number[]): number {
         dxrel = sqrt(d1mach(4));// sqrt(Eps) ~ 1.49 e-8  for IEEE double 
     }
     #else*/
-    // For IEEE double precision DBL_EPSILON = 2^-52 = 2.220446049250313e-16 :
-    //   xmax  = DBL_MAX / log(DBL_MAX) = 2^1024 / (1024 * log(2)) = 2^1014 / log(2)
-    //   dxrel = sqrt(DBL_EPSILON) = 2^-26 = 5^26 * 1e-26 (is *exact* below !)
-    // 
+  // For IEEE double precision DBL_EPSILON = 2^-52 = 2.220446049250313e-16 :
+  //   xmax  = DBL_MAX / log(DBL_MAX) = 2^1024 / (1024 * log(2)) = 2^1014 / log(2)
+  //   dxrel = sqrt(DBL_EPSILON) = 2^-26 = 5^26 * 1e-26 (is *exact* below !)
+  //
 
-    if (!!sgn) sgn[0] = 1;
+  if (sgn) sgn[0] = 1;
 
+  //#ifdef IEEE_754
+  if (ISNAN(x)) return x;
+  //#endif
+
+  if (sgn && x < 0 && fmod(floor(-x), 2) === 0) {
+    sgn[0] = -1;
+  }
+
+  if (x <= 0 && x === trunc(x)) {
+    /// Negative integer argument
+    ML_ERROR(ME.ME_RANGE, 'lgamma', printer_sign);
+    return ML_POSINF; // +Inf, since lgamma(x) = log|gamma(x)|
+  }
+
+  y = fabs(x);
+
+  if (y < 1e-306) return -log(y); // denormalized range, R change
+  if (y <= 10) return log(fabs(gammafn(x) as number));
+
+  //  ELSE  y = |x| > 10 ----------------------
+
+  if (y > xmax) {
+    ML_ERROR(ME.ME_RANGE, 'lgamma', printer_sign);
+    return ML_POSINF;
+  }
+
+  if (x > 0) {
+    // i.e. y = x > 10
     //#ifdef IEEE_754
-    if (ISNAN(x)) return x;
-    //#endif
+    if (x > 1e17) return x * (log(x) - 1);
+    else if (x > 4934720) return M_LN_SQRT_2PI + (x - 0.5) * log(x) - x;
+    else return M_LN_SQRT_2PI + (x - 0.5) * log(x) - x + lgammacor(x);
+  }
+  // else: x < -10; y = -x
+  sinpiy = fabs(sinpi(y));
 
-    if (!!sgn && x < 0 && fmod(Math.floor(-x), 2.) === 0) {
-        sgn[0] = -1;
-    }
+  if (sinpiy === 0) {
+    // Negative integer argument ===
+    //Now UNNECESSARY: caught above
+    printer_sign(' ** should NEVER happen! *** [lgamma.c: Neg.int, y=%d]', y);
+    return ML_ERR_return_NAN(printer_sign);
+  }
 
-    if (x <= 0 && x === Math.trunc(x)) { /// Negative integer argument 
-        ML_ERROR(ME.ME_RANGE, 'lgamma');
-        return ML_POSINF; // +Inf, since lgamma(x) = log|gamma(x)| 
-    }
+  ans = M_LN_SQRT_PId2 + (x - 0.5) * log(y) - x - log(sinpiy) - lgammacor(y);
 
-    y = fabs(x);
+  if (fabs((x - Math.trunc(x - 0.5)) * ans / x) < dxrel) {
+    // The answer is less than half precision because
+    // the argument is too near a negative integer.
 
-    if (y < 1e-306) return -log(y); // denormalized range, R change
-    if (y <= 10) return log(fabs(gammafn(x)));
+    ML_ERROR(ME.ME_PRECISION, 'lgamma', printer_sign);
+  }
 
-    //  ELSE  y = |x| > 10 ---------------------- 
-
-    if (y > xmax) {
-        ML_ERROR(ME.ME_RANGE, 'lgamma');
-        return ML_POSINF;
-    }
-
-    if (x > 0) { // i.e. y = x > 10 
-        //#ifdef IEEE_754
-        if (x > 1e17)
-            return (x * (log(x) - 1.));
-        else if (x > 4934720.)
-            return (M_LN_SQRT_2PI + (x - 0.5) * log(x) - x);
-        else
-            return M_LN_SQRT_2PI + (x - 0.5) * log(x) - x + lgammacor(x);
-    }
-    // else: x < -10; y = -x 
-    sinpiy = fabs(sinpi(y));
-
-    if (sinpiy === 0) { // Negative integer argument ===
-        //Now UNNECESSARY: caught above 
-        MATHLIB_WARNING(' ** should NEVER happen! *** [lgamma.c: Neg.int, y=%g]\n', y);
-        return ML_ERR_return_NAN();
-    }
-
-    ans = M_LN_SQRT_PId2 + (x - 0.5) * log(y) - x - log(sinpiy) - lgammacor(y);
-
-    if (fabs((x - Math.trunc(x - 0.5)) * ans / x) < dxrel) {
-
-        // The answer is less than half precision because
-        // the argument is too near a negative integer. 
-
-        ML_ERROR(ME.ME_PRECISION, 'lgamma');
-    }
-
-    return ans;
+  return ans;
 }
 
-export function lgammafn(x: number): number {
-    return lgammafn_sign(x);
+export function lgammafn<T>(
+    x: T): T {
+
+  const fx: number[] = isArray(x) ? x : [x] as any;
+
+  const result: number[] = fx.map((fx) => {
+    return lgammafn_sign(fx);
+  });
+
+  return result.length === 1 ? result[0] : result as any;
 }
