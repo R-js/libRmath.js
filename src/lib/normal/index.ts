@@ -6,7 +6,7 @@ import { qnorm } from './qnorm';
 import { rnorm } from './rnorm';
 
 import { IRNGNormal, rng } from '../rng';
-const { normal: { Inversion }, MersenneTwister } = rng;
+const { normal: { BoxMuller }, SuperDuper } = rng;
 
 export interface INormal {
   rnorm: (n: number, mu: number, sigma: number) => number | number[];
@@ -29,7 +29,7 @@ export interface INormal {
   norm_rand: () => number;
 }
 
-export function normal(rng: IRNGNormal = new Inversion( new MersenneTwister(0))): INormal {
+export function normal(rng: IRNGNormal = new BoxMuller( new SuperDuper(0))): INormal {
  
   const norm_rand: () => number = rng.norm_rand.bind(rng);
   // underlying uniform PRNG

@@ -70,7 +70,12 @@ const one_7 = 0.1428571428571428571;
 const one_12 = 0.0833333333333333333;
 const one_24 = 0.0416666666666666667;
 
-export function rpois(mu: number, normal: INormal): number {
+export function rpois( n: number= 1, mu: number = 1, normal: INormal): number|number[] {
+    const result = new Array(n).fill(0).map(() => _rpois(mu, normal));
+    return result.length === 1 ? result[0] : result;  
+}
+
+function _rpois(mu: number, normal: INormal): number {
   /* Factorial Table (0:9)! */
   const fact = [1, 1, 2, 6, 24, 120, 720, 5040, 40320, 362880];
 

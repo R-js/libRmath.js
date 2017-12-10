@@ -38,12 +38,16 @@ import { NumberW } from '~common';
 
 import { INormal } from '~normal';
 
+import * as debug from 'debug';
+
+const printer = debug('ppois');
+
 export function ppois<T>(
   _x: T,
-  lambda: number,
-  lower_tail: boolean,
-  log_p: boolean,
-  normal: INormal
+  lambda: number = 1,
+  lowerTail: boolean = true,
+  logP: boolean = false,
+  normal: INormal //pass it on to "pgamma"->"pgamma_raw"->"ppois_asymp"->(dpnorm??)->("normal.pnorm")  
 ): T {
   const fa: number[] = isArray(_x) ? _x : [_x] as any;
 
@@ -51,14 +55,14 @@ export function ppois<T>(
     if (ISNAN(x) || ISNAN(lambda)) return x + lambda;
 
     if (lambda < 0) {
-      return ML_ERR_return_NAN();
+      return ML_ERR_return_NAN(printer);
     }
-    if (x < 0) return R_DT_0(lower_tail, log_p);
-    if (lambda === 0) return R_DT_1(lower_tail, log_p);
-    if (!R_FINITE(x)) return R_DT_1(lower_tail, log_p);
+    if (x < 0) return R_DT_0(lowerTail, logP);
+    if (lambda === 0) return R_DT_1(lowerTail, logP);
+    if (!R_FINITE(x)) return R_DT_1(lowerTail, logP);
     x = floor(x + 1e-7);
 
-    return pgamma(lambda, x + 1, 1, !lower_tail, log_p, normal);
+    return pgamma(lambda, x + 1, 1, !lowerTail, logP, normal);
   });
 
   return result.length === 1 ? result[0] : result as any;

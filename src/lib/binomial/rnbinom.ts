@@ -60,12 +60,12 @@ export function rnbinom(size: number, prob: number, normal: INormal): number {
         /* prob = 1 is ok, PR#1218 */
         return ML_ERR_return_NAN();
     }
-    return (prob === 1) ? 0 : rpois( rgamma(size, (1 - prob) / prob, normal), normal);
+    return (prob === 1) ? 0 : rpois(1, rgamma(size, (1 - prob) / prob, normal), normal) as number;
 }
 
 export function rnbinom_mu(size: number, mu: number, normal: INormal): number {
     if (!R_FINITE(size) || !R_FINITE(mu) || size <= 0 || mu < 0) {
         return ML_ERR_return_NAN();
     }
-    return (mu === 0) ? 0 : rpois(rgamma(size, mu / size, normal), normal);
+    return (mu === 0) ? 0 : rpois(1, rgamma(size, mu / size, normal), normal) as number;
 }

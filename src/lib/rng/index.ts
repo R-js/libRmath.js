@@ -14,6 +14,7 @@ import {
     AhrensDieter,
     KindermanRamage
 } from './normal';
+import { timeseed } from './timeseed';
 
 export const rng = {
   SuperDuper,
@@ -29,7 +30,8 @@ export const rng = {
     AhrensDieter,
     Inversion,
     KindermanRamage
-  }
+  },
+  timeseed
 };
 
 export { IRNG, IRNGNormal };
