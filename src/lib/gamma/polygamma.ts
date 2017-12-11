@@ -618,6 +618,8 @@ export function psigamma(x: number, deriv: number): number {
   return ans[0]; /* = psi(n, x) */
 }
 
+//https://commons.wikimedia.org/wiki/File:Digamma_function_plot.png
+
 export function digamma(x: number): number {
   let ans = new Array(1).fill(0);
   let nz = new NumberW(0);
@@ -630,6 +632,8 @@ export function digamma(x: number): number {
   return -ans[0];
 }
 
+//https://commons.wikimedia.org/wiki/Category:Polygamma_function#/media/File:Trigamma_function_plot.png
+
 export function trigamma(x: number): number {
   let ans = new Array(1).fill(0);
   let nz = new NumberW(0);
@@ -641,7 +645,7 @@ export function trigamma(x: number): number {
   }
   return ans[0];
 }
-
+//https://commons.wikimedia.org/wiki/Category:Polygamma_function#/media/File:Tetragamma_function_plot.png
 export function tetragamma(x: number): number {
   let ans = new Array(1).fill(0);
 
@@ -654,7 +658,7 @@ export function tetragamma(x: number): number {
   }
   return -2.0 * ans[0];
 }
-
+// replaced by psigamma function
 export function pentagamma(x: number): number {
   let ans = new Array(1).fill(0);
 
