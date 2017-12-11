@@ -98,17 +98,17 @@ const {
 
 const { isArray } = Array;
 
-export const scalefactor = sqr(sqr(sqr(4294967296.0)));
+const scalefactor = sqr(sqr(sqr(4294967296.0)));
 
 /* If |x| > |k| * M_cutoff,  then  log[ exp(-x) * k^x ]	 =~=  -x */
-export const M_cutoff = M_LN2 * DBL_MAX_EXP / DBL_EPSILON; /*=3.196577e18*/
+const M_cutoff = M_LN2 * DBL_MAX_EXP / DBL_EPSILON; /*=3.196577e18*/
 
 /* Continued fraction for calculation of
  *    1/i + x/(i+d) + x^2/(i+2*d) + x^3/(i+3*d) + ... = sum_{k=0}^Inf x^k/(i+k*d)
  *
  * auxilary in log1pmx() and lgamma1p()
  */
-export function logcf(
+function logcf(
   x: number,
   i: number,
   d: number,
@@ -159,7 +159,7 @@ export function logcf(
 }
 
 /* Accurate calculation of log(1+x)-x, particularly for small x.  */
-export function log1pmx(x: number) {
+function log1pmx(x: number) {
   const minLog1Value = -0.79149064;
 
   if (x > 1 || x < minLog1Value) return log1p(x) - x;
@@ -260,7 +260,7 @@ export function lgamma1p(a: number) {
  * without causing overflows and without throwing away large handfuls
  * of accuracy.
  */
-export function logspace_add(logx: number, logy: number) {
+ export function logspace_add(logx: number, logy: number) {
   return fmax2(logx, logy) + log1p(exp(-fabs(logx - logy)));
 }
 
@@ -273,7 +273,7 @@ export function logspace_add(logx: number, logy: number) {
  * of accuracy.
  */
 
-export function logspace_sub(logx: number, logy: number) {
+ function logspace_sub(logx: number, logy: number) {
   return logx + R_Log1_Exp(logy - logx);
 }
 
@@ -287,7 +287,7 @@ export function logspace_sub(logx: number, logy: number) {
  * without causing overflows or throwing much accuracy.
  */
 
-export function logspace_sum(logx: number[], n: number): number {
+ function logspace_sum(logx: number[], n: number): number {
   if (n === 0) return ML_NEGINF; // = log( sum(<empty>) )
   if (n === 1) return logx[0];
   if (n === 2) return logspace_add(logx[0], logx[1]);
@@ -312,7 +312,8 @@ export function logspace_sum(logx: number[], n: number): number {
  * and  dpois*(.., give_log = TRUE) :=  log( dpois*(..) )
 */
 const pr_dpois_wrap = debug('dpois_wrap');
-export function dpois_wrap(
+
+ function dpois_wrap(
   x_plus_1: number,
   lambda: number,
   give_log: boolean
@@ -341,7 +342,8 @@ export function dpois_wrap(
  * Abramowitz and Stegun 6.5.29 [right]
  */
 const pr_pgamma_smallx = debug('pgamma_smallx');
-export function pgamma_smallx(
+
+ function pgamma_smallx(
   x: number,
   alph: number,
   lowerTail: boolean,
@@ -392,7 +394,7 @@ export function pgamma_smallx(
   }
 } /* pgamma_smallx() */
 
-export function pd_upper_series(x: number, y: number, logP: boolean): number {
+ function pd_upper_series(x: number, y: number, logP: boolean): number {
   let term = x / y;
   let sum = term;
 
@@ -415,7 +417,8 @@ export function pd_upper_series(x: number, y: number, logP: boolean): number {
  *  ~=  (y / d) * [1 +  (1-y)/d +  O( ((1-y)/d)^2 ) ]
  */
 const pr_pd_lower_cf = debug('pd_lower_cf');
-export function pd_lower_cf(y: number, d: number): number {
+
+function pd_lower_cf(y: number, d: number): number {
   let f = 0.0; /* -Wall */
   let of;
   let f0;
@@ -493,7 +496,8 @@ export function pd_lower_cf(y: number, d: number): number {
 } /* pd_lower_cf() */
 
 const pr_pd_lower_series = debug('pd_lower_series');
-export function pd_lower_series(lambda: number, y: number): number {
+
+function pd_lower_series(lambda: number, y: number): number {
   let term = 1;
   let sum = 0;
 
@@ -541,7 +545,7 @@ export function pd_lower_series(lambda: number, y: number): number {
  *
  * Abramowitz & Stegun 26.2.12
  */
-export function dpnorm(
+ function dpnorm(
   x: number,
   lowerTail: boolean,
   lp: number,
@@ -587,7 +591,8 @@ export function dpnorm(
  */
 
 const pr_ppois_asymp = debug('ppois_asymp');
-export function ppois_asymp(
+
+function ppois_asymp(
   x: number,
   lambda: number,
   lowerTail: boolean,
@@ -691,6 +696,7 @@ export function ppois_asymp(
 } /* ppois_asymp() */
 
 const pr_pgamma_raw = debug('pgamma_raw');
+ 
 export function pgamma_raw(
   x: number,
   alph: number,

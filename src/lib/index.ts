@@ -3,12 +3,22 @@ export { uniform } from './uniform';
 export { normal } from './normal';
 export { logNormal } from './normal/lognormal';
 export { rng, IRNG } from './rng';
-import { gammafn, lgammafn } from '~gamma';
+import { gammafn, lgammafn, lgammafn_sign,
+  pentagamma,
+  tetragamma,
+  trigamma,
+  digamma,
+  psigamma } from '~gamma';
 
-export const special = {
+export const special = Object.freeze({
   gamma: gammafn,
-  lgamma: lgammafn
-};
+  lgamma: lgammafn,
+  pentagamma,
+  tetragamma,
+  trigamma,
+  digamma,
+  psigamma
+});
 
 //export * as rfunc from './r-func';
 

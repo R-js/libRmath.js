@@ -146,7 +146,14 @@
 #define n_max (100)
 
 /* From R, currently only used for kode = 1, m = 1 : */
-void dpsifn(double x, int n, int kode, int m, double *ans, int *nz, int *ierr)
+void dpsifn(
+    double x,
+    int n,
+    int kode,
+    int m,
+    double *ans,
+    int *nz,
+    int *ierr)
 {
     const static double bvalues[] = {/* Bernoulli Numbers */
                                      1.00000000000000000e+00,
@@ -185,6 +192,7 @@ void dpsifn(double x, int n, int kode, int m, double *ans, int *nz, int *ierr)
         *ierr = 1;
         return;
     }
+
     if (x <= 0.)
     {
         /* use	Abramowitz & Stegun 6.4.7 "Reflection Formula"
@@ -366,8 +374,8 @@ void dpsifn(double x, int n, int kode, int m, double *ans, int *nz, int *ierr)
 
     if (mm != 1)
     { /* generate higher derivatives, j > n */
-
-        tol = wdtol / 5.0;
+ 
+        tol = wdtol / 5.0; // line 438
         for (j = 1; j < mm; j++)
         {
             t /= x;
@@ -387,7 +395,7 @@ void dpsifn(double x, int n, int kode, int m, double *ans, int *nz, int *ierr)
     }
     return;
 
-L10:
+L10:// line 455
     tss = exp(-t);
     tt = 0.5 / xdmy;
     t1 = tt;
@@ -409,9 +417,10 @@ L10:
                 break;
             s += trm[k];
             tk += 2.;
-        }
-    }
+        }//for
+    }//if
     s = (s + t1) * tss;
+    // need to break for L20  //480
     if (xinc != 0.0)
     {
 
@@ -424,9 +433,7 @@ L10:
             *nz = 0;
             *ierr = 3;
             return;
-        }
-        else
-        {
+        } else {
             if (nn == 0)
                 goto L20;
             xm = xinc - 1.0;
@@ -487,12 +494,13 @@ L10:
         ans[mm - j] = s;
         if (fn == 0)
             goto L30;
-    }
+    } //for
     return;
 
 L20:
     for (i = 1; i <= nx; i++)
-        s += 1. / (x + (nx - i)); /* avoid disastrous cancellation, PR#13714 */
+        s += 1. / (x + (nx - i));
+    /* avoid disastrous cancellation, PR#13714 */
 
 L30:
     if (kode != 2) /* always */
@@ -585,3 +593,4 @@ double pentagamma(double x)
     ML_TREAT_psigam(ierr);
     return 6.0 * ans;
 }
+

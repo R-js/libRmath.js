@@ -44,7 +44,7 @@
 import {
     Rf_d1mach as d1mach,
     ML_ERROR,
-    ME,
+    ME
 } from '~common';
 
 const { max:fmax2, log, abs:fabs } = Math;
@@ -52,7 +52,7 @@ const {NaN:ML_NAN } = Number;
 
 const printer = debug('gammalims');
 
-export function gammalims(input: { xmin: number, xmax: number }, IEEE_754?: boolean): void {
+function gammalims(input: { xmin: number, xmax: number }, IEEE_754?: boolean): void {
     /* 
         FIXME: Even better: If IEEE, #define these in nmath.h
           and don't call gammalims() at all

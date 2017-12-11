@@ -6,9 +6,23 @@ export * from './gammalims';
 import { lgammafn_sign, lgammafn } from './lgamma_fn';
 export * from './lgammacor';
 export * from './pgamma';
-export * from './polygamma';
+import {
+  pentagamma,
+  tetragamma,
+  trigamma,
+  digamma,
+  psigamma
+} from './polygamma';
 export * from './qgamma';
 export * from './rgamma';
 
-export { gammafn };
-export { lgammafn_sign, lgammafn };
+export {
+  lgammafn_sign,
+  gammafn,
+  lgammafn,
+  pentagamma,
+  tetragamma,
+  trigamma,
+  digamma,
+  psigamma
+};
