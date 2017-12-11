@@ -82,7 +82,9 @@ export function dpois(
   lambda: number,
   give_log: boolean = false
 ): number | number[] {
-  const fx: number[] = isArray(_x) ? _x : ([_x] as any);
+  
+  const fx: number[] = isArray(_x) ? _x : [_x];
+
   const result = fx.map(x => {
     if (ISNAN(x) || ISNAN(lambda)) {
       return x + lambda;

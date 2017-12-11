@@ -96,7 +96,7 @@ const {
   NEGATIVE_INFINITY: ML_NEGINF
 } = Number;
 
-
+const { isArray } = Array;
 
 export const scalefactor = sqr(sqr(sqr(4294967296.0)));
 
@@ -488,10 +488,7 @@ export function pd_lower_cf(y: number, d: number): number {
     }
   }
 
-  pr_pd_lower_cf(
-    " ** NON-convergence in pgamma()'s pd_lower_cf() f= %d.",
-    f
-  );
+  pr_pd_lower_cf(" ** NON-convergence in pgamma()'s pd_lower_cf() f= %d.", f);
   return f; /* should not happen ... */
 } /* pd_lower_cf() */
 
@@ -589,7 +586,7 @@ export function dpnorm(
  * http://members.aol.com/iandjmsmith/PoissonApprox.htm
  */
 
- const pr_ppois_asymp = debug('ppois_asymp');
+const pr_ppois_asymp = debug('ppois_asymp');
 export function ppois_asymp(
   x: number,
   lambda: number,
@@ -772,28 +769,33 @@ export function pgamma_raw(
   } else return res;
 }
 
-export function pgamma(
-  x: number,
+export function pgamma<T>(
+  xx: T,
   alph: number,
   scale: number,
   lowerTail: boolean,
   logP: boolean,
   normal: INormal
-) {
-  if (ISNAN(x) || ISNAN(alph) || ISNAN(scale)) return x + alph + scale;
+): T {
+  const fa: number[] = isArray(xx) ? xx : [xx] as any;
 
-  if (alph < 0 || scale <= 0) ML_ERR_return_NAN;
-  x /= scale;
+  const result = fa.map(x => {
+    if (ISNAN(x) || ISNAN(alph) || ISNAN(scale)) return x + alph + scale;
 
-  if (ISNAN(x))
-    /* eg. original x = scale = +Inf */
-    return x;
-  if (alph === 0)
-    /* limit case; useful e.g. in pnchisq() */
-    return x <= 0
-      ? R_DT_0(lowerTail, logP)
-      : R_DT_1(lowerTail, logP); /* <= assert  pgamma(0,0) ==> 0 */
-  return pgamma_raw(x, alph, lowerTail, logP, normal);
+    if (alph < 0 || scale <= 0) ML_ERR_return_NAN;
+    x /= scale;
+
+    if (ISNAN(x))
+      /* eg. original x = scale = +Inf */
+      return x;
+    if (alph === 0)
+      /* limit case; useful e.g. in pnchisq() */
+      return x <= 0
+        ? R_DT_0(lowerTail, logP)
+        : R_DT_1(lowerTail, logP); /* <= assert  pgamma(0,0) ==> 0 */
+    return pgamma_raw(x, alph, lowerTail, logP, normal);
+  });
+  return result.length === 1 ? result[0] : result as any;
 }
 /* From: terra@gnome.org (Morten Welinder)
  * To: R-bugs@biostat.ku.dk

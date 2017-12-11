@@ -39,18 +39,18 @@
  *    by W. Fullerton of Los Alamos Scientific Laboratory.
  */
 
+ import * as debug from 'debug';
+
 import {
     Rf_d1mach as d1mach,
-    log,
-    fabs,
-    ML_NAN,
     ML_ERROR,
     ME,
-    fmax2
 } from '~common';
 
+const { max:fmax2, log, abs:fabs } = Math;
+const {NaN:ML_NAN } = Number;
 
-
+const printer = debug('gammalims');
 
 export function gammalims(input: { xmin: number, xmax: number }, IEEE_754?: boolean): void {
     /* 
@@ -87,7 +87,7 @@ export function gammalims(input: { xmin: number, xmax: number }, IEEE_754?: bool
 
     /* unable to find xmin */
     if (!find_xmax) {
-        ML_ERROR(ME.ME_NOCONV, 'gammalims');
+        ML_ERROR(ME.ME_NOCONV, 'gammalims', printer);
         input.xmin = input.xmax = ML_NAN;
     }
     //goto label
@@ -111,7 +111,7 @@ export function gammalims(input: { xmin: number, xmax: number }, IEEE_754?: bool
 
     /* unable to find xmax */
     if (!done) {
-        ML_ERROR(ME.ME_NOCONV, 'gammalims');
+        ML_ERROR(ME.ME_NOCONV, 'gammalims', printer);
         input.xmin = input.xmax = ML_NAN;
     }
     //goto label
