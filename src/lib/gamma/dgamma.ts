@@ -46,46 +46,55 @@
  * The old (R 1.1.1) version of the code is available via `#define D_non_pois'
  */
 
-import {
-    ISNAN,
-    ML_ERR_return_NAN,
-    R_D__0,
-    ML_POSINF,
-    log
-
-} from '~common';
+import { ML_ERR_return_NAN, R_D__0 } from '~common';
 
 import { dpois_raw } from '~poisson';
+import * as debug from 'debug';
 
-export function dgamma(x: number, shape: number, scale: number, give_log: boolean): number {
+const { log } = Math;
+const { isNaN: ISNAN, POSITIVE_INFINITY: ML_POSINF } = Number;
+const { isArray } = Array;
 
+const printer = debug('dgamma');
+
+export function dgamma<T>(
+  x: T,
+  shape: number,
+  scale: number = 1,
+  give_log: boolean = false
+): T {
+
+  const fa: number[] = isArray(x) ? x : [x] as any;
+  const result = fa.map(x => {
     let pr: number;
 
-    if (ISNAN(x) || ISNAN(shape) || ISNAN(scale))
-        return x + shape + scale;
+    if (ISNAN(x) || ISNAN(shape) || ISNAN(scale)) return x + shape + scale;
     if (shape < 0 || scale <= 0) {
-        return ML_ERR_return_NAN();
+      return ML_ERR_return_NAN(printer);
     }
     if (x < 0) {
-        return R_D__0(give_log);
+      return R_D__0(give_log);
     }
-    if (shape === 0){ /* point mass at 0 */
-        return (x === 0) ? ML_POSINF : R_D__0(give_log);
+    if (shape === 0) {
+      /* point mass at 0 */
+      return x === 0 ? ML_POSINF : R_D__0(give_log);
     }
     if (x === 0) {
-        if (shape < 1) return ML_POSINF;
-        if (shape > 1) {
-            return R_D__0(give_log);
-        }
-        /* else */
-        return give_log ? -log(scale) : 1 / scale;
+      if (shape < 1) return ML_POSINF;
+      if (shape > 1) {
+        return R_D__0(give_log);
+      }
+      /* else */
+      return give_log ? -log(scale) : 1 / scale;
     }
 
     if (shape < 1) {
-        pr = dpois_raw(shape, x / scale, give_log);
-        return give_log ? pr + log(shape / x) : pr * shape / x;
+      pr = dpois_raw(shape, x / scale, give_log);
+      return give_log ? pr + log(shape / x) : pr * shape / x;
     }
     /* else  shape >= 1 */
     pr = dpois_raw(shape - 1, x / scale, give_log);
     return give_log ? pr - log(scale) : pr / scale;
+  });
+  return result.length === 1 ? result[0] : result as any;
 }
