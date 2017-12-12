@@ -61,7 +61,7 @@ import { R_Log1_Exp } from '~exp-tools';
 
 import { lgammafn } from '~gamma';
 
-import { logspace_add } from '~gamma';
+import { logspace_add } from '../gamma/logspace-add';
 
 import { pchisq } from '~chi-2';
 

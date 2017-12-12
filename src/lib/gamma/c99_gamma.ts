@@ -44,7 +44,7 @@ const { floor, exp, log, abs:fabs} = Math;
 const  { MAX_VALUE: DBL_MAX, NaN: ML_NAN } = Number;
 const printer = debug('gamma_c99');
 
-export function tgamma(x: number): number {
+ function tgamma(x: number): number {
 
   if (x <= 0.0) {
     ML_ERROR(ME.ME_DOMAIN, 'gamma', printer);
@@ -151,7 +151,7 @@ export function tgamma(x: number): number {
   return exp(lgamma_c99(x));
 }
 
-export function lgamma_c99(x: number) {
+ function lgamma_c99(x: number) {
 
   if (x <= 0.0) {
     ML_ERROR(ME.ME_DOMAIN, 'gamma');

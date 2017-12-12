@@ -49,7 +49,7 @@ import {
 
 } from '~common';
 
-import { lgammacor } from '~gamma';
+import { lgammacor } from '../gamma/lgammacor';
 import { lgammafn } from '~gamma';
 import { gammafn } from '~gamma';
 

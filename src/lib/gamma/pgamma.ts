@@ -84,7 +84,7 @@ import { log1p } from '~log';
 import { lgammafn } from '~gamma';
 import { R_Log1_Exp } from '~exp-tools';
 import { dpois_raw } from '~poisson';
-
+import { logspace_add } from './logspace-add';
 import { INormal } from '~normal';
 
 const { expm1, sqrt, floor, pow, log, exp, max: fmax2, abs: fabs } = Math;
@@ -253,18 +253,6 @@ export function lgamma1p(a: number) {
 } /* lgamma1p */
 
 /*
- * Compute the log of a sum from logs of terms, i.e.,
- *
- *     log (exp (logx) + exp (logy))
- *
- * without causing overflows and without throwing away large handfuls
- * of accuracy.
- */
- export function logspace_add(logx: number, logy: number) {
-  return fmax2(logx, logy) + log1p(exp(-fabs(logx - logy)));
-}
-
-/*
  * Compute the log of a difference from logs of terms, i.e.,
  *
  *     log (exp (logx) - exp (logy))
@@ -273,7 +261,7 @@ export function lgamma1p(a: number) {
  * of accuracy.
  */
 
- function logspace_sub(logx: number, logy: number) {
+function logspace_sub(logx: number, logy: number) {
   return logx + R_Log1_Exp(logy - logx);
 }
 
@@ -287,7 +275,7 @@ export function lgamma1p(a: number) {
  * without causing overflows or throwing much accuracy.
  */
 
- function logspace_sum(logx: number[], n: number): number {
+function logspace_sum(logx: number[], n: number): number {
   if (n === 0) return ML_NEGINF; // = log( sum(<empty>) )
   if (n === 1) return logx[0];
   if (n === 2) return logspace_add(logx[0], logx[1]);
@@ -313,7 +301,7 @@ export function lgamma1p(a: number) {
 */
 const pr_dpois_wrap = debug('dpois_wrap');
 
- function dpois_wrap(
+function dpois_wrap(
   x_plus_1: number,
   lambda: number,
   give_log: boolean
@@ -343,7 +331,7 @@ const pr_dpois_wrap = debug('dpois_wrap');
  */
 const pr_pgamma_smallx = debug('pgamma_smallx');
 
- function pgamma_smallx(
+function pgamma_smallx(
   x: number,
   alph: number,
   lowerTail: boolean,
@@ -394,7 +382,7 @@ const pr_pgamma_smallx = debug('pgamma_smallx');
   }
 } /* pgamma_smallx() */
 
- function pd_upper_series(x: number, y: number, logP: boolean): number {
+function pd_upper_series(x: number, y: number, logP: boolean): number {
   let term = x / y;
   let sum = term;
 
@@ -545,7 +533,7 @@ function pd_lower_series(lambda: number, y: number): number {
  *
  * Abramowitz & Stegun 26.2.12
  */
- function dpnorm(
+function dpnorm(
   x: number,
   lowerTail: boolean,
   lp: number,
@@ -696,7 +684,7 @@ function ppois_asymp(
 } /* ppois_asymp() */
 
 const pr_pgamma_raw = debug('pgamma_raw');
- 
+
 export function pgamma_raw(
   x: number,
   alph: number,
@@ -776,32 +764,33 @@ export function pgamma_raw(
 }
 
 export function pgamma<T>(
-  xx: T,
-  alph: number,
+  q: T,
+  shape: number,
   scale: number,
   lowerTail: boolean,
   logP: boolean,
   normal: INormal
 ): T {
-  const fa: number[] = isArray(xx) ? xx : [xx] as any;
+  const fa: number[] = isArray(q) ? q : ([q] as any);
 
   const result = fa.map(x => {
-    if (ISNAN(x) || ISNAN(alph) || ISNAN(scale)) return x + alph + scale;
-
-    if (alph < 0 || scale <= 0) ML_ERR_return_NAN;
+    if (ISNAN(x) || ISNAN(shape) || ISNAN(scale)) {
+      return x + shape + scale;
+    }
+    if (shape < 0 || scale <= 0) ML_ERR_return_NAN;
     x /= scale;
 
     if (ISNAN(x))
       /* eg. original x = scale = +Inf */
       return x;
-    if (alph === 0)
+    if (shape === 0)
       /* limit case; useful e.g. in pnchisq() */
       return x <= 0
         ? R_DT_0(lowerTail, logP)
         : R_DT_1(lowerTail, logP); /* <= assert  pgamma(0,0) ==> 0 */
-    return pgamma_raw(x, alph, lowerTail, logP, normal);
+    return pgamma_raw(x, shape, lowerTail, logP, normal);
   });
-  return result.length === 1 ? result[0] : result as any;
+  return result.length === 1 ? result[0] : (result as any);
 }
 /* From: terra@gnome.org (Morten Welinder)
  * To: R-bugs@biostat.ku.dk

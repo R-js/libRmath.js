@@ -46,26 +46,41 @@
  *    parameter p/(1-p).  Return a Poisson deviate with mean lambda.
  */
 
-import {
-    R_FINITE,
-    ML_ERR_return_NAN
-} from '~common';
+import { R_FINITE, ML_ERR_return_NAN } from '~common';
 
 import { rpois } from '~poisson';
 import { rgamma } from '~gamma';
 import { INormal } from '~normal';
 
 export function rnbinom(size: number, prob: number, normal: INormal): number {
-    if (!R_FINITE(size) || !R_FINITE(prob) || size <= 0 || prob <= 0 || prob > 1) {
-        /* prob = 1 is ok, PR#1218 */
-        return ML_ERR_return_NAN();
-    }
-    return (prob === 1) ? 0 : rpois(1, rgamma(size, (1 - prob) / prob, normal), normal) as number;
+  if (
+    !R_FINITE(size) ||
+    !R_FINITE(prob) ||
+    size <= 0 ||
+    prob <= 0 ||
+    prob > 1
+  ) {
+    /* prob = 1 is ok, PR#1218 */
+    return ML_ERR_return_NAN();
+  }
+  return prob === 1
+    ? 0
+    : (rpois(
+        1,
+        rgamma(1, size, (1 - prob) / prob, normal) as number,
+        normal
+      ) as number);
 }
 
 export function rnbinom_mu(size: number, mu: number, normal: INormal): number {
-    if (!R_FINITE(size) || !R_FINITE(mu) || size <= 0 || mu < 0) {
-        return ML_ERR_return_NAN();
-    }
-    return (mu === 0) ? 0 : rpois(1, rgamma(size, mu / size, normal), normal) as number;
+  if (!R_FINITE(size) || !R_FINITE(mu) || size <= 0 || mu < 0) {
+    return ML_ERR_return_NAN();
+  }
+  return mu === 0
+    ? 0
+    : (rpois(
+        1,
+        rgamma(1, size, mu / size, normal) as number,
+        normal
+      ) as number);
 }

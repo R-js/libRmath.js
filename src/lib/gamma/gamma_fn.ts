@@ -52,7 +52,7 @@ import { ML_ERROR, ME } from '~common';
 import { chebyshev_eval } from '~chebyshev';
 import { stirlerr } from '~stirling';
 import { sinpi } from '~trigonometry';
-import { lgammacor } from '~gamma';
+import { lgammacor } from './lgammacor';
 
 import * as debug from 'debug';
 

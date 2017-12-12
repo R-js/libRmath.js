@@ -3,12 +3,15 @@ export { uniform } from './uniform';
 export { normal } from './normal';
 export { logNormal } from './normal/lognormal';
 export { rng, IRNG } from './rng';
-import { gammafn, lgammafn, lgammafn_sign,
+import {
+  gammafn,
+  lgammafn,
   pentagamma,
   tetragamma,
   trigamma,
   digamma,
-  psigamma } from '~gamma';
+  psigamma
+} from '~gamma';
 
 export const special = Object.freeze({
   gamma: gammafn,

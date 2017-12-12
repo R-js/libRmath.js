@@ -73,12 +73,12 @@ export function rnchisq(df: number, lambda: number, normal: INormal): number {
         ML_ERR_return_NAN;
 
     if (lambda === 0.) {
-        return (df === 0.) ? 0. : rgamma(df / 2., 2., normal);
+        return (df === 0.) ? 0. : rgamma(1, df / 2., 2., normal) as number;
     }
     else {
         let r = rpois(1, lambda / 2., normal) as number;
         if (r > 0.) r = rchisq(2. * r, normal);
-        if (df > 0.) r += rgamma(df / 2., 2., normal);
+        if (df > 0.) r += rgamma(1, df / 2., 2., normal) as number;
         return r;
     }
 }

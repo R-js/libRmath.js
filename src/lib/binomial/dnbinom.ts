@@ -58,7 +58,7 @@ import { dbinom_raw } from '~binomial';
 
 import { log1p } from '~log';
 
-import { lgamma_c99 } from '~gamma';
+import { lgammafn } from '~gamma';
 
 export function dnbinom(
   x: number,
@@ -152,7 +152,7 @@ export function dnbinom_mu(
     p = size < mu ? log(size / (1 + size / mu)) : log(mu / (1 + mu / size));
     return R_D_exp(
       give_log,
-      x * p - mu - lgamma_c99(x + 1) + log1p(x * (x - 1) / (2 * size))
+      x * p - mu - lgammafn(x + 1) + log1p(x * (x - 1) / (2 * size))
     );
   }
   /* else: no unnecessary cancellation inside dbinom_raw, when

@@ -63,7 +63,7 @@ import {
 
 import { bessel_y, bessel_y_ex } from './bessel_y';
 
-import { Rf_gamma_cody } from '~gamma';
+import { Rf_gamma_cody } from '../gamma/gamma_cody';
 
 export interface JBesselProperties {
     x: number;

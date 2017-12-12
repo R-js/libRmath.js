@@ -61,7 +61,7 @@ import {
 
 } from '~common';
 
-import { Rf_gamma_cody } from '~gamma';
+import { Rf_gamma_cody } from '../gamma/gamma_cody';
 
 interface IBesselInput {
     x: number;

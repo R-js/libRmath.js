@@ -69,8 +69,20 @@ import {
 const { expm1 } = Math;
 
 export function rgamma(
-    a: number, 
-    scale: number, 
+    n: number = 1,
+    a: number = 1,
+    scale: number = 1, //this is not the rate!!
+    normal: INormal
+): number | number[] {
+
+    const result = new Array(n).fill(0).map(() => _rgamma(a, scale, normal));
+    
+    return result.length === 1 ? result[0] :result;
+}
+
+export function _rgamma(
+    a: number= 1, 
+    scale: number = 1, 
     normal: INormal): number {
 
     /* Constants : */

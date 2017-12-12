@@ -63,19 +63,19 @@ import {
 } from '~common';
 
 import { lbeta } from '~beta';
-import { lgammafn_sign, lgammafn } from '~gamma';
-
+import { lgammafn } from '~gamma';
+import { lgammafn_sign } from '../gamma/lgammafn_sign';
 
 export function lfastchoose(n: number, k: number) {
-  return -log(n + 1.) - lbeta(n - k + 1., k + 1.);
+  return -log(n + 1) - lbeta(n - k + 1, k + 1);
 }
 /* mathematically the same:
    less stable typically, but useful if n-k+1 < 0 : */
 
 export function lfastchoose2(n: number, k: number, sChoose?: number[]) {
   let r: number;
-  r = lgammafn_sign(n - k + 1., sChoose);
-  return lgammafn(n + 1.) - lgammafn(k + 1.) - r;
+  r = lgammafn_sign(n - k + 1, sChoose);
+  return lgammafn(n + 1) - lgammafn(k + 1) - r;
 }
 
 export function lchoose(n: number, k: number): number {
@@ -87,15 +87,14 @@ export function lchoose(n: number, k: number): number {
     MATHLIB_WARNING2('"k" (%.2f) must be integer, rounded to %.0f', k0, k);
   if (k < 2) {
     if (k < 0) return ML_NEGINF;
-    if (k === 0) return 0.;
+    if (k === 0) return 0;
     /* else: k == 1 */
     return log(fabs(n));
   }
   /* else: k >= 2 */
   if (n < 0) {
     return lchoose(-n + k - 1, k);
-  }
-  else if (isInteger(n)) {
+  } else if (isInteger(n)) {
     n = round(n);
     if (n < k) return ML_NEGINF;
     /* k <= n :*/
@@ -110,7 +109,7 @@ export function lchoose(n: number, k: number): number {
   return lfastchoose(n, k);
 }
 
-const k_small_max =  30;
+const k_small_max = 30;
 
 /* 30 is somewhat arbitrary: it is on the *safe* side:
  * both speed and precision are clearly improved for k < 30.
@@ -126,12 +125,11 @@ export function choose(n: number, k: number): number {
   if (k < k_small_max) {
     let j: number;
     if (n - k < k && n >= 0 && isInteger(n)) k = n - k; /* <- Symmetry */
-    if (k < 0) return 0.;
-    if (k === 0) return 1.;
+    if (k < 0) return 0;
+    if (k === 0) return 1;
     /* else: k >= 1 */
     r = n;
-    for (j = 2; j <= k; j++)
-      r *= (n - j + 1) / j;
+    for (j = 2; j <= k; j++) r *= (n - j + 1) / j;
     return isInteger(n) ? round(r) : r;
     /* might have got rounding errors */
   }
@@ -140,10 +138,9 @@ export function choose(n: number, k: number): number {
     r = choose(-n + k - 1, k);
     if (isOdd(k)) r = -r;
     return r;
-  }
-  else if (isInteger(n)) {
+  } else if (isInteger(n)) {
     n = round(n);
-    if (n < k) return 0.;
+    if (n < k) return 0;
     if (n - k < k_small_max) return choose(n, n - k); /* <- Symmetry */
     return round(exp(lfastchoose(n, k)));
   }

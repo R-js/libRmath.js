@@ -48,5 +48,5 @@ export function rchisq(df: number, normal: INormal): number {
     if (!R_FINITE(df) || df < 0.0) {
         return ML_ERR_return_NAN();
     }
-    return rgamma(df / 2.0, 2.0, normal);
+    return rgamma(1, df / 2.0, 2.0, normal) as number;
 }
