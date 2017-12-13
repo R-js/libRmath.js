@@ -42,7 +42,7 @@ import {
 } from '~common';
 
 
-import { pbeta } from '~beta';
+import { pbeta } from '../beta/pbeta';
 
 import { Toms708, NumberW } from '~common';
 

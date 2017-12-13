@@ -80,7 +80,7 @@ const { expm1 } = Math;
 
 import { lgammafn } from '~gamma';
 
-import { pbeta } from '~beta';
+import { pbeta } from '../beta/pbeta';
 
 import { R_DT_val } from '~log';
 

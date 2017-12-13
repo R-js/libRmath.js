@@ -29,28 +29,37 @@
  *
  *    This function calls rchisq and rnorm to do the real work.
  */
-import {
-    ISNAN,
-    ML_ERR_return_NAN,
-    R_FINITE,
-    sqrt
-} from '~common';
+
+import * as debug from 'debug';
+
+import { ML_ERR_return_NAN } from '~common';
 
 import { INormal } from '~normal';
 
 import { rchisq } from '~chi-2';
 
-export function rt(df: number, normal: INormal): number {
+const { sqrt } = Math;
+const { isNaN: ISNAN, isFinite: R_FINITE } = Number;
+const printer = debug('rt');
+
+export function rt(
+  n: number = 1,
+  df: number,
+  normal: INormal
+): number | number[] {
+  const result = new Array(n).fill(0).map(() => {
     if (ISNAN(df) || df <= 0.0) {
-        return ML_ERR_return_NAN();
+      return ML_ERR_return_NAN(printer);
     }
 
-    if (!R_FINITE(df))
-        return normal.norm_rand();
+    if (!R_FINITE(df)) return normal.norm_rand();
     else {
-        /* Some compilers (including MW6) evaluated this from right to left
+      /* Some compilers (including MW6) evaluated this from right to left
             return norm_rand() / sqrt(rchisq(df) / df); */
-        let num = normal.norm_rand();
-        return num / sqrt(rchisq(df, normal) / df);
+
+      let num = normal.norm_rand();
+      return num / sqrt((rchisq(1, df, normal) as number) / df);
     }
+  });
+  return result.length === 1 ? result[0] : result;
 }

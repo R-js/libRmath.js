@@ -22,14 +22,10 @@
  *  https://www.R-project.org/Licenses/
  */
 
+import * as debug from 'debug';
+
 import {
-  ISNAN,
-  R_FINITE,
   ML_ERR_return_NAN,
-  sqrt,
-  fabs,
-  log,
-  exp,
   R_DT_0,
   R_DT_1,
   M_LN2,
@@ -38,11 +34,13 @@ import {
 
 import { INormal } from '~normal';
 
-import { lbeta } from '~beta';
+import { lbeta } from '../beta/lbeta';
 
-import { pbeta } from '~beta';
+import { pbeta } from '../beta/pbeta';
 
-import { log1p } from '~log';
+const { log1p, sqrt, log, abs:fabs, exp  } = Math;
+const { isNaN:ISNAN, isFinite:R_FINITE } = Number;
+const printer = debug('pt');
 
 export function pt(
   x: number,
@@ -62,7 +60,7 @@ export function pt(
   if (ISNAN(x) || ISNAN(n)) return x + n;
 
   if (n <= 0.0) {
-    return ML_ERR_return_NAN();
+    return ML_ERR_return_NAN(printer);
   }
 
   if (!R_FINITE(x)) {

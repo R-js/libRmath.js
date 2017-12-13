@@ -19,40 +19,52 @@
  * 
  */
 
-import {
-    ISNAN,
-    R_FINITE,
-    ML_ERR_return_NAN,
-    R_Q_P01_boundaries,
-    DBL_EPSILON,
-    fmin2,
-    DBL_MIN
-} from '~common';
+import * as debug from 'debug';
+
+import { ML_ERR_return_NAN, R_Q_P01_boundaries } from '~common';
 
 import { R_DT_qIv } from '~exp-tools';
-
 import { pnbeta } from './pnbeta';
 
-export function qnbeta(p: number, a: number, b: number, ncp: number,
-    lower_tail: boolean, log_p: boolean): number {
-    const accu = 1e-15;
-    const Eps = 1e-14; /* must be > accu */
+const {
+  isNaN: ISNAN,
+  isFinite: R_FINITE,
+  MIN_VALUE: DBL_MIN,
+  EPSILON: DBL_EPSILON
+} = Number;
 
+const { min: fmin2 } = Math;
+
+const printer_qnbeta = debug('qnbeta');
+
+export function qnbeta<T>(
+  _p: T,
+  a: number,
+  b: number,
+  ncp: number,
+  lower_tail: boolean,
+  log_p: boolean
+): T {
+  const accu = 1e-15;
+  const Eps = 1e-14; /* must be > accu */
+
+  const fa: number[] = Array.isArray(_p) ? _p : ([_p] as any);
+
+  const result = fa.map(p => {
     let ux;
     let lx;
     let nx;
     let pp;
 
-    if (ISNAN(p) || ISNAN(a) || ISNAN(b) || ISNAN(ncp))
-        return p + a + b + ncp;
+    if (ISNAN(p) || ISNAN(a) || ISNAN(b) || ISNAN(ncp)) return p + a + b + ncp;
 
-    if (!R_FINITE(a)) return ML_ERR_return_NAN();
+    if (!R_FINITE(a)) return ML_ERR_return_NAN(printer_qnbeta);
 
-    if (ncp < 0. || a <= 0. || b <= 0.) ML_ERR_return_NAN;
+    if (ncp < 0 || a <= 0 || b <= 0) ML_ERR_return_NAN(printer_qnbeta);
 
     let rc = R_Q_P01_boundaries(lower_tail, log_p, p, 0, 1);
     if (rc !== undefined) {
-        return rc;
+      return rc;
     }
     p = R_DT_qIv(lower_tail, log_p, p);
 
@@ -60,20 +72,26 @@ export function qnbeta(p: number, a: number, b: number, ncp: number,
      * 1. finding an upper and lower bound */
     if (p > 1 - DBL_EPSILON) return 1.0;
     pp = fmin2(1 - DBL_EPSILON, p * (1 + Eps));
-    for (ux = 0.5;
-        ux < 1 - DBL_EPSILON && pnbeta(ux, a, b, ncp, true, false) < pp;
-        ux = 0.5 * (1 + ux));
+    for (
+      ux = 0.5;
+      ux < 1 - DBL_EPSILON && pnbeta(ux, a, b, ncp, true, false) < pp;
+      ux = 0.5 * (1 + ux)
+    );
     pp = p * (1 - Eps);
-    for (lx = 0.5;
-        lx > DBL_MIN && pnbeta(lx, a, b, ncp, true, false) > pp;
-        lx *= 0.5);
+    for (
+      lx = 0.5;
+      lx > DBL_MIN && pnbeta(lx, a, b, ncp, true, false) > pp;
+      lx *= 0.5
+    );
 
     /* 2. interval (lx,ux)  halving : */
     do {
-        nx = 0.5 * (lx + ux);
-        if (pnbeta(nx, a, b, ncp, true, false) > p) ux = nx; else lx = nx;
-    }
-    while ((ux - lx) / nx > accu);
+      nx = 0.5 * (lx + ux);
+      if (pnbeta(nx, a, b, ncp, true, false) > p) ux = nx;
+      else lx = nx;
+    } while ((ux - lx) / nx > accu);
 
     return 0.5 * (ux + lx);
+  });
+  return result.length === 1 ? result[0] : (result as any);
 }

@@ -30,35 +30,35 @@
  * (Algorithms BB and BC)
  */
 
+import * as debug from 'debug';
+import { DBL_MAX_EXP, ML_ERR_return_NAN } from '~common';
+import { INormal } from '~normal';
 
-import {
-    M_LN2,
-    DBL_MAX_EXP,
-    ML_ERR_return_NAN,
-    R_FINITE,
-    fmin2,
-    fmax2,
-    log,
-    DBL_MAX,
-    exp,
-    sqrt
-} from '~common';
+const { LN2: M_LN2, log, min: fmin2, max: fmax2, exp, sqrt } = Math;
+const { MAX_VALUE: DBL_MAX, isFinite: R_FINITE } = Number;
+const printer = debug('rbeta');
 
 export const expmax = DBL_MAX_EXP * M_LN2; /* = log(DBL_MAX) */
 
-export function rbeta(aa: number, bb: number, unif_rand: () => number ): number {
-    if (aa < 0. || bb < 0.) {
-        return ML_ERR_return_NAN();
+export function rbeta(
+  n: number = 1,
+  aa: number,
+  bb: number,
+  normal: INormal
+): number | number[] {
+  const result = new Array(n).fill(0).map(() => {
+    if (aa < 0 || bb < 0) {
+      return ML_ERR_return_NAN(printer);
     }
-    if (!R_FINITE(aa) && !R_FINITE(bb)) // a = b = Inf : all mass at 1/2
-        return 0.5;
-    if (aa === 0. && bb === 0.) // point mass 1/2 at each of {0,1} :
-        return (unif_rand() < 0.5) ? 0. : 1.;
+    if (!R_FINITE(aa) && !R_FINITE(bb))
+      // a = b = Inf : all mass at 1/2
+      return 0.5;
+    if (aa === 0 && bb === 0)
+      // point mass 1/2 at each of {0,1} :
+      return normal.unif_rand() < 0.5 ? 0 : 1;
     // now, at least one of a, b is finite and positive
-    if (!R_FINITE(aa) || bb === 0.)
-        return 1.0;
-    if (!R_FINITE(bb) || aa === 0.)
-        return 0.0;
+    if (!R_FINITE(aa) || bb === 0) return 1.0;
+    if (!R_FINITE(bb) || aa === 0) return 0.0;
 
     let a;
     let b;
@@ -84,86 +84,86 @@ export function rbeta(aa: number, bb: number, unif_rand: () => number ): number 
     let oldb = -1.0;
 
     /* Test if we need new "initializing" */
-    qsame = (olda === aa) && (oldb === bb);
-    if (!qsame) { olda = aa; oldb = bb; }
+    qsame = olda === aa && oldb === bb;
+    if (!qsame) {
+      olda = aa;
+      oldb = bb;
+    }
 
     a = fmin2(aa, bb);
     b = fmax2(aa, bb); /* a <= b */
     alpha = a + b;
 
     function v_w_from__u1_bet(AA: number) {
-        v = beta * log(u1 / (1.0 - u1));
-        if (v <= expmax) {
-            w = AA * exp(v);
-            if (!R_FINITE(w)) {
-                w = DBL_MAX;
-            }
+      v = beta * log(u1 / (1.0 - u1));
+      if (v <= expmax) {
+        w = AA * exp(v);
+        if (!R_FINITE(w)) {
+          w = DBL_MAX;
+        }
+      } else {
+        w = DBL_MAX;
+      }
+    }
+
+    if (a <= 1.0) {
+      /* --- Algorithm BC --- */
+
+      /* changed notation, now also a <= b (was reversed) */
+
+      if (!qsame) {
+        /* initialize */
+        beta = 1.0 / a;
+        delta = 1.0 + b - a;
+        k1 = delta * (0.0138889 + 0.0416667 * a) / (b * beta - 0.777778);
+        k2 = 0.25 + (0.5 + 0.25 / delta) * a;
+      }
+      /* FIXME: "do { } while()", but not trivially because of "continue"s:*/
+      for (;;) {
+        u1 = normal.unif_rand();
+        u2 = normal.unif_rand();
+        if (u1 < 0.5) {
+          y = u1 * u2;
+          z = u1 * y;
+          if (0.25 * u2 + z - y >= k1) continue;
         } else {
-            w = DBL_MAX;
-        }
-    }
-
-
-    if (a <= 1.0) {	/* --- Algorithm BC --- */
-
-        /* changed notation, now also a <= b (was reversed) */
-
-        if (!qsame) { /* initialize */
-            beta = 1.0 / a;
-            delta = 1.0 + b - a;
-            k1 = delta * (0.0138889 + 0.0416667 * a) / (b * beta - 0.777778);
-            k2 = 0.25 + (0.5 + 0.25 / delta) * a;
-        }
-        /* FIXME: "do { } while()", but not trivially because of "continue"s:*/
-        for ( ; ; ) {
-            u1 = unif_rand();
-            u2 = unif_rand();
-            if (u1 < 0.5) {
-                y = u1 * u2;
-                z = u1 * y;
-                if (0.25 * u2 + z - y >= k1)
-                    continue;
-            } else {
-                z = u1 * u1 * u2;
-                if (z <= 0.25) {
-                    v_w_from__u1_bet(b);
-                    break;
-                }
-                if (z >= k2)
-                    continue;
-            }
-
+          z = u1 * u1 * u2;
+          if (z <= 0.25) {
             v_w_from__u1_bet(b);
-
-            if (alpha * (log(alpha / (a + w)) + v) - 1.3862944 >= log(z))
-                break;
+            break;
+          }
+          if (z >= k2) continue;
         }
-        return (aa === a) ? a / (a + w) : w / (a + w);
 
+        v_w_from__u1_bet(b);
+
+        if (alpha * (log(alpha / (a + w)) + v) - 1.3862944 >= log(z)) break;
+      }
+      return aa === a ? a / (a + w) : w / (a + w);
+    } else {
+      /* Algorithm BB */
+
+      if (!qsame) {
+        /* initialize */
+        beta = sqrt((alpha - 2.0) / (2.0 * a * b - alpha));
+        gamma = a + 1.0 / beta;
+      }
+      do {
+        u1 = normal.unif_rand();
+        u2 = normal.unif_rand();
+
+        v_w_from__u1_bet(a);
+
+        z = u1 * u1 * u2;
+        r = gamma * v - 1.3862944;
+        s = a + r - w;
+        if (s + 2.609438 >= 5.0 * z) break;
+        t = log(z);
+        if (s > t) break;
+      } while (r + alpha * log(alpha / (b + w)) < t);
+
+      return aa !== a ? b / (b + w) : w / (b + w);
     }
-    else {		/* Algorithm BB */
-
-        if (!qsame) { /* initialize */
-            beta = sqrt((alpha - 2.0) / (2.0 * a * b - alpha));
-            gamma = a + 1.0 / beta;
-        }
-        do {
-            u1 = unif_rand();
-            u2 = unif_rand();
-
-            v_w_from__u1_bet(a);
-
-            z = u1 * u1 * u2;
-            r = gamma * v - 1.3862944;
-            s = a + r - w;
-            if (s + 2.609438 >= 5.0 * z)
-                break;
-            t = log(z);
-            if (s > t)
-                break;
-        }
-        while (r + alpha * log(alpha / (b + w)) < t);
-
-        return (aa !== a) ? b / (b + w) : w / (b + w);
-    }
+  });
+  return result.length === 1 ? result[0] : result;
 }

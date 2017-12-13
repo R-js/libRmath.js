@@ -3,24 +3,15 @@ export { uniform } from './uniform';
 export { normal } from './normal';
 export { logNormal } from './normal/lognormal';
 export { rng, IRNG } from './rng';
-import {
-  gammafn,
-  lgammafn,
-  pentagamma,
-  tetragamma,
-  trigamma,
-  digamma,
-  psigamma
-} from '~gamma';
+export { beta } from '~beta';
+export { poisson } from './poisson';
+
+import { special as betaSpecial } from '~beta';
+import { special as gammaSpecial } from '~gamma';
 
 export const special = Object.freeze({
-  gamma: gammafn,
-  lgamma: lgammafn,
-  pentagamma,
-  tetragamma,
-  trigamma,
-  digamma,
-  psigamma
+  ...gammaSpecial,
+  ...betaSpecial
 });
 
 //export * as rfunc from './r-func';
@@ -29,21 +20,21 @@ export const special = Object.freeze({
 //Fix declaration emit for exported export alias specifiers
 
 export * from './bessel';
-export * from './beta';
+//export * from './beta';
 export * from './binomial';
 export * from './cauchy';
 export * from './chebyshev';
 export * from './chi-2';
 export * from './common';
 export * from './deviance';
-export * from './exp';
+//export * from './exp';
 export * from './f-distro';
-export * from './gamma';
+//export * from './gamma';
 export * from './geometric';
 export * from './log';
-export * from './rng';
+//export * from './rng';
 export * from './r-func';
 export * from './bessel';
-export * from './beta';
+//export * from './beta';
 export * from './binomial';
-export * from './poisson';
+//export * from './poisson';

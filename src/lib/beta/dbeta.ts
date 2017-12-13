@@ -47,61 +47,78 @@
  *    term is large.  We use Loader's code only if both a and b > 2.
  */
 
+import * as debug from 'debug';
 
 import {
-    ISNAN,
-    ML_ERR_return_NAN,
-    R_FINITE,
-    ML_POSINF,
-    R_D__0,
-    R_D_val,
-    log,
-    R_D_exp
+  ML_ERR_return_NAN,
+  R_D__0,
+  R_D_val,
+  R_D_exp
 } from '~common';
 
-import { log1p } from '~log';
 import { lbeta } from './lbeta';
-import { dbinom_raw }  from '~binomial';
+import { dbinom_raw } from '~binomial';
 
-export function dbeta(x: number, a: number, b: number, give_log: boolean): number {
+const { log , log1p } = Math;
+const {
+  isNaN: ISNAN,
+  isFinite: R_FINITE,
+  POSITIVE_INFINITY: ML_POSINF
+} = Number;
 
+const printer = debug('dbeta');
+
+export function dbeta<T>(_x: T, a: number, b: number, give_log: boolean): T {
+  const fa: number[] = Array.isArray(_x) ? _x : ([_x] as any);
+
+  const result = fa.map(x => {
     if (ISNAN(x) || ISNAN(a) || ISNAN(b)) return x + a + b;
 
-    if (a < 0 || b < 0) ML_ERR_return_NAN;
+    if (a < 0 || b < 0) ML_ERR_return_NAN(printer);
     if (x < 0 || x > 1) return R_D__0(give_log);
 
     // limit cases for (a,b), leading to point masses
-    
+
     if (a === 0 || b === 0 || !R_FINITE(a) || !R_FINITE(b)) {
-        if (a === 0 && b === 0) { // point mass 1/2 at each of {0,1} :
-            if (x === 0 || x === 1) return (ML_POSINF); else return R_D__0(give_log);
-        }
-        if (a === 0 || a / b === 0) { // point mass 1 at 0
-            if (x === 0) return (ML_POSINF); else return R_D__0(give_log);
-        }
-        if (b === 0 || b / a === 0) { // point mass 1 at 1
-            if (x === 1) return (ML_POSINF); else return R_D__0(give_log);
-        }
-        // else, remaining case:  a = b = Inf : point mass 1 at 1/2
-        if (x === 0.5) return (ML_POSINF); else return R_D__0(give_log);
+      if (a === 0 && b === 0) {
+        // point mass 1/2 at each of {0,1} :
+        if (x === 0 || x === 1) return ML_POSINF;
+        else return R_D__0(give_log);
+      }
+      if (a === 0 || a / b === 0) {
+        // point mass 1 at 0
+        if (x === 0) return ML_POSINF;
+        else return R_D__0(give_log);
+      }
+      if (b === 0 || b / a === 0) {
+        // point mass 1 at 1
+        if (x === 1) return ML_POSINF;
+        else return R_D__0(give_log);
+      }
+      // else, remaining case:  a = b = Inf : point mass 1 at 1/2
+      if (x === 0.5) return ML_POSINF;
+      else return R_D__0(give_log);
     }
 
     if (x === 0) {
-        if (a > 1) return R_D__0(give_log);
-        if (a < 1) return (ML_POSINF);
-    /* a == 1 : */ return (R_D_val(give_log, b));
+      if (a > 1) return R_D__0(give_log);
+      if (a < 1) return ML_POSINF;
+      /* a == 1 : */ return R_D_val(give_log, b);
     }
     if (x === 1) {
-        if (b > 1) return R_D__0(give_log);
-        if (b < 1) return (ML_POSINF);
-    /* b == 1 : */ return (R_D_val(give_log , a));
+      if (b > 1) return R_D__0(give_log);
+      if (b < 1) return ML_POSINF;
+      /* b == 1 : */ return R_D_val(give_log, a);
     }
 
     let lval: number;
     if (a <= 2 || b <= 2)
-        lval = (a - 1) * log(x) + (b - 1) * log1p(-x) - lbeta(a, b);
-    else{
-        lval = log(a + b - 1) + dbinom_raw(a - 1, a + b - 2, x, 1 - x, true);
+      lval = (a - 1) * log(x) + (b - 1) * log1p(-x) - lbeta(a, b);
+    else {
+      lval = log(a + b - 1) + dbinom_raw(a - 1, a + b - 2, x, 1 - x, true);
     }
     return R_D_exp(give_log, lval);
+  });
+
+  return result.length === 1 ? result[0] : (result as any);
 }

@@ -43,70 +43,58 @@
  *    conform to the IEEE 754 standard.
  */
 
+import * as debug from 'debug';
 
-import {
-    ISNAN,
-    R_FINITE,
-    ML_POSINF,
-    ML_ERR_return_NAN,
-    ML_ERROR,
-    ME
-} from '~common';
+import { ML_ERR_return_NAN, ML_ERROR, ME } from '~common';
 
 import { gammafn } from '~gamma';
 import { lbeta } from './lbeta';
 
 //const xmin =  - 170.5674972726612;
 const xmax = 171.61447887182298;
-const lnsml = - 708.39641853226412;
+const lnsml = -708.39641853226412;
 
+const {
+  isNaN: ISNAN,
+  isFinite: R_FINITE,
+  POSITIVE_INFINITY: ML_POSINF
+} = Number;
 
-export function beta(a: number, b: number): number {
+const printer = debug('beta');
 
-    /*#ifdef NOMORE_FOR_THREADS
-    static double xmin, xmax = 0;//-> typically = 171.61447887 for IEEE 
-    static double lnsml = 0;//-> typically = -708.3964185 
+export function beta(_a: number | number[], b: number): number | number[] {
+  const fa = Array.isArray(_a) ? _a : [_a];
 
-    if (xmax == 0) {
-        gammalims(&xmin, &xmax);
-        lnsml = log(d1mach(1));
-    }
-    #else*/
-    // For IEEE double precision DBL_EPSILON = 2^-52 = 2.220446049250313e-16 :
-    //    xmin, xmax : see ./gammalims.c
-    //    lnsml = log(DBL_MIN) = log(2 ^ -1022) = -1022 * log(2)
-    //
-    // NaNs propagated correctly 
-
+  const result = fa.map(a => {
     if (ISNAN(a) || ISNAN(b)) return a + b;
 
-    if (a < 0 || b < 0)
-        return ML_ERR_return_NAN();
-    else if (a === 0 || b === 0)
-        return ML_POSINF;
-    else if (!R_FINITE(a) || !R_FINITE(b))
-        return 0;
+    if (a < 0 || b < 0) return ML_ERR_return_NAN(printer);
+    else if (a === 0 || b === 0) return ML_POSINF;
+    else if (!R_FINITE(a) || !R_FINITE(b)) return 0;
 
     if (a + b < xmax) {
-        //
-        // ~= 171.61 for IEEE 
-        //	return gammafn(a) * gammafn(b) / gammafn(a+b);
-        // All the terms are positive, and all can be large for large
-        //   or small arguments.  They are never much less than one.
-        //   gammafn(x) can still overflow for x ~ 1e-308,
-        //   but the result would too.
-        //
-        return (1 / gammafn(a + b)) * gammafn(a) * gammafn(b);
+      //
+      // ~= 171.61 for IEEE
+      //	return gammafn(a) * gammafn(b) / gammafn(a+b);
+      // All the terms are positive, and all can be large for large
+      //   or small arguments.  They are never much less than one.
+      //   gammafn(x) can still overflow for x ~ 1e-308,
+      //   but the result would too.
+      //
+      return 1 / gammafn(a + b) * gammafn(a) * gammafn(b);
     } else {
-        let val: number = lbeta(a, b);
-        // underflow to 0 is not harmful per se;  exp(-999) also gives no warning
-        //#ifndef IEEE_754
-        if (val < lnsml) {
-            // a and/or b so big that beta underflows 
-            ML_ERROR(ME.ME_UNDERFLOW, 'beta');
-            // return ML_UNDERFLOW; pointless giving incorrect value 
-        }
-        //#endif
-        return Math.exp(val);
+      let val: number = lbeta(a, b);
+      // underflow to 0 is not harmful per se;  exp(-999) also gives no warning
+      //#ifndef IEEE_754
+      if (val < lnsml) {
+        // a and/or b so big that beta underflows
+        ML_ERROR(ME.ME_UNDERFLOW, 'beta', printer);
+        // return ML_UNDERFLOW; pointless giving incorrect value
+      }
+      //#endif
+      return Math.exp(val);
     }
+  });
+
+  return result.length === 1 ? result[0] : result;
 }

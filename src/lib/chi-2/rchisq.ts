@@ -35,18 +35,21 @@
  *    Calls rgamma to do the real work.
  */
 
-import {
-    R_FINITE,
-    ML_ERR_return_NAN
-} from '~common';
+import * as debug from 'debug';
+import { R_FINITE, ML_ERR_return_NAN } from '~common';
 
-import { rgamma  } from '~gamma';
+import { rgamma } from '~gamma';
 import { INormal } from '~normal';
 
-export function rchisq(df: number, normal: INormal): number {
+const printer = debug('rchisq');
 
-    if (!R_FINITE(df) || df < 0.0) {
-        return ML_ERR_return_NAN();
-    }
-    return rgamma(1, df / 2.0, 2.0, normal) as number;
+export function rchisq(
+  n: number,
+  df: number,
+  normal: INormal
+): number| number[] {
+  if (!R_FINITE(df) || df < 0.0) {
+    return ML_ERR_return_NAN(printer);
+  }
+  return rgamma(n, df / 2.0, 2.0, normal);
 }

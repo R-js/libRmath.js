@@ -50,7 +50,7 @@ import {
 import { dnchisq } from '~chi-2';
 import { dgamma } from '~gamma';
 import { log1p } from '~log';
-import { dnbeta } from '~beta';
+import { dnbeta } from '../beta/dnbeta';
 
 export function dnf(x: number, df1: number, df2: number, ncp: number, give_log: boolean): number {
     let y: number;

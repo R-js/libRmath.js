@@ -34,7 +34,7 @@ import {
 } from '~common';
 
 import { qnchisq } from '~chi-2';
-import { qnbeta } from '~beta';
+import { qnbeta } from '../beta/qnbeta';
 import { INormal } from '~normal';
 
 export function qnf(

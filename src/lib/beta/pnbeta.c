@@ -20,7 +20,12 @@
 #include "dpq.h"
 
 LDOUBLE attribute_hidden
-pnbeta_raw(double x, double o_x, double a, double b, double ncp)
+pnbeta_raw(
+    double x, 
+    double o_x, 
+    double a, 
+    double b, 
+    double ncp)
 {
     /* o_x  == 1 - x  but maybe more accurate */
 

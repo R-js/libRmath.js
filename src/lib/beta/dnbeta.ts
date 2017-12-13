@@ -53,104 +53,119 @@
  * The new algorithm first determines for which k the k-th term is maximal,
  * and then sums outwards to both sides from the 'mid'.
  */
+import * as debug from 'debug';
 
 import {
-    ISNAN,
-    ML_ERR_return_NAN,
-    R_FINITE,
-    R_D__0,
-    ceil,
-    sqrt,
-    R_D_exp,
-    log
+  ML_ERR_return_NAN,
+  R_D__0,
+  R_D_exp
 } from '~common';
 
+const { log, sqrt, ceil} = Math;
+const { isNaN: ISNAN, isFinite: R_FINITE } = Number;
+const printer = debug('dnbeta');
 
-import {
-    dbeta
-} from './dbeta';
+import { dbeta } from './dbeta';
 
-import {
-    dpois_raw
-} from '~poisson';
+import { dpois_raw } from '~poisson';
 
-export function dnbeta(x: number, a: number, b: number, ncp: number, give_log: boolean): number {
+//used by f-distriution
 
-    const eps = 1.e-15;
-
-    let kMax;
-    let k;
-    let ncp2;
-    let dx2;
-    let d;
-    let D;
-    let term;
-
-    let sum;
-    let p_k;
-    let q;
-
-    if (ISNAN(x) || ISNAN(a) || ISNAN(b) || ISNAN(ncp))
-        return x + a + b + ncp;
-    if (ncp < 0 || a <= 0 || b <= 0) {
-        return ML_ERR_return_NAN();
+export function dnbeta<T>(
+    xx: T,
+    shape1: number = 0.5,
+    shape2: number = 0.5,
+    ncp: number = 0,
+    log: boolean): T
+    {
+        const fa: number[] = Array.isArray(xx) ? xx :[xx] as any;
+        const result = fa.map( x => _dnbeta(x, shape1, shape2, ncp, log));
+        
+        return result.length === 1 ? result[0] : result as any;
     }
 
-    if (!R_FINITE(a) || !R_FINITE(b) || !R_FINITE(ncp)) {
-        return ML_ERR_return_NAN();
-    }
+function _dnbeta(
+  x: number,
+  a: number,
+  b: number,
+  ncp: number,
+  give_log: boolean
+): number {
+  const eps = 1e-15;
+  //int
+  let kMax;
+  //double
+  let k;
+  let ncp2;
+  let dx2;
+  let d;
+  let D;
+  let term;
+  //long double
+  let sum;
+  let p_k;
+  let q;
 
-    if (x < 0 || x > 1) {
-        return R_D__0(give_log);
-    }
-    if (ncp === 0) {
-        return dbeta(x, a, b, give_log);
-    }
-    /* New algorithm, starting with *largest* term : */
-    ncp2 = 0.5 * ncp;
-    dx2 = ncp2 * x;
-    d = (dx2 - a - 1) / 2;
-    D = d * d + dx2 * (a + b) - a;
-    if (D <= 0) {
-        kMax = 0;
-    } else {
-        D = ceil(d + sqrt(D));
-        kMax = (D > 0) ? D : 0;
-    }
+  if (ISNAN(x) || ISNAN(a) || ISNAN(b) || ISNAN(ncp)) return x + a + b + ncp;
+  if (ncp < 0 || a <= 0 || b <= 0) {
+    return ML_ERR_return_NAN(printer);
+  }
 
-    /* The starting "middle term" --- first look at it's log scale: */
-    term = dbeta(x, a + kMax, b, /* log = */ true);
-    p_k = dpois_raw(kMax, ncp2, true);
-    if (x === 0. || !R_FINITE(term) || !R_FINITE(p_k)) { /* if term = +Inf */
-        return R_D_exp(give_log, p_k + term);
-    }
+  if (!R_FINITE(a) || !R_FINITE(b) || !R_FINITE(ncp)) {
+    return ML_ERR_return_NAN(printer);
+  }
 
-    /* Now if s_k := p_k * t_k  {here = exp(p_k + term)} would underflow,
+  if (x < 0 || x > 1) {
+    return R_D__0(give_log);
+  }
+  if (ncp === 0) {
+    return dbeta(x, a, b, give_log);
+  }
+  /* New algorithm, starting with *largest* term : */
+  ncp2 = 0.5 * ncp;
+  dx2 = ncp2 * x;
+  d = (dx2 - a - 1) / 2;
+  D = d * d + dx2 * (a + b) - a;
+  if (D <= 0) {
+    kMax = 0;
+  } else {
+    D = ceil(d + sqrt(D));
+    kMax = D > 0 ? D : 0;
+  }
+
+  /* The starting "middle term" --- first look at it's log scale: */
+  term = dbeta(x, a + kMax, b, /* log = */ true);
+  p_k = dpois_raw(kMax, ncp2, true);
+  if (x === 0 || !R_FINITE(term) || !R_FINITE(p_k)) {
+    /* if term = +Inf */
+    return R_D_exp(give_log, p_k + term);
+  }
+
+  /* Now if s_k := p_k * t_k  {here = exp(p_k + term)} would underflow,
      * we should rather scale everything and re-scale at the end:*/
 
-    p_k += term; /* = log(p_k) + log(t_k) == log(s_k) -- used at end to rescale */
-    /* mid = 1 = the rescaled value, instead of  mid = exp(p_k); */
+  p_k += term; /* = log(p_k) + log(t_k) == log(s_k) -- used at end to rescale */
+  /* mid = 1 = the rescaled value, instead of  mid = exp(p_k); */
 
-    /* Now sum from the inside out */
-    sum = term = 1. /* = mid term */;
-    /* middle to the left */
-    k = kMax;
-    while (k > 0 && term > sum * eps) {
-        k--;
-        q = /* 1 / r_k = */ (k + 1) * (k + a) / (k + a + b) / dx2;
-        term *= q;
-        sum += term;
-    }
-    /* middle to the right */
-    term = 1.;
-    k = kMax;
-    do {
-        q = /* r_{old k} = */ dx2 * (k + a + b) / (k + a) / (k + 1);
-        k++;
-        term *= q;
-        sum += term;
-    } while (term > sum * eps);
+  /* Now sum from the inside out */
+  sum = term = 1 /* = mid term */;
+  /* middle to the left */
+  k = kMax;
+  while (k > 0 && term > sum * eps) {
+    k--;
+    q = /* 1 / r_k = */ (k + 1) * (k + a) / (k + a + b) / dx2;
+    term *= q;
+    sum += term;
+  }
+  /* middle to the right */
+  term = 1;
+  k = kMax;
+  do {
+    q = /* r_{old k} = */ dx2 * (k + a + b) / (k + a) / (k + 1);
+    k++;
+    term *= q;
+    sum += term;
+  } while (term > sum * eps);
 
-    return R_D_exp(give_log, (p_k + log(sum)));
-
+  return R_D_exp(give_log, p_k + log(sum));
 }

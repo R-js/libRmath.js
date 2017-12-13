@@ -37,7 +37,7 @@ import {
   R_Q_P01_boundaries
 } from '~common';
 
-import { qbeta } from '~beta';
+import { qbeta } from '../beta/qbeta';
 import { qchisq } from '~chi-2';
 import { INormal } from '~normal';
 

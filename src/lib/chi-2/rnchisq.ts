@@ -57,10 +57,10 @@
 	else rchisq0(n, ncp) + .Internal(rchisq(n, df))
     }
  */
-import {
-    R_FINITE,
-    ML_ERR_return_NAN
-} from '~common';
+
+import * as debug from 'debug';
+
+import { R_FINITE, ML_ERR_return_NAN } from '~common';
 
 import { rgamma } from '~gamma';
 import { rpois } from '~poisson';
@@ -68,17 +68,26 @@ import { rchisq } from './rchisq';
 import { INormal } from '~normal';
 //import { unwatchFile } from 'fs';
 
-export function rnchisq(df: number, lambda: number, normal: INormal): number {
-    if (!R_FINITE(df) || !R_FINITE(lambda) || df < 0. || lambda < 0.)
-        ML_ERR_return_NAN;
+const printer = debug('rnchisq');
 
-    if (lambda === 0.) {
-        return (df === 0.) ? 0. : rgamma(1, df / 2., 2., normal) as number;
+export function rnchisq(
+  n: number = 1,
+  df: number,
+  lambda: number,
+  normal: INormal
+): number| number[] {
+  const result = new Array(n).fill(0).map(() => {
+    if (!R_FINITE(df) || !R_FINITE(lambda) || df < 0 || lambda < 0){
+      ML_ERR_return_NAN(printer);
     }
-    else {
-        let r = rpois(1, lambda / 2., normal) as number;
-        if (r > 0.) r = rchisq(2. * r, normal);
-        if (df > 0.) r += rgamma(1, df / 2., 2., normal) as number;
-        return r;
+    if (lambda === 0) {
+      return df === 0 ? 0 : (rgamma(1, df / 2, 2, normal) as number);
+    } else {
+      let r = rpois(1, lambda / 2, normal) as number;
+      if (r > 0) r = rchisq(1, 2 * r, normal) as number;
+      if (df > 0) r += rgamma(1, df / 2, 2, normal) as number;
+      return r;
     }
+  });
+  return result.length === 1 ? result[0] :result;
 }

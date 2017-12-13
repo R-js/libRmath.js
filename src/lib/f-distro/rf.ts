@@ -35,26 +35,32 @@
  *    This function calls rchisq to do the real work
  */
 
-import {
-    ISNAN,
-    ML_ERR_return_NAN,
-    R_FINITE
-} from '~common';
+import * as debug from 'debug';
+
+import { ISNAN, ML_ERR_return_NAN, R_FINITE } from '~common';
 
 import { rchisq } from '~chi-2';
 import { uniform } from 'src/lib/uniform';
 import { INormal } from '~normal';
 
+const printer = debug('rf');
 
-export function rf(n1: number, n2: number, normal: INormal): number {
+export function rf(
+  n: number = 1,
+  n1: number,
+  n2: number,
+  normal: INormal
+): number | number[] {
+  const result = new Array(n).fill(0).map(() => {
     let v1;
     let v2;
-    if (ISNAN(n1) || ISNAN(n2) || n1 <= 0. || n2 <= 0.){
-        return ML_ERR_return_NAN();
+    if (ISNAN(n1) || ISNAN(n2) || n1 <= 0 || n2 <= 0) {
+      return ML_ERR_return_NAN(printer);
     }
 
-    v1 = R_FINITE(n1) ? (rchisq(n1, normal) / n1) : 1;
-    v2 = R_FINITE(n2) ? (rchisq(n2, normal) / n2) : 1;
+    v1 = R_FINITE(n1) ? (rchisq(1, n1, normal) as number) / n1 : 1;
+    v2 = R_FINITE(n2) ? (rchisq(1, n2, normal) as number) / n2 : 1;
     return v1 / v2;
+  });
+  return result.length === 1 ? result[0] : result;
 }
-

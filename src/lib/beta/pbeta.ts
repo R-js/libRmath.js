@@ -96,20 +96,25 @@ export function pbeta_raw(
   return lower_tail ? w.val : wc.val;
 } /* pbeta_raw() */
 
-export function pbeta(
-  x: number,
-  a: number,
-  b: number,
-  lower_tail: boolean,
-  log_p: boolean
-): number {
-  if (ISNAN(x) || ISNAN(a) || ISNAN(b)) return x + a + b;
+export function pbeta<T>(
+  q: T,
+  a: number = 0.5,
+  b: number = 0.5,
+  lower_tail: boolean = true,
+  log_p: boolean = false
+): T {
+  const fa: number[] = Array.isArray(q) ? q : [q] as any;
 
-  if (a < 0 || b < 0) ML_ERR_return_NAN;
-  // allowing a==0 and b==0  <==> treat as one- or two-point mass
+  const result = fa.map(x => {
+    if (ISNAN(x) || ISNAN(a) || ISNAN(b)) return x + a + b;
 
-  if (x <= 0) return R_DT_0(lower_tail, log_p);
-  if (x >= 1) return R_DT_1(lower_tail, log_p);
+    if (a < 0 || b < 0) ML_ERR_return_NAN;
+    // allowing a==0 and b==0  <==> treat as one- or two-point mass
 
-  return pbeta_raw(x, a, b, lower_tail, log_p);
+    if (x <= 0) return R_DT_0(lower_tail, log_p);
+    if (x >= 1) return R_DT_1(lower_tail, log_p);
+
+    return pbeta_raw(x, a, b, lower_tail, log_p);
+  });
+  return result.length === 1 ? result[0] : result as any;
 }

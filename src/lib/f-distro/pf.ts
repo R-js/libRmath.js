@@ -40,7 +40,7 @@ import {
 } from '~common';
 
 import { pchisq } from '~chi-2';
-import { pbeta } from '~beta';
+import { pbeta } from '../beta/pbeta';
 
 import { INormal } from '~normal';
 

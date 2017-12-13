@@ -5,9 +5,6 @@ import { rgamma } from './rgamma';
 import { pgamma } from './pgamma';
 import { gammafn } from './gamma_fn';
 import { lgammafn } from './lgamma_fn';
-
-
-
 import { normal, INormal } from '../normal';
 import {
   pentagamma,
@@ -19,19 +16,25 @@ import {
 
 
 export {
-  gammafn,
-  lgammafn,
-  pentagamma,
-  tetragamma,
-  trigamma,
-  digamma,
-  psigamma,
+
   //
   rgamma,
   pgamma,
   dgamma,
   qgamma,
   //
+  gammafn,
+  lgammafn
+};
+
+export const special = {
+  gamma:gammafn,
+  lgamma:lgammafn,
+  pentagamma,
+  tetragamma,
+  trigamma,
+  digamma,
+  psigamma,
 };
 
 export interface IGamma {
