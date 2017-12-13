@@ -67,6 +67,9 @@
             "~geometric": [
                 "src/lib/geometric/index.ts"
             ],
+            "~hypergeometric": [
+                "src/lib/hypergeometric/index.ts"
+            ],
             "~log": [
                 "src/lib/log/index.ts"
             ],

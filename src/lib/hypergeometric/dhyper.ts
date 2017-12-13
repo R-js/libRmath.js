@@ -52,7 +52,7 @@ import {
     R_D__1
 } from '~common';
 
-import { dbinom_raw } from '../../binomial/dbinom';
+import { dbinom_raw } from '../binomial/dbinom';
 
 
 export function dhyper(x: number, r: number, b: number, n: number, give_log: boolean): number {

@@ -31,9 +31,12 @@ export * from './chi-2';
 export * from './f-distro';
 //export * from './gamma';
 export * from './geometric';
+export * from './hypergeometric';
 //export * from './rng';
 export * from './r-func';
 export * from './bessel';
 //export * from './beta';
 export * from './binomial';
+export * from './binomial-negative';
+
 //export * from './poisson';

@@ -62,7 +62,7 @@ import {
 
 import { rbinom } from '~binomial';
 
-import { qhyper } from '~geometric';
+import { qhyper } from './qhyper';
 
 import { INormal } from '~normal';
 
