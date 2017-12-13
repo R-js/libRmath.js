@@ -35,32 +35,32 @@
  *	this initial start point.
  */
 
+import * as debug from 'debug';
+
 import {
-    fmax2,
-    fmin2,
     REprintf,
-    ISNAN,
-    R_FINITE,
     ML_ERR_return_NAN,
-    floor,
-    sqrt,
-    DBL_EPSILON,
     R_Q_P01_boundaries
 } from '~common';
 
+const { max:fmax2, min:fmin2, floor, sqrt} = Math;
+const { isNaN: ISNAN, isFinite: R_FINITE, EPSILON: DBL_EPSILON, } = Number;
+
+
 import { NumberW } from '~common';
-
 import { pbinom } from './pbinom';
-
 import { R_DT_qIv } from '~exp-utils';
-
 import { INormal } from '~normal';
 
+
+
+const printer_do_search = debug('do_search');
+ 
 function do_search(y: number, z: NumberW, p: number, n: number, pr: number, incr: number): number {
     if (z.val >= p) {
         /* search to the left */
 
-        REprintf('\tnew z=%7g >= p = %7g  --> search to left (y--) ..\n', z.val, p);
+        printer_do_search('new z=%d >= p = %d  --> search to left (y--) ..', z.val, p);
 
         while (true) {
             let newz: number;
@@ -73,7 +73,7 @@ function do_search(y: number, z: NumberW, p: number, n: number, pr: number, incr
     }
     else {		/* search to the right */
 
-        REprintf('\tnew z=%7g < p = %7g  --> search to right (y++) ..\n', z.val, p);
+        printer_do_search('new z=%d < p = %d  --> search to right (y++) ..', z.val, p);
 
         while (true) {
             y = fmin2(y + incr, n);
@@ -84,8 +84,23 @@ function do_search(y: number, z: NumberW, p: number, n: number, pr: number, incr
     }
 }
 
+export function qbinom<T>(
+    pp: T,
+    n: number = 30, 
+    pr: number = 0.5, 
+    lowerTail: boolean = true, 
+    logP: boolean = false, 
+    normal: INormal
+): T {
+    const fp: number[] = Array.isArray(pp) ? pp :[pp] as any;
+    const result = fp.map(p => _qbinom(p, n, pr, lowerTail, logP, normal));
+     
+    return result.length === 1 ? result[0] : result as any;
+}
 
-export function qbinom(
+const printer_qbinom = debug('_qbinom');
+
+function _qbinom(
     p: number, 
     n: number, 
     pr: number, 
@@ -105,17 +120,17 @@ export function qbinom(
         return p + n + pr;
 
     if (!R_FINITE(n) || !R_FINITE(pr)) {
-        return ML_ERR_return_NAN();
+        return ML_ERR_return_NAN(printer_qbinom);
     }
     /* if log_p is true, p = -Inf is a legitimate value */
     if (!R_FINITE(p) && !log_p) {
-        return ML_ERR_return_NAN();
+        return ML_ERR_return_NAN(printer_qbinom);
     }
 
 
-    if (n !== floor(n + 0.5)) ML_ERR_return_NAN;
+    if (n !== floor(n + 0.5)) ML_ERR_return_NAN(printer_qbinom);
     if (pr < 0 || pr > 1 || n < 0)
-        ML_ERR_return_NAN;
+        ML_ERR_return_NAN(printer_qbinom);
 
     let rc = R_Q_P01_boundaries(lower_tail, log_p, p, 0, n);
     if (rc !== undefined) {
@@ -131,7 +146,7 @@ export function qbinom(
     gamma = (q - pr) / sigma;
 
 
-    REprintf('qbinom(p=%7g, n=%g, pr=%7g, l.t.=%d, log=%d): sigm=%g, gam=%g\n',
+    printer_qbinom('qbinom(p=%d, n=%d, pr=%d, l.t.=%d, log=%d): sigm=%d, gam=%d',
         p, n, pr, lower_tail, log_p, sigma, gamma);
 
     /* Note : "same" code in qpois.c, qbinom.c, qnbinom.c --
@@ -151,7 +166,7 @@ export function qbinom(
     if (y > n) /* way off */ y = n;
 
 
-    REprintf('  new (p,1-p)=(%7g,%7g), z=qnorm(..)=%7g, y=%5g\n', p, 1 - p, z.val, y);
+    printer_qbinom('  new (p,1-p)=(%7d,%7d), z=qnorm(..)=%7d, y=%5d', p, 1 - p, z.val, y);
 
     z.val = pbinom(y, n, pr, /*lower_tail*/true, /*log_p*/false);
 

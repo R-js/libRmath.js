@@ -38,21 +38,18 @@
  *	Communications of the ACM 31, 216-222.
  *	(Algorithm BTPEC).
  */
-
-import {
-  R_FINITE,
-  R_forceint,
-  fmin2,
-  ML_ERR_return_NAN,
-  INT_MAX,
-  sqrt,
-  R_pow_di,
-  fabs,
-  log
+import * as debug from 'debug';
+import { 
+  ML_ERR_return_NAN, 
+  R_pow_di 
 } from '~common';
 
 import { qbinom } from './qbinom';
 import { INormal } from '~normal';
+
+const { log, abs: fabs, sqrt, min: fmin2, round: R_forceint } = Math;
+const { MAX_SAFE_INTEGER: INT_MAX, isFinite: R_FINITE } = Number;
+const printer = debug('rbinom');
 
 export function rbinom(nin: number, pp: number, normal: INormal): number {
   /* FIXME: These should become THREAD_specific globals : */
@@ -102,18 +99,18 @@ export function rbinom(nin: number, pp: number, normal: INormal): number {
   let k;
   let n;
 
-  if (!R_FINITE(nin)) ML_ERR_return_NAN;
+  if (!R_FINITE(nin)) ML_ERR_return_NAN(printer);
   r = R_forceint(nin);
-  if (r !== nin) ML_ERR_return_NAN;
+  if (r !== nin) ML_ERR_return_NAN(printer);
   if (
     !R_FINITE(pp) ||
     /* n=0, p=0, p=1 are not errors <TSL>*/
     r < 0 ||
     pp < 0 ||
     pp > 1
-  )
-    ML_ERR_return_NAN;
-
+  ) {
+    ML_ERR_return_NAN(printer);
+  }
   if (r === 0 || pp === 0) return 0;
   if (pp === 1) return r;
 

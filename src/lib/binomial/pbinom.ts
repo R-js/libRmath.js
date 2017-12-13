@@ -27,39 +27,45 @@
  *
  *    The distribution function of the binomial distribution.
  */
+import * as debug from 'debug';
 
 import {
-    ISNAN,
-    MATHLIB_WARNING,
-    R_nonint,
-    R_FINITE,
-    ML_ERR_return_NAN,
-    R_forceint,
-    R_DT_0,
-    floor,
-    R_DT_1
+  R_nonint,
+  ML_ERR_return_NAN,
+  R_DT_0,
+  R_DT_1
 } from '~common';
 
 import { pbeta } from '../beta/pbeta';
 
-export function pbinom(x: number, n: number, p: number, lower_tail: boolean, log_p: boolean): number {
+const printer = debug('pbinom');
+const { floor,  round: R_forceint  } = Math;
+const { isNaN: ISNAN, isFinite: R_FINITE } = Number;
 
-    if (ISNAN(x) || ISNAN(n) || ISNAN(p))
-        return x + n + p;
-    if (!R_FINITE(n) || !R_FINITE(p)) {
-        return ML_ERR_return_NAN();
-    }
+export function pbinom(
+  x: number,
+  n: number,
+  p: number,
+  lower_tail: boolean,
+  log_p: boolean
+): number {
+  if (ISNAN(x) || ISNAN(n) || ISNAN(p)) return x + n + p;
+  if (!R_FINITE(n) || !R_FINITE(p)) {
+    return ML_ERR_return_NAN(printer);
+  }
 
-    if (R_nonint(n)) {
-        MATHLIB_WARNING('non-integer n = %f', n);
-        ML_ERR_return_NAN;
-    }
-    n = R_forceint(n);
-    /* PR#8560: n=0 is a valid value */
-    if (n < 0 || p < 0 || p > 1) ML_ERR_return_NAN;
+  if (R_nonint(n)) {
+    printer('non-integer n = %d', n);
+    ML_ERR_return_NAN(printer);
+  }
+  n = R_forceint(n);
+  /* 
+     PR#8560: n=0 is a valid value 
+  */
+  if (n < 0 || p < 0 || p > 1) ML_ERR_return_NAN(printer);
 
-    if (x < 0) return R_DT_0(lower_tail, log_p);
-    x = floor(x + 1e-7);
-    if (n <= x) return R_DT_1(lower_tail, log_p);
-    return pbeta(p, x + 1, n - x, !lower_tail, log_p);
+  if (x < 0) return R_DT_0(lower_tail, log_p);
+  x = floor(x + 1e-7);
+  if (n <= x) return R_DT_1(lower_tail, log_p);
+  return pbeta(p, x + 1, n - x, !lower_tail, log_p);
 }

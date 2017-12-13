@@ -41,63 +41,67 @@
  *   the distribution is well defined for non-integers,
  *   and this can be useful for e.g. overdispersed discrete survival times.
  */
+import * as debug from 'debug';
 
 import {
-  ISNAN,
   ML_ERR_return_NAN,
   R_D_nonint_check,
-  R_FINITE,
   R_D__0,
   R_D__1,
-  R_forceint,
-  log,
   R_D_exp
 } from '~common';
 
 import { dbinom_raw } from '../binomial/dbinom';
+import { lgammafn } from '../gamma/lgamma_fn';
 
-import { log1p } from '~log';
+const printer = debug('dnbinom');
+const { log, round: R_forceint, log1p } = Math;
+const { isFinite: R_FINITE, isNaN: ISNAN } = Number;
 
-import { lgammafn } from '~gamma';
-
-export function dnbinom(
-  x: number,
+export function dnbinom<T>(
+  xx: T,
   size: number,
   prob: number,
   give_log: boolean
-): number {
-  let ans: number;
-  let p: number;
+): T {
+  const fx: number[] = Array.isArray(xx) ? xx : ([xx] as any);
 
-  if (ISNAN(x) || ISNAN(size) || ISNAN(prob)) {
-    return x + size + prob;
-  }
+  const result = fx.map(x => {
+    let ans: number;
+    let p: number;
 
-  if (prob <= 0 || prob > 1 || size < 0) {
-    return ML_ERR_return_NAN();
-  }
-  let rc = R_D_nonint_check(give_log, x);
-  if (rc !== undefined) {
-    return rc;
-  }
+    if (ISNAN(x) || ISNAN(size) || ISNAN(prob)) {
+      return x + size + prob;
+    }
 
-  if (x < 0 || !R_FINITE(x)) {
-    return R_D__0(give_log);
-  }
-  /* limiting case as size approaches zero is point mass at zero */
-  if (x === 0 && size === 0) {
-    return R_D__1(give_log);
-  }
+    if (prob <= 0 || prob > 1 || size < 0) {
+      return ML_ERR_return_NAN(printer);
+    }
+    let rc = R_D_nonint_check(give_log, x);
+    if (rc !== undefined) {
+      return rc;
+    }
 
-  x = R_forceint(x);
+    if (x < 0 || !R_FINITE(x)) {
+      return R_D__0(give_log);
+    }
+    /* limiting case as size approaches zero is point mass at zero */
+    if (x === 0 && size === 0) {
+      return R_D__1(give_log);
+    }
 
-  ans = dbinom_raw(size, x + size, prob, 1 - prob, give_log);
+    x = R_forceint(x);
 
-  p = size / (size + x);
+    ans = dbinom_raw(size, x + size, prob, 1 - prob, give_log);
 
-  return give_log ? log(p) + ans : p * ans;
+    p = size / (size + x);
+
+    return give_log ? log(p) + ans : p * ans;
+  });
+  return result.length === 1 ? result[0] : (result as any);
 }
 
+const printer_dnbinom_mu = debug('dnbinom_mu');
 export function dnbinom_mu(
   x: number,
   size: number,
@@ -114,7 +118,7 @@ export function dnbinom_mu(
   }
 
   if (mu < 0 || size < 0) {
-    return ML_ERR_return_NAN();
+    return ML_ERR_return_NAN(printer_dnbinom_mu);
   }
 
   let rc = R_D_nonint_check(give_log, x);

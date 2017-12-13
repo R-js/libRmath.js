@@ -55,14 +55,13 @@ import {
   ML_ERR_return_NAN,
   M_LN_2PI,
   R_D_negInonint,
-  R_forceint,
   R_D__0,
   R_D_exp,
   R_D__1,
   R_D_nonint_check
 } from '~common';
 
-const { log, log1p } = Math;
+const { log, log1p, round: R_forceint } = Math;
 const { isNaN: ISNAN, isFinite: R_FINITE } = Number;
 const printer = debug('dbinom');
 

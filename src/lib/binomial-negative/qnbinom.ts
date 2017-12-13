@@ -45,74 +45,85 @@
  *	this initial start point.
  */
 
+import * as debug from 'debug';
+
 import {
-    ISNAN,
-    fmax2,
-    ML_ERR_return_NAN,
-    R_Q_P01_boundaries,
-    ML_POSINF,
-    sqrt,
-    R_DT_0,
-    R_DT_1,
-    DBL_EPSILON,
-    R_forceint,
-    floor
+  ML_ERR_return_NAN,
+  R_Q_P01_boundaries,
+  R_DT_0,
+  R_DT_1,
+  NumberW
 } from '~common';
 
-import {
-    NumberW
-} from '~common';
-
-import {
-    pnbinom
-} from './pnbinom';
-
-import { 
-    R_DT_qIv
-} from '~exp-utils';
-
+import { pnbinom } from './pnbinom';
+import { R_DT_qIv } from '~exp-utils';
 import { INormal } from '~normal';
 
+const {
+  isNaN: ISNAN,
+  POSITIVE_INFINITY: ML_POSINF,
+  EPSILON: DBL_EPSILON
+} = Number;
 
- function do_search(y: number, z: NumberW, p: number, n: number, pr: number, incr: number): number {
-    if (z.val >= p) {
-        //* search to the left 
-        while (true) {
-            if (y === 0 ||
-                (z.val = pnbinom(
-                    y - incr, 
-                    n, 
-                    pr, 
-                    true, ///log_p,
-                    false)) < p)
-                return y;
-            y = fmax2(0, y - incr);
-        }
-    }
-    else {		// search to the right 
+const { max: fmax2, sqrt, floor, round: R_forceint } = Math;
 
-        while (true) {
-            y = y + incr;
-            if ((z.val = pnbinom(
-                y, 
-                n, 
-                pr, //l._t.
-                true, 
-                false)) >= p)
-                return y;
-        }
+function do_search(
+  y: number,
+  z: NumberW,
+  p: number,
+  n: number,
+  pr: number,
+  incr: number
+): number {
+  if (z.val >= p) {
+    //* search to the left
+    while (true) {
+      if (
+        y === 0 ||
+        (z.val = pnbinom(
+          y - incr,
+          n,
+          pr,
+          true, ///log_p,
+          false
+        )) < p
+      )
+        return y;
+      y = fmax2(0, y - incr);
     }
+  } else {
+    // search to the right
+
+    while (true) {
+      y = y + incr;
+      if (
+        (z.val = pnbinom(
+          y,
+          n,
+          pr, //l._t.
+          true,
+          false
+        )) >= p
+      )
+        return y;
+    }
+  }
 }
 
+const printer_qnbinom = debug('qnbinom');
 
-export function qnbinom(
-    p: number, 
-    size: number, 
-    prob: number, 
-    lower_tail: boolean, 
-    log_p: boolean,
-    normal: INormal
-): number {
+
+export function qnbinom<T>(
+  pp: T,
+  size: number,
+  prob: number,
+  lower_tail: boolean,
+  log_p: boolean,
+  normal: INormal
+): T {
+  const fp: number[] = Array.isArray(pp) ? pp : ([pp] as any);
+
+  const result = fp.map(p => {
     let P;
     let Q;
     let mu;
@@ -122,23 +133,21 @@ export function qnbinom(
 
     let z: NumberW = new NumberW(0);
 
-
-    if (ISNAN(p) || ISNAN(size) || ISNAN(prob))
-        return p + size + prob;
-
+    if (ISNAN(p) || ISNAN(size) || ISNAN(prob)) return p + size + prob;
 
     /* this happens if specified via mu, size, since
        prob == size/(size+mu)
     */
     if (prob === 0 && size === 0) return 0;
 
-    if (prob <= 0 || prob > 1 || size < 0) return ML_ERR_return_NAN();
+    if (prob <= 0 || prob > 1 || size < 0)
+      return ML_ERR_return_NAN(printer_qnbinom);
 
     if (prob === 1 || size === 0) return 0;
 
     let rc = R_Q_P01_boundaries(lower_tail, log_p, p, 0, ML_POSINF);
     if (rc !== undefined) {
-        return rc;
+      return rc;
     }
     Q = 1.0 / prob;
     P = (1.0 - prob) * Q;
@@ -149,18 +158,22 @@ export function qnbinom(
     /* Note : "same" code in qpois.c, qbinom.c, qnbinom.c --
      * FIXME: This is far from optimal [cancellation for p ~= 1, etc]: */
     if (!lower_tail || log_p) {
-        p = R_DT_qIv(lower_tail, log_p, p); /* need check again (cancellation!): */
-        if (p === R_DT_0(lower_tail, log_p)) return 0;
-        if (p === R_DT_1(lower_tail, log_p)) return ML_POSINF;
+      p = R_DT_qIv(
+        lower_tail,
+        log_p,
+        p
+      ); /* need check again (cancellation!): */
+      if (p === R_DT_0(lower_tail, log_p)) return 0;
+      if (p === R_DT_1(lower_tail, log_p)) return ML_POSINF;
     }
     /* temporary hack --- FIXME --- */
-    if (p + 1.01 * DBL_EPSILON >= 1.) return ML_POSINF;
+    if (p + 1.01 * DBL_EPSILON >= 1) return ML_POSINF;
 
     /* y := approx.value (Cornish-Fisher expansion) :  */
-    z.val = normal.qnorm(p, 0., 1., /*lower_tail*/true, /*log_p*/true);
+    z.val = normal.qnorm(p, 0, 1, /*lower_tail*/ true, /*log_p*/ true);
     y = R_forceint(mu + sigma * (z.val + gamma * (z.val * z.val - 1) / 6));
 
-    z.val = pnbinom(y, size, prob, /*lower_tail*/true, /*log_p*/false);
+    z.val = pnbinom(y, size, prob, /*lower_tail*/ true, /*log_p*/ false);
 
     /* fuzz to ensure left continuity: */
     p *= 1 - 64 * DBL_EPSILON;
@@ -169,18 +182,34 @@ export function qnbinom(
     if (y < 1e5) return do_search(y, z, p, size, prob, 1);
     /* Otherwise be a bit cleverer in the search */
     {
-        let incr = floor(y * 0.001);
-        let oldincr;
-        do {
-            oldincr = incr;
-            y = do_search(y, z, p, size, prob, incr);
-            incr = fmax2(1, floor(incr / 100));
-        } while (oldincr > 1 && incr > y * 1e-15);
-        return y;
+      let incr = floor(y * 0.001);
+      let oldincr;
+      do {
+        oldincr = incr;
+        y = do_search(y, z, p, size, prob, incr);
+        incr = fmax2(1, floor(incr / 100));
+      } while (oldincr > 1 && incr > y * 1e-15);
+      return y;
     }
+  });
+  return result.length === 1 ? result[0] : (result as any);
 }
 
-export function qnbinom_mu(p: number, size: number, mu: number, lower_tail: boolean, log_p: boolean, normal: INormal){
-    /* FIXME!  Implement properly!! (not losing accuracy for very large size (prob ~= 1)*/
-    return qnbinom(p, size, /* prob = */ size / (size + mu), lower_tail, log_p, normal);
+export function qnbinom_mu(
+  p: number,
+  size: number,
+  mu: number,
+  lower_tail: boolean,
+  log_p: boolean,
+  normal: INormal
+) {
+  /* FIXME!  Implement properly!! (not losing accuracy for very large size (prob ~= 1)*/
+  return qnbinom(
+    p,
+    size,
+    /* prob = */ size / (size + mu),
+    lower_tail,
+    log_p,
+    normal
+  );
 }

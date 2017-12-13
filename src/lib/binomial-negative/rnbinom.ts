@@ -46,35 +46,50 @@
  *    parameter p/(1-p).  Return a Poisson deviate with mean lambda.
  */
 
-import { R_FINITE, ML_ERR_return_NAN } from '~common';
+import * as debug from 'debug';
+import { ML_ERR_return_NAN } from '~common';
 
-import { rpois } from '~poisson';
-import { rgamma } from '~gamma';
+import { rpois } from '../poisson/rpois';
+import { rgamma } from '../gamma/rgamma';
 import { INormal } from '~normal';
 
-export function rnbinom(size: number, prob: number, normal: INormal): number {
-  if (
-    !R_FINITE(size) ||
-    !R_FINITE(prob) ||
-    size <= 0 ||
-    prob <= 0 ||
-    prob > 1
-  ) {
-    /* prob = 1 is ok, PR#1218 */
-    return ML_ERR_return_NAN();
-  }
-  return prob === 1
-    ? 0
-    : (rpois(
-        1,
-        rgamma(1, size, (1 - prob) / prob, normal) as number,
-        normal
-      ) as number);
+const { isFinite: R_FINITE } = Number;
+
+const printer_rnbinom = debug('rnbinom');
+
+export function rnbinom(
+  n: number,
+  size: number,
+  prob: number,
+  normal: INormal
+): number| number[] {
+  const result = new Array(n).fill(0).map(() => {
+    if (
+      !R_FINITE(size) ||
+      !R_FINITE(prob) ||
+      size <= 0 ||
+      prob <= 0 ||
+      prob > 1
+    ) {
+      /* prob = 1 is ok, PR#1218 */
+      return ML_ERR_return_NAN(printer_rnbinom);
+    }
+    return prob === 1
+      ? 0
+      : (rpois(
+          1,
+          rgamma(1, size, (1 - prob) / prob, normal) as number,
+          normal
+        ) as number);
+  });
+  return result.length === 1 ? result[0] : result;
 }
+
+const printer_rnbinom_mu = debug('rnbinom_mu');
 
 export function rnbinom_mu(size: number, mu: number, normal: INormal): number {
   if (!R_FINITE(size) || !R_FINITE(mu) || size <= 0 || mu < 0) {
-    return ML_ERR_return_NAN();
+    return ML_ERR_return_NAN(printer_rnbinom_mu);
   }
   return mu === 0
     ? 0
