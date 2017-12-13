@@ -60,7 +60,7 @@ import {
     sqrt
 } from '~common';
 
-import { exp_rand } from '~exp-tools';
+import { exp_rand } from '../exp/sexp';
 
 import {
     INormal

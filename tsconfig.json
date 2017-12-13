@@ -34,6 +34,9 @@
             "~binomial": [
                 "src/lib/binomial/index.ts"
             ],
+            "~binomial-negative": [
+                "src/lib/binomial-negative/index.ts"
+            ],
             "~cauchy": [
                 "src/lib/cauchy/index.ts"
             ],
@@ -52,7 +55,7 @@
             "~exp": [
                 "src/lib/exp/index.ts"
             ],
-            "~exp-tools": [
+            "~exp-utils": [
                 "src/lib/exp/expm1.ts"
             ],
             "~f-distro": [

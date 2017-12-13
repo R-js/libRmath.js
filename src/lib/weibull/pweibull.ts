@@ -36,7 +36,7 @@ import {
 
 import {
     R_Log1_Exp
-} from '~exp-tools';
+} from '~exp-utils';
 
 const { expm1 } = Math;
 

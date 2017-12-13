@@ -69,7 +69,7 @@ import {
 
 import { 
     R_DT_qIv
-} from '~exp-tools';
+} from '~exp-utils';
 
 import { INormal } from '~normal';
 

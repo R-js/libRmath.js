@@ -11,15 +11,17 @@
 /*    N.B. The MODIFICATIONS introduced in the 9th printing (2002) are
       included here; there's no backwards compatibility with the original. */
 
-const { trunc } = Math;
-const frac = (x: number) => x - trunc(x);
+import * as debug from 'debug';      
 
-import { warning, error } from '../../_logging';
+
 import { IRNGType } from '../irng-type';
 import { timeseed } from '../timeseed';
 import { IRNG } from '../irng';
 
 import { fixup } from '../fixup';
+
+const { trunc } = Math;
+const frac = (x: number) => x - trunc(x);
 
 const QUALITY = 1009; /* recommended quality level for high-res use */
 const SEED_LEN = 101;

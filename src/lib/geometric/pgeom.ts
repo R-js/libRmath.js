@@ -41,7 +41,7 @@ import {
 } from '~common';
 
 import { log1p } from '~log';
-import { R_DT_Clog } from '~exp-tools';
+import { R_DT_Clog } from '~exp-utils';
 
 const { expm1 } = Math;
 

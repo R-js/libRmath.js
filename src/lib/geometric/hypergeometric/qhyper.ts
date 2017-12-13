@@ -41,7 +41,7 @@ import {
     
 } from '~common';
 
-import { R_DT_qIv } from '~exp-tools';
+import { R_DT_qIv } from '~exp-utils';
 
 import { lfastchoose } from '~common';
 

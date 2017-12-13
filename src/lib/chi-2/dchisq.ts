@@ -34,11 +34,8 @@
  *    The density of the chi-squared distribution.
  */
 
+import { dgamma } from '../gamma/dgamma';
 
-import {
-    dgamma
-} from '~gamma';
-
-export function dchisq(x: number, df: number, give_log: boolean) {
-    return dgamma(x, df / 2., 2., give_log);
+export function dchisq<T>(x: T, df: number, log: boolean = false) {
+  return dgamma(x, df / 2, 2, log);
 }

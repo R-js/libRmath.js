@@ -16,7 +16,6 @@ import {
 
 
 export {
-
   //
   rgamma,
   pgamma,

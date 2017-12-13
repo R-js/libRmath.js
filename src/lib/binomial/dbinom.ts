@@ -46,26 +46,25 @@
  *         Do this in the calling function.
  */
 
+import * as debug from 'debug';
+
+import { bd0 } from '~deviance';
+import { stirlerr } from '~stirling';
+
 import {
-  ISNAN,
   ML_ERR_return_NAN,
-  R_FINITE,
   M_LN_2PI,
   R_D_negInonint,
   R_forceint,
   R_D__0,
-  log,
   R_D_exp,
   R_D__1,
   R_D_nonint_check
 } from '~common';
 
-import { bd0 } from '~deviance';
-//import {  log1p } from '~log';
-
-import { log1p } from '~log';
-
-import { stirlerr } from '~stirling';
+const { log, log1p } = Math;
+const { isNaN: ISNAN, isFinite: R_FINITE } = Number;
+const printer = debug('dbinom');
 
 export function dbinom_raw(
   x: number,
@@ -111,16 +110,25 @@ export function dbinom_raw(
   return R_D_exp(give_log, lc - 0.5 * lf);
 }
 
-export function dbinom(x: number, n: number, p: number, give_log: boolean) {
-  /* NaNs propagated correctly */
-  if (ISNAN(x) || ISNAN(n) || ISNAN(p)) return x + n + p;
+export function dbinom(
+  N: number = 1,
+  x: number,
+  n: number,
+  p: number,
+  logX: boolean
+): number | number[] {
+  const result = new Array(N).fill(0).map(() => {
+    /* NaNs propagated correctly */
+    if (ISNAN(x) || ISNAN(n) || ISNAN(p)) return x + n + p;
 
-  if (p < 0 || p > 1 || R_D_negInonint(n)) ML_ERR_return_NAN;
-  R_D_nonint_check(give_log, x);
-  if (x < 0 || !R_FINITE(x)) return R_D__0;
+    if (p < 0 || p > 1 || R_D_negInonint(n)) ML_ERR_return_NAN(printer);
+    R_D_nonint_check(logX, x);
+    if (x < 0 || !R_FINITE(x)) return R_D__0(logX);
 
-  n = R_forceint(n);
-  x = R_forceint(x);
+    n = R_forceint(n);
+    x = R_forceint(x);
 
-  return dbinom_raw(x, n, p, 1 - p, give_log);
+    return dbinom_raw(x, n, p, 1 - p, logX);
+  });
+  return result.length === 1 ? result[0] : result;
 }

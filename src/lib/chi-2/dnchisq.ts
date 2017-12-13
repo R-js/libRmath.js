@@ -29,26 +29,33 @@
  *    degrees of freedom and noncentrality parameter "ncp".
  */
 
-import {
+import * as debug from 'debug';
 
-    ISNAN,
-    R_FINITE,
-    ML_ERR_return_NAN,
-    R_D__0,
-    ML_POSINF,
-    ceil,
-    sqrt,
-    R_D_val
+import { ML_ERR_return_NAN, R_D__0, R_D_val } from '~common';
 
-} from '~common';
+import { dchisq } from '../chi-2/dchisq';
+import { dpois_raw } from '../poisson/dpois';
 
-import { dchisq } from '~chi-2';
-import { dpois_raw } from '~poisson';
+const { ceil, sqrt } = Math;
+const {
+  isNaN: ISNAN,
+  isFinite: R_FINITE,
+  POSITIVE_INFINITY: ML_POSINF
+} = Number;
 
-export function dnchisq(x: number, df: number, ncp: number, give_log: boolean): number {
+const printer = debug('dnchisq');
 
-    const eps = 5e-15;
+export function dnchisq<T>(
+  xx: T,
+  df: number,
+  ncp: number,
+  give_log: boolean
+): T {
+  const eps = 5e-15;
 
+  const fa: number[] = Array.isArray(xx) ? xx : ([xx] as any);
+
+  const result = fa.map(x => {
     let i: number;
     let ncp2: number;
     let q: number;
@@ -58,51 +65,44 @@ export function dnchisq(x: number, df: number, ncp: number, give_log: boolean): 
     let sum: number;
     let term: number;
 
-
     if (ISNAN(x) || ISNAN(df) || ISNAN(ncp)) {
-        return x + df + ncp;
+      return x + df + ncp;
     }
 
     if (!R_FINITE(df) || !R_FINITE(ncp) || ncp < 0 || df < 0) {
-        return ML_ERR_return_NAN();
+      return ML_ERR_return_NAN();
     }
 
     if (x < 0) {
-        return R_D__0(give_log);
+      return R_D__0(give_log);
     }
-    if (x === 0 && df < 2.)
-        return ML_POSINF;
-    if (ncp === 0)
-        return (df > 0) ? dchisq(x, df, give_log) : R_D__0(give_log);
-    if (x === ML_POSINF)
-        return R_D__0(give_log);
+    if (x === 0 && df < 2) return ML_POSINF;
+    if (ncp === 0) return df > 0 ? dchisq(x, df, give_log) : R_D__0(give_log);
+    if (x === ML_POSINF) return R_D__0(give_log);
 
     ncp2 = 0.5 * ncp;
 
     /* find max element of sum */
     imax = ceil((-(2 + df) + sqrt((2 - df) * (2 - df) + 4 * ncp * x)) / 4);
-    if (imax < 0)
-        imax = 0;
+    if (imax < 0) imax = 0;
     if (R_FINITE(imax)) {
-        dfmid = df + 2 * imax;
-        mid = dpois_raw(imax, ncp2, false) * dchisq(x, dfmid, false);
-    }
-    else {/* imax = Inf */
-        // mid = 0;
-        // }
+      dfmid = df + 2 * imax;
+      mid = dpois_raw(imax, ncp2, false) * dchisq(x, dfmid, false);
+    } else {
+      /* imax = Inf */
+      // mid = 0;
+      // }
 
-        // if (mid === 0) {
-        /* underflow to 0 -- maybe numerically correct; maybe can be more accurate,
+      // if (mid === 0) {
+      /* underflow to 0 -- maybe numerically correct; maybe can be more accurate,
 	 * particularly when  give_log = TRUE */
-        /* Use  central-chisq approximation formula when appropriate;
+      /* Use  central-chisq approximation formula when appropriate;
 	 * ((FIXME: the optimal cutoff also depends on (x,df);  use always here? )) */
-        if (give_log || ncp > 1000.) {
-            let nl = df + ncp;
-            let ic = nl / (nl + ncp); /* = "1/(1+b)" Abramowitz & St.*/
-            return dchisq(x * ic, nl * ic, give_log);
-        }
-        else
-            return R_D__0(give_log);
+      if (give_log || ncp > 1000) {
+        let nl = df + ncp;
+        let ic = nl / (nl + ncp); /* = "1/(1+b)" Abramowitz & St.*/
+        return dchisq(x * ic, nl * ic, give_log);
+      } else return R_D__0(give_log);
     }
 
     sum = mid;
@@ -115,24 +115,26 @@ export function dnchisq(x: number, df: number, ncp: number, give_log: boolean): 
     i = imax;
     let x2 = x * ncp2;
     do {
-        i++;
-        q = x2 / i / df;
-        df += 2;
-        term *= q;
-        sum += term;
+      i++;
+      q = x2 / i / df;
+      df += 2;
+      term *= q;
+      sum += term;
     } while (q >= 1 || term * q > (1 - q) * eps || term > 1e-10 * sum);
     /* lower tail */
     term = mid;
     df = dfmid;
     i = imax;
     while (i !== 0) {
-        df -= 2;
-        q = i * df / x2;
-        i--;
-        term *= q;
-        sum += term;
-        if (q < 1 && term * q <= (1 - q) * eps)
-            break;
+      df -= 2;
+      q = i * df / x2;
+      i--;
+      term *= q;
+      sum += term;
+      if (q < 1 && term * q <= (1 - q) * eps) break;
     }
     return R_D_val(give_log, sum);
+  });
+
+  return result.length === 1 ? result[0] : (result as any);
 }

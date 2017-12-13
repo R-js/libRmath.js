@@ -57,7 +57,7 @@ import {
 } from '~common';
 
 import { lbeta } from './lbeta';
-import { dbinom_raw } from '~binomial';
+import { dbinom_raw } from '../binomial/dbinom';
 
 const { log , log1p } = Math;
 const {

@@ -29,10 +29,10 @@
 
 import {
     pgamma
-} from '~gamma';
+} from '../gamma/pgamma';
 
-import { INormal } from '~normal';
+import { INormal } from '../normal';
 
-export function pchisq(x: number, df: number, lower_tail: boolean, log_p: boolean, normal: INormal) {
-    return pgamma(x, df / 2., 2., lower_tail, log_p, normal);
+export function pchisq<T>(x: T, df: number, lowerTail: boolean= true, logP: boolean= false, normal: INormal) {
+    return pgamma(x, df / 2., 2., lowerTail, logP, normal);
 }

@@ -40,7 +40,6 @@ import {
     R_DT_1
 } from '~common';
 
-
 import { pbeta } from '../beta/pbeta';
 
 export function pbinom(x: number, n: number, p: number, lower_tail: boolean, log_p: boolean): number {

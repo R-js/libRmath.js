@@ -52,7 +52,7 @@ import { NumberW } from '~common';
 
 import { pbinom } from './pbinom';
 
-import { R_DT_qIv } from '~exp-tools';
+import { R_DT_qIv } from '~exp-utils';
 
 import { INormal } from '~normal';
 

@@ -43,7 +43,7 @@ import {
 
 import {
     dbinom_raw
-} from '~binomial';
+} from '../binomial/dbinom';
 
 
 export function dgeom(x: number, p: number, give_log: boolean): number {

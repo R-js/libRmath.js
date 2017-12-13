@@ -76,7 +76,9 @@ export function rnchisq(
   lambda: number,
   normal: INormal
 ): number| number[] {
+  
   const result = new Array(n).fill(0).map(() => {
+
     if (!R_FINITE(df) || !R_FINITE(lambda) || df < 0 || lambda < 0){
       ML_ERR_return_NAN(printer);
     }

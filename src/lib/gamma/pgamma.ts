@@ -82,7 +82,7 @@ import {
 
 import { log1p } from '~log';
 import { lgammafn } from '~gamma';
-import { R_Log1_Exp } from '~exp-tools';
+import { R_Log1_Exp } from '~exp-utils';
 import { dpois_raw } from '~poisson';
 import { logspace_add } from './logspace-add';
 import { INormal } from '~normal';

@@ -50,7 +50,7 @@ import { ppois } from './ppois';
 
 import { INormal } from '~normal';
 
-import { R_DT_qIv } from '~exp-tools';
+import { R_DT_qIv } from '~exp-utils';
 
 function do_search(
   y: number,

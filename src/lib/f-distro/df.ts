@@ -50,7 +50,7 @@ import {
 
 import { dgamma } from '~gamma';
 
-import { dbinom_raw } from '~binomial';
+import { dbinom_raw } from '../binomial/dbinom';
 
 export function df(x: number, m: number, n: number, give_log: boolean): number {
    

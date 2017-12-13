@@ -35,13 +35,13 @@ const { isArray } = Array;
 const { isNaN: ISNAN } = Number;
 const printer = debug('qexp');
 
-export function qexp(
-  _p: number | number[],
+export function qexp<T>(
+  _p: T,
   scale: number = 1,
   lower_tail: boolean = true,
   log_p: boolean = false
-): number | number[] {
-  let fa: number[] = (() => (isArray(_p) && _p) || [_p])();
+): T {
+  let fa: number[] = (() => (isArray(_p) && _p) || [_p])() as any;
 
   let result = fa.map(p => {
     if (ISNAN(p) || ISNAN(scale)) return p + scale;
@@ -56,5 +56,5 @@ export function qexp(
 
     return -scale * R_DT_Clog(lower_tail, log_p, p);
   });
-  return result.length === 1 ? result[0] : result;
+  return result.length === 1 ? result[0] : result as any;
 }

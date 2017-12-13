@@ -28,7 +28,7 @@
 
 import { R_Q_P01_check, ML_ERR_return_NAN } from '~common';
 
-import { R_DT_qIv } from '~exp-tools';
+import { R_DT_qIv } from '~exp-utils';
 import * as debug from 'debug';
 
 const { isNaN: ISNAN, isFinite: R_FINITE } = Number;

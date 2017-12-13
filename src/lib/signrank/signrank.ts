@@ -62,7 +62,7 @@ import {
 
 
 import { R_DT_val } from '~log';
-import { R_DT_qIv } from '~exp-tools';
+import { R_DT_qIv } from '~exp-utils';
 
 let w: number[];
 let allocated_n: number;

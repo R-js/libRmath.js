@@ -51,7 +51,7 @@ import {
   R_DT_Clog,
   R_DT_log,
   R_Log1_Exp
-} from '~exp-tools';
+} from '~exp-utils';
 
 import { lbeta } from '../beta/lbeta';
 import { pbeta_raw } from '../beta/pbeta';

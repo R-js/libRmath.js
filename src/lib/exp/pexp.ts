@@ -48,7 +48,7 @@ export function pexp(
   let result = fa.map(fx => {
     if (ISNAN(fx) || ISNAN(scale)) return fx + scale;
     if (scale < 0) {
-      return ML_ERR_return_NAN();
+      return ML_ERR_return_NAN(printer);
     }
 
     if (fx <= 0) return R_DT_0(lower_tail, log_p);

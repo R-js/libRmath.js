@@ -4,7 +4,7 @@ import { qexp } from './qexp';
 import { rexp } from './rexp';
 
 import { IRNG, rng } from '../rng';
-const { normal: { Inversion }, MersenneTwister } = rng;
+const { normal: { Inversion }, SuperDuper } = rng;
 
 export interface IExponential {
   rexp: (n: number, rate: number) => number | number[];
@@ -14,7 +14,7 @@ export interface IExponential {
 }
 
 export function exponential(
-  rng: IRNG = new MersenneTwister(0)
+  rng: IRNG = new SuperDuper(0)
 ): IExponential {
   // underlying uniform PRNG
  // const unif_rand: () => number = rng.unif_rand.bind(rng);

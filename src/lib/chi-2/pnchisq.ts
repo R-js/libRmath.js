@@ -28,48 +28,54 @@
  * -- Feb.6, 2000 (R pre0.99); M.Maechler:  still have
  * bad precision & non-convergence in some cases (x ~= f, both LARGE)
  */
+import * as debug from 'debug';
 
 import {
   M_LN2,
   DBL_MIN_EXP,
-  ISNAN,
-  R_FINITE,
   ML_ERR_return_NAN,
-  DBL_EPSILON,
   ME,
   ML_ERROR,
-  REprintf,
-  fmax2,
-  fmin2,
   R_D__1,
   M_LN10,
   R_D_exp,
   R_DT_0,
   R_DT_1,
-  log,
-  ML_NEGINF,
-  exp,
-  fabs,
-  sqrt,
-  M_LN_SQRT_2PI,
-  MATHLIB_WARNING2
+  M_LN_SQRT_2PI
 } from '~common';
 
-import { log1p, R_DT_val } from '~log';
+const { 
+  sqrt, 
+  abs: fabs, 
+  exp, 
+  log, 
+  min: fmin2, 
+  max: fmax2 
+} = Math;
 
-import { R_Log1_Exp } from '~exp-tools';
+const {
+  isNaN: ISNAN,
+  isFinite: R_FINITE,
+  EPSILON: DBL_EPSILON,
+  NEGATIVE_INFINITY: ML_NEGINF
+} = Number;
 
-import { lgammafn } from '~gamma';
+import { R_DT_val } from '~log';
+
+import { R_Log1_Exp } from '~exp-utils';
+
+import { lgammafn } from '../gamma/lgamma_fn';
 
 import { logspace_add } from '../gamma/logspace-add';
 
-import { pchisq } from '~chi-2';
+import { pchisq } from './pchisq';
 
 import { INormal } from '~normal';
 
-export const _dbl_min_exp = M_LN2 * DBL_MIN_EXP;
+const _dbl_min_exp = M_LN2 * DBL_MIN_EXP;
 /*= -708.3964 for IEEE double precision */
-const { expm1 } = Math;
+const { expm1, log1p } = Math;
+const printer = debug('pnchisq');
 
 export function pnchisq(
   x: number,
@@ -116,7 +122,7 @@ export function pnchisq(
   else {
     // log_p  &&  ans > -1e-8
     // prob. = exp(ans) is near one: we can do better using the other tail
-    REprintf('   pnchisq_raw(*, log_p): ans=%g => 2nd call, other tail\n', ans);
+    printer('   pnchisq_raw(*, log_p): ans=%d => 2nd call, other tail', ans);
 
     // FIXME: (sum,sum2) will be the same (=> return them as well and reuse here ?)
     ans = pnchisq_raw(
@@ -213,8 +219,8 @@ export function pnchisq_raw(
         if (sum2 >= -1e-15) /*<=> EXP(sum2) >= 1-1e-15 */ break;
       }
       ans = sum - sum2;
-      REprintf(
-        'pnchisq(x=%g, f=%g, th.=%g); th. < 80, logspace: i=%d, ans=(sum=%g)-(sum2=%g)\n',
+      printer(
+        'pnchisq(x=%d, f=%d, th.=%d); th. < 80, logspace: i=%d, ans=(sum=%d)-(sum2=%d)',
         x,
         f,
         theta,
@@ -240,8 +246,8 @@ export function pnchisq_raw(
       }
       ans = sum / sum2;
 
-      REprintf(
-        'pnchisq(x=%g, f=%g, theta=%g); theta < 80: i=%d, sum=%g, sum2=%g\n',
+      printer(
+        'pnchisq(x=%d, f=%d, theta=%d); theta < 80: i=%d, sum=%d, sum2=%d',
         x,
         f,
         theta,
@@ -256,7 +262,7 @@ export function pnchisq_raw(
 
   // else: theta ===  ncp >= 80 --------------------------------------------
 
-  REprintf('pnchisq(x=%g, f=%g, theta=%g >= 80): ', x, f, theta);
+  printer('pnchisq(x=%d, f=%d, theta=%d >= 80): ', x, f, theta);
 
   // Series expansion ------- FIXME: log_p=TRUE, lower_tail=FALSE only applied at end
 
@@ -279,7 +285,7 @@ export function pnchisq_raw(
   f2 = 0.5 * f;
   f_x_2n = f - x;
 
-  REprintf('-- v=exp(-th/2)=%g, x/2= %g, f/2= %g\n', v, x2, f2);
+  printer('-- v=exp(-th/2)=%d, x/2= %d, f/2= %d', v, x2, f2);
 
   if (
     f2 * DBL_EPSILON > 0.125 /* very large f and x ~= f: probably needs */ &&
@@ -289,17 +295,17 @@ export function pnchisq_raw(
     /* t = exp((1 - t)*(2 - t/(f2 + 1))) / sqrt(2*M_PI*(f2 + 1));*/
     lt = (1 - t) * (2 - t / (f2 + 1)) - M_LN_SQRT_2PI - 0.5 * log(f2 + 1);
 
-    REprintf(' (case I) === > ');
+    printer(' (case I) === > ');
   } else {
     /* Usual case 2: careful not to overflow .. : */
     lt = f2 * log(x2) - x2 - lgammafn(f2 + 1);
   }
 
-  REprintf(' lt= %g', lt);
+  printer(' lt= %d', lt);
 
   tSml = lt < _dbl_min_exp;
   if (tSml) {
-    REprintf(' is very small\n');
+    printer(' is very small\n');
 
     if (x > f + theta + 5 * sqrt(2 * (f + 2 * theta))) {
       /* x > E[X] + 5* sigma(X) */
@@ -313,12 +319,12 @@ export function pnchisq_raw(
     t = 0;
   } else {
     t = exp(lt);
-    REprintf(', t=exp(lt)= %g\n', t);
+    printer(', t=exp(lt)= %d', t);
     ans = term = v * t;
   }
 
   for (n = 1, f_2n = f + 2, f_x_2n += 2; ; n++, f_2n += 2, f_x_2n += 2) {
-    REprintf('\n _OL_: n=%d', n);
+    printer('\n _OL_: n=%d', n);
     /* f_2n    === = f + 2*n
          * f_x_2n  === = f - x + 2*n   > 0  <==> (f+2n)  >   x */
     if (f_x_2n > 0) {
@@ -326,7 +332,7 @@ export function pnchisq_raw(
 
       bound = t * x / f_x_2n;
 
-      REprintf('\n L10: n=%d; term= %g; bound= %g', n, term, bound);
+      printer('\n L10: n=%d; term= %d; bound= %d', n, term, bound);
 
       is_r = is_it = false;
       /* convergence only if BOTH absolute and relative error < 'bnd' */
@@ -334,8 +340,8 @@ export function pnchisq_raw(
         ((is_b = bound <= errmax) && (is_r = term <= reltol * ans)) ||
         (is_it = n > itrmax)
       ) {
-        REprintf(
-          'BREAK n=%d %s; bound= %g %s, rel.err= %g %s\n',
+        printer(
+          'BREAK n=%d %s; bound= %d %s, rel.err= %d %s\n',
           n,
           is_it ? '> itrmax' : '',
           bound,
@@ -343,7 +349,6 @@ export function pnchisq_raw(
           term / ans,
           is_r ? '<= reltol' : ''
         );
-
         break; /* out completely */
       }
     }
@@ -356,7 +361,7 @@ export function pnchisq_raw(
       if (lu >= _dbl_min_exp) {
         /* no underflow anymore === > change regime */
 
-        REprintf(' n=%d; nomore underflow in u = exp(lu) === > change\n', n);
+        printer(' n=%d; nomore underflow in u = exp(lu) === > change', n);
 
         v = u = exp(lu); /* the first non-0 'u' */
         lamSml = false;
@@ -370,7 +375,7 @@ export function pnchisq_raw(
       if (lt >= _dbl_min_exp) {
         /* no underflow anymore === > change regime */
 
-        REprintf('  n=%d; nomore underflow in t = exp(lt) === > change\n', n);
+        printer('  n=%d; nomore underflow in t = exp(lt) === > change', n);
 
         t = exp(lt); /* the first non-0 't' */
         tSml = false;
@@ -385,10 +390,10 @@ export function pnchisq_raw(
   } /* for(n ...) */
 
   if (is_it) {
-    MATHLIB_WARNING2('pnchisq(x=%g, ..): not converged in %d iter.', x, itrmax);
+    printer('pnchisq(x=%d, ..): not converged in %d iter.', x, itrmax);
   }
 
-  REprintf('\n ===  L_End: n=%d; term= %g; bound=%g\n', n, term, bound);
+  printer('\n ===  L_End: n=%d; term= %d; bound=%d', n, term, bound);
 
   let dans = ans;
   return R_DT_val(lower_tail, log_p, dans);

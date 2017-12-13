@@ -72,7 +72,7 @@ import {
   M_SQRT2
 } from '~common';
 
-import { R_DT_qIv, R_D_LExp } from '~exp-tools';
+import { R_DT_qIv, R_D_LExp } from '~exp-utils';
 
 const { expm1 } = Math;
 

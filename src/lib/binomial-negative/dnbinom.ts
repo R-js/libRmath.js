@@ -54,7 +54,7 @@ import {
   R_D_exp
 } from '~common';
 
-import { dbinom_raw } from '~binomial';
+import { dbinom_raw } from '../binomial/dbinom';
 
 import { log1p } from '~log';
 

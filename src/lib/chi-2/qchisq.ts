@@ -26,11 +26,16 @@
  *	The quantile function of the chi-squared distribution.
  */
 
-
-import { qgamma } from '~gamma';
+import { qgamma } from '../gamma/qgamma';
 
 import { INormal } from '~normal';
 
-export function qchisq(p: number, df: number, lower_tail: boolean, log_p: boolean, normal: INormal): number{
-    return qgamma(p, 0.5 * df, 2.0, lower_tail, log_p, normal);
+export function qchisq<T>(
+  p: T,
+  df: number,
+  lowerTail: boolean = true,
+  logP: boolean = false,
+  normal: INormal
+): T {
+  return qgamma(p, 0.5 * df, 2.0, lowerTail, logP, normal);
 }

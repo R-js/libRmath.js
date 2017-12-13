@@ -63,7 +63,7 @@ import {
     R_D_Lval
 } from '~common';
 
-import { R_DT_log } from '~exp-tools';
+import { R_DT_log } from '~exp-utils';
 import { dhyper } from './dhyper';
 import { log1p } from '~log';
 
