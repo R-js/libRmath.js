@@ -29,7 +29,7 @@
 
 import { ISNAN, ML_ERR_return_NAN, R_DT_0, log } from '~common';
 
-import { pnorm5 as pnorm } from '../pnorm';
+import { pnorm5 as pnorm } from '../normal/pnorm';
 
 const { isArray } = Array;
 

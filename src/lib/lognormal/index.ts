@@ -4,7 +4,7 @@ import { plnorm } from './plnorm';
 import { qlnorm } from './qlnorm';
 import { rlnorm } from './rlnorm';
 
-import { INormal, Normal } from '../';
+import { INormal, Normal } from '../normal';
 
 export interface ILogNormal {
   rlnorm: (n: number, meanlog: number, sdlog: number) => number | number[];

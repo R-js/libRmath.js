@@ -29,7 +29,7 @@
 
 import { ISNAN, ML_POSINF, R_Q_P01_boundaries, exp } from '~common';
 
-import { qnorm } from '../qnorm';
+import { qnorm } from '../normal/qnorm';
 
 const { isArray } = Array;
 

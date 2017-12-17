@@ -1,7 +1,7 @@
 'use strict';
 export { Uniform } from './uniform';
 export { Normal } from './normal';
-export { LogNormal } from './normal/lognormal';
+export { LogNormal } from './lognormal';
 export { rng, IRNG } from './rng';
 export { Beta } from '~beta';
 export { Poisson } from './poisson';
