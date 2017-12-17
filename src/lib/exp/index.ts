@@ -13,7 +13,7 @@ export interface IExponential {
   qexp: (_p: number | number[], rate: number, lowerTail: boolean, logp: boolean) => number|number[];
 }
 
-export function exponential(
+export function Exponential(
   rng: IRNG = new SuperDuper(0)
 ): IExponential {
   // underlying uniform PRNG
