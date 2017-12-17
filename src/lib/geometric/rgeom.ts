@@ -62,5 +62,5 @@ import { INormal } from '~normal';
 export function rgeom(p: number, normal: INormal): number {
     if (!R_FINITE(p) || p <= 0 || p > 1) ML_ERR_return_NAN;
 
-    return rpois(1, exp_rand(normal.unif_rand) * ((1 - p) / p), normal) as number;
+    return rpois(1, exp_rand(normal.rng.unif_rand) * ((1 - p) / p), normal) as number;
 }

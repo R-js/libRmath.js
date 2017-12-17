@@ -34,9 +34,9 @@ import {
     ML_POSINF
 } from '~common';
 
-import { pnchisq } from '~chi-2';
+import { pnchisq } from '../chi-2/pnchisq';
 import { pnbeta2 } from '../beta/pnbeta';
-import { INormal } from '~normal';
+import { INormal } from '../normal';
 
 export function pnf(x: number, df1: number, df2: number, ncp: number,
     lower_tail: boolean, log_p: boolean, normal: INormal): number {

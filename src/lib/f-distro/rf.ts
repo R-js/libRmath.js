@@ -39,7 +39,7 @@ import * as debug from 'debug';
 
 import { ISNAN, ML_ERR_return_NAN, R_FINITE } from '~common';
 
-import { rchisq } from '~chi-2';
+import { rchisq } from '../chi-2/rchisq';
 import { uniform } from 'src/lib/uniform';
 import { INormal } from '~normal';
 

@@ -46,7 +46,10 @@
 
  * */
 
-import { R_FINITE, NaN, fabs, DBL_MIN, log } from '~common';
+
+const {isFinite:R_FINITE, MIN_VALUE: DBL_MIN, NaN} = Number;
+const { abs:fabs, log} = Math;
+
 
 export function bd0(x: number, np: number): number {
   let ej: number;

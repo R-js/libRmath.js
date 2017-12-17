@@ -28,62 +28,73 @@
  *
  *	The quantile function of the Cauchy distribution.
  */
-
+import * as debug from 'debug';
 import {
-  ISNAN,
-  R_FINITE,
-  ML_POSINF,
   ML_ERR_return_NAN,
-  exp,
-  ML_NEGINF,
   R_Q_P01_check
-
 } from '~common';
-
-const { expm1 }  = Math;
-
 import { tanpi } from '~trigonometry';
 
-export function qcauchy(p: number, location: number, scale: number, lower_tail: boolean, log_p: boolean) {
+const { expm1, exp } = Math;
+const {
+  isNaN: ISNAN,
+  isFinite: R_FINITE,
+  POSITIVE_INFINITY: ML_POSINF,
+  NEGATIVE_INFINITY: ML_NEGINF
+} = Number;
 
-  if (ISNAN(p) || ISNAN(location) || ISNAN(scale))
-    return p + location + scale;
+const printer = debug('qcauchy');
 
-  let rc = R_Q_P01_check(log_p, p);
-  if (rc === undefined) {
-    return rc;
-  }
 
-  if (scale <= 0 || !R_FINITE(scale)) {
-    if (scale === 0) return location;
-  /* else */ return ML_ERR_return_NAN();
-  }
+export function qcauchy<T>(
+  pp: T,
+  location: number,
+  scale: number,
+  lowerTail: boolean,
+  logP: boolean
+): T {
+  const fp: number[] = Array.isArray(pp) ? pp : ([pp] as any);
 
-  const my_INF = location + (lower_tail ? scale : -scale) * ML_POSINF;
-  if (log_p) {
-    if (p > -1) {
-      /* when ep := exp(p),
+  const result = fp.map(p => {
+    if (ISNAN(p) || ISNAN(location) || ISNAN(scale))
+      return p + location + scale;
+
+    let rc = R_Q_P01_check(logP, p);
+    if (rc === undefined) {
+      return rc;
+    }
+
+    if (scale <= 0 || !R_FINITE(scale)) {
+      if (scale === 0) return location;
+      /* else */ return ML_ERR_return_NAN(printer);
+    }
+
+    const my_INF = location + (lowerTail ? scale : -scale) * ML_POSINF;
+    if (logP) {
+      if (p > -1) {
+        /* when ep := exp(p),
        * tan(pi*ep)= -tan(pi*(-ep))= -tan(pi*(-ep)+pi) = -tan(pi*(1-ep)) =
        *		 = -tan(pi*(-expm1(p))
        * for p ~ 0, exp(p) ~ 1, tan(~0) may be better than tan(~pi).
        */
-      if (p === 0.) /* needed, since 1/tan(-0) = -Inf  for some arch. */
-        return my_INF;
-      lower_tail = !lower_tail;
-      p = -expm1(p);
-    } else
-      p = exp(p);
-  } else {
-    if (p > 0.5) {
-      if (p === 1.)
-        return my_INF;
-      p = 1 - p;
-      lower_tail = !lower_tail;
+        if (p === 0)
+          /* needed, since 1/tan(-0) = -Inf  for some arch. */
+          return my_INF;
+        lowerTail = !lowerTail;
+        p = -expm1(p);
+      } else p = exp(p);
+    } else {
+      if (p > 0.5) {
+        if (p === 1) return my_INF;
+        p = 1 - p;
+        lowerTail = !lowerTail;
+      }
     }
-  }
 
-  if (p === 0.5) return location; // avoid 1/Inf below
-  if (p === 0.) return location + (lower_tail ? scale : -scale) * ML_NEGINF; // p = 1. is handled above
-  return location + (lower_tail ? -scale : scale) / tanpi(p);
-  /*	-1/tan(pi * p) = -cot(pi * p) = tan(pi * (p - 1/2))  */
+    if (p === 0.5) return location; // avoid 1/Inf below
+    if (p === 0) return location + (lowerTail ? scale : -scale) * ML_NEGINF; // p = 1. is handled above
+    return location + (lowerTail ? -scale : scale) / tanpi(p);
+    /*	-1/tan(pi * p) = -cot(pi * p) = tan(pi * (p - 1/2))  */
+  });
+  return result.length === 1 ? result[0] : (result as any);
 }

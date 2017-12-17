@@ -169,7 +169,7 @@ export function rhyper(
       return rbinom(kkin, nn1in / (nn1in + nn2in), normal);
     }
     // Slow, but safe: return  F^{-1}(U)  where F(.) = phyper(.) and  U ~ U[0,1]
-    return qhyper(normal.unif_rand(), nn1in, nn2in, kkin, false, false);
+    return qhyper(normal.rng.unif_rand(), nn1in, nn2in, kkin, false, false);
   }
   nn1 = nn1in;
   nn2 = nn2in;
@@ -255,7 +255,7 @@ export function rhyper(
     while (true) {
       p = w;
       ix = minjx;
-      u = normal.unif_rand() * scale;
+      u = normal.rng.unif_rand() * scale;
 
       REprintf('  _new_ u = %g\n', u);
 
@@ -326,8 +326,8 @@ export function rhyper(
     //L30:
     let goto_L30 = false;
     while (true) {
-      let u = normal.unif_rand() * p3;
-      let v = normal.unif_rand();
+      let u = normal.rng.unif_rand() * p3;
+      let v = normal.rng.unif_rand();
       n_uv++;
       if (n_uv >= 10000) {
         REprintf('rhyper() branch III: giving up after %d rejections', n_uv);

@@ -39,7 +39,7 @@ import {
     ML_VALID
 } from '~common';
 
-import { pchisq } from '~chi-2';
+import { pchisq } from '../chi-2/pchisq';
 import { pbeta } from '../beta/pbeta';
 
 import { INormal } from '~normal';

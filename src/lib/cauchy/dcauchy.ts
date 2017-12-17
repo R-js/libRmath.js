@@ -32,29 +32,35 @@
  *
  *    The density of the Cauchy distribution.
  */
+import * as debug from 'debug';
+import { ML_ERR_return_NAN } from '~common';
 
-import {
-    ISNAN,
-    ML_ERR_return_NAN,
-    M_PI,
-    log
-} from '~common';
+const { isNaN: ISNAN } = Number;
+const { PI: M_PI, log } = Math;
+const printer = debug('dcauchy');
 
-
-export function dcauchy(x: number, location: number, scale: number, give_log: boolean) {
-
+export function dcauchy<T>(
+  xx: T,
+  location: number,
+  scale: number,
+  giveLog: boolean
+): T {
+  const fx: number[] = Array.isArray(xx) ? xx : ([xx] as any);
+  const result = fx.map(x => {
     let y: number;
     /* NaNs propagated correctly */
     if (ISNAN(x) || ISNAN(location) || ISNAN(scale)) {
-        return x + location + scale;
+      return x + location + scale;
     }
 
     if (scale <= 0) {
-        return ML_ERR_return_NAN();
+      return ML_ERR_return_NAN(printer);
     }
 
     y = (x - location) / scale;
-    return give_log ?
-        - log(M_PI * scale * (1. + y * y)) :
-        1. / (M_PI * scale * (1. + y * y));
+    return giveLog
+      ? -log(M_PI * scale * (1 + y * y))
+      : 1 / (M_PI * scale * (1 + y * y));
+  });
+  return result.length === 1 ? result[0] : (result as any);
 }

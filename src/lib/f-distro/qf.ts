@@ -38,7 +38,7 @@ import {
 } from '~common';
 
 import { qbeta } from '../beta/qbeta';
-import { qchisq } from '~chi-2';
+import { qchisq } from '../chi-2/qchisq';
 import { INormal } from '~normal';
 
 export function qf(

@@ -101,3 +101,7 @@ export function tanpi(x: number): number {
   }
   return x === 0 ? 0 : x === 0.5 ? ML_NAN : Math.tan(M_PI * x);
 }
+
+export function atanpi(x: number) {
+  return Math.atan(x) / Math.PI;
+}

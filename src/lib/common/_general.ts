@@ -487,10 +487,6 @@ export function iF77_NAME(i: number) {
 
 export const ftrunc = trunc;
 
-export const atanpi = (x: number) => {
-    return Math.atan(x) / Math.PI;
-};
-
 
 export function R_D_log(log_p: boolean, p: number) {
     return (log_p ? (p) : log(p)); 	/* log(p) */

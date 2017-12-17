@@ -118,7 +118,7 @@ export function rbinom(nin: number, pp: number, normal: INormal): number {
     /* evade integer overflow,
             and r == INT_MAX gave only even values */
     return qbinom(
-      normal.unif_rand(),
+      normal.rng.unif_rand(),
       r,
       pp,
       /*lower_tail*/ false,
@@ -174,8 +174,8 @@ export function rbinom(nin: number, pp: number, normal: INormal): number {
   /*-------------------------- np = n*p >= 30 : ------------------- */
   let gotoFinis = false;
   while (true && !gotoL_np_small) {
-    u = normal.unif_rand() * p4;
-    v = normal.unif_rand();
+    u = normal.rng.unif_rand() * p4;
+    v = normal.rng.unif_rand();
     /* triangular region */
     if (u <= p1) {
       ix = xm - p1 * v + u;
@@ -269,7 +269,7 @@ export function rbinom(nin: number, pp: number, normal: INormal): number {
     while (true) {
       ix = 0;
       f = qn;
-      u = normal.unif_rand();
+      u = normal.rng.unif_rand();
       while (true) {
         if (u < f) {
           //goto finis;

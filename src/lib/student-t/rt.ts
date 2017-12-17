@@ -36,7 +36,7 @@ import { ML_ERR_return_NAN } from '~common';
 
 import { INormal } from '~normal';
 
-import { rchisq } from '~chi-2';
+import { rchisq } from '../chi-2/rchisq';
 
 const { sqrt } = Math;
 const { isNaN: ISNAN, isFinite: R_FINITE } = Number;
@@ -52,12 +52,12 @@ export function rt(
       return ML_ERR_return_NAN(printer);
     }
 
-    if (!R_FINITE(df)) return normal.norm_rand();
+    if (!R_FINITE(df)) return normal.rng.norm_rand();
     else {
       /* Some compilers (including MW6) evaluated this from right to left
             return norm_rand() / sqrt(rchisq(df) / df); */
 
-      let num = normal.norm_rand();
+      let num = normal.rng.norm_rand();
       return num / sqrt((rchisq(1, df, normal) as number) / df);
     }
   });

@@ -24,22 +24,26 @@
 */
 
 import * as debug from 'debug';
-
+import { IRNG } from '../rng';
 import { ML_ERR_return_NAN } from '~common';
 
 const { isFinite: R_FINITE } = Number;
 const printer = debug('runif');
 
-export function runif(n: number = 1, a: number = 0, b: number= 1 , unif_rand: () => number): number|number[] {
-    
-    if (!(R_FINITE(a) && R_FINITE(b) && b > a)) {
-        return ML_ERR_return_NAN(printer);
-    }
-    
-    let result = new Array(n).fill(0).map( () => {
-        const s = unif_rand();
-        return (b - a) * s + a;
-    });
+export function runif(
+  n: number = 1,
+  a: number = 0,
+  b: number = 1,
+  u: IRNG 
+): number | number[] {
+  if (!(R_FINITE(a) && R_FINITE(b) && b > a)) {
+    return ML_ERR_return_NAN(printer);
+  }
 
-    return result.length === 1 ? result[0] : result;
+  let result = new Array(n).fill(0).map(() => {
+    const s = u.unif_rand();
+    return (b - a) * s + a;
+  });
+
+  return result.length === 1 ? result[0] : result;
 }

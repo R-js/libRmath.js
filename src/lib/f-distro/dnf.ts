@@ -47,7 +47,7 @@ import {
     log
 } from '~common';
 
-import { dnchisq } from '~chi-2';
+import { dnchisq } from '../chi-2/dnchisq';
 import { dgamma } from '~gamma';
 import { log1p } from '~log';
 import { dnbeta } from '../beta/dnbeta';

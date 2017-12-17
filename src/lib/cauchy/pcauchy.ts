@@ -27,49 +27,55 @@
  *
  *	The distribution function of the Cauchy distribution.
  */
+import * as debug from 'debug';
 
-import {
-    atanpi,
-    ISNAN,
-    ML_ERR_return_NAN,
-    R_FINITE,
-    R_DT_0,
-    R_DT_1,
-    fabs,
-    R_D_val
-} from '~common';
+import { ML_ERR_return_NAN, R_DT_0, R_DT_1, R_D_val } from '~common';
 
 import { R_D_Clog } from '~log';
+import { atanpi } from '~trigonometry';
 
-export function pcauchy(x: number, location: number, scale: number, lower_tail: boolean, log_p: boolean): number {
+const { isNaN: ISNAN, isFinite: R_FINITE } = Number;
+const { abs: fabs } = Math;
 
+const printer = debug('pcauchy');
+
+export function pcauchy<T>(
+  xx: T,
+  location: number,
+  scale: number,
+  lowerTail: boolean = true,
+  logP: boolean = false
+): T {
+  const fx: number[] = Array.isArray(xx) ? xx : ([xx] as any);
+
+  const result = fx.map(x => {
     if (ISNAN(x) || ISNAN(location) || ISNAN(scale))
-        return x + location + scale;
+      return x + location + scale;
 
     if (scale <= 0) {
-        return ML_ERR_return_NAN();
+      return ML_ERR_return_NAN(printer);
     }
 
     x = (x - location) / scale;
     if (ISNAN(x)) {
-        return ML_ERR_return_NAN();
+      return ML_ERR_return_NAN(printer);
     }
 
     if (!R_FINITE(x)) {
-        if (x < 0) return R_DT_0(lower_tail, log_p);
-        else return R_DT_1(lower_tail, log_p);
+      if (x < 0) return R_DT_0(lowerTail, logP);
+      else return R_DT_1(lowerTail, logP);
     }
 
-    if (!lower_tail)
-        x = -x;
+    if (!lowerTail) x = -x;
     /* for large x, the standard formula suffers from cancellation.
      * This is from Morten Welinder thanks to  Ian Smith's  atan(1/x) : */
 
     if (fabs(x) > 1) {
-        let y = atanpi(1 / x);
-        return (x > 0) ? R_D_Clog(log_p, y) : R_D_val(log_p, -y);
+      let y = atanpi(1 / x);
+      return x > 0 ? R_D_Clog(logP, y) : R_D_val(logP, -y);
     } else {
-        return R_D_val(log_p, 0.5 + atanpi(x));
+      return R_D_val(logP, 0.5 + atanpi(x));
     }
-
+  });
+  return result.length === 1 ? result[0] : (result as any);
 }

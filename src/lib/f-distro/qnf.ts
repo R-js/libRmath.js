@@ -33,7 +33,7 @@ import {
   R_Q_P01_boundaries
 } from '~common';
 
-import { qnchisq } from '~chi-2';
+import { qnchisq } from '../chi-2/qnchisq';
 import { qnbeta } from '../beta/qnbeta';
 import { INormal } from '~normal';
 

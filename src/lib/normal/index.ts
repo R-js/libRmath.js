@@ -25,22 +25,18 @@ export interface INormal {
     lower_tail: boolean,
     log_p: boolean
   ) => T;
-  unif_rand: () => number;
-  norm_rand: () => number;
+  rng: IRNGNormal;
 }
 
 export function normal(rng: IRNGNormal = new BoxMuller( new SuperDuper(0))): INormal {
  
-  const norm_rand: () => number = rng.norm_rand.bind(rng);
-  // underlying uniform PRNG
-  const unif_rand: () => number = rng.unif_rand.bind(rng);
+  
   return {
     rnorm: (n: number = 1, mu: number = 0, sigma = 1) =>
-      rnorm(n, mu, sigma, norm_rand),
+      rnorm(n, mu, sigma, rng.norm_rand),
     dnorm,
     pnorm,
     qnorm,
-    unif_rand,
-    norm_rand
+    rng,
   };
 }

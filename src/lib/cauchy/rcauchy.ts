@@ -31,21 +31,26 @@
  *    Random variates from the Cauchy distribution.
  */
 
-import {
-    ISNAN,
-    R_FINITE,
-    ML_ERR_return_NAN,
-    M_PI
-} from '~common';
+import * as debug from 'debug';
+import { ML_ERR_return_NAN } from '~common';
+import { IRNG } from '../rng';
 
+const { isNaN: ISNAN, isFinite: R_FINITE } = Number;
+const { PI: M_PI } = Math;
+const printer = debug('rcauchy');
 
-
-export function rcauchy(location: number, scale: number, unif_rand: () => number): number {
+export function rcauchy(
+  n: number = 1,
+  location: number,
+  scale: number,
+  rng: IRNG
+): number | number[] {
+  const result = new Array(n).fill(0).map(() => {
     if (ISNAN(location) || !R_FINITE(scale) || scale < 0) {
-        return ML_ERR_return_NAN();
+      return ML_ERR_return_NAN(printer);
     }
-    if (scale === 0. || !R_FINITE(location))
-        return location;
-    else
-        return location + scale * Math.tan(M_PI * unif_rand());
+    if (scale === 0 || !R_FINITE(location)) return location;
+    else return location + scale * Math.tan(M_PI * rng.unif_rand());
+  });
+  return result.length === 1 ? result[0] : result;
 }
