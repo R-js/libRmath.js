@@ -42,13 +42,18 @@ const printer = debug('pbinom');
 const { floor,  round: R_forceint  } = Math;
 const { isNaN: ISNAN, isFinite: R_FINITE } = Number;
 
-export function pbinom(
-  x: number,
+export function pbinom<T>(
+  xx: T,
   n: number,
   p: number,
   lower_tail: boolean,
   log_p: boolean
-): number {
+): T {
+
+  const fx: number[] = Array.isArray(xx) ? xx :[xx] as any;
+  
+  const result = fx.map(x => {
+
   if (ISNAN(x) || ISNAN(n) || ISNAN(p)) return x + n + p;
   if (!R_FINITE(n) || !R_FINITE(p)) {
     return ML_ERR_return_NAN(printer);
@@ -68,4 +73,8 @@ export function pbinom(
   x = floor(x + 1e-7);
   if (n <= x) return R_DT_1(lower_tail, log_p);
   return pbeta(p, x + 1, n - x, !lower_tail, log_p);
+  });
+
+  return result.length === 1 ? result[0] : result as any;
+
 }

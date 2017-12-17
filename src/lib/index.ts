@@ -6,6 +6,7 @@ export { rng, IRNG } from './rng';
 export { beta } from '~beta';
 export { poisson } from './poisson';
 export { cauchy } from './cauchy';
+export { binomial } from './binomial';
 
 import { special as betaSpecial } from '~beta';
 import { special as gammaSpecial } from '~gamma';
@@ -22,7 +23,7 @@ export const special = Object.freeze({
 
 export * from './bessel';
 //export * from './beta';
-export * from './binomial';
+
 export * from './chebyshev';
 export * from './chi-2';
 //export * from './common';

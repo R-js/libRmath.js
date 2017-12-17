@@ -43,6 +43,8 @@ import {
     R_Q_P01_boundaries
 } from '~common';
 
+import { IRNG } from '../rng';
+
 const { max:fmax2, min:fmin2, floor, sqrt} = Math;
 const { isNaN: ISNAN, isFinite: R_FINITE, EPSILON: DBL_EPSILON, } = Number;
 
@@ -90,10 +92,10 @@ export function qbinom<T>(
     pr: number = 0.5, 
     lowerTail: boolean = true, 
     logP: boolean = false, 
-    normal: INormal
+    rng: INormal
 ): T {
     const fp: number[] = Array.isArray(pp) ? pp :[pp] as any;
-    const result = fp.map(p => _qbinom(p, n, pr, lowerTail, logP, normal));
+    const result = fp.map(p => _qbinom(p, n, pr, lowerTail, logP, rng));
      
     return result.length === 1 ? result[0] : result as any;
 }

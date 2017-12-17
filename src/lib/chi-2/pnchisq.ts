@@ -31,18 +31,23 @@
 import * as debug from 'debug';
 
 import {
-  M_LN2,
-  DBL_MIN_EXP,
   ML_ERR_return_NAN,
   ME,
   ML_ERROR,
   R_D__1,
-  M_LN10,
   R_D_exp,
   R_DT_0,
   R_DT_1,
   M_LN_SQRT_2PI
 } from '~common';
+
+
+import { R_DT_val } from '../log/log1p';
+import { R_Log1_Exp } from '~exp-utils';
+import { lgammafn } from '../gamma/lgamma_fn';
+import { logspace_add } from '../gamma/logspace-add';
+import { pchisq } from './pchisq';
+import { INormal } from '~normal';
 
 const { 
   sqrt, 
@@ -50,7 +55,9 @@ const {
   exp, 
   log, 
   min: fmin2, 
-  max: fmax2 
+  max: fmax2,
+  LN2: M_LN2,
+  LN10: M_LN10
 } = Math;
 
 const {
@@ -60,22 +67,14 @@ const {
   NEGATIVE_INFINITY: ML_NEGINF
 } = Number;
 
-import { R_DT_val } from '~log';
-
-import { R_Log1_Exp } from '~exp-utils';
-
-import { lgammafn } from '../gamma/lgamma_fn';
-
-import { logspace_add } from '../gamma/logspace-add';
-
-import { pchisq } from './pchisq';
-
-import { INormal } from '~normal';
+export const DBL_MAX_EXP = Math.log2(Number.MAX_VALUE);
+export const DBL_MIN_EXP = Math.log2(Number.MIN_VALUE);
 
 const _dbl_min_exp = M_LN2 * DBL_MIN_EXP;
 /*= -708.3964 for IEEE double precision */
 const { expm1, log1p } = Math;
 const printer = debug('pnchisq');
+
 
 export function pnchisq(
   x: number,
@@ -89,11 +88,11 @@ export function pnchisq(
 
   if (ISNAN(x) || ISNAN(df) || ISNAN(ncp)) return x + df + ncp;
   if (!R_FINITE(df) || !R_FINITE(ncp)) {
-    return ML_ERR_return_NAN();
+    return ML_ERR_return_NAN(printer);
   }
 
   if (df < 0 || ncp < 0) {
-    return ML_ERR_return_NAN();
+    return ML_ERR_return_NAN(printer);
   }
 
   ans = pnchisq_raw(
@@ -114,7 +113,7 @@ export function pnchisq(
       /* !lower_tail */
       /* since we computed the other tail cancellation is likely */
       if (ans < (log_p ? -10 * M_LN10 : 1e-10))
-        ML_ERROR(ME.ME_PRECISION, 'pnchisq');
+        ML_ERROR(ME.ME_PRECISION, 'pnchisq', printer);
       if (!log_p) ans = fmax2(ans, 0.0); /* Precaution PR#7099 */
     }
   }

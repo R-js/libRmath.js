@@ -60,7 +60,7 @@ import {
   sqrt
 } from '~common';
 
-import { rbinom } from '~binomial';
+import { rbinom } from '../binomial/rbinom';
 
 import { qhyper } from './qhyper';
 
@@ -166,7 +166,7 @@ export function rhyper(
     // Johnson, Kotz,.. p.258 (top) mention the *four* different binomial approximations
     if (kkin === 1) {
       // Bernoulli
-      return rbinom(kkin, nn1in / (nn1in + nn2in), normal);
+      return rbinom(1, kkin, nn1in / (nn1in + nn2in), normal) as number;
     }
     // Slow, but safe: return  F^{-1}(U)  where F(.) = phyper(.) and  U ~ U[0,1]
     return qhyper(normal.rng.unif_rand(), nn1in, nn2in, kkin, false, false);

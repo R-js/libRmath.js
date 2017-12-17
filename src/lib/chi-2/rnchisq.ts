@@ -60,7 +60,7 @@
 
 import * as debug from 'debug';
 
-import { R_FINITE, ML_ERR_return_NAN } from '~common';
+import { ML_ERR_return_NAN } from '~common';
 
 import { rgamma } from '~gamma';
 import { rpois } from '~poisson';
@@ -69,6 +69,7 @@ import { INormal } from '~normal';
 //import { unwatchFile } from 'fs';
 
 const printer = debug('rnchisq');
+const { isFinite:R_FINITE } = Number;
 
 export function rnchisq(
   n: number = 1,

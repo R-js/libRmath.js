@@ -41,9 +41,8 @@
 
 import { ML_ERROR, ME, R_FINITE, fabs, MATHLIB_ERROR } from '~common';
 
-import { rbinom } from '~binomial';
-import { INormal } from '~normal';
-//#define ML_ERR_ret_NAN(_k_) {ML_ERROR(ME_DOMAIN, "rmultinom"); rN[_k_]=-1; return;}
+import { rbinom } from '../binomial/rbinom';
+import { INormal } from '../normal';
 
 export const ML_ERR_ret_NAN = (_k_: number, rN: number[]): void => {
   ML_ERROR(ME.ME_DOMAIN, 'rmultinom');
@@ -103,7 +102,7 @@ export function rmultinom(
       /* printf("[%d] %.17f\n", k+1, pp); */
       rN[k] =
         pp < 1
-          ? rbinom(n, pp, normal)
+          ? rbinom(1, n, pp, normal) as number
           : /*>= 1; > 1 happens because of rounding */
             n;
       n -= rN[k];

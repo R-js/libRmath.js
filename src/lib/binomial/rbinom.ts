@@ -39,19 +39,29 @@
  *	(Algorithm BTPEC).
  */
 import * as debug from 'debug';
-import { 
-  ML_ERR_return_NAN, 
-  R_pow_di 
-} from '~common';
+import { ML_ERR_return_NAN, R_pow_di } from '~common';
 
 import { qbinom } from './qbinom';
-import { INormal } from '~normal';
+import { INormal } from '../normal';
 
 const { log, abs: fabs, sqrt, min: fmin2, round: R_forceint } = Math;
 const { MAX_SAFE_INTEGER: INT_MAX, isFinite: R_FINITE } = Number;
-const printer = debug('rbinom');
+const printer = debug('_rbinom');
 
-export function rbinom(nin: number, pp: number, normal: INormal): number {
+export function rbinom(
+  N: number = 1,
+  nin: number,
+  pp: number,
+  normal: INormal
+): number | number[] {
+  const result = new Array(N).fill(0).map(() => {
+    return _rbinom(nin, pp, normal);
+  });
+
+  return result.length === 1 ? result[0] : (result as any);
+}
+
+function _rbinom(nin: number, pp: number, normal: INormal): number {
   /* FIXME: These should become THREAD_specific globals : */
 
   let c = 0;

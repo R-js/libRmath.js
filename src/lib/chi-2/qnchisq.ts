@@ -86,7 +86,7 @@ function _qnchisq(
 
   if (ISNAN(p) || ISNAN(df) || ISNAN(ncp)) return p + df + ncp;
 
-  if (!R_FINITE(df)) ML_ERR_return_NAN;
+  if (!R_FINITE(df)) ML_ERR_return_NAN(printer);
 
   /* Was
      * df = floor(df + 0.5);

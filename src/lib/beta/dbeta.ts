@@ -69,6 +69,7 @@ const {
 const printer = debug('dbeta');
 
 export function dbeta<T>(_x: T, a: number, b: number, give_log: boolean): T {
+  
   const fa: number[] = Array.isArray(_x) ? _x : ([_x] as any);
 
   const result = fa.map(x => {
