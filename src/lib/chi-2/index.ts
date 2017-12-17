@@ -1,9 +1,58 @@
-import { dchisq } from './dchisq';
-import { dnchisq } from './dnchisq';
-import { pchisq } from './pchisq';
-import { pnchisq } from './pnchisq';
-import { qchisq } from './qchisq';
-import { qnchisq } from './qnchisq';
-import { rchisq } from './rchisq';
-import { rnchisq } from './rnchisq';
+import { dchisq as _dchisq } from './dchisq';
+import { dnchisq as _dnchisq } from './dnchisq';
+import { pchisq as _pchisq } from './pchisq';
+import { pnchisq as _pnchisq } from './pnchisq';
+import { qchisq as _qchisq } from './qchisq';
+import { qnchisq as _qnchisq } from './qnchisq';
+import { rchisq as _rchisq } from './rchisq';
+import { rnchisq as _rnchisq } from './rnchisq';
+//
+import { INormal, normal } from '../normal';
 
+export function chiSquared(rng: INormal = normal()) {
+  function rchisq(n: number = 1, df: number, ncp?: number) {
+    return ncp === undefined
+      ? _rchisq(n, df, rng)
+      : _rnchisq(n, df, ncp / 2, rng);
+  }
+
+  function qchisq(
+    p: number | number[],
+    df: number,
+    ncp?: number,
+    lowerTail: boolean = true,
+    logP: boolean = false
+  ) {
+    return ncp === undefined
+      ? _qchisq(p, df, lowerTail, logP, rng)
+      : _qnchisq(p, df, ncp, lowerTail, logP, rng);
+  }
+
+  function pchisq(
+    p: number | number[],
+    df: number,
+    ncp?: number,
+    lowerTail: boolean = true,
+    logP: boolean = false
+  ) {
+    return ncp === undefined
+      ? _pchisq(p, df, lowerTail, logP, rng)
+      : _qnchisq(p, df, ncp, lowerTail, logP, rng);
+  }
+
+  function dchisq(
+    x: number | number[],
+    df: number,
+    ncp?: number,
+    log: boolean = false
+  ) {
+    return ncp === undefined ? _dchisq(x, df, log) : _dnchisq(x, df, ncp, log);
+  }
+
+  return {
+      dchisq,
+      rchisq,
+      pchisq,
+      qchisq
+  };
+}
