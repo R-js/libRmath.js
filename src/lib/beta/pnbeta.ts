@@ -26,7 +26,7 @@ import { ML_ERR_return_NAN, ML_ERROR, ME, R_P_bounds_01 } from '~common';
 
 import { lgammafn } from '~gamma';
 
-import { Toms708, NumberW } from '~common';
+import { Toms708, NumberW } from '../common/toms708';
 
 const { log1p, floor, max: fmax2, sqrt, log, exp } = Math;
 const { isNaN: ISNAN } = Number;

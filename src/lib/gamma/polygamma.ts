@@ -152,7 +152,7 @@ import {
   MATHLIB_WARNING2
 } from '~common';
 
-import { NumberW } from '~common';
+import { NumberW } from '../common/toms708';
 
 const printer = debug('dpsifn');
 

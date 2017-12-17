@@ -2,7 +2,7 @@ import { dbinom } from './dbinom';
 import { pbinom } from './pbinom';
 import { qbinom } from './qbinom';
 import { rbinom } from './rbinom';
-import { INormal, normal } from '../normal';
+import { INormal, Normal } from '../normal';
 
 export interface IBinomial {
   dbinom: (
@@ -29,7 +29,7 @@ export interface IBinomial {
   rbinom: (N: number, nin: number, pp: number) => number | number[];
 }
 
-export function binomial(rng: INormal = normal()): IBinomial {
+export function Binomial(rng: INormal = Normal()): IBinomial {
   return {
     dbinom: (N: number = 1, x: number, n: number, p: number, logX: boolean) =>
       dbinom(N, x, n, p, logX),

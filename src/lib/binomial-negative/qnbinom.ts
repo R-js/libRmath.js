@@ -47,13 +47,9 @@
 
 import * as debug from 'debug';
 
-import {
-  ML_ERR_return_NAN,
-  R_Q_P01_boundaries,
-  R_DT_0,
-  R_DT_1,
-  NumberW
-} from '~common';
+import { ML_ERR_return_NAN, R_Q_P01_boundaries, R_DT_0, R_DT_1 } from '~common';
+
+import { NumberW } from '../common/toms708';
 
 import { pnbinom } from './pnbinom';
 import { R_DT_qIv } from '~exp-utils';
@@ -111,7 +107,6 @@ function do_search(
 }
 
 const printer_qnbinom = debug('qnbinom');
-
 
 export function qnbinom<T>(
   pp: T,
@@ -195,21 +190,25 @@ export function qnbinom<T>(
   return result.length === 1 ? result[0] : (result as any);
 }
 
-export function qnbinom_mu(
-  p: number,
+export function qnbinom_mu<T>(
+  pp: T,
   size: number,
   mu: number,
   lower_tail: boolean,
   log_p: boolean,
   normal: INormal
-) {
-  /* FIXME!  Implement properly!! (not losing accuracy for very large size (prob ~= 1)*/
-  return qnbinom(
-    p,
-    size,
-    /* prob = */ size / (size + mu),
-    lower_tail,
-    log_p,
-    normal
-  );
+): T {
+  const fp: number[] = Array.isArray(pp) ? pp : ([pp] as any);
+  const result = fp.map(p => {
+    /* FIXME!  Implement properly!! (not losing accuracy for very large size (prob ~= 1)*/
+    return qnbinom(
+      p,
+      size,
+      /* prob = */ size / (size + mu),
+      lower_tail,
+      log_p,
+      normal
+    );
+  });
+  return result.length === 1 ? result[0] : (result as any);
 }

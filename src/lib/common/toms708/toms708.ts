@@ -10,28 +10,9 @@
  *  @author James Curran (j.curran@auckland.ac.nz) (Java version)
 */
 
-const trunc = Math.trunc;
+import{ NumberW } from './NumberW';
 
-
-export class NumberW {
-  private _val: number;
-  constructor(v: number) {
-    this._val = v;
-  }
-  get val() {
-    return this._val;
-  }
-  set val(a: number) {
-    this._val = a;
-  }
-}
-
-
-
-
-import { log } from '~common';
-import { log1p } from '~log';
-
+const { trunc, log, log1p } = Math;
 
 /**
    * Computes the incomplete beta function

@@ -31,7 +31,7 @@ export interface ICauchy {
   ) => number | number[];
 }
 
-export function cauchy(rng: IRNG = new SuperDuper(0)): ICauchy {
+export function Cauchy(rng: IRNG = new SuperDuper(0)): ICauchy {
   return {
     rcauchy: (n: number = 1, location: number, scale: number) =>
       rcauchy(n, location, scale, rng),

@@ -34,7 +34,7 @@ const { floor, max: fmax2 } = Math;
 
 import { pgamma } from '~gamma';
 
-import { NumberW } from '~common';
+import { NumberW } from '../common/toms708';
 
 import { INormal } from '~normal';
 

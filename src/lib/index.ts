@@ -1,13 +1,14 @@
 'use strict';
-export { uniform } from './uniform';
-export { normal } from './normal';
-export { logNormal } from './normal/lognormal';
+export { Uniform } from './uniform';
+export { Normal } from './normal';
+export { LogNormal } from './normal/lognormal';
 export { rng, IRNG } from './rng';
-export { beta } from '~beta';
-export { poisson } from './poisson';
-export { cauchy } from './cauchy';
-export { binomial } from './binomial';
-export { chiSquared } from './chi-2';
+export { Beta } from '~beta';
+export { Poisson } from './poisson';
+export { Cauchy } from './cauchy';
+export { Binomial } from './binomial';
+export { NegativeBinomial } from './binomial-negative';
+export { ChiSquared } from './chi-2';
 import { special as betaSpecial } from '~beta';
 import { special as gammaSpecial } from '~gamma';
 

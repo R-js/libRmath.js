@@ -49,7 +49,7 @@ import {
   MATHLIB_WARNING4
 } from '~common';
 
-import { Toms708, NumberW } from '~common';
+import { Toms708, NumberW } from '../common/toms708';
 
 export function pbeta_raw(
   x: number,

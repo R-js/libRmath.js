@@ -39,7 +39,7 @@ const { isNaN: ISNAN, isFinite: R_FINITE } = Number;
 const { floor } = Math;
 
 import { pbeta } from '../beta/pbeta';
-import { Toms708, NumberW } from '~common';
+import { Toms708, NumberW } from '../common/toms708';
 
 const printer = debug('pnbinom');
 
@@ -47,78 +47,82 @@ export function pnbinom<T>(
   xx: T,
   size: number,
   prob: number,
-  lower_tail: boolean,
-  log_p: boolean
+  lowerTail: boolean,
+  logP: boolean
 ): T {
-  
-  const fx: number[] = Array.isArray(xx) ? xx :[xx] as any;
+  const fx: number[] = Array.isArray(xx) ? xx : ([xx] as any);
 
   const result = fx.map(x => {
-  if (ISNAN(x) || ISNAN(size) || ISNAN(prob)) return x + size + prob;
-  if (!R_FINITE(size) || !R_FINITE(prob)) {
-    return ML_ERR_return_NAN(printer);
-  }
+    if (ISNAN(x) || ISNAN(size) || ISNAN(prob)) return x + size + prob;
+    if (!R_FINITE(size) || !R_FINITE(prob)) {
+      return ML_ERR_return_NAN(printer);
+    }
 
-  if (size < 0 || prob <= 0 || prob > 1) {
-    return ML_ERR_return_NAN(printer);
-  }
+    if (size < 0 || prob <= 0 || prob > 1) {
+      return ML_ERR_return_NAN(printer);
+    }
 
-  /* limiting case: point mass at zero */
-  if (size === 0)
-    return x >= 0 ? R_DT_1(lower_tail, log_p) : R_DT_0(lower_tail, log_p);
+    /* limiting case: point mass at zero */
+    if (size === 0)
+      return x >= 0 ? R_DT_1(lowerTail, logP) : R_DT_0(lowerTail, logP);
 
-  if (x < 0) return R_DT_0(lower_tail, log_p);
-  if (!R_FINITE(x)) return R_DT_1(lower_tail, log_p);
-  x = floor(x + 1e-7);
-  return pbeta(prob, size, x + 1, lower_tail, log_p);
+    if (x < 0) return R_DT_0(lowerTail, logP);
+    if (!R_FINITE(x)) return R_DT_1(lowerTail, logP);
+    x = floor(x + 1e-7);
+    return pbeta(prob, size, x + 1, lowerTail, logP);
   });
 
-  return result.length === 1 ? result[0] :result as any;
+  return result.length === 1 ? result[0] : (result as any);
 }
 
 const printer_pnbinom_mu = debug('printer_pnbinom_mu');
 
-export function pnbinom_mu(
-  x: number,
+export function pnbinom_mu<T>(
+  xx: T,
   size: number,
   mu: number,
-  lower_tail: boolean,
-  log_p: boolean
-): number {
-  if (ISNAN(x) || ISNAN(size) || ISNAN(mu)) return x + size + mu;
-  if (!R_FINITE(size) || !R_FINITE(mu)) ML_ERR_return_NAN(printer_pnbinom_mu);
+  lowerTail: boolean,
+  logP: boolean
+): T {
+  const fx: number[] = Array.isArray(xx) ? xx : ([xx] as any);
+  const result = fx.map(x => {
+    if (ISNAN(x) || ISNAN(size) || ISNAN(mu)) return x + size + mu;
+    if (!R_FINITE(size) || !R_FINITE(mu)) ML_ERR_return_NAN(printer_pnbinom_mu);
 
-  if (size < 0 || mu < 0) ML_ERR_return_NAN(printer_pnbinom_mu);
+    if (size < 0 || mu < 0) ML_ERR_return_NAN(printer_pnbinom_mu);
 
-  /* limiting case: point mass at zero */
-  if (size === 0)
-    return x >= 0 ? R_DT_1(lower_tail, log_p) : R_DT_0(lower_tail, log_p);
+    /* limiting case: point mass at zero */
+    if (size === 0)
+      return x >= 0 ? R_DT_1(lowerTail, logP) : R_DT_0(lowerTail, logP);
 
-  if (x < 0) return R_DT_0(lower_tail, log_p);
-  if (!R_FINITE(x)) return R_DT_1(lower_tail, log_p);
-  x = floor(x + 1e-7);
-  /* return
-     * pbeta(pr, size, x + 1, lower_tail, log_p);  pr = size/(size + mu), 1-pr = mu/(size+mu)
+    if (x < 0) return R_DT_0(lowerTail, logP);
+    if (!R_FINITE(x)) return R_DT_1(lowerTail, logP);
+    x = floor(x + 1e-7);
+    /* return
+     * pbeta(pr, size, x + 1, lowerTail, logP);  pr = size/(size + mu), 1-pr = mu/(size+mu)
      *
-     *= pbeta_raw(pr, size, x + 1, lower_tail, log_p)
+     *= pbeta_raw(pr, size, x + 1, lowerTail, logP)
      *            x.  pin   qin
-     *=  bratio (pin,  qin, x., 1-x., &w, &wc, &ierr, log_p),  and return w or wc ..
-     *=  bratio (size, x+1, pr, 1-pr, &w, &wc, &ierr, log_p) */
-  {
-    let ierr = new NumberW(0);
-    let w = new NumberW(0);
-    let wc = new NumberW(0);
-    Toms708.bratio(
-      size,
-      x + 1,
-      size / (size + mu),
-      mu / (size + mu),
-      w,
-      wc,
-      ierr,
-      log_p
-    );
-    if (ierr) printer('pnbinom_mu() -> bratio() gave error code %d', ierr.val);
-    return lower_tail ? w.val : wc.val;
-  }
+     *=  bratio (pin,  qin, x., 1-x., &w, &wc, &ierr, logP),  and return w or wc ..
+     *=  bratio (size, x+1, pr, 1-pr, &w, &wc, &ierr, logP) */
+    {
+      let ierr = new NumberW(0);
+      let w = new NumberW(0);
+      let wc = new NumberW(0);
+      Toms708.bratio(
+        size,
+        x + 1,
+        size / (size + mu),
+        mu / (size + mu),
+        w,
+        wc,
+        ierr,
+        logP
+      );
+      if (ierr)
+        printer('pnbinom_mu() -> bratio() gave error code %d', ierr.val);
+      return lowerTail ? w.val : wc.val;
+    }
+  });
+  return result.length === 1 ? result[0] : (result as any);
 }

@@ -87,7 +87,10 @@ export function rnbinom(
 
 const printer_rnbinom_mu = debug('rnbinom_mu');
 
-export function rnbinom_mu(size: number, mu: number, normal: INormal): number {
+export function rnbinom_mu(n: number= 1, size: number, mu: number, normal: INormal): number| number[] {
+
+  const result = new Array(n).fill(0).map(() => {
+
   if (!R_FINITE(size) || !R_FINITE(mu) || size <= 0 || mu < 0) {
     return ML_ERR_return_NAN(printer_rnbinom_mu);
   }
@@ -98,4 +101,7 @@ export function rnbinom_mu(size: number, mu: number, normal: INormal): number {
         rgamma(1, size, mu / size, normal) as number,
         normal
       ) as number);
+
+});
+return result.length === 1 ? result[0] :result ;
 }

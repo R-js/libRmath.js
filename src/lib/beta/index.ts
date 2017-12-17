@@ -20,7 +20,7 @@ import { rbeta as _rbeta } from './rbeta';
 import { rnchisq } from '../chi-2/rnchisq';
 import { rchisq } from '../chi-2/rchisq';
 
-import { INormal, normal } from '~normal';
+import { INormal, Normal } from '~normal';
 
 export const special = {
   beta,
@@ -91,7 +91,7 @@ function rbeta(
   }
 }
 
-function NSbeta(norm: INormal = normal()) {
+function NSbeta(norm: INormal = Normal()) {
   return Object.freeze({
     rbeta: (
       n: number = 1,
@@ -125,4 +125,4 @@ function NSbeta(norm: INormal = normal()) {
   });
 }
 
-export { NSbeta as beta };
+export { NSbeta as Beta };

@@ -44,7 +44,7 @@ const {
   isFinite: R_FINITE
 } = Number;
 
-import { NumberW } from '~common';
+import { NumberW } from '../common/toms708';
 
 import { ppois } from './ppois';
 

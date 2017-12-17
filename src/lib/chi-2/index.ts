@@ -7,9 +7,9 @@ import { qnchisq as _qnchisq } from './qnchisq';
 import { rchisq as _rchisq } from './rchisq';
 import { rnchisq as _rnchisq } from './rnchisq';
 //
-import { INormal, normal } from '../normal';
+import { INormal, Normal } from '../normal';
 
-export function chiSquared(rng: INormal = normal()) {
+export function ChiSquared(rng: INormal = Normal()) {
   function rchisq(n: number = 1, df: number, ncp?: number) {
     return ncp === undefined
       ? _rchisq(n, df, rng)

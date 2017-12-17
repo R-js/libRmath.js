@@ -80,7 +80,7 @@ const { isNaN: ISNAN, isFinite: R_FINITE, EPSILON: DBL_EPSILON } = Number;
 const { trunc, log, exp, abs: fabs, log1p } = Math;
 const { isArray } = Array;
 
-import { NumberW } from '~common';
+import { NumberW } from '../common/toms708';
 
 const SIXTEN = 16; /* Cutoff allowing exact "*" and "/" */
 const printer = debug('pnorm5');

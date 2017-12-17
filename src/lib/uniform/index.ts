@@ -28,7 +28,7 @@ export interface IUniform {
   ) => number | number[];
 }
 
-export function uniform(rng: IRNG = new SuperDuper(0)) {
+export function Uniform(rng: IRNG = new SuperDuper(0)) {
   return {
     runif: (n: number = 1, a: number = 0, b: number = 1) =>
       runif(n, a, b, rng),

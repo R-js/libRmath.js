@@ -5,7 +5,7 @@ import { rgamma } from './rgamma';
 import { pgamma } from './pgamma';
 import { gammafn } from './gamma_fn';
 import { lgammafn } from './lgamma_fn';
-import { normal, INormal } from '../normal';
+import { Normal, INormal } from '../normal';
 import {
   pentagamma,
   tetragamma,
@@ -60,7 +60,7 @@ export interface IGamma {
   ) => number | number[];
 }
 
-export function gamma(norm: INormal = normal()): IGamma {
+export function gamma(norm: INormal = Normal()): IGamma {
   return {
     dgamma: (
       x: number | number[],

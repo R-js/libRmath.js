@@ -5,7 +5,7 @@ import { qpois } from './qpois';
 
 export { dpois_raw, rpois }; //needed for rnbinom
 
-import { INormal, normal } from '../normal';
+import { INormal, Normal } from '../normal';
 
 export interface IPoisson {
   rpois: (n: number, lambda: number) => number | number[];
@@ -28,7 +28,7 @@ export interface IPoisson {
   ) => number | number[];
 }
 
-export function poisson(norm: INormal = normal()): IPoisson {
+export function Poisson(norm: INormal = Normal()): IPoisson {
   return {
     rpois: (n: number = 1, lambda: number = 1) => rpois(n, lambda, norm),
     dpois: (x: number | number[], lambda: number = 1, logP: boolean = false) =>

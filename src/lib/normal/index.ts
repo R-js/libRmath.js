@@ -28,7 +28,7 @@ export interface INormal {
   rng: IRNGNormal;
 }
 
-export function normal(rng: IRNGNormal = new BoxMuller( new SuperDuper(0))): INormal {
+export function Normal(rng: IRNGNormal = new BoxMuller( new SuperDuper(0))): INormal {
  
   
   return {
