@@ -81,7 +81,7 @@ import { dt } from './dt';
 
 import { INormal } from '~normal';
 
-import { lgammafn } from '~gamma';
+import { lgammafn } from '../gamma/lgamma_fn';
 
 import { pnt } from './pnt';
 

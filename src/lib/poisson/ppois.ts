@@ -32,7 +32,7 @@ const { isNaN: ISNAN, isFinite: R_FINITE } = Number;
 const { isArray } = Array;
 const { floor, max: fmax2 } = Math;
 
-import { pgamma } from '~gamma';
+import { pgamma } from '../gamma/pgamma';
 
 import { NumberW } from '../common/toms708';
 

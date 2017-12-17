@@ -24,7 +24,7 @@ import * as debug from 'debug';
 
 import { ML_ERR_return_NAN, ML_ERROR, ME, R_P_bounds_01 } from '~common';
 
-import { lgammafn } from '~gamma';
+import { lgammafn } from '../gamma/lgamma_fn';
 
 import { Toms708, NumberW } from '../common/toms708';
 

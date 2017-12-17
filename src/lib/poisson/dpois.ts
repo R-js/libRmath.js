@@ -49,7 +49,7 @@ import {
 } from '~common';
 
 import { bd0 } from '~deviance';
-import { lgammafn } from '~gamma';
+import { lgammafn } from '../gamma/lgamma_fn';
 import { stirlerr } from '~stirling';
 
 

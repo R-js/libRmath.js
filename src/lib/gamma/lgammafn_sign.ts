@@ -3,11 +3,10 @@ import * as debug from 'debug';
 
 import {
   M_LN_SQRT_PId2,
-  fmod,
+  fmod, // no math alias for this
   ML_ERROR,
   ME,
   M_LN_SQRT_2PI,
-  MATHLIB_WARNING,
   ML_ERR_return_NAN
 } from '~common';
 
@@ -16,7 +15,7 @@ import { sinpi } from '~trigonometry';
 import { lgammacor } from './lgammacor';
 
 const { isNaN: ISNAN, POSITIVE_INFINITY: ML_POSINF } = Number;
-const { log, abs: fabs, floor, trunc } = Math;
+const { log, abs: fabs, floor, trunc} = Math;
 
 
 const printer_sign = debug('lgammafn_sign');

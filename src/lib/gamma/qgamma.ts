@@ -55,7 +55,9 @@ import {
 
 import { R_DT_log, R_DT_Clog, R_DT_qIv } from '~exp-utils';
 
-import { dgamma, lgammafn, pgamma } from '~gamma';
+import { dgamma } from '../gamma/dgamma';
+import { lgammafn } from '../gamma/lgamma_fn';
+import { pgamma } from '../gamma/pgamma';
 
 import { pgamma_raw } from './pgamma';
 
@@ -169,7 +171,7 @@ export function qgamma<T>(
     _qgamma(pp, alpha, scale, lowerTail, logP, normal)
   );
 
-  return result.length === 1 ? result[0] : result as any;
+  return result.length === 1 ? result[0] : (result as any);
 }
 
 const printer_qgamma = debug('_qgamma');
@@ -393,7 +395,7 @@ export function _qgamma(
       p1 = p_ - p;
 
       if (i === 1)
-      printer_qgamma(
+        printer_qgamma(
           ' it=%d: p=%d, x = %d, p.=%d; p1=d{p}=%d',
           i,
           p,
@@ -402,13 +404,20 @@ export function _qgamma(
           p1
         );
       if (i >= 2)
-      printer_qgamma('          x{it= %d} = %d, p.=%d, p1=d{p}=%d', i, x, p_, p1);
+        printer_qgamma(
+          '          x{it= %d} = %d, p.=%d, p1=d{p}=%d',
+          i,
+          x,
+          p_,
+          p1
+        );
 
       if (fabs(p1) < fabs(EPS_N * p)) break;
       /* else */
       g = dgamma(x, alpha, scale, log_p);
       if (g === R_D__0(log_p)) {
-        if (i === 1) printer_qgamma('no final Newton step because dgamma(*)== 0!');
+        if (i === 1)
+          printer_qgamma('no final Newton step because dgamma(*)== 0!');
         break;
       }
       /* else :
@@ -426,7 +435,7 @@ export function _qgamma(
         /* no improvement */
 
         if (i === 1 && max_it_Newton > 1)
-        printer_qgamma('no Newton step done since delta{p} >= last delta');
+          printer_qgamma('no Newton step done since delta{p} >= last delta');
 
         break;
       } /* else : */

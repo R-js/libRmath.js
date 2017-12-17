@@ -81,7 +81,7 @@ import {
 } from '~common';
 
 import { log1p } from '~log';
-import { lgammafn } from '~gamma';
+import { lgammafn } from './lgamma_fn';
 import { R_Log1_Exp } from '~exp-utils';
 import { dpois_raw } from '~poisson';
 import { logspace_add } from './logspace-add';

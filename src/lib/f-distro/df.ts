@@ -48,7 +48,7 @@ import {
    
 } from '~common';
 
-import { dgamma } from '~gamma';
+import { dgamma } from '../gamma/dgamma';
 
 import { dbinom_raw } from '../binomial/dbinom';
 

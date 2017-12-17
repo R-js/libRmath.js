@@ -63,7 +63,7 @@ import {
 } from '~common';
 
 import { lbeta } from '../beta/lbeta';
-import { lgammafn } from '~gamma';
+import { lgammafn } from '../gamma/lgamma_fn';
 import { lgammafn_sign } from '../gamma/lgammafn_sign';
 
 export function lfastchoose(n: number, k: number) {

@@ -38,7 +38,7 @@
 import * as debug from 'debug';
 import { R_FINITE, ML_ERR_return_NAN } from '~common';
 
-import { rgamma } from '~gamma';
+import { rgamma } from '../gamma/rgamma';
 import { INormal } from '~normal';
 
 const printer = debug('rchisq');

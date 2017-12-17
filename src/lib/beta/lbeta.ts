@@ -42,8 +42,8 @@ import * as debug from 'debug';
 import { ML_ERR_return_NAN, M_LN_SQRT_2PI } from '~common';
 
 import { lgammacor } from '../gamma/lgammacor';
-import { lgammafn } from '~gamma';
-import { gammafn } from '~gamma';
+import { lgammafn } from '../gamma/lgamma_fn';
+import { gammafn } from '../gamma/gamma_fn';
 
 const { log, log1p } = Math;
 

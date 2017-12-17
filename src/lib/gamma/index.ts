@@ -14,18 +14,6 @@ import {
   psigamma
 } from './polygamma';
 
-
-export {
-  //
-  rgamma,
-  pgamma,
-  dgamma,
-  qgamma,
-  //
-  gammafn,
-  lgammafn
-};
-
 export const special = {
   gamma:gammafn,
   lgamma:lgammafn,
@@ -60,7 +48,7 @@ export interface IGamma {
   ) => number | number[];
 }
 
-export function gamma(norm: INormal = Normal()): IGamma {
+export function Gamma(norm: INormal = Normal()): IGamma {
   return {
     dgamma: (
       x: number | number[],

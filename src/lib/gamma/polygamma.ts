@@ -147,9 +147,7 @@ import {
   R_pow_di,
   imin2,
   Rf_i1mach,
-  Rf_d1mach,
-  R_forceint,
-  MATHLIB_WARNING2
+  Rf_d1mach
 } from '~common';
 
 import { NumberW } from '../common/toms708';
@@ -175,7 +173,8 @@ const {
   sin,
   cos,
   PI: M_PI,
-  round
+  round,
+  round:R_forceint
 } = Math;
 
 /* From R, currently only used for kode = 1, m = 1 : */

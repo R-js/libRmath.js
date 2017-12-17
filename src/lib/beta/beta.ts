@@ -47,7 +47,7 @@ import * as debug from 'debug';
 
 import { ML_ERR_return_NAN, ML_ERROR, ME } from '~common';
 
-import { gammafn } from '~gamma';
+import { gammafn } from '../gamma/gamma_fn';
 import { lbeta } from './lbeta';
 
 //const xmin =  - 170.5674972726612;

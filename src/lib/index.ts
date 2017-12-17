@@ -9,6 +9,9 @@ export { Cauchy } from './cauchy';
 export { Binomial } from './binomial';
 export { NegativeBinomial } from './binomial-negative';
 export { ChiSquared } from './chi-2';
+export { Exponential } from './exp';
+export { Gamma } from './gamma';
+
 import { special as betaSpecial } from '~beta';
 import { special as gammaSpecial } from '~gamma';
 
@@ -26,19 +29,8 @@ export * from './bessel';
 //export * from './beta';
 
 export * from './chebyshev';
-export * from './chi-2';
-//export * from './common';
-//export * from './deviance';
-//export * from './exp';
 export * from './f-distro';
-//export * from './gamma';
 export * from './geometric';
 export * from './hypergeometric';
-//export * from './rng';
 export * from './r-func';
 export * from './bessel';
-//export * from './beta';
-export * from './binomial';
-export * from './binomial-negative';
-
-//export * from './poisson';

@@ -78,7 +78,7 @@ import { INormal } from '~normal';
 
 const { expm1 } = Math;
 
-import { lgammafn } from '~gamma';
+import { lgammafn } from '../gamma/lgamma_fn';
 
 import { pbeta } from '../beta/pbeta';
 
