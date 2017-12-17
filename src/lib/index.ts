@@ -7,7 +7,7 @@ export { beta } from '~beta';
 export { poisson } from './poisson';
 export { cauchy } from './cauchy';
 export { binomial } from './binomial';
-
+export { chiSquared } from './chi-2';
 import { special as betaSpecial } from '~beta';
 import { special as gammaSpecial } from '~gamma';
 
