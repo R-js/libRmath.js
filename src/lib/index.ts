@@ -11,26 +11,28 @@ export { NegativeBinomial } from './binomial-negative';
 export { ChiSquared } from './chi-2';
 export { Exponential } from './exp';
 export { Gamma } from './gamma';
+export {FDist} from './f-distro';
 
 import { special as betaSpecial } from '~beta';
 import { special as gammaSpecial } from '~gamma';
+
 
 export const special = Object.freeze({
   ...gammaSpecial,
   ...betaSpecial
 });
 
-//export * as rfunc from './r-func';
+import { selector, seq, flatten } from '~R';
 
-//https://github.com/Microsoft/TypeScript/pull/19852
-//Fix declaration emit for exported export alias specifiers
+export const R = {
+  selector,
+  seq,
+  flatten
+};
 
 export * from './bessel';
-//export * from './beta';
-
 export * from './chebyshev';
-export * from './f-distro';
+
 export * from './geometric';
 export * from './hypergeometric';
-export * from './r-func';
-export * from './bessel';
+

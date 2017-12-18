@@ -60,7 +60,7 @@ const {
   POSITIVE_INFINITY: ML_POSINF
 } = Number;
 
-const printer = debug('beta');
+const printer_beta = debug('beta');
 
 export function beta(_a: number | number[], b: number): number | number[] {
   const fa = Array.isArray(_a) ? _a : [_a];
@@ -68,7 +68,7 @@ export function beta(_a: number | number[], b: number): number | number[] {
   const result = fa.map(a => {
     if (ISNAN(a) || ISNAN(b)) return a + b;
 
-    if (a < 0 || b < 0) return ML_ERR_return_NAN(printer);
+    if (a < 0 || b < 0) return ML_ERR_return_NAN(printer_beta);
     else if (a === 0 || b === 0) return ML_POSINF;
     else if (!R_FINITE(a) || !R_FINITE(b)) return 0;
 
@@ -88,7 +88,7 @@ export function beta(_a: number | number[], b: number): number | number[] {
       //#ifndef IEEE_754
       if (val < lnsml) {
         // a and/or b so big that beta underflows
-        ML_ERROR(ME.ME_UNDERFLOW, 'beta', printer);
+        ML_ERROR(ME.ME_UNDERFLOW, 'beta', printer_beta);
         // return ML_UNDERFLOW; pointless giving incorrect value
       }
       //#endif

@@ -18,7 +18,7 @@
 #  A copy of the GNU General Public License is available at
 #  http://www.r-project.org/Licenses/
 */
-import { seq, filterOnIdx } from '~R';
+import { seq } from '~R';
 
 const { trunc, round, ceil, min, log2, pow } = Math;
 const { now } = Date;

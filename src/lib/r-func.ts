@@ -21,7 +21,7 @@ export const seq = (adjust = 0) => (adjustMin = adjust) =>
   return rc;
 };
 
-export function filterOnIdx(indexes: number[]) {
+export function selector(indexes: number[]) {
   return (val: any, idx: number) => {
     return indexes.indexOf(idx) >= 0;
   };
