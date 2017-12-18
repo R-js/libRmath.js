@@ -28,43 +28,43 @@
  *
  *    The distribution function of the geometric distribution.
  */
+import * as debug from 'debug';
 
-import {
-    ISNAN,
-    ML_ERR_return_NAN,
-    R_DT_0,
-    R_DT_1,
-    R_FINITE,
-    floor,
-    log,
-    exp
-} from '~common';
+import { ML_ERR_return_NAN, R_DT_0, R_DT_1 } from '~common';
 
-import { log1p } from '~log';
 import { R_DT_Clog } from '~exp-utils';
 
-const { expm1 } = Math;
+const { expm1, log1p, log, exp, floor } = Math;
+const { isNaN: ISNAN, isFinite: R_FINITE } = Number;
+const printer = debug('pgeom');
 
-export function pgeom(x: number, p: number, lower_tail: boolean, log_p: boolean) {
+export function pgeom<T>(
+  xx: T,
+  p: number,
+  lowerTail: boolean = true,
+  logP: boolean = false
+): T {
+  const fx: number[] = Array.isArray(xx) ? xx : ([xx] as any);
 
-    if (ISNAN(x) || ISNAN(p))
-        return x + p;
+  const result = fx.map(x => {
+    if (ISNAN(x) || ISNAN(p)) return x + p;
 
     if (p <= 0 || p > 1) {
-        return ML_ERR_return_NAN();
+      return ML_ERR_return_NAN(printer);
     }
 
-    if (x < 0.) return R_DT_0(lower_tail, log_p);
-    if (!R_FINITE(x)) return R_DT_1(lower_tail, log_p);
+    if (x < 0) return R_DT_0(lowerTail, logP);
+    if (!R_FINITE(x)) return R_DT_1(lowerTail, logP);
     x = floor(x + 1e-7);
 
-    if (p === 1.) { /* we cannot assume IEEE */
-        x = lower_tail ? 1 : 0;
-        return log_p ? log(x) : x;
+    if (p === 1) {
+      /* we cannot assume IEEE */
+      x = lowerTail ? 1 : 0;
+      return logP ? log(x) : x;
     }
     x = log1p(-p) * (x + 1);
-    if (log_p)
-        return R_DT_Clog(lower_tail, log_p, x);
-    else
-        return lower_tail ? -expm1(x) : exp(x);
+    if (logP) return R_DT_Clog(lowerTail, logP, x);
+    else return lowerTail ? -expm1(x) : exp(x);
+  });
+  return result.length === 1 ? result[0] : (result as any);
 }

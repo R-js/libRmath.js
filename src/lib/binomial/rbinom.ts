@@ -109,9 +109,9 @@ function _rbinom(nin: number, pp: number, normal: INormal): number {
   let k;
   let n;
 
-  if (!R_FINITE(nin)) ML_ERR_return_NAN(printer);
+  if (!R_FINITE(nin)) return ML_ERR_return_NAN(printer);
   r = R_forceint(nin);
-  if (r !== nin) ML_ERR_return_NAN(printer);
+  if (r !== nin) return ML_ERR_return_NAN(printer);
   if (
     !R_FINITE(pp) ||
     /* n=0, p=0, p=1 are not errors <TSL>*/
@@ -119,7 +119,7 @@ function _rbinom(nin: number, pp: number, normal: INormal): number {
     pp < 0 ||
     pp > 1
   ) {
-    ML_ERR_return_NAN(printer);
+    return ML_ERR_return_NAN(printer);
   }
   if (r === 0 || pp === 0) return 0;
   if (pp === 1) return r;

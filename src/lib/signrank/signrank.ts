@@ -39,219 +39,211 @@
  *		   distribution.
  */
 
+import * as debug from 'debug';
+
 import {
-    imin2,
-    R_forceint,
-    ISNAN,
-    ML_ERR_return_NAN,
-    fabs,
-    R_D__0,
-    trunc,
-    R_D_exp,
-    log,
-    M_LN2,
-    R_FINITE,
-    R_DT_0,
-    R_DT_1,
-    exp,
-    MATHLIB_ERROR,
-    R_Q_P01_check,
-    DBL_EPSILON,
-    floor
+  ML_ERR_return_NAN,
+  R_D__0,
+  R_D_exp,
+  R_DT_0,
+  R_DT_1,
+  R_Q_P01_check,
+  imin2
 } from '~common';
 
-
-import { R_DT_val } from '~log';
+import { R_DT_val } from '../log/log1p';
 import { R_DT_qIv } from '~exp-utils';
 
+import { IRNG } from '../rng';
+
+const { isFinite: R_FINITE, EPSILON: DBL_EPSILON, isNaN: ISNAN } = Number;
+const {
+  LN2: M_LN2,
+  abs: fabs,
+  trunc,
+  log,
+  exp,
+  floor,
+  round: R_forceint
+} = Math;
+
+
 let w: number[];
-let allocated_n: number;
 
 
 export function w_init_maybe(n: number): void {
-    let u;
-    let c;
+  let u;
+  let c;
 
-    u = n * (n + 1) / 2;
-    c = (u / 2);
-
-
-    w = new Array<number>(c + 1);
-    if (!w) MATHLIB_ERROR('%s', 'signrank allocation error');
-    allocated_n = n;
-
+  u = n * (n + 1) / 2;
+  c = u / 2;
+  w = new Array<number>(c + 1);
 }
 
 export function csignrank(k: number, n: number): number {
+  let c;
+  let u;
+  let j;
 
-    let c;
-    let u;
-    let j;
+  //R_CheckUserInterrupt();
 
-    //R_CheckUserInterrupt();
+  u = n * (n + 1) / 2;
+  c = u / 2;
 
+  if (k < 0 || k > u) return 0;
+  if (k > c) k = u - k;
 
-    u = n * (n + 1) / 2;
-    c = (u / 2);
+  if (n === 1) return 1;
+  if (w[0] === 1) return w[k];
 
-    if (k < 0 || k > u)
-        return 0;
-    if (k > c)
-        k = u - k;
+  w[0] = w[1] = 1;
+  for (j = 2; j < n + 1; ++j) {
+    let i;
+    let end = imin2(j * (j + 1) / 2, c);
+    for (i = end; i >= j; --i) w[i] += w[i - j];
+  }
 
-    if (n === 1)
-        return 1.;
-    if (w[0] === 1.)
-        return w[k];
-
-    w[0] = w[1] = 1.;
-    for (j = 2; j < n + 1; ++j) {
-        let i;
-        let end = imin2(j * (j + 1) / 2, c);
-        for (i = end; i >= j; --i)
-            w[i] += w[i - j];
-    }
-
-    return w[k];
+  return w[k];
 }
 
+const printer_dsignrank = debug('dsignrank');
 export function dsignrank(x: number, n: number, give_log: boolean): number {
+ 
+
     let d: number;
 
+  /* NaNs propagated correctly */
+  if (ISNAN(x) || ISNAN(n)) return x + n;
 
-    /* NaNs propagated correctly */
-    if (ISNAN(x) || ISNAN(n)) return (x + n);
+  n = R_forceint(n);
+  if (n <= 0) {
+    return ML_ERR_return_NAN(printer_dsignrank);
+  }
+  if (fabs(x - R_forceint(x)) > 1e-7) {
+    return R_D__0(give_log);
+  }
+  x = R_forceint(x);
+  if (x < 0 || x > n * (n + 1) / 2) {
+    return R_D__0(give_log);
+  }
 
-    n = R_forceint(n);
-    if (n <= 0) {
-        return ML_ERR_return_NAN();
-    }
-    if (fabs(x - R_forceint(x)) > 1e-7) {
-        return (R_D__0(give_log));
-    }
-    x = R_forceint(x);
-    if ((x < 0) || (x > (n * (n + 1) / 2))) {
-        return (R_D__0(give_log));
-    }
+  let nn = trunc(n);
+  w_init_maybe(nn);
+  d = R_D_exp(give_log, log(csignrank(trunc(x), nn)) - n * M_LN2);
 
-    let nn = trunc(n);
-    w_init_maybe(nn);
-    d = R_D_exp(give_log, log(csignrank(trunc(x), nn)) - n * M_LN2);
-
-    return (d);
+  return d;
 }
 
-export function psignrank(x: number, n: number, lower_tail: boolean, log_p: boolean): number {
-    let i;
-    let f;
-    let p;
+const printer_psignrank = debug('psignrank');
+export function psignrank(
+  x: number,
+  n: number,
+  lower_tail: boolean,
+  log_p: boolean
+): number {
+  let i;
+  let f;
+  let p;
 
+  if (ISNAN(x) || ISNAN(n)) return x + n;
 
-    if (ISNAN(x) || ISNAN(n))
-        return (x + n);
+  if (!R_FINITE(n)) return ML_ERR_return_NAN(printer_psignrank);
+  n = R_forceint(n);
+  if (n <= 0) return ML_ERR_return_NAN(printer_psignrank);
 
-    if (!R_FINITE(n)) ML_ERR_return_NAN;
-    n = R_forceint(n);
-    if (n <= 0) ML_ERR_return_NAN;
+  x = R_forceint(x + 1e-7);
+  if (x < 0.0) return R_DT_0(lower_tail, log_p);
+  if (x >= n * (n + 1) / 2) return R_DT_1(lower_tail, log_p);
 
-    x = R_forceint(x + 1e-7);
-    if (x < 0.0)
-        return (R_DT_0(lower_tail, log_p));
-    if (x >= n * (n + 1) / 2)
-        return (R_DT_1(lower_tail, log_p));
+  let nn = trunc(n);
+  w_init_maybe(nn);
+  f = exp(-n * M_LN2);
+  p = 0;
+  if (x <= n * (n + 1) / 4) {
+    for (i = 0; i <= x; i++) p += csignrank(i, nn) * f;
+  } else {
+    x = n * (n + 1) / 2 - x;
+    for (i = 0; i < x; i++) p += csignrank(i, nn) * f;
+    lower_tail = !lower_tail; /* p = 1 - p; */
+  }
 
-    let nn = trunc(n);
-    w_init_maybe(nn);
-    f = exp(- n * M_LN2);
-    p = 0;
-    if (x <= (n * (n + 1) / 4)) {
-        for (i = 0; i <= x; i++)
-            p += csignrank(i, nn) * f;
-    }
-    else {
-        x = n * (n + 1) / 2 - x;
-        for (i = 0; i < x; i++)
-            p += csignrank(i, nn) * f;
-        lower_tail = !lower_tail; /* p = 1 - p; */
-    }
-
-    return (R_DT_val(lower_tail, log_p, p));
+  return R_DT_val(lower_tail, log_p, p);
 } /* psignrank() */
 
-export function qsignrank(x: number, n: number, lower_tail: boolean, log_p: boolean): number {
+const printer_qsignrank = debug('qsignrank');
 
-    let f;
-    let p;
+export function qsignrank(
+  x: number,
+  n: number,
+  lower_tail: boolean,
+  log_p: boolean
+): number {
+  let f;
+  let p;
 
+  if (ISNAN(x) || ISNAN(n)) {
+    return x + n;
+  }
+  if (!R_FINITE(x) || !R_FINITE(n)) {
+    return ML_ERR_return_NAN(printer_qsignrank);
+  }
+  let rc = R_Q_P01_check(log_p, x);
+  if (rc !== undefined) {
+    return rc;
+  }
 
-    if (ISNAN(x) || ISNAN(n)) {
-        return (x + n);
+  n = R_forceint(n);
+  if (n <= 0) return ML_ERR_return_NAN(printer_qsignrank);
+
+  if (x === R_DT_0(lower_tail, log_p)) return 0;
+  if (x === R_DT_1(lower_tail, log_p)) return n * (n + 1) / 2;
+
+  if (log_p || !lower_tail)
+    x = R_DT_qIv(lower_tail, log_p, x); /* lower_tail,non-log "p" */
+
+  let nn = trunc(n);
+  w_init_maybe(nn);
+  f = exp(-n * M_LN2);
+  p = 0;
+  let q = 0;
+  if (x <= 0.5) {
+    x = x - 10 * DBL_EPSILON;
+    while (true) {
+      p += csignrank(q, nn) * f;
+      if (p >= x) break;
+      q++;
     }
-    if (!R_FINITE(x) || !R_FINITE(n)) {
-        return ML_ERR_return_NAN();
+  } else {
+    x = 1 - x + 10 * DBL_EPSILON;
+    while (true) {
+      p += csignrank(q, nn) * f;
+      if (p > x) {
+        q = trunc(n * (n + 1) / 2 - q);
+        break;
+      }
+      q++;
     }
-    let rc = R_Q_P01_check(log_p, x);
-    if (rc !== undefined) {
-        return rc;
-    }
+  }
 
-    n = R_forceint(n);
-    if (n <= 0)
-        ML_ERR_return_NAN;
-
-    if (x === R_DT_0(lower_tail, log_p))
-        return (0);
-    if (x === R_DT_1(lower_tail, log_p))
-        return (n * (n + 1) / 2);
-
-    if (log_p || !lower_tail)
-        x = R_DT_qIv(lower_tail, log_p, x); /* lower_tail,non-log "p" */
-
-    let nn = trunc(n);
-    w_init_maybe(nn);
-    f = exp(- n * M_LN2);
-    p = 0;
-    let q = 0;
-    if (x <= 0.5) {
-        x = x - 10 * DBL_EPSILON;
-        while (true) {
-            p += csignrank(q, nn) * f;
-            if (p >= x)
-                break;
-            q++;
-        }
-    }
-    else {
-        x = 1 - x + 10 * DBL_EPSILON;
-        while (true) {
-            p += csignrank(q, nn) * f;
-            if (p > x) {
-                q = trunc((n * (n + 1) / 2 - q));
-                break;
-            }
-            q++;
-        }
-    }
-
-    return (q);
+  return q;
 }
 
-export function rsignrank(n: number, unif_rand: () => number): number {
-    let i;
-    let k;
-    let r;
+const printer_rsignrank = debug('rsignrank');
+export function rsignrank(n: number, rng: IRNG): number {
+  let i;
+  let k;
+  let r;
 
-    /* NaNs propagated correctly */
-    if (ISNAN(n)) return (n);
-    n = R_forceint(n);
-    if (n < 0) ML_ERR_return_NAN;
+  /* NaNs propagated correctly */
+  if (ISNAN(n)) return n;
+  n = R_forceint(n);
+  if (n < 0) return ML_ERR_return_NAN(printer_rsignrank);
 
-    if (n === 0)
-        return (0);
-    r = 0.0;
-    k = floor(n);
-    for (i = 0; i < k; /**/) {
-        r += (++i) * floor(unif_rand() + 0.5);
-    }
-    return (r);
+  if (n === 0) return 0;
+  r = 0.0;
+  k = floor(n);
+  for (i = 0; i < k /**/; ) {
+    r += ++i * floor(rng.unif_rand() + 0.5);
+  }
+  return r;
 }

@@ -30,42 +30,43 @@
  *
  *    Computes the geometric probabilities, Pr(X=x) = p(1-p)^x.
  */
+import * as debug from 'debug';
+import { ML_ERR_return_NAN, R_D__0, R_D_nonint_check } from '~common';
+import { dbinom_raw } from '../binomial/dbinom';
 
-import {
-    ISNAN,
-    R_FINITE,
-    R_forceint,
-    ML_ERR_return_NAN,
-    R_D__0,
-    R_D_nonint_check,
-    log
-} from '~common';
+const { isNaN: ISNAN, isFinite: R_FINITE } = Number;
+const { round: R_forceint, log } = Math;
 
-import {
-    dbinom_raw
-} from '../binomial/dbinom';
+const printer = debug('dgeom');
 
-
-export function dgeom(x: number, p: number, give_log: boolean): number {
+export function dgeom<T>(xx: T, p: number, giveLog: boolean = false): T {
+  
+  const fx: number[] = Array.isArray(xx) ? xx : [xx] as any;
+  
+  const result = fx.map( x => {
+  
     let prob: number;
 
     if (ISNAN(x) || ISNAN(p)) return x + p;
 
     if (p <= 0 || p > 1) {
-        return ML_ERR_return_NAN();
+      return ML_ERR_return_NAN(printer);
     }
 
-    let rc = R_D_nonint_check(give_log, x);
+    let rc = R_D_nonint_check(giveLog, x, printer);
     if (rc !== undefined) {
-        return rc;
+      return rc;
     }
     if (x < 0 || !R_FINITE(x) || p === 0) {
-        return R_D__0(give_log);
+      return R_D__0(giveLog);
     }
     x = R_forceint(x);
 
     /* prob = (1-p)^x, stable for small p */
-    prob = dbinom_raw(0., x, p, 1 - p, give_log);
+    prob = dbinom_raw(0, x, p, 1 - p, giveLog);
 
-    return ((give_log) ? log(p) + prob : p * prob);
+    return giveLog ? log(p) + prob : p * prob;
+  });
+
+  return result.length === 1 ? result[0] : result as any;
 }

@@ -42,13 +42,13 @@ import {
 
 const { floor, exp, log, abs:fabs} = Math;
 const  { MAX_VALUE: DBL_MAX, NaN: ML_NAN } = Number;
-const printer = debug('gamma_c99');
+const printer_tgamma = debug('tgamma');
 
  function tgamma(x: number): number {
 
   if (x <= 0.0) {
-    ML_ERROR(ME.ME_DOMAIN, 'gamma', printer);
-    printer('Argument %d must be positive', x);
+    ML_ERROR(ME.ME_DOMAIN, 'gamma', printer_tgamma);
+    printer_tgamma('Argument %d must be positive', x);
     return ML_NAN;
   }
 
@@ -154,7 +154,7 @@ const printer = debug('gamma_c99');
  function lgamma_c99(x: number) {
 
   if (x <= 0.0) {
-    ML_ERROR(ME.ME_DOMAIN, 'gamma');
+    ML_ERROR(ME.ME_DOMAIN, 'gamma', printer_tgamma);
     MATHLIB_WARNING('Argument %f must be positive', x);
     return ML_NAN;
   }

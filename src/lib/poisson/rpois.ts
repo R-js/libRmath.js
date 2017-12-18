@@ -38,24 +38,16 @@
  *    ACM Trans. Math. Software 8, 163-179.
  */
 
-import {
-  R_FINITE,
-  M_1_SQRT_2PI,
-  ML_ERR_return_NAN,
-  sqrt,
-  floor,
-  imin2,
-  exp,
-  pow,
-  fabs,
-  log,
-  trunc,
-  imax2
-} from '~common';
+import * as debug from 'debug';
+
+import { M_1_SQRT_2PI, ML_ERR_return_NAN, imin2, imax2 } from '~common';
 
 import { INormal } from '~normal';
 import { exp_rand } from '../exp/sexp';
 import { fsign } from '~signrank';
+
+const { trunc, log, abs: fabs, pow, exp, floor, sqrt } = Math;
+const { isFinite: R_FINITE } = Number;
 
 const a0 = -0.5;
 const a1 = 0.3333333;
@@ -70,11 +62,16 @@ const one_7 = 0.1428571428571428571;
 const one_12 = 0.0833333333333333333;
 const one_24 = 0.0416666666666666667;
 
-export function rpois( n: number= 1, mu: number = 1, normal: INormal): number|number[] {
-    const result = new Array(n).fill(0).map(() => _rpois(mu, normal));
-    return result.length === 1 ? result[0] : result;  
+export function rpois(
+  n: number = 1,
+  mu: number = 1,
+  normal: INormal
+): number | number[] {
+  const result = new Array(n).fill(0).map(() => _rpois(mu, normal));
+  return result.length === 1 ? result[0] : result;
 }
 
+const printer_rpois = debug('_rpois');
 function _rpois(mu: number, normal: INormal): number {
   /* Factorial Table (0:9)! */
   const fact = [1, 1, 2, 6, 24, 120, 720, 5040, 40320, 362880];
@@ -121,7 +118,7 @@ function _rpois(mu: number, normal: INormal): number {
   let new_big_mu = false;
 
   if (!R_FINITE(mu) || mu < 0) {
-    return ML_ERR_return_NAN();
+    return ML_ERR_return_NAN(printer_rpois);
   }
   if (mu <= 0) return 0;
 
@@ -192,7 +189,8 @@ function _rpois(mu: number, normal: INormal): number {
   /* Only if mu >= 10 : ----------------------- */
 
   /* Step N. normal sample */
-  g = mu + s * normal.rng.norm_rand(); /* norm_rand() ~ N(0,1), standard normal */
+  g =
+    mu + s * normal.rng.norm_rand(); /* norm_rand() ~ N(0,1), standard normal */
 
   if (g >= 0) {
     pois = floor(g);

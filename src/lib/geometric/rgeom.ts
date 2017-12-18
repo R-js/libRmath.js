@@ -43,24 +43,30 @@
  *    New York: Springer-Verlag.
  *    Pages 488f.
  */
+import * as debug from 'debug';
+import { R_FINITE, ML_ERR_return_NAN } from '~common';
 
-import {
-    R_FINITE,
-    ML_ERR_return_NAN
-} from '~common';
+import { rpois } from '~poisson';
 
-import {
-    rpois
-} from '~poisson';
-
-import {
-    exp_rand
-} from '../exp/sexp';
+import { exp_rand } from '../exp/sexp';
 
 import { INormal } from '~normal';
 
-export function rgeom(p: number, normal: INormal): number {
-    if (!R_FINITE(p) || p <= 0 || p > 1) ML_ERR_return_NAN;
+const printer = debug('rgeom');
 
-    return rpois(1, exp_rand(normal.rng.unif_rand) * ((1 - p) / p), normal) as number;
+export function rgeom(
+  N: number = 1,
+  p: number,
+  normal: INormal
+): number | number {
+  const result = new Array(N).fill(0).map(() => {
+    if (!R_FINITE(p) || p <= 0 || p > 1) return ML_ERR_return_NAN(printer);
+
+    return rpois(
+      1,
+      exp_rand(normal.rng.unif_rand) * ((1 - p) / p),
+      normal
+    ) as number;
+  });
+  return result.length === 1 ? result[0] : (result as any);
 }

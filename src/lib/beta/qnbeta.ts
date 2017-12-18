@@ -60,7 +60,7 @@ export function qnbeta<T>(
 
     if (!R_FINITE(a)) return ML_ERR_return_NAN(printer_qnbeta);
 
-    if (ncp < 0 || a <= 0 || b <= 0) ML_ERR_return_NAN(printer_qnbeta);
+    if (ncp < 0 || a <= 0 || b <= 0) return ML_ERR_return_NAN(printer_qnbeta);
 
     let rc = R_Q_P01_boundaries(lower_tail, log_p, p, 0, 1);
     if (rc !== undefined) {

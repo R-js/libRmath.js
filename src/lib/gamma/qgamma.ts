@@ -233,7 +233,7 @@ export function _qgamma(
   if (rc !== undefined) {
     return rc;
   }
-  if (alpha < 0 || scale <= 0) ML_ERR_return_NAN(printer_qgamma);
+  if (alpha < 0 || scale <= 0) return ML_ERR_return_NAN(printer_qgamma);
 
   if (alpha === 0) /* all mass at 0 : */ return 0;
 

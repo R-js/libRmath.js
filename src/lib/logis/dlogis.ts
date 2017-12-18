@@ -22,30 +22,30 @@
  *  along with this program; if not, a copy is available at
  *  https://www.R-project.org/Licenses/
  */
+import * as debug from 'debug';
+import { ML_ERR_return_NAN } from '~common';
 
-import {
+const { log, exp, abs: fabs } = Math;
+const { isNaN: ISNAN } = Number;
 
-    ISNAN,
-    ML_ERR_return_NAN,
-    fabs,
-    exp,
-    log
+const printer_dlogis = debug('dlogis'); 
 
-} from '~common';
+export function dlogis(
+  x: number,
+  location: number,
+  scale: number,
+  give_log: boolean
+) {
+  let e: number;
+  let f: number;
 
-export function dlogis(x: number, location: number, scale: number, give_log: boolean) {
+  if (ISNAN(x) || ISNAN(location) || ISNAN(scale)) return x + location + scale;
+  if (scale <= 0.0) {
+    return ML_ERR_return_NAN(printer_dlogis);
+  }
 
-    let e: number;
-    let f: number;
-
-    if (ISNAN(x) || ISNAN(location) || ISNAN(scale))
-        return x + location + scale;
-    if (scale <= 0.0) {
-        return ML_ERR_return_NAN();
-    }
-
-    x = fabs((x - location) / scale);
-    e = exp(-x);
-    f = 1.0 + e;
-    return give_log ? -(x + log(scale * f * f)) : e / (scale * f * f);
+  x = fabs((x - location) / scale);
+  e = exp(-x);
+  f = 1.0 + e;
+  return give_log ? -(x + log(scale * f * f)) : e / (scale * f * f);
 }

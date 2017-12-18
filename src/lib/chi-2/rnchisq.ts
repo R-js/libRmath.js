@@ -81,7 +81,7 @@ export function rnchisq(
   const result = new Array(n).fill(0).map(() => {
 
     if (!R_FINITE(df) || !R_FINITE(lambda) || df < 0 || lambda < 0){
-      ML_ERR_return_NAN(printer);
+      return ML_ERR_return_NAN(printer);
     }
     if (lambda === 0) {
       return df === 0 ? 0 : (rgamma(1, df / 2, 2, normal) as number);

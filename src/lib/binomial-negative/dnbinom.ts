@@ -78,7 +78,7 @@ export function dnbinom<T>(
       return ML_ERR_return_NAN(printer);
     }
 
-    let rc = R_D_nonint_check(give_log, x);
+    let rc = R_D_nonint_check(give_log, x, printer);
     if (rc !== undefined) {
       return rc;
     }
@@ -127,7 +127,7 @@ export function dnbinom_mu<T>(
       return ML_ERR_return_NAN(printer_dnbinom_mu);
     }
 
-    let rc = R_D_nonint_check(give_log, x);
+    let rc = R_D_nonint_check(give_log, x, printer_dnbinom_mu);
     if (rc !== undefined) {
       return rc;
     }

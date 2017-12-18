@@ -130,9 +130,9 @@ function _qbinom(
     }
 
 
-    if (n !== floor(n + 0.5)) ML_ERR_return_NAN(printer_qbinom);
+    if (n !== floor(n + 0.5)) return ML_ERR_return_NAN(printer_qbinom);
     if (pr < 0 || pr > 1 || n < 0)
-        ML_ERR_return_NAN(printer_qbinom);
+       return ML_ERR_return_NAN(printer_qbinom);
 
     let rc = R_Q_P01_boundaries(lower_tail, log_p, p, 0, n);
     if (rc !== undefined) {

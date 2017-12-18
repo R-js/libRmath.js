@@ -78,10 +78,10 @@ const {
   NaN: ML_NAN
 } = Number;
 
-const printer_qbeta_raw = debug('qbeta_raw');
-const printer_qbeta = debug('qbeta');
 
-const R_ifDEBUG_printf = printer_qbeta_raw;
+
+
+
 
 const USE_LOG_X_CUTOFF = -5;
 //                       --- based on some testing; had = -10
@@ -97,6 +97,7 @@ const MLOGICAL_NA = -1;
         int swap_01, double log_q_cut, int n_N, double * qb): number { return 0 };
 */
 
+const printer_qbeta = debug('qbeta');
 export function qbeta<T>(
   pp: T,
   shape1: number,
@@ -194,6 +195,9 @@ function return_q_half(give_log_q: boolean, qb: number[]): void {
   return;
 }
 
+
+const printer_qbeta_raw = debug('qbeta_raw');
+const R_ifDEBUG_printf = printer_qbeta_raw;
 // Returns both qbeta() and its "mirror" 1-qbeta(). Useful notably when qbeta() ~= 1
 export function qbeta_raw(
   alpha: number,
@@ -247,8 +251,8 @@ export function qbeta_raw(
   // check alpha {*before* transformation which may all accuracy}:
   if ((log_p && alpha > 0) || (!log_p && (alpha < 0 || alpha > 1))) {
     // alpha is outside
-    R_ifDEBUG_printf(
-      'qbeta(alpha=%g, %g, %g, .., log_p=%d): %s%s\n',
+    printer_qbeta_raw(
+      'qbeta(alpha=%d, %d, %d, .., log_p=%d): %s%s',
       alpha,
       p,
       q,
@@ -257,7 +261,7 @@ export function qbeta_raw(
       log_p ? '[-Inf, 0]' : '[0,1]'
     );
     // ML_ERR_return_NAN :
-    ML_ERROR(ME.ME_DOMAIN, '');
+    ML_ERROR(ME.ME_DOMAIN, '', printer_qbeta_raw);
     qb[0] = qb[1] = ML_NAN;
     return;
   }
@@ -265,8 +269,8 @@ export function qbeta_raw(
   //  p==0, q==0, p = Inf, q = Inf  <==> treat as one- or two-point mass
   if (p === 0 || q === 0 || !R_FINITE(p) || !R_FINITE(q)) {
     // We know 0 < T(alpha) < 1 : pbeta() is constant and trivial in {0, 1/2, 1}
-    R_ifDEBUG_printf(
-      'qbeta(%g, %g, %g, lower_t=%d, log_p=%d): (p,q)-boundary: trivial\n',
+    printer_qbeta_raw(
+      'qbeta(%d, %d, %d, lower_t=%d, log_p=%d): (p,q)-boundary: trivial',
       alpha,
       p,
       q,
@@ -336,8 +340,8 @@ export function qbeta_raw(
   t = 0.2;
   // FIXME: Factor 0.2 is a bit arbitrary;  '1' is clearly much too much.
 
-  R_ifDEBUG_printf(
-    'qbeta(%g, %g, %g, lower_t=%d, log_p=%d):%s\n   swap_tail=%d, la=%g, u0=%g (bnd: %g (%g)) ',
+  printer_qbeta_raw(
+    'qbeta(%d, %d, %d, lower_t=%d, log_p=%d):%s   swap_tail=%d, la=%d, u0=%d (bnd: %d (%d)) ',
     alpha,
     p,
     q,
@@ -369,10 +373,10 @@ export function qbeta_raw(
     r = r * exp(u0); // = r*x0
     if (r > -1) {
       u = u0 - log1p(r) / pp;
-      R_ifDEBUG_printf('u1-u0=%9.3g --> choosing u = u1\n', u - u0);
+      printer_qbeta_raw('u1-u0=%d --> choosing u = u1', u - u0);
     } else {
       u = u0;
-      R_ifDEBUG_printf('cannot cheaply improve u0\n');
+      printer_qbeta_raw('cannot cheaply improve u0');
     }
     tx = xinbta = exp(u);
     use_log_x = true; // or (u < log_q_cut)  ??
@@ -392,7 +396,7 @@ export function qbeta_raw(
       t = 1 / (qq + qq - 1);
       h = 2 / (s + t);
       w = y * sqrt(h + r) / h - (t - s) * (r + 5.0 / 6.0 - 2.0 / (3 * h));
-      R_ifDEBUG_printf('p,q > 1 => w=%g', w);
+      printer_qbeta_raw('p,q > 1 => w=%d', w);
       if (w > 300) {
         // exp(w+w) is huge or overflows
         t = w + w + log(qq) - log(pp); // = argument of log1pexp(.)
@@ -655,7 +659,7 @@ export function qbeta_raw(
         if (!R_FINITE(y) && !(log_p && y === ML_NEGINF)) {
           // y = -Inf  is ok if(log_p)
           // ML_ERR_return_NAN :
-          ML_ERROR(ME.ME_DOMAIN, '');
+          ML_ERROR(ME.ME_DOMAIN, '', printer_qbeta_raw);
           qb[0] = qb[1] = ML_NAN;
           return;
         }
@@ -668,7 +672,7 @@ export function qbeta_raw(
           : (y - a) * exp(logbeta + r * log(xinbta) + t * log1p(-xinbta));
         if (i_pb >= n_N && w * wprev <= 0) prev = fmax2(fabs(adj), fpu);
         R_ifDEBUG_printf(
-          'N(i=%2d): x0=%#17.15g, pb(x0)=%#17.15g, w=%#17.15g, %s prev=%g,',
+          'N(i=%2d): x0=%d, pb(x0)=%d, w=%d, %s prev=%d,',
           i_pb,
           xinbta,
           y,
@@ -718,7 +722,7 @@ export function qbeta_raw(
     /*-- NOT converged: Iteration count --*/
     if (!goto_L_converged) {
       warned = true;
-      ML_ERROR(ME.ME_PRECISION, 'qbeta');
+      ML_ERROR(ME.ME_PRECISION, 'qbeta', printer_qbeta_raw);
     }
 
     //L_converged:

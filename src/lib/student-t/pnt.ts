@@ -51,6 +51,8 @@
     - but for ncp > 100
  */
 
+import * as debug from 'debug';
+
 import {
   ML_ERR_return_NAN,
   R_FINITE,
@@ -83,6 +85,8 @@ import { lgammafn } from '../gamma/lgamma_fn';
 import { pbeta } from '../beta/pbeta';
 
 import { R_DT_val } from '~log';
+
+const printer_pnt = debug('pnt');
 
 export function pnt(
   t: number,
@@ -117,7 +121,7 @@ export function pnt(
   const itrmax = 1000;
   const errmax = 1e-12;
 
-  if (df <= 0.0) return ML_ERR_return_NAN();
+  if (df <= 0.0) return ML_ERR_return_NAN(printer_pnt);
   if (ncp === 0.0) return pt(t, df, lower_tail, log_p, normal);
 
   if (!R_FINITE(t))
@@ -170,8 +174,8 @@ export function pnt(
       /* underflow! */
 
       /*========== really use an other algorithm for this case !!! */
-      ML_ERROR(ME.ME_UNDERFLOW, 'pnt');
-      ML_ERROR(ME.ME_RANGE, 'pnt'); /* |ncp| too large */
+      ML_ERROR(ME.ME_UNDERFLOW, 'pnt', printer_pnt);
+      ML_ERROR(ME.ME_RANGE, 'pnt', printer_pnt); /* |ncp| too large */
       return R_DT_0(lower_tail, log_p);
     }
 
@@ -216,7 +220,7 @@ export function pnt(
 
       if (s < -1e-10) {
         /* happens e.g. for (t,df,ncp)=(40,10,38.5), after 799 it.*/
-        ML_ERROR(ME.ME_PRECISION, 'pnt');
+        ML_ERROR(ME.ME_PRECISION, 'pnt', printer_pnt);
         REprintf('s = %#14.7Lg < 0 !!! ---> non-convergence!!\n', s);
         finis = true;
         break;
@@ -246,7 +250,7 @@ export function pnt(
     } //for
     /* non-convergence:*/
     if (!finis) {
-      ML_ERROR(ME.ME_NOCONV, 'pnt');
+      ML_ERROR(ME.ME_NOCONV, 'pnt', printer_pnt);
     }
   } else {
     /* x = t = 0 */
@@ -255,7 +259,8 @@ export function pnt(
   tnc += normal.pnorm(-del, 0, 1, /*lower*/ true, /*log_p*/ false);
 
   lower_tail = lower_tail !== negdel; /* xor */
-  if (tnc > 1 - 1e-10 && lower_tail) ML_ERROR(ME.ME_PRECISION, 'pnt{final}');
-
+  if (tnc > 1 - 1e-10 && lower_tail){
+    ML_ERROR(ME.ME_PRECISION, 'pnt{final}', printer_pnt);
+  }
   return R_DT_val(lower_tail, log_p, fmin2(tnc, 1) /* Precaution */);
 }

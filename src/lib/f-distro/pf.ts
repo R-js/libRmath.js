@@ -43,7 +43,7 @@ const {
 
 const { LN2: M_LN2 } = Math;
 
-const printer = debug('pf');
+const printer_pf = debug('pf');
 
 export function pf<T>(
   q: T,
@@ -59,7 +59,7 @@ export function pf<T>(
     if (ISNAN(x) || ISNAN(df1) || ISNAN(df2)) return x + df2 + df1;
 
     if (df1 <= 0 || df2 <= 0) {
-      return ML_ERR_return_NAN();
+      return ML_ERR_return_NAN(printer_pf);
     }
 
     let rc = R_P_bounds_01(lowerTail, logP, x, 0, ML_POSINF);

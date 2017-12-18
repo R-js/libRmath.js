@@ -23,18 +23,11 @@
  *  quantily function of the commulative  probability of the non-central t-distribution
  */
 
+import * as debug from 'debug';
+
 import {
-  ISNAN,
   ML_ERR_return_NAN,
-  ML_NEGINF,
-  ML_POSINF,
-  R_Q_P01_boundaries,
-  R_FINITE,
-  fmin2,
-  fmax2,
-  DBL_EPSILON,
-  DBL_MAX,
-  fabs
+  R_Q_P01_boundaries
 } from '~common';
 
 import { INormal } from '~normal';
@@ -44,6 +37,17 @@ import { pnt } from './pnt';
 import { qt } from './qt';
 
 import { R_DT_qIv } from '~exp-utils';
+
+const { abs: fabs, max: fmax2, min: fmin2 } = Math;
+const {
+  MAX_VALUE: DBL_MAX,
+  EPSILON:DBL_EPSILON,
+  isFinite: R_FINITE,
+  POSITIVE_INFINITY: ML_POSINF,
+  NEGATIVE_INFINITY: ML_NEGINF,
+  isNaN: ISNAN
+} = Number;
+const printer = debug('qnt');
 
 export function qnt(
   p: number,
@@ -67,7 +71,7 @@ export function qnt(
      * df = floor(df + 0.5);
      * if (df < 1 || ncp < 0) ML_ERR_return_NAN;
      */
-  if (df <= 0.0) return ML_ERR_return_NAN();
+  if (df <= 0.0) return ML_ERR_return_NAN(printer);
 
   if (ncp === 0.0 && df >= 1.0) return qt(p, df, lower_tail, log_p, normal);
 

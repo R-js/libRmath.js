@@ -26,26 +26,28 @@
  *  random variates of the logistic distribution
  */
 
+import * as debug from 'debug';
 
-import {
-    R_FINITE,
-    ML_ERR_return_NAN,
-    ISNAN,
-    log
-} from '~common';
+import { ML_ERR_return_NAN } from '~common';
+import { IRNG } from '../rng';
 
+const { log } = Math;
+const { isNaN: ISNAN, isFinite: R_FINITE } = Number;
 
+const printer_rlogis = debug('rlogis');
 
-export function rlogis(location: number, scale: number, unif_rand: () => number): number {
-    if (ISNAN(location) || !R_FINITE(scale)) {
-        return ML_ERR_return_NAN();
-    }
+export function rlogis(
+  location: number,
+  scale: number,
+  rng: IRNG
+): number {
+  if (ISNAN(location) || !R_FINITE(scale)) {
+    return ML_ERR_return_NAN(printer_rlogis);
+  }
 
-
-    if (scale === 0. || !R_FINITE(location))
-        return location;
-    else {
-        let u = unif_rand();
-        return location + scale * log(u / (1. - u));
-    }
+  if (scale === 0 || !R_FINITE(location)) return location;
+  else {
+    let u = rng.unif_rand();
+    return location + scale * log(u / (1 - u));
+  }
 }

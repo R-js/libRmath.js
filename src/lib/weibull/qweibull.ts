@@ -27,23 +27,25 @@
  *    The quantile function of the Weibull distribution.
  */
 
+import * as debug from 'debug';
 
 import {
-    ISNAN,
     ML_ERR_return_NAN,
-    ML_POSINF,
-    R_Q_P01_boundaries,
-    pow
+    R_Q_P01_boundaries
 } from '~common';
 
 import { R_DT_Clog } from '~exp-utils';
+
+const { pow } = Math;
+const { isNaN: ISNAN, POSITIVE_INFINITY: ML_POSINF } = Number;
+const printer = debug('qweibull');
 
 export function qweibull(p: number, shape: number, scale: number, lower_tail: boolean, log_p: boolean): number {
 
     if (ISNAN(p) || ISNAN(shape) || ISNAN(scale))
         return p + shape + scale;
 
-    if (shape <= 0 || scale <= 0) return ML_ERR_return_NAN();
+    if (shape <= 0 || scale <= 0) return ML_ERR_return_NAN(printer);
 
     let rc = R_Q_P01_boundaries(lower_tail, log_p, p, 0, ML_POSINF);
     if (rc !== undefined) {

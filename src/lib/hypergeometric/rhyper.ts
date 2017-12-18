@@ -45,6 +45,8 @@
  *    where (m < 100 || ix <= 50) , see below.
  */
 
+import * as debug from 'debug';
+
 import {
   MATHLIB_WARNING,
   log,
@@ -61,11 +63,10 @@ import {
 } from '~common';
 
 import { rbinom } from '../binomial/rbinom';
-
 import { qhyper } from './qhyper';
-
 import { INormal } from '~normal';
 
+const printer_afc = debug('afc'); 
 // afc(i) :=  ln( i! )	[logarithm of the factorial i]
 export function afc(i: number): number {
   // If (i > 7), use Stirling's approximation, otherwise use table lookup.
@@ -87,7 +88,7 @@ export function afc(i: number): number {
   ];
 
   if (i < 0) {
-    MATHLIB_WARNING('rhyper.c: afc(i), i=%d < 0 -- SHOULD NOT HAPPEN!\n', i);
+    printer_afc('rhyper.c: afc(i), i=%d < 0 -- SHOULD NOT HAPPEN!', i);
     return -1; // unreached
   }
   if (i <= 7) {
@@ -105,6 +106,8 @@ export function afc(i: number): number {
 }
 
 //     rhyper(NR, NB, n) -- NR 'red', NB 'blue', n drawn, how many are 'red'
+const printer_rhyper = debug('rhyper');
+
 export function rhyper(
   nn1in: number,
   nn2in: number,
@@ -151,14 +154,14 @@ export function rhyper(
   /* check parameter validity */
 
   if (!R_FINITE(nn1in) || !R_FINITE(nn2in) || !R_FINITE(kkin))
-    return ML_ERR_return_NAN();
+    return ML_ERR_return_NAN(printer_rhyper);
 
   nn1in = R_forceint(nn1in);
   nn2in = R_forceint(nn2in);
   kkin = R_forceint(kkin);
 
   if (nn1in < 0 || nn2in < 0 || kkin < 0 || kkin > nn1in + nn2in)
-    return ML_ERR_return_NAN();
+    return ML_ERR_return_NAN(printer_rhyper);
   if (nn1in >= INT_MAX || nn2in >= INT_MAX || kkin >= INT_MAX) {
     /* large n -- evade integer overflow (and inappropriate algorithms)
            -------- */
@@ -331,7 +334,7 @@ export function rhyper(
       n_uv++;
       if (n_uv >= 10000) {
         REprintf('rhyper() branch III: giving up after %d rejections', n_uv);
-        return ML_ERR_return_NAN();
+        return ML_ERR_return_NAN(printer_rhyper);
       }
 
       REprintf(' ... L30: new (u=%g, v ~ U[0,1])[%d]\n', u, n_uv);

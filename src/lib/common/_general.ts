@@ -208,21 +208,21 @@ export const mapErr = new Map([
   [ME.ME_UNDERFLOW, "underflow occurred in '%s'\n"]
 ]);
 
-export const ML_ERROR = (x: ME, s: any, printer?: debug.IDebugger) => {
+export const ML_ERROR = (x: ME, s: any, printer: debug.IDebugger) => {
   const str = mapErr.get(x);
   if (str) {
-    printer && printer(str, s);
+    printer(str, s);
   }
 };
 
-export function ML_ERR_return_NAN(printer?: debug.IDebugger) {
+export function ML_ERR_return_NAN(printer: debug.IDebugger) {
   ML_ERROR(ME.ME_DOMAIN, '', printer);
   return ML_NAN;
 }
 
-export function R_D_nonint_check(log: boolean, x: number) {
+export function R_D_nonint_check(log: boolean, x: number, printer: debug.IDebugger) {
   if (R_nonint(x)) {
-    MATHLIB_WARNING('non-integer x = %f', x);
+    printer('non-integer x = %d', x);
     return R_D__0(log);
   }
   return undefined;

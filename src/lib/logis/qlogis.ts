@@ -25,42 +25,45 @@
  * 
  * The Logistic Distribution  quantile function.
  */
+import * as debug from 'debug';
 
-import {
-    ISNAN,
-    R_Q_P01_boundaries,
-    ML_NEGINF,
-    ML_POSINF,
-    ML_ERR_return_NAN,
-    log
-} from '~common';
+import { R_Q_P01_boundaries, ML_ERR_return_NAN } from '~common';
 
 import { R_Log1_Exp } from '~exp-utils';
 
-export function qlogis(p: number, location: number, scale: number, lower_tail: boolean, log_p: boolean): number {
+const {
+  isNaN: ISNAN,
+  POSITIVE_INFINITY: ML_POSINF,
+  NEGATIVE_INFINITY: ML_NEGINF
+} = Number;
 
-    if (ISNAN(p) || ISNAN(location) || ISNAN(scale))
-        return p + location + scale;
+const { log } = Math;
 
-    let rc = R_Q_P01_boundaries(lower_tail, log_p, p, ML_NEGINF, ML_POSINF);
-    if (rc !== undefined) {
-        return rc;
-    }
+const printer_qlogis = debug('qlogis');
+export function qlogis(
+  p: number,
+  location: number,
+  scale: number,
+  lower_tail: boolean,
+  log_p: boolean
+): number {
+  if (ISNAN(p) || ISNAN(location) || ISNAN(scale)) return p + location + scale;
 
-    if (scale < 0.) {
-        return ML_ERR_return_NAN();
-    }
-    if (scale === 0.) return location;
+  let rc = R_Q_P01_boundaries(lower_tail, log_p, p, ML_NEGINF, ML_POSINF);
+  if (rc !== undefined) {
+    return rc;
+  }
 
-    /* p := logit(p) = log( p / (1-p) )	 : */
-    if (log_p) {
-        if (lower_tail)
-            p = p - R_Log1_Exp(p);
-        else
-            p = R_Log1_Exp(p) - p;
-    }
-    else
-        p = log(lower_tail ? (p / (1. - p)) : ((1. - p) / p));
+  if (scale < 0) {
+    return ML_ERR_return_NAN(printer_qlogis);
+  }
+  if (scale === 0) return location;
 
-    return location + scale * p;
+  /* p := logit(p) = log( p / (1-p) )	 : */
+  if (log_p) {
+    if (lower_tail) p = p - R_Log1_Exp(p);
+    else p = R_Log1_Exp(p) - p;
+  } else p = log(lower_tail ? p / (1 - p) : (1 - p) / p);
+
+  return location + scale * p;
 }

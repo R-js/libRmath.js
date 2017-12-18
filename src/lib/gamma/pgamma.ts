@@ -80,14 +80,23 @@ import {
   R_DT_1
 } from '~common';
 
-import { log1p } from '~log';
 import { lgammafn } from './lgamma_fn';
 import { R_Log1_Exp } from '~exp-utils';
 import { dpois_raw } from '~poisson';
 import { logspace_add } from './logspace-add';
 import { INormal } from '~normal';
 
-const { expm1, sqrt, floor, pow, log, exp, max: fmax2, abs: fabs } = Math;
+const {
+  log1p,
+  expm1,
+  sqrt,
+  floor,
+  pow,
+  log,
+  exp,
+  max: fmax2,
+  abs: fabs
+} = Math;
 const {
   isNaN: ISNAN,
   MIN_VALUE: DBL_MIN,
@@ -763,6 +772,7 @@ export function pgamma_raw(
   } else return res;
 }
 
+const printer_pgamma = debug('pgamma');
 export function pgamma<T>(
   q: T,
   shape: number,
@@ -777,7 +787,7 @@ export function pgamma<T>(
     if (ISNAN(x) || ISNAN(shape) || ISNAN(scale)) {
       return x + shape + scale;
     }
-    if (shape < 0 || scale <= 0) ML_ERR_return_NAN;
+    if (shape < 0 || scale <= 0) return ML_ERR_return_NAN(printer_pgamma);
     x /= scale;
 
     if (ISNAN(x))

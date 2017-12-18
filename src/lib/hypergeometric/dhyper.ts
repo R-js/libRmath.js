@@ -42,6 +42,9 @@
  *    for any p. For numerical stability, we take p=n/(r+b); with this choice,
  *    the denominator is not exponentially small.
  */
+
+ import * as debug from 'debug';
+
 import {
     ISNAN,
     R_D_negInonint,
@@ -54,6 +57,7 @@ import {
 
 import { dbinom_raw } from '../binomial/dbinom';
 
+const printer = debug('dhyper');
 
 export function dhyper(x: number, r: number, b: number, n: number, give_log: boolean): number {
 
@@ -67,9 +71,9 @@ export function dhyper(x: number, r: number, b: number, n: number, give_log: boo
         return x + r + b + n;
 
     if (R_D_negInonint(r) || R_D_negInonint(b) || R_D_negInonint(n) || n > r + b)
-        ML_ERR_return_NAN;
+        return ML_ERR_return_NAN(printer);
     if (x < 0) return (R_D__0(give_log));
-    let rc = R_D_nonint_check(give_log, x); // incl warning
+    let rc = R_D_nonint_check(give_log, x, printer); // incl warning
     if (rc !== undefined) {
         return rc;
     }

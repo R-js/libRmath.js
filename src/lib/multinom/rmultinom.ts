@@ -39,13 +39,17 @@
  *	=> Hence also can have  int arguments.
  */
 
-import { ML_ERROR, ME, R_FINITE, fabs, MATHLIB_ERROR } from '~common';
+import * as debug from 'debug';
+
+import { ML_ERROR, ME, R_FINITE, fabs } from '~common';
 
 import { rbinom } from '../binomial/rbinom';
 import { INormal } from '../normal';
 
+const printer_rmultinom = debug('rmultinom');
+
 export const ML_ERR_ret_NAN = (_k_: number, rN: number[]): void => {
-  ML_ERROR(ME.ME_DOMAIN, 'rmultinom');
+  ML_ERROR(ME.ME_DOMAIN, 'rmultinom', printer_rmultinom);
   rN[_k_] = -1;
   return;
 };
@@ -70,7 +74,7 @@ export function rmultinom(
        result. */
 
   if (K < 1) {
-    ML_ERROR(ME.ME_DOMAIN, 'rmultinom');
+    ML_ERROR(ME.ME_DOMAIN, 'rmultinom', printer_rmultinom);
     return;
   }
   if (n < 0) {
@@ -89,7 +93,7 @@ export function rmultinom(
     rN[k] = 0;
   }
   if (fabs(p_tot - 1) > 1e-7)
-    MATHLIB_ERROR('rbinom: probability sum should be 1, but is %g', p_tot);
+    printer_rmultinom('rbinom: probability sum should be 1, but is %d', p_tot);
   if (n === 0) return;
   if (K === 1 && p_tot === 0) return; /* trivial border case: do as rbinom */
 
@@ -102,7 +106,7 @@ export function rmultinom(
       /* printf("[%d] %.17f\n", k+1, pp); */
       rN[k] =
         pp < 1
-          ? rbinom(1, n, pp, normal) as number
+          ? (rbinom(1, n, pp, normal) as number)
           : /*>= 1; > 1 happens because of rounding */
             n;
       n -= rN[k];

@@ -26,37 +26,41 @@
  *
  *    The quantile function of the geometric distribution.
  */
-
-import {
-    ML_ERR_return_NAN,
-    ML_POSINF,
-    R_Q_P01_boundaries,
-    ISNAN,
-    fmax2,
-    ceil,
-
-} from '~common';
+import * as debug from 'debug';
+import { ML_ERR_return_NAN, R_Q_P01_boundaries } from '~common';
 
 import { R_DT_Clog } from '~exp-utils';
 
-import { log1p } from '~log';
+const { ceil, max: fmax2, log1p } = Math;
+const { POSITIVE_INFINITY: ML_POSINF, isNaN: ISNAN } = Number;
+const printer = debug('qgeom');
 
-export function qgeom(p: number, prob: number, lower_tail: boolean, log_p: boolean): number {
+export function qgeom<T>(
+  pp: T,
+  prob: number,
+  lower_tail: boolean,
+  log_p: boolean
+): T {
+  const fp: number[] = Array.isArray(pp) ? pp : ([pp] as any);
+
+  const result = fp.map(p => {
     if (prob <= 0 || prob > 1) {
-        return ML_ERR_return_NAN();
+      return ML_ERR_return_NAN(printer);
     }
 
     let rc = R_Q_P01_boundaries(lower_tail, log_p, p, 0, ML_POSINF);
     if (rc !== undefined) {
-        return rc;
+      return rc;
     }
 
+    if (ISNAN(p) || ISNAN(prob)) return p + prob;
 
-    if (ISNAN(p) || ISNAN(prob))
-        return p + prob;
-
-
-    if (prob === 1) return (0);
+    if (prob === 1) return 0;
     /* add a fuzz to ensure left continuity, but value must be >= 0 */
-    return fmax2(0, ceil(R_DT_Clog(lower_tail, log_p, p) / log1p(- prob) - 1 - 1e-12));
+    return fmax2(
+      0,
+      ceil(R_DT_Clog(lower_tail, log_p, p) / log1p(-prob) - 1 - 1e-12)
+    );
+  });
+  return result.length === 1 ? result[0] : result as any;
 }

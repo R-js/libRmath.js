@@ -86,13 +86,13 @@ function _qnchisq(
 
   if (ISNAN(p) || ISNAN(df) || ISNAN(ncp)) return p + df + ncp;
 
-  if (!R_FINITE(df)) ML_ERR_return_NAN(printer);
+  if (!R_FINITE(df)) return ML_ERR_return_NAN(printer);
 
   /* Was
      * df = floor(df + 0.5);
      * if (df < 1 || ncp < 0) ML_ERR_return_NAN;
      */
-  if (df < 0 || ncp < 0) ML_ERR_return_NAN(printer);
+  if (df < 0 || ncp < 0) return ML_ERR_return_NAN(printer);
 
   let rc = R_Q_P01_boundaries(lower_tail, log_p, p, 0, ML_POSINF);
   if (rc !== undefined) {

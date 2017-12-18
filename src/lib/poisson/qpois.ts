@@ -34,6 +34,8 @@
  *	this initial start point.
  */
 
+import * as debug from 'debug';
+
 import { ML_ERR_return_NAN, R_Q_P01_boundaries } from '~common';
 
 const { max: fmax2, sqrt, floor, round: nearbyint } = Math;
@@ -93,6 +95,8 @@ export function qpois<T>(
   return result.length === 1 ? result[0] : (result as any);
 }
 
+const printer_qpois = debug('_qpois');
+
 function _qpois(
   p: number,
   lambda: number,
@@ -109,9 +113,9 @@ function _qpois(
   if (ISNAN(p) || ISNAN(lambda)) return p + lambda;
 
   if (!R_FINITE(lambda)) {
-    return ML_ERR_return_NAN();
+    return ML_ERR_return_NAN(printer_qpois);
   }
-  if (lambda < 0) ML_ERR_return_NAN;
+  if (lambda < 0) return ML_ERR_return_NAN(printer_qpois);
   if (lambda === 0) return 0;
 
   let rc = R_Q_P01_boundaries(lower_tail, log_p, p, 0, ML_POSINF);

@@ -75,7 +75,7 @@ export function dbeta<T>(_x: T, a: number, b: number, give_log: boolean): T {
   const result = fa.map(x => {
     if (ISNAN(x) || ISNAN(a) || ISNAN(b)) return x + a + b;
 
-    if (a < 0 || b < 0) ML_ERR_return_NAN(printer);
+    if (a < 0 || b < 0) return ML_ERR_return_NAN(printer);
     if (x < 0 || x > 1) return R_D__0(give_log);
 
     // limit cases for (a,b), leading to point masses

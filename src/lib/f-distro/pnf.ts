@@ -26,6 +26,7 @@
 *	The distribution function of the non-central F distribution.
 */
 
+import * as debug from 'debug';
 import { ML_ERR_return_NAN, R_P_bounds_01 } from '~common';
 
 import { pnchisq } from '../chi-2/pnchisq';
@@ -38,6 +39,7 @@ const {
   POSITIVE_INFINITY: ML_POSINF
 } = Number;
 
+const printer_pnf = debug('pnf');
 export function pnf<T>(
   xx: T,
   df1: number,
@@ -54,11 +56,11 @@ export function pnf<T>(
     if (ISNAN(x) || ISNAN(df1) || ISNAN(df2) || ISNAN(ncp))
       return x + df2 + df1 + ncp;
 
-    if (df1 <= 0 || df2 <= 0 || ncp < 0) return ML_ERR_return_NAN();
-    if (!R_FINITE(ncp)) return ML_ERR_return_NAN();
+    if (df1 <= 0 || df2 <= 0 || ncp < 0) return ML_ERR_return_NAN(printer_pnf);
+    if (!R_FINITE(ncp)) return ML_ERR_return_NAN(printer_pnf);
     if (!R_FINITE(df1) && !R_FINITE(df2))
       /* both +Inf */
-      return ML_ERR_return_NAN();
+      return ML_ERR_return_NAN(printer_pnf);
 
     let rc = R_P_bounds_01(lowerTail, logP, x, 0, ML_POSINF);
     if (rc !== undefined) {

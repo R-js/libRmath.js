@@ -57,7 +57,7 @@ export function qf<T>(
   const result = fp.map(p => {
     if (ISNAN(p) || ISNAN(df1) || ISNAN(df2)) return p + df1 + df2;
 
-    if (df1 <= 0 || df2 <= 0) ML_ERR_return_NAN(printer);
+    if (df1 <= 0 || df2 <= 0) return ML_ERR_return_NAN(printer);
 
     let rc = R_Q_P01_boundaries(lower_tail, log_p, p, 0, ML_POSINF);
     if (rc !== undefined) {

@@ -61,13 +61,13 @@ export function pbinom<T>(
 
   if (R_nonint(n)) {
     printer('non-integer n = %d', n);
-    ML_ERR_return_NAN(printer);
+    return ML_ERR_return_NAN(printer);
   }
   n = R_forceint(n);
   /* 
      PR#8560: n=0 is a valid value 
   */
-  if (n < 0 || p < 0 || p > 1) ML_ERR_return_NAN(printer);
+  if (n < 0 || p < 0 || p > 1) return ML_ERR_return_NAN(printer);
 
   if (x < 0) return R_DT_0(lower_tail, log_p);
   x = floor(x + 1e-7);

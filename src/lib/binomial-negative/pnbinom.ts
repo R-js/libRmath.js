@@ -87,9 +87,9 @@ export function pnbinom_mu<T>(
   const fx: number[] = Array.isArray(xx) ? xx : ([xx] as any);
   const result = fx.map(x => {
     if (ISNAN(x) || ISNAN(size) || ISNAN(mu)) return x + size + mu;
-    if (!R_FINITE(size) || !R_FINITE(mu)) ML_ERR_return_NAN(printer_pnbinom_mu);
+    if (!R_FINITE(size) || !R_FINITE(mu)) return ML_ERR_return_NAN(printer_pnbinom_mu);
 
-    if (size < 0 || mu < 0) ML_ERR_return_NAN(printer_pnbinom_mu);
+    if (size < 0 || mu < 0) return ML_ERR_return_NAN(printer_pnbinom_mu);
 
     /* limiting case: point mass at zero */
     if (size === 0)

@@ -25,27 +25,28 @@
  *
  *    The distribution function of the Weibull distribution.
  */
+import * as debug from 'debug';
 
 import {
-    ISNAN,
     ML_ERR_return_NAN,
     R_DT_0,
-    R_D_exp,
-    pow
+    R_D_exp
 } from '~common';
 
 import {
     R_Log1_Exp
 } from '~exp-utils';
 
-const { expm1 } = Math;
+const { expm1, pow } = Math;
+const { isNaN: ISNAN} = Number;
+const printer = debug('pweibull');
 
 export function pweibull(x: number, shape: number, scale: number, lower_tail: boolean, log_p: boolean): number {
 
     if (ISNAN(x) || ISNAN(shape) || ISNAN(scale))
         return x + shape + scale;
 
-    if (shape <= 0 || scale <= 0) ML_ERR_return_NAN;
+    if (shape <= 0 || scale <= 0)  return ML_ERR_return_NAN(printer);
 
     if (x <= 0) {
         return R_DT_0(lower_tail, log_p);

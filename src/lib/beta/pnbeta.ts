@@ -66,7 +66,7 @@ function pnbeta_raw(
   let sumq;
 
   if (ncp < 0 || a <= 0 || b <= 0) {
-    return ML_ERR_return_NAN();
+    return ML_ERR_return_NAN(printer);
   }
 
   if (x < 0 || o_x > 1 || (x === 0 && o_x === 1)) return 0;
@@ -104,12 +104,13 @@ function pnbeta_raw(
     errbd = (temp.val - gx) * sumq;
   } while (errbd > errmax && j < itrmax + x0);
 
-  if (errbd > errmax) ML_ERROR(ME.ME_PRECISION, 'pnbeta');
-  if (j >= itrmax + x0) ML_ERROR(ME.ME_NOCONV, 'pnbeta');
+  if (errbd > errmax)  ML_ERROR(ME.ME_PRECISION, 'pnbeta', printer);
+  if (j >= itrmax + x0)  ML_ERROR(ME.ME_NOCONV, 'pnbeta', printer);
 
   return ans;
 }
 
+const printer_pnbeta2 = debug('pnbeta2');
 export function pnbeta2(
   x: number,
   o_x: number,
@@ -125,7 +126,7 @@ export function pnbeta2(
   if (lower_tail) {
     return log_p ? log(ans) : ans;
   } else {
-    if (ans > 1 - 1e-10) ML_ERROR(ME.ME_PRECISION, 'pnbeta');
+    if (ans > 1 - 1e-10) ML_ERROR(ME.ME_PRECISION, 'pnbeta', printer_pnbeta2);
     if (ans > 1.0) ans = 1.0; /* Precaution */
     /* include standalone case */
     return log_p ? log1p(-ans) : 1 - ans;

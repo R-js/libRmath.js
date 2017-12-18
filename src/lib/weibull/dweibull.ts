@@ -27,16 +27,16 @@
  *    The density function of the Weibull distribution.
  */
 
+import * as debug from 'debug';
+
 import {
-    ISNAN,
-    R_FINITE,
-    pow,
-    ML_POSINF,
     ML_ERR_return_NAN,
     R_D__0,
-    log,
-    exp
 } from '~common';
+
+const { pow, log, exp} = Math;
+const { isNaN: ISNAN, isFinite:R_FINITE, POSITIVE_INFINITY: ML_POSINF } = Number;
+const printer = debug('dweilbull');
 
 export function dweibull(x: number, shape: number, scale: number, give_log: boolean): number {
 
@@ -44,7 +44,7 @@ export function dweibull(x: number, shape: number, scale: number, give_log: bool
     let tmp2;
     if (ISNAN(x) || ISNAN(shape) || ISNAN(scale))
         return x + shape + scale;
-    if (shape <= 0 || scale <= 0) ML_ERR_return_NAN;
+    if (shape <= 0 || scale <= 0) return ML_ERR_return_NAN(printer);
 
     if (x < 0) return R_D__0(give_log);
     if (!R_FINITE(x)) return R_D__0(give_log);

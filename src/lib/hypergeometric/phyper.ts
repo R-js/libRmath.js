@@ -50,26 +50,34 @@
 
 */
 
+import * as debug from 'debug';
 
 import {
-    DBL_EPSILON,
-    ISNAN,
-    floor,
-    R_forceint,
-    R_FINITE,
-    ML_ERR_return_NAN,
-    R_DT_0,
-    R_DT_1,
-    R_D_Lval
+  DBL_EPSILON,
+  ISNAN,
+  floor,
+  R_forceint,
+  R_FINITE,
+  ML_ERR_return_NAN,
+  R_DT_0,
+  R_DT_1,
+  R_D_Lval
 } from '~common';
 
 import { R_DT_log } from '~exp-utils';
 import { dhyper } from './dhyper';
-import { log1p } from '~log';
 
-export function pdhyper(x: number, NR: number, NB: number, n: number, log_p: boolean): number {
-    
-    /*
+const { log1p } = Math;
+
+const printer_pdhyper = debug('pdhyper');
+export function pdhyper(
+  x: number,
+  NR: number,
+  NB: number,
+  n: number,
+  log_p: boolean
+): number {
+  /*
      * Calculate
      *
      *	    phyper (x, NR, NB, n, TRUE, FALSE)
@@ -82,59 +90,62 @@ export function pdhyper(x: number, NR: number, NB: number, n: number, log_p: boo
      *
      */
 
-    let sum = 0;
-    let term = 1;
+  let sum = 0;
+  let term = 1;
 
-    while (x > 0 && term >= DBL_EPSILON * sum) {
-        term *= x * (NB - n + x) / (n + 1 - x) / (NR + 1 - x);
-        sum += term;
-        x--;
-    }
+  while (x > 0 && term >= DBL_EPSILON * sum) {
+    term *= x * (NB - n + x) / (n + 1 - x) / (NR + 1 - x);
+    sum += term;
+    x--;
+  }
 
-    let ss = sum;
-    return log_p ? log1p(ss) : 1 + ss;
+  let ss = sum;
+  return log_p ? log1p(ss) : 1 + ss;
 }
-
 
 /* FIXME: The old phyper() code was basically used in ./qhyper.c as well
  * -----  We need to sync this again!
 */
-export function phyper(x: number, NR: number, NB: number, n: number, lower_tail: boolean, log_p: boolean): number {
-    /* Sample of  n balls from  NR red  and	 NB black ones;	 x are red */
+export function phyper(
+  x: number,
+  NR: number,
+  NB: number,
+  n: number,
+  lower_tail: boolean,
+  log_p: boolean
+): number {
+  /* Sample of  n balls from  NR red  and	 NB black ones;	 x are red */
 
-    let d: number;
-    let pd: number;
+  let d: number;
+  let pd: number;
 
+  if (ISNAN(x) || ISNAN(NR) || ISNAN(NB) || ISNAN(n)) return x + NR + NB + n;
 
-    if (ISNAN(x) || ISNAN(NR) || ISNAN(NB) || ISNAN(n))
-        return x + NR + NB + n;
+  x = floor(x + 1e-7);
+  NR = R_forceint(NR);
+  NB = R_forceint(NB);
+  n = R_forceint(n);
 
+  if (NR < 0 || NB < 0 || !R_FINITE(NR + NB) || n < 0 || n > NR + NB) {
+    return ML_ERR_return_NAN(printer_pdhyper);
+  }
 
-    x = floor(x + 1e-7);
-    NR = R_forceint(NR);
-    NB = R_forceint(NB);
-    n = R_forceint(n);
+  if (x * (NR + NB) > n * NR) {
+    /* Swap tails.	*/
+    let oldNB = NB;
+    NB = NR;
+    NR = oldNB;
+    x = n - x - 1;
+    lower_tail = !lower_tail;
+  }
 
-    if (NR < 0 || NB < 0 || !R_FINITE(NR + NB) || n < 0 || n > NR + NB) {
-        return ML_ERR_return_NAN();
-    }
+  if (x < 0) return R_DT_0(lower_tail, log_p);
+  if (x >= NR || x >= n) return R_DT_1(lower_tail, log_p);
 
-    if (x * (NR + NB) > n * NR) {
-        /* Swap tails.	*/
-        let oldNB = NB;
-        NB = NR;
-        NR = oldNB;
-        x = n - x - 1;
-        lower_tail = !lower_tail;
-    }
+  d = dhyper(x, NR, NB, n, log_p);
+  pd = pdhyper(x, NR, NB, n, log_p);
 
-    if (x < 0)
-        return R_DT_0(lower_tail, log_p);
-    if (x >= NR || x >= n)
-        return R_DT_1(lower_tail, log_p);
-
-    d = dhyper(x, NR, NB, n, log_p);
-    pd = pdhyper(x, NR, NB, n, log_p);
-
-    return log_p ? R_DT_log(lower_tail, log_p, d + pd) : R_D_Lval(lower_tail, d * pd);
+  return log_p
+    ? R_DT_log(lower_tail, log_p, d + pd)
+    : R_D_Lval(lower_tail, d * pd);
 }

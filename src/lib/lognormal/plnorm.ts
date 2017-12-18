@@ -27,11 +27,16 @@
  *    The lognormal distribution function.
  */
 
-import { ISNAN, ML_ERR_return_NAN, R_DT_0, log } from '~common';
+import * as debug from 'debug';
+import { ML_ERR_return_NAN, R_DT_0 } from '~common';
 
 import { pnorm5 as pnorm } from '../normal/pnorm';
 
 const { isArray } = Array;
+const { isNaN:ISNAN } = Number;
+const { log } = Math;
+
+const printer = debug('plnorm');
 
 export function plnorm(
   x: number | number[],
@@ -40,14 +45,13 @@ export function plnorm(
   lower_tail: boolean,
   log_p: boolean
 ): number | number[] {
-
   let fa: number[] = (() => (isArray(x) && x) || [x])();
 
   let result = fa.map(fx => {
     if (ISNAN(fx) || ISNAN(meanlog) || ISNAN(sdlog))
       return fx + meanlog + sdlog;
 
-    if (sdlog < 0) ML_ERR_return_NAN;
+    if (sdlog < 0) return ML_ERR_return_NAN(printer);
 
     if (fx > 0) return pnorm(log(fx), meanlog, sdlog, lower_tail, log_p);
     return R_DT_0(lower_tail, log_p);

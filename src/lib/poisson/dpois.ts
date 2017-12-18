@@ -93,7 +93,7 @@ export function dpois(
     if (lambda < 0) {
       return ML_ERR_return_NAN(printer);
     }
-    let rc = R_D_nonint_check(give_log, x);
+    let rc = R_D_nonint_check(give_log, x, printer);
     if (rc !== undefined) {
       return rc;
     }

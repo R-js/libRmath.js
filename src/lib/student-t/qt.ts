@@ -42,47 +42,52 @@
  *	- Improve the formula decision for 1 < df < 2
  */
 
+import * as debug from 'debug';
+
 import {
-  ISNAN,
   R_Q_P01_boundaries,
-  fmin2,
-  DBL_EPSILON,
-  DBL_MAX,
-  DBL_MIN,
-  ML_POSINF,
-  fabs,
-  log,
-  exp,
-  pow,
-  ML_NEGINF,
   ML_ERR_return_NAN,
   ML_ERROR,
   ME,
   R_D_qIv,
   R_D_Lval,
   R_D_Cval,
-  sqrt,
   M_1_PI,
-  M_PI,
   M_PI_2,
-  R_FINITE,
   DBL_MANT_DIG,
-  M_LN2,
-  R_D_log,
-  M_SQRT2
+  R_D_log
 } from '~common';
 
 import { R_DT_qIv, R_D_LExp } from '~exp-utils';
-
-const { expm1 } = Math;
-
 import { pt } from './pt';
-
 import { INormal } from '~normal';
-
 import { dt } from './dt';
-
 import { tanpi } from '~trigonometry';
+
+const {
+  LN2: M_LN2,
+  PI: M_PI,
+  SQRT2: M_SQRT2,
+  sqrt,
+  pow,
+  log,
+  exp,
+  min: fmin2,
+  abs: fabs,
+  expm1
+} = Math;
+
+const {
+  isNaN: ISNAN,
+  EPSILON: DBL_EPSILON,
+  MAX_VALUE: DBL_MAX,
+  MIN_VALUE: DBL_MIN,
+  POSITIVE_INFINITY: ML_POSINF,
+  NEGATIVE_INFINITY: ML_NEGINF,
+  isFinite: R_FINITE
+} = Number;
+
+const printer_qt = debug('qt');
 
 export function qt(
   p: number,
@@ -104,7 +109,7 @@ export function qt(
   if (rc !== undefined) {
     return rc;
   }
-  if (ndf <= 0) return ML_ERR_return_NAN();
+  if (ndf <= 0) return ML_ERR_return_NAN(printer_qt);
 
   if (ndf < 1) {
     /* based on qnt */
@@ -144,7 +149,7 @@ export function qt(
     } while ((ux - lx) / fabs(nx) > accu && ++iter < 1000);
 
     if (iter >= 1000) {
-      ML_ERROR(ME.ME_PRECISION, 'qt');
+      ML_ERROR(ME.ME_PRECISION, 'qt', printer_qt);
     }
 
     return 0.5 * (lx + ux);

@@ -63,19 +63,9 @@
  * FIXME: pnt() is known to be inaccurate in the (very) left tail and for ncp > 38
  *       ==> use a direct log-space summation formula in that case
  */
+import * as debug from 'debug';
 
-import {
-  ISNAN,
-  R_FINITE,
-  R_D__0,
-  ML_ERR_return_NAN,
-  fabs,
-  sqrt,
-  log,
-  exp,
-  M_LN_SQRT_PI,
-  DBL_EPSILON
-} from '~common';
+import { R_D__0, ML_ERR_return_NAN, M_LN_SQRT_PI } from '~common';
 
 import { dt } from './dt';
 
@@ -84,6 +74,10 @@ import { INormal } from '~normal';
 import { lgammafn } from '../gamma/lgamma_fn';
 
 import { pnt } from './pnt';
+
+const { isNaN: ISNAN, isFinite: R_FINITE, EPSILON: DBL_EPSILON } = Number;
+const { abs: fabs, sqrt, log, exp } = Math;
+const printer_dnt = debug('dnt');
 
 export function dnt(
   x: number,
@@ -97,7 +91,7 @@ export function dnt(
   if (ISNAN(x) || ISNAN(df)) return x + df;
 
   /* If non-positive df then error */
-  if (df <= 0.0) ML_ERR_return_NAN;
+  if (df <= 0.0) return ML_ERR_return_NAN(printer_dnt);
 
   if (ncp === 0.0) return dt(x, df, give_log, normal);
 

@@ -24,18 +24,16 @@
 
 /*  DESCRIPTION --> see below */
 
-
 /* From http://www.netlib.org/specfun/rybesl	Fortran translated by f2c,...
  *	------------------------------=#----	Martin Maechler, ETH Zurich
  */
+import * as debug from 'debug';
+
 import {
   DBL_MIN,
   M_SQRT_2dPI,
   DBL_EPSILON,
-  sqrt,
-  fabs,
   DBL_MAX,
-  log,
   thresh_BESS_Y,
   ML_POSINF,
   ISNAN,
@@ -45,24 +43,19 @@ import {
   M_1_PI,
   M_PI,
   M_PI_2,
-  trunc,
-  floor,
   MATHLIB_WARNING,
   MATHLIB_WARNING4,
   MATHLIB_WARNING2,
   min0,
   xlrg_BESS_Y,
   ML_NEGINF,
-  sin,
-  pow,
-  cos,
   M_eps_sinc
 } from '~common';
 
 import { bessel_j_ex, bessel_j } from './bessel_j';
-
 import { cospi, sinpi } from '~trigonometry';
 
+const { cos, pow, sin, floor, trunc, abs: fabs, sqrt, log } = Math;
 
 interface YBesselProperties {
   x: number;
@@ -70,10 +63,11 @@ interface YBesselProperties {
   nb: number;
   by: number[];
   ncalc: number;
-
 }
 
 // unused now from R
+const printer_bessel_y = debug('bessel_y');
+
 export function bessel_y(x: number, alpha: number): number {
   let nb: number;
   let ncalc: number = 0;
@@ -82,23 +76,26 @@ export function bessel_y(x: number, alpha: number): number {
   /* NaNs propagated correctly */
   if (ISNAN(x) || ISNAN(alpha)) return x + alpha;
   if (x < 0) {
-    ML_ERROR(ME.ME_RANGE, 'bessel_y');
+    ML_ERROR(ME.ME_RANGE, 'bessel_y', printer_bessel_y);
     return ML_NAN;
   }
   na = floor(alpha);
   if (alpha < 0) {
     /* Using Abramowitz & Stegun  9.1.2
      * this may not be quite optimal (CPU and accuracy wise) */
-    return (((alpha - na === 0.5) ? 0 : bessel_y(x, -alpha) * cospi(alpha)) -
-      ((alpha === na) ? 0 : bessel_j(x, -alpha) * sinpi(alpha)));
-  }
-  else if (alpha > 1e7) {
-    MATHLIB_WARNING('besselY(x, nu): nu=%g too large for bessel_y() algorithm',
-      alpha);
+    return (
+      (alpha - na === 0.5 ? 0 : bessel_y(x, -alpha) * cospi(alpha)) -
+      (alpha === na ? 0 : bessel_j(x, -alpha) * sinpi(alpha))
+    );
+  } else if (alpha > 1e7) {
+    printer_bessel_y(
+      'besselY(x, nu): nu=%d too large for bessel_y() algorithm',
+      alpha
+    );
     return ML_NAN;
   }
-  nb = 1 + trunc(na); // nb-1 <= alpha < nb 
-  alpha -= (nb - 1);
+  nb = 1 + trunc(na); // nb-1 <= alpha < nb
+  alpha -= nb - 1;
   _by = new Array<number>(nb);
   let input: YBesselProperties = { x, alpha, nb, by: _by, ncalc: ncalc };
   Y_bessel(input);
@@ -106,16 +103,24 @@ export function bessel_y(x: number, alpha: number): number {
   //no need for _by = input.by
   ({ x, alpha, nb, ncalc } = input);
 
-  if (ncalc !== nb) {// error input 
+  if (ncalc !== nb) {
+    // error input
     if (ncalc === -1) {
       return ML_POSINF;
-    }
-    else if (ncalc < -1)
-      MATHLIB_WARNING4('bessel_y(%g): ncalc (=%d) != nb (=%d); alpha=%g. Arg. out of range?\n',
-        x, ncalc, nb, alpha);
-    else /* ncalc >= 0 */
-      MATHLIB_WARNING2('bessel_y(%g,nu=%g): precision lost in result\n',
-        x, alpha + nb - 1);
+    } else if (ncalc < -1)
+      printer_bessel_y_ex(
+        'bessel_y(%d): ncalc (=%d) != nb (=%d); alpha=%d. Arg. out of range?',
+        x,
+        ncalc,
+        nb,
+        alpha
+      ); /* ncalc >= 0 */
+    else
+      MATHLIB_WARNING2(
+        'bessel_y(%d,nu=%d): precision lost in result',
+        x,
+        alpha + nb - 1
+      );
   }
   x = _by[nb - 1];
   return x;
@@ -123,8 +128,9 @@ export function bessel_y(x: number, alpha: number): number {
 
 /* Called from R: modified version of bessel_y(), accepting a work array
  * instead of allocating one. */
-export function bessel_y_ex(x: number, alpha: number, by: number[]): number {
+const printer_bessel_y_ex = debug('bessel_y_ex');
 
+export function bessel_y_ex(x: number, alpha: number, by: number[]): number {
   let nb: number;
   let ncalc: number;
   let na: number;
@@ -133,44 +139,53 @@ export function bessel_y_ex(x: number, alpha: number, by: number[]): number {
   if (ISNAN(x) || ISNAN(alpha)) return x + alpha;
 
   if (x < 0) {
-    ML_ERROR(ME.ME_RANGE, 'bessel_y');
+    ML_ERROR(ME.ME_RANGE, 'bessel_y', printer_bessel_y_ex);
     return ML_NAN;
   }
   na = floor(alpha);
   if (alpha < 0) {
     /* Using Abramowitz & Stegun  9.1.2
      * this may not be quite optimal (CPU and accuracy wise) */
-    return (((alpha - na === 0.5) ? 0 : bessel_y_ex(x, -alpha, by) * cospi(alpha)) -
-      ((alpha === na) ? 0 : bessel_j_ex(x, -alpha, by) * sinpi(alpha)));
-  }
-  else if (alpha > 1e7) {
-    MATHLIB_WARNING('besselY(x, nu): nu=%g too large for bessel_y() algorithm',
-      alpha);
+    return (
+      (alpha - na === 0.5 ? 0 : bessel_y_ex(x, -alpha, by) * cospi(alpha)) -
+      (alpha === na ? 0 : bessel_j_ex(x, -alpha, by) * sinpi(alpha))
+    );
+  } else if (alpha > 1e7) {
+    printer_bessel_y_ex(
+      'besselY(x, nu): nu=%d too large for bessel_y() algorithm',
+      alpha
+    );
     return ML_NAN;
   }
   nb = 1 + trunc(na); /* nb-1 <= alpha < nb */
-  alpha -= (nb - 1);
+  alpha -= nb - 1;
   let input: YBesselProperties = { x, alpha, nb, by, ncalc: 0 };
   Y_bessel(input);
   //unwind
   ({ x, alpha, nb, by, ncalc } = input);
-  if (ncalc !== nb) {/* error input */
-    if (ncalc === -1)
-      return ML_POSINF;
+  if (ncalc !== nb) {
+    /* error input */
+    if (ncalc === -1) return ML_POSINF;
     else if (ncalc < -1)
-      MATHLIB_WARNING4('bessel_y(%g): ncalc (=%d) != nb (=%d); alpha=%g. Arg. out of range?\n',
-        x, ncalc, nb, alpha);
-    else /* ncalc >= 0 */
-      MATHLIB_WARNING2('bessel_y(%g,nu=%g): precision lost in result\n',
-        x, alpha + nb - 1);
+      printer_bessel_y_ex(
+        'bessel_y(%d): ncalc (=%d) != nb (=%d); alpha=%d. Arg. out of range?',
+        x,
+        ncalc,
+        nb,
+        alpha
+      ); /* ncalc >= 0 */
+    else
+      printer_bessel_y_ex(
+        'bessel_y(%d,nu=%d): precision lost in result',
+        x,
+        alpha + nb - 1
+      );
   }
   x = by[nb - 1];
   return x;
 }
 
-
 function Y_bessel(input: YBesselProperties) {
-
   /* ----------------------------------------------------------------------
   
    This routine calculates Bessel functions Y_(N+ALPHA) (X)
@@ -249,30 +264,40 @@ function Y_bessel(input: YBesselProperties) {
            Argonne, IL  60439
    ----------------------------------------------------------------------*/
 
-
   /* ----------------------------------------------------------------------
     Mathematical constants
       FIVPI = 5*PI
       PIM5 = 5*PI - 15
    ----------------------------------------------------------------------*/
   const fivpi = 15.707963267948966192;
-  const pim5 = .70796326794896619231;
+  const pim5 = 0.70796326794896619231;
 
   /*----------------------------------------------------------------------
     Coefficients for Chebyshev polynomial expansion of
     1/gamma(1-x), abs(x) <= .5
     ----------------------------------------------------------------------*/
-  const ch = [-6.7735241822398840964e-24,
-  -6.1455180116049879894e-23, 2.9017595056104745456e-21,
-    1.3639417919073099464e-19, 2.3826220476859635824e-18,
-  -9.0642907957550702534e-18, -1.4943667065169001769e-15,
-  -3.3919078305362211264e-14, -1.7023776642512729175e-13,
-    9.1609750938768647911e-12, 2.4230957900482704055e-10,
-    1.7451364971382984243e-9, -3.3126119768180852711e-8,
-  -8.6592079961391259661e-7, -4.9717367041957398581e-6,
-    7.6309597585908126618e-5, .0012719271366545622927,
-    .0017063050710955562222, -.07685284084478667369,
-  -.28387654227602353814, .92187029365045265648
+  const ch = [
+    -6.7735241822398840964e-24,
+    -6.1455180116049879894e-23,
+    2.9017595056104745456e-21,
+    1.3639417919073099464e-19,
+    2.3826220476859635824e-18,
+    -9.0642907957550702534e-18,
+    -1.4943667065169001769e-15,
+    -3.3919078305362211264e-14,
+    -1.7023776642512729175e-13,
+    9.1609750938768647911e-12,
+    2.4230957900482704055e-10,
+    1.7451364971382984243e-9,
+    -3.3126119768180852711e-8,
+    -8.6592079961391259661e-7,
+    -4.9717367041957398581e-6,
+    7.6309597585908126618e-5,
+    0.0012719271366545622927,
+    0.0017063050710955562222,
+    -0.07685284084478667369,
+    -0.28387654227602353814,
+    0.92187029365045265648
   ];
 
   /* Local variables */
@@ -326,109 +351,109 @@ function Y_bessel(input: YBesselProperties) {
       input.by[i] = ML_NEGINF; /* was 0 */
   }
 
-  en1 = ya = ya1 = 0;		/* -Wall */
+  en1 = ya = ya1 = 0; /* -Wall */
 
   let by = input.by; //special case coz, by is an ARRAY
 
   ex = input.x;
   nu = input.alpha;
-  if (input.nb > 0 && 0. <= nu && nu < 1.) {
+  if (input.nb > 0 && 0 <= nu && nu < 1) {
     if (ex < DBL_MIN || ex > xlrg_BESS_Y) {
       /* Warning is not really appropriate, give
        * proper limit:
        * ML_ERROR(ME_RANGE, "Y_bessel"); */
       input.ncalc = input.nb;
-      if (ex > xlrg_BESS_Y) by[0] = 0.; /*was ML_POSINF */
-      else if (ex < DBL_MIN) by[0] = ML_NEGINF;
-      for (i = 0; i < input.nb; i++)
-        by[i] = by[0];
+      if (ex > xlrg_BESS_Y) by[0] = 0;
+      else if (ex < DBL_MIN)
+        /*was ML_POSINF */
+        by[0] = ML_NEGINF;
+      for (i = 0; i < input.nb; i++) by[i] = by[0];
       return;
     }
-    xna = trunc(nu + .5);
+    xna = trunc(nu + 0.5);
     na = trunc(xna);
-    if (na === 1) {/* <==>  .5 <= *alpha < 1	 <==>  -5. <= nu < 0 */
+    if (na === 1) {
+      /* <==>  .5 <= *alpha < 1	 <==>  -5. <= nu < 0 */
       nu -= xna;
     }
-    if (nu === -.5) {
+    if (nu === -0.5) {
       p = M_SQRT_2dPI / sqrt(ex);
       ya = p * sin(ex);
       ya1 = -p * cos(ex);
-    } else if (ex < 3.) {
+    } else if (ex < 3) {
       /* -------------------------------------------------------------
          Use Temme's scheme for small X
          ------------------------------------------------------------- */
-      b = ex * .5;
+      b = ex * 0.5;
       d = -log(b);
       f = nu * d;
       e = pow(b, -nu);
-      if (fabs(nu) < M_eps_sinc)
-        c = M_1_PI;
-      else
-        c = nu / sinpi(nu);
+      if (fabs(nu) < M_eps_sinc) c = M_1_PI;
+      else c = nu / sinpi(nu);
 
       /* ------------------------------------------------------------
          Computation of sinh(f)/f
          ------------------------------------------------------------ */
-      if (fabs(f) < 1.) {
+      if (fabs(f) < 1) {
         x2 = f * f;
-        en = 19.;
-        s = 1.;
+        en = 19;
+        s = 1;
         for (i = 1; i <= 9; ++i) {
-          s = s * x2 / en / (en - 1.) + 1.;
-          en -= 2.;
+          s = s * x2 / en / (en - 1) + 1;
+          en -= 2;
         }
       } else {
-        s = (e - 1. / e) * .5 / f;
+        s = (e - 1 / e) * 0.5 / f;
       }
       /* --------------------------------------------------------
          Computation of 1/gamma(1-a) using Chebyshev polynomials */
-      x2 = nu * nu * 8.;
+      x2 = nu * nu * 8;
       aye = ch[0];
-      even = 0.;
+      even = 0;
       alfa = ch[1];
-      odd = 0.;
+      odd = 0;
       for (i = 3; i <= 19; i += 2) {
         even = -(aye + aye + even);
         aye = -even * x2 - aye + ch[i - 1];
         odd = -(alfa + alfa + odd);
         alfa = -odd * x2 - alfa + ch[i];
       }
-      even = (even * .5 + aye) * x2 - aye + ch[20];
-      odd = (odd + alfa) * 2.;
+      even = (even * 0.5 + aye) * x2 - aye + ch[20];
+      odd = (odd + alfa) * 2;
       gamma = odd * nu + even;
       /* End of computation of 1/gamma(1-a)
          ----------------------------------------------------------- */
       g = e * gamma;
-      e = (e + 1. / e) * .5;
-      f = 2. * c * (odd * e + even * s * d);
+      e = (e + 1 / e) * 0.5;
+      f = 2 * c * (odd * e + even * s * d);
       e = nu * nu;
       p = g * c;
       q = M_1_PI / g;
       c = nu * M_PI_2;
-      if (fabs(c) < M_eps_sinc)
-        r = 1.;
-      else
-        r = sinpi(nu / 2) / c;
+      if (fabs(c) < M_eps_sinc) r = 1;
+      else r = sinpi(nu / 2) / c;
 
       r = M_PI * c * r * r;
-      c = 1.;
+      c = 1;
       d = -b * b;
-      h = 0.;
+      h = 0;
       ya = f + r * q;
       ya1 = p;
-      en = 1.;
+      en = 1;
 
-      while (fabs(g / (1. + fabs(ya))) +
-        fabs(h / (1. + fabs(ya1))) > DBL_EPSILON) {
+      while (
+        fabs(g / (1 + fabs(ya))) + fabs(h / (1 + fabs(ya1))) >
+        DBL_EPSILON
+      ) {
         f = (f * en + p + q) / (en * en - e);
-        c *= (d / en);
+        c *= d / en;
         p /= en - nu;
         q /= en + nu;
         g = c * (f + r * q);
         h = c * p - en * g;
         ya += g;
         ya1 += h;
-        en += 1.;
+        en += 1;
       }
       ya = -ya;
       ya1 = -ya1 / b;
@@ -436,18 +461,18 @@ function Y_bessel(input: YBesselProperties) {
       /* --------------------------------------------------------------
          Use Temme's scheme for moderate X :  3 <= x < 16
          -------------------------------------------------------------- */
-      c = (.5 - nu) * (.5 + nu);
+      c = (0.5 - nu) * (0.5 + nu);
       b = ex + ex;
       e = ex * M_1_PI * cospi(nu) / DBL_EPSILON;
       e *= e;
-      p = 1.;
+      p = 1;
       q = -ex;
-      r = 1. + ex * ex;
+      r = 1 + ex * ex;
       s = r;
-      en = 2.;
+      en = 2;
       while (r * en * en < e) {
-        en1 = en + 1.;
-        d = (en - 1. + c / en) / s;
+        en1 = en + 1;
+        d = (en - 1 + c / en) / s;
         p = (en + en - p * d) / en1;
         q = (-b + q * d) / en1;
         s = p * p + q * q;
@@ -460,14 +485,14 @@ function Y_bessel(input: YBesselProperties) {
       q = g;
       //L220:
       while (true) {
-        en -= 1.;
-        if (en > 0.) {
-          r = en1 * (2. - p) - 2.;
+        en -= 1;
+        if (en > 0) {
+          r = en1 * (2 - p) - 2;
           s = b + en1 * q;
-          d = (en - 1. + c / en) / (r * r + s * s);
+          d = (en - 1 + c / en) / (r * r + s * s);
           p = d * r;
           q = d * s;
-          e = f + 1.;
+          e = f + 1;
           f = p * e - g * q;
           g = q * e + p * g;
           en1 = en;
@@ -476,79 +501,78 @@ function Y_bessel(input: YBesselProperties) {
         }
         break;
       }
-      f = 1. + f;
+      f = 1 + f;
       d = f * f + g * g;
       pa = f / d;
       qa = -g / d;
-      d = nu + .5 - p;
+      d = nu + 0.5 - p;
       q += ex;
       pa1 = (pa * q - qa * d) / ex;
       qa1 = (qa * q + pa * d) / ex;
-      b = ex - M_PI_2 * (nu + .5);
+      b = ex - M_PI_2 * (nu + 0.5);
       c = cos(b);
       s = sin(b);
       d = M_SQRT_2dPI / sqrt(ex);
       ya = d * (pa * s + qa * c);
       ya1 = d * (qa1 * s - pa1 * c);
-    } else { /* x > thresh_BESS_Y */
+    } else {
+      /* x > thresh_BESS_Y */
       /* ----------------------------------------------------------
          Use Campbell's asymptotic scheme.
          ---------------------------------------------------------- */
       na = 0;
       d1 = trunc(ex / fivpi);
       i = trunc(d1);
-      dmu = ex - 15. * d1 - d1 * pim5 - (input.alpha + .5) * M_PI_2;
-      if (i - (i / 2 << 1) === 0) {
+      dmu = ex - 15 * d1 - d1 * pim5 - (input.alpha + 0.5) * M_PI_2;
+      if (i - ((i / 2) << 1) === 0) {
         cosmu = cos(dmu);
         sinmu = sin(dmu);
       } else {
         cosmu = -cos(dmu);
         sinmu = -sin(dmu);
       }
-      ddiv = 8. * ex;
+      ddiv = 8 * ex;
       dmu = input.alpha;
       den = sqrt(ex);
       for (k = 1; k <= 2; ++k) {
         p = cosmu;
         cosmu = sinmu;
         sinmu = -p;
-        d1 = (2. * dmu - 1.) * (2. * dmu + 1.);
-        d2 = 0.;
+        d1 = (2 * dmu - 1) * (2 * dmu + 1);
+        d2 = 0;
         div = ddiv;
-        p = 0.;
-        q = 0.;
+        p = 0;
+        q = 0;
         q0 = d1 / div;
         term = q0;
         for (i = 2; i <= 20; ++i) {
-          d2 += 8.;
+          d2 += 8;
           d1 -= d2;
           div += ddiv;
           term = -term * d1 / div;
           p += term;
-          d2 += 8.;
+          d2 += 8;
           d1 -= d2;
           div += ddiv;
-          term *= (d1 / div);
+          term *= d1 / div;
           q += term;
           if (fabs(term) <= DBL_EPSILON) {
             break;
           }
         }
-        p += 1.;
+        p += 1;
         q += q0;
-        if (k === 1)
-          ya = M_SQRT_2dPI * (p * cosmu - q * sinmu) / den;
-        else
-          ya1 = M_SQRT_2dPI * (p * cosmu - q * sinmu) / den;
-        dmu += 1.;
+        if (k === 1) ya = M_SQRT_2dPI * (p * cosmu - q * sinmu) / den;
+        else ya1 = M_SQRT_2dPI * (p * cosmu - q * sinmu) / den;
+        dmu += 1;
       }
     }
     if (na === 1) {
-      h = 2. * (nu + 1.) / ex;
-      if (h > 1.) {
+      h = 2 * (nu + 1) / ex;
+      if (h > 1) {
         if (fabs(ya1) > DBL_MAX / h) {
-          h = 0.;
-          ya = 0.;
+          h = 0;
+          ya = 0;
         }
       }
       h = h * ya1 - ya;
@@ -563,28 +587,25 @@ function Y_bessel(input: YBesselProperties) {
     input.ncalc = 1;
     if (input.nb > 1) {
       by[1] = ya1;
-      if (ya1 !== 0.) {
-        aye = 1. + input.alpha;
-        twobyx = 2. / ex;
+      if (ya1 !== 0) {
+        aye = 1 + input.alpha;
+        twobyx = 2 / ex;
         input.ncalc = 2;
         for (i = 2; i < input.nb; ++i) {
-          if (twobyx < 1.) {
-            if (fabs(by[i - 1]) * twobyx >= DBL_MAX / aye)
-              return L450();
+          if (twobyx < 1) {
+            if (fabs(by[i - 1]) * twobyx >= DBL_MAX / aye) return L450();
           } else {
-            if (fabs(by[i - 1]) >= DBL_MAX / aye / twobyx)
-              return L450();
+            if (fabs(by[i - 1]) >= DBL_MAX / aye / twobyx) return L450();
           }
           by[i] = twobyx * aye * by[i - 1] - by[i - 2];
-          aye += 1.;
-          ++(input.ncalc);
+          aye += 1;
+          ++input.ncalc;
         }
       }
     }
     L450();
   } else {
-    by[0] = 0.;
+    by[0] = 0;
     input.ncalc = min0(input.nb, 0) - 1;
   }
 }
-

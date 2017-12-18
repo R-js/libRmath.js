@@ -38,18 +38,19 @@
  *      As from R 2.3.0, a wrapper for TOMS708
  *      as from R 2.6.0, 'log_p' partially improved over log(p..)
  */
+import * as debug from 'debug';
 
 import {
-  ISNAN,
   ML_ERR_return_NAN,
-  R_FINITE,
   R_DT_1,
-  R_DT_0,
-  M_LN2,
-  MATHLIB_WARNING4
+  R_DT_0
 } from '~common';
 
 import { Toms708, NumberW } from '../common/toms708';
+const  { isNaN: ISNAN, isFinite: R_FINITE} = Number;
+const {LN2: M_LN2 } = Math;
+
+const printer = debug('pbeta_raw');
 
 export function pbeta_raw(
   x: number,
@@ -86,8 +87,8 @@ export function pbeta_raw(
   //====
   // ierr in {10,14} <==> bgrat() error code ierr-10 in 1:4; for 1 and 4, warned *there*
   if (ierr && ierr.val && ierr.val !== 11 && ierr.val !== 14)
-    MATHLIB_WARNING4(
-      'pbeta_raw(%g, a=%g, b=%g, ..) -> bratio() gave error code %d',
+  printer(
+      'pbeta_raw(%d, a=%d, b=%d, ..) -> bratio() gave error code %d',
       x,
       a,
       b,
@@ -95,6 +96,8 @@ export function pbeta_raw(
     );
   return lower_tail ? w.val : wc.val;
 } /* pbeta_raw() */
+
+const printer_pbeta = debug('pbeta');
 
 export function pbeta<T>(
   q: T,
@@ -108,7 +111,7 @@ export function pbeta<T>(
   const result = fa.map(x => {
     if (ISNAN(x) || ISNAN(a) || ISNAN(b)) return x + a + b;
 
-    if (a < 0 || b < 0) ML_ERR_return_NAN;
+    if (a < 0 || b < 0) return ML_ERR_return_NAN(printer_pbeta);
     // allowing a==0 and b==0  <==> treat as one- or two-point mass
 
     if (x <= 0) return R_DT_0(lower_tail, log_p);

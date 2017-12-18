@@ -120,8 +120,8 @@ export function dbinom(
     /* NaNs propagated correctly */
     if (ISNAN(x) || ISNAN(n) || ISNAN(p)) return x + n + p;
 
-    if (p < 0 || p > 1 || R_D_negInonint(n)) ML_ERR_return_NAN(printer);
-    R_D_nonint_check(logX, x);
+    if (p < 0 || p > 1 || R_D_negInonint(n)) return ML_ERR_return_NAN(printer);
+    R_D_nonint_check(logX, x, printer);
     if (x < 0 || !R_FINITE(x)) return R_D__0(logX);
 
     n = R_forceint(n);

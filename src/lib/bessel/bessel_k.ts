@@ -32,6 +32,8 @@
 /* From http://www.netlib.org/specfun/rkbesl	Fortran translated by f2c,...
  *	------------------------------=#----	Martin Maechler, ETH Zurich
  */
+import * as debug from 'debug';
+
 import {
   DBL_MIN,
   M_SQRT_2dPI,
@@ -57,6 +59,7 @@ import {
   min0
 } from '~common';
 
+const printer_bessel_k = debug('bessel_k');
 
 export function bessel_k(x: number, alpha: number, expo: number): number {
 
@@ -69,7 +72,7 @@ export function bessel_k(x: number, alpha: number, expo: number): number {
   if (ISNAN(x) || ISNAN(alpha)) return x + alpha;
 
   if (x < 0) {
-    ML_ERROR(ME.ME_RANGE, 'bessel_k');
+    ML_ERROR(ME.ME_RANGE, 'bessel_k', printer_bessel_k);
     return ML_NAN;
   }
   ize = trunc(expo);
@@ -107,7 +110,7 @@ export function bessel_k_ex(x: number, alpha: number, expo: number, bk: number[]
 
   if (ISNAN(x) || ISNAN(alpha)) return x + alpha;
   if (x < 0) {
-    ML_ERROR(ME.ME_RANGE, 'bessel_k');
+    ML_ERROR(ME.ME_RANGE, 'bessel_k', printer_bessel_k);
     return ML_NAN;
   }
   ize = trunc(expo);
@@ -313,7 +316,7 @@ export function K_bessel(input: KBesselProps): void {
   if (input.nb > 0 && (0. <= nu && nu < 1.) && (1 <= input.ize && input.ize <= 2)) {
     if (ex <= 0 || (input.ize === 1 && ex > xmax_BESS_K)) {
       if (ex <= 0) {
-        if (ex < 0) ML_ERROR(ME.ME_RANGE, 'K_bessel');
+        if (ex < 0) ML_ERROR(ME.ME_RANGE, 'K_bessel', printer_bessel_k);
         for (i = 0; i < input.nb; i++)
           input.bk[i] = ML_POSINF;
       } else /* would only have underflow */
@@ -553,15 +556,18 @@ export function K_bessel(input: KBesselProps): void {
       -------------------------------------------------------------------*/
     input.ncalc = input.nb;
     input.bk[0] = bk1;
-    if (iend === 0)
+    if (iend === 0){
       return;
+    }
 
     j = 1 - k;
-    if (j >= 0)
+    if (j >= 0){
       input.bk[j] = bk2;
+    }
 
-    if (iend === 1)
+    if (iend === 1){
       return;
+    }
 
     m = min0(trunc(wminf - nu), iend);
     for (i = 2; i <= m; ++i) {

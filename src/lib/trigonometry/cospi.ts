@@ -26,6 +26,8 @@
  * 
  */
 
+import * as debug from 'debug';
+
 import {
   ME,
   ML_ERROR,
@@ -50,12 +52,13 @@ const {
 */
 
 // cos(pi * x)  -- exact when x = k/2  for all integer k
+const printer_cospi = debug('cospi');
 
 export function cospi(x: number): number {
   // NaNs propagated correctly
   if (ISNAN(x)) return x;
   if (!R_FINITE(x)) {
-    ML_ERROR(ME.ME_DOMAIN, '');
+    ML_ERROR(ME.ME_DOMAIN, '', printer_cospi);
     return ML_NAN;
   }
 
@@ -68,10 +71,11 @@ export function cospi(x: number): number {
 }
 
 // sin(pi * x)  -- exact when x = k/2  for all integer k
+const printer_sinpi = debug('sinpi');
 export function sinpi(x: number): number {
   if (ISNAN(x)) return x;
   if (!R_FINITE(x)) {
-    ML_ERROR(ME.ME_DOMAIN, 'sinpi not finite');
+    ML_ERROR(ME.ME_DOMAIN, 'sinpi not finite', printer_sinpi);
     return ML_NAN;
   }
   x = fmod(x, 2); // sin(pi(x + 2k)) == sin(pi x)  for all integer k
@@ -86,10 +90,11 @@ export function sinpi(x: number): number {
 }
 
 // tan(pi * x)  -- exact when x = k/2  for all integer k
+const printer_tanpi = debug('tanpi');
 export function tanpi(x: number): number {
   if (ISNAN(x)) return x;
   if (!R_FINITE(x)) {
-    ML_ERROR(ME.ME_DOMAIN, '');
+    ML_ERROR(ME.ME_DOMAIN, '', printer_tanpi);
     return ML_NAN;
   }
   x = fmod(x, 1); // tan(pi(x + k)) == tan(pi x)  for all integer k

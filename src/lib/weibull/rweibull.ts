@@ -27,20 +27,25 @@
  *
  *    Random variates from the Weibull distribution.
  */
+import * as debug from 'debug';
 
-import {
-    R_FINITE,
-    ML_ERR_return_NAN,
-    pow,
-    log
-} from '~common';
+import { ML_ERR_return_NAN } from '~common';
+import { IRNG } from '../rng';
 
-export function rweibull(shape: number, scale: number, unif_rand: () => number): number {
-    if (!R_FINITE(shape) || !R_FINITE(scale) || shape <= 0. || scale <= 0.) {
-        if (scale === 0.) return 0.;
-        /* else */
-        return ML_ERR_return_NAN();
-    }
+const { log, pow } = Math;
+const { isFinite: R_FINITE } = Number;
+const printer = debug('rweibull');
 
-    return scale * pow(-log(unif_rand()), 1.0 / shape);
+export function rweibull(
+  shape: number,
+  scale: number,
+  rng: IRNG
+): number {
+  if (!R_FINITE(shape) || !R_FINITE(scale) || shape <= 0 || scale <= 0) {
+    if (scale === 0) return 0;
+    /* else */
+    return ML_ERR_return_NAN(printer);
+  }
+
+  return scale * pow(-log(rng.unif_rand()), 1.0 / shape);
 }

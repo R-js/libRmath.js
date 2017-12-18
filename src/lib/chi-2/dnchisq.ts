@@ -43,7 +43,7 @@ const {
   POSITIVE_INFINITY: ML_POSINF
 } = Number;
 
-const printer = debug('dnchisq');
+const printer_dnchisq = debug('dnchisq');
 
 export function dnchisq<T>(
   xx: T,
@@ -70,7 +70,7 @@ export function dnchisq<T>(
     }
 
     if (!R_FINITE(df) || !R_FINITE(ncp) || ncp < 0 || df < 0) {
-      return ML_ERR_return_NAN();
+      return ML_ERR_return_NAN(printer_dnchisq);
     }
 
     if (x < 0) {

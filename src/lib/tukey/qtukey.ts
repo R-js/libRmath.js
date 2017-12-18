@@ -122,22 +122,22 @@ export function qinv(p: number, c: number, v: number): number {
  *  the search is terminated
  */
 
+ import * as debug from 'debug';
+
 import {
-  ISNAN,
   ML_ERROR,
   ME,
   ML_ERR_return_NAN,
-  ML_POSINF,
-  R_Q_P01_boundaries,
-  fmax2,
-  fabs
+  R_Q_P01_boundaries
 } from '~common';
 
 import { R_DT_qIv } from '~exp-utils';
-
 import { ptukey } from './ptukey';
-
 import { INormal } from '~normal';
+
+const { isNaN: ISNAN, POSITIVE_INFINITY: ML_POSINF } = Number;
+const { abs:fabs, max:fmax2 } = Math;
+const printer = debug('qtukey');
 
 export function qtukey(
   p: number,
@@ -160,12 +160,12 @@ export function qtukey(
   let iter;
 
   if (ISNAN(p) || ISNAN(rr) || ISNAN(cc) || ISNAN(df)) {
-    ML_ERROR(ME.ME_DOMAIN, 'qtukey');
+    ML_ERROR(ME.ME_DOMAIN, 'qtukey', printer);
     return p + rr + cc + df;
   }
 
   /* df must be > 1 ; there must be at least two values */
-  if (df < 2 || rr < 1 || cc < 2) return ML_ERR_return_NAN();
+  if (df < 2 || rr < 1 || cc < 2) return ML_ERR_return_NAN(printer);
 
   let rc = R_Q_P01_boundaries(lower_tail, log_p, p, 0, ML_POSINF);
   if (rc !== undefined) {
@@ -218,6 +218,6 @@ export function qtukey(
   }
 
   /* The process did not converge in 'maxiter' iterations */
-  ML_ERROR(ME.ME_NOCONV, 'qtukey');
+  ML_ERROR(ME.ME_NOCONV, 'qtukey', printer);
   return ans;
 }

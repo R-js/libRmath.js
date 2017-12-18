@@ -25,148 +25,178 @@
 
 /*  DESCRIPTION --> see below */
 
-
 /* From http://www.netlib.org/specfun/ribesl	Fortran translated by f2c,...
  *	------------------------------=#----	Martin Maechler, ETH Zurich
  */
 
+import * as debug from 'debug';
+
 import {
-    //bessel
-    ensig_BESS,
-    exparg_BESS,
-    xlrg_BESS_IJ,
-    rtnsig_BESS,
-    nsig_BESS,
-    enmten_BESS,
-    //other
-    min0,
-    ISNAN,
-    ML_ERROR,
-    ME,
-    ML_NAN,
-    trunc,
-    floor,
-    exp,
-    M_PI,
-    MATHLIB_WARNING4,
-    MATHLIB_WARNING2,
-    ML_POSINF,
-    sqrt,
-    enten_BESS,
-    R_pow_di,
-    fmax2,
-    ldexp,
-    pow
-
-
+  //bessel
+  ensig_BESS,
+  exparg_BESS,
+  xlrg_BESS_IJ,
+  rtnsig_BESS,
+  nsig_BESS,
+  enmten_BESS,
+  //other
+  min0,
+  ISNAN,
+  ML_ERROR,
+  ME,
+  ML_NAN,
+  trunc,
+  floor,
+  exp,
+  M_PI,
+  MATHLIB_WARNING4,
+  MATHLIB_WARNING2,
+  ML_POSINF,
+  sqrt,
+  enten_BESS,
+  R_pow_di,
+  fmax2,
+  ldexp,
+  pow
 } from '~common';
 
 import { Rf_gamma_cody } from '../gamma/gamma_cody';
 
 interface IBesselInput {
-    x: number;
-    alpha: number;
-    nb: number;
-    ize: number;
-    bi: number[];
-    ncalc: number;
+  x: number;
+  alpha: number;
+  nb: number;
+  ize: number;
+  bi: number[];
+  ncalc: number;
 }
 
 import { bessel_k, bessel_k_ex } from './bessel_k';
 import { sinpi } from '~trigonometry';
 
-
-
+const printer_bessel_i = debug('bessel_i');
 /** .Internal(besselI(*)) : */
+
 export function bessel_i(x: number, alpha: number, expo: number): number {
+  let nb: number;
+  let ncalc: number;
+  let ize: number;
+  let na: number;
+  let bi: number[];
 
-    let nb: number;
-    let ncalc: number;
-    let ize: number;
-    let na: number;
-    let bi: number[];
+  /* NaNs propagated correctly */
+  if (ISNAN(x) || ISNAN(alpha)) return x + alpha;
 
-    /* NaNs propagated correctly */
-    if (ISNAN(x) || ISNAN(alpha)) return x + alpha;
-
-    if (x < 0) {
-        ML_ERROR(ME.ME_RANGE, 'bessel_i');
-        return ML_NAN;
-    }
-    ize = trunc(expo);
-    na = floor(alpha);
-    if (alpha < 0) {
-        /* Using Abramowitz & Stegun  9.6.2 & 9.6.6
+  if (x < 0) {
+    ML_ERROR(ME.ME_RANGE, 'bessel_i', printer_bessel_i);
+    return ML_NAN;
+  }
+  ize = trunc(expo);
+  na = floor(alpha);
+  if (alpha < 0) {
+    /* Using Abramowitz & Stegun  9.6.2 & 9.6.6
          * this may not be quite optimal (CPU and accuracy wise) */
-        return (bessel_i(x, -alpha, expo) +
-            ((alpha === na) ? /* sin(pi * alpha) = 0 */ 0 :
-                bessel_k(x, -alpha, expo) *
-                ((ize === 1) ? 2. : 2. * exp(-2. * x)) / M_PI * sinpi(-alpha)));
-    }
-    nb = 1 + trunc(na); /* nb-1 <= alpha < nb */
-    alpha -= (nb - 1);
-    let input: IBesselInput = { x, alpha, nb, ize, bi: [], ncalc: 0 };
-    I_bessel(input);
-    ({ x, alpha, nb, ize, bi, ncalc } = input);
+    return (
+      bessel_i(x, -alpha, expo) +
+      (alpha === na
+        ? /* sin(pi * alpha) = 0 */ 0
+        : bessel_k(x, -alpha, expo) *
+          (ize === 1 ? 2 : 2 * exp(-2 * x)) /
+          M_PI *
+          sinpi(-alpha))
+    );
+  }
+  nb = 1 + trunc(na); /* nb-1 <= alpha < nb */
+  alpha -= nb - 1;
+  let input: IBesselInput = { x, alpha, nb, ize, bi: [], ncalc: 0 };
+  I_bessel(input);
+  ({ x, alpha, nb, ize, bi, ncalc } = input);
 
-    if (ncalc !== nb) {/* error input */
-        if (ncalc < 0)
-            MATHLIB_WARNING4('bessel_i(%g): ncalc (=%d) != nb (=%d); alpha=%g. Arg. out of range?\n',
-                x, ncalc, nb, alpha);
-        else
-            MATHLIB_WARNING2('bessel_i(%g,nu=%g): precision lost in result\n',
-                x, alpha + nb - 1);
-    }
-    x = bi[nb - 1];
-    return x;
+  if (ncalc !== nb) {
+    /* error input */
+    if (ncalc < 0)
+      printer_bessel_i(
+        'bessel_i(%d): ncalc (=%d) != nb (=%d); alpha=%d. Arg. out of range?\n',
+        x,
+        ncalc,
+        nb,
+        alpha
+      );
+    else
+      printer_bessel_i(
+        'bessel_i(%d,nu=%d): precision lost in result\n',
+        x,
+        alpha + nb - 1
+      );
+  }
+  x = bi[nb - 1];
+  return x;
 }
 
 /* modified version of bessel_i that accepts a work array instead of
    allocating one. */
-export function bessel_i_ex(x: number, alpha: number, expo: number, bi: number[]): number {
+const printer_bessel_i_ex = debug('bessel_i_ex');
+export function bessel_i_ex(
+  x: number,
+  alpha: number,
+  expo: number,
+  bi: number[]
+): number {
+  let nb: number;
+  let ncalc: number;
+  let ize: number;
+  let na: number;
 
-    let nb: number;
-    let ncalc: number;
-    let ize: number;
-    let na: number;
+  /* NaNs propagated correctly */
+  if (ISNAN(x) || ISNAN(alpha)) return x + alpha;
 
-    /* NaNs propagated correctly */
-    if (ISNAN(x) || ISNAN(alpha)) return x + alpha;
-
-    if (x < 0) {
-        ML_ERROR(ME.ME_RANGE, 'bessel_i');
-        return ML_NAN;
-    }
-    ize = trunc(expo);
-    na = floor(alpha);
-    if (alpha < 0) {
-        /* Using Abramowitz & Stegun  9.6.2 & 9.6.6
+  if (x < 0) {
+    ML_ERROR(ME.ME_RANGE, 'bessel_i', printer_bessel_i_ex);
+    return ML_NAN;
+  }
+  ize = trunc(expo);
+  na = floor(alpha);
+  if (alpha < 0) {
+    /* Using Abramowitz & Stegun  9.6.2 & 9.6.6
          * this may not be quite optimal (CPU and accuracy wise) */
-        return (bessel_i_ex(x, -alpha, expo, bi) +
-            ((alpha === na) ? 0 :
-                bessel_k_ex(x, -alpha, expo, bi) *
-                ((ize === 1) ? 2. : 2. * exp(-2. * x)) / M_PI * sinpi(-alpha)));
-    }
-    nb = 1 + trunc(na); /* nb-1 <= alpha < nb */
-    alpha -= (nb - 1);
-    let input: IBesselInput = { x, alpha, nb, ize, bi, ncalc: 0 };
-    I_bessel(input);
-    ({ x, alpha, nb, ize, bi, ncalc } = input);
-    if (ncalc !== nb) {/* error input */
-        if (ncalc < 0)
-            MATHLIB_WARNING4('bessel_i(%g): ncalc (=%d) != nb (=%d); alpha=%g. Arg. out of range?\n',
-                x, ncalc, nb, alpha);
-        else
-            MATHLIB_WARNING2('bessel_i(%g,nu=%g): precision lost in result\n',
-                x, alpha + nb - 1);
-    }
-    x = bi[nb - 1];
-    return x;
+    return (
+      bessel_i_ex(x, -alpha, expo, bi) +
+      (alpha === na
+        ? 0
+        : bessel_k_ex(x, -alpha, expo, bi) *
+          (ize === 1 ? 2 : 2 * exp(-2 * x)) /
+          M_PI *
+          sinpi(-alpha))
+    );
+  }
+  nb = 1 + trunc(na); /* nb-1 <= alpha < nb */
+  alpha -= nb - 1;
+  let input: IBesselInput = { x, alpha, nb, ize, bi, ncalc: 0 };
+  I_bessel(input);
+  ({ x, alpha, nb, ize, bi, ncalc } = input);
+  if (ncalc !== nb) {
+    /* error input */
+    if (ncalc < 0)
+    printer_bessel_i_ex(
+        'bessel_i(%d): ncalc (=%d) != nb (=%d); alpha=%d. Arg. out of range?',
+        x,
+        ncalc,
+        nb,
+        alpha
+      );
+    else
+    printer_bessel_i_ex(
+        'bessel_i(%d,nu=%d): precision lost in result',
+        x,
+        alpha + nb - 1
+      );
+  }
+  x = bi[nb - 1];
+  return x;
 }
 
 function I_bessel(µ: IBesselInput) {
-
-    /* -------------------------------------------------------------------
+  /* -------------------------------------------------------------------
     
      This routine calculates Bessel functions I_(N+ALPHA) (X)
      for non-negative argument X, and non-negative order N+ALPHA,
@@ -257,347 +287,335 @@ function I_bessel(µ: IBesselInput) {
                Argonne, IL  60439
     */
 
-    /*-------------------------------------------------------------------
+  /*-------------------------------------------------------------------
       Mathematical constants
       -------------------------------------------------------------------*/
-    const _const = 1.585;
+  const _const = 1.585;
 
-    /* Local variables */
-    let nend: number;
-    let intx: number;
-    let nbmx: number;
-    let k: number;
-    let l: number;
-    let n: number;
-    let nstart: number;
+  /* Local variables */
+  let nend: number;
+  let intx: number;
+  let nbmx: number;
+  let k: number;
+  let l: number;
+  let n: number;
+  let nstart: number;
 
-    let pold: number;
-    let test: number;
-    let p: number;
-    let em: number;
-    let en: number;
-    let empal: number;
-    let emp2al: number;
-    let halfx: number;
-    let aa: number;
-    let bb: number;
-    let cc: number;
-    let psave: number;
-    let plast: number;
-    let tover: number;
-    let psavel: number;
-    let sum: number;
-    let nu: number;
-    let twonu: number;
+  let pold: number;
+  let test: number;
+  let p: number;
+  let em: number;
+  let en: number;
+  let empal: number;
+  let emp2al: number;
+  let halfx: number;
+  let aa: number;
+  let bb: number;
+  let cc: number;
+  let psave: number;
+  let plast: number;
+  let tover: number;
+  let psavel: number;
+  let sum: number;
+  let nu: number;
+  let twonu: number;
 
-    /*Parameter adjustments */
-    nu = µ.alpha;
-    twonu = nu + nu;
+  /*Parameter adjustments */
+  nu = µ.alpha;
+  twonu = nu + nu;
 
-    /*-------------------------------------------------------------------
+  /*-------------------------------------------------------------------
       Check for X, NB, OR IZE out of range.
       ------------------------------------------------------------------- */
-    if (µ.nb > 0 && µ.x >= 0. && (0. <= nu && nu < 1.) &&
-        (1 <= µ.ize && µ.ize <= 2)) {
-
-        µ.ncalc = µ.nb;
-        if (µ.ize === 1 && µ.x > exparg_BESS) {
-            for (k = 1; k <= µ.nb; k++)
-                µ.bi[k - 1] = ML_POSINF; /* the limit *is* = Inf */
-            return;
-        }
-        if (µ.ize === 2 && µ.x > xlrg_BESS_IJ) {
-            for (k = 1; k <= µ.nb; k++)
-                µ.bi[k - 1] = 0.; /* The limit exp(-x) * I_nu(x) --> 0 : */
-            return;
-        }
-        intx = trunc(µ.x); /* fine, since *x <= xlrg_BESS_IJ <<< LONG_MAX */
-        let L120 = false;
-        if (µ.x >= rtnsig_BESS) { /* "non-small" x ( >= 1e-4 ) */
-            /* -------------------------------------------------------------------
+  if (
+    µ.nb > 0 &&
+    µ.x >= 0 &&
+    (0 <= nu && nu < 1) &&
+    (1 <= µ.ize && µ.ize <= 2)
+  ) {
+    µ.ncalc = µ.nb;
+    if (µ.ize === 1 && µ.x > exparg_BESS) {
+      for (k = 1; k <= µ.nb; k++)
+        µ.bi[k - 1] = ML_POSINF; /* the limit *is* = Inf */
+      return;
+    }
+    if (µ.ize === 2 && µ.x > xlrg_BESS_IJ) {
+      for (k = 1; k <= µ.nb; k++)
+        µ.bi[k - 1] = 0; /* The limit exp(-x) * I_nu(x) --> 0 : */
+      return;
+    }
+    intx = trunc(µ.x); /* fine, since *x <= xlrg_BESS_IJ <<< LONG_MAX */
+    let L120 = false;
+    if (µ.x >= rtnsig_BESS) {
+      /* "non-small" x ( >= 1e-4 ) */
+      /* -------------------------------------------------------------------
                Initialize the forward sweep, the P-sequence of Olver
                ------------------------------------------------------------------- */
-            nbmx = µ.nb - intx;
-            n = intx + 1;
-            en = (n + n) + twonu;
-            plast = 1.;
-            p = en / µ.x;
-            /* ------------------------------------------------
+      nbmx = µ.nb - intx;
+      n = intx + 1;
+      en = n + n + twonu;
+      plast = 1;
+      p = en / µ.x;
+      /* ------------------------------------------------
                Calculate general significance test
                ------------------------------------------------ */
-            test = ensig_BESS + ensig_BESS;
-            if (intx << 1 > nsig_BESS * 5) {
-                test = sqrt(test * p);
-            } else {
-                test /= R_pow_di(_const, intx);
-            }
-            if (nbmx >= 3) {
-                /* --------------------------------------------------
+      test = ensig_BESS + ensig_BESS;
+      if (intx << 1 > nsig_BESS * 5) {
+        test = sqrt(test * p);
+      } else {
+        test /= R_pow_di(_const, intx);
+      }
+      if (nbmx >= 3) {
+        /* --------------------------------------------------
                    Calculate P-sequence until N = NB-1
                    Check for possible overflow.
                    ------------------------------------------------ */
-                tover = enten_BESS / ensig_BESS;
-                nstart = intx + 2;
-                nend = µ.nb - 1;
-                for (k = nstart; k <= nend; ++k) {
-                    n = k;
-                    en += 2.;
-                    pold = plast;
-                    plast = p;
-                    p = en * plast / µ.x + pold;
-                    if (p > tover) {
-                        /* ------------------------------------------------
+        tover = enten_BESS / ensig_BESS;
+        nstart = intx + 2;
+        nend = µ.nb - 1;
+        for (k = nstart; k <= nend; ++k) {
+          n = k;
+          en += 2;
+          pold = plast;
+          plast = p;
+          p = en * plast / µ.x + pold;
+          if (p > tover) {
+            /* ------------------------------------------------
                            To avoid overflow, divide P-sequence by TOVER.
                            Calculate P-sequence until ABS(P) > 1.
                            ---------------------------------------------- */
-                        tover = enten_BESS;
-                        p /= tover;
-                        plast /= tover;
-                        psave = p;
-                        psavel = plast;
-                        nstart = n + 1;
-                        do {
-                            ++n;
-                            en += 2.;
-                            pold = plast;
-                            plast = p;
-                            p = en * plast / µ.x + pold;
-                        }
-                        while (p <= 1.);
+            tover = enten_BESS;
+            p /= tover;
+            plast /= tover;
+            psave = p;
+            psavel = plast;
+            nstart = n + 1;
+            do {
+              ++n;
+              en += 2;
+              pold = plast;
+              plast = p;
+              p = en * plast / µ.x + pold;
+            } while (p <= 1);
 
-                        bb = en / µ.x;
-                        /* ------------------------------------------------
+            bb = en / µ.x;
+            /* ------------------------------------------------
                            Calculate backward test, and find NCALC,
                            the highest N such that the test is passed.
                            ------------------------------------------------ */
-                        test = pold * plast / ensig_BESS;
-                        test *= .5 - .5 / (bb * bb);
-                        p = plast * tover;
-                        --n;
-                        en -= 2.;
-                        nend = min0(µ.nb, n);
-                        let L90 = false;
-                        for (l = nstart; l <= nend; ++l) {
-                            µ.ncalc = l;
-                            pold = psavel;
-                            psavel = psave;
-                            psave = en * psavel / µ.x + pold;
-                            if (psave * psavel > test) {
-                                L90 = true;
-                                break;
-                            }
-                        }
-                        if (!L90) {
-                            µ.ncalc = nend + 1;
-                        }
-                        --(µ.ncalc);
-                        L120 = true;
-                        break;
-                    }//if statement
-                }//for-loop
-                if (!L120) {
-                    n = nend;
-                    en = (n + n) + twonu;
-                    /*---------------------------------------------------
+            test = pold * plast / ensig_BESS;
+            test *= 0.5 - 0.5 / (bb * bb);
+            p = plast * tover;
+            --n;
+            en -= 2;
+            nend = min0(µ.nb, n);
+            let L90 = false;
+            for (l = nstart; l <= nend; ++l) {
+              µ.ncalc = l;
+              pold = psavel;
+              psavel = psave;
+              psave = en * psavel / µ.x + pold;
+              if (psave * psavel > test) {
+                L90 = true;
+                break;
+              }
+            }
+            if (!L90) {
+              µ.ncalc = nend + 1;
+            }
+            --µ.ncalc;
+            L120 = true;
+            break;
+          } //if statement
+        } //for-loop
+        if (!L120) {
+          n = nend;
+          en = n + n + twonu;
+          /*---------------------------------------------------
                       Calculate special significance test for NBMX > 2.
                       --------------------------------------------------- */
-                    test = fmax2(test, sqrt(plast * ensig_BESS) * sqrt(p + p));
-                }
-            }//if statement
-            /* --------------------------------------------------------
+          test = fmax2(test, sqrt(plast * ensig_BESS) * sqrt(p + p));
+        }
+      } //if statement
+      /* --------------------------------------------------------
                Calculate P-sequence until significance test passed.
                -------------------------------------------------------- */
-            if (!L120) {
-                do {
-                    ++n;
-                    en += 2.;
-                    pold = plast;
-                    plast = p;
-                    p = en * plast / µ.x + pold;
-                } while (p < test);
-            }
-            // L120:
-            /* -------------------------------------------------------------------
+      if (!L120) {
+        do {
+          ++n;
+          en += 2;
+          pold = plast;
+          plast = p;
+          p = en * plast / µ.x + pold;
+        } while (p < test);
+      }
+      // L120:
+      /* -------------------------------------------------------------------
              Initialize the backward recursion and the normalization sum.
              ------------------------------------------------------------------- */
-            ++n;
-            en += 2.;
-            bb = 0.;
-            aa = 1. / p;
-            em = n - 1.;
-            empal = em + nu;
-            emp2al = em - 1. + twonu;
-            sum = aa * empal * emp2al / em;
-            nend = n - µ.nb;
-            let L220 = false;
-            let L230 = false;
-            if (nend < 0) {
-                /* -----------------------------------------------------
+      ++n;
+      en += 2;
+      bb = 0;
+      aa = 1 / p;
+      em = n - 1;
+      empal = em + nu;
+      emp2al = em - 1 + twonu;
+      sum = aa * empal * emp2al / em;
+      nend = n - µ.nb;
+      let L220 = false;
+      let L230 = false;
+      if (nend < 0) {
+        /* -----------------------------------------------------
                    N < NB, so store BI[N] and set higher orders to 0..
                    ----------------------------------------------------- */
-                µ.bi[n] = aa;
-                nend = -nend;
-                for (l = 1; l <= nend; ++l) {
-                    µ.bi[n + l - 1] = 0.;
-                }
-            } else {
-                if (nend > 0) {
-                    /* -----------------------------------------------------
+        µ.bi[n] = aa;
+        nend = -nend;
+        for (l = 1; l <= nend; ++l) {
+          µ.bi[n + l - 1] = 0;
+        }
+      } else {
+        if (nend > 0) {
+          /* -----------------------------------------------------
                        Recur backward via difference equation,
                        calculating (but not storing) BI[N], until N = NB.
                        --------------------------------------------------- */
 
-                    for (l = 1; l <= nend; ++l) {
-                        --n;
-                        en -= 2.;
-                        cc = bb;
-                        bb = aa;
-                        /* for x ~= 1500,  sum would overflow to 'inf' here,
+          for (l = 1; l <= nend; ++l) {
+            --n;
+            en -= 2;
+            cc = bb;
+            bb = aa;
+            /* for x ~= 1500,  sum would overflow to 'inf' here,
                          * and the final bi[] /= sum would give 0 wrongly;
                          * RE-normalize (aa, sum) here -- no need to undo */
-                        if (nend > 100 && aa > 1e200) {
-                            /* multiply by  2^-900 = 1.18e-271 */
-                            cc = ldexp(cc, -900);
-                            bb = ldexp(bb, -900);
-                            sum = ldexp(sum, -900);
-                        }
-                        aa = en * bb / µ.x + cc;
-                        em -= 1.;
-                        emp2al -= 1.;
-                        if (n === 1) {
-                            break;
-                        }
-                        if (n === 2) {
-                            emp2al = 1.;
-                        }
-                        empal -= 1.;
-                        sum = (sum + aa * empal) * emp2al / em;
-                    }
-                }
-                /* ---------------------------------------------------
+            if (nend > 100 && aa > 1e200) {
+              /* multiply by  2^-900 = 1.18e-271 */
+              cc = ldexp(cc, -900);
+              bb = ldexp(bb, -900);
+              sum = ldexp(sum, -900);
+            }
+            aa = en * bb / µ.x + cc;
+            em -= 1;
+            emp2al -= 1;
+            if (n === 1) {
+              break;
+            }
+            if (n === 2) {
+              emp2al = 1;
+            }
+            empal -= 1;
+            sum = (sum + aa * empal) * emp2al / em;
+          }
+        }
+        /* ---------------------------------------------------
                    Store BI[NB]
                    --------------------------------------------------- */
 
-                µ.bi[n - 1] = aa;
-                if (µ.nb <= 1) {
-                    sum = sum + sum + aa;
-                    L230 = true;
-                }
-                if (!L230) {
-                    /* -------------------------------------------------
+        µ.bi[n - 1] = aa;
+        if (µ.nb <= 1) {
+          sum = sum + sum + aa;
+          L230 = true;
+        }
+        if (!L230) {
+          /* -------------------------------------------------
                        Calculate and Store BI[NB-1]
                        ------------------------------------------------- */
-                    --n;
-                    en -= 2.;
-                    µ.bi[n - 1] = en * aa / µ.x + bb;
+          --n;
+          en -= 2;
+          µ.bi[n - 1] = en * aa / µ.x + bb;
 
-                    if (n === 1) {
-                        L220 = true;
-                    }
-                    if (!L220) {
-                        em -= 1.;
-                        if (n === 2)
-                            emp2al = 1.;
-                        else
-                            emp2al -= 1.;
+          if (n === 1) {
+            L220 = true;
+          }
+          if (!L220) {
+            em -= 1;
+            if (n === 2) emp2al = 1;
+            else emp2al -= 1;
 
-                        empal -= 1.;
-                        sum = (sum + µ.bi[n - 1] * empal) * emp2al / em;
-                    }//because of goto L220
-                }// because of goto L230
-            }
-            //
-            if (!L230 || !L220) {
-                nend = n - 2;
-                if (nend > 0) {
-                    /* --------------------------------------------
+            empal -= 1;
+            sum = (sum + µ.bi[n - 1] * empal) * emp2al / em;
+          } //because of goto L220
+        } // because of goto L230
+      }
+      //
+      if (!L230 || !L220) {
+        nend = n - 2;
+        if (nend > 0) {
+          /* --------------------------------------------
                        Calculate via difference equation
                        and store BI[N], until N = 2.
                        ------------------------------------------ */
-                    for (l = 1; l <= nend; ++l) {
-                        --n;
-                        en -= 2.;
-                        µ.bi[n - 1] = en * µ.bi[n + 1 - 1] / µ.x + µ.bi[n + 2 - 1];
-                        em -= 1.;
-                        if (n === 2)
-                            emp2al = 1.;
-                        else
-                            emp2al -= 1.;
-                        empal -= 1.;
-                        sum = (sum + µ.bi[n - 1] * empal) * emp2al / em;
-                    }
-                }
-                /* ----------------------------------------------
+          for (l = 1; l <= nend; ++l) {
+            --n;
+            en -= 2;
+            µ.bi[n - 1] = en * µ.bi[n + 1 - 1] / µ.x + µ.bi[n + 2 - 1];
+            em -= 1;
+            if (n === 2) emp2al = 1;
+            else emp2al -= 1;
+            empal -= 1;
+            sum = (sum + µ.bi[n - 1] * empal) * emp2al / em;
+          }
+        }
+        /* ----------------------------------------------
                    Calculate BI[1]
                    -------------------------------------------- */
-                µ.bi[1 - 1] = 2. * empal * µ.bi[2 - 1] / µ.x + µ.bi[3 - 1];
-            }
-            // label for goto L220:
-            if (!L230) {
-                sum = sum + sum + µ.bi[1 - 1];
-            }
-            // label for goto L230:
-            /* ---------------------------------------------------------
+        µ.bi[1 - 1] = 2 * empal * µ.bi[2 - 1] / µ.x + µ.bi[3 - 1];
+      }
+      // label for goto L220:
+      if (!L230) {
+        sum = sum + sum + µ.bi[1 - 1];
+      }
+      // label for goto L230:
+      /* ---------------------------------------------------------
                Normalize.  Divide all BI[N] by sum.
                --------------------------------------------------------- */
-            if (nu !== 0.)
-                sum *= (Rf_gamma_cody(1. + nu) * pow(µ.x * .5, -nu));
-            if (µ.ize === 1)
-                sum *= exp(-(µ.x));
-            aa = enmten_BESS;
-            if (sum > 1.)
-                aa *= sum;
-            for (n = 1; n <= µ.nb; ++n) {
-                if (µ.bi[n] < aa)
-                    µ.bi[n] = 0.;
-                else
-                    µ.bi[n] /= sum;
-            }
-            return;
-        } else { /* small x  < 1e-4 */
-            /* -----------------------------------------------------------
+      if (nu !== 0) sum *= Rf_gamma_cody(1 + nu) * pow(µ.x * 0.5, -nu);
+      if (µ.ize === 1) sum *= exp(-µ.x);
+      aa = enmten_BESS;
+      if (sum > 1) aa *= sum;
+      for (n = 1; n <= µ.nb; ++n) {
+        if (µ.bi[n] < aa) µ.bi[n] = 0;
+        else µ.bi[n] /= sum;
+      }
+      return;
+    } else {
+      /* small x  < 1e-4 */
+      /* -----------------------------------------------------------
                Two-term ascending series for small X.
                -----------------------------------------------------------*/
-            aa = 1.;
-            empal = 1. + nu;
-            /* No need to check for underflow */
-            halfx = .5 * µ.x;
+      aa = 1;
+      empal = 1 + nu;
+      /* No need to check for underflow */
+      halfx = 0.5 * µ.x;
 
-            if (nu !== 0.)
-                aa = pow(halfx, nu) / Rf_gamma_cody(empal);
-            if (µ.ize === 2)
-                aa *= exp(-(µ.x));
-            bb = halfx * halfx;
-            µ.bi[1 - 1] = aa + aa * bb / empal;
-            if (µ.x !== 0. && µ.bi[1] === 0.)
-                µ.ncalc = 0;
-            if (µ.nb > 1) {
-                if (µ.x === 0.) {
-                    for (n = 2; n <= µ.nb; ++n)
-                        µ.bi[n] = 0.;
-                } else {
-                    /* -------------------------------------------------
+      if (nu !== 0) aa = pow(halfx, nu) / Rf_gamma_cody(empal);
+      if (µ.ize === 2) aa *= exp(-µ.x);
+      bb = halfx * halfx;
+      µ.bi[1 - 1] = aa + aa * bb / empal;
+      if (µ.x !== 0 && µ.bi[1] === 0) µ.ncalc = 0;
+      if (µ.nb > 1) {
+        if (µ.x === 0) {
+          for (n = 2; n <= µ.nb; ++n) µ.bi[n] = 0;
+        } else {
+          /* -------------------------------------------------
                        Calculate higher-order functions.
                        ------------------------------------------------- */
-                    cc = halfx;
-                    tover = (enmten_BESS + enmten_BESS) / µ.x;
-                    if (bb !== 0.)
-                        tover = enmten_BESS / bb;
-                    for (n = 2; n <= µ.nb; ++n) {
-                        aa /= empal;
-                        empal += 1.;
-                        aa *= cc;
-                        if (aa <= tover * empal)
-                            µ.bi[n - 1] = aa = 0.;
-                        else
-                            µ.bi[n - 1] = aa + aa * bb / empal;
-                        if (µ.bi[n - 1] === 0. && µ.ncalc > n)
-                            µ.ncalc = n - 1;
-                    }
-                }
-            }
+          cc = halfx;
+          tover = (enmten_BESS + enmten_BESS) / µ.x;
+          if (bb !== 0) tover = enmten_BESS / bb;
+          for (n = 2; n <= µ.nb; ++n) {
+            aa /= empal;
+            empal += 1;
+            aa *= cc;
+            if (aa <= tover * empal) µ.bi[n - 1] = aa = 0;
+            else µ.bi[n - 1] = aa + aa * bb / empal;
+            if (µ.bi[n - 1] === 0 && µ.ncalc > n) µ.ncalc = n - 1;
+          }
         }
-    } else { /* argument out of range */
-        µ.ncalc = min0(µ.nb, 0) - 1;
+      }
     }
+  } else {
+    /* argument out of range */
+    µ.ncalc = min0(µ.nb, 0) - 1;
+  }
 }

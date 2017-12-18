@@ -70,14 +70,16 @@ import {
 
 import { chebyshev_eval } from '~chebyshev';
 
+const { log1p } = Math;
 
+/*
 export function log1p(x: number): number {
-    /* series for log1p on the interval -.375 to .375
-     *				     with weighted error   6.35e-32
-     *				      log weighted error  31.20
-     *			    significant figures required  30.93
-     *				 decimal places required  32.01
-     */
+    // series for log1p on the interval -.375 to .375
+     //				     with weighted error   6.35e-32
+     //				      log weighted error  31.20
+     //			    significant figures required  30.93
+     //				 decimal places required  32.01
+     //
     const alnrcs = [
         +.10378693562743769800686267719098e+1,
         -.13364301504908918098766041553133e+0,
@@ -123,43 +125,44 @@ export function log1p(x: number): number {
         -.33410026677731010351377066666666e-30,
         +.63533936180236187354180266666666e-31,
     ];
-    /*
-    #ifdef NOMORE_FOR_THREADS
-        static int nlnrel = 0;
-        static double xmin = 0.0;
+    //
+    //#ifdef NOMORE_FOR_THREADS
+    //    static int nlnrel = 0;
+    //    static double xmin = 0.0;
     
-        if (xmin == 0.0) xmin = -1 + sqrt(DBL_EPSILON);// was sqrt(d1mach(4)); 
-        if (nlnrel == 0) // initialize chebychev coefficients 
-        nlnrel = chebyshev_init(alnrcs, 43, DBL_EPSILON/20);//was .1*d1mach(3)
-    #else
-    */
+    //    if (xmin == 0.0) xmin = -1 + sqrt(DBL_EPSILON);// was sqrt(d1mach(4)); 
+    //    if (nlnrel == 0) // initialize chebychev coefficients 
+    //    nlnrel = chebyshev_init(alnrcs, 43, DBL_EPSILON/20);//was .1*d1mach(3)
+    //#else
+    //
     const nlnrel = 22;
     const xmin = -0.999999985;
     // 22: for IEEE double precision where DBL_EPSILON =  2.22044604925031e-16 
     //#endif
 
-    if (x === 0.) return 0.; /* speed */
+    if (x === 0.) return 0.; // speed 
     if (x === -1) return (ML_NEGINF);
     if (x < -1) return ML_ERR_return_NAN();
 
     if (fabs(x) <= .375) {
-        /* Improve on speed (only);
-       again give result accurate to IEEE double precision: */
+    // Improve on speed (only);
+      // again give result accurate to IEEE double precision: 
         if (fabs(x) < .5 * DBL_EPSILON)
             return x;
 
         if ((0 < x && x < 1e-8) || (-1e-9 < x && x < 0))
             return x * (1 - .5 * x);
-        /* else */
+        // else 
         return x * (1 - x * chebyshev_eval(x / .375, alnrcs, nlnrel));
     }
-    /* else */
+    // else 
     if (x < xmin) {
-        /* answer less than half precision because x too near -1 */
+        // answer less than half precision because x too near -1 
         ML_ERROR(ME.ME_PRECISION, 'log1p');
     }
     return log(1 + x);
 }
+*/
 
 /* Used as a substitute for the C99 function hypot, which all currently
    known platforms have */
