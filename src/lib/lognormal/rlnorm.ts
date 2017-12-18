@@ -30,11 +30,14 @@
  *
  *    Random variates from the lognormal distribution.
  */
+import * as debug from 'debug';
 
-import { ISNAN, R_FINITE, ML_ERR_return_NAN, exp } from '~common';
+import { ML_ERR_return_NAN } from '~common';
 
 import { INormal } from '~normal';
-import * as debug from 'debug';
+
+const { exp} = Math;
+const { isNaN: ISNAN, isFinite: R_FINITE } = Number;
 
 const printer = debug('rlnorm');
 

@@ -40,12 +40,8 @@
 import * as debug from 'debug';
 import {
   R_D__0,
-  ML_NAN,
   ML_ERR_return_NAN,
-  ML_POSINF,
-  DBL_MAX,
   M_LN_SQRT_2PI,
-  log,
   M_1_SQRT_2PI,
   M_LN2,
   DBL_MIN_EXP,
@@ -53,8 +49,14 @@ import {
   ldexp
 } from '~common';
 
-const { isNaN: ISNAN, isFinite: R_FINITE } = Number;
-const { sqrt, exp, abs: fabs, round: R_forceint } = Math;
+const {
+  isNaN: ISNAN,
+  isFinite: R_FINITE,
+  MAX_VALUE: DBL_MAX,
+  POSITIVE_INFINITY: ML_POSINF,
+  NaN: ML_NAN
+} = Number;
+const { sqrt, exp, abs: fabs, round: R_forceint, log } = Math;
 const printer = debug('dnorm4');
 const { isArray } = Array;
 

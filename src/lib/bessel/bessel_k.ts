@@ -28,46 +28,39 @@
 
 /*  DESCRIPTION --> see below */
 
-
 /* From http://www.netlib.org/specfun/rkbesl	Fortran translated by f2c,...
  *	------------------------------=#----	Martin Maechler, ETH Zurich
  */
 import * as debug from 'debug';
-
-import {
-  DBL_MIN,
-  M_SQRT_2dPI,
-  DBL_EPSILON,
+const {
   sqrt,
-  fabs,
-  DBL_MAX,
+  abs: fabs,
   sinh,
   log,
   exp,
-  ML_POSINF,
-  ISNAN,
-  ML_ERROR,
-  ME,
-  ML_NAN,
   trunc,
   floor,
-  MATHLIB_WARNING4,
-  MATHLIB_WARNING2,
-  xmax_BESS_K,
-  sqxmin_BESS_K,
-  max0,
-  min0
-} from '~common';
+  max: max0,
+  min: min0
+} = Math;
+const {
+  MIN_VALUE: DBL_MIN,
+  EPSILON: DBL_EPSILON,
+  MAX_VALUE: DBL_MAX,
+  POSITIVE_INFINITY: ML_POSINF,
+  isNaN: ISNAN,
+  NaN: ML_NAN
+} = Number;
+
+import { M_SQRT_2dPI, ML_ERROR, ME, xmax_BESS_K, sqxmin_BESS_K } from '~common';
 
 const printer_bessel_k = debug('bessel_k');
 
 export function bessel_k(x: number, alpha: number, expo: number): number {
-
   let nb: number;
   let ncalc: number;
   let ize: number;
   let _bk: number[];
-
 
   if (ISNAN(x) || ISNAN(alpha)) return x + alpha;
 
@@ -80,7 +73,7 @@ export function bessel_k(x: number, alpha: number, expo: number): number {
   if (alpha < 0) alpha = -alpha;
 
   nb = 1 + floor(alpha);
-  alpha -= (nb - 1);
+  alpha -= nb - 1;
 
   _bk = new Array(nb);
   let p: KBesselProps = { x, alpha, nb, ize, bk: _bk, ncalc: 0 };
@@ -91,19 +84,33 @@ export function bessel_k(x: number, alpha: number, expo: number): number {
   _bk = p.bk;
   ncalc = p.ncalc;
 
-  if (ncalc !== nb) {// error input 
+  if (ncalc !== nb) {
+    // error input
     if (ncalc < 0)
-      MATHLIB_WARNING4('bessel_k(%g): ncalc (=%d) != nb (=%d); alpha=%g. Arg. out of range?\n',
-        x, ncalc, nb, alpha);
+      printer_bessel_k(
+        'bessel_k(%d): ncalc (=%d) != nb (=%d); alpha=%d. Arg. out of range?',
+        x,
+        ncalc,
+        nb,
+        alpha
+      );
     else
-      MATHLIB_WARNING2('bessel_k(%g,nu=%g): precision lost in result\n',
-        x, alpha + nb - 1);
+      printer_bessel_k(
+        'bessel_k(%d,nu=%d): precision lost in result',
+        x,
+        alpha + nb - 1
+      );
   }
   x = _bk[nb - 1];
   return x;
 }
 
-export function bessel_k_ex(x: number, alpha: number, expo: number, bk: number[]) {
+export function bessel_k_ex(
+  x: number,
+  alpha: number,
+  expo: number,
+  bk: number[]
+) {
   let nb: number;
   let ncalc: number;
   let ize: number;
@@ -114,9 +121,8 @@ export function bessel_k_ex(x: number, alpha: number, expo: number, bk: number[]
     return ML_NAN;
   }
   ize = trunc(expo);
-  if (alpha < 0)
-    alpha = -alpha;
-  nb = 1 + floor(alpha); // nb-1 <= |alpha| < nb 
+  if (alpha < 0) alpha = -alpha;
+  nb = 1 + floor(alpha); // nb-1 <= |alpha| < nb
   alpha -= floor(nb - 1);
   let p: KBesselProps = { x, alpha, nb, ize, bk, ncalc: 0 };
   K_bessel(p);
@@ -126,13 +132,22 @@ export function bessel_k_ex(x: number, alpha: number, expo: number, bk: number[]
   bk = p.bk;
   ncalc = p.ncalc;
 
-  if (ncalc !== nb) {// error input 
+  if (ncalc !== nb) {
+    // error input
     if (ncalc < 0)
-      MATHLIB_WARNING4('bessel_k(%g): ncalc (=%d) != nb (=%d); alpha=%g. Arg. out of range?\n',
-        x, ncalc, nb, alpha);
+      printer_bessel_k(
+        'bessel_k(%d): ncalc (=%d) != nb (=%d); alpha=%d. Arg. out of range?',
+        x,
+        ncalc,
+        nb,
+        alpha
+      );
     else
-      MATHLIB_WARNING2('bessel_k(%g,nu=%g): precision lost in result\n',
-        x, alpha + nb - 1);
+    printer_bessel_k(
+        'bessel_k(%d,nu=%d): precision lost in result',
+        x,
+        alpha + nb - 1
+      );
   }
   x = bk[nb - 1];
   return x;
@@ -146,7 +161,6 @@ export interface KBesselProps {
   bk: number[];
   ncalc: number;
 }
-
 
 export function K_bessel(input: KBesselProps): void {
   /*-------------------------------------------------------------------
@@ -242,39 +256,60 @@ export function K_bessel(input: KBesselProps): void {
    *	A = LOG(2) - Euler's constant
    *	D = SQRT(2/PI)
    ---------------------------------------------------------------------*/
-  const a = .11593151565841244881;
+  const a = 0.11593151565841244881;
 
   /*---------------------------------------------------------------------
     P, Q - Approximation for LOG(GAMMA(1+ALPHA))/ALPHA + Euler's constant
     Coefficients converted from hex to decimal and modified
     by W. J. Cody, 2/26/82 */
   const p = [
-    .805629875690432845, 20.4045500205365151,
-    157.705605106676174, 536.671116469207504, 900.382759291288778,
-    730.923886650660393, 229.299301509425145, .822467033424113231];
+    0.805629875690432845,
+    20.4045500205365151,
+    157.705605106676174,
+    536.671116469207504,
+    900.382759291288778,
+    730.923886650660393,
+    229.299301509425145,
+    0.822467033424113231
+  ];
 
   const q = [
-    29.4601986247850434, 277.577868510221208,
-    1206.70325591027438, 2762.91444159791519, 3443.74050506564618,
-    2210.63190113378647, 572.267338359892221];
+    29.4601986247850434,
+    277.577868510221208,
+    1206.70325591027438,
+    2762.91444159791519,
+    3443.74050506564618,
+    2210.63190113378647,
+    572.267338359892221
+  ];
 
   /* R, S - Approximation for (1-ALPHA*PI/SIN(ALPHA*PI))/(2.D0*ALPHA) */
 
-  const r = [-.48672575865218401848, 13.079485869097804016,
-  -101.96490580880537526, 347.65409106507813131,
+  const r = [
+    -0.48672575865218401848,
+    13.079485869097804016,
+    -101.96490580880537526,
+    347.65409106507813131,
     3.495898124521934782e-4
   ];
-  const s = [-25.579105509976461286, 212.57260432226544008,
-  -610.69018684944109624, 422.69668805777760407];
+  const s = [
+    -25.579105509976461286,
+    212.57260432226544008,
+    -610.69018684944109624,
+    422.69668805777760407
+  ];
   /* T    - Approximation for SINH(Y)/Y */
   const t = [
     1.6125990452916363814e-10,
-    2.5051878502858255354e-8, 2.7557319615147964774e-6,
-    1.9841269840928373686e-4, .0083333333333334751799,
-    .16666666666666666446];
+    2.5051878502858255354e-8,
+    2.7557319615147964774e-6,
+    1.9841269840928373686e-4,
+    0.0083333333333334751799,
+    0.16666666666666666446
+  ];
   /*---------------------------------------------------------------------*/
   const estm = [52.0583, 5.7607, 2.7782, 14.4303, 185.3004, 9.3715];
-  const estf = [41.8341, 7.1075, 6.4306, 42.511, 1.35633, 84.5096, 20.];
+  const estf = [41.8341, 7.1075, 6.4306, 42.511, 1.35633, 84.5096, 20];
 
   /* Local variables */
   let iend: number;
@@ -313,36 +348,40 @@ export function K_bessel(input: KBesselProps): void {
   ex = input.x;
   nu = input.alpha;
   input.ncalc = min0(input.nb, 0) - 2;
-  if (input.nb > 0 && (0. <= nu && nu < 1.) && (1 <= input.ize && input.ize <= 2)) {
+  if (
+    input.nb > 0 &&
+    (0 <= nu && nu < 1) &&
+    (1 <= input.ize && input.ize <= 2)
+  ) {
     if (ex <= 0 || (input.ize === 1 && ex > xmax_BESS_K)) {
       if (ex <= 0) {
         if (ex < 0) ML_ERROR(ME.ME_RANGE, 'K_bessel', printer_bessel_k);
-        for (i = 0; i < input.nb; i++)
-          input.bk[i] = ML_POSINF;
-      } else /* would only have underflow */
-        for (i = 0; i < input.nb; i++)
-          input.bk[i] = 0.;
+        for (i = 0; i < input.nb; i++) input.bk[i] = ML_POSINF;
+      } /* would only have underflow */ else
+        for (i = 0; i < input.nb; i++) input.bk[i] = 0;
       input.ncalc = input.nb;
       return;
     }
     k = 0;
     if (nu < sqxmin_BESS_K) {
-      nu = 0.;
-    } else if (nu > .5) {
+      nu = 0;
+    } else if (nu > 0.5) {
       k = 1;
-      nu -= 1.;
+      nu -= 1;
     }
     twonu = nu + nu;
     iend = input.nb + k - 1;
     c = nu * nu;
     d3 = -c;
-    if (ex <= 1.) {
+    if (ex <= 1) {
       /* ------------------------------------------------------------
          Calculation of P0 = GAMMA(1+ALPHA) * (2/X)**ALPHA
             Q0 = GAMMA(1-ALPHA) * (X/2)**ALPHA
          ------------------------------------------------------------ */
-      d1 = 0.; d2 = p[0];
-      t1 = 1.; t2 = q[0];
+      d1 = 0;
+      d2 = p[0];
+      t1 = 1;
+      t2 = q[0];
       for (i = 2; i <= 7; i += 2) {
         d1 = c * d1 + p[i - 1];
         d2 = c * d2 + p[i];
@@ -360,16 +399,16 @@ export function K_bessel(input: KBesselProps): void {
          Calculation of F0 =
          ----------------------------------------------------------- */
       d1 = r[4];
-      t1 = 1.;
+      t1 = 1;
       for (i = 0; i < 4; ++i) {
         d1 = c * d1 + r[i];
         t1 = c * t1 + s[i];
       }
       /* d2 := sinh(f1)/ nu = sinh(f1)/(f1/f0)
        *	   = f0 * sinh(f1)/f1 */
-      if (fabs(f1) <= .5) {
+      if (fabs(f1) <= 0.5) {
         f1 *= f1;
-        d2 = 0.;
+        d2 = 0;
         for (i = 0; i < 6; ++i) {
           d2 = f1 * d2 + t[i];
         }
@@ -399,12 +438,11 @@ export function K_bessel(input: KBesselProps): void {
             return;
           }
           input.bk[0] = ratio * input.bk[0] / ex;
-          twonu += 2.;
+          twonu += 2;
           ratio = twonu;
         }
         input.ncalc = 1;
-        if (input.nb === 1)
-          return;
+        if (input.nb === 1) return;
 
         /* -----------------------------------------------------
            Calculate  K(ALPHA+L,X)/K(ALPHA+L-1,X),
@@ -412,11 +450,10 @@ export function K_bessel(input: KBesselProps): void {
            ----------------------------------------------------- */
         input.ncalc = -1;
         for (i = 1; i < input.nb; ++i) {
-          if (ratio >= c)
-            return;
+          if (ratio >= c) return;
 
           input.bk[i] = ratio / ex;
-          twonu += 2.;
+          twonu += 2;
           ratio = twonu;
         }
         input.ncalc = 1;
@@ -425,19 +462,19 @@ export function K_bessel(input: KBesselProps): void {
         /* ------------------------------------------------------
            10^-10 < X <= 1.0
            ------------------------------------------------------ */
-        c = 1.;
-        x2by4 = ex * ex / 4.;
-        p0 = .5 * p0;
-        q0 = .5 * q0;
-        d1 = -1.;
-        d2 = 0.;
-        bk1 = 0.;
-        bk2 = 0.;
+        c = 1;
+        x2by4 = ex * ex / 4;
+        p0 = 0.5 * p0;
+        q0 = 0.5 * q0;
+        d1 = -1;
+        d2 = 0;
+        bk1 = 0;
+        bk2 = 0;
         f1 = f0;
         f2 = p0;
         do {
-          d1 += 2.;
-          d2 += 1.;
+          d1 += 2;
+          d2 += 1;
           d3 = d1 + d3;
           c = x2by4 * c / d2;
           f0 = (d2 * f0 + p0 + q0) / d3;
@@ -447,10 +484,12 @@ export function K_bessel(input: KBesselProps): void {
           t2 = c * (p0 - d2 * f0);
           bk1 += t1;
           bk2 += t2;
-        } while (fabs(t1 / (f1 + bk1)) > DBL_EPSILON ||
-          fabs(t2 / (f2 + bk2)) > DBL_EPSILON);
+        } while (
+          fabs(t1 / (f1 + bk1)) > DBL_EPSILON ||
+          fabs(t2 / (f2 + bk2)) > DBL_EPSILON
+        );
         bk1 = f1 + bk1;
-        bk2 = 2. * (f2 + bk2) / ex;
+        bk2 = 2 * (f2 + bk2) / ex;
         if (input.ize === 2) {
           d1 = exp(ex);
           bk1 *= d1;
@@ -458,34 +497,32 @@ export function K_bessel(input: KBesselProps): void {
         }
         wminf = estf[0] * ex + estf[1];
       }
-    } else if (DBL_EPSILON * ex > 1.) {
-/* -------------------------------------------------
+    } else if (DBL_EPSILON * ex > 1) {
+      /* -------------------------------------------------
 	       X > 1./EPS
 	       ------------------------------------------------- */
       input.ncalc = input.nb;
-      bk1 = 1. / (M_SQRT_2dPI * sqrt(ex));
-      for (i = 0; i < input.nb; ++i)
-        input.bk[i] = bk1;
+      bk1 = 1 / (M_SQRT_2dPI * sqrt(ex));
+      for (i = 0; i < input.nb; ++i) input.bk[i] = bk1;
       return;
-
     } else {
       /* -------------------------------------------------------
          X > 1.0
          ------------------------------------------------------- */
       twox = ex + ex;
-      blpha = 0.;
-      ratio = 0.;
-      if (ex <= 4.) {
+      blpha = 0;
+      ratio = 0;
+      if (ex <= 4) {
         /* ----------------------------------------------------------
            Calculation of K(ALPHA+1,X)/K(ALPHA,X),  1.0 <= X <= 4.0
            ----------------------------------------------------------*/
         d2 = trunc(estm[0] / ex + estm[1]);
         m = trunc(d2);
         d1 = d2 + d2;
-        d2 -= .5;
+        d2 -= 0.5;
         d2 *= d2;
         for (i = 2; i <= m; ++i) {
-          d1 -= 2.;
+          d1 -= 2;
           d2 -= d1;
           ratio = (d3 + d2) / (twox + d1 - ratio);
         }
@@ -497,26 +534,26 @@ export function K_bessel(input: KBesselProps): void {
         m = trunc(d2);
         c = fabs(nu);
         d3 = c + c;
-        d1 = d3 - 1.;
+        d1 = d3 - 1;
         f1 = DBL_MIN;
-        f0 = (2. * (c + d2) / ex + .5 * ex / (c + d2 + 1.)) * DBL_MIN;
+        f0 = (2 * (c + d2) / ex + 0.5 * ex / (c + d2 + 1)) * DBL_MIN;
         for (i = 3; i <= m; ++i) {
-          d2 -= 1.;
+          d2 -= 1;
           f2 = (d3 + d2 + d2) * f0;
-          blpha = (1. + d1 / d2) * (f2 + blpha);
+          blpha = (1 + d1 / d2) * (f2 + blpha);
           f2 = f2 / ex + f1;
           f1 = f0;
           f0 = f2;
         }
-        f1 = (d3 + 2.) * f0 / ex + f1;
-        d1 = 0.;
-        t1 = 1.;
+        f1 = (d3 + 2) * f0 / ex + f1;
+        d1 = 0;
+        t1 = 1;
         for (i = 1; i <= 7; ++i) {
           d1 = c * d1 + p[i - 1];
           t1 = c * t1 + q[i - 1];
         }
         p0 = exp(c * (a + c * (p[7] - c * d1 / t1) - log(ex))) / ex;
-        f2 = (c + .5 - ratio) * f1 / ex;
+        f2 = (c + 0.5 - ratio) * f1 / ex;
         bk1 = p0 + (d3 * f0 - f2 + f0 + blpha) / (f2 + f1 + f0) * p0;
         if (input.ize === 1) {
           bk1 *= exp(-ex);
@@ -529,26 +566,25 @@ export function K_bessel(input: KBesselProps): void {
            ----------------------------------------------------------*/
         dm = trunc(estm[4] / ex + estm[5]);
         m = trunc(dm);
-        d2 = dm - .5;
+        d2 = dm - 0.5;
         d2 *= d2;
         d1 = dm + dm;
         for (i = 2; i <= m; ++i) {
-          dm -= 1.;
-          d1 -= 2.;
+          dm -= 1;
+          d1 -= 2;
           d2 -= d1;
           ratio = (d3 + d2) / (twox + d1 - ratio);
           blpha = (ratio + ratio * blpha) / dm;
         }
-        bk1 = 1. / ((M_SQRT_2dPI + M_SQRT_2dPI * blpha) * sqrt(ex));
-        if (input.ize === 1)
-          bk1 *= exp(-ex);
+        bk1 = 1 / ((M_SQRT_2dPI + M_SQRT_2dPI * blpha) * sqrt(ex));
+        if (input.ize === 1) bk1 *= exp(-ex);
         wminf = estf[4] * (ex - fabs(ex - estf[6])) + estf[5];
       }
       /* ---------------------------------------------------------
          Calculation of K(ALPHA+1,X)
          from K(ALPHA,X) and  K(ALPHA+1,X)/K(ALPHA,X)
          --------------------------------------------------------- */
-      bk2 = bk1 + bk1 * (nu + .5 - ratio) / ex;
+      bk2 = bk1 + bk1 * (nu + 0.5 - ratio) / ex;
     }
     /*--------------------------------------------------------------------
       Calculation of 'NCALC', K(ALPHA+I,X),	I  =  0, 1, ... , NCALC-1,
@@ -556,16 +592,16 @@ export function K_bessel(input: KBesselProps): void {
       -------------------------------------------------------------------*/
     input.ncalc = input.nb;
     input.bk[0] = bk1;
-    if (iend === 0){
+    if (iend === 0) {
       return;
     }
 
     j = 1 - k;
-    if (j >= 0){
+    if (j >= 0) {
       input.bk[j] = bk2;
     }
 
-    if (iend === 1){
+    if (iend === 1) {
       return;
     }
 
@@ -573,13 +609,11 @@ export function K_bessel(input: KBesselProps): void {
     for (i = 2; i <= m; ++i) {
       t1 = bk1;
       bk1 = bk2;
-      twonu += 2.;
-      if (ex < 1.) {
-        if (bk1 >= DBL_MAX / twonu * ex)
-          break;
+      twonu += 2;
+      if (ex < 1) {
+        if (bk1 >= DBL_MAX / twonu * ex) break;
       } else {
-        if (bk1 / ex >= DBL_MAX / twonu)
-          break;
+        if (bk1 / ex >= DBL_MAX / twonu) break;
       }
       bk2 = twonu / ex * bk1 + t1;
       ii = i;
@@ -597,32 +631,28 @@ export function K_bessel(input: KBesselProps): void {
     mplus1 = m + 1;
     input.ncalc = -1;
     for (i = mplus1; i <= iend; ++i) {
-      twonu += 2.;
-      ratio = twonu / ex + 1. / ratio;
+      twonu += 2;
+      ratio = twonu / ex + 1 / ratio;
       ++j;
       if (j >= 1) {
         input.bk[j] = ratio;
       } else {
-        if (bk2 >= DBL_MAX / ratio)
-          return;
+        if (bk2 >= DBL_MAX / ratio) return;
 
         bk2 *= ratio;
       }
     }
     input.ncalc = max0(1, mplus1 - k);
-    if (input.ncalc === 1)
-      input.bk[0] = bk2;
-    if (input.nb === 1)
-      return;
+    if (input.ncalc === 1) input.bk[0] = bk2;
+    if (input.nb === 1) return;
 
     L420();
   }
-  function L420(){
-    for (i = input.ncalc; i < input.nb; ++i) { /* i == *ncalc */
+  function L420() {
+    for (i = input.ncalc; i < input.nb; ++i) {
+      /* i == *ncalc */
       input.bk[i] *= input.bk[i - 1];
       input.ncalc++;
     }
   }
 }
-
-

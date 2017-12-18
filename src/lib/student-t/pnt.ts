@@ -52,33 +52,24 @@
  */
 
 import * as debug from 'debug';
-
+const { isFinite: R_FINITE, EPSILON: DBL_EPSILON } = Number;
+const { sqrt, exp, pow, log } = Math;
 import {
   ML_ERR_return_NAN,
-  R_FINITE,
   R_DT_0,
   R_DT_1,
   DBL_MIN_EXP,
-  M_LN2,
-  sqrt,
-  REprintf,
-  exp,
   ML_ERROR,
   ME,
   M_SQRT_2dPI,
-  pow,
-  M_LN_SQRT_PI,
-  log,
-  DBL_EPSILON,
-  fabs,
-  fmin2
+  M_LN_SQRT_PI
 } from '~common';
 
 import { pt } from './pt';
 
 import { INormal } from '~normal';
 
-const { expm1 } = Math;
+const { expm1, abs: fabs, min: fmin2, LN2:M_LN2 } = Math;
 
 import { lgammafn } from '../gamma/lgamma_fn';
 
@@ -161,14 +152,14 @@ export function pnt(
   rxb = df / (x + df); /* := (1 - x) {x below} -- but more accurately */
   x = x / (x + df); /* in [0,1) */
 
-  REprintf('pnt(t=%7g, df=%7g, ncp=%7g) ==> x= %10g:', t, df, ncp, x);
+  printer_pnt('pnt(t=%d, df=%d, ncp=%d) ==> x= %d:', t, df, ncp, x);
 
   if (x > 0) {
     /* <==>  t != 0 */
     lambda = del * del;
     p = 0.5 * exp(-0.5 * lambda);
 
-    REprintf('\t p=%10Lg\n', p);
+    printer_pnt('\t p=%d', p);
 
     if (p === 0) {
       /* underflow! */
@@ -179,10 +170,10 @@ export function pnt(
       return R_DT_0(lower_tail, log_p);
     }
 
-    REprintf(
+    printer_pnt(
       'it  1e5*(godd,   geven)|          p           q           s' +
         /* 1.3 1..4..7.9 1..4..7.9|1..4..7.901 1..4..7.901 1..4..7.901 */
-        '        pnt(*)     errbd\n'
+        '        pnt(*)     errbd'
     );
     /* 1..4..7..0..34 1..4..7.9*/
 
@@ -221,7 +212,7 @@ export function pnt(
       if (s < -1e-10) {
         /* happens e.g. for (t,df,ncp)=(40,10,38.5), after 799 it.*/
         ML_ERROR(ME.ME_PRECISION, 'pnt', printer_pnt);
-        REprintf('s = %#14.7Lg < 0 !!! ---> non-convergence!!\n', s);
+        printer_pnt('s = %d < 0 !!! ---> non-convergence!!\n', s);
         finis = true;
         break;
       }
@@ -231,8 +222,8 @@ export function pnt(
       }
       errbd = 2 * s * (xodd - godd);
 
-      REprintf(
-        '%3d %#9.4g %#9.4g|%#11.4Lg %#11.4Lg %#11.4Lg %#14.10Lg %#9.4g\n',
+      printer_pnt(
+        '%3d %d %d|%d %d %d %d %d',
         it,
         1e5 * godd,
         1e5 * geven,
@@ -259,7 +250,7 @@ export function pnt(
   tnc += normal.pnorm(-del, 0, 1, /*lower*/ true, /*log_p*/ false);
 
   lower_tail = lower_tail !== negdel; /* xor */
-  if (tnc > 1 - 1e-10 && lower_tail){
+  if (tnc > 1 - 1e-10 && lower_tail) {
     ML_ERROR(ME.ME_PRECISION, 'pnt{final}', printer_pnt);
   }
   return R_DT_val(lower_tail, log_p, fmin2(tnc, 1) /* Precaution */);

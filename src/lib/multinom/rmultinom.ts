@@ -41,7 +41,10 @@
 
 import * as debug from 'debug';
 
-import { ML_ERROR, ME, R_FINITE, fabs } from '~common';
+const { isFinite:R_FINITE } = Number;
+const { abs:fabs} = Math;
+
+import { ML_ERROR, ME } from '~common';
 
 import { rbinom } from '../binomial/rbinom';
 import { INormal } from '../normal';

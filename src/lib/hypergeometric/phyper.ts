@@ -51,13 +51,9 @@
 */
 
 import * as debug from 'debug';
-
+const {floor, round:R_forceint} = Math;
+const { EPSILON: DBL_EPSILON, isNaN:ISNAN, isFinite:R_FINITE } = Number;
 import {
-  DBL_EPSILON,
-  ISNAN,
-  floor,
-  R_forceint,
-  R_FINITE,
   ML_ERR_return_NAN,
   R_DT_0,
   R_DT_1,

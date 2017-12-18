@@ -31,29 +31,27 @@
  * Additional code for nu == alpha < 0  MM
  */
 import * as debug from 'debug';
+const {
+  max: fmax2,
+  sqrt,
+  abs: fabs,
+  trunc,
+  floor,
+  min: min0,
+  sin,
+  cos,
+  pow
+} = Math;
+const { isNaN: ISNAN, NaN: ML_NAN } = Number;
 
 import {
-  fmax2,
   enten_BESS,
   ensig_BESS,
   enmten_BESS,
   rtnsig_BESS,
-  sqrt,
-  fabs,
-  ISNAN,
   ML_ERROR,
   ME,
-  ML_NAN,
-  xlrg_BESS_IJ,
-  trunc,
-  floor,
-  // MATHLIB_WARNING,
-  // MATHLIB_WARNING4,
-  // MATHLIB_WARNING2,
-  min0,
-  sin,
-  pow,
-  cos
+  xlrg_BESS_IJ
 } from '~common';
 
 import { cospi, sinpi } from '~trigonometry';
@@ -168,7 +166,7 @@ export function bessel_j_ex(x: number, alpha: number, bj: number[]): number {
   if (ncalc !== nb) {
     /* error input */
     if (ncalc < 0)
-    printer_bessel_j_ex(
+      printer_bessel_j_ex(
         'bessel_j(%d): ncalc (=%d) != nb (=%d); alpha=%d. Arg. out of range?',
         x,
         ncalc,
@@ -176,7 +174,7 @@ export function bessel_j_ex(x: number, alpha: number, bj: number[]): number {
         alpha
       );
     else
-    printer_bessel_j_ex(
+      printer_bessel_j_ex(
         'bessel_j(%d,nu=%d): precision lost in result',
         x,
         alpha + nb - 1

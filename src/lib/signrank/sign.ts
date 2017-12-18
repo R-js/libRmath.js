@@ -34,11 +34,9 @@
  *    	sign(x) = -1  if x < 0
  */
 
-import {
-    ISNAN
-} from '~common';
+ const { isNaN: ISNAN } = Number;
 
-export function sign(x: number): number {
+ export function sign(x: number): number {
     if (ISNAN(x))
         return x;
     return ((x > 0) ? 1 : ((x === 0) ? 0 : -1));

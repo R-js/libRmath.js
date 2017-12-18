@@ -52,13 +52,17 @@
  */
 
 import * as debug from 'debug';
-import { R_FINITE, ML_ERR_return_NAN } from '~common';
+
+
+
+import { ML_ERR_return_NAN } from '~common';
 
 import { exp_rand } from '../exp/sexp';
 
 import { INormal } from '~normal';
 
 const { expm1, abs:fabs, sqrt, log, exp } = Math;
+const { isFinite:R_FINITE } = Number;
 
 export function rgamma(
   n: number = 1,

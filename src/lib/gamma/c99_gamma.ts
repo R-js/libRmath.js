@@ -37,7 +37,6 @@ import * as debug from 'debug';
 import {
   ML_ERROR,
   ME,
-  MATHLIB_WARNING,
 } from '~common';
 
 const { floor, exp, log, abs:fabs} = Math;
@@ -155,7 +154,7 @@ const printer_tgamma = debug('tgamma');
 
   if (x <= 0.0) {
     ML_ERROR(ME.ME_DOMAIN, 'gamma', printer_tgamma);
-    MATHLIB_WARNING('Argument %f must be positive', x);
+    printer_tgamma('Argument %f must be positive', x);
     return ML_NAN;
   }
 

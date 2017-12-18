@@ -65,16 +65,11 @@
 import * as debug from 'debug';
 
 import {
-  sqr,
-  M_LN2,
   DBL_MAX_EXP,
   ML_ERR_return_NAN,
-  REprintf,
   R_D__0,
   R_D__1,
   R_D_exp,
-  MATHLIB_WARNING,
-  ML_POSINF,
   R_P_bounds_01,
   R_DT_0,
   R_DT_1
@@ -87,6 +82,7 @@ import { logspace_add } from './logspace-add';
 import { INormal } from '~normal';
 
 const {
+  LN2:M_LN2,
   log1p,
   expm1,
   sqrt,
@@ -102,11 +98,12 @@ const {
   MIN_VALUE: DBL_MIN,
   EPSILON: DBL_EPSILON,
   isFinite: R_FINITE,
-  NEGATIVE_INFINITY: ML_NEGINF
+  NEGATIVE_INFINITY: ML_NEGINF,
+  POSITIVE_INFINITY:ML_POSINF
 } = Number;
 
 const { isArray } = Array;
-
+const sqr = (x: number) => x * x;
 const scalefactor = sqr(sqr(sqr(4294967296.0)));
 
 /* If |x| > |k| * M_cutoff,  then  log[ exp(-x) * k^x ]	 =~=  -x */

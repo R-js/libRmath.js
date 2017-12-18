@@ -60,7 +60,7 @@
  *	is treated as infinity.
  */
 
-import { sqrt, log } from '~common';
+const { sqrt, log } = Math;
 
 export function qinv(p: number, c: number, v: number): number {
   const p0 = 0.322232421088;

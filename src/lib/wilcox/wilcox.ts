@@ -47,22 +47,16 @@
 */
 import * as debug from 'debug';
 
+const { isNaN: ISNAN, isFinite:R_FINITE, EPSILON:DBL_EPSILON } = Number;
+const { round:R_forceint, abs:fabs, log , floor, trunc} = Math;
+
 import {
   imax2,
-  ISNAN,
   ML_ERR_return_NAN,
-  R_forceint,
-  fabs,
   R_D__0,
-  log,
-  R_FINITE,
-  floor,
   R_DT_0,
   R_DT_1,
-  R_Q_P01_check,
-  DBL_EPSILON,
-  trunc,
-  MATHLIB_ERROR
+  R_Q_P01_check
 } from '~common';
 
 import { choose, lchoose } from '~common';
@@ -307,7 +301,7 @@ export function rwilcox(m: number, n: number, unif_rand: () => number): number {
   k = trunc(m + n);
   x = new Array<number>(k);
 
-  if (!x) MATHLIB_ERROR('wilcox allocation error %d', 4);
+  if (!x) printer_rwilcox('wilcox allocation error %d', 4);
 
   for (i = 0; i < k; i++) x[i] = i;
   for (i = 0; i < n; i++) {

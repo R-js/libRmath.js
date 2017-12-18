@@ -33,11 +33,9 @@
  *                        |x| * signum(y)
  */
 
-import {
-    ISNAN,
-    fabs
-} from '~common';
 
+const { abs:fabs } = Math;
+const { isNaN:ISNAN } = Number;
 
 export function fsign(x: number, y: number) {
     if (ISNAN(x) || ISNAN(y))

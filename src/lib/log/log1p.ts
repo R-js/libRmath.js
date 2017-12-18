@@ -50,23 +50,16 @@
 
 /* want to compile log1p as Rlog1p if HAVE_LOG1P && !HAVE_WORKING_LOG1P */
 
-import {
-    ML_NEGINF,
-    ML_ERR_return_NAN,
-    fabs,
-    DBL_EPSILON,
-    ML_ERROR,
-    ME,
-    log,
-    ISNAN,
-    R_FINITE,
-    ML_POSINF,
-    fmax2,
-    fmin2,
-    R_D_val
+const { abs: fabs, log, max: fmax2, min: fmin2 } = Math;
+const {
+  NEGATIVE_INFINITY: ML_NEGINF,
+  POSITIVE_INFINITY: ML_POSINF,
+  EPSILON: DBL_EPSILON,
+  isNaN: ISNAN,
+  isFinite: R_FINITE
+} = Number;
 
-
-} from '~common';
+import { ML_ERR_return_NAN, ML_ERROR, ME, R_D_val } from '~common';
 
 import { chebyshev_eval } from '~chebyshev';
 
@@ -172,48 +165,46 @@ export function log1p(x: number): number {
  */
 
 export function hypot(a: number, b: number) {
+  let p: number;
+  let r: number;
+  let s: number;
+  let t: number;
+  let tmp: number;
+  let u: number;
 
-    let p: number;
-    let r: number;
-    let s: number;
-    let t: number;
-    let tmp: number;
-    let u: number;
-
-    if (ISNAN(a) || ISNAN(b)) { /* propagate Na(N)s: */
-        return a + b;
-    }
-    if (!R_FINITE(a) || !R_FINITE(b)) {
-        return ML_POSINF;
-    }
-    p = fmax2(fabs(a), fabs(b));
-    if (p !== 0.0) {
-
-        /* r = (min(|a|,|b|) / p) ^2 */
-        tmp = fmin2(fabs(a), fabs(b)) / p;
-        r = tmp * tmp;
-        while (true) {
-            t = 4.0 + r;
-            /* This was a test of 4.0 + r == 4.0, but optimizing
+  if (ISNAN(a) || ISNAN(b)) {
+    /* propagate Na(N)s: */
+    return a + b;
+  }
+  if (!R_FINITE(a) || !R_FINITE(b)) {
+    return ML_POSINF;
+  }
+  p = fmax2(fabs(a), fabs(b));
+  if (p !== 0.0) {
+    /* r = (min(|a|,|b|) / p) ^2 */
+    tmp = fmin2(fabs(a), fabs(b)) / p;
+    r = tmp * tmp;
+    while (true) {
+      t = 4.0 + r;
+      /* This was a test of 4.0 + r == 4.0, but optimizing
             compilers nowadays infinite loop on that. */
-            if (fabs(r) < 2 * DBL_EPSILON) break;
-            s = r / t;
-            u = 1. + 2. * s;
-            p *= u;
+      if (fabs(r) < 2 * DBL_EPSILON) break;
+      s = r / t;
+      u = 1 + 2 * s;
+      p *= u;
 
-            /* r = (s / u)^2 * r */
-            tmp = s / u;
-            r *= tmp * tmp;
-        }
+      /* r = (s / u)^2 * r */
+      tmp = s / u;
+      r *= tmp * tmp;
     }
-    return p;
+  }
+  return p;
 }
 
 export function R_D_Clog(log_p: boolean, p: number): number {
-    return (log_p ? log1p(-(p)) : (0.5 - (p) + 0.5)); /* [log](1-p) */
+  return log_p ? log1p(-p) : 0.5 - p + 0.5; /* [log](1-p) */
 }
 
-
 export function R_DT_val(lower_tail: boolean, log_p: boolean, x: number) {
-    return lower_tail ? R_D_val(log_p, x) : R_D_Clog(log_p, x);
+  return lower_tail ? R_D_val(log_p, x) : R_D_Clog(log_p, x);
 }

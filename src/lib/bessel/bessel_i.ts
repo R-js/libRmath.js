@@ -39,26 +39,15 @@ import {
   rtnsig_BESS,
   nsig_BESS,
   enmten_BESS,
-  //other
-  min0,
-  ISNAN,
+  //other,
   ML_ERROR,
   ME,
-  ML_NAN,
-  trunc,
-  floor,
-  exp,
-  M_PI,
-  MATHLIB_WARNING4,
-  MATHLIB_WARNING2,
-  ML_POSINF,
-  sqrt,
   enten_BESS,
   R_pow_di,
-  fmax2,
-  ldexp,
-  pow
+  ldexp
 } from '~common';
+const { pow, max: fmax2, sqrt, exp, floor, trunc, min: min0, PI: M_PI } = Math;
+const { isNaN: ISNAN, NaN: ML_NAN , POSITIVE_INFINITY:ML_POSINF} = Number;
 
 import { Rf_gamma_cody } from '../gamma/gamma_cody';
 
@@ -177,7 +166,7 @@ export function bessel_i_ex(
   if (ncalc !== nb) {
     /* error input */
     if (ncalc < 0)
-    printer_bessel_i_ex(
+      printer_bessel_i_ex(
         'bessel_i(%d): ncalc (=%d) != nb (=%d); alpha=%d. Arg. out of range?',
         x,
         ncalc,
@@ -185,7 +174,7 @@ export function bessel_i_ex(
         alpha
       );
     else
-    printer_bessel_i_ex(
+      printer_bessel_i_ex(
         'bessel_i(%d,nu=%d): precision lost in result',
         x,
         alpha + nb - 1

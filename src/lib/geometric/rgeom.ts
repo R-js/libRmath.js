@@ -43,14 +43,15 @@
  *    New York: Springer-Verlag.
  *    Pages 488f.
  */
+
 import * as debug from 'debug';
-import { R_FINITE, ML_ERR_return_NAN } from '~common';
 
+import { ML_ERR_return_NAN } from '~common';
 import { rpois } from '~poisson';
-
 import { exp_rand } from '../exp/sexp';
-
 import { INormal } from '~normal';
+
+const { isFinite:R_FINITE } = Number; 
 
 const printer = debug('rgeom');
 

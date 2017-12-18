@@ -47,26 +47,21 @@
 
 import * as debug from 'debug';
 
+const { log, round: R_forceint, exp, sqrt } = Math;
+const { isFinite: R_FINITE, MAX_SAFE_INTEGER: INT_MAX } = Number;
+
 import {
-  MATHLIB_WARNING,
-  log,
   M_LN_SQRT_2PI,
-  R_FINITE,
   ML_ERR_return_NAN,
-  R_forceint,
-  INT_MAX,
   imax2,
-  imin2,
-  REprintf,
-  exp,
-  sqrt
+  imin2
 } from '~common';
 
 import { rbinom } from '../binomial/rbinom';
 import { qhyper } from './qhyper';
 import { INormal } from '~normal';
 
-const printer_afc = debug('afc'); 
+const printer_afc = debug('afc');
 // afc(i) :=  ln( i! )	[logarithm of the factorial i]
 export function afc(i: number): number {
   // If (i > 7), use Stirling's approximation, otherwise use table lookup.
@@ -214,8 +209,8 @@ export function rhyper(
     minjx = imax2(0, k - n2);
     maxjx = imin2(n1, k);
 
-    REprintf(
-      'rhyper(nn1=%d, nn2=%d, kk=%d), setup: floor(mean)= m=%d, jx in (%d..%d)\n',
+    printer_rhyper(
+      'rhyper(nn1=%d, nn2=%d, kk=%d), setup: floor(mean)= m=%d, jx in (%d..%d)',
       nn1,
       nn2,
       kk,
@@ -230,7 +225,7 @@ export function rhyper(
   if (minjx === maxjx) {
     /* I: degenerate distribution ---------------- */
 
-    REprintf('rhyper(), branch I (degenerate)\n');
+    printer_rhyper('rhyper(), branch I (degenerate)');
 
     ix = maxjx;
     goto_L_finis = true;
@@ -251,7 +246,7 @@ export function rhyper(
     }
     let p = 0;
     let u = 0;
-    REprintf('rhyper(), branch II; w = %g > 0\n', w);
+    printer_rhyper('rhyper(), branch II; w = %d > 0', w);
 
     //L10:
     let goto_L10 = false;
@@ -260,15 +255,15 @@ export function rhyper(
       ix = minjx;
       u = normal.rng.unif_rand() * scale;
 
-      REprintf('  _new_ u = %g\n', u);
+      printer_rhyper('  _new_ u = %d', u);
 
       while (u > p) {
         u -= p;
         p *= (n1 - ix) * (k - ix);
         ix++;
         p = p / ix / (n2 - k + ix);
-        REprintf(
-          '       ix=%3d, u=%11g, p=%20.14g (u-p=%g)\n',
+        printer_rhyper(
+          '       ix=%d, u=%d, p=%d (u-p=%d)\n',
           ix,
           u,
           p,
@@ -316,14 +311,14 @@ export function rhyper(
       p3 = p2 + kr / lamdr;
     }
 
-    REprintf(
-      'rhyper(), branch III {accept/reject}: (xl,xr)= (%g,%g); (lamdl,lamdr)= (%g,%g)\n',
+    printer_rhyper(
+      'rhyper(), branch III {accept/reject}: (xl,xr)= (%d,%d); (lamdl,lamdr)= (%d,%d)\n',
       xl,
       xr,
       lamdl,
       lamdr
     );
-    REprintf('-------- p123= c(%g,%g,%g)\n', p1, p2, p3);
+    printer_rhyper('-------- p123= c(%d,%d,%d)\n', p1, p2, p3);
 
     let n_uv = 0;
     //L30:
@@ -333,11 +328,11 @@ export function rhyper(
       let v = normal.rng.unif_rand();
       n_uv++;
       if (n_uv >= 10000) {
-        REprintf('rhyper() branch III: giving up after %d rejections', n_uv);
+        printer_rhyper('rhyper() branch III: giving up after %d rejections', n_uv);
         return ML_ERR_return_NAN(printer_rhyper);
       }
 
-      REprintf(' ... L30: new (u=%g, v ~ U[0,1])[%d]\n', u, n_uv);
+      printer_rhyper(' ... L30: new (u=%d, v ~ U[0,1])[%d]\n', u, n_uv);
 
       if (u < p1) {
         /* rectangular region */
@@ -412,7 +407,7 @@ export function rhyper(
         let yk;
         let alv;
 
-        REprintf(" ... accept/reject 'large' case v=%g\n", v);
+        printer_rhyper(" ... accept/reject 'large' case v=%d", v);
 
         /* squeeze using upper and lower bounds */
         y = ix;

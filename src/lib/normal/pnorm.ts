@@ -67,15 +67,19 @@ import {
   ML_ERR_return_NAN,
   R_DT_0,
   R_DT_1,
-  ML_NAN,
-  DBL_MIN,
   M_SQRT_32,
   M_1_SQRT_2PI,
   R_D__1,
   R_D__0
 } from '~common';
 
-const { isNaN: ISNAN, isFinite: R_FINITE, EPSILON: DBL_EPSILON } = Number;
+const {
+  isNaN: ISNAN,
+  isFinite: R_FINITE,
+  EPSILON: DBL_EPSILON,
+  NaN: ML_NAN,
+  MIN_VALUE: DBL_MIN
+} = Number;
 
 const { trunc, log, exp, abs: fabs, log1p } = Math;
 const { isArray } = Array;

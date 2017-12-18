@@ -38,7 +38,6 @@
 import * as debug from 'debug';
 
 import {
-    REprintf,
     ML_ERR_return_NAN,
     R_Q_P01_boundaries
 } from '~common';

@@ -43,16 +43,11 @@
 
 
 import {
-    nearbyint as R_rint,
-    ISNAN,
-    R_FINITE,
-    round,
-    log10,
-    floor,
-    fabs,
     R_pow_di
 } from '~common';
 
+const {floor, abs:fabs, log10, round, round:R_rint } = Math;
+const {isFinite:R_FINITE, isNaN:ISNAN } = Number;
 
 /* Improvements by Martin Maechler, May 1997;
    further ones, Feb.2000:

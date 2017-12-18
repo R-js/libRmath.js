@@ -146,8 +146,10 @@ import * as debug from 'debug';
 import {
   R_pow_di,
   imin2,
-  Rf_i1mach,
-  Rf_d1mach
+  DBL_MIN_EXP,
+  DBL_MAX_EXP,
+  Rf_d1mach,
+  DBL_MANT_DIG
 } from '~common';
 
 import { NumberW } from '../common/toms708';
@@ -335,7 +337,7 @@ function dpsifn(
     }
   }
   mm = m;
-  nx = imin2(-Rf_i1mach(15), Rf_i1mach(16)); /* = 1021 */
+  nx = imin2(-DBL_MIN_EXP, DBL_MAX_EXP); /* = 1021 */
   r1m5 = Rf_d1mach(5);
   r1m4 = Rf_d1mach(4) * 0.5;
   wdtol = fmax2(r1m4, 0.5e-18); /* 1.11e-16 */
@@ -372,7 +374,7 @@ function dpsifn(
 
       /* compute xmin and the number of terms of the series,  fln+1 */
 
-      rln = r1m5 * Rf_i1mach(14);
+      rln = r1m5 * DBL_MANT_DIG;
       rln = fmin2(rln, 18.06);
       fln = fmax2(rln, 3.0) - 3.0;
       yint = 3.5 + 0.4 * fln;

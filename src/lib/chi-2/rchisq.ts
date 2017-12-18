@@ -36,24 +36,24 @@
  */
 
 import * as debug from 'debug';
-import { R_FINITE, ML_ERR_return_NAN } from '~common';
+import { ML_ERR_return_NAN } from '~common';
 
 import { rgamma } from '../gamma/rgamma';
 import { INormal } from '~normal';
 
+const { isFinite: R_FINITE } = Number;
 const printer = debug('rchisq');
 
 export function rchisq(
   n: number,
   df: number,
   normal: INormal
-): number| number[] {
-  
+): number | number[] {
   const result = new Array(n).fill(0).map(() => {
-  if (!R_FINITE(df) || df < 0.0) {
-    return ML_ERR_return_NAN(printer);
-  }
-  return rgamma(1, df / 2.0, 2.0, normal) as number;
-});
+    if (!R_FINITE(df) || df < 0.0) {
+      return ML_ERR_return_NAN(printer);
+    }
+    return rgamma(1, df / 2.0, 2.0, normal) as number;
+  });
   return result.length === 1 ? result[0] : result;
 }

@@ -27,11 +27,13 @@
  *    This the lognormal quantile function.
  */
 
-import { ISNAN, ML_POSINF, R_Q_P01_boundaries, exp } from '~common';
+import { R_Q_P01_boundaries } from '~common';
 
 import { qnorm } from '../normal/qnorm';
 
 const { isArray } = Array;
+const { exp } = Math;
+const { isNaN: ISNAN, POSITIVE_INFINITY: ML_POSINF } = Number;
 
 export function qlnorm(
   _p: number | number[],

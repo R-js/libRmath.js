@@ -30,27 +30,26 @@
 import * as debug from 'debug';
 
 import {
-  DBL_MIN,
   M_SQRT_2dPI,
-  DBL_EPSILON,
-  DBL_MAX,
   thresh_BESS_Y,
-  ML_POSINF,
-  ISNAN,
   ML_ERROR,
   ME,
-  ML_NAN,
   M_1_PI,
-  M_PI,
   M_PI_2,
-  MATHLIB_WARNING,
-  MATHLIB_WARNING4,
-  MATHLIB_WARNING2,
-  min0,
   xlrg_BESS_Y,
-  ML_NEGINF,
   M_eps_sinc
 } from '~common';
+
+const { min: min0, PI: M_PI } = Math;
+const {
+  NEGATIVE_INFINITY: ML_NEGINF,
+  NaN: ML_NAN,
+  isNaN: ISNAN,
+  POSITIVE_INFINITY: ML_POSINF,
+  MAX_VALUE:DBL_MAX,
+  MIN_VALUE:DBL_MIN,
+  EPSILON:DBL_EPSILON
+} = Number;
 
 import { bessel_j_ex, bessel_j } from './bessel_j';
 import { cospi, sinpi } from '~trigonometry';
@@ -116,7 +115,7 @@ export function bessel_y(x: number, alpha: number): number {
         alpha
       ); /* ncalc >= 0 */
     else
-      MATHLIB_WARNING2(
+    printer_bessel_y(
         'bessel_y(%d,nu=%d): precision lost in result',
         x,
         alpha + nb - 1
