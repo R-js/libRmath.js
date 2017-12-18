@@ -26,67 +26,70 @@
  *
  *    The distribution function of the F distribution.
  */
+import * as debug from 'debug';
 
-import {
-    ISNAN,
-    ML_ERR_return_NAN,
-    R_P_bounds_01,
-    ML_POSINF,
-    R_DT_0,
-    R_DT_1,
-    M_LN2,
-    ML_NAN,
-    ML_VALID
-} from '~common';
+import { ML_ERR_return_NAN, R_P_bounds_01, R_DT_0, R_DT_1 } from '~common';
 
 import { pchisq } from '../chi-2/pchisq';
 import { pbeta } from '../beta/pbeta';
-
 import { INormal } from '~normal';
 
-export function pf(
-    x: number, 
-    df1: number, 
-    df2: number, 
-    lower_tail: boolean, 
-    log_p: boolean,
-    normal: INormal
-): number {
+const {
+  isNaN: ISNAN,
+  POSITIVE_INFINITY: ML_POSINF,
+  NaN: ML_NAN,
+  isFinite: ML_VALID
+} = Number;
 
-    if (ISNAN(x) || ISNAN(df1) || ISNAN(df2))
-        return x + df2 + df1;
+const { LN2: M_LN2 } = Math;
 
-    if (df1 <= 0. || df2 <= 0.) {
-        return ML_ERR_return_NAN();
+const printer = debug('pf');
+
+export function pf<T>(
+  q: T,
+  df1: number,
+  df2: number,
+  lowerTail: boolean = true,
+  logP: boolean = false,
+  normal: INormal
+): T {
+  const fx: number[] = Array.isArray(q) ? q : [q] as any;
+
+  const result = fx.map(x => {
+    if (ISNAN(x) || ISNAN(df1) || ISNAN(df2)) return x + df2 + df1;
+
+    if (df1 <= 0 || df2 <= 0) {
+      return ML_ERR_return_NAN();
     }
 
-    let rc = R_P_bounds_01(lower_tail, log_p, x, 0., ML_POSINF);
+    let rc = R_P_bounds_01(lowerTail, logP, x, 0, ML_POSINF);
     if (rc !== undefined) {
-        return rc;
+      return rc;
     }
 
     /* move to pchisq for very large values - was 'df1 > 4e5' in 2.0.x,
        now only needed for df1 = Inf or df2 = Inf {since pbeta(0,*)=0} : */
     if (df2 === ML_POSINF) {
-        if (df1 === ML_POSINF) {
-            if (x < 1.) return R_DT_0(lower_tail, log_p);
-            if (x === 1.) return (log_p ? -M_LN2 : 0.5);
-            if (x > 1.) return R_DT_1(lower_tail, log_p);
-        }
+      if (df1 === ML_POSINF) {
+        if (x < 1) return R_DT_0(lowerTail, logP);
+        if (x === 1) return logP ? -M_LN2 : 0.5;
+        if (x > 1) return R_DT_1(lowerTail, logP);
+      }
 
-        return pchisq(x * df1, df1, lower_tail, log_p, normal);
+      return pchisq(x * df1, df1, lowerTail, logP, normal);
     }
 
-    if (df1 === ML_POSINF)/* was "fudge"	'df1 > 4e5' in 2.0.x */
-        return pchisq(df2 / x, df2, !lower_tail, log_p, normal);
+    if (df1 === ML_POSINF)
+      /* was "fudge"	'df1 > 4e5' in 2.0.x */
+      return pchisq(df2 / x, df2, !lowerTail, logP, normal);
 
     /* Avoid squeezing pbeta's first parameter against 1 :  */
     if (df1 * x > df2)
-        x = pbeta(df2 / (df2 + df1 * x), df2 / 2., df1 / 2.,
-            !lower_tail, log_p);
+      x = pbeta(df2 / (df2 + df1 * x), df2 / 2, df1 / 2, !lowerTail, logP);
     else
-        x = pbeta(df1 * x / (df2 + df1 * x), df1 / 2., df2 / 2.,
-            lower_tail, log_p);
+      x = pbeta(df1 * x / (df2 + df1 * x), df1 / 2, df2 / 2, lowerTail, logP);
 
     return ML_VALID(x) ? x : ML_NAN;
+  });
+  return result.length === 1 ? result[0] : (result as any);
 }

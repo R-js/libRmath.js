@@ -1,13 +1,6 @@
  libR = require('./dist/lib/libR');
  let sd = new libR.rng.SuperDuper(0);
- bm = new libR.rng.normal.BoxMuller(sd);
- n = libR.normal(bm);
- sp = libR.special;
- g = libR.gamma();
- lbeta = libR.lbeta;
- dbeta = libR.dbeta;
- pbeta = libR.pbeta;
- const { log, exp, max, abs } = Math;
+
  /*
 > pbeta(
     seq()()(0,1,0.1), 

@@ -25,44 +25,62 @@
  * 
  */
 
-import {
-  ISNAN,
-  ML_ERR_return_NAN,
-  R_FINITE,
-  ML_POSINF,
-  R_Q_P01_boundaries
-} from '~common';
+import * as debug from 'debug';
+
+import { ML_ERR_return_NAN, R_Q_P01_boundaries } from '~common';
 
 import { qnchisq } from '../chi-2/qnchisq';
 import { qnbeta } from '../beta/qnbeta';
 import { INormal } from '~normal';
 
-export function qnf(
-  p: number,
+const {
+  isNaN: ISNAN,
+  isFinite: R_FINITE,
+  POSITIVE_INFINITY: ML_POSINF
+} = Number;
+
+const printer = debug('qnf');
+
+export function qnf<T>(
+  pp: T,
   df1: number,
   df2: number,
   ncp: number,
-  lower_tail: boolean,
-  log_p: boolean,
+  lowerTail: boolean = true,
+  logP: boolean = false,
   normal: INormal
-) {
-  let y;
+): T {
+  const fp: number[] = Array.isArray(pp) ? pp : ([pp] as any);
 
-  if (ISNAN(p) || ISNAN(df1) || ISNAN(df2) || ISNAN(ncp))
-    return p + df1 + df2 + ncp;
+  const result = fp.map(p => {
+    let y;
 
-  if (df1 <= 0 || df2 <= 0 || ncp < 0) ML_ERR_return_NAN;
-  if (!R_FINITE(ncp)) ML_ERR_return_NAN;
-  if (!R_FINITE(df1) && !R_FINITE(df2)) ML_ERR_return_NAN;
-  let rc = R_Q_P01_boundaries(lower_tail, log_p, p, 0, ML_POSINF);
-  if (rc !== undefined) {
-    return rc;
-  }
+    if (ISNAN(p) || ISNAN(df1) || ISNAN(df2) || ISNAN(ncp))
+      return p + df1 + df2 + ncp;
 
-  if (df2 > 1e8)
-    /* avoid problems with +Inf and loss of accuracy */
-    return qnchisq(p, df1, ncp, lower_tail, log_p, normal) / df1;
+    switch (true) {
+      case df1 <= 0 || df2 <= 0 || ncp < 0:
+      case !R_FINITE(ncp):
+      case !R_FINITE(df1) && !R_FINITE(df2):
+        return ML_ERR_return_NAN(printer);
+      default:
+        // pass through
+        break;
+    }
+    //if (df1 <= 0 || df2 <= 0 || ncp < 0) ML_ERR_return_NAN(printer);
+    //if (!R_FINITE(ncp)) ML_ERR_return_NAN;
+    //if (!R_FINITE(df1) && !R_FINITE(df2)) ML_ERR_return_NAN;
+    let rc = R_Q_P01_boundaries(lowerTail, logP, p, 0, ML_POSINF);
+    if (rc !== undefined) {
+      return rc;
+    }
 
-  y = qnbeta(p, df1 / 2, df2 / 2, ncp, lower_tail, log_p);
-  return y / (1 - y) * (df2 / df1);
+    if (df2 > 1e8)
+      /* avoid problems with +Inf and loss of accuracy */
+      return qnchisq(p, df1, ncp, lowerTail, logP, normal) / df1;
+
+    y = qnbeta(p, df1 / 2, df2 / 2, ncp, lowerTail, logP);
+    return y / (1 - y) * (df2 / df1);
+  });
+  return result.length === 1 ? result[0] : result as any;
 }
