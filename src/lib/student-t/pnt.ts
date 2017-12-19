@@ -75,7 +75,7 @@ import { lgammafn } from '../gamma/lgamma_fn';
 
 import { pbeta } from '../beta/pbeta';
 
-import { R_DT_val } from '~log';
+import { R_DT_val } from '../common/_general';
 
 const printer_pnt = debug('pnt');
 

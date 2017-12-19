@@ -42,7 +42,7 @@ import {
 } from '~common';
 
 
-import { R_DT_val } from '../log/log1p';
+import { R_DT_val } from '../common/_general';
 import { R_Log1_Exp } from '~exp-utils';
 import { lgammafn } from '../gamma/lgamma_fn';
 import { logspace_add } from '../gamma/logspace-add';

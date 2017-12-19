@@ -38,8 +38,8 @@ const printer = debug('qgeom');
 export function qgeom<T>(
   pp: T,
   prob: number,
-  lower_tail: boolean,
-  log_p: boolean
+  lower_tail: boolean = true,
+  log_p: boolean = false
 ): T {
   const fp: number[] = Array.isArray(pp) ? pp : ([pp] as any);
 

@@ -51,7 +51,7 @@ import {
   imin2
 } from '~common';
 
-import { R_DT_val } from '../log/log1p';
+import { R_DT_val } from '../common/_general';
 import { R_DT_qIv } from '~exp-utils';
 
 import { IRNG } from '../rng';

@@ -56,7 +56,7 @@ import {
 
 import { INormal } from '~normal';
 import { lgammafn } from '../gamma/lgamma_fn';
-import { R_DT_val } from '~log';
+import { R_DT_val } from '../common/_general';
 
 const { isNaN: ISNAN, isFinite: R_FINITE } = Number;
 const { exp, pow, sqrt, log, LN2: M_LN2 } = Math;

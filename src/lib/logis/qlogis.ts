@@ -40,30 +40,37 @@ const {
 const { log } = Math;
 
 const printer_qlogis = debug('qlogis');
-export function qlogis(
-  p: number,
-  location: number,
-  scale: number,
-  lower_tail: boolean,
-  log_p: boolean
-): number {
-  if (ISNAN(p) || ISNAN(location) || ISNAN(scale)) return p + location + scale;
 
-  let rc = R_Q_P01_boundaries(lower_tail, log_p, p, ML_NEGINF, ML_POSINF);
-  if (rc !== undefined) {
-    return rc;
-  }
+export function qlogis<T>(
+  pp: T,
+  location: number = 0,
+  scale: number= 1,
+  lower_tail: boolean = true,
+  log_p: boolean = false
+): T {
+  const fp: number[] = (Array.isArray(pp) ? pp : [pp]) as any;
 
-  if (scale < 0) {
-    return ML_ERR_return_NAN(printer_qlogis);
-  }
-  if (scale === 0) return location;
+  const result = fp.map(p => {
+    if (ISNAN(p) || ISNAN(location) || ISNAN(scale))
+      return p + location + scale;
 
-  /* p := logit(p) = log( p / (1-p) )	 : */
-  if (log_p) {
-    if (lower_tail) p = p - R_Log1_Exp(p);
-    else p = R_Log1_Exp(p) - p;
-  } else p = log(lower_tail ? p / (1 - p) : (1 - p) / p);
+    let rc = R_Q_P01_boundaries(lower_tail, log_p, p, ML_NEGINF, ML_POSINF);
+    if (rc !== undefined) {
+      return rc;
+    }
 
-  return location + scale * p;
+    if (scale < 0) {
+      return ML_ERR_return_NAN(printer_qlogis);
+    }
+    if (scale === 0) return location;
+
+    /* p := logit(p) = log( p / (1-p) )	 : */
+    if (log_p) {
+      if (lower_tail) p = p - R_Log1_Exp(p);
+      else p = R_Log1_Exp(p) - p;
+    } else p = log(lower_tail ? p / (1 - p) : (1 - p) / p);
+
+    return location + scale * p;
+  });
+  return (result.length === 1 ? result[0] : result) as any;
 }

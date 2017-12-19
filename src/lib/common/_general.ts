@@ -94,6 +94,15 @@ export const R_DT_1 = (lower_tail: boolean, log_p: boolean): number => {
 export const R_D_val = (log_p: boolean, x: number) => {
   return log_p ? Math.log(x) : x;
 };
+
+export function R_D_Clog(log_p: boolean, p: number): number {
+  return log_p ? Math.log1p(-p) : 0.5 - p + 0.5; /* [log](1-p) */
+}
+
+export function R_DT_val(lower_tail: boolean, log_p: boolean, x: number) {
+  return lower_tail ? R_D_val(log_p, x) : R_D_Clog(log_p, x);
+}
+
 /*
 export function rround(x: number) {
   if (x < 0) {

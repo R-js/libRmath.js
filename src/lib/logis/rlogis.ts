@@ -37,8 +37,9 @@ const { isNaN: ISNAN, isFinite: R_FINITE } = Number;
 const printer_rlogis = debug('rlogis');
 
 export function rlogis(
-  location: number,
-  scale: number,
+  N: number = 1,
+  location: number = 0,
+  scale: number = 1,
   rng: IRNG
 ): number {
   if (ISNAN(location) || !R_FINITE(scale)) {

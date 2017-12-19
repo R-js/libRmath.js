@@ -28,24 +28,31 @@ import { ML_ERR_return_NAN } from '~common';
 const { log, exp, abs: fabs } = Math;
 const { isNaN: ISNAN } = Number;
 
-const printer_dlogis = debug('dlogis'); 
+const printer_dlogis = debug('dlogis');
 
-export function dlogis(
-  x: number,
-  location: number,
-  scale: number,
-  give_log: boolean
-) {
-  let e: number;
-  let f: number;
+export function dlogis<T>(
+  xx: T,
+  location: number = 0,
+  scale: number = 1,
+  give_log: boolean = false
+): T {
+  const fx: number[] = Array.isArray(xx) ? xx : ([xx] as any);
 
-  if (ISNAN(x) || ISNAN(location) || ISNAN(scale)) return x + location + scale;
-  if (scale <= 0.0) {
-    return ML_ERR_return_NAN(printer_dlogis);
-  }
+  const result = fx.map(x => {
+    let e: number;
+    let f: number;
 
-  x = fabs((x - location) / scale);
-  e = exp(-x);
-  f = 1.0 + e;
-  return give_log ? -(x + log(scale * f * f)) : e / (scale * f * f);
+    if (ISNAN(x) || ISNAN(location) || ISNAN(scale))
+      return x + location + scale;
+    if (scale <= 0.0) {
+      return ML_ERR_return_NAN(printer_dlogis);
+    }
+
+    x = fabs((x - location) / scale);
+    e = exp(-x);
+    f = 1.0 + e;
+    return give_log ? -(x + log(scale * f * f)) : e / (scale * f * f);
+  });
+
+  return result.length === 1 ? result[0] : (result as any);
 }

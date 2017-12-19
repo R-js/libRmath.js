@@ -44,32 +44,39 @@ export function Rf_log1pexp(x: number): number {
 
 const printer_plogis = debug('plogis');
 
-export function plogis(
-  x: number,
-  location: number,
-  scale: number,
-  lower_tail: boolean,
-  log_p: boolean
-): number {
-  if (ISNAN(x) || ISNAN(location) || ISNAN(scale)) return x + location + scale;
+export function plogis<T>(
+  xx: T,
+  location: number = 0,
+  scale: number = 1,
+  lower_tail: boolean = true,
+  log_p: boolean = false
+): T {
+  const fx: number[] = (Array.isArray(xx) ? xx : [xx]) as any;
 
-  if (scale <= 0.0) {
-    return ML_ERR_return_NAN(printer_plogis);
-  }
+  const result = fx.map(x => {
+    if (ISNAN(x) || ISNAN(location) || ISNAN(scale))
+      return x + location + scale;
 
-  x = (x - location) / scale;
-  if (ISNAN(x)) {
-    return ML_ERR_return_NAN(printer_plogis);
-  }
-  let rc = R_P_bounds_Inf_01(lower_tail, log_p, x);
-  if (rc !== undefined) {
-    return rc;
-  }
+    if (scale <= 0.0) {
+      return ML_ERR_return_NAN(printer_plogis);
+    }
 
-  if (log_p) {
-    // log(1 / (1 + exp( +- x ))) = -log(1 + exp( +- x))
-    return -Rf_log1pexp(lower_tail ? -x : x);
-  } else {
-    return 1 / (1 + exp(lower_tail ? -x : x));
-  }
+    x = (x - location) / scale;
+    if (ISNAN(x)) {
+      return ML_ERR_return_NAN(printer_plogis);
+    }
+    let rc = R_P_bounds_Inf_01(lower_tail, log_p, x);
+    if (rc !== undefined) {
+      return rc;
+    }
+
+    if (log_p) {
+      // log(1 / (1 + exp( +- x ))) = -log(1 + exp( +- x))
+      return -Rf_log1pexp(lower_tail ? -x : x);
+    } else {
+      return 1 / (1 + exp(lower_tail ? -x : x));
+    }
+  });
+
+  return (result.length === 1 ? result[0] : result) as any;
 }

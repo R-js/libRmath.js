@@ -49,7 +49,7 @@
  */
 
 import { ML_ERROR, ME } from '~common';
-import { chebyshev_eval } from '~chebyshev';
+import { chebyshev_eval } from '../chebyshev/chebyshev';
 import { stirlerr } from '~stirling';
 import { sinpi } from '~trigonometry';
 import { lgammacor } from './lgammacor';

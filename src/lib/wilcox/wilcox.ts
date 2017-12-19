@@ -60,7 +60,7 @@ import {
 } from '~common';
 
 import { choose, lchoose } from '~common';
-import { R_DT_val } from '~log';
+import { R_DT_val } from '../common/_general';
 import { R_DT_qIv } from '~exp-utils';
 
 const WILCOX_MAX = 50;

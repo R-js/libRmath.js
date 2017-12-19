@@ -50,7 +50,7 @@
  */
 import * as debug from 'debug';
 import { ME, ML_ERROR, ML_ERR_return_NAN } from '~common';
-import { chebyshev_eval } from '~chebyshev';
+import { chebyshev_eval } from '../chebyshev/chebyshev';
 
 const printer = debug('lgammacor');
 

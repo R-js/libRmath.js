@@ -46,8 +46,8 @@ export function pbinom<T>(
   xx: T,
   n: number,
   p: number,
-  lower_tail: boolean,
-  log_p: boolean
+  lower_tail: boolean = true,
+  log_p: boolean = false
 ): T {
 
   const fx: number[] = Array.isArray(xx) ? xx :[xx] as any;

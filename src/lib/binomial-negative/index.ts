@@ -10,6 +10,36 @@ const errText = Object.freeze([
   'both arguments "mu" and "prob" are undefined'
 ]);
 
+function select(
+  fs: 'd' | 'p' | 'r' | 'q',
+  mu?: number,
+  prob?: number
+): Function {
+  const selector = {
+    mu: {
+      d: dnbinom_mu,
+      p: pnbinom_mu,
+      r: rnbinom_mu,
+      q: qnbinom_mu
+    },
+    p: {
+      d: _dnbinom,
+      p: _pnbinom,
+      r: _rnbinom,
+      q: _qnbinom
+    }
+  };
+
+  if (prob !== undefined && mu !== undefined) {
+    throw new Error(errText[0]);
+  }
+  if (prob === undefined && mu === undefined) {
+    throw new Error(errText[1]);
+  }
+  const s = prob === undefined ? 'mu' : 'p';
+  return selector[s][fs];
+}
+
 export function NegativeBinomial(rng: INormal = Normal()) {
   function dnbinom(
     x: number | number[],
@@ -18,16 +48,8 @@ export function NegativeBinomial(rng: INormal = Normal()) {
     mu?: number,
     giveLog: boolean = false
   ) {
-    if (prob !== undefined && mu !== undefined) {
-      throw new Error(errText[0]);
-    }
-    if (mu !== undefined) {
-      return dnbinom_mu(x, size, mu, giveLog);
-    }
-    if (prob !== undefined) {
-      return _dnbinom(x, size, prob, giveLog);
-    }
-    throw new Error(errText[1]);
+    const val = mu || prob;
+    return select('d', mu, prob)(x, size, val, giveLog);
   }
 
   function pnbinom(
@@ -38,16 +60,8 @@ export function NegativeBinomial(rng: INormal = Normal()) {
     lowerTail: boolean = true,
     logP = false
   ) {
-    if (prob !== undefined && mu !== undefined) {
-      throw new Error(errText[0]);
-    }
-    if (mu !== undefined) {
-      return pnbinom_mu(q, size, mu, lowerTail, logP);
-    }
-    if (prob !== undefined) {
-      return _pnbinom(q, size, prob, lowerTail, logP);
-    }
-    throw new Error(errText[1]);
+    const val = mu || prob;
+    return select('p', mu, prob)(q, size, val, lowerTail, logP);
   }
 
   function qnbinom(
@@ -58,29 +72,18 @@ export function NegativeBinomial(rng: INormal = Normal()) {
     lowerTail: boolean = true,
     logP = false
   ) {
-    if (prob !== undefined && mu !== undefined) {
-      throw new Error(errText[0]);
-    }
-    if (mu !== undefined) {
-      return qnbinom_mu(q, size, mu, lowerTail, logP, rng);
-    }
-    if (prob !== undefined) {
-      return _qnbinom(q, size, prob, lowerTail, logP, rng);
-    }
-    throw new Error(errText[1]);
+    const val = mu || prob;
+    return select('q', mu, prob)(q, size, val, lowerTail, logP);
   }
 
-  function rnbinom(n: number, size: number, prob?: number, mu?: number): number|number[] {
-    if (prob !== undefined && mu !== undefined) {
-        throw new Error(errText[0]);
-      }
-      if (mu !== undefined) {
-        return rnbinom_mu(n, size, mu, rng);
-      }
-      if (prob !== undefined) {
-        return _rnbinom(n, size, prob, rng);
-      }
-      throw new Error(errText[1]);  
+  function rnbinom(
+    n: number,
+    size: number,
+    prob?: number,
+    mu?: number
+  ): number | number[] {
+    const val = mu || prob;
+    return select('q', mu, prob)(n, size, val, rng);
   }
 
   return {
@@ -90,38 +93,3 @@ export function NegativeBinomial(rng: INormal = Normal()) {
     rnbinom
   };
 }
-
-/*
-export function dnbinom<T>(
-  xx: T,
-  size: number,
-  prob: number,
-  give_log: boolean
-): T
-
-export function pnbinom<T>(
-  xx: T,
-  size: number,
-  prob: number,
-  lower_tail: boolean,
-  log_p: boolean
-): T
-
-export function qnbinom<T>(
-  pp: T,
-  size: number,
-  prob: number,
-  lower_tail: boolean,
-  log_p: boolean,
-  normal: INormal
-): T
-
-
-export function rnbinom(
-  n: number,
-  size: number,
-  prob: number,
-  normal: INormal
-): number| number[] 
-
-*/

@@ -114,7 +114,7 @@ export function dbinom(
   x: number,
   n: number,
   p: number,
-  logX: boolean
+  logX: boolean = false
 ): number | number[] {
   const result = new Array(N).fill(0).map(() => {
     /* NaNs propagated correctly */

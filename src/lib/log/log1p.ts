@@ -61,7 +61,7 @@ const {
 
 import { ML_ERR_return_NAN, ML_ERROR, ME, R_D_val } from '~common';
 
-import { chebyshev_eval } from '~chebyshev';
+//import { chebyshev_eval } from '~chebyshev';
 
 const { log1p } = Math;
 
@@ -164,7 +164,7 @@ export function log1p(x: number): number {
  *		without overflow or destructive underflow.
  */
 
-export function hypot(a: number, b: number) {
+ function hypot(a: number, b: number) {
   let p: number;
   let r: number;
   let s: number;
@@ -199,12 +199,4 @@ export function hypot(a: number, b: number) {
     }
   }
   return p;
-}
-
-export function R_D_Clog(log_p: boolean, p: number): number {
-  return log_p ? log1p(-p) : 0.5 - p + 0.5; /* [log](1-p) */
-}
-
-export function R_DT_val(lower_tail: boolean, log_p: boolean, x: number) {
-  return lower_tail ? R_D_val(log_p, x) : R_D_Clog(log_p, x);
 }

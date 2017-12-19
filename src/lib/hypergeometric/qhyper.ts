@@ -27,25 +27,27 @@
  */
 
 import * as debug from 'debug';
-
-import { ML_ERR_return_NAN, R_Q_P01_boundaries } from '~common';
-
+import { ML_ERR_return_NAN, R_Q_P01_boundaries } from '../common/_general';
 import { R_DT_qIv } from '~exp-utils';
+import { lfastchoose } from '../common/choose';
 
-import { lfastchoose } from '~common';
 
-const printer_qhyper = debug('qhyper');
 const { log, exp, min: fmin2, max: fmax2, round: R_forceint } = Math;
 const { isNaN: ISNAN, isFinite: R_FINITE, EPSILON: DBL_EPSILON } = Number;
 
-export function qhyper(
-  p: number,
+const printer_qhyper = debug('qhyper');
+export function qhyper<T>(
+  pp: T,
   NR: number,
   NB: number,
   n: number,
-  lowerTail: boolean,
-  logP: boolean
-): number {
+  lowerTail: boolean= true,
+  logP: boolean= false
+): T {
+
+  const fp: number[] = Array.isArray(pp) ? pp : [pp] as any;
+  
+  const result = fp.map(p => {
   /* This is basically the same code as  ./phyper.c  *used* to be --> FIXME! */
   let N;
   let xstart;
@@ -106,4 +108,6 @@ export function qhyper(
     NR--;
   }
   return xr;
+});
+ return result.length === 1 ? result[0] : result as any;
 }

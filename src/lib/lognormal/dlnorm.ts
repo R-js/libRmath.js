@@ -32,13 +32,15 @@ import {
   R_D__0,
   M_LN_SQRT_2PI,
   M_1_SQRT_2PI
-} from '~common';
+} from '../common/_general';
 
 import * as debug from 'debug';
-const printer = debug('dlnorm');
+
 const { isArray } = Array;
 const { isNaN: ISNAN, POSITIVE_INFINITY:ML_POSINF } = Number;
 const { log, exp } = Math;
+
+const printer = debug('dlnorm');
 
 export function dlnorm(
   x: number|number[],

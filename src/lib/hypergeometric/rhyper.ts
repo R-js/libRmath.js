@@ -46,22 +46,22 @@
  */
 
 import * as debug from 'debug';
-
-const { log, round: R_forceint, exp, sqrt } = Math;
-const { isFinite: R_FINITE, MAX_SAFE_INTEGER: INT_MAX } = Number;
-
 import {
   M_LN_SQRT_2PI,
   ML_ERR_return_NAN,
   imax2,
   imin2
-} from '~common';
+} from '../common/_general';
 
 import { rbinom } from '../binomial/rbinom';
 import { qhyper } from './qhyper';
 import { INormal } from '~normal';
 
+const { log, round: R_forceint, exp, sqrt } = Math;
+const { isFinite: R_FINITE, MAX_SAFE_INTEGER: INT_MAX } = Number;
+
 const printer_afc = debug('afc');
+
 // afc(i) :=  ln( i! )	[logarithm of the factorial i]
 export function afc(i: number): number {
   // If (i > 7), use Stirling's approximation, otherwise use table lookup.
@@ -100,10 +100,25 @@ export function afc(i: number): number {
   );
 }
 
-//     rhyper(NR, NB, n) -- NR 'red', NB 'blue', n drawn, how many are 'red'
-const printer_rhyper = debug('rhyper');
-
 export function rhyper(
+  N: number = 1,
+  nn1in: number,
+  nn2in: number,
+  kkin: number,
+  normal: INormal
+): number | number[] {
+
+  const result = new Array(N).fill(0).map(() => {
+    return _rhyper(nn1in, nn2in, kkin, normal);
+  });
+  return result.length === 1 ? result[0] : result;
+
+}
+
+//     rhyper(NR, NB, n) -- NR 'red', NB 'blue', n drawn, how many are 'red'
+const printer_rhyper = debug('_rhyper');
+
+function _rhyper(
   nn1in: number,
   nn2in: number,
   kkin: number,
@@ -262,13 +277,7 @@ export function rhyper(
         p *= (n1 - ix) * (k - ix);
         ix++;
         p = p / ix / (n2 - k + ix);
-        printer_rhyper(
-          '       ix=%d, u=%d, p=%d (u-p=%d)\n',
-          ix,
-          u,
-          p,
-          u - p
-        );
+        printer_rhyper('       ix=%d, u=%d, p=%d (u-p=%d)\n', ix, u, p, u - p);
         if (ix > maxjx) {
           goto_L10 = true;
           break;
@@ -328,7 +337,10 @@ export function rhyper(
       let v = normal.rng.unif_rand();
       n_uv++;
       if (n_uv >= 10000) {
-        printer_rhyper('rhyper() branch III: giving up after %d rejections', n_uv);
+        printer_rhyper(
+          'rhyper() branch III: giving up after %d rejections',
+          n_uv
+        );
         return ML_ERR_return_NAN(printer_rhyper);
       }
 
