@@ -3,32 +3,9 @@ import { ppois } from './ppois';
 import { rpois } from './rpois';
 import { qpois } from './qpois';
 
-export { dpois_raw, rpois }; //needed for rnbinom
-
 import { INormal, Normal } from '../normal';
 
-export interface IPoisson {
-  rpois: (n: number, lambda: number) => number | number[];
-  dpois: (
-    x: number | number[],
-    lambda: number,
-    logP: boolean
-  ) => number | number[];
-  ppois: (
-    q: number | number[],
-    lambda: number,
-    lowerTail: boolean,
-    logP: boolean
-  ) => number | number[];
-  qpois: (
-    p: number | number[],
-    lambda: number,
-    lowerTail: boolean,
-    logP: boolean
-  ) => number | number[];
-}
-
-export function Poisson(norm: INormal = Normal()): IPoisson {
+export function Poisson(norm: INormal = Normal()) {
   return {
     rpois: (n: number = 1, lambda: number = 1) => rpois(n, lambda, norm),
     dpois: (x: number | number[], lambda: number = 1, logP: boolean = false) =>

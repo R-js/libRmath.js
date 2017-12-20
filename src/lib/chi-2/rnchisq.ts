@@ -63,7 +63,7 @@ import * as debug from 'debug';
 import { ML_ERR_return_NAN } from '~common';
 
 import { rgamma } from '../gamma/rgamma';
-import { rpois } from '~poisson';
+import { rpois } from '../poisson/rpois';
 import { rchisq } from './rchisq';
 import { INormal } from '~normal';
 //import { unwatchFile } from 'fs';

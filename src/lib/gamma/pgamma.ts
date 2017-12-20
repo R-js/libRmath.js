@@ -77,7 +77,7 @@ import {
 
 import { lgammafn } from './lgamma_fn';
 import { R_Log1_Exp } from '~exp-utils';
-import { dpois_raw } from '~poisson';
+import { dpois_raw } from '../poisson/dpois';
 import { logspace_add } from './logspace-add';
 import { INormal } from '~normal';
 

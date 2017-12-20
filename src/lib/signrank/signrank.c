@@ -44,9 +44,10 @@ static int allocated_n;
 static void
 w_free(void)
 {
-    if (!w) return;
+    if (!w)
+        return;
 
-    free((void *) w);
+    free((void *)w);
     w = 0;
     allocated_n = 0;
 }
@@ -64,19 +65,24 @@ w_init_maybe(int n)
     u = n * (n + 1) / 2;
     c = (u / 2);
 
-    if (w) {
-        if(n != allocated_n) {
-	    w_free();
-	}
-	else return;
+    if (w)
+    {
+        if (n != allocated_n)
+        {
+            w_free();
+        }
+        else
+            return;
     }
 
-    if(!w) {
-	w = (double *) calloc((size_t) c + 1, sizeof(double));
+    if (!w)
+    {
+        w = (double *)calloc((size_t)c + 1, sizeof(double));
 #ifdef MATHLIB_STANDALONE
-	if (!w) MATHLIB_ERROR("%s", _("signrank allocation error"));
+        if (!w)
+            MATHLIB_ERROR("%s", _("signrank allocation error"));
 #endif
-	allocated_n = n;
+        allocated_n = n;
     }
 }
 
@@ -93,9 +99,9 @@ csignrank(int k, int n)
     c = (u / 2);
 
     if (k < 0 || k > u)
-	return 0;
+        return 0;
     if (k > c)
-	k = u - k;
+        k = u - k;
 
     if (n == 1)
         return 1.;
@@ -103,12 +109,12 @@ csignrank(int k, int n)
         return w[k];
 
     w[0] = w[1] = 1.;
-    for(j = 2; j < n+1; ++j) {
-        int i, end = imin2(j*(j+1)/2, c);
-	for(i = end; i >= j; --i)
-	    w[i] += w[i-j];
+    for (j = 2; j < n + 1; ++j)
+    {
+        int end = imin2(j * (j + 1) / 2, c);
+        for (int i = end; i >= j; --i)
+            w[i] += w[i - j];
     }
-
     return w[k];
 }
 
@@ -118,60 +124,71 @@ double dsignrank(double x, double n, int give_log)
 
 #ifdef IEEE_754
     /* NaNs propagated correctly */
-    if (ISNAN(x) || ISNAN(n)) return(x + n);
+    if (ISNAN(x) || ISNAN(n))
+        return (x + n);
 #endif
     n = R_forceint(n);
     if (n <= 0)
-	ML_ERR_return_NAN;
+        ML_ERR_return_NAN;
 
     if (fabs(x - R_forceint(x)) > 1e-7)
-	return(R_D__0);
+        return (R_D__0);
     x = R_forceint(x);
     if ((x < 0) || (x > (n * (n + 1) / 2)))
-	return(R_D__0);
+        return (R_D__0);
 
-    int nn = (int) n;
+    int nn = (int)n;
     w_init_maybe(nn);
-    d = R_D_exp(log(csignrank((int) x, nn)) - n * M_LN2);
+    d = R_D_exp(log(csignrank((int)x, nn)) - n * M_LN2);
 
-    return(d);
+    return (d);
 }
 
-double psignrank(double x, double n, int lower_tail, int log_p)
+double psignrank(
+    double x, 
+    double n, 
+    int lower_tail, 
+    int log_p)
 {
     int i;
     double f, p;
 
 #ifdef IEEE_754
     if (ISNAN(x) || ISNAN(n))
-    return(x + n);
+        return (x + n);
 #endif
-    if (!R_FINITE(n)) ML_ERR_return_NAN;
+    if (!R_FINITE(n))
+        ML_ERR_return_NAN;
     n = R_forceint(n);
-    if (n <= 0) ML_ERR_return_NAN;
+    if (n <= 0)
+        ML_ERR_return_NAN;
 
-    x = R_forceint(x + 1e-7);
+    x = R_forceint(x + 1e-7);// lolz, forceint is a round
     if (x < 0.0)
-	return(R_DT_0);
+        return (R_DT_0);
     if (x >= n * (n + 1) / 2)
-	return(R_DT_1);
+        return (R_DT_1);
 
-    int nn = (int) n;
+    int nn = (int)n;
     w_init_maybe(nn);
-    f = exp(- n * M_LN2);
+    f = exp(-n * M_LN2);
     p = 0;
-    if (x <= (n * (n + 1) / 4)) {
-	for (i = 0; i <= x; i++)
-	    p += csignrank(i, nn) * f;
+    if (x <= (n * (n + 1) / 4))
+    {
+        for (i = 0; i <= x; i++){
+            p += csignrank(i, nn) * f;
+        }
     }
-    else {
-	x = n * (n + 1) / 2 - x;
-	for (i = 0; i < x; i++)
-	    p += csignrank(i, nn) * f;
-	lower_tail = !lower_tail; /* p = 1 - p; */
+    else
+    {
+        x = n * (n + 1) / 2 - x;
+        for (i = 0; i < x; i++){
+            p += csignrank(i, nn) * f;
+        }
+        lower_tail = !lower_tail; /* p = 1 - p; */
     }
 
-    return(R_DT_val(p));
+    return (R_DT_val(p));
 } /* psignrank() */
 
 double qsignrank(double x, double n, int lower_tail, int log_p)
@@ -180,51 +197,56 @@ double qsignrank(double x, double n, int lower_tail, int log_p)
 
 #ifdef IEEE_754
     if (ISNAN(x) || ISNAN(n))
-	return(x + n);
+        return (x + n);
 #endif
     if (!R_FINITE(x) || !R_FINITE(n))
-	ML_ERR_return_NAN;
+        ML_ERR_return_NAN;
     R_Q_P01_check(x);
 
     n = R_forceint(n);
     if (n <= 0)
-	ML_ERR_return_NAN;
+        ML_ERR_return_NAN;
 
     if (x == R_DT_0)
-	return(0);
+        return (0);
     if (x == R_DT_1)
-	return(n * (n + 1) / 2);
+        return (n * (n + 1) / 2);
 
-    if(log_p || !lower_tail)
-	x = R_DT_qIv(x); /* lower_tail,non-log "p" */
+    if (log_p || !lower_tail)
+        x = R_DT_qIv(x); /* lower_tail,non-log "p" */
 
-    int nn = (int) n;
+    int nn = (int)n;
     w_init_maybe(nn);
-    f = exp(- n * M_LN2);
+    f = exp(-n * M_LN2);
     p = 0;
     int q = 0;
-    if (x <= 0.5) {
-	x = x - 10 * DBL_EPSILON;
-	for (;;) {
-	    p += csignrank(q, nn) * f;
-	    if (p >= x)
-		break;
-	    q++;
-	}
+    if (x <= 0.5)
+    {
+        x = x - 10 * DBL_EPSILON;
+        for (;;)
+        {
+            p += csignrank(q, nn) * f;
+            if (p >= x)
+                break;
+            q++;
+        }
     }
-    else {
-	x = 1 - x + 10 * DBL_EPSILON;
-	for (;;) {
-	    p += csignrank(q, nn) * f;
-	    if (p > x) {
-		q = (int)(n * (n + 1) / 2 - q);
-		break;
-	    }
-	    q++;
-	}
+    else
+    {
+        x = 1 - x + 10 * DBL_EPSILON;
+        for (;;)
+        {
+            p += csignrank(q, nn) * f;
+            if (p > x)
+            {
+                q = (int)(n * (n + 1) / 2 - q);
+                break;
+            }
+            q++;
+        }
     }
 
-    return(q);
+    return (q);
 }
 
 double rsignrank(double n)
@@ -234,17 +256,20 @@ double rsignrank(double n)
 
 #ifdef IEEE_754
     /* NaNs propagated correctly */
-    if (ISNAN(n)) return(n);
+    if (ISNAN(n))
+        return (n);
 #endif
     n = R_forceint(n);
-    if (n < 0) ML_ERR_return_NAN;
+    if (n < 0)
+        ML_ERR_return_NAN;
 
     if (n == 0)
-	return(0);
+        return (0);
     r = 0.0;
-    k = (int) n;
-    for (i = 0; i < k; ) {
-	r += (++i) * floor(unif_rand() + 0.5);
+    k = (int)n;
+    for (i = 0; i < k;)
+    {
+        r += (++i) * floor(unif_rand() + 0.5);
     }
-    return(r);
+    return (r);
 }

@@ -44,7 +44,7 @@ import { M_1_SQRT_2PI, ML_ERR_return_NAN, imin2, imax2 } from '~common';
 
 import { INormal } from '~normal';
 import { exp_rand } from '../exp/sexp';
-import { fsign } from '~signrank';
+import { fsign } from '../signrank/fsign';
 
 const { trunc, log, abs: fabs, pow, exp, floor, sqrt } = Math;
 const { isFinite: R_FINITE } = Number;
@@ -244,7 +244,7 @@ function _rpois(mu: number, normal: INormal): number {
       /*  sample t from the laplace 'hat'
                 (if t <= -0.6744 then pk < fk for all mu >= 10.) */
       u = 2 * normal.rng.unif_rand() - 1;
-      t = 1.8 + fsign(E, u);
+      t = 1.8 + fsign(E, u >= 0);
     }
     if (t > -0.6744 || gotoStepF) {
       if (!gotoStepF) {

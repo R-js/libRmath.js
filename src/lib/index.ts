@@ -1,4 +1,5 @@
 'use strict';
+
 export { Beta } from '~beta';
 export { Binomial } from './binomial';
 export { NegativeBinomial } from './binomial-negative';
@@ -10,24 +11,24 @@ export { FDist } from './f-distro';
 export { Gamma } from './gamma';
 export { Geometric } from './geometric';
 export { HyperGeometric } from './hypergeometric';
-export { Logistic} from './logis';
+export { Logistic } from './logis';
 export { LogNormal } from './lognormal';
 export { MultiNomial } from './multinom';
-//
-export { Uniform } from './uniform';
 export { Normal } from './normal';
-
-export { rng, IRNG } from './rng';
-
 export { Poisson } from './poisson';
+export { rng, IRNG } from './rng';
+export { SignRank } from './signrank';
+//  stirling
+//  student-t
+//  trigonometry
+//  tukey
+export { Uniform } from './uniform';
+//  weibull
+//  wilcox
 
-
-
-
-
-
-
-
+/*
+  Class of Special functions collected here.  
+*/
 import { special as betaSpecial } from '~beta';
 import { special as gammaSpecial } from '~gamma';
 
@@ -43,7 +44,3 @@ export const R = {
   seq,
   flatten
 };
-
-export * from './bessel';
-
-

@@ -33,14 +33,13 @@
  *                        |x| * signum(y)
  */
 
-
 const { abs:fabs } = Math;
 const { isNaN:ISNAN } = Number;
 
-export function fsign(x: number, y: number) {
-    if (ISNAN(x) || ISNAN(y))
-        return x + y;
-    return ((y >= 0) ? fabs(x) : -fabs(x));
+// needed by rpois
+export function fsign(x: number, signal: boolean) {
+    if (ISNAN(x)) return x;
+    return signal ? fabs(x) : -fabs(x); 
 }
 
 

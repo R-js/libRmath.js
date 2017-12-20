@@ -67,7 +67,7 @@ const printer = debug('dnbeta');
 
 import { dbeta } from './dbeta';
 
-import { dpois_raw } from '~poisson';
+import { dpois_raw } from '../poisson/dpois';
 
 //used by f-distriution
 

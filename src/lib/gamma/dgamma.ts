@@ -48,7 +48,7 @@
 
 import { ML_ERR_return_NAN, R_D__0 } from '~common';
 
-import { dpois_raw } from '~poisson';
+import { dpois_raw } from '../poisson/dpois';
 import * as debug from 'debug';
 
 const { log } = Math;
