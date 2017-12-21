@@ -3,6 +3,7 @@
  srt = libR.SignRank();
  psignrank = srt.psignrank;
  seq = libR.R.seq()();
+ student = libR.StudentT();
 
  /*
 > pbeta(

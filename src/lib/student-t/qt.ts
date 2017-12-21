@@ -89,7 +89,20 @@ const {
 
 const printer_qt = debug('qt');
 
-export function qt(
+export function qt<T>(
+  pp: T,
+  ndf: number,
+  lowerTail: boolean,
+  logP: boolean,
+  normal: INormal
+): T {
+  const fp: number[] = (Array.isArray(pp) ? pp : [pp]) as any;
+  const result = fp.map(p => _qt(p, ndf, lowerTail, logP, normal));
+
+  return (result.length === 1 ? result[0] : result) as any;
+}
+
+function _qt(
   p: number,
   ndf: number,
   lower_tail: boolean,

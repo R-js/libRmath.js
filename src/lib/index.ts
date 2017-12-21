@@ -19,28 +19,32 @@ export { Poisson } from './poisson';
 export { rng, IRNG } from './rng';
 export { SignRank } from './signrank';
 //  stirling, no need to export, it is a util
-//  student-t
-//  trigonometry
-//  tukey
+export { StudentT } from './student-t';
+//  trigonometry, no need to export, it is a util
+//TODO:  tukey
 export { Uniform } from './uniform';
-//  weibull
-//  wilcox
+//TODO:  weibull
+//TODO:  wilcox
 
 /*
   Class of Special functions collected here.  
 */
 import { special as betaSpecial } from '~beta';
 import { special as gammaSpecial } from '~gamma';
+//TODO: bessel equations
 
 export const special = Object.freeze({
   ...gammaSpecial,
   ...betaSpecial
 });
 
-import { selector, seq, flatten } from '~R';
+import { selector, seq, flatten, arrayrify, forceToArray, possibleScalar } from '~R';
 
 export const R = {
   selector,
   seq,
-  flatten
+  flatten,
+  arrayrify,
+  forceToArray,
+  possibleScalar
 };

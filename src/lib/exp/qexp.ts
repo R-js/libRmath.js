@@ -31,6 +31,8 @@ import { R_DT_0, ML_ERR_return_NAN, R_Q_P01_check } from '~common';
 
 import { R_DT_Clog } from './expm1';
 
+import { forceToArray, possibleScalar } from '~R';
+
 const { isArray } = Array;
 const { isNaN: ISNAN } = Number;
 const printer = debug('qexp');
@@ -41,7 +43,7 @@ export function qexp<T>(
   lower_tail: boolean = true,
   log_p: boolean = false
 ): T {
-  let fa: number[] = (() => (isArray(_p) && _p) || [_p])() as any;
+  let fa: number[] = forceToArray(_p) as any;
 
   let result = fa.map(p => {
     if (ISNAN(p) || ISNAN(scale)) return p + scale;
@@ -56,5 +58,5 @@ export function qexp<T>(
 
     return -scale * R_DT_Clog(lower_tail, log_p, p);
   });
-  return result.length === 1 ? result[0] : result as any;
+  return possibleScalar(result) as any;
 }
