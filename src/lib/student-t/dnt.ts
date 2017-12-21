@@ -65,66 +65,70 @@
  */
 import * as debug from 'debug';
 
-import { R_D__0, ML_ERR_return_NAN, M_LN_SQRT_PI } from '~common';
+import { R_D__0, ML_ERR_return_NAN, M_LN_SQRT_PI } from '../common/_general';
 
 import { dt } from './dt';
-
 import { INormal } from '~normal';
-
 import { lgammafn } from '../gamma/lgamma_fn';
-
 import { pnt } from './pnt';
 
 const { isNaN: ISNAN, isFinite: R_FINITE, EPSILON: DBL_EPSILON } = Number;
 const { abs: fabs, sqrt, log, exp } = Math;
+
 const printer_dnt = debug('dnt');
-
-export function dnt(
-  x: number,
+export function dnt<T>(
+  xx: T,
   df: number,
-  ncp: number,
-  give_log: boolean,
+  ncp: number = 0,
+  give_log: boolean = false,
   normal: INormal
-): number {
-  let u: number;
+): T {
+  const fx: number[] = (Array.isArray(xx) ? xx : [xx]) as any;
 
-  if (ISNAN(x) || ISNAN(df)) return x + df;
+  const result = fx.map(x => {
+    if (ISNAN(x) || ISNAN(df)) return x + df;
 
-  /* If non-positive df then error */
-  if (df <= 0.0) return ML_ERR_return_NAN(printer_dnt);
+    /* If non-positive df then error */
+    if (df <= 0.0) return ML_ERR_return_NAN(printer_dnt);
 
-  if (ncp === 0.0) return dt(x, df, give_log, normal);
+    if (ncp === 0.0) return dt(x, df, give_log, normal);
 
-  /* If x is infinite then return 0 */
-  if (!R_FINITE(x)) return R_D__0(give_log);
+    /* If x is infinite then return 0 */
+    if (!R_FINITE(x)) return R_D__0(give_log);
 
-  /* If infinite df then the density is identical to a
+    /* If infinite df then the density is identical to a
        normal distribution with mean = ncp.  However, the formula
        loses a lot of accuracy around df=1e9
     */
-  if (!R_FINITE(df) || df > 1e8) return normal.dnorm(x, ncp, 1, give_log);
+    if (!R_FINITE(df) || df > 1e8) return normal.dnorm(x, ncp, 1, give_log);
 
-  /* Do calculations on log scale to stabilize */
+    /* Do calculations on log scale to stabilize */
 
-  /* Consider two cases: x ~= 0 or not */
-  if (fabs(x) > sqrt(df * DBL_EPSILON)) {
-    u =
-      log(df) -
-      log(fabs(x)) +
-      log(
-        fabs(
-          pnt(x * sqrt((df + 2) / df), df + 2, ncp, true, false, normal) -
-            pnt(x, df, ncp, true, false, normal)
-        )
-      );
-    /* FIXME: the above still suffers from cancellation (but not horribly) */
-  } else {
-    /* x ~= 0 : -> same value as for  x = 0 */
-    u =
-      lgammafn((df + 1) / 2) -
-      lgammafn(df / 2) -
-      (M_LN_SQRT_PI + 0.5 * (log(df) + ncp * ncp));
-  }
+    /* Consider two cases: x ~= 0 or not */
+    const u = (function() {
+      if (fabs(x) > sqrt(df * DBL_EPSILON)) {
+        return (
+          log(df) -
+          log(fabs(x)) +
+          log(
+            fabs(
+              pnt(x * sqrt((df + 2) / df), df + 2, ncp, true, false, normal) -
+                pnt(x, df, ncp, true, false, normal)
+            )
+          )
+        );
+        /* FIXME: the above still suffers from cancellation (but not horribly) */
+      } else {
+        /* x ~= 0 : -> same value as for  x = 0 */
+        return (
+          lgammafn((df + 1) / 2) -
+          lgammafn(df / 2) -
+          (M_LN_SQRT_PI + 0.5 * (log(df) + ncp * ncp))
+        );
+      }
+    })();
 
-  return give_log ? u : exp(u);
+    return give_log ? u : exp(u);
+  });
+  return (result.length === 1 ? result[0] : result) as any;
 }

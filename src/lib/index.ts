@@ -18,7 +18,7 @@ export { Normal } from './normal';
 export { Poisson } from './poisson';
 export { rng, IRNG } from './rng';
 export { SignRank } from './signrank';
-//  stirling
+//  stirling, no need to export, it is a util
 //  student-t
 //  trigonometry
 //  tukey

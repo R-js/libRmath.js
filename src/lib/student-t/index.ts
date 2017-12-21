@@ -1,5 +1,5 @@
-export * from './dnt';
-export * from './dt';
+import { dnt }  from './dnt';
+import { dt as _dt }  from './dt';
 export * from './pnt';
 export * from './pt';
 export * from './qnt';

@@ -37,15 +37,7 @@
  *    values of n, including n -> 0 and n -> infinity.
  */
 
-import {
-   ISNAN,
-   R_FINITE,
-   bd0,
-   log,
-   log1p,
-   exp
 
-} from '~common';
 
 double dt(double x, double n, int give_log)
 {

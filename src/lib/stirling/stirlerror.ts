@@ -92,9 +92,7 @@ const S4 = 0.0008417508417508417508417508; // 1/1188
 // see also lgammacor() in ./lgammacor.c  which computes almost the same!
 //
 
-export function stirlerr(n: number): number {
-
-
+ export function stirlerr(n: number): number {
 
     //  error for 0, 0.5, 1.0, 1.5, ..., 14.5, 15.0.
     let nn: number;

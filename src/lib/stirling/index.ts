@@ -1,1 +1,1 @@
-export * from './stirlerror';
+export { stirlerr } from './stirlerror';
