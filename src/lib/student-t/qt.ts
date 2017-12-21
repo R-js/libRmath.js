@@ -56,13 +56,13 @@ import {
   M_PI_2,
   DBL_MANT_DIG,
   R_D_log
-} from '~common';
+} from '../common/_general';
 
 import { R_DT_qIv, R_D_LExp } from '~exp-utils';
 import { pt } from './pt';
 import { INormal } from '~normal';
 import { dt } from './dt';
-import { tanpi } from '~trigonometry';
+import { tanpi } from '../trigonometry/cospi';
 
 const {
   LN2: M_LN2,

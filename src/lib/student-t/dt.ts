@@ -58,7 +58,7 @@ const printer_dt = debug('dt');
 export function dt<T>(
   xx: T,
   n: number,
-  give_log: boolean = false,
+  giveLog: boolean = false,
   normal: INormal
 ): T {
   const fx: number[] = (Array.isArray(xx) ? xx : [xx]) as any;
@@ -70,10 +70,10 @@ export function dt<T>(
       return ML_ERR_return_NAN(printer_dt);
     }
     if (!R_FINITE(x)) {
-      return R_D__0(give_log);
+      return R_D__0(giveLog);
     }
     if (!R_FINITE(n)) {
-      return normal.dnorm(x, 0, 1, give_log);
+      return normal.dnorm(x, 0, 1, giveLog);
     }
 
     let u: number;
@@ -105,7 +105,7 @@ export function dt<T>(
     //	     1/sqrt(f) = 1/sqrt(2pi * (1+ x^2 / n))
     //		       = 1/sqrt(2pi)/(|x|/sqrt(n)*sqrt(1+1/x2n))
     //		       = M_1_SQRT_2PI * sqrt(n)/ (|x|*sqrt(1+1/x2n))
-    if (give_log) return t - u - (M_LN_SQRT_2PI + l_x2n);
+    if (giveLog) return t - u - (M_LN_SQRT_2PI + l_x2n);
 
     // else :  if(lrg_x2n) : sqrt(1 + 1/x2n) ='= sqrt(1) = 1
     let I_sqrt_ = lrg_x2n ? sqrt(n) / ax : exp(-l_x2n);

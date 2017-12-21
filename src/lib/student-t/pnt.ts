@@ -69,7 +69,7 @@ import { pt } from './pt';
 
 import { INormal } from '~normal';
 
-const { expm1, abs: fabs, min: fmin2, LN2:M_LN2 } = Math;
+const { expm1, abs: fabs, min: fmin2, LN2: M_LN2 } = Math;
 
 import { lgammafn } from '../gamma/lgamma_fn';
 
@@ -79,14 +79,30 @@ import { R_DT_val } from '../common/_general';
 
 const printer_pnt = debug('pnt');
 
-export function pnt(
+export function pnt<T>(
+  tt: T,
+  df: number,
+  ncp: number,
+  lowerTail: boolean = true,
+  logP: boolean = false,
+  normal: INormal
+): T {
+  const ft: number[] = (Array.isArray(tt) ? tt : [tt]) as any;
+
+  const result = ft.map(t => _pnt(t, df, ncp, lowerTail, logP, normal));
+
+  return (result.length === 1 ? result[0] : result) as any;
+}
+
+function _pnt(
   t: number,
   df: number,
   ncp: number,
-  lower_tail: boolean,
-  log_p: boolean,
+  lower_tail: boolean = true,
+  log_p: boolean = false,
   normal: INormal
 ): number {
+  //double
   let albeta: number;
   let a: number;
   let b: number;
@@ -96,6 +112,7 @@ export function pnt(
   let rxb: number;
   let tt: number;
   let x: number;
+  // long double
   let geven: number;
   let godd: number;
   let p: number;
@@ -104,6 +121,7 @@ export function pnt(
   let tnc: number;
   let xeven: number;
   let xodd: number;
+  // int
   let it: number;
   let negdel: boolean;
 
@@ -122,18 +140,26 @@ export function pnt(
     tt = t;
     del = ncp;
   } else {
-    /* We deal quickly with left tail if extreme,
-           since pt(q, df, ncp) <= pt(0, df, ncp) = \Phi(-ncp) */
-    if (ncp > 40 && (!log_p || !lower_tail)) return R_DT_0(lower_tail, log_p);
+    /* 
+      We deal quickly with left tail if extreme,
+        since pt(q, df, ncp) <= pt(0, df, ncp) = \Phi(-ncp) 
+    */
+    if (ncp > 40 && (!log_p || !lower_tail)) {
+      return R_DT_0(lower_tail, log_p);
+    }
     negdel = true;
     tt = -t;
     del = -ncp;
   }
 
   if (df > 4e5 || del * del > 2 * M_LN2 * -DBL_MIN_EXP) {
-    /*-- 2nd part: if del > 37.62, then p=0 below
-          FIXME: test should depend on `df', `tt' AND `del' ! */
-    /* Approx. from	 Abramowitz & Stegun 26.7.10 (p.949) */
+    /*
+       -- 2nd part: if del > 37.62, then p=0 below
+          FIXME: test should depend on `df', `tt' AND `del' ! 
+    */
+    /* 
+      Approx. from	 Abramowitz & Stegun 26.7.10 (p.949) 
+    */
     s = 1 / (4 * df);
 
     return normal.pnorm(
@@ -159,7 +185,7 @@ export function pnt(
     lambda = del * del;
     p = 0.5 * exp(-0.5 * lambda);
 
-    printer_pnt('\t p=%d', p);
+    printer_pnt(' p=%d', p);
 
     if (p === 0) {
       /* underflow! */
@@ -194,7 +220,7 @@ export function pnt(
     geven = tnc * rxb;
     tnc = p * xodd + q * xeven;
 
-    let finis = false;
+    let gotoFinis = false;
 
     /* repeat until convergence or iteration limit */
     for (it = 1; it <= itrmax; it++) {
@@ -212,12 +238,12 @@ export function pnt(
       if (s < -1e-10) {
         /* happens e.g. for (t,df,ncp)=(40,10,38.5), after 799 it.*/
         ML_ERROR(ME.ME_PRECISION, 'pnt', printer_pnt);
-        printer_pnt('s = %d < 0 !!! ---> non-convergence!!\n', s);
-        finis = true;
+        printer_pnt('s = %d < 0 !!! ---> non-convergence!!', s);
+        gotoFinis = true;
         break;
       }
       if (s <= 0 && it > 1) {
-        finis = true;
+        gotoFinis = true;
         break;
       }
       errbd = 2 * s * (xodd - godd);
@@ -235,12 +261,12 @@ export function pnt(
       );
 
       if (fabs(errbd) < errmax) {
-        finis = true; /*convergence*/
+        gotoFinis = true; /*convergence*/
         break;
       }
-    } //for
+    } //for (it = 1; it <= itrmax; it++)
     /* non-convergence:*/
-    if (!finis) {
+    if (!gotoFinis) {
       ML_ERROR(ME.ME_NOCONV, 'pnt', printer_pnt);
     }
   } else {

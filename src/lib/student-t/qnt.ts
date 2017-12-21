@@ -25,10 +25,7 @@
 
 import * as debug from 'debug';
 
-import {
-  ML_ERR_return_NAN,
-  R_Q_P01_boundaries
-} from '~common';
+import { ML_ERR_return_NAN, R_Q_P01_boundaries } from '~common';
 
 import { INormal } from '~normal';
 
@@ -41,7 +38,7 @@ import { R_DT_qIv } from '~exp-utils';
 const { abs: fabs, max: fmax2, min: fmin2 } = Math;
 const {
   MAX_VALUE: DBL_MAX,
-  EPSILON:DBL_EPSILON,
+  EPSILON: DBL_EPSILON,
   isFinite: R_FINITE,
   POSITIVE_INFINITY: ML_POSINF,
   NEGATIVE_INFINITY: ML_NEGINF,
@@ -49,7 +46,20 @@ const {
 } = Number;
 const printer = debug('qnt');
 
-export function qnt(
+export function qnt<T>(
+  pp: T,
+  df: number,
+  ncp: number,
+  lowerTail: boolean,
+  logP: boolean,
+  normal: INormal
+): T {
+  const fp: number[] = (Array.isArray(pp) ? pp : [pp]) as any;
+  const result = fp.map(p => _qnt(p, df, ncp, lowerTail, logP, normal));
+  return (result.length === 1 ? result[0] : result) as any;
+}
+
+function _qnt(
   p: number,
   df: number,
   ncp: number,

@@ -64,8 +64,11 @@
  *       ==> use a direct log-space summation formula in that case
  */
 import * as debug from 'debug';
-
-import { R_D__0, ML_ERR_return_NAN, M_LN_SQRT_PI } from '../common/_general';
+import { 
+  R_D__0, 
+  ML_ERR_return_NAN, 
+  M_LN_SQRT_PI 
+} from '../common/_general';
 
 import { dt } from './dt';
 import { INormal } from '~normal';
@@ -80,27 +83,28 @@ export function dnt<T>(
   xx: T,
   df: number,
   ncp: number = 0,
-  give_log: boolean = false,
+  giveLog: boolean = false,
   normal: INormal
 ): T {
-  const fx: number[] = (Array.isArray(xx) ? xx : [xx]) as any;
 
+  const fx: number[] = (Array.isArray(xx) ? xx : [xx]) as any;
+  
   const result = fx.map(x => {
     if (ISNAN(x) || ISNAN(df)) return x + df;
 
     /* If non-positive df then error */
     if (df <= 0.0) return ML_ERR_return_NAN(printer_dnt);
 
-    if (ncp === 0.0) return dt(x, df, give_log, normal);
+    if (ncp === 0.0) return dt(x, df, giveLog, normal);
 
     /* If x is infinite then return 0 */
-    if (!R_FINITE(x)) return R_D__0(give_log);
+    if (!R_FINITE(x)) return R_D__0(giveLog);
 
     /* If infinite df then the density is identical to a
        normal distribution with mean = ncp.  However, the formula
        loses a lot of accuracy around df=1e9
     */
-    if (!R_FINITE(df) || df > 1e8) return normal.dnorm(x, ncp, 1, give_log);
+    if (!R_FINITE(df) || df > 1e8) return normal.dnorm(x, ncp, 1, giveLog);
 
     /* Do calculations on log scale to stabilize */
 
@@ -127,8 +131,7 @@ export function dnt<T>(
         );
       }
     })();
-
-    return give_log ? u : exp(u);
+    return giveLog ? u : exp(u);
   });
   return (result.length === 1 ? result[0] : result) as any;
 }
