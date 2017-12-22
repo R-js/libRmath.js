@@ -21,9 +21,9 @@ export { SignRank } from './signrank';
 //  stirling, no need to export, it is a util
 export { StudentT } from './student-t';
 //  trigonometry, no need to export, it is a util
-//TODO:  tukey
+export { Tukey } from './tukey';
 export { Uniform } from './uniform';
-//TODO:  weibull
+export { Weibull } from './weibull';
 //TODO:  wilcox
 
 /*
@@ -38,7 +38,15 @@ export const special = Object.freeze({
   ...betaSpecial
 });
 
-import { selector, seq, flatten, arrayrify, forceToArray, possibleScalar } from '~R';
+import {
+  vectorize,
+  selector,
+  seq,
+  flatten,
+  arrayrify,
+  forceToArray,
+  possibleScalar
+} from '~R';
 
 export const R = {
   selector,
@@ -46,5 +54,5 @@ export const R = {
   flatten,
   arrayrify,
   forceToArray,
-  possibleScalar
+  vectorize
 };

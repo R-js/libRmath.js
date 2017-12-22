@@ -27,32 +27,32 @@
  */
 import * as debug from 'debug';
 
-import {
-    ML_ERR_return_NAN,
-    R_DT_0,
-    R_D_exp
-} from '~common';
+import { ML_ERR_return_NAN, R_DT_0, R_D_exp } from '../common/_general';
 
-import {
-    R_Log1_Exp
-} from '~exp-utils';
+import { R_Log1_Exp } from '~exp-utils';
+
+import { vectorize } from '~R';
 
 const { expm1, pow } = Math;
-const { isNaN: ISNAN} = Number;
+const { isNaN: ISNAN } = Number;
 const printer = debug('pweibull');
 
-export function pweibull(x: number, shape: number, scale: number, lower_tail: boolean, log_p: boolean): number {
+export function pweibull<T>(
+  xx: T,
+  shape: number,
+  scale: number = 1,
+  lower_tail: boolean = true,
+  log_p: boolean = false
+): T {
+  return vectorize(xx)(x => {
+    if (ISNAN(x) || ISNAN(shape) || ISNAN(scale)) return x + shape + scale;
 
-    if (ISNAN(x) || ISNAN(shape) || ISNAN(scale))
-        return x + shape + scale;
-
-    if (shape <= 0 || scale <= 0)  return ML_ERR_return_NAN(printer);
+    if (shape <= 0 || scale <= 0) return ML_ERR_return_NAN(printer);
 
     if (x <= 0) {
-        return R_DT_0(lower_tail, log_p);
+      return R_DT_0(lower_tail, log_p);
     }
     x = -pow(x / scale, shape);
-    return lower_tail
-        ? (log_p ? R_Log1_Exp(x) : -expm1(x))
-        : R_D_exp(log_p, x);
+    return lower_tail ? (log_p ? R_Log1_Exp(x) : -expm1(x)) : R_D_exp(log_p, x);
+  }) as any;
 }

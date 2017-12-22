@@ -129,7 +129,7 @@ import { ML_ERROR, ME, ML_ERR_return_NAN, R_Q_P01_boundaries } from '~common';
 import { R_DT_qIv } from '~exp-utils';
 import { ptukey } from './ptukey';
 import { INormal } from '~normal';
-import { forceToArray, possibleScalar } from '~R';
+import { vectorize } from '~R';
 
 const { isNaN: ISNAN, POSITIVE_INFINITY: ML_POSINF } = Number;
 const { abs: fabs, max: fmax2 } = Math;
@@ -140,13 +140,13 @@ export function qtukey<T>(
   rr: number,
   cc: number,
   df: number,
-  lower_tail: boolean,
-  log_p: boolean,
+  lower_tail: boolean = true,
+  log_p: boolean = false,
   normal: INormal
 ): T {
-  const fp: number[] = forceToArray(pp) as any;  
-  const result = fp.map(p => _qtukey(p, rr, cc, df, lower_tail, log_p, normal));
-  return possibleScalar(result) as any;
+  return vectorize(pp)(p =>
+    _qtukey(p, rr, cc, df, lower_tail, log_p, normal)
+  ) as any;
 }
 
 function _qtukey(

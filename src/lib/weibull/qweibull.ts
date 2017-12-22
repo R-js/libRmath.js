@@ -29,27 +29,31 @@
 
 import * as debug from 'debug';
 
-import {
-    ML_ERR_return_NAN,
-    R_Q_P01_boundaries
-} from '~common';
+import { ML_ERR_return_NAN, R_Q_P01_boundaries } from '../common/_general';
 
 import { R_DT_Clog } from '~exp-utils';
+import { vectorize } from '../r-func';
 
 const { pow } = Math;
 const { isNaN: ISNAN, POSITIVE_INFINITY: ML_POSINF } = Number;
 const printer = debug('qweibull');
 
-export function qweibull(p: number, shape: number, scale: number, lower_tail: boolean, log_p: boolean): number {
-
-    if (ISNAN(p) || ISNAN(shape) || ISNAN(scale))
-        return p + shape + scale;
+export function qweibull<T>(
+  pp: T,
+  shape: number,
+  scale: number = 1,
+  lowerTail: boolean = true,
+  logP: boolean = false
+): T {
+  return vectorize(pp)(p => {
+    if (ISNAN(p) || ISNAN(shape) || ISNAN(scale)) return p + shape + scale;
 
     if (shape <= 0 || scale <= 0) return ML_ERR_return_NAN(printer);
 
-    let rc = R_Q_P01_boundaries(lower_tail, log_p, p, 0, ML_POSINF);
+    let rc = R_Q_P01_boundaries(lowerTail, logP, p, 0, ML_POSINF);
     if (rc !== undefined) {
-        return rc;
+      return rc;
     }
-    return scale * pow(- R_DT_Clog(lower_tail, log_p, p), 1. / shape);
+    return scale * pow(-R_DT_Clog(lowerTail, logP, p), 1 / shape);
+  }) as any;
 }

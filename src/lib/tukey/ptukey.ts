@@ -58,7 +58,7 @@ import {
 
 import { lgammafn } from '../gamma/lgamma_fn';
 import { R_DT_val } from '../common/_general';
-import { forceToArray, possibleScalar } from '~R';
+import { vectorize } from '~R';
 
 const { isNaN: ISNAN, isFinite: R_FINITE } = Number;
 const { exp, sqrt, log, LN2: M_LN2 } = Math;
@@ -70,13 +70,13 @@ export function ptukey<T>(
   rr: number,
   cc: number,
   df: number,
-  lower_tail: boolean,
-  log_p: boolean,
+  lower_tail: boolean = true,
+  log_p: boolean = false,
   normal: INormal
 ): T {
-  const fq: number[] = forceToArray(qq) as any ;
-  const result = fq.map(q => _ptukey(q, rr, cc, df, lower_tail, log_p, normal));
-  return possibleScalar(result) as any;
+  return vectorize(qq)(q =>
+    _ptukey(q, rr, cc, df, lower_tail, log_p, normal)
+  ) as any;
 }
 
 function _ptukey(

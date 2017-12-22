@@ -29,23 +29,28 @@
  */
 import * as debug from 'debug';
 
-import { ML_ERR_return_NAN } from '~common';
+import { ML_ERR_return_NAN } from '../common/_general';
 import { IRNG } from '../rng';
+import { possibleScalar } from '../r-func';
 
 const { log, pow } = Math;
 const { isFinite: R_FINITE } = Number;
 const printer = debug('rweibull');
 
 export function rweibull(
+  n: number,
   shape: number,
-  scale: number,
+  scale: number = 1,
   rng: IRNG
-): number {
-  if (!R_FINITE(shape) || !R_FINITE(scale) || shape <= 0 || scale <= 0) {
-    if (scale === 0) return 0;
-    /* else */
-    return ML_ERR_return_NAN(printer);
-  }
+): number | number[] {
+  const result = new Array(n).fill(0).map(() => {
+    if (!R_FINITE(shape) || !R_FINITE(scale) || shape <= 0 || scale <= 0) {
+      if (scale === 0) return 0;
+      /* else */
+      return ML_ERR_return_NAN(printer);
+    }
 
-  return scale * pow(-log(rng.unif_rand()), 1.0 / shape);
+    return scale * pow(-log(rng.unif_rand()), 1.0 / shape);
+  });
+  return possibleScalar(result);
 }

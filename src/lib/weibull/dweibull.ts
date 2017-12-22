@@ -29,31 +29,36 @@
 
 import * as debug from 'debug';
 
-import {
-    ML_ERR_return_NAN,
-    R_D__0,
-} from '~common';
+import { ML_ERR_return_NAN, R_D__0 } from '../common/_general';
+import { vectorize } from '~R';
 
-const { pow, log, exp} = Math;
-const { isNaN: ISNAN, isFinite:R_FINITE, POSITIVE_INFINITY: ML_POSINF } = Number;
+const { pow, log, exp } = Math;
+const {
+  isNaN: ISNAN,
+  isFinite: R_FINITE,
+  POSITIVE_INFINITY: ML_POSINF
+} = Number;
 const printer = debug('dweilbull');
 
-export function dweibull(x: number, shape: number, scale: number, give_log: boolean): number {
-
-    let tmp1;
-    let tmp2;
-    if (ISNAN(x) || ISNAN(shape) || ISNAN(scale))
-        return x + shape + scale;
+export function dweibull<T>(
+  xx: T,
+  shape: number,
+  scale: number = 1,
+  give_log: boolean = false
+): T {
+  return vectorize(xx)(x => {
+    if (ISNAN(x) || ISNAN(shape) || ISNAN(scale)) return x + shape + scale;
     if (shape <= 0 || scale <= 0) return ML_ERR_return_NAN(printer);
 
     if (x < 0) return R_D__0(give_log);
     if (!R_FINITE(x)) return R_D__0(give_log);
     /* need to handle x == 0 separately */
     if (x === 0 && shape < 1) return ML_POSINF;
-    tmp1 = pow(x / scale, shape - 1);
-    tmp2 = tmp1 * (x / scale);
+    let tmp1 = pow(x / scale, shape - 1);
+    let tmp2 = tmp1 * (x / scale);
     /* These are incorrect if tmp1 == 0 */
-    return give_log ?
-        -tmp2 + log(shape * tmp1 / scale) :
-        shape * tmp1 * exp(-tmp2) / scale;
+    return give_log
+      ? -tmp2 + log(shape * tmp1 / scale)
+      : shape * tmp1 * exp(-tmp2) / scale;
+  }) as any;
 }
