@@ -62,7 +62,7 @@
 
 const { sqrt, log } = Math;
 
-export function qinv(p: number, c: number, v: number): number {
+function qinv(p: number, c: number, v: number): number {
   const p0 = 0.322232421088;
   const q0 = 0.99348462606e-1;
   const p1 = -1.0;
@@ -122,24 +122,34 @@ export function qinv(p: number, c: number, v: number): number {
  *  the search is terminated
  */
 
- import * as debug from 'debug';
+import * as debug from 'debug';
 
-import {
-  ML_ERROR,
-  ME,
-  ML_ERR_return_NAN,
-  R_Q_P01_boundaries
-} from '~common';
+import { ML_ERROR, ME, ML_ERR_return_NAN, R_Q_P01_boundaries } from '~common';
 
 import { R_DT_qIv } from '~exp-utils';
 import { ptukey } from './ptukey';
 import { INormal } from '~normal';
+import { forceToArray, possibleScalar } from '~R';
 
 const { isNaN: ISNAN, POSITIVE_INFINITY: ML_POSINF } = Number;
-const { abs:fabs, max:fmax2 } = Math;
+const { abs: fabs, max: fmax2 } = Math;
 const printer = debug('qtukey');
 
-export function qtukey(
+export function qtukey<T>(
+  pp: T,
+  rr: number,
+  cc: number,
+  df: number,
+  lower_tail: boolean,
+  log_p: boolean,
+  normal: INormal
+): T {
+  const fp: number[] = forceToArray(pp) as any;  
+  const result = fp.map(p => _qtukey(p, rr, cc, df, lower_tail, log_p, normal));
+  return possibleScalar(result) as any;
+}
+
+function _qtukey(
   p: number,
   rr: number,
   cc: number,
