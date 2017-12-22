@@ -210,7 +210,6 @@ export function fmod(x: number, y: number): number {
   return x - Math.trunc(x / y) * y;
 }
 
-
 export function imax2(x: number, y: number): number {
   return Math.trunc(Math.max(x, y));
 }

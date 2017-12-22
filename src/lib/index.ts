@@ -24,18 +24,19 @@ export { StudentT } from './student-t';
 export { Tukey } from './tukey';
 export { Uniform } from './uniform';
 export { Weibull } from './weibull';
-//TODO:  wilcox
-
+export { Wilcoxon } from './wilcoxon';
 /*
   Class of Special functions collected here.  
 */
 import { special as betaSpecial } from '~beta';
 import { special as gammaSpecial } from '~gamma';
+import { special as chooseSpecial } from '~common';
 //TODO: bessel equations
 
 export const special = Object.freeze({
   ...gammaSpecial,
-  ...betaSpecial
+  ...betaSpecial,
+  ...chooseSpecial
 });
 
 import {

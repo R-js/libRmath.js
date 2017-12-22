@@ -59,13 +59,14 @@ import { lbeta } from '../beta/lbeta';
 import { lgammafn } from '../gamma/lgamma_fn';
 import { lgammafn_sign } from '../gamma/lgammafn_sign';
 
-export function lfastchoose(n: number, k: number) {
+// used by "qhyper"
+function lfastchoose(n: number, k: number) {
   return -log(n + 1) - lbeta(n - k + 1, k + 1);
 }
 /* mathematically the same:
    less stable typically, but useful if n-k+1 < 0 : */
 
-export function lfastchoose2(n: number, k: number, sChoose?: number[]) {
+function lfastchoose2(n: number, k: number, sChoose?: number[]) {
   let r: number;
   r = lgammafn_sign(n - k + 1, sChoose);
   return lgammafn(n + 1) - lgammafn(k + 1) - r;
