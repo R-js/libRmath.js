@@ -39,20 +39,20 @@
 
  */
 
-
 import * as debug from 'debug';
 
 import { vectorize } from '../r-func';
 import { ML_ERR_return_NAN, R_D__0 } from '../common/_general';
 import { choose, lchoose } from '../common/choose';
 
-import { initw } from './initw';
+import { WilcoxonCache } from './WilcoxonCache';
 import { cwilcox } from './cwilcox';
 
 const { round: R_forceint, abs: fabs, log } = Math;
 const { isNaN: ISNAN } = Number;
 
 const printer_dwilcox = debug('dwilcox');
+
 
 export function dwilcox<T>(
   xx: T,
@@ -61,33 +61,44 @@ export function dwilcox<T>(
   giveLog: boolean = false
 ): T {
   // outside the potential loop
-  const w = initw(n, m);
+
   m = R_forceint(m);
   n = R_forceint(n);
 
+  const nm = m * n;
+ 
   return vectorize(xx)(x => {
+   
+    const w = new WilcoxonCache();
     //#ifdef IEEE_754
     /* NaNs propagated correctly */
+
     if (ISNAN(x) || ISNAN(m) || ISNAN(n)) {
-      return x + m + n;
+     // console.log(`1. x:${x}, m:${m}, n:${n}`);
+      return (x + m + n);
     }
     //#endif
 
     if (m <= 0 || n <= 0) {
+     // console.log(`2. x:${x}, m:${m}, n:${n}`);
       return ML_ERR_return_NAN(printer_dwilcox);
     }
 
-    if (fabs(x - R_forceint(x)) > 1e-7) return R_D__0(giveLog);
+    if (fabs(x - R_forceint(x)) > 1e-7) {
+     // console.log(`3. x:${x}, m:${m}, n:${n}`);
+      return R_D__0(giveLog);
+    }
     x = R_forceint(x);
     if (x < 0 || x > m * n) {
       return R_D__0(giveLog);
     }
-
-    let mm = m;
-    let nn = n;
-    let xx = x;
+    //const w = initw(m, n);
+    //console.log(`0. special: ${w[4][4].length}`);
+    const c1 = cwilcox(x, m, n, w);
+    
+    //console.log(`4. c1:${c1} <- x:${x}, m:${m}, n:${n}`);
     return giveLog
-      ? log(cwilcox(xx, mm, nn, w)) - lchoose(m + n, n)
-      : cwilcox(xx, mm, nn, w) / choose(m + n, n);
+      ? log(cwilcox(x, m, n, w)) - lchoose(m + n, n)
+      : cwilcox(x, m, n, w) / choose(m + n, n);
   }) as any;
 }

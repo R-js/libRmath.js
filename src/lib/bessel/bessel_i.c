@@ -19,7 +19,6 @@
 
 /*  DESCRIPTION --> see below */
 
-
 /* From http://www.netlib.org/specfun/ribesl	Fortran translated by f2c,...
  *	------------------------------=#----	Martin Maechler, ETH Zurich
  */
@@ -33,106 +32,116 @@
 #define min0(x, y) (((x) <= (y)) ? (x) : (y))
 
 static void I_bessel(double *x, double *alpha, int *nb,
-		     int *ize, double *bi, int *ncalc);
+					 int *ize, double *bi, int *ncalc);
 
 /* .Internal(besselI(*)) : */
 double bessel_i(double x, double alpha, double expo)
 {
-    int nb, ncalc, ize;
-    double na, *bi;
+	int nb, ncalc, ize;
+	double na, *bi;
 #ifndef MATHLIB_STANDALONE
-    const void *vmax;
+	const void *vmax;
 #endif
 
 #ifdef IEEE_754
-    /* NaNs propagated correctly */
-    if (ISNAN(x) || ISNAN(alpha)) return x + alpha;
+	/* NaNs propagated correctly */
+	if (ISNAN(x) || ISNAN(alpha))
+		return x + alpha;
 #endif
-    if (x < 0) {
-	ML_ERROR(ME_RANGE, "bessel_i");
-	return ML_NAN;
-    }
-    ize = (int)expo;
-    na = floor(alpha);
-    if (alpha < 0) {
-	/* Using Abramowitz & Stegun  9.6.2 & 9.6.6
+	if (x < 0)
+	{
+		ML_ERROR(ME_RANGE, "bessel_i");
+		return ML_NAN;
+	}
+	ize = (int)expo;
+	na = floor(alpha);
+	if (alpha < 0)
+	{
+		/* Using Abramowitz & Stegun  9.6.2 & 9.6.6
 	 * this may not be quite optimal (CPU and accuracy wise) */
-	return(bessel_i(x, -alpha, expo) +
-	       ((alpha == na) ? /* sin(pi * alpha) = 0 */ 0 :
-		bessel_k(x, -alpha, expo) *
-		((ize == 1)? 2. : 2.*exp(-2.*x))/M_PI * sinpi(-alpha)));
-    }
-    nb = 1 + (int)na;/* nb-1 <= alpha < nb */
-    alpha -= (double)(nb-1);
+		return (bessel_i(x, -alpha, expo) +
+				((alpha == na) ? /* sin(pi * alpha) = 0 */ 0 : bessel_k(x, -alpha, expo) * ((ize == 1) ? 2. : 2. * exp(-2. * x)) / M_PI * sinpi(-alpha)));
+	}
+	nb = 1 + (int)na; /* nb-1 <= alpha < nb */
+	alpha -= (double)(nb - 1);
 #ifdef MATHLIB_STANDALONE
-    bi = (double *) calloc(nb, sizeof(double));
-    if (!bi) MATHLIB_ERROR("%s", _("bessel_i allocation error"));
+	bi = (double *)calloc(nb, sizeof(double));
+	if (!bi)
+		MATHLIB_ERROR("%s", _("bessel_i allocation error"));
 #else
-    vmax = vmaxget();
-    bi = (double *) R_alloc((size_t) nb, sizeof(double));
+	vmax = vmaxget();
+	bi = (double *)R_alloc((size_t)nb, sizeof(double));
 #endif
-    I_bessel(&x, &alpha, &nb, &ize, bi, &ncalc);
-    if(ncalc != nb) {/* error input */
-	if(ncalc < 0)
-	    MATHLIB_WARNING4(_("bessel_i(%g): ncalc (=%d) != nb (=%d); alpha=%g. Arg. out of range?\n"),
-			     x, ncalc, nb, alpha);
-	else
-	    MATHLIB_WARNING2(_("bessel_i(%g,nu=%g): precision lost in result\n"),
-			     x, alpha+(double)nb-1);
-    }
-    x = bi[nb-1];
+	I_bessel(&x, &alpha, &nb, &ize, bi, &ncalc);
+	if (ncalc != nb)
+	{ /* error input */
+		if (ncalc < 0)
+			MATHLIB_WARNING4(_("bessel_i(%g): ncalc (=%d) != nb (=%d); alpha=%g. Arg. out of range?\n"),
+							 x, ncalc, nb, alpha);
+		else
+			MATHLIB_WARNING2(_("bessel_i(%g,nu=%g): precision lost in result\n"),
+							 x, alpha + (double)nb - 1);
+	}
+	x = bi[nb - 1];
 #ifdef MATHLIB_STANDALONE
-    free(bi);
+	free(bi);
 #else
-    vmaxset(vmax);
+	vmaxset(vmax);
 #endif
-    return x;
+	return x;
 }
 
 /* modified version of bessel_i that accepts a work array instead of
    allocating one. */
 double bessel_i_ex(double x, double alpha, double expo, double *bi)
 {
-    int nb, ncalc, ize;
-    double na;
+	int nb, ncalc, ize;
+	double na;
 
 #ifdef IEEE_754
-    /* NaNs propagated correctly */
-    if (ISNAN(x) || ISNAN(alpha)) return x + alpha;
+	/* NaNs propagated correctly */
+	if (ISNAN(x) || ISNAN(alpha))
+		return x + alpha;
 #endif
-    if (x < 0) {
-	ML_ERROR(ME_RANGE, "bessel_i");
-	return ML_NAN;
-    }
-    ize = (int)expo;
-    na = floor(alpha);
-    if (alpha < 0) {
-	/* Using Abramowitz & Stegun  9.6.2 & 9.6.6
+	if (x < 0)
+	{
+		ML_ERROR(ME_RANGE, "bessel_i");
+		return ML_NAN;
+	}
+	ize = (int)expo;
+	na = floor(alpha);
+	if (alpha < 0)
+	{
+		/* Using Abramowitz & Stegun  9.6.2 & 9.6.6
 	 * this may not be quite optimal (CPU and accuracy wise) */
-	return(bessel_i_ex(x, -alpha, expo, bi) +
-	       ((alpha == na) ? 0 :
-		bessel_k_ex(x, -alpha, expo, bi) *
-		((ize == 1)? 2. : 2.*exp(-2.*x))/M_PI * sinpi(-alpha)));
-    }
-    nb = 1 + (int)na;/* nb-1 <= alpha < nb */
-    alpha -= (double)(nb-1);
-    I_bessel(&x, &alpha, &nb, &ize, bi, &ncalc);
-    if(ncalc != nb) {/* error input */
-	if(ncalc < 0)
-	    MATHLIB_WARNING4(_("bessel_i(%g): ncalc (=%d) != nb (=%d); alpha=%g. Arg. out of range?\n"),
-			     x, ncalc, nb, alpha);
-	else
-	    MATHLIB_WARNING2(_("bessel_i(%g,nu=%g): precision lost in result\n"),
-			     x, alpha+(double)nb-1);
-    }
-    x = bi[nb-1];
-    return x;
+		return (bessel_i_ex(x, -alpha, expo, bi) +
+				((alpha == na) ? 0 : bessel_k_ex(x, -alpha, expo, bi) * ((ize == 1) ? 2. : 2. * exp(-2. * x)) / M_PI * sinpi(-alpha)));
+	}
+	nb = 1 + (int)na; /* nb-1 <= alpha < nb */
+	alpha -= (double)(nb - 1);
+	I_bessel(&x, &alpha, &nb, &ize, bi, &ncalc);
+	if (ncalc != nb)
+	{ /* error input */
+		if (ncalc < 0)
+			MATHLIB_WARNING4(_("bessel_i(%g): ncalc (=%d) != nb (=%d); alpha=%g. Arg. out of range?\n"),
+							 x, ncalc, nb, alpha);
+		else
+			MATHLIB_WARNING2(_("bessel_i(%g,nu=%g): precision lost in result\n"),
+							 x, alpha + (double)nb - 1);
+	}
+	x = bi[nb - 1];
+	return x;
 }
 
-static void I_bessel(double *x, double *alpha, int *nb,
-		     int *ize, double *bi, int *ncalc)
+static void I_bessel(
+	double *x, 
+	double *alpha, 
+	int *nb,
+	int *ize, 
+	double *bi, 
+	int *ncalc)
 {
-/* -------------------------------------------------------------------
+	/* -------------------------------------------------------------------
 
  This routine calculates Bessel functions I_(N+ALPHA) (X)
  for non-negative argument X, and non-negative order N+ALPHA,
@@ -223,311 +232,348 @@ static void I_bessel(double *x, double *alpha, int *nb,
 	       Argonne, IL  60439
 */
 
-    /*-------------------------------------------------------------------
+	/*-------------------------------------------------------------------
       Mathematical constants
       -------------------------------------------------------------------*/
-    const static double const__ = 1.585;
+	const static double const__ = 1.585;
 
-    /* Local variables */
-    int nend, intx, nbmx, k, l, n, nstart;
-    double pold, test,	p, em, en, empal, emp2al, halfx,
-	aa, bb, cc, psave, plast, tover, psavel, sum, nu, twonu;
+	/* Local variables */
+	int nend, intx, nbmx, k, l, n, nstart;
+	double pold, test, p, em, en, empal, emp2al, halfx,
+		aa, bb, cc, psave, plast, tover, psavel, sum, nu, twonu;
 
-    /*Parameter adjustments */
-    --bi;
-    nu = *alpha;
-    twonu = nu + nu;
+	/*Parameter adjustments */
+	--bi;
+	nu = *alpha;
+	twonu = nu + nu;
 
-    /*-------------------------------------------------------------------
+	/*-------------------------------------------------------------------
       Check for X, NB, OR IZE out of range.
       ------------------------------------------------------------------- */
-    if (*nb > 0 && *x >= 0. &&	(0. <= nu && nu < 1.) &&
-	(1 <= *ize && *ize <= 2) ) {
+	if (*nb > 0 && *x >= 0. && (0. <= nu && nu < 1.) &&
+		(1 <= *ize && *ize <= 2))
+	{
 
-	*ncalc = *nb;
-	if(*ize == 1 && *x > exparg_BESS) {
-	    for(k=1; k <= *nb; k++)
-		bi[k]=ML_POSINF; /* the limit *is* = Inf */
-	    return;
-	}
-	if(*ize == 2 && *x > xlrg_BESS_IJ) {
-	    for(k=1; k <= *nb; k++)
-		bi[k]= 0.; /* The limit exp(-x) * I_nu(x) --> 0 : */
-	    return;
-	}
-	intx = (int) (*x);/* fine, since *x <= xlrg_BESS_IJ <<< LONG_MAX */
-	if (*x >= rtnsig_BESS) { /* "non-small" x ( >= 1e-4 ) */
-/* -------------------------------------------------------------------
+		*ncalc = *nb;
+		if (*ize == 1 && *x > exparg_BESS)
+		{
+			for (k = 1; k <= *nb; k++)
+				bi[k] = ML_POSINF; /* the limit *is* = Inf */
+			return;
+		}
+		if (*ize == 2 && *x > xlrg_BESS_IJ)
+		{
+			for (k = 1; k <= *nb; k++)
+				bi[k] = 0.; /* The limit exp(-x) * I_nu(x) --> 0 : */
+			return;
+		}
+		intx = (int)(*x); /* fine, since *x <= xlrg_BESS_IJ <<< LONG_MAX */
+		if (*x >= rtnsig_BESS)
+		{   /* "non-small" x ( >= 1e-4 ) */
+			/* -------------------------------------------------------------------
    Initialize the forward sweep, the P-sequence of Olver
    ------------------------------------------------------------------- */
-	    nbmx = *nb - intx;
-	    n = intx + 1;
-	    en = (double) (n + n) + twonu;
-	    plast = 1.;
-	    p = en / *x;
-	    /* ------------------------------------------------
+			nbmx = *nb - intx;
+			n = intx + 1;
+			en = (double)(n + n) + twonu;
+			plast = 1.;
+			p = en / *x;
+			/* ------------------------------------------------
 	       Calculate general significance test
 	       ------------------------------------------------ */
-	    test = ensig_BESS + ensig_BESS;
-	    if (intx << 1 > nsig_BESS * 5) {
-		test = sqrt(test * p);
-	    } else {
-		test /= R_pow_di(const__, intx);
-	    }
-	    if (nbmx >= 3) {
-		/* --------------------------------------------------
+			test = ensig_BESS + ensig_BESS;
+			if (intx << 1 > nsig_BESS * 5)
+			{
+				test = sqrt(test * p);
+			}
+			else
+			{
+				test /= R_pow_di(const__, intx);
+			}
+			if (nbmx >= 3)
+			{
+				/* --------------------------------------------------
 		   Calculate P-sequence until N = NB-1
 		   Check for possible overflow.
 		   ------------------------------------------------ */
-		tover = enten_BESS / ensig_BESS;
-		nstart = intx + 2;
-		nend = *nb - 1;
-		for (k = nstart; k <= nend; ++k) {
-		    n = k;
-		    en += 2.;
-		    pold = plast;
-		    plast = p;
-		    p = en * plast / *x + pold;
-		    if (p > tover) {
-			/* ------------------------------------------------
+				tover = enten_BESS / ensig_BESS;
+				nstart = intx + 2;
+				nend = *nb - 1;
+				for (k = nstart; k <= nend; ++k)
+				{
+					n = k;
+					en += 2.;
+					pold = plast;
+					plast = p;
+					p = en * plast / *x + pold;
+					if (p > tover)
+					{
+						/* ------------------------------------------------
 			   To avoid overflow, divide P-sequence by TOVER.
 			   Calculate P-sequence until ABS(P) > 1.
 			   ---------------------------------------------- */
-			tover = enten_BESS;
-			p /= tover;
-			plast /= tover;
-			psave = p;
-			psavel = plast;
-			nstart = n + 1;
-			do {
-			    ++n;
-			    en += 2.;
-			    pold = plast;
-			    plast = p;
-			    p = en * plast / *x + pold;
-			}
-			while (p <= 1.);
+						tover = enten_BESS;
+						p /= tover;
+						plast /= tover;
+						psave = p;
+						psavel = plast;
+						nstart = n + 1;
+						do
+						{
+							++n;
+							en += 2.;
+							pold = plast;
+							plast = p;
+							p = en * plast / *x + pold;
+						} while (p <= 1.);
 
-			bb = en / *x;
-			/* ------------------------------------------------
+						bb = en / *x;
+						/* ------------------------------------------------
 			   Calculate backward test, and find NCALC,
 			   the highest N such that the test is passed.
 			   ------------------------------------------------ */
-			test = pold * plast / ensig_BESS;
-			test *= .5 - .5 / (bb * bb);
-			p = plast * tover;
-			--n;
-			en -= 2.;
-			nend = min0(*nb,n);
-			for (l = nstart; l <= nend; ++l) {
-			    *ncalc = l;
-			    pold = psavel;
-			    psavel = psave;
-			    psave = en * psavel / *x + pold;
-			    if (psave * psavel > test) {
-				goto L90;
-			    }
-			}
-			*ncalc = nend + 1;
-L90:
-			--(*ncalc);
-			goto L120;
-		    }
-		}
-		n = nend;
-		en = (double)(n + n) + twonu;
-		/*---------------------------------------------------
+						test = pold * plast / ensig_BESS;
+						test *= .5 - .5 / (bb * bb);
+						p = plast * tover;
+						--n;
+						en -= 2.;
+						nend = min0(*nb, n);
+						for (l = nstart; l <= nend; ++l)
+						{
+							*ncalc = l;
+							pold = psavel;
+							psavel = psave;
+							psave = en * psavel / *x + pold;
+							if (psave * psavel > test)
+							{
+								goto L90;
+							}
+						}
+						*ncalc = nend + 1;
+					L90:
+						--(*ncalc);
+						goto L120;
+					}
+				}
+				n = nend;
+				en = (double)(n + n) + twonu;
+				/*---------------------------------------------------
 		  Calculate special significance test for NBMX > 2.
 		  --------------------------------------------------- */
-		test = fmax2(test,sqrt(plast * ensig_BESS) * sqrt(p + p));
-	    }
-	    /* --------------------------------------------------------
+				test = fmax2(test, sqrt(plast * ensig_BESS) * sqrt(p + p));
+			}
+			/* --------------------------------------------------------
 	       Calculate P-sequence until significance test passed.
 	       -------------------------------------------------------- */
-	    do {
-		++n;
-		en += 2.;
-		pold = plast;
-		plast = p;
-		p = en * plast / *x + pold;
-	    } while (p < test);
+			do
+			{
+				++n;
+				en += 2.;
+				pold = plast;
+				plast = p;
+				p = en * plast / *x + pold;
+			} while (p < test);
 
-L120:
-/* -------------------------------------------------------------------
+		L120:
+			/* -------------------------------------------------------------------
  Initialize the backward recursion and the normalization sum.
  ------------------------------------------------------------------- */
-	    ++n;
-	    en += 2.;
-	    bb = 0.;
-	    aa = 1. / p;
-	    em = (double) n - 1.;
-	    empal = em + nu;
-	    emp2al = em - 1. + twonu;
-	    sum = aa * empal * emp2al / em;
-	    nend = n - *nb;
-	    if (nend < 0) {
-		/* -----------------------------------------------------
+			++n;
+			en += 2.;
+			bb = 0.;
+			aa = 1. / p;
+			em = (double)n - 1.;
+			empal = em + nu;
+			emp2al = em - 1. + twonu;
+			sum = aa * empal * emp2al / em;
+			nend = n - *nb;
+			if (nend < 0)
+			{
+				/* -----------------------------------------------------
 		   N < NB, so store BI[N] and set higher orders to 0..
 		   ----------------------------------------------------- */
-		bi[n] = aa;
-		nend = -nend;
-		for (l = 1; l <= nend; ++l) {
-		    bi[n + l] = 0.;
-		}
-	    } else {
-		if (nend > 0) {
-		    /* -----------------------------------------------------
+				bi[n] = aa;
+				nend = -nend;
+				for (l = 1; l <= nend; ++l)
+				{
+					bi[n + l] = 0.;
+				}
+			}
+			else
+			{
+				if (nend > 0)
+				{
+					/* -----------------------------------------------------
 		       Recur backward via difference equation,
 		       calculating (but not storing) BI[N], until N = NB.
 		       --------------------------------------------------- */
 
-		    for (l = 1; l <= nend; ++l) {
-			--n;
-			en -= 2.;
-			cc = bb;
-			bb = aa;
-			/* for x ~= 1500,  sum would overflow to 'inf' here,
+					for (l = 1; l <= nend; ++l)
+					{
+						--n;
+						en -= 2.;
+						cc = bb;
+						bb = aa;
+						/* for x ~= 1500,  sum would overflow to 'inf' here,
 			 * and the final bi[] /= sum would give 0 wrongly;
 			 * RE-normalize (aa, sum) here -- no need to undo */
-			if(nend > 100 && aa > 1e200) {
-			    /* multiply by  2^-900 = 1.18e-271 */
-			    cc	= ldexp(cc, -900);
-			    bb	= ldexp(bb, -900);
-			    sum = ldexp(sum,-900);
-			}
-			aa = en * bb / *x + cc;
-			em -= 1.;
-			emp2al -= 1.;
-			if (n == 1) {
-			    break;
-			}
-			if (n == 2) {
-			    emp2al = 1.;
-			}
-			empal -= 1.;
-			sum = (sum + aa * empal) * emp2al / em;
-		    }
-		}
-		/* ---------------------------------------------------
+						if (nend > 100 && aa > 1e200)
+						{
+							/* multiply by  2^-900 = 1.18e-271 */
+							cc = ldexp(cc, -900);
+							bb = ldexp(bb, -900);
+							sum = ldexp(sum, -900);
+						}
+						aa = en * bb / *x + cc;
+						em -= 1.;
+						emp2al -= 1.;
+						if (n == 1)
+						{
+							break;
+						}
+						if (n == 2)
+						{
+							emp2al = 1.;
+						}
+						empal -= 1.;
+						sum = (sum + aa * empal) * emp2al / em;
+					}
+				}
+				/* ---------------------------------------------------
 		   Store BI[NB]
 		   --------------------------------------------------- */
-		bi[n] = aa;
-		if (*nb <= 1) {
-		    sum = sum + sum + aa;
-		    goto L230;
-		}
-		/* -------------------------------------------------
+				bi[n] = aa;
+				if (*nb <= 1)
+				{
+					sum = sum + sum + aa;
+					goto L230;
+				}
+				/* -------------------------------------------------
 		   Calculate and Store BI[NB-1]
 		   ------------------------------------------------- */
-		--n;
-		en -= 2.;
-		bi[n] = en * aa / *x + bb;
-		if (n == 1) {
-		    goto L220;
-		}
-		em -= 1.;
-		if (n == 2)
-		    emp2al = 1.;
-		else
-		    emp2al -= 1.;
+				--n;
+				en -= 2.;
+				bi[n] = en * aa / *x + bb;
+				if (n == 1)
+				{
+					goto L220;
+				}
+				em -= 1.;
+				if (n == 2)
+					emp2al = 1.;
+				else
+					emp2al -= 1.;
 
-		empal -= 1.;
-		sum = (sum + bi[n] * empal) * emp2al / em;
-	    }
-	    nend = n - 2;
-	    if (nend > 0) {
-		/* --------------------------------------------
+				empal -= 1.;
+				sum = (sum + bi[n] * empal) * emp2al / em;
+			}
+			nend = n - 2;
+			if (nend > 0)
+			{
+				/* --------------------------------------------
 		   Calculate via difference equation
 		   and store BI[N], until N = 2.
 		   ------------------------------------------ */
-		for (l = 1; l <= nend; ++l) {
-		    --n;
-		    en -= 2.;
-		    bi[n] = en * bi[n + 1] / *x + bi[n + 2];
-		    em -= 1.;
-		    if (n == 2)
-			emp2al = 1.;
-		    else
-			emp2al -= 1.;
-		    empal -= 1.;
-		    sum = (sum + bi[n] * empal) * emp2al / em;
-		}
-	    }
-	    /* ----------------------------------------------
+				for (l = 1; l <= nend; ++l)
+				{
+					--n;
+					en -= 2.;
+					bi[n] = en * bi[n + 1] / *x + bi[n + 2];
+					em -= 1.;
+					if (n == 2)
+						emp2al = 1.;
+					else
+						emp2al -= 1.;
+					empal -= 1.;
+					sum = (sum + bi[n] * empal) * emp2al / em;
+				}
+			}
+			/* ----------------------------------------------
 	       Calculate BI[1]
 	       -------------------------------------------- */
-	    bi[1] = 2. * empal * bi[2] / *x + bi[3];
-L220:
-	    sum = sum + sum + bi[1];
+			bi[1] = 2. * empal * bi[2] / *x + bi[3];
+		L220:
+			sum = sum + sum + bi[1];
 
-L230:
-	    /* ---------------------------------------------------------
+		L230:
+			/* ---------------------------------------------------------
 	       Normalize.  Divide all BI[N] by sum.
 	       --------------------------------------------------------- */
-	    if (nu != 0.)
-		sum *= (Rf_gamma_cody(1. + nu) * pow(*x * .5, -nu));
-	    if (*ize == 1)
-		sum *= exp(-(*x));
-	    aa = enmten_BESS;
-	    if (sum > 1.)
-		aa *= sum;
-	    for (n = 1; n <= *nb; ++n) {
-		if (bi[n] < aa)
-		    bi[n] = 0.;
+			if (nu != 0.)
+				sum *= (Rf_gamma_cody(1. + nu) * pow(*x * .5, -nu));
+			if (*ize == 1)
+				sum *= exp(-(*x));
+			aa = enmten_BESS;
+			if (sum > 1.)
+				aa *= sum;
+			for (n = 1; n <= *nb; ++n)
+			{
+				if (bi[n] < aa)
+					bi[n] = 0.;
+				else
+					bi[n] /= sum;
+			}
+			return;
+		}
 		else
-		    bi[n] /= sum;
-	    }
-	    return;
-	} else { /* small x  < 1e-4 */
-	    /* -----------------------------------------------------------
+		{ /* small x  < 1e-4 */
+			/* -----------------------------------------------------------
 	       Two-term ascending series for small X.
 	       -----------------------------------------------------------*/
-	    aa = 1.;
-	    empal = 1. + nu;
+			aa = 1.;
+			empal = 1. + nu;
 #ifdef IEEE_754
-	    /* No need to check for underflow */
-	    halfx = .5 * *x;
+			/* No need to check for underflow */
+			halfx = .5 * *x;
 #else
-	    if (*x > enmten_BESS) */
-		halfx = .5 * *x;
-	    else
-	    	halfx = 0.;
+			if (*x > enmten_BESS)
+				* /
+					halfx = .5 * *x;
+			else
+				halfx = 0.;
 #endif
-	    if (nu != 0.)
-		aa = pow(halfx, nu) / Rf_gamma_cody(empal);
-	    if (*ize == 2)
-		aa *= exp(-(*x));
-	    bb = halfx * halfx;
-	    bi[1] = aa + aa * bb / empal;
-	    if (*x != 0. && bi[1] == 0.)
-		*ncalc = 0;
-	    if (*nb > 1) {
-		if (*x == 0.) {
-		    for (n = 2; n <= *nb; ++n)
-			bi[n] = 0.;
-		} else {
-		    /* -------------------------------------------------
+			if (nu != 0.)
+				aa = pow(halfx, nu) / Rf_gamma_cody(empal);
+			if (*ize == 2)
+				aa *= exp(-(*x));
+			bb = halfx * halfx;
+			bi[1] = aa + aa * bb / empal;
+			if (*x != 0. && bi[1] == 0.)
+				*ncalc = 0;
+			if (*nb > 1)
+			{
+				if (*x == 0.)
+				{
+					for (n = 2; n <= *nb; ++n)
+						bi[n] = 0.;
+				}
+				else
+				{
+					/* -------------------------------------------------
 		       Calculate higher-order functions.
 		       ------------------------------------------------- */
-		    cc = halfx;
-		    tover = (enmten_BESS + enmten_BESS) / *x;
-		    if (bb != 0.)
-			tover = enmten_BESS / bb;
-		    for (n = 2; n <= *nb; ++n) {
-			aa /= empal;
-			empal += 1.;
-			aa *= cc;
-			if (aa <= tover * empal)
-			    bi[n] = aa = 0.;
-			else
-			    bi[n] = aa + aa * bb / empal;
-			if (bi[n] == 0. && *ncalc > n)
-			    *ncalc = n - 1;
-		    }
+					cc = halfx;
+					tover = (enmten_BESS + enmten_BESS) / *x;
+					if (bb != 0.)
+						tover = enmten_BESS / bb;
+					for (n = 2; n <= *nb; ++n)
+					{
+						aa /= empal;
+						empal += 1.;
+						aa *= cc;
+						if (aa <= tover * empal)
+							bi[n] = aa = 0.;
+						else
+							bi[n] = aa + aa * bb / empal;
+						if (bi[n] == 0. && *ncalc > n)
+							*ncalc = n - 1;
+					}
+				}
+			}
 		}
-	    }
 	}
-    } else { /* argument out of range */
-	*ncalc = min0(*nb,0) - 1;
-    }
+	else
+	{ /* argument out of range */
+		*ncalc = min0(*nb, 0) - 1;
+	}
 }

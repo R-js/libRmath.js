@@ -46,7 +46,8 @@ import { vectorize } from '../r-func';
 import { ML_ERR_return_NAN, R_DT_0, R_DT_1, R_DT_val } from '../common/_general';
 import { choose } from '../common/choose';
 
-import { initw } from './initw';
+import { WilcoxonCache } from './WilcoxonCache';
+
 import { cwilcox } from './cwilcox';
 
 const { round:R_forceint, floor} = Math;
@@ -57,14 +58,17 @@ export function pwilcox<T>(
   qq: T,
   m: number,
   n: number,
-  lowerTail: boolean,
-  logP: boolean
+  lowerTail: boolean = true,
+  logP: boolean = false
 ): T {
   m = R_forceint(m);
   n = R_forceint(n);
-  const w = initw(n, m);
+ 
 
   return vectorize(qq)(q => {
+    
+    const w = new WilcoxonCache();
+
     let lower_tail = lowerTail;
     if (ISNAN(q) || ISNAN(m) || ISNAN(n)) return q + m + n;
     if (!R_FINITE(m) || !R_FINITE(n)) return ML_ERR_return_NAN(printer_pwilcox);

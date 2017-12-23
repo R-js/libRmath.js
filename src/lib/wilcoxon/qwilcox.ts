@@ -42,7 +42,7 @@
  
 import * as debug from 'debug';
 
-import { initw } from './initw';
+import { WilcoxonCache } from './WilcoxonCache';
 import { cwilcox } from './cwilcox';
 import { R_DT_qIv } from '~exp-utils';
 import { vectorize } from '../r-func';
@@ -69,7 +69,7 @@ export function qwilcox<T>(
 ): T {
   m = R_forceint(m);
   n = R_forceint(n);
-  const w = initw(n, m);
+  const w = new WilcoxonCache();
 
   return vectorize(xx)(x => {
     if (ISNAN(x) || ISNAN(m) || ISNAN(n)) return x + m + n;

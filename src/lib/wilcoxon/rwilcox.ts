@@ -1,4 +1,3 @@
-
 /*
  *  AUTHOR
  * 
@@ -40,7 +39,6 @@
 
  */
 
- 
 import * as debug from 'debug';
 
 import { IRNG } from '../rng';
@@ -70,11 +68,12 @@ export function rwilcox(
     let r = 0.0;
     let k = trunc(m + n);
     let x = seq()()(0, k - 1);
-
+    printer_rwilcox(`------v`);
     for (let i = 0; i < n; i++) {
       let j = floor(k * rng.unif_rand());
       r += x[j];
       x[j] = x[--k];
+      printer_rwilcox(`i:${i},\tn:${n}\tj:${j}\tk:${k}\tr:${r}\tx:${x}`);
     }
 
     return r - n * (n - 1) / 2;

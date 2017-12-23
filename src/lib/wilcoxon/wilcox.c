@@ -75,7 +75,7 @@ w_init_maybe(int m, int n)
     int i;
 
     if (m > n) // make m smaller then n, always
-    { //swap
+    {          //swap
         i = n;
         n = m;
         m = i;
@@ -154,11 +154,11 @@ cwilcox(int k, int m, int n)
        these can only be in the first k.  So the count is the same as
        if there were just k y's. 
     */
-    if (j > 0 && k < j)
+    if (j > 0 && k < j){
         return cwilcox(k, i, k);
+    }
 
-    if (w[i][j] == 0)
-    {
+    if (w[i][j] == 0){
         w[i][j] = (double *)calloc((size_t)c + 1, sizeof(double));
 #ifdef MATHLIB_STANDALONE
         if (!w[i][j])
@@ -177,7 +177,11 @@ cwilcox(int k, int m, int n)
     return (w[i][j][k]);
 }
 
-double dwilcox(double x, double m, double n, int give_log)
+double dwilcox(
+    double x,
+    double m,
+    double n,
+    int give_log)
 {
     double d;
 
@@ -199,7 +203,8 @@ double dwilcox(double x, double m, double n, int give_log)
 
     int mm = (int)m, nn = (int)n, xx = (int)x;
     w_init_maybe(mm, nn);
-    d = give_log ? log(cwilcox(xx, mm, nn)) - lchoose(m + n, n) : cwilcox(xx, mm, nn) / choose(m + n, n);
+    d = give_log ? log(cwilcox(xx, mm, nn)) - lchoose(m + n, n)
+                 : cwilcox(xx, mm, nn) / choose(m + n, n);
 
     return (d);
 }

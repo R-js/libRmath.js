@@ -47,41 +47,43 @@ import {
   ldexp
 } from '~common';
 const { pow, max: fmax2, sqrt, exp, floor, trunc, min: min0, PI: M_PI } = Math;
-const { isNaN: ISNAN, NaN: ML_NAN , POSITIVE_INFINITY:ML_POSINF} = Number;
+const { isNaN: ISNAN, NaN: ML_NAN, POSITIVE_INFINITY: ML_POSINF } = Number;
 
 import { Rf_gamma_cody } from '../gamma/gamma_cody';
 
 interface IBesselInput {
-  x: number;
-  alpha: number;
-  nb: number;
-  ize: number;
-  bi: number[];
-  ncalc: number;
+  x: number; // double
+  alpha: number; //double
+  nb: number; //int
+  ize: number; //int
+  bi: number[]; //double
+  ncalc: number; //int
 }
 
 import { bessel_k, bessel_k_ex } from './bessel_k';
-import { sinpi } from '~trigonometry';
+import { sinpi } from '../trigonometry/sinpi';
 
 const printer_bessel_i = debug('bessel_i');
 /** .Internal(besselI(*)) : */
 
 export function bessel_i(x: number, alpha: number, expo: number): number {
-  let nb: number;
+  //int
+
   let ncalc: number;
-  let ize: number;
-  let na: number;
+  //double
   let bi: number[];
 
   /* NaNs propagated correctly */
-  if (ISNAN(x) || ISNAN(alpha)) return x + alpha;
+  if (ISNAN(x) || ISNAN(alpha)) {
+    return NaN;
+  }
 
   if (x < 0) {
     ML_ERROR(ME.ME_RANGE, 'bessel_i', printer_bessel_i);
     return ML_NAN;
   }
-  ize = trunc(expo);
-  na = floor(alpha);
+  let ize = trunc(expo);
+  let na = floor(alpha);
   if (alpha < 0) {
     /* Using Abramowitz & Stegun  9.6.2 & 9.6.6
          * this may not be quite optimal (CPU and accuracy wise) */
@@ -95,7 +97,7 @@ export function bessel_i(x: number, alpha: number, expo: number): number {
           sinpi(-alpha))
     );
   }
-  nb = 1 + trunc(na); /* nb-1 <= alpha < nb */
+  let nb = 1 + trunc(na); /* nb-1 <= alpha < nb */
   alpha -= nb - 1;
   let input: IBesselInput = { x, alpha, nb, ize, bi: [], ncalc: 0 };
   I_bessel(input);
@@ -105,7 +107,7 @@ export function bessel_i(x: number, alpha: number, expo: number): number {
     /* error input */
     if (ncalc < 0)
       printer_bessel_i(
-        'bessel_i(%d): ncalc (=%d) != nb (=%d); alpha=%d. Arg. out of range?\n',
+        'bessel_i(%d): ncalc (=%d) != nb (=%d); alpha=%d. Arg. out of range?',
         x,
         ncalc,
         nb,
@@ -113,7 +115,7 @@ export function bessel_i(x: number, alpha: number, expo: number): number {
       );
     else
       printer_bessel_i(
-        'bessel_i(%d,nu=%d): precision lost in result\n',
+        'bessel_i(%d,nu=%d): precision lost in result',
         x,
         alpha + nb - 1
       );
@@ -125,15 +127,17 @@ export function bessel_i(x: number, alpha: number, expo: number): number {
 /* modified version of bessel_i that accepts a work array instead of
    allocating one. */
 const printer_bessel_i_ex = debug('bessel_i_ex');
-export function bessel_i_ex(
+function bessel_i_ex(
   x: number,
   alpha: number,
   expo: number,
   bi: number[]
 ): number {
+  //int
   let nb: number;
   let ncalc: number;
   let ize: number;
+  //double
   let na: number;
 
   /* NaNs propagated correctly */
@@ -282,6 +286,7 @@ function I_bessel(µ: IBesselInput) {
   const _const = 1.585;
 
   /* Local variables */
+  // int
   let nend: number;
   let intx: number;
   let nbmx: number;
@@ -289,7 +294,7 @@ function I_bessel(µ: IBesselInput) {
   let l: number;
   let n: number;
   let nstart: number;
-
+  // double
   let pold: number;
   let test: number;
   let p: number;
@@ -324,8 +329,9 @@ function I_bessel(µ: IBesselInput) {
   ) {
     µ.ncalc = µ.nb;
     if (µ.ize === 1 && µ.x > exparg_BESS) {
-      for (k = 1; k <= µ.nb; k++)
-        µ.bi[k - 1] = ML_POSINF; /* the limit *is* = Inf */
+      for (k = 0; k < µ.nb; k++){
+        µ.bi[k] = ML_POSINF; /* the limit *is* = Inf */
+      }
       return;
     }
     if (µ.ize === 2 && µ.x > xlrg_BESS_IJ) {
