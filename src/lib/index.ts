@@ -31,12 +31,13 @@ export { Wilcoxon } from './wilcoxon';
 import { special as betaSpecial } from '~beta';
 import { special as gammaSpecial } from '~gamma';
 import { special as chooseSpecial } from '~common';
-//TODO: bessel equations
+import { special as besselSpecial } from '~bessel';
 
 export const special = Object.freeze({
   ...gammaSpecial,
   ...betaSpecial,
-  ...chooseSpecial
+  ...chooseSpecial,
+  ...besselSpecial
 });
 
 import {

@@ -20,7 +20,7 @@ export const seq = (adjust = 0) => (adjustMin = adjust) => (
   do {
     rc.push(cursor);
     cursor += step;
-  } while (cursor >= s && cursor <= e);
+  } while (cursor >= s && cursor <= e && step !== 0);
   return rc;
 };
 
@@ -44,28 +44,25 @@ export function flatten<T>(...rest: (T | T[])[]): T[] {
 }
 
 export function arrayrify<T, R>(fn: (x: T, ...rest: any[]) => R) {
-  
   return function(x: T | T[], ...rest: any[]): R | R[] {
     const fp = Array.isArray(x) ? x : [x];
     const result = fp.map(p => fn(p, ...rest));
-    return (result.length === 1 ? result[0] : result);
+    return result.length === 1 ? result[0] : result;
   };
 }
 
-export function forceToArray<T>(x: T|T[]): T[] {
-   return Array.isArray(x) ? x : [x];
+export function forceToArray<T>(x: T | T[]): T[] {
+  return Array.isArray(x) ? x : [x];
 }
 
-export function possibleScalar<T>(x: T[]): T|T[] {
+export function possibleScalar<T>(x: T[]): T | T[] {
   return x.length === 1 ? x[0] : x;
 }
 
-
-export function vectorize<T>(xx: T){
+export function vectorize<T>(xx: T) {
   const fx: number[] = forceToArray(xx) as any;
-  return function( fn: (x: number) => number): number|number[]{
-     const result: number[] = fx.map(fn);
-     return possibleScalar(result) as any;
+  return function(fn: (x: number) => number): number | number[] {
+    const result: number[] = fx.map(fn);
+    return possibleScalar(result) as any;
   };
 }
-  

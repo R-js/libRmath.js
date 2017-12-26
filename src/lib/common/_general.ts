@@ -176,12 +176,12 @@ export const max0 = (x: number, y: number): number => {
 };
 */
 export const mapErr = new Map([
-  [ME.ME_NONE, 'No error\n'],
-  [ME.ME_DOMAIN, "argument out of domain in '%s'\n"],
-  [ME.ME_RANGE, "argument out of domain in '%s'\n"],
-  [ME.ME_NOCONV, "convergence failed in '%s'\n"],
-  [ME.ME_PRECISION, "full precision may not have been achieved in '%s'\n"],
-  [ME.ME_UNDERFLOW, "underflow occurred in '%s'\n"]
+  [ME.ME_NONE, 'No error'],
+  [ME.ME_DOMAIN, "argument out of domain in '%s'"],
+  [ME.ME_RANGE, "argument out of domain in '%s'"],
+  [ME.ME_NOCONV, "convergence failed in '%s'"],
+  [ME.ME_PRECISION, "full precision may not have been achieved in '%s'"],
+  [ME.ME_UNDERFLOW, "underflow occurred in '%s'"]
 ]);
 
 export const ML_ERROR = (x: ME, s: any, printer: debug.IDebugger) => {
