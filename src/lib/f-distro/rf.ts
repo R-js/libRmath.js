@@ -39,9 +39,9 @@ import * as debug from 'debug';
 
 import { ML_ERR_return_NAN } from '~common';
 
-import { rchisq } from '../chi-2/rchisq';
 import { Uniform } from 'src/lib/uniform';
 import { INormal } from '~normal';
+import { rchisq } from '../chi-2/rchisq';
 
 const printer = debug('rf');
 const { isNaN: ISNAN, isFinite: R_FINITE } = Number;

@@ -52,12 +52,12 @@ import * as debug from 'debug';
 import {
   ML_ERR_return_NAN,
   R_D__0,
-  R_D_val,
-  R_D_exp
-} from '~common';
+  R_D_exp,
+  R_D_val
+} from '../common/_general';
 
-import { lbeta } from './lbeta';
 import { dbinom_raw } from '../binomial/dbinom';
+import { lbeta } from './lbeta';
 
 const { log , log1p } = Math;
 const {

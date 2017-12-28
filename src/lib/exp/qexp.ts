@@ -27,7 +27,7 @@
  *
  */
 import * as debug from 'debug';
-import { R_DT_0, ML_ERR_return_NAN, R_Q_P01_check } from '~common';
+import { ML_ERR_return_NAN, R_DT_0, R_Q_P01_check } from '~common';
 
 import { R_DT_Clog } from './expm1';
 

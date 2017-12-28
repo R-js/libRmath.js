@@ -19,14 +19,14 @@ function select(
     mu: {
       d: dnbinom_mu,
       p: pnbinom_mu,
-      r: rnbinom_mu,
-      q: qnbinom_mu
+      q: qnbinom_mu,
+      r: rnbinom_mu
     },
     p: {
       d: _dnbinom,
       p: _pnbinom,
-      r: _rnbinom,
-      q: _qnbinom
+      q: _qnbinom,
+      r: _rnbinom
     }
   };
 

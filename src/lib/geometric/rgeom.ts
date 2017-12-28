@@ -47,9 +47,9 @@
 import * as debug from 'debug';
 
 import { ML_ERR_return_NAN } from '~common';
-import { rpois } from '../poisson/rpois';
-import { exp_rand } from '../exp/sexp';
 import { INormal } from '~normal';
+import { exp_rand } from '../exp/sexp';
+import { rpois } from '../poisson/rpois';
 
 const { isFinite: R_FINITE } = Number;
 

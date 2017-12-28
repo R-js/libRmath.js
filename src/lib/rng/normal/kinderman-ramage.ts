@@ -47,8 +47,8 @@
 
 /*-----------------------------------------------------------*/
 
-import { IRNGNormal } from './inormal-rng';
 import { IRNG } from '../';
+import { IRNGNormal } from './inormal-rng';
 
 const { exp, log, sqrt, max: fmax2, min: fmin2, abs: fabs } = Math;
 

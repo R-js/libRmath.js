@@ -1,11 +1,11 @@
 'use strict';
 
-import { runif } from './runif';
 import { dunif } from './dunif';
 import { punif } from './punif';
 import { qunif } from './qunif';
+import { runif } from './runif';
 
-import { rng, IRNG } from '../rng';
+import { IRNG, rng } from '../rng';
 const { SuperDuper } = rng;
 
 export interface IUniform {
@@ -30,11 +30,11 @@ export interface IUniform {
 
 export function Uniform(rng: IRNG = new SuperDuper(0)) {
   return {
-    runif: (n: number = 1, a: number = 0, b: number = 1) =>
-      runif(n, a, b, rng),
     dunif,
     punif,
     qunif,
-    rng // class of the rng
+    rng, // class of the rng
+    runif: (n: number = 1, a: number = 0, b: number = 1) =>
+      runif(n, a, b, rng)
   };
 }

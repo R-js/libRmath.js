@@ -11,11 +11,11 @@
 const { trunc } = Math;
 const frac = (x: number) => x - trunc(x);
 
+import { fixup } from '../fixup';
+import { IRNG } from '../irng';
 import { IRNGType } from '../irng-type';
 import { timeseed } from '../timeseed';
 import { TAOCP1997init } from './taocp-1997-init';
-import { fixup } from '../fixup';
-import { IRNG } from '../irng';
 /* helpers */
 /* helpers */
 /* helpers */

@@ -49,16 +49,16 @@ import { wprob } from './wprob';
 
 import {
   M_1_SQRT_2PI,
+  ME,
   ML_ERR_return_NAN,
-  R_DT_0,
-  R_DT_1,
   ML_ERROR,
-  ME
+  R_DT_0,
+  R_DT_1
 } from '../common/_general';
 
-import { lgammafn } from '../gamma/lgamma_fn';
+import { forEach } from '~R';
 import { R_DT_val } from '../common/_general';
-import { vectorize } from '~R';
+import { lgammafn } from '../gamma/lgamma_fn';
 
 const { isNaN: ISNAN, isFinite: R_FINITE } = Number;
 const { exp, sqrt, log, LN2: M_LN2 } = Math;
@@ -74,7 +74,7 @@ export function ptukey<T>(
   log_p: boolean = false,
   normal: INormal
 ): T {
-  return vectorize(qq)(q =>
+  return forEach(qq)(q =>
     _ptukey(q, rr, cc, df, lower_tail, log_p, normal)
   ) as any;
 }

@@ -30,10 +30,10 @@
 import * as debug from 'debug';
 
 import {
-  R_nonint,
   ML_ERR_return_NAN,
   R_DT_0,
-  R_DT_1
+  R_DT_1,
+  R_nonint
 } from '~common';
 
 import { pbeta } from '../beta/pbeta';

@@ -27,10 +27,10 @@
  *	The distribution function of the exponential distribution.
  */
 
-import { ML_ERR_return_NAN, R_DT_0, R_D_exp } from '~common';
+import { ML_ERR_return_NAN, R_D_exp, R_DT_0 } from '~common';
 
-import { R_Log1_Exp } from './expm1';
 import * as debug from 'debug';
+import { R_Log1_Exp } from './expm1';
 
 const { expm1 } = Math;
 const { isNaN: ISNAN } = Number;

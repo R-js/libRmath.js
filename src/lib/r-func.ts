@@ -59,7 +59,7 @@ export function possibleScalar<T>(x: T[]): T | T[] {
   return x.length === 1 ? x[0] : x;
 }
 
-export function vectorize<T>(xx: T) {
+export function forEach<T>(xx: T) {
   const fx: number[] = forceToArray(xx) as any;
   return function(fn: (x: number) => number): number | number[] {
     const result: number[] = fx.map(fn);

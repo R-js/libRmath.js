@@ -2,16 +2,16 @@
 import * as debug from 'debug';
 
 import {
+  fmod,
+  M_LN_SQRT_2PI, // no math alias for this
   M_LN_SQRT_PId2,
-  fmod, // no math alias for this
-  ML_ERROR,
   ME,
-  M_LN_SQRT_2PI,
-  ML_ERR_return_NAN
+  ML_ERR_return_NAN,
+  ML_ERROR
 } from '~common';
 
-import { gammafn } from './gamma_fn';
 import { sinpi } from '~trigonometry';
+import { gammafn } from './gamma_fn';
 import { lgammacor } from './lgammacor';
 
 const { isNaN: ISNAN, POSITIVE_INFINITY: ML_POSINF } = Number;

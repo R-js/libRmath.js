@@ -1,3 +1,9 @@
+//
+import { INormal, Normal } from '~normal';
+import { rchisq } from '../chi-2/rchisq';
+import { rnorm } from '../normal/rnorm';
+import { arrayrify, forceToArray } from '../r-func';
+//
 import { dnt } from './dnt';
 import { dt as _dt } from './dt';
 import { pnt } from './pnt';
@@ -6,11 +12,6 @@ import { qnt } from './qnt';
 import { qt as _qt } from './qt';
 //
 import { rt as _rt } from './rt';
-import { rnorm } from '../normal/rnorm';
-import { rchisq } from '../chi-2/rchisq';
-//
-import { INormal, Normal } from '~normal';
-import { arrayrify, forceToArray } from '~R';
 
 const { sqrt } = Math;
 
@@ -44,9 +45,9 @@ export function StudentT(rng: INormal = Normal()) {
     logP: boolean = false
   ) {
     if (ncp === undefined) {
-        return _qt(pp, df, lowerTail, logP, rng);
-      }
-      return qnt(pp, df, ncp, lowerTail, logP, rng);
+      return _qt(pp, df, lowerTail, logP, rng);
+    }
+    return qnt(pp, df, ncp, lowerTail, logP, rng);
   }
   /*
   > rt
@@ -60,35 +61,30 @@ function (n, df, ncp)
     }
     else rnorm(n, ncp)/sqrt(rchisq(n, df)/df)
 }
-  */ 
+  */
 
-  function rt(n: number, df: number, ncp?: number){
-      
-      if (ncp === undefined){
-          return _rt(n, df, rng);
-      }
-      else if (Number.isNaN(ncp)){
-          return new Array(n).fill(NaN);
-      }
-      else {
-          // array devision and sqrt
-          const div = arrayrify( (a: number, b: number) => a / b);
-          const sqrt = arrayrify( Math.sqrt );
-          
-          const norm =  forceToArray(rnorm(n, ncp, 1, rng.rng.norm_rand)); // bleed this first from rng
-          const chisq = forceToArray(div(sqrt(rchisq(n, df, rng)), df));
-           
-          const result = norm.map((n, i) => n / chisq[i]);
-          return result.length === 1 ? result[0] :result;
-      }
+  function rt(n: number, df: number, ncp?: number) {
+    if (ncp === undefined) {
+      return _rt(n, df, rng);
+    } else if (Number.isNaN(ncp)) {
+      return new Array(n).fill(NaN);
+    } else {
+      // array devision and sqrt
+      const div = arrayrify((a: number, b: number) => a / b);
+      const sqrt = arrayrify(Math.sqrt);
+
+      const norm = forceToArray(rnorm(n, ncp, 1, rng.rng.norm_rand)); // bleed this first from rng
+      const chisq = forceToArray(div(sqrt(rchisq(n, df, rng)), df));
+
+      const result = norm.map((n, i) => n / chisq[i]);
+      return result.length === 1 ? result[0] : result;
+    }
   }
 
-
   return {
-      rt,
-      pt,
-      qt,
-      dt
+    dt,
+    pt,
+    qt,
+    rt
   };
-
 }

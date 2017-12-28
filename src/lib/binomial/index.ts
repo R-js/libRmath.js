@@ -1,8 +1,8 @@
+import { INormal, Normal } from '../normal';
 import { dbinom } from './dbinom';
 import { pbinom } from './pbinom';
 import { qbinom } from './qbinom';
 import { rbinom } from './rbinom';
-import { INormal, Normal } from '../normal';
 
 export function Binomial(rng: INormal = Normal()) {
   return {

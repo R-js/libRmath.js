@@ -1,5 +1,5 @@
-import { IRNGType } from './irng-type';
 import { IN01Type } from './in01-type';
+import { IRNGType } from './irng-type';
 
 export interface IRNGTab {
     kind: IRNGType;

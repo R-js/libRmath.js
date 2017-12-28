@@ -42,11 +42,11 @@ import * as debug from 'debug';
 
 import {
   ML_ERR_return_NAN,
-  R_DT_1,
-  R_DT_0
-} from '~common';
+  R_DT_0,
+  R_DT_1
+} from '../common/_general';
 
-import { Toms708, NumberW } from '../common/toms708';
+import { NumberW, Toms708 } from '../common/toms708';
 const  { isNaN: ISNAN, isFinite: R_FINITE} = Number;
 const {LN2: M_LN2 } = Math;
 

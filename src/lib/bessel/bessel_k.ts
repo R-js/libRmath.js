@@ -52,7 +52,13 @@ const {
   NaN: ML_NAN
 } = Number;
 
-import { M_SQRT_2dPI, ML_ERROR, ME, xmax_BESS_K, sqxmin_BESS_K } from '~common';
+import {
+  M_SQRT_2dPI,
+  ME,
+  ML_ERROR,
+  sqxmin_BESS_K,
+  xmax_BESS_K
+} from '../common/_general';
 
 const printer_bessel_k = debug('bessel_k');
 
@@ -143,7 +149,7 @@ export function bessel_k_ex(
         alpha
       );
     else
-    printer_bessel_k(
+      printer_bessel_k(
         'bessel_k(%d,nu=%d): precision lost in result',
         x,
         alpha + nb - 1

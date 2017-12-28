@@ -29,10 +29,10 @@
  */
 import * as debug from 'debug';
 
-import { ML_ERR_return_NAN, R_DT_0, R_DT_1, R_D_val } from '~common';
+import { ML_ERR_return_NAN, R_D_val, R_DT_0, R_DT_1 } from '~common';
 
-import { R_D_Clog } from '../common/_general';
 import { atanpi } from '~trigonometry';
+import { R_D_Clog } from '../common/_general';
 
 const { isNaN: ISNAN, isFinite: R_FINITE } = Number;
 const { abs: fabs } = Math;

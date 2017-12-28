@@ -12,9 +12,9 @@ export function Logistic(rng: IRNG = new _rng.SuperDuper(0)) {
   }
 
   return {
-    rlogis,
     dlogis,
+    plogis,
     qlogis,
-    plogis
+    rlogis
   };
 }

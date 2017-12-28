@@ -33,13 +33,13 @@
 
 import * as debug from 'debug';
 
-import { ML_ERR_return_NAN, R_DT_1, R_DT_0 } from '~common';
+import { ML_ERR_return_NAN, R_DT_0, R_DT_1 } from '~common';
 
 const { isNaN: ISNAN, isFinite: R_FINITE } = Number;
 const { floor } = Math;
 
 import { pbeta } from '../beta/pbeta';
-import { Toms708, NumberW } from '../common/toms708';
+import { NumberW, Toms708 } from '../common/toms708';
 
 const printer = debug('pnbinom');
 

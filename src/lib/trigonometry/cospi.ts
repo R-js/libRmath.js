@@ -29,9 +29,9 @@
 import * as debug from 'debug';
 
 import {
+  fmod,
   ME,
-  ML_ERROR,
-  fmod
+  ML_ERROR
 } from '../common/_general';
 
 const  { 

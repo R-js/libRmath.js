@@ -31,9 +31,9 @@ import * as debug from 'debug';
 
 import { ML_ERR_return_NAN, R_Q_P01_boundaries } from '~common';
 
+import { INormal } from '~normal';
 import { qbeta } from '../beta/qbeta';
 import { qchisq } from '../chi-2/qchisq';
-import { INormal } from '~normal';
 
 const printer = debug('qf');
 

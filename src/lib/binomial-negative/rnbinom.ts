@@ -49,9 +49,9 @@
 import * as debug from 'debug';
 import { ML_ERR_return_NAN } from '~common';
 
-import { rpois } from '../poisson/rpois';
-import { rgamma } from '../gamma/rgamma';
 import { INormal } from '~normal';
+import { rgamma } from '../gamma/rgamma';
+import { rpois } from '../poisson/rpois';
 
 const { isFinite: R_FINITE } = Number;
 

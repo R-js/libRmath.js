@@ -48,8 +48,8 @@
 
 import { ML_ERR_return_NAN, R_D__0 } from '~common';
 
-import { dpois_raw } from '../poisson/dpois';
 import * as debug from 'debug';
+import { dpois_raw } from '../poisson/dpois';
 
 const { log } = Math;
 const { isNaN: ISNAN, POSITIVE_INFINITY: ML_POSINF } = Number;

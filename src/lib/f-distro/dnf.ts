@@ -40,9 +40,9 @@
 import * as debug from 'debug';
 import { ML_ERR_return_NAN, R_D__0 } from '~common';
 
+import { dnbeta } from '../beta/dnbeta';
 import { dnchisq } from '../chi-2/dnchisq';
 import { dgamma } from '../gamma/dgamma';
-import { dnbeta } from '../beta/dnbeta';
 
 const { log1p, log } = Math;
 

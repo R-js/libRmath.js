@@ -144,12 +144,12 @@
 import * as debug from 'debug';
 
 import {
-  R_pow_di,
-  imin2,
-  DBL_MIN_EXP,
+  DBL_MANT_DIG,
   DBL_MAX_EXP,
-  Rf_d1mach,
-  DBL_MANT_DIG
+  DBL_MIN_EXP,
+  imin2,
+  R_pow_di,
+  Rf_d1mach
 } from '~common';
 
 import { NumberW } from '../common/toms708';

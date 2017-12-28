@@ -27,11 +27,11 @@
 
 import * as debug from 'debug';
 
-import { ML_ERR_return_NAN, R_Q_P01_boundaries } from '~common';
+import { ML_ERR_return_NAN, R_Q_P01_boundaries } from '../common/_general';
 
-import { qnchisq } from '../chi-2/qnchisq';
-import { qnbeta } from '../beta/qnbeta';
 import { INormal } from '~normal';
+import { qnbeta } from '../beta/qnbeta';
+import { qnchisq } from '../chi-2/qnchisq';
 
 const {
   isNaN: ISNAN,

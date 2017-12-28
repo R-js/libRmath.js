@@ -48,10 +48,10 @@
  *    MM specialized the case of  n!  for n < 50 - for even better precision
  */
 
-import { ML_ERROR, ME } from '~common';
-import { chebyshev_eval } from '../chebyshev/chebyshev';
+import { ME, ML_ERROR } from '~common';
 import { stirlerr } from '~stirling';
 import { sinpi } from '~trigonometry';
+import { chebyshev_eval } from '../chebyshev/chebyshev';
 import { lgammacor } from './lgammacor';
 
 import * as debug from 'debug';

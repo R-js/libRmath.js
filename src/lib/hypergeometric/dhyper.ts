@@ -49,12 +49,12 @@ const { round: R_forceint } = Math;
 const { isNaN: ISNAN } = Number;
 
 import {
-  R_D_negInonint,
-  R_D_nonint_check,
   ML_ERR_return_NAN,
   R_D__0,
-  R_D__1
-} from '~common';
+  R_D__1,
+  R_D_negInonint,
+  R_D_nonint_check
+} from '../common/_general';
 
 import { dbinom_raw } from '../binomial/dbinom';
 

@@ -32,9 +32,9 @@
 
 import * as debug from 'debug';
 
-import { ML_ERR_return_NAN } from '../common/_general';
 import { INormal } from '~normal';
 import { rchisq } from '../chi-2/rchisq';
+import { ML_ERR_return_NAN } from '../common/_general';
 
 const { sqrt } = Math;
 const { isNaN: ISNAN, isFinite: R_FINITE } = Number;

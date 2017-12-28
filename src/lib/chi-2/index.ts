@@ -1,3 +1,5 @@
+//
+import { INormal, Normal } from '../normal';
 import { dchisq as _dchisq } from './dchisq';
 import { dnchisq as _dnchisq } from './dnchisq';
 import { pchisq as _pchisq } from './pchisq';
@@ -6,8 +8,6 @@ import { qchisq as _qchisq } from './qchisq';
 import { qnchisq as _qnchisq } from './qnchisq';
 import { rchisq as _rchisq } from './rchisq';
 import { rnchisq as _rnchisq } from './rnchisq';
-//
-import { INormal, Normal } from '../normal';
 
 export function ChiSquared(rng: INormal = Normal()) {
   function rchisq(n: number = 1, df: number, ncp?: number) {
@@ -51,8 +51,8 @@ export function ChiSquared(rng: INormal = Normal()) {
 
   return {
       dchisq,
-      rchisq,
       pchisq,
-      qchisq
+      qchisq,
+      rchisq
   };
 }

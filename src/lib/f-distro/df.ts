@@ -40,8 +40,8 @@ import * as debug from 'debug';
 
 import { ML_ERR_return_NAN, R_D__0, R_D__1 } from '~common';
 
-import { dgamma } from '../gamma/dgamma';
 import { dbinom_raw } from '../binomial/dbinom';
+import { dgamma } from '../gamma/dgamma';
 
 const { log } = Math;
 const {

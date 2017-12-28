@@ -1,6 +1,6 @@
 import * as debug from 'debug';
 
-import { ME, ML_ERROR, fmod } from '../common/_general';
+import { fmod, ME, ML_ERROR } from '../common/_general';
 
 const { abs: fabs, PI: M_PI } = Math;
 

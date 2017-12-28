@@ -41,9 +41,9 @@
 
 import * as debug from 'debug';
 
-import { IRNG } from '../rng';
-import { seq, possibleScalar } from '../r-func';
 import { ML_ERR_return_NAN } from '../common/_general';
+import { possibleScalar, seq } from '../r-func';
+import { IRNG } from '../rng';
 
 const printer_rwilcox = debug('rwilcox');
 const { round: R_forceint, trunc, floor } = Math;

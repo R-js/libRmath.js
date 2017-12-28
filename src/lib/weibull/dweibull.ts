@@ -30,7 +30,7 @@
 import * as debug from 'debug';
 
 import { ML_ERR_return_NAN, R_D__0 } from '../common/_general';
-import { vectorize } from '~R';
+import { forEach } from '../r-func';
 
 const { pow, log, exp } = Math;
 const {

@@ -26,10 +26,10 @@
  *    The quantile function of the uniform distribution.
  */
 
-import { R_Q_P01_check, ML_ERR_return_NAN } from '~common';
+import { ML_ERR_return_NAN, R_Q_P01_check } from '../common/_general';
 
-import { R_DT_qIv } from '~exp-utils';
 import * as debug from 'debug';
+import { R_DT_qIv } from '~exp-utils';
 
 const { isNaN: ISNAN, isFinite: R_FINITE } = Number;
 const printer = debug('qunif');

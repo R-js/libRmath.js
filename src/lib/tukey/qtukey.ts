@@ -124,12 +124,12 @@ function qinv(p: number, c: number, v: number): number {
 
 import * as debug from 'debug';
 
-import { ML_ERROR, ME, ML_ERR_return_NAN, R_Q_P01_boundaries } from '~common';
+import { ME, ML_ERR_return_NAN, ML_ERROR, R_Q_P01_boundaries } from '../common/_general';
 
 import { R_DT_qIv } from '~exp-utils';
-import { ptukey } from './ptukey';
 import { INormal } from '~normal';
-import { vectorize } from '~R';
+import { forEach } from '~R';
+import { ptukey } from './ptukey';
 
 const { isNaN: ISNAN, POSITIVE_INFINITY: ML_POSINF } = Number;
 const { abs: fabs, max: fmax2 } = Math;
@@ -144,7 +144,7 @@ export function qtukey<T>(
   log_p: boolean = false,
   normal: INormal
 ): T {
-  return vectorize(pp)(p =>
+  return forEach(pp)(p =>
     _qtukey(p, rr, cc, df, lower_tail, log_p, normal)
   ) as any;
 }

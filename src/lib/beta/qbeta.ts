@@ -33,23 +33,23 @@
 import * as debug from 'debug';
 
 import {
-  ML_ERR_return_NAN,
-  M_LN2,
+  DBL_MANT_DIG,
   DBL_MIN_EXP,
-  R_DT_0,
-  R_DT_1,
+  M_LN2,
   ME,
+  ML_ERR_return_NAN,
   ML_ERROR,
   R_D_half,
-  DBL_MANT_DIG,
+  R_DT_0,
+  R_DT_1,
   R_pow_di
-} from '~common';
+} from '../common/_general';
 
 import {
-  R_DT_qIv,
   R_DT_CIv,
   R_DT_Clog,
   R_DT_log,
+  R_DT_qIv,
   R_Log1_Exp
 } from '~exp-utils';
 

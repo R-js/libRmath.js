@@ -1,37 +1,37 @@
-import { WichmannHill } from './wichmann-hill';
-import { MarsagliaMultiCarry } from './marsaglia-multicarry';
-import { SuperDuper } from './super-duper';
-import { MersenneTwister } from './mersenne-twister';
+import { IRNG } from './irng';
 import { KnuthTAOCP } from './knuth-taocp';
 import { KnuthTAOCP2002 } from './knuth-taocp-2002';
 import { LecuyerCMRG } from './lecuyer-cmrg';
-import { IRNG } from './irng';
-import { IRNGNormal } from './normal/inormal-rng';
+import { MarsagliaMultiCarry } from './marsaglia-multicarry';
+import { MersenneTwister } from './mersenne-twister';
 import { 
-    Inversion, 
-    BuggyKindermanRamage, 
+    AhrensDieter, 
     BoxMuller, 
-    AhrensDieter,
+    BuggyKindermanRamage, 
+    Inversion,
     KindermanRamage
 } from './normal';
+import { IRNGNormal } from './normal/inormal-rng';
+import { SuperDuper } from './super-duper';
 import { timeseed } from './timeseed';
+import { WichmannHill } from './wichmann-hill';
 
 export const rng = {
-  SuperDuper,
   KnuthTAOCP,
   KnuthTAOCP2002,
-  WichmannHill,
   LecuyerCMRG,
-  MersenneTwister,
   MarsagliaMultiCarry,
+  MersenneTwister,
   normal: {
-    BuggyKindermanRamage,
-    BoxMuller,
     AhrensDieter,
+    BoxMuller,
+    BuggyKindermanRamage, 
     Inversion,
     KindermanRamage
   },
-  timeseed
+  SuperDuper,
+  timeseed,
+  WichmannHill,
 };
 
 export { IRNG, IRNGNormal };

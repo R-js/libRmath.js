@@ -25,11 +25,11 @@
 import * as debug from 'debug';
 
 import {
-  ML_ERR_return_NAN,
-  R_DT_0,
-  R_DT_1,
   M_LN2,
-  R_D_Cval
+  ML_ERR_return_NAN,
+  R_D_Cval,
+  R_DT_0,
+  R_DT_1
 } from '../common/_general';
 
 import { INormal } from '~normal';

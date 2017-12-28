@@ -35,9 +35,9 @@
 import * as debug from 'debug';
 // Note that the functions Gamma and LogGamma are mutually dependent.
 import {
-  ML_ERROR,
   ME,
-} from '~common';
+  ML_ERROR,
+} from '../common/_general';
 
 const { floor, exp, log, abs:fabs} = Math;
 const  { MAX_VALUE: DBL_MAX, NaN: ML_NAN } = Number;

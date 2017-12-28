@@ -64,13 +64,13 @@
 import * as debug from 'debug';
 
 import {
-  ML_ERR_return_NAN,
-  R_DT_0,
-  R_DT_1,
-  M_SQRT_32,
   M_1_SQRT_2PI,
+  M_SQRT_32,
+  ML_ERR_return_NAN,
+  R_D__0,
   R_D__1,
-  R_D__0
+  R_DT_0,
+  R_DT_1
 } from '~common';
 
 const {

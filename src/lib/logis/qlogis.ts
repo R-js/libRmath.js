@@ -27,9 +27,11 @@
  */
 import * as debug from 'debug';
 
-import { R_Q_P01_boundaries, ML_ERR_return_NAN } from '~common';
+import { ML_ERR_return_NAN, R_Q_P01_boundaries } from '../common/_general';
 
 import { R_Log1_Exp } from '~exp-utils';
+
+import { forEach } from '../r-func';
 
 const {
   isNaN: ISNAN,
@@ -44,13 +46,13 @@ const printer_qlogis = debug('qlogis');
 export function qlogis<T>(
   pp: T,
   location: number = 0,
-  scale: number= 1,
+  scale: number = 1,
   lower_tail: boolean = true,
   log_p: boolean = false
 ): T {
   const fp: number[] = (Array.isArray(pp) ? pp : [pp]) as any;
 
-  const result = fp.map(p => {
+  return forEach(pp)(p => {
     if (ISNAN(p) || ISNAN(location) || ISNAN(scale))
       return p + location + scale;
 
@@ -71,6 +73,5 @@ export function qlogis<T>(
     } else p = log(lower_tail ? p / (1 - p) : (1 - p) / p);
 
     return location + scale * p;
-  });
-  return (result.length === 1 ? result[0] : result) as any;
+  }) as any;
 }

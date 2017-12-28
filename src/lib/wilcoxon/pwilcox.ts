@@ -42,9 +42,9 @@
  
 import * as debug from 'debug';
 
-import { vectorize } from '../r-func';
 import { ML_ERR_return_NAN, R_DT_0, R_DT_1, R_DT_val } from '../common/_general';
 import { choose } from '../common/choose';
+import { forEach } from '../r-func';
 
 import { WilcoxonCache } from './WilcoxonCache';
 
@@ -65,7 +65,7 @@ export function pwilcox<T>(
   n = R_forceint(n);
  
 
-  return vectorize(qq)(q => {
+  return forEach(qq)(q => {
     
     const w = new WilcoxonCache();
 

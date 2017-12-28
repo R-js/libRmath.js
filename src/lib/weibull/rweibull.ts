@@ -30,8 +30,8 @@
 import * as debug from 'debug';
 
 import { ML_ERR_return_NAN } from '../common/_general';
-import { IRNG } from '../rng';
 import { possibleScalar } from '../r-func';
+import { IRNG } from '../rng';
 
 const { log, pow } = Math;
 const { isFinite: R_FINITE } = Number;

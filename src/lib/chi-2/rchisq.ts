@@ -38,8 +38,8 @@
 import * as debug from 'debug';
 import { ML_ERR_return_NAN } from '~common';
 
-import { rgamma } from '../gamma/rgamma';
 import { INormal } from '~normal';
+import { rgamma } from '../gamma/rgamma';
 
 const { isFinite: R_FINITE } = Number;
 const printer = debug('rchisq');

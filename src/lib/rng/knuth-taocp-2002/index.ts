@@ -14,9 +14,9 @@
 import * as debug from 'debug';      
 
 
+import { IRNG } from '../irng';
 import { IRNGType } from '../irng-type';
 import { timeseed } from '../timeseed';
-import { IRNG } from '../irng';
 
 import { fixup } from '../fixup';
 

@@ -41,12 +41,11 @@
 
 import * as debug from 'debug';
 
-import { vectorize } from '../r-func';
 import { ML_ERR_return_NAN, R_D__0 } from '../common/_general';
 import { choose, lchoose } from '../common/choose';
-
-import { WilcoxonCache } from './WilcoxonCache';
+import { forEach } from '../r-func';
 import { cwilcox } from './cwilcox';
+import { WilcoxonCache } from './WilcoxonCache';
 
 const { round: R_forceint, abs: fabs, log } = Math;
 const { isNaN: ISNAN } = Number;

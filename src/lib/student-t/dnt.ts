@@ -65,14 +65,14 @@
  */
 import * as debug from 'debug';
 import { 
-  R_D__0, 
+  M_LN_SQRT_PI, 
   ML_ERR_return_NAN, 
-  M_LN_SQRT_PI 
+  R_D__0 
 } from '../common/_general';
 
-import { dt } from './dt';
 import { INormal } from '~normal';
 import { lgammafn } from '../gamma/lgamma_fn';
+import { dt } from './dt';
 import { pnt } from './pnt';
 
 const { isNaN: ISNAN, isFinite: R_FINITE, EPSILON: DBL_EPSILON } = Number;

@@ -47,15 +47,15 @@
 
 import * as debug from 'debug';
 import {
-  M_LN_SQRT_2PI,
-  ML_ERR_return_NAN,
   imax2,
-  imin2
+  imin2,
+  M_LN_SQRT_2PI,
+  ML_ERR_return_NAN
 } from '../common/_general';
 
+import { INormal } from '~normal';
 import { rbinom } from '../binomial/rbinom';
 import { qhyper } from './qhyper';
-import { INormal } from '~normal';
 
 const { log, round: R_forceint, exp, sqrt } = Math;
 const { isFinite: R_FINITE, MAX_SAFE_INTEGER: INT_MAX } = Number;

@@ -52,7 +52,7 @@ const enmten_BESS = 8.9e-308;
 const enten_BESS = 1e308;
 const xlrg_BESS_IJ = 1e5;
 
-import { ML_ERROR, ME } from '../common/_general';
+import { ME, ML_ERROR } from '../common/_general';
 
 import { cospi } from '../trigonometry/cospi';
 import { sinpi } from '../trigonometry/sinpi';
@@ -62,11 +62,11 @@ import { sinpi } from '../trigonometry/sinpi';
 import { Rf_gamma_cody } from '../gamma/gamma_cody';
 
 export interface JBesselProperties {
-  x: number;
   alpha: number;
-  nb: number;
   b: number[];
+  nb: number;
   ncalc: number;
+  x: number;
 }
 
 // unused now from R
@@ -103,12 +103,12 @@ export function bessel_j(x: number, alpha: number): number {
   let ncalc: number;
   let nb: number;
 
-  ({ x, alpha, b: bj, nb, ncalc } = J_bessel({
-    x,
+  ({ alpha, b: bj, nb, ncalc, x } = J_bessel({
     alpha: alpha - floor(alpha),
-    nb: floor(alpha) + 1,
     b: new Array(floor(alpha + 1)).fill(0),
-    ncalc: 0
+    nb: floor(alpha) + 1,
+    ncalc: 0,
+    x
   }));
   if (ncalc !== nb) {
     /* error input */
@@ -164,12 +164,12 @@ export function bessel_j_ex(x: number, alpha: number, bj: number[]): number {
   let nb: number;
   // NOTE: "bj" comes here as a function argument
 
-  ({ x, alpha, b: bj, nb, ncalc } = J_bessel({
-    x,
+  ({ alpha, b: bj, nb, ncalc, x } = J_bessel({
     alpha: alpha - trunc(alpha),
-    nb: trunc(alpha) + 1,
     b: new Array(trunc(alpha) + 1).fill(0),
-    ncalc: 0
+    nb: trunc(alpha) + 1,
+    ncalc: 0,
+    x
   }));
 
   if (ncalc !== nb) {
@@ -279,7 +279,7 @@ function J_bessel(props: JBesselProperties): JBesselProperties {
   // pointer adjusted??
   //--b;
 
-  let { nb, x, ncalc, alpha: nu, b, alpha } = props;
+  let { nb, x, alpha: nu, b, ncalc } = props;
   let twonu = nu + nu;
 
   /*-------------------------------------------------------------------
@@ -291,10 +291,9 @@ function J_bessel(props: JBesselProperties): JBesselProperties {
     ML_ERROR(ME.ME_RANGE, 'J_bessel, alpha out of range', printer_J_bessel);
     b[0] = 0;
     ncalc = min0(nb, 0) - 1;
-    return { x, ncalc, alpha, nb, b };
+    return { alpha: nu, b, nb, ncalc, x };
   }
 
-  ncalc = nb;
   if (x > xlrg_BESS_IJ) {
     ML_ERROR(ME.ME_RANGE, "J_bessel x > 100'000", printer_J_bessel);
     /* indeed, the limit is 0,
@@ -304,7 +303,7 @@ function J_bessel(props: JBesselProperties): JBesselProperties {
       b[i - 1] = 0; //was ML_POSINF (really nonsense)
     }
     printer_J_bessel('return: %o', props);
-    return { x, ncalc, alpha, nb, b };
+    return { alpha: nu, b, nb, ncalc, x };
   }
 
   /* Initialize result array to zero. */
@@ -320,13 +319,13 @@ function J_bessel(props: JBesselProperties): JBesselProperties {
   */
 
   if (x < rtnsig_BESS /* 0.0001 */) {
-    bessel_j_small_x({ x, alpha, b, nb, ncalc });
+    bessel_j_small_x({ alpha: nu, b, nb, ncalc, x });
     printer_J_bessel(
       'small strategy for x, because x[%d] < %d',
       x,
       rtnsig_BESS
     );
-    return bessel_j_small_x({ x, alpha, b, nb, ncalc });
+    return bessel_j_small_x({ alpha: nu, b, nb, ncalc, x });
   }
 
   const intx = trunc(x);
@@ -336,7 +335,7 @@ function J_bessel(props: JBesselProperties): JBesselProperties {
       nb,
       intx + 1
     );
-    return bessel_j_assymptotic_large_x({ x, alpha, b, nb, ncalc });
+    return bessel_j_assymptotic_large_x({ alpha: nu, b, nb, ncalc, x });
   }
   //Evertything else here
 
@@ -605,7 +604,7 @@ function bessel_j_recurrence(props: JBesselProperties): JBesselProperties {
       b[n - 1] /= sum;
     }
   } //for
-  return { x, nb, ncalc, b, alpha };
+  return { alpha, b, nb, ncalc, x };
 }
 
 function bessel_j_assymptotic_large_x(
@@ -690,7 +689,7 @@ function bessel_j_assymptotic_large_x(
 
     if (nb === 1) {
       // end
-      return { x, nb, ncalc, b, alpha };
+      return { alpha, b, nb, ncalc, x };
     }
 
     /* vsin <--> vcos */ t = vsin;
@@ -708,7 +707,7 @@ function bessel_j_assymptotic_large_x(
       b[j - 1] = gnu * b[j - 1 - 1] / x - b[j - 2 - 1];
     }
   }
-  return { x, nb, ncalc, b, alpha };
+  return { alpha, b, nb, ncalc, x };
 }
 
 function bessel_j_small_x(props: JBesselProperties): JBesselProperties {
@@ -754,5 +753,5 @@ function bessel_j_small_x(props: JBesselProperties): JBesselProperties {
       } //for
     } //if (x <= 0)
   } // if (nb !== 1) {
-  return { nb, x, ncalc, b, alpha };
+  return { alpha, b, nb, ncalc, x };
 }

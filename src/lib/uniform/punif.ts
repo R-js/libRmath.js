@@ -28,7 +28,7 @@
 import * as debug from 'debug';
 const printer = debug('punif');
 
-import { ML_ERR_return_NAN, R_DT_1, R_DT_0, R_D_val } from '~common';
+import { ML_ERR_return_NAN, R_D_val, R_DT_0, R_DT_1 } from '../common/_general';
 
 const { isNaN: ISNAN, isFinite: R_FINITE } = Number;
 

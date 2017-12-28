@@ -24,8 +24,8 @@
 */
 
 import * as debug from 'debug';
+import { ML_ERR_return_NAN } from '../common/_general';
 import { IRNG } from '../rng';
-import { ML_ERR_return_NAN } from '~common';
 
 const { isFinite: R_FINITE } = Number;
 const printer = debug('runif');

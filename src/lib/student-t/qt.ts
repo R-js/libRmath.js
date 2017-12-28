@@ -45,24 +45,24 @@
 import * as debug from 'debug';
 
 import {
-  R_Q_P01_boundaries,
-  ML_ERR_return_NAN,
-  ML_ERROR,
-  ME,
-  R_D_qIv,
-  R_D_Lval,
-  R_D_Cval,
+  DBL_MANT_DIG,
   M_1_PI,
   M_PI_2,
-  DBL_MANT_DIG,
-  R_D_log
+  ME,
+  ML_ERR_return_NAN,
+  ML_ERROR,
+  R_D_Cval,
+  R_D_log,
+  R_D_Lval,
+  R_D_qIv,
+  R_Q_P01_boundaries
 } from '../common/_general';
 
-import { R_DT_qIv, R_D_LExp } from '~exp-utils';
-import { pt } from './pt';
+import { R_D_LExp, R_DT_qIv } from '~exp-utils';
 import { INormal } from '~normal';
-import { dt } from './dt';
 import { tanpi } from '../trigonometry/cospi';
+import { dt } from './dt';
+import { pt } from './pt';
 
 const {
   LN2: M_LN2,

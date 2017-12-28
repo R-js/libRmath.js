@@ -34,9 +34,9 @@
 
 import { ML_ERR_return_NAN } from '~common';
 
-import { exp_rand } from './sexp';
-import { IRNG } from '../rng/IRNG';
 import * as debug from 'debug';
+import { IRNG } from '../rng/IRNG';
+import { exp_rand } from './sexp';
 
 const { isFinite: R_FINITE } = Number;
 const printer = debug('rexp');

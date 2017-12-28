@@ -28,16 +28,16 @@
 import * as debug from 'debug';
 
 import {
+  ME,
   ML_ERR_return_NAN,
-  R_Q_P01_boundaries,
   ML_ERROR,
   R_D_qIv,
-  ME
-} from '~common';
+  R_Q_P01_boundaries
+} from '../common/_general';
 
+import { INormal } from '~normal';
 import { qchisq } from '../chi-2/qchisq';
 import { pnchisq_raw } from './pnchisq';
-import { INormal } from '~normal';
 
 const { expm1, min: fmin2 } = Math;
 const {

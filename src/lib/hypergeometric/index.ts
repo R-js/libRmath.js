@@ -12,9 +12,9 @@ export function HyperGeometric(rng: INormal = Normal()) {
   }
 
   return {
-    rhyper,
+    dhyper,
     phyper,
     qhyper,
-    dhyper
+    rhyper
   };
 }

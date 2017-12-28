@@ -39,14 +39,14 @@
  */
 import * as debug from 'debug';
 import {
-  R_D__0,
-  ML_ERR_return_NAN,
-  M_LN_SQRT_2PI,
+  DBL_MANT_DIG,
+  DBL_MIN_EXP,
+  ldexp,
   M_1_SQRT_2PI,
   M_LN2,
-  DBL_MIN_EXP,
-  DBL_MANT_DIG,
-  ldexp
+  M_LN_SQRT_2PI,
+  ML_ERR_return_NAN,
+  R_D__0
 } from '~common';
 
 const {

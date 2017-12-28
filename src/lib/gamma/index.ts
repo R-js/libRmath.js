@@ -1,27 +1,27 @@
 
+import { INormal, Normal } from '../normal';
 import { dgamma } from './dgamma';
-import { qgamma } from './qgamma';
-import { rgamma } from './rgamma';
-import { pgamma } from './pgamma';
 import { gammafn } from './gamma_fn';
 import { lgammafn } from './lgamma_fn';
-import { Normal, INormal } from '../normal';
+import { pgamma } from './pgamma';
 import {
-  pentagamma,
-  tetragamma,
-  trigamma,
   digamma,
-  psigamma
+  pentagamma,
+  psigamma,
+  tetragamma,
+  trigamma
 } from './polygamma';
+import { qgamma } from './qgamma';
+import { rgamma } from './rgamma';
 
 export const special = {
+  digamma,
   gamma:gammafn,
   lgamma:lgammafn,
   pentagamma,
-  tetragamma,
-  trigamma,
-  digamma,
   psigamma,
+  tetragamma,
+  trigamma
 };
 
 export interface IGamma {

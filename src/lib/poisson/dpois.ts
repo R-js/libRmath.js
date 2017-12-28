@@ -40,17 +40,17 @@
 import * as debug from 'debug';
 
 import {
+  ML_ERR_return_NAN,
   R_D__0,
   R_D__1,
-  R_D_fexp,
   R_D_exp,
-  ML_ERR_return_NAN,
+  R_D_fexp,
   R_D_nonint_check
 } from '~common';
 
 import { bd0 } from '~deviance';
-import { lgammafn } from '../gamma/lgamma_fn';
 import { stirlerr } from '~stirling';
+import { lgammafn } from '../gamma/lgamma_fn';
 
 
 const { round: R_forceint, log, PI } = Math;

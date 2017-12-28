@@ -48,10 +48,10 @@ const { max:fmax2, min:fmin2, floor, sqrt} = Math;
 const { isNaN: ISNAN, isFinite: R_FINITE, EPSILON: DBL_EPSILON, } = Number;
 
 
-import { NumberW } from '../common/toms708';
-import { pbinom } from './pbinom';
 import { R_DT_qIv } from '~exp-utils';
 import { INormal } from '~normal';
+import { NumberW } from '../common/toms708';
+import { pbinom } from './pbinom';
 
 
 

@@ -40,7 +40,7 @@
 
 import * as debug from 'debug';
 
-import { M_1_SQRT_2PI, ML_ERR_return_NAN, imin2, imax2 } from '~common';
+import { imax2, imin2, M_1_SQRT_2PI, ML_ERR_return_NAN } from '~common';
 
 import { INormal } from '~normal';
 import { exp_rand } from '../exp/sexp';

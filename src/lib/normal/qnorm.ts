@@ -52,9 +52,9 @@
 
 import * as debug from 'debug';
 
-import { R_Q_P01_boundaries, ML_ERR_return_NAN } from '~common';
+import { ML_ERR_return_NAN, R_Q_P01_boundaries } from '~common';
 
-import { R_DT_qIv, R_DT_CIv } from '~exp-utils';
+import { R_DT_CIv, R_DT_qIv } from '~exp-utils';
 
 const printer = debug('qnorm');
 

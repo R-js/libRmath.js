@@ -33,18 +33,18 @@ import * as debug from 'debug';
 
 import {
   //bessel
-  ensig_BESS,
-  exparg_BESS,
-  xlrg_BESS_IJ,
-  rtnsig_BESS,
-  nsig_BESS,
   enmten_BESS,
+  ensig_BESS,
+  enten_BESS,
+  exparg_BESS,
+  ldexp,
+  ME,
   //other,
   ML_ERROR,
-  ME,
-  enten_BESS,
+  nsig_BESS,
   R_pow_di,
-  ldexp
+  rtnsig_BESS,
+  xlrg_BESS_IJ
 } from '~common';
 const { pow, max: fmax2, sqrt, exp, floor, trunc, min: min0, PI: M_PI } = Math;
 const { isNaN: ISNAN, NaN: ML_NAN, POSITIVE_INFINITY: ML_POSINF } = Number;
@@ -60,8 +60,8 @@ interface IBesselInput {
   ncalc: number; //int
 }
 
-import { bessel_k, bessel_k_ex } from './bessel_k';
 import { sinpi } from '../trigonometry/sinpi';
+import { bessel_k, bessel_k_ex } from './bessel_k';
 
 const printer_bessel_i = debug('bessel_i');
 /** .Internal(besselI(*)) : */

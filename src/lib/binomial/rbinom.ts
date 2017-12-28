@@ -41,8 +41,8 @@
 import * as debug from 'debug';
 import { ML_ERR_return_NAN, R_pow_di } from '~common';
 
-import { qbinom } from './qbinom';
 import { INormal } from '../normal';
+import { qbinom } from './qbinom';
 
 const { log, abs: fabs, sqrt, min: fmin2, round: R_forceint } = Math;
 const { MAX_SAFE_INTEGER: INT_MAX, isFinite: R_FINITE } = Number;

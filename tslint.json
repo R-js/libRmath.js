@@ -1,11 +1,18 @@
 {
     "rules": {
-        "quotemark": [
+        "ordered-imports": [
             true,
-            "single",
-            "jsx-double",
-            "avoid-escape"
+            {
+                "import-sources-order": "case-insensitive",
+                "named-imports-order": "case-insensitive"
+            }
         ],
+        "object-literal-sort-keys": [
+            true,
+            "ignore-case",
+            "match-declaration-order"
+        ],
+        "quotemark": [true, "single", "jsx-double", "avoid-escape"],
         "class-name": true,
         "new-parens": true,
         "variable-name": [
@@ -14,10 +21,7 @@
             "allow-leading-underscore",
             "allow-pascal-case"
         ],
-        "one-variable-per-declaration": [
-            true,
-            "ignore-for-loop"
-        ],
+        "one-variable-per-declaration": [true, "ignore-for-loop"],
         "space-before-function-paren": [
             true,
             {
@@ -28,29 +32,17 @@
                 "constructor": "never"
             }
         ],
-        "object-literal-key-quotes": [
-            true,
-            "as-needed"
-        ],
+        "object-literal-key-quotes": [true, "as-needed"],
         "arrow-parens": false,
         "eofline": true,
-        "linebreak-style": [
-            false,
-            "LF"
-        ],
+        "linebreak-style": [false, "LF"],
         "no-var-keyword": true,
         "switch-default": true,
-        "triple-equals": [
-            true,
-            "allow-null-check"
-        ],
+        "triple-equals": [true, "allow-null-check"],
         //"no-use-before-declare": true,
         //"no-unused-variable": true,
         "no-construct": true,
-        "indent": [
-            true,
-            "spaces"
-        ],
+        "indent": [true, "spaces"],
         "whitespace": [
             true,
             "check-branch",
@@ -59,10 +51,7 @@
             "check-separator",
             "check-module"
         ],
-        "semicolon": [
-            true,
-            "always"
-        ],
+        "semicolon": [true, "always"],
         "typedef-whitespace": [
             true,
             {

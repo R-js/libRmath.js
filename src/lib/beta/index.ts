@@ -16,9 +16,9 @@ import { qbeta as _qbeta } from './qbeta';
 import { qnbeta as _qnbeta } from './qnbeta';
 
 //rbeta
-import { rbeta as _rbeta } from './rbeta';
-import { rnchisq } from '../chi-2/rnchisq';
 import { rchisq } from '../chi-2/rchisq';
+import { rnchisq } from '../chi-2/rnchisq';
+import { rbeta as _rbeta } from './rbeta';
 
 import { INormal, Normal } from '~normal';
 
@@ -92,10 +92,11 @@ function NSbeta(norm: INormal = Normal()) {
   }
 
   return Object.freeze({
-    rbeta,
+   
     dbeta,
+    pbeta,
     qbeta,
-    pbeta
+    rbeta
   });
 }
 

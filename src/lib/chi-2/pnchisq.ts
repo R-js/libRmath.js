@@ -31,23 +31,23 @@
 import * as debug from 'debug';
 
 import {
-  ML_ERR_return_NAN,
+  M_LN_SQRT_2PI,
   ME,
+  ML_ERR_return_NAN,
   ML_ERROR,
   R_D__1,
   R_D_exp,
   R_DT_0,
-  R_DT_1,
-  M_LN_SQRT_2PI
-} from '~common';
+  R_DT_1
+} from '../common/_general';
 
 
-import { R_DT_val } from '../common/_general';
 import { R_Log1_Exp } from '~exp-utils';
+import { INormal } from '~normal';
+import { R_DT_val } from '../common/_general';
 import { lgammafn } from '../gamma/lgamma_fn';
 import { logspace_add } from '../gamma/logspace-add';
 import { pchisq } from './pchisq';
-import { INormal } from '~normal';
 
 const { 
   sqrt, 

@@ -51,7 +51,7 @@
 */
 
 import * as debug from 'debug';
-import { ML_ERR_return_NAN, R_DT_0, R_DT_1, R_D_Lval } from '~common';
+import { ML_ERR_return_NAN, R_D_Lval, R_DT_0, R_DT_1 } from '~common';
 import { R_DT_log } from '~exp-utils';
 import { dhyper } from './dhyper';
 

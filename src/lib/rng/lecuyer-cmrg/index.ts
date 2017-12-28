@@ -3,10 +3,10 @@
 const { trunc } = Math;
 const frac = (x: number) => x - trunc(x);
 
+import { fixup } from '../fixup';
+import { IRNG } from '../irng';
 import { IRNGType } from '../irng-type';
 import { timeseed } from '../timeseed';
-import { IRNG } from '../irng';
-import { fixup } from '../fixup';
 
 const SEED_LEN = 6;
 const a12 = 1403580; //least 64 bits

@@ -30,14 +30,14 @@
 import * as debug from 'debug';
 
 import {
-  M_SQRT_2dPI,
-  thresh_BESS_Y,
-  ML_ERROR,
-  ME,
   M_1_PI,
+  M_eps_sinc,
   M_PI_2,
-  xlrg_BESS_Y,
-  M_eps_sinc
+  M_SQRT_2dPI,
+  ME,
+  ML_ERROR,
+  thresh_BESS_Y,
+  xlrg_BESS_Y
 } from '~common';
 
 const { min: min0, PI: M_PI } = Math;
@@ -51,8 +51,8 @@ const {
   EPSILON:DBL_EPSILON
 } = Number;
 
-import { bessel_j_ex, bessel_j } from './bessel_j';
 import { cospi, sinpi } from '~trigonometry';
+import { bessel_j, bessel_j_ex } from './bessel_j';
 
 const { cos, pow, sin, floor, trunc, abs: fabs, sqrt, log } = Math;
 

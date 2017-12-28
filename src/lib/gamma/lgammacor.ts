@@ -49,8 +49,8 @@
  *    is faster and cleaner, but is only defined "fast" for half integers.
  */
 import * as debug from 'debug';
-import { ME, ML_ERROR, ML_ERR_return_NAN } from '~common';
 import { chebyshev_eval } from '../chebyshev/chebyshev';
+import { ME, ML_ERR_return_NAN, ML_ERROR } from '../common/_general';
 
 const printer = debug('lgammacor');
 

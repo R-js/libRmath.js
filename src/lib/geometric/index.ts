@@ -1,8 +1,8 @@
+import { INormal, Normal } from '../normal';
 import { dgeom  } from './dgeom';
 import { pgeom  } from './pgeom';
 import { qgeom } from './qgeom';
 import { rgeom as _rgeom } from './rgeom';
-import { INormal, Normal } from '../normal';
 
 export function Geometric(rng: INormal = Normal()){
     return {

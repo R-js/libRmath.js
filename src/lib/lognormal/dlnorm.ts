@@ -28,10 +28,10 @@
  */
 
 import {
-  ML_ERR_return_NAN,
-  R_D__0,
+  M_1_SQRT_2PI,
   M_LN_SQRT_2PI,
-  M_1_SQRT_2PI
+  ML_ERR_return_NAN,
+  R_D__0
 } from '../common/_general';
 
 import * as debug from 'debug';

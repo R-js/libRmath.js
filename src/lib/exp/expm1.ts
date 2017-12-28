@@ -44,10 +44,10 @@
 
 import {
   M_LN2,
+  R_D_Cval,
   R_D_log,
-  R_D_Lval,
-  R_D_Cval
-} from '~common';
+  R_D_Lval
+} from '../common/_general';
 
 //import { log1p } from '~log';
 

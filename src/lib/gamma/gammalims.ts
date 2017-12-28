@@ -42,10 +42,10 @@
  import * as debug from 'debug';
 
 import {
-    Rf_d1mach as d1mach,
+    ME,
     ML_ERROR,
-    ME
-} from '~common';
+    Rf_d1mach as d1mach
+} from '../common/_general';
 
 const { max:fmax2, log, abs:fabs } = Math;
 const {NaN:ML_NAN } = Number;

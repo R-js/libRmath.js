@@ -45,10 +45,10 @@ import * as debug from 'debug';
 
 import {
   ML_ERR_return_NAN,
-  R_D_nonint_check,
   R_D__0,
   R_D__1,
-  R_D_exp
+  R_D_exp,
+  R_D_nonint_check
 } from '~common';
 
 import { dbinom_raw } from '../binomial/dbinom';

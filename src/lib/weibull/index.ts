@@ -11,9 +11,9 @@ export function Weibull(rng: IRNG = new _rng.SuperDuper(0)) {
   }
 
   return {
-    rweibull,
     dweibull,
     pweibull,
-    qweibull
+    qweibull,
+    rweibull
   };
 }

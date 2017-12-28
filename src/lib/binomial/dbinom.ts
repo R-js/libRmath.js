@@ -52,12 +52,12 @@ import { bd0 } from '~deviance';
 import { stirlerr } from '~stirling';
 
 import {
-  ML_ERR_return_NAN,
   M_LN_2PI,
-  R_D_negInonint,
+  ML_ERR_return_NAN,
   R_D__0,
-  R_D_exp,
   R_D__1,
+  R_D_exp,
+  R_D_negInonint,
   R_D_nonint_check
 } from '~common';
 

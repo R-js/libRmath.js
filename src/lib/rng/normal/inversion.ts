@@ -47,9 +47,9 @@
 
 /*-----------------------------------------------------------*/
 
-import { IRNGNormal } from './inormal-rng';
 import { IRNG } from '../';
 import { qnorm } from '../../normal/qnorm';
+import { IRNGNormal } from './inormal-rng';
 
 const BIG = 134217728; /* 2^27 */
 

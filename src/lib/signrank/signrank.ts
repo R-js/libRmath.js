@@ -41,16 +41,16 @@
 import * as debug from 'debug';
 
 import {
+  imin2,
   ML_ERR_return_NAN,
   R_D__0,
   R_D_exp,
   R_DT_0,
   R_DT_1,
-  R_Q_P01_check,
-  imin2
-} from '~common';
+  R_DT_val,
+  R_Q_P01_check
+} from '../common/_general';
 
-import { R_DT_val } from '../common/_general';
 import { R_DT_qIv } from '~exp-utils';
 
 import { IRNG } from '../rng';

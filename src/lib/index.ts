@@ -28,10 +28,10 @@ export { Wilcoxon } from './wilcoxon';
 /*
   Class of Special functions collected here.  
 */
-import { special as betaSpecial } from '~beta';
-import { special as gammaSpecial } from '~gamma';
-import { special as chooseSpecial } from '~common';
 import { special as besselSpecial } from '~bessel';
+import { special as betaSpecial } from '~beta';
+import { special as chooseSpecial } from '~common';
+import { special as gammaSpecial } from '~gamma';
 
 export const special = Object.freeze({
   ...gammaSpecial,
@@ -41,13 +41,13 @@ export const special = Object.freeze({
 });
 
 import {
-  vectorize,
-  selector,
-  seq,
-  flatten,
   arrayrify,
+  flatten,
   forceToArray,
-  possibleScalar
+  forEach,
+  possibleScalar,
+  selector,
+  seq
 } from '~R';
 
 export const R = {
@@ -56,5 +56,5 @@ export const R = {
   flatten,
   arrayrify,
   forceToArray,
-  vectorize
+  forEach
 };

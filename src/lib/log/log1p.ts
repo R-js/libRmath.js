@@ -59,7 +59,7 @@ const {
   isFinite: R_FINITE
 } = Number;
 
-import { ML_ERR_return_NAN, ML_ERROR, ME, R_D_val } from '~common';
+import { ME, ML_ERR_return_NAN, ML_ERROR, R_D_val } from '../common/_general';
 
 //import { chebyshev_eval } from '~chebyshev';
 

@@ -42,16 +42,16 @@
  
 import * as debug from 'debug';
 
-import { WilcoxonCache } from './WilcoxonCache';
-import { cwilcox } from './cwilcox';
 import { R_DT_qIv } from '~exp-utils';
-import { vectorize } from '../r-func';
 import {
   ML_ERR_return_NAN,
-  R_Q_P01_check,
   R_DT_0,
-  R_DT_1
+  R_DT_1,
+  R_Q_P01_check
 } from '../common/_general';
+import { forEach } from '../r-func';
+import { cwilcox } from './cwilcox';
+import { WilcoxonCache } from './WilcoxonCache';
 
 import { choose } from '../common/choose';
 
@@ -71,7 +71,7 @@ export function qwilcox<T>(
   n = R_forceint(n);
   const w = new WilcoxonCache();
 
-  return vectorize(xx)(x => {
+  return forEach(xx)(x => {
     if (ISNAN(x) || ISNAN(m) || ISNAN(n)) return x + m + n;
     if (!R_FINITE(x) || !R_FINITE(m) || !R_FINITE(n))
       return ML_ERR_return_NAN(printer_qwilcox);

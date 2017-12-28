@@ -70,16 +70,16 @@ import {
   R_D__0,
   R_D__1,
   R_D_exp,
-  R_P_bounds_01,
   R_DT_0,
-  R_DT_1
+  R_DT_1,
+  R_P_bounds_01
 } from '~common';
 
-import { lgammafn } from './lgamma_fn';
 import { R_Log1_Exp } from '~exp-utils';
-import { dpois_raw } from '../poisson/dpois';
-import { logspace_add } from './logspace-add';
 import { INormal } from '~normal';
+import { dpois_raw } from '../poisson/dpois';
+import { lgammafn } from './lgamma_fn';
+import { logspace_add } from './logspace-add';
 
 const {
   LN2:M_LN2,

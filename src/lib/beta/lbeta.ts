@@ -39,11 +39,11 @@
  */
 import * as debug from 'debug';
 
-import { ML_ERR_return_NAN, M_LN_SQRT_2PI } from '~common';
+import { M_LN_SQRT_2PI, ML_ERR_return_NAN } from '~common';
 
-import { lgammacor } from '../gamma/lgammacor';
-import { lgammafn } from '../gamma/lgamma_fn';
 import { gammafn } from '../gamma/gamma_fn';
+import { lgammafn } from '../gamma/lgamma_fn';
+import { lgammacor } from '../gamma/lgammacor';
 
 const { log, log1p } = Math;
 

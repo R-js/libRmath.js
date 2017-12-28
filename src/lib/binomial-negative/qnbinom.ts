@@ -47,13 +47,13 @@
 
 import * as debug from 'debug';
 
-import { ML_ERR_return_NAN, R_Q_P01_boundaries, R_DT_0, R_DT_1 } from '~common';
+import { ML_ERR_return_NAN, R_DT_0, R_DT_1, R_Q_P01_boundaries } from '../common/_general';
 
 import { NumberW } from '../common/toms708';
 
-import { pnbinom } from './pnbinom';
 import { R_DT_qIv } from '~exp-utils';
 import { INormal } from '~normal';
+import { pnbinom } from './pnbinom';
 
 const {
   isNaN: ISNAN,

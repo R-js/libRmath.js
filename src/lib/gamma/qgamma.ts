@@ -46,14 +46,14 @@
 import * as debug from 'debug';
 
 import {
-  R_Q_P01_check,
-  ML_ERR_return_NAN,
   M_LN2,
+  ML_ERR_return_NAN,
+  R_D__0,
   R_Q_P01_boundaries,
-  R_D__0
-} from '~common';
+  R_Q_P01_check
+} from '../common/_general';
 
-import { R_DT_log, R_DT_Clog, R_DT_qIv } from '~exp-utils';
+import { R_DT_Clog, R_DT_log, R_DT_qIv } from '~exp-utils';
 
 import { dgamma } from '../gamma/dgamma';
 import { lgammafn } from '../gamma/lgamma_fn';

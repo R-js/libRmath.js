@@ -55,14 +55,14 @@ import * as debug from 'debug';
 const { isFinite: R_FINITE, EPSILON: DBL_EPSILON } = Number;
 const { sqrt, exp, pow, log } = Math;
 import {
-  ML_ERR_return_NAN,
-  R_DT_0,
-  R_DT_1,
   DBL_MIN_EXP,
-  ML_ERROR,
-  ME,
+  M_LN_SQRT_PI,
   M_SQRT_2dPI,
-  M_LN_SQRT_PI
+  ME,
+  ML_ERR_return_NAN,
+  ML_ERROR,
+  R_DT_0,
+  R_DT_1
 } from '~common';
 
 import { pt } from './pt';

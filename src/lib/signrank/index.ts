@@ -1,11 +1,11 @@
 //export { fsign } from './fsign';
+import { IRNG, rng } from '../rng';
 import {
   dsignrank,
   psignrank,
   qsignrank,
   rsignrank as _rsignrank
 } from './signrank';
-import { IRNG, rng } from '../rng';
 
 const { SuperDuper } = rng;
 
@@ -15,10 +15,9 @@ export function SignRank(rng: IRNG = new SuperDuper(0)) {
   }
 
   return {
-    rsignrank,
     dsignrank,
+    psignrank,
     qsignrank,
-    psignrank
-
+    rsignrank
   };
 }

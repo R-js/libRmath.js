@@ -56,7 +56,7 @@ export function FDist(rng: INormal = Normal()) {
   return {
     df,
     pf,
-    rf,
-    qf
+    qf,
+    rf
   };
 }
