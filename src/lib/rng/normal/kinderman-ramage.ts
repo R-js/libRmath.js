@@ -48,6 +48,7 @@
 /*-----------------------------------------------------------*/
 
 import { IRNG } from '../';
+import { MersenneTwister } from '../mersenne-twister';
 import { IRNGNormal } from './inormal-rng';
 
 const { exp, log, sqrt, max: fmax2, min: fmin2, abs: fabs } = Math;
@@ -64,7 +65,7 @@ const C2 = 0.180025191068563;
      *    JASA 71, 893-896.
      */
 export class KindermanRamage extends IRNGNormal {
-  constructor(_rng: IRNG) {
+  constructor(_rng: IRNG  = new MersenneTwister(0) ) {
     super(_rng);
   }
 

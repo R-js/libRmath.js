@@ -88,7 +88,7 @@
         "wilcoxon rank sum statistic distribution"
     ],
     "license": "GPL-3.0",
-    "main": "./dist/lib/libR.js",
+    "main": "dist/lib/libR.js",
     "module:disabled": "",
     "module:doc": "https://github.com/dherman/defense-of-dot-js/blob/master/proposal.md",
     "name": "lib-r-math.js",

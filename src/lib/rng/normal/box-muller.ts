@@ -48,6 +48,7 @@
 /*-----------------------------------------------------------*/
 
 import { IRNG } from '../';
+import { MersenneTwister } from '../mersenne-twister';
 import { IRNGNormal } from './inormal-rng';
 
 const { log, sqrt, min: fmin2, max: fmax2, abs: fabs, exp, cos, sin } = Math;
@@ -62,7 +63,7 @@ export class BoxMuller extends IRNGNormal {
     this.BM_norm_keep = 0;
   }
 
-  constructor(_rng: IRNG) {
+  constructor(_rng: IRNG = new MersenneTwister(0) ) {
     super(_rng);
     this.BM_norm_keep = 0;
     _rng.register('INIT', this.reset.bind(this));

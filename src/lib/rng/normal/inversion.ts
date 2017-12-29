@@ -49,13 +49,14 @@
 
 import { IRNG } from '../';
 import { qnorm } from '../../normal/qnorm';
+import { MersenneTwister } from '../mersenne-twister';
 import { IRNGNormal } from './inormal-rng';
 
 const BIG = 134217728; /* 2^27 */
 
 const { isArray } = Array;
 export class Inversion extends IRNGNormal {
-  constructor(_rng: IRNG) {
+  constructor(_rng: IRNG  = new MersenneTwister(0) ) {
     super(_rng);
   }
 

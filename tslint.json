@@ -7,11 +7,6 @@
                 "named-imports-order": "case-insensitive"
             }
         ],
-        "object-literal-sort-keys": [
-            true,
-            "ignore-case",
-            "match-declaration-order"
-        ],
         "quotemark": [true, "single", "jsx-double", "avoid-escape"],
         "class-name": true,
         "new-parens": true,

@@ -6,29 +6,9 @@ import { qunif } from './qunif';
 import { runif } from './runif';
 
 import { IRNG, rng } from '../rng';
-const { SuperDuper } = rng;
+const { MersenneTwister } = rng;
 
-export interface IUniform {
-  dunif: (
-    x: number | number[],
-    a: number,
-    b: number,
-    giveLog: boolean
-  ) => number | number[];
-  runif: ( n: number,
-    a: number,
-    b: number
-  ) => number | number[];
-  punif: (
-    x: number | number[],
-    a: number,
-    b: number,
-    lower_tail: boolean,
-    log_p: boolean
-  ) => number | number[];
-}
-
-export function Uniform(rng: IRNG = new SuperDuper(0)) {
+export function Uniform(rng: IRNG = new MersenneTwister(0)) {
   return {
     dunif,
     punif,
