@@ -298,7 +298,7 @@ All uniform random generator export the same functions:
 2. `seed (read/write property)`: get/set the current seed values as an array.
 3. `unif_random`: get a random value, same as `runif(1)` in R
 
-#### "Mersenne Twister".
+#### "Mersenne Twister"
 
 From Matsumoto and Nishimura (1998). A twisted GFSR with period `2^19937 - 1`
 and equi-distribution in 623 consecutive dimensions (over the whole period). The
@@ -389,7 +389,7 @@ _in R console_:
 [5] 0.3375606
 ```
 
-#### "Marsaglia-Multicarry":
+#### "Marsaglia-Multicarry"
 
 A multiply-with-carry RNG is used, as recommended by George Marsaglia in his
 post to the mailing list ‘sci.stat.math’. It has a period of more than 2^60 and
@@ -429,7 +429,7 @@ _in R console_:
 [5] 0.4576562
 ```
 
-#### "Super Duper":
+#### "Super Duper"
 
 Marsaglia's famous Super-Duper from the 70's. This is the original version which
 does not pass the `MTUPLE` test of the `Diehard` battery. It has a period of about
@@ -472,7 +472,7 @@ _in R console_:
 [5] 0.2679058
 ```
 
-#### "Knuth TAOCP":
+#### "Knuth TAOCP"
 
 An earlier version from Knuth (1997).
 
@@ -517,7 +517,7 @@ _in R console_:
 [1] 0.6274008 0.3541867 0.9898934 0.8624081 0.6622992
 ```
 
-#### "Knuth TAOCP 2002":
+#### "Knuth TAOCP 2002"
 
 A 32-bit integer GFSR using lagged Fibonacci sequences with subtraction. That
 is, the recurrence used is
@@ -914,11 +914,13 @@ random numbers with a particular distribution (like `Uniform`, `Normal`, `Gamma`
 _It is also possible to provide your own uniform random source (example: real
 random numbers fetched from services over the net). It is straightforward to create new PNRG (either uniform or normal). Review existing PRNG codes for examples.
 
-#### Uniform distribution
+### Uniform distribution
 
 `dunif, qunif, punif, runif`
 
 [_Naming follows exactly their R counter part_](http://stat.ethz.ch/R-manual/R-patched/library/stats/html/Uniform.html)
+
+These functions are created with the factory method `Uniform` taking as argument a uniform PRNG (defaults to (Mersenne-Twister)[#mersenne-twister]).
 
 Usage:
 
@@ -926,22 +928,39 @@ Usage:
 const libR = require('lib-r-math.js');
 
 // get the suite of functions working with uniform distributions
-const { uniform } = libR;
-
-// prepare PRNG
+const { Uniform, rng } = libR;
 const { SuperDuper } = libR.rng;
 
-// initialize PRNG with seed (`0` and `1234`) and create R instance of uniform functions working with this PRNG
-const Runif = uniform(new SuperDuper(0));
-const Runif2 = uniform(new SuperDuper(1234));
+//Create Uniform family of functions using "SuperDuper"
+const uni1 = Uniform(new SuperDuper(0));
 
-// for documentation purpose we strip R uniform equivalents
-const { runif, dunif, punif, qunif } = Runif;
+// Create Uniform family of functions using default "Mersenne-Twister"
+const uni2 = Uniform();
 
-// Get 15 uniformly distributed numbers between 0 and 1
-runif(15);
+// functions exactly named as in `R`
+const { runif, dunif, punif, qunif } = uni2;
+```
 
-// Get 5 uniformly distributed numbers between 4 and 9
+#### `dunif`
+
+_decl:_
+
+```typescript
+function dunif(
+  x: number | number[],
+  a: number = 0,
+  b: number = 1,
+  giveLog: boolean = false
+): number|number[]
+```
+
+Example:
+
+```javascript
+const libR = require('lib-r-math.js');
+
+const uni = libR.Uniform();// use default Mersenne-Twister PRNG
+
 runif(5, 4, 9);
 
 // get the envelope of the uniform distributions

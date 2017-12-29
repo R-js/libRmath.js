@@ -1,4 +1,4 @@
-const libR = require('../../dist/lib/libR');
+const libR = require('../dist/lib/libR.js');
 // Possible to arbitraty uniform PRNG source (example: SuperDuper)
 const sd = new libR.rng.SuperDuper(0);
 const bkm1 = new libR.rng.normal.BuggyKindermanRamage(sd);

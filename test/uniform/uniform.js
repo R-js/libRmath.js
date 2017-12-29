@@ -1,35 +1,27 @@
-const libR = require('../../dist/lib/libR');
+const libR = require('../dist/lib/libR.js');
 
-const { rng, uniform } = libR;
+const { rng, Uniform } = libR;
 
 // select specific PRNG to use with uniform
-const uni1 = uniform(new rng.SuperDuper(0));
+const uni1 = Uniform(new rng.SuperDuper(0));
 
 // default will be "new rng.MersenneTwister(0)"
-const uni2 = uniform(); // d
+const { dunif, punif, qunif, runif } = uni1;
 
-const ad1 = new libR.rng.normal.AhrensDieter(sd);
-// At any time reset normal PRNG seed, with the reference to uniform PRNG
-sd.init(0);
+dunif(0, -1, 1, false);
 
-// uses default: new MersenneTwister(0)
-const ad2 = new libR.rng.normal.AhrensDieter();
+dunif([NaN, -Infinity, Infinity, -1, 0, 0.5, 1, 2]);
 
-// reference to uniform PRNG under rng property
-ad2.rng.init(0);
-// bleed the normal PRNG 
-new Array(5).fill('').map(() => ad2.norm_rand());
-/*
-[
-  -1.1761675317838745,
-  0.674117731642815,
-  1.0641435248508742,
-  -0.1438972977736321,
-  -1.2311497987786715
-]
-*/
-// its possible to bleed the uniform PRNG from the normal PRNG
-ad2.unif_rand();
-//0.2016819310374558
-ad2.rng.unif_rand();
-//0.8983896849676967
+dunif([0, 1, 2], -2, 2);
+
+dunif([0, 1, 2], -2, 2, true);
+
+punif(0.5);
+
+punif([-Infinity, 0, 0.5, 1, Infinity]);
+
+punif([-Infinity, 0, 0.5, 1, Infinity], false);
+
+punif([-0.5, 0.5], -1, 1);
+
+punif([-0.5, 0.5], -1, 1, log);
