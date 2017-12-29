@@ -26,44 +26,242 @@ npm install --save lib-r-math.js
 ```
 
 # Table of Contents
-- [Some usefull functions for porting R to Javascript](#some-usefull-functions-for-porting-r-to-javascript)
-  -[seq](#seq)
-  -[]
-- [Uniform Pseudo Random Number Generators](#uniform-pseudo-random-number-generators)
-- [Normal Random Number Generators](#normal-distributed-random-number-generators)
-- [Uniform probability distribution](#uniform-probability-distribution)
-- [Normal distribution](#normal-distribution)
-- [Other Probability Distributions](#probability-distributions)
-  - [Beta distribution](#beta-distribution)
-  - [Binomial distribution](#binomial-distribution) 
-  - [Negative Binomial distribution](#negative-binomial-distribution)
-  - [Cauchy distribution](#cauchy-distribution)
-  - [Χ<sup>2</sup> distribution](#Χ<sup>2</sup>-distribution)
-  - [Exponential distribution](#exponential-distribution)
-  - [F distribution](#f-distribution)
-  - [Gamma distribution](#gamma-distribution)
-  - [Geometric distribution](#geometric-distribution)
-  - [Hypergeometric distribution](#hypergeometric-distribution)
-  - [Logistic distribution](#logistic-distribution)
-  - [LogNormal distribution](#lognormal-distribution)
-  - [Multinomial distribution](#multinomial-distribution)
-  - [Poisson distribution](#poisson-distribution)
-  - [Wilcoxon signed rank statistic distribution](#wilcoxon-signed-rank-statistic-distribution)
-  - [Student's t-distribution](#student's-t-distribution)
-  - [Studentized Range (_Tukey_) Distribution](#studentized-range-distribution)
-  - [Weibull Distribution](#weibull-distribution)
-  - [Wilcoxon rank sum statistic distribution](#wilcoxon-rank-sum-statistic-distribution)
-- [Special Functions of Mathematics](#special-functions-of-mathematics)
-  - [Bessel functions](#bessel-functions)
-  - [Beta functions](#beta-functions)
-  - [Gamma functions](#gamma-functions)
-  - [Functions for working with Combinatorics](#functions-for-working-with-combinatorics)
-- [Road map](#road-map)
 
+* [Helper functions for porting R](#helper-functions-for-porting-r)
+* [Uniform Pseudo Random Number Generators](#uniform-pseudo-random-number-generators)
+* [Normal Random Number Generators](#normal-distributed-random-number-generators)
+* [Uniform probability distribution](#uniform-probability-distribution)
+* [Normal distribution](#normal-distribution)
+* [Other Probability Distributions](#probability-distributions)
+  * [Beta distribution](#beta-distribution)
+  * [Binomial distribution](#binomial-distribution)
+  * [Negative Binomial distribution](#negative-binomial-distribution)
+  * [Cauchy distribution](#cauchy-distribution)
+  * [Χ<sup>2</sup> distribution](#Χ<sup>2</sup>-distribution)
+  * [Exponential distribution](#exponential-distribution)
+  * [F distribution](#f-distribution)
+  * [Gamma distribution](#gamma-distribution)
+  * [Geometric distribution](#geometric-distribution)
+  * [Hypergeometric distribution](#hypergeometric-distribution)
+  * [Logistic distribution](#logistic-distribution)
+  * [LogNormal distribution](#lognormal-distribution)
+  * [Multinomial distribution](#multinomial-distribution)
+  * [Poisson distribution](#poisson-distribution)
+  * [Wilcoxon signed rank statistic distribution](#wilcoxon-signed-rank-statistic-distribution)
+  * [Student's t-distribution](#student's-t-distribution)
+  * [Studentized Range (_Tukey_) Distribution](#studentized-range-distribution)
+  * [Weibull Distribution](#weibull-distribution)
+  * [Wilcoxon rank sum statistic distribution](#wilcoxon-rank-sum-statistic-distribution)
+* [Special Functions of Mathematics](#special-functions-of-mathematics)
+  * [Bessel functions](#bessel-functions)
+  * [Beta functions](#beta-functions)
+  * [Gamma functions](#gamma-functions)
+  * [Functions for working with Combinatorics](#functions-for-working-with-combinatorics)
+* [Road map](#road-map)
 
-# Some usefull functions for porting R to javascript
+# Helper functions for porting `R`.
 
+#### Summary
 
+R language operators and functions can work `vectors` and `list`.
+These Javascript helper functions are used to make the porting process to ES6 easier for R programmers.
+
+### `arrayrify`
+
+Wraps an existing function for it to accept the first argument as a scalar or vectorized input.
+
+_Note: Only the first function argument is vectorized_
+
+_decl:_
+
+```typescript
+function arrayrify<T, R>(fn: (x: T, ...rest: any[]) => R);
+```
+
+trivial R list example
+
+```R
+# R console
+# devide each vector element by 5
+> c(1,2,3,4)/5
+[1] 0.2 0.4 0.6 0.8
+```
+
+Javascript equivalent
+
+```javascript
+ const libR = require('lib-r-math.js');
+ const { arrayrify } = libR.R;
+
+ // create vectorize "/" operator
+ const div = arrayrify( (a, b) => a / b ) );
+
+ div(3, 4); //0.75
+ // Note: only the first function argument can be a vector
+ div([3, 4, 5], 4); //[ 0.75, 1, 1.25 ]
+```
+
+### `flatten`
+
+Recursively flatten all arguments (some possible arrays with possible nested arrays) into one array.
+
+_decl:_
+
+```typescript
+function flatten<T>(...rest: (T | T[])[]): T[];
+```
+
+Example:
+
+```javascript
+const libR = require('lib-r-math.js');
+const { flatten } = libR.R;
+
+flatten(-1, 0, [1], 'r', 'b', [2, 3, [4, 5]]);
+// [ -1, 0, 1, 'r', 'b', 2, 3, 4, 5 ]
+```
+
+### `forceToArray`
+
+Return the first argument wrapped in an array. If it is already an array just return the reference to the array.
+
+_decl:_
+
+```typescript
+function forceToArray<T>(x: T | T[]): T[];
+```
+
+Example:
+
+```javascript
+const libR = require('lib-r-math.js');
+const { forceToArray } = libR.R;
+
+forceToArray(3);
+//[3]
+forceToAray([4, 5]);
+//[4,5]
+```
+
+### `forEach`
+
+Functional analog to `Array.prototype.forEach`, but also takes **non-array** arguments. The return type can be either an new array or a scalar (see `Example`)
+
+_decl:_
+
+```typescript
+function forEach<T>(xx: T): { (fn: (x: number) => number): number | number[] };
+```
+
+Example:
+
+```javascript
+const libR = require('lib-r-math.js');
+const { forEach } = libR.R;
+
+forEach(11)(v => v * 2);
+//22
+
+// single element array result are forced to scalar
+forEach([3])(v => v * 2);
+//6
+
+forEach([11, 12])(v => v * 2);
+// [22, 24]
+```
+
+### `selector`
+
+Filter function generator, to be used with `Array.prototype.filter` to pick elements based on their order (zero based index) in the array.
+Usually used together with `seq` to pick items from an array.
+
+**NOTE:** Always returns an instance of Array.
+
+_decl:_
+
+```typescript
+function selector(
+  indexes: number | number[]
+): { (val: any, index: number): boolean };
+```
+
+Example:
+
+```javascript
+const libR = require('lib-r-math.js');
+const { selector } = libR.R;
+
+['an', 'array', 'with', 'some', 'elements'].filter(
+  selector([0, 2, 3]) // select values at these indexes
+);
+//[ 'an', 'with', 'some']
+
+['an', 'array', 'with', 'some', 'elements'].filter(
+  selector(3) // just one value at postion 3
+);
+//['some']
+const seq = libR.R.seq()(); // see "seq" for defaults.
+
+[7, 1, 2, 9, 4, 8, 16].filter(
+  selector(
+    seq(0, 6, 2) // creates an array [ 0, 2, 4, 6]
+  )
+);
+// returns [7, 2, 4, 16]
+```
+
+### `seq`
+
+_decl:_
+
+```typescript
+const seq = (adjust = 0) => (adjustMin = adjust) => (
+  start: number,
+  end: number,
+  step?: number
+) => number[];
+```
+
+R analog to the `seq` function in R. Generates an array between `start` and `end` (inclusive) using `step` (defaults to `1`). This function ignores the entered **sign** of the
+`step` argument and only looks at its absolute value.
+
+If `(end-start)/step` is not an exact integer, `seq` will not overstep the bounds while counting up (or down).
+
+* `adjust`: If `end` >= `start` then `adjust` value is added to every element in the array.
+* `adjustMin`: if `start` >= `end` then `adjustMin` value is added to every element in the array.
+
+First we look how `seq` works in R.
+
+_R analog ( R Console):_
+
+```R
+> seq(1,3,0.5)
+[1] 1.0 1.5 2.0 2.5 3.0
+
+> seq(7,-2, -1.3)
+[1]  7.0  5.7  4.4  3.1  1.8  0.5 -0.8
+```
+
+Using `lib-r-math.js`:
+
+```javascript
+const libR = require('lib-r-math.js');
+const seqGenerator = libR.R.seq;
+
+let seqA = seqGenerator()();
+
+seqA(1, 5);
+//[ 1, 2, 3, 4, 5 ]
+seqA(5, -3);
+//[ 5, 4, 3, 2, 1, 0, -1, -2, -3 ]
+
+let seqB = seqGenerator(1)(-2);
+
+seqB(0, 4); //range will be adjusted with '1'
+//[ 1, 2, 3, 4]
+seqB(6, 5, 0.3); //range will be adjusted with '-2', step
+//[ 4, 4.7, 4.4, 4.1 ]  will not overstep boundery '4'
+```
 
 # Uniform Pseudo Random Number Generators.
 
@@ -146,7 +344,7 @@ mt.unif_rand();
 //0.5728533633518964
 mt.unif_rand();
 //0.9082077899947762
-```
+````
 
 _in R console_:
 
@@ -160,10 +358,8 @@ _in R console_:
 
 #### "Wichmann-Hill".
 
-The seed, is an integer vector of length 3, where each element is in `1:(p[i] -
-1)`, where p is the length 3 vector of primes, `p = (30269, 30307, 30323)`. The
-`Wichmann–Hill` generator has a cycle length of `6.9536e12 = ( 30269 * 30307 *
-30323 )`, see Applied Statistics (1984) 33, 123 which corrects the original
+The seed, is an integer vector of length 3, where each element is in `1:(p[i] - 1)`, where p is the length 3 vector of primes, `p = (30269, 30307, 30323)`. The
+`Wichmann–Hill` generator has a cycle length of `6.9536e12 = ( 30269 * 30307 * 30323 )`, see Applied Statistics (1984) 33, 123 which corrects the original
 article).
 
 usage example:
@@ -550,10 +746,11 @@ _in R console_
  [1] -0.649928441 -0.789697017 -1.562348704  0.951090934
  [5] -0.133362358  1.180379344 -1.323692331  0.244831276
  [9]  0.818515265 -0.005867987
-> 
+>
 ```
 
 #### Buggy Kinderman Ramage
+
 Kinderman, A. J. and Ramage, J. G. (1976) Computer generation of normal random variables. Journal of the American Statistical Association 71, 893-896.
 
 The Kinderman-Ramage generator used in versions prior to 1.7.0 (now called "Buggy") had several approximation errors and should only be used for reproduction of old results.
@@ -564,14 +761,14 @@ example usage:
 const libR = require('lib-r-math.js');
 // use "super duper" as a source
 const superDuper = new libR.rng.SuperDuper(0);
-const bkr = new libR.rng.normal.BuggyKindermanRamage( superDuper );
+const bkr = new libR.rng.normal.BuggyKindermanRamage(superDuper);
 
- bkr.norm_rand()
+bkr.norm_rand();
 //0.7027315285336992
-  
-superDuper.init(0);// re-initialize seeds
+
+superDuper.init(0); // re-initialize seeds
 // fetch 10 samples
-const samples10 = new Array(10).fill(0).map(()=> bkr.norm_rand());
+const samples10 = new Array(10).fill(0).map(() => bkr.norm_rand());
 /*[ 0.7027315285336992,
   -0.7648617333751202,
   -0.4501248829623014,
@@ -592,10 +789,11 @@ const samples10 = new Array(10).fill(0).map(()=> bkr.norm_rand());
  [1]  0.7027315 -0.7648617 -0.4501249 -0.1401490
  [5] -2.3594652 -0.1851717  1.0527093 -0.2219719
  [9]  0.2097885 -0.6538655
-> 
+>
 ```
 
 #### Inversion
+
 Inverse transform sampling
 https://en.wikipedia.org/wiki/Inverse_transform_sampling
 
@@ -605,9 +803,9 @@ example usage:
 const libR = require('lib-r-math.js');
 // use "super duper" as a source
 const superDuper = new libR.rng.SuperDuper(0);
-const bkr = new libR.rng.normal.Inversion( superDuper );
+const bkr = new libR.rng.normal.Inversion(superDuper);
 
-const samples10 = new Array(10).fill(0).map(()=> bkr.norm_rand());
+const samples10 = new Array(10).fill(0).map(() => bkr.norm_rand());
 /*
 [ 0.35953771535957096,
   -0.21991491144870018,
@@ -623,6 +821,7 @@ const samples10 = new Array(10).fill(0).map(()=> bkr.norm_rand());
 ```
 
 _in R console_
+
 ```R
 > RNGkind("Super",normal.kind="Inversion")
 > set.seed(0)
@@ -630,10 +829,10 @@ _in R console_
  [1]  0.35953772 -0.21991491 -0.61915899 -0.07302897
  [5]  3.05085095  0.58364097  0.63108265  0.16729394
  [9]  0.77949159  0.62871010
-
 ```
 
 #### Kinderman Ramage
+
 Kinderman, A. J. and Ramage, J. G. (1976) Computer generation of normal random variables. Journal of the American Statistical Association 71, 893-896.
 
 _Non "buggy" version_
@@ -644,14 +843,14 @@ example usage:
 const libR = require('lib-r-math.js');
 // use "super duper" as a source
 const superDuper = new libR.rng.SuperDuper(0);
-const bkr = new libR.rng.normal.KindermanRamage( superDuper );
+const bkr = new libR.rng.normal.KindermanRamage(superDuper);
 
- bkr.norm_rand()
+bkr.norm_rand();
 //0.7027315285336992
-  
-superDuper.init(0);// re-initialize seeds
+
+superDuper.init(0); // re-initialize seeds
 // fetch 10 samples
-const samples10 = new Array(10).fill(0).map(()=> bkr.norm_rand());
+const samples10 = new Array(10).fill(0).map(() => bkr.norm_rand());
 /*[ 0.7027315285370768,
   -0.764861733372942,
   -0.45012488296088843,
@@ -673,9 +872,8 @@ _in R console_
  [1]  0.7027315 -0.7648617 -0.4501249 -0.1401490
  [5] -2.3594652 -0.1851717  1.0527093 -0.2219719
  [9]  0.2097885 -0.6538655
-> 
+>
 ```
-
 
 ## Probability Distributions.
 
@@ -695,7 +893,7 @@ PRNG to be consumed by probability distribution simulators is discussed in the
 
 `dunif, qunif, punif, runif`
 
-[_Naming follows exactly their R counter part_](http://stat.ethz.ch/R-manual/R-patched/library/stats/html/Uniform.html) 
+[_Naming follows exactly their R counter part_](http://stat.ethz.ch/R-manual/R-patched/library/stats/html/Uniform.html)
 
 Usage:
 
@@ -769,6 +967,7 @@ Usage:
 
 `dnorm ( x: number|number[], mean: number = 0, sigma: number = 1, logP: boolean=false )`
 _gives values of the value of the probability density function at position(s) x_
+
 ```javascript
 const libR = require('lib-r-math.js');
 
@@ -786,12 +985,25 @@ const n = libR.normal(bm);
 
 n.dnorm(0); // probability distribution, peek value at null
 //0.3989422804014327
-n.dnorm(3,4,2); // value at x = 3, with mean=4 and sigma=2
+n.dnorm(3, 4, 2); // value at x = 3, with mean=4 and sigma=2
 //
-n.dnorm(-10,0,1); // of course the gaussian is almost zero 10 sigmas from the mean
+n.dnorm(-10, 0, 1); // of course the gaussian is almost zero 10 sigmas from the mean
 //7.69459862670642e-23
 
-n.dnorm([Number.NEGATIVE_INFINITY, -4,-3,-2,-1,0,Number.NaN,1,2,3,4, Number.POSITIVE_INFINITY]);
+n.dnorm([
+  Number.NEGATIVE_INFINITY,
+  -4,
+  -3,
+  -2,
+  -1,
+  0,
+  Number.NaN,
+  1,
+  2,
+  3,
+  4,
+  Number.POSITIVE_INFINITY
+]);
 /*[ 0,
   0.00013383022576488537,
   0.0044318484119380075,
@@ -806,6 +1018,7 @@ n.dnorm([Number.NEGATIVE_INFINITY, -4,-3,-2,-1,0,Number.NaN,1,2,3,4, Number.POSI
   0 ]
 */
 ```
+
 _Equivalence in R console_
 
 ```R
@@ -813,11 +1026,30 @@ _Equivalence in R console_
  [1] 0.0000000000 0.0001338302 0.0044318484 0.0539909665 0.2419707245 0.3989422804          NaN 0.2419707245
  [9] 0.0539909665 0.0044318484 0.0001338302 0.0000000000
 ```
+
 `Another Javascript Example:`
 
 ```javascript
-n.dnorm([Number.NEGATIVE_INFINITY, -4,-3,-2,-1,0,Number.NaN,1,2,3,4, Number.POSITIVE_INFINITY], 0,1,true)
-[ -Infinity,
+n.dnorm(
+  [
+    Number.NEGATIVE_INFINITY,
+    -4,
+    -3,
+    -2,
+    -1,
+    0,
+    Number.NaN,
+    1,
+    2,
+    3,
+    4,
+    Number.POSITIVE_INFINITY
+  ],
+  0,
+  1,
+  true
+)[
+  (-Infinity,
   -8.918938533204672,
   -5.418938533204673,
   -2.9189385332046727,
@@ -828,7 +1060,8 @@ n.dnorm([Number.NEGATIVE_INFINITY, -4,-3,-2,-1,0,Number.NaN,1,2,3,4, Number.POSI
   -2.9189385332046727,
   -5.418938533204673,
   -8.918938533204672,
-  -Infinity ]
+  -Infinity)
+];
 ```
 
 _Equivalence in R console_
@@ -840,13 +1073,14 @@ _Equivalence in R console_
 ```
 
 `qnorm(p: number|number[], mean: number = 0, sigma: number =1, lowerTail: boolean = true, logP: boolean= false)`
+
 ```javascript
- //
- // 10% probability is at quantile position -1.281552
- n.qnorm(0.1);
- //  -1.281552
- //
- n.qnorm([ 0, 0.05, 0.25 ,0.5 , 0.75, 0.95, 1 ]);
+//
+// 10% probability is at quantile position -1.281552
+n.qnorm(0.1);
+//  -1.281552
+//
+n.qnorm([0, 0.05, 0.25, 0.5, 0.75, 0.95, 1]);
 /*[
   -Infinity,
   -1.6448536269514726,
@@ -858,6 +1092,7 @@ _Equivalence in R console_
   ]
   */
 ```
+
 _R equivalent_
 
 ```R
@@ -868,8 +1103,9 @@ _R equivalent_
 
 `pnorm(q: number|number[], mean = 0, sigma = 1, lowerTail = TRUE, logP = FALSE)`
 _(cumulative distribution function)_
+
 ```javascript
-n.pnorm([Number.NEGATIVE_INFINITY,-4,-3,-2,-1,0, 1,2,3,4])
+n.pnorm([Number.NEGATIVE_INFINITY, -4, -3, -2, -1, 0, 1, 2, 3, 4]);
 /*[ 0,
   0.000031671241833119924,
   0.0013498980316300946,
@@ -882,6 +1118,7 @@ n.pnorm([Number.NEGATIVE_INFINITY,-4,-3,-2,-1,0, 1,2,3,4])
   0.9999683287581669 ]
 */
 ```
+
 _R equivalent_
 
 ```R
@@ -889,9 +1126,11 @@ _R equivalent_
 > qnorm( c( 0, 0.05, 0.25 ,0.5 , 0.75, 0.95, 1));
 [1] -Inf -1.6448536 -0.6744898  0.0000000  0.6744898  1.6448536 Inf
 ```
+
 pnorm with `logp = true`
+
 ```javascript
- n.pnorm([Number.NEGATIVE_INFINITY,-4,-3,-2,-1,0], 0, 1, true, true)
+n.pnorm([Number.NEGATIVE_INFINITY, -4, -3, -2, -1, 0], 0, 1, true, true);
 /*[ -Infinity,
   -10.360101486527292,
   -6.607726221510349,
@@ -899,6 +1138,7 @@ pnorm with `logp = true`
   -1.8410216450092636,
   -0.6931471805599453 ]*/
 ```
+
 _R equivalent_
 
 ```R
@@ -909,7 +1149,7 @@ _R equivalent_
 `rnorm(n, mean = 0, sigma = 1)`
 
 ```javascript
- n.rnorm(5)
+n.rnorm(5);
 /*[ -0.6499284414442905,
   -0.7896970173309513,
   -1.5623487035106534,
@@ -917,22 +1157,28 @@ _R equivalent_
   -0.1333623579729381 ]
  */
 ```
+
 _R equivalent_
+
 ```R
 > rnorm(5)
 [1] -0.6499284 -0.7896970 -1.5623487  0.9510909 -0.1333624
 ```
+
 `Another Javascript Example:`
+
 ```javascript
-  sd.init(0) // make sure to reset SuperDuper to get the same answers below in R
-  n.rnorm(5,2,3)
+sd.init(0); // make sure to reset SuperDuper to get the same answers below in R
+n.rnorm(5, 2, 3);
 /*[ 0.05021467566712845,
   -0.3690910519928541,
   -2.68704611053196,
   4.853272800568524,
   1.5999129260811857 ]*/
 ```
+
 _R equivalent_
+
 ```R
 > rnorm(5,2,3)
 [1]  0.05021468 -0.36909105 -2.68704611  4.85327280  1.59991293

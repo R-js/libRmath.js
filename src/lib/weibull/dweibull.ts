@@ -46,7 +46,7 @@ export function dweibull<T>(
   scale: number = 1,
   give_log: boolean = false
 ): T {
-  return vectorize(xx)(x => {
+  return forEach(xx)(x => {
     if (ISNAN(x) || ISNAN(shape) || ISNAN(scale)) return x + shape + scale;
     if (shape <= 0 || scale <= 0) return ML_ERR_return_NAN(printer);
 

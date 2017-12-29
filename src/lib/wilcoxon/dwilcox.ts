@@ -66,7 +66,7 @@ export function dwilcox<T>(
 
   const nm = m * n;
  
-  return vectorize(xx)(x => {
+  return forEach(xx)(x => {
    
     const w = new WilcoxonCache();
     //#ifdef IEEE_754

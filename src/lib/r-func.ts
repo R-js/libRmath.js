@@ -24,17 +24,18 @@ export const seq = (adjust = 0) => (adjustMin = adjust) => (
   return rc;
 };
 
-export function selector(indexes: number[]) {
+export function selector(indexes: number|number[]): { (val: any, index: number): boolean} {
+  const ind = forceToArray(indexes);
   return (val: any, idx: number) => {
-    return indexes.indexOf(idx) >= 0;
+    return ind.indexOf(idx) >= 0;
   };
 }
 
 export function flatten<T>(...rest: (T | T[])[]): T[] {
   let rc = [];
-  for (let itm of rest) {
+  for (const itm of rest) {
     if (Array.isArray(itm)) {
-      let rc2 = flatten(itm);
+      let rc2 = flatten(...itm);
       rc.push(...rc2);
       continue;
     }
@@ -59,7 +60,7 @@ export function possibleScalar<T>(x: T[]): T | T[] {
   return x.length === 1 ? x[0] : x;
 }
 
-export function forEach<T>(xx: T) {
+export function forEach<T>(xx: T): { (fn: (x: number) => number): number|number[] } {
   const fx: number[] = forceToArray(xx) as any;
   return function(fn: (x: number) => number): number | number[] {
     const result: number[] = fx.map(fn);

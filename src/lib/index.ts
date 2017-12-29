@@ -45,16 +45,15 @@ import {
   flatten,
   forceToArray,
   forEach,
-  possibleScalar,
   selector,
   seq
-} from '~R';
+} from './r-func';
 
 export const R = {
-  selector,
-  seq,
-  flatten,
   arrayrify,
+  flatten,
   forceToArray,
-  forEach
+  forEach,
+  selector,
+  seq
 };
