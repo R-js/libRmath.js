@@ -3,7 +3,7 @@
 Javascript ( TypeScript ) Pure Implementation of Statistical R "core" numerical
 `libRmath.so` library found here https://svn.r-project.org/R/trunk/src/nmath/
 
-### Summary
+#### Summary
 
 Porting `R nmath` core is a daunting task, we _VERIFIED_ fidelity with `R` on
 all functions that are ported from `R` to `javascript` by using static fixtures
@@ -30,29 +30,29 @@ npm install --save lib-r-math.js
 * [Helper functions for porting R](#helper-functions-for-porting-r)
 * [Uniform Pseudo Random Number Generators](#uniform-pseudo-random-number-generators)
 * [Normal Random Number Generators](#normal-distributed-random-number-generators)
-* [Probability distributions](#probability-distributions)
+* [Canonical distributions](#canonical-distributions)
   * [Uniform distribution](#uniform-distributions)
   * [Normal distribution](#normal-distribution)
-  * [Other Probability Distributions](#probability-distributions)
-    * [Beta distribution](#beta-distribution)
-    * [Binomial distribution](#binomial-distribution)
-    * [Negative Binomial distribution](#negative-binomial-distribution)
-    * [Cauchy distribution](#cauchy-distribution)
-    * [Χ<sup>2</sup> distribution](#Χ<sup>2</sup>-distribution)
-    * [Exponential distribution](#exponential-distribution)
-    * [F distribution](#f-distribution)
-    * [Gamma distribution](#gamma-distribution)
-    * [Geometric distribution](#geometric-distribution)
-    * [Hypergeometric distribution](#hypergeometric-distribution)
-    * [Logistic distribution](#logistic-distribution)
-    * [LogNormal distribution](#lognormal-distribution)
-    * [Multinomial distribution](#multinomial-distribution)
-    * [Poisson distribution](#poisson-distribution)
-    * [Wilcoxon signed rank statistic distribution](#wilcoxon-signed-rank-statistic-distribution)
-    * [Student's t-distribution](#student's-t-distribution)
-    * [Studentized Range (_Tukey_) distribution](#studentized-range-distribution)
-    * [Weibull distribution](#weibull-distribution)
-    * [Wilcoxon rank sum statistic distribution](#wilcoxon-rank-sum-statistic-distribution)
+* [Other Probability Distributions](#other-probability-distributions)
+  * [Beta distribution](#beta-distribution)
+  * [Binomial distribution](#binomial-distribution)
+  * [Negative Binomial distribution](#negative-binomial-distribution)
+  * [Cauchy distribution](#cauchy-distribution)
+  * [Χ<sup>2</sup> distribution](#Χ<sup>2</sup>-distribution)
+  * [Exponential distribution](#exponential-distribution)
+  * [F distribution](#f-distribution)
+  * [Gamma distribution](#gamma-distribution)
+  * [Geometric distribution](#geometric-distribution)
+  * [Hypergeometric distribution](#hypergeometric-distribution)
+  * [Logistic distribution](#logistic-distribution)
+  * [LogNormal distribution](#lognormal-distribution)
+  * [Multinomial distribution](#multinomial-distribution)
+  * [Poisson distribution](#poisson-distribution)
+  * [Wilcoxon signed rank statistic distribution](#wilcoxon-signed-rank-statistic-distribution)
+  * [Student's t-distribution](#student's-t-distribution)
+  * [Studentized Range (_Tukey_) distribution](#studentized-range-distribution)
+  * [Weibull distribution](#weibull-distribution)
+  * [Wilcoxon rank sum statistic distribution](#wilcoxon-rank-sum-statistic-distribution)
 * [Special Functions of Mathematics](#special-functions-of-mathematics)
   * [Bessel functions](#bessel-functions)
   * [Beta functions](#beta-functions)
@@ -313,7 +313,7 @@ const { MersenneTwister, timeseed } = libR.rng;
 
 const mt = new MersenneTwister(12345); // initialize with seed = 12345
 
-mt.init( timeseed() ); // Use seed derived from system clock
+mt.init(timeseed()); // Use seed derived from system clock
 
 mt.init(0); // re-initialize with seed = 0
 
@@ -330,7 +330,7 @@ let s = lt.seed;
   .]
 */
 
-new Array(5).fill('').map( () => mt.unif_rand() );
+new Array(5).fill('').map(() => mt.unif_rand());
 /*
 [ 0.8966972001362592,
   0.2655086631421,
@@ -405,13 +405,13 @@ const { MarsagliaMultiCarry, timeseed } = libR.rng;
 // Some options on seeding given below
 const mmc = new MarsagliaMultiCarry(1234); // use seed = 1234 on creation
 
-mmc.init( timeseed() )
+mmc.init(timeseed());
 
-mmc.init( 0 ); // also, defaults to '0' if seed is not specified
+mmc.init(0); // also, defaults to '0' if seed is not specified
 
 mmc.seed;
 //[ -835792825, 1280795612 ]
-new Array(5).fill('').map( () => mm.unif_rand() )
+new Array(5).fill('').map(() => mm.unif_rand());
 /*[ 0.16915375533726848,
   0.5315435299490446,
   0.5946052972214773,
@@ -419,6 +419,7 @@ new Array(5).fill('').map( () => mm.unif_rand() )
   0.45765617989414736 ]
 */
 ```
+
 _in R console_:
 
 ```R
@@ -446,12 +447,12 @@ const { SuperDuper, timeseed } = libR.rng;
 
 // Seeding possibilities shown below
 const sd = new SuperDuper(1234); // use seed = 1234 on creation
-sd.init( timeseed() ) // re-initialize with random seed based on timestamp
+sd.init(timeseed()); // re-initialize with random seed based on timestamp
 sd.init(0); // re-initialize with any seed = 0.
 //
 sd.seed;
 //[ -835792825, 1280795613 ]
-new Array(5).fill('').map( () => sd.unif_rand() )
+new Array(5).fill('').map(() => sd.unif_rand());
 /*
 [ 0.6404035621416762,
   0.5927312545461418,
@@ -488,8 +489,8 @@ const libR = require('lib-r-math.js');
 const { KnuthTAOCP, timeseed } = libR.rng;
 
 // Seeding possibilities shown below
-const kn97 = new KnuthTAOCP(1234);  // use seed = 1234 on creation
-kn97.init( timeseed() ) // re-initialize with random seed based on timestamp
+const kn97 = new KnuthTAOCP(1234); // use seed = 1234 on creation
+kn97.init(timeseed()); // re-initialize with random seed based on timestamp
 kn97.init(0); // re-initialize with any seed = 0.
 
 kn97.seed;
@@ -500,7 +501,7 @@ kn97.seed;
   926003693,
  .
  .]*/
-new Array(5).fill('').map( () => kn97.unif_rand() );
+new Array(5).fill('').map(() => kn97.unif_rand());
 /*[ 0.6274007670581344,
   0.35418667178601043,
   0.9898934308439498,
@@ -528,7 +529,7 @@ X[j] = (X[j-100] - X[j-37]) mod 2^30
 
 and the ‘seed’ is the set of the 100 last numbers (actually recorded as 101
 numbers, the last being a cyclic shift of the buffer). The period is around
-2^129.
+2<sup>129</sup>.
 
 usage example:
 
@@ -537,11 +538,11 @@ const libR = require('lib-r-math.js');
 const { KnuthTAOCP2002, timeseed } = libR.rng;
 
 // Seeding possibilities shown below
-const kt2002 = new KnuthTAOCP2002( 1234 ); // use seed = 1234 on creation
+const kt2002 = new KnuthTAOCP2002(1234); // use seed = 1234 on creation
 
-kt2002.init( timeseed() ); //re-initialize with random seed based on timestamp
+kt2002.init(timeseed()); //re-initialize with random seed based on timestamp
 
-kt2002.init( 0 ); //re-initialize with seed = 0
+kt2002.init(0); //re-initialize with seed = 0
 kt2002.seed;
 // 101 unsigned integer array
 //[ 481970911,
@@ -553,7 +554,7 @@ kt2002.seed;
 //  638368738,
 // .
 // .]
-new Array(5).fill('').map(() => kt2002.unif_rand())
+new Array(5).fill('').map(() => kt2002.unif_rand());
 /*
 [ 0.19581903796643027,
   0.7538668839260939,
@@ -593,11 +594,11 @@ const libR = require('lib-r-math.js');
 const { LecuyerCMRG, timestamp } = libR.rng;
 
 // Seeding possibilities shown below
-const lc = new LecuyerCMRG( 1234 );
+const lc = new LecuyerCMRG(1234);
 
-lc.init( timeseed() ); //re-initialize with random seed based on timestamp
+lc.init(timeseed()); //re-initialize with random seed based on timestamp
 
-lc.init( 0 ); //re-initialize with seed = 0
+lc.init(0); //re-initialize with seed = 0
 lc.seed;
 /*
 [ -835792825,
@@ -652,7 +653,7 @@ All normal random generator adhere to the same principles:
 1. A constructor that takes an instance of a uniform PRNG as an argument
 2. `unif_random`: get a random value, same as `rnorm(1)` in R
 3. We adhere to the `R` default for _uniform_ PRNG when none is explicitly specified: `Mersenne-Twister`.
-4. All PRNG producing normal variates are packaged under the name space `rng.normal`. 
+4. All PRNG producing normal variates are packaged under the name space `rng.normal`.
 
 #### "Ahrens Dieter"
 
@@ -675,7 +676,7 @@ const ad2 = new libR.rng.normal.AhrensDieter();
 
 // reference to uniform PRNG under rng property
 ad2.rng.init(0);
-// bleed the normal PRNG 
+// bleed the normal PRNG
 new Array(5).fill('').map(() => ad2.norm_rand());
 /*
 [
@@ -728,7 +729,7 @@ const bm2 = new libR.rng.normal.BoxMuller();
 
 // reference to uniform PRNG under rng property
 bm2.rng.init(0);
-// bleed the normal PRNG 
+// bleed the normal PRNG
 new Array(5).fill('').map(() => bm2.norm_rand());
 /*
 [ 1.2973875806285824,
@@ -793,6 +794,8 @@ bkm2.rng.unif_rand();
 //0.6870228466577828
 ```
 
+_in R Console_
+
 ```R
 > RNGkind("Mersenne-Twister",normal.kind="Buggy")
 > set.seed(0)
@@ -805,8 +808,8 @@ bkm2.rng.unif_rand();
 
 #### Inversion
 
-Inverse transform sampling
-https://en.wikipedia.org/wiki/Inverse_transform_sampling
+Inverse transform sampling [wiki](
+https://en.wikipedia.org/wiki/Inverse_transform_sampling)
 
 example usage:
 
@@ -823,7 +826,7 @@ const inv2 = new libR.rng.normal.Inversion();
 
 // reference to uniform PRNG under rng property
 inv2.rng.init(0);
-// bleed the normal PRNG 
+// bleed the normal PRNG
 new Array(5).fill('').map(() => inv2.norm_rand());
 /*
 [ 1.2629542848807933,
@@ -872,7 +875,7 @@ const km2 = new libR.rng.normal.KindermanRamage();
 
 // reference to uniform PRNG under rng property
 km2.rng.init(0);
-// bleed the normal PRNG 
+// bleed the normal PRNG
 new Array(5).fill('').map(() => km2.norm_rand());
 /*
 [ 0.3216151001162507,
@@ -901,7 +904,7 @@ _in R console_
 >
 ```
 
-## Probability distributions
+## Canonical distributions
 
 #### Summary
 
@@ -911,14 +914,14 @@ we discussed uniform and normal PRNG classes. These classes can be used by thems
 random numbers with a particular distribution (like `Uniform`, `Normal`, `Gamma`,
 `Weibull`, `Chi-square` etc).
 
-_It is also possible to provide your own uniform random source (example: real
+\_It is also possible to provide your own uniform random source (example: real
 random numbers fetched from services over the net). It is straightforward to create new PNRG (either uniform or normal). Review existing PRNG codes for examples.
 
 ### Uniform distribution
 
 `dunif, qunif, punif, runif`
 
-[_Naming follows exactly their R counter part_](http://stat.ethz.ch/R-manual/R-patched/library/stats/html/Uniform.html)
+R documentation [here](http://stat.ethz.ch/R-manual/R-patched/library/stats/html/Uniform.html)
 
 These functions are created with the factory method `Uniform` taking as argument a uniform PRNG (defaults to (Mersenne-Twister)[#mersenne-twister]).
 
@@ -943,29 +946,30 @@ const { runif, dunif, punif, qunif } = uni2;
 
 #### `dunif`
 
+The density function. See [R doc](http://stat.ethz.ch/r-manual/r-patched/library/stats/html/uniform.html)
+
 _decl:_
 
 ```typescript
 function dunif(
   x: number | number[],
-  a: number = 0,
-  b: number = 1,
-  giveLog: boolean = false
-): number|number[]
+  min = 0,
+  max = 1,
+  giveLog = false
+): number | number[];
 ```
+
+* `x`: scalar or vector of quantiles
+* `min, max` lower and upper limits of the distribution. Must be finite.
+* `logP` if `true`, probabilities p are given as log(p).
 
 Example:
 
 ```javascript
 const libR = require('lib-r-math.js');
+const uni = libR.Uniform(); // use default Mersenne-Twister PRNG
+const { runif, dunif, punif, qunif } = uni;
 
-const uni = libR.Uniform();// use default Mersenne-Twister PRNG
-
-runif(5, 4, 9);
-
-// get the envelope of the uniform distributions
-// dunif(x, min = 0, max = 1, log = FALSE)
-// x could be an Array of numbers of a scalar
 dunif([-1, 0, 0.4, 1, 2]);
 // [ 0, 1, 1, 1, 0 ]  Everythin is 1 for inputs between 0 and 1
 dunif([-1, 0, 0.4, 1, 2], 0, 2);
@@ -979,8 +983,36 @@ dunif([-1, 0, 0.4, 1, 2], 0, 2, true);
   -0.6931471805599453
   ]
   */
-// cummumative distribution R
-// punif(q, min = 0, max = 1, lower.tail = TRUE, log.p = FALSE)
+```
+
+#### `punif`
+
+The distribution function. See [R doc](http://stat.ethz.ch/r-manual/r-patched/library/stats/html/uniform.html)
+
+_decl:_
+
+```typescript
+function punif(
+  q: number | number[],
+  min = 0,
+  max = 1,
+  lowerTail = true,
+  logP = false
+): number | number[];
+```
+
+* `x`: scalar or vector of quantiles
+* `min, max` lower and upper limits of the distribution. Must be finite.
+* `lowerTail` if TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
+* `logP` if `true`, probabilities p are given as log(p).
+
+Example:
+
+```javascript
+const libR = require('lib-r-math.js');
+const uni = libR.Uniform(); // use default Mersenne-Twister PRNG
+const { runif, dunif, punif, qunif } = uni;
+
 punif(0.25);
 // 0.25
 
@@ -995,175 +1027,297 @@ punif([-2, 0.25, 0.75, 2], 0, 2, false, true);
 
 punif([-2, 0.25, 0.75, 2], 0, 2, false, true);
 //[ 0, -0.13353139262452263, -0.4700036292457356, -Infinity ]
-
-// inverse of the cummumative propbabilty
-// qunif(p, min = 0, max = 1, lower.tail = TRUE, log.p = FALSE)
-qunif([0, 0.25, 0.75, 0.9, 1], 0, 4, true);
-//qunif( [  0, 0.25, 0.75, 0.9 , 1 ], 0, 4, true)
 ```
 
-#### Normal distribution
+#### `qunif`
+
+The quantile function. See [R doc](http://stat.ethz.ch/r-manual/r-patched/library/stats/html/uniform.html)
+
+_decl:_
+
+```typescript
+function qunif(
+  p: number | number[],
+  min = 0,
+  max = 1,
+  lowerTail = true,
+  logP = false
+): number | number[];
+```
+
+* `p`: scalar or vector of quantiles
+* `min, max` lower and upper limits of the distribution. Must be finite.
+* `lowerTail` if `true` (default), probabilities are P[X ≤ x], otherwise, P[X > x].
+* `logP` if `true`, probabilities p are given as log(p).
+
+Example:
+
+```javascript
+const libR = require('lib-r-math.js');
+const uni = libR.Uniform(); // use default Mersenne-Twister PRNG
+const { runif, dunif, punif, qunif } = uni;
+
+qunif(0);
+//0
+qunif([0, 0.1, 0.5, 0.9, 1], -1, 1, false);
+//[ 1, 0.8, 0, -0.8, -1 ]
+
+const { arrayrify } = libR.R;
+const log = arrayrify(Math.log);
+
+qunif(log([0, 0.1, 0.5, 0.9, 1]), -1, 1, false, true);
+//[ 1, 0.8, 0, -0.8, -1 ]
+```
+
+#### `runif`
+
+Generates random deviates. See [doc](http://stat.ethz.ch/R-manual/R-patched/library/stats/html/Uniform.html)
+
+_decl:_
+
+```typescript
+function runif(
+  n: number = 1,
+  min: number = 0,
+  max: number = 1
+): number | number[];
+```
+
+* `n`: number of deviates. Defaults to 1.
+* `min, max` lower and upper limits of the distribution. Must be finite.
+
+Example:
+
+```javascript
+const libR = require('lib-r-math.js');
+const uni = libR.Uniform(); // use default Mersenne-Twister PRNG
+const { runif, dunif, punif, qunif } = uni;
+
+runif(4);
+/*
+[ 0.8966972001362592,
+  0.2655086631421,
+  0.37212389963679016,
+  0.5728533633518964 ]
+*/
+runif(5, -1, 1, true);
+/*
+[ 0.8164155799895525,
+  -0.5966361379250884,
+  0.7967793699353933,
+  0.8893505372107029,
+  0.3215955849736929 ]
+  */
+```
+
+_R console_ (exactly the same values for the same seed)
+
+```R
+> RNGkind("Mersenne")
+> set.seed(0)
+> runif(4)
+[1] 0.8966972 0.2655087 0.3721239
+[4] 0.5728534
+> runif(5,-1,1)
+[1]  0.8164156 -0.5966361  0.7967794
+[4]  0.8893505  0.3215956
+```
+
+### Normal distribution
 
 `dnorm, qnorm, pnorm, rnorm`
-[_Naming follows exactly their R counter part_](http://stat.ethz.ch/R-manual/R-patched/library/stats/html/Normal.html)
+R documentation [here](http://stat.ethz.ch/R-manual/R-patched/library/stats/html/Normal.html)
+
+These functions are created with the factory method `Normal` taking as argument an optional _normal PRNG_ (defaults to [Inversion](#inversion).
 
 Usage:
-
-`dnorm ( x: number|number[], mean: number = 0, sigma: number = 1, logP: boolean=false )`
-_gives values of the value of the probability density function at position(s) x_
 
 ```javascript
 const libR = require('lib-r-math.js');
 
-// create generator with normal distribution
-const marsM = new libR.rng.MarsagliaMultiCarry(0);
-const bm = new libR.rng.normal.BoxMuller(marsM);
+// get the suite of functions working with uniform distributions
+const { Normal } = libR;
+const { normal: { BoxMuller }, SuperDuper }
 
-// create an instance of normal functions using selected PRNG.
-const n = libR.normal(bm);
-//
-//  dnorm ( x= x values, mean, sigma, log )
-//
-// dnorm(0) == 1/sqrt(2*pi)
-// dnorm(1) == exp(-1/2)/sqrt(2*pi)
+//Create Normal family of functions using "BoxMuller" feeding from "SuperDuper"
+const norm1 = Normal(new BoxMuller( new SuperDuper(0)));
 
-n.dnorm(0); // probability distribution, peek value at null
-//0.3989422804014327
-n.dnorm(3, 4, 2); // value at x = 3, with mean=4 and sigma=2
-//
-n.dnorm(-10, 0, 1); // of course the gaussian is almost zero 10 sigmas from the mean
-//7.69459862670642e-23
+// using the default "Inversion" feeding from "Mersenne-Twister".
+const norm2 = Normal(); //
 
-n.dnorm([
-  Number.NEGATIVE_INFINITY,
-  -4,
-  -3,
-  -2,
-  -1,
-  0,
-  Number.NaN,
-  1,
-  2,
-  3,
-  4,
-  Number.POSITIVE_INFINITY
-]);
-/*[ 0,
-  0.00013383022576488537,
-  0.0044318484119380075,
-  0.05399096651318806,
-  0.24197072451914337,
-  0.3989422804014327,
-  NaN,
-  0.24197072451914337,
-  0.05399096651318806,
-  0.0044318484119380075,
-  0.00013383022576488537,
-  0 ]
-*/
+// functions exactly named as in `R`
+const { rnorm, dnorm, pnorm, qnorm } = norm2;
 ```
 
-_Equivalence in R console_
+#### `dnorm`
 
-```R
-> dnorm(c(-Inf, -4,-3,-2,-1,0,NaN,1,2,3,4, Inf));
- [1] 0.0000000000 0.0001338302 0.0044318484 0.0539909665 0.2419707245 0.3989422804          NaN 0.2419707245
- [9] 0.0539909665 0.0044318484 0.0001338302 0.0000000000
+The density function. See [R doc](http://stat.ethz.ch/r-manual/r-patched/library/stats/html/normal.html)
+
+_decl:_
+
+```typescript
+function dnorm(
+  x: number | number[],
+  mu = 0,
+  sigma = 1,
+  giveLog = false
+): number | number[];
 ```
 
-`Another Javascript Example:`
+* `x`:scalar or array of quantiles
+* `mu`: mean (default 0)
+* `sigma`: standard deviation
+* `giveLog`: give result as log value
 
 ```javascript
-n.dnorm(
-  [
-    Number.NEGATIVE_INFINITY,
-    -4,
-    -3,
-    -2,
-    -1,
-    0,
-    Number.NaN,
-    1,
-    2,
-    3,
-    4,
-    Number.POSITIVE_INFINITY
-  ],
+const libR = require('lib-r-math.js');
+const { Normal } = libR;
+const { seq } = libR.R;
+const { rnorm, dnorm, pnorm, qnorm } = Normal();
+
+dnorm(0); //standard normal density, max value at '0'
+//0.3989422804014327
+dnorm(3, 4, 2); // standard normal with mean=4 and sigma=2, value at 3
+//0.17603266338214976
+dnorm(-10); // course the gaussian is almost zero 10 sigmas from the mean
+//7.69459862670642e-23
+dnorm([-Infinity, Infinity, NaN, -4, -3, -2, 0, 1, 2, 3, 4]);
+/*
+[ 0,
   0,
-  1,
-  true
-)[
-  (-Infinity,
+  NaN,
+  0.00013383022576488537,
+  0.0044318484119380075,
+  0.05399096651318806,
+  0.3989422804014327,
+  0.24197072451914337,
+  0.05399096651318806,
+  0.0044318484119380075,
+  0.00013383022576488537 ]
+*/
+dnorm(
+  seq(0)(0)(-4, 4), //[-4,-3,..., 4]
+  2, //mu = 2
+  1, //sigma = 1
+  true //give return values as log
+);
+/*
+[ -18.918938533204674,
+  -13.418938533204672,
   -8.918938533204672,
   -5.418938533204673,
   -2.9189385332046727,
   -1.4189385332046727,
   -0.9189385332046728,
-  NaN,
   -1.4189385332046727,
-  -2.9189385332046727,
-  -5.418938533204673,
-  -8.918938533204672,
-  -Infinity)
-];
-```
-
-_Equivalence in R console_
-
-```R
- >dnorm(c(-Inf, -4,-3,-2,-1,0,NaN,1,2,3,4, Inf), 0,1, TRUE);
- [1]       -Inf -8.9189385 -5.4189385 -2.9189385 -1.4189385 -0.9189385        NaN -1.4189385 -2.9189385 -5.4189385
-[11] -8.9189385       -Inf
-```
-
-`qnorm(p: number|number[], mean: number = 0, sigma: number =1, lowerTail: boolean = true, logP: boolean= false)`
-
-```javascript
-//
-// 10% probability is at quantile position -1.281552
-n.qnorm(0.1);
-//  -1.281552
-//
-n.qnorm([0, 0.05, 0.25, 0.5, 0.75, 0.95, 1]);
-/*[
-  -Infinity,
-  -1.6448536269514726,
-  -0.6744897501960817,
-  0,
-  0.6744897501960817,
-  1.6448536269514715,
-  Infinity
-  ]
-  */
-```
-
-_R equivalent_
-
-```R
-#R console
-> qnorm( c( 0, 0.05, 0.25 ,0.5 , 0.75, 0.95, 1));
-[1] -Inf -1.6448536 -0.6744898  0.0000000  0.6744898  1.6448536 Inf
-```
-
-`pnorm(q: number|number[], mean = 0, sigma = 1, lowerTail = TRUE, logP = FALSE)`
-_(cumulative distribution function)_
-
-```javascript
-n.pnorm([Number.NEGATIVE_INFINITY, -4, -3, -2, -1, 0, 1, 2, 3, 4]);
-/*[ 0,
-  0.000031671241833119924,
-  0.0013498980316300946,
-  0.022750131948179212,
-  0.15865525393145705,
-  0.5,
-  0.8413447460685429,
-  0.9772498680518208,
-  0.9986501019683699,
-  0.9999683287581669 ]
+  -2.9189385332046727 ]
 */
 ```
 
-_R equivalent_
+_in R Console_
+
+```R
+> dnorm(seq(-4,4),2, 1, TRUE)
+[1] -18.9189385 -13.4189385
+[3]  -8.9189385  -5.4189385
+[5]  -2.9189385  -1.4189385
+[7]  -0.9189385  -1.4189385
+[9]  -2.9189385
+```
+
+#### `pnorm`
+
+```typescript
+function pnorm(
+  q: number | number[],
+  mu = 0,
+  sigma = 1,
+  lowerTail = true,
+  logP = false
+): number | number[];
+```
+
+* `q`:scalar or array of quantiles
+* `mu`: mean (default 0)
+* `sigma`: standard deviation
+* `lowerTail`: if `true` (default), probabilities are P[X ≤ x], otherwise, P[X > x].
+* `logP`: give result as log value
+
+```javascript
+const libR = require('lib-r-math.js');
+const { Normal, arrayrify } = libR;
+const { rnorm, dnorm, pnorm, qnorm } = Normal();
+
+pnorm(0);
+//0.5
+pnorm([-1, 0, 1]);
+//[ 0.15865525393145705, 0.5, 0.8413447460685429 ]
+
+pnorm([-1, 0, 1], 0, 1, false); // propability upper tail, reverse above result
+//[ 0.8413447460685429, 0.5, 0.15865525393145705 ]
+
+pnorm([-1, 0, 1], 0, 1, false, true); // probabilities as log(p)
+//[ -0.17275377902344988, -0.6931471805599453, -1.8410216450092636 ]
+
+// Above result is the same as
+const log = arrayrify(Math.log);
+log(pnorm([-1, 0, 1], 0, 1, false));
+//[ -0.1727537790234499, -0.6931471805599453, -1.8410216450092636 ]
+```
+
+_in R console_
+
+```R
+> pnorm(-1:1, 0, 1, FALSE, TRUE)
+[1] -0.1727538 -0.6931472 -1.8410216
+```
+
+#### `qnorm`
+
+The quantile function. See [R doc](http://stat.ethz.ch/r-manual/r-patched/library/stats/html/normal.html])
+
+_decl:_
+
+```typescript
+function qnorm(
+  p: number | number[],
+  mu = 0,
+  sigma = 1,
+  lowerTail = true,
+  logP = false
+): number | number[];
+```
+
+* `p`: probabilities (scalar or array).
+* `mu`: normal mean (default 0).
+* `sigma`: standard deviation (default 1).
+* `logP`: probabilities are given as log(p).
+
+```javascript
+const libR = require('lib-r-math.js');
+const { Normal, arrayrify } = libR;
+const { rnorm, dnorm, pnorm, qnorm } = Normal();
+
+// Math.log will work on both scalar or an array
+const log = arrayrify(Math.log);
+
+qnorm(0);
+//-Infinity
+
+qnorm([-1, 0, 1]); // -1 makes no sense
+//[ NaN, -Infinity, Infinity ]
+
+qnorm([0, 0.25, 0.5, 0.75, 1], 0, 2); // take quantiles of 25%
+//[ -Infinity, -1.3489795003921634, 0, 1.3489795003921634, Infinity ]
+
+qnorm([0, 0.25, 0.5, 0.75, 1], 0, 2, false); // same but use upper Tail of distribution
+//[ Infinity, 1.3489795003921634, 0, -1.3489795003921634, -Infinity ]
+
+qnorm(log([0, 0.25, 0.5, 0.75, 1]), 0, 2, false, true); //
+//[ Infinity, 1.3489795003921634, 0, -1.3489795003921634, -Infinity ]
+```
+
+_in R console_
 
 ```R
 #R console
@@ -1171,59 +1325,321 @@ _R equivalent_
 [1] -Inf -1.6448536 -0.6744898  0.0000000  0.6744898  1.6448536 Inf
 ```
 
-pnorm with `logp = true`
+#### `rnorm`
+
+Generates random normal deviates. See [R doc](http://stat.ethz.ch/r-manual/r-patched/library/stats/html/normal.html])
+
+_decl:_
+
+```typescript
+function rnorm(n = 1, mu = 0, sigma = 1): number | number[];
+```
+
+* `n`: number of deviates
+* `mu`: mean of the distribution. Defaults to 0.
+* `sigma`: standard deviation. Defaults to 1.
 
 ```javascript
-n.pnorm([Number.NEGATIVE_INFINITY, -4, -3, -2, -1, 0], 0, 1, true, true);
-/*[ -Infinity,
-  -10.360101486527292,
-  -6.607726221510349,
-  -3.7831843336820317,
-  -1.8410216450092636,
-  -0.6931471805599453 ]*/
+const libR = require('lib-r-math.js');
+const { Normal } = libR;
+
+//default Mersenne-Twister/Inversion
+const { rnorm, dnorm, pnorm, qnorm } = Normal();
+
+rnorm(5);
+/*[ 1.2629542848807933,
+  -0.3262333607056494,
+  1.3297992629225006,
+  1.2724293214294047,
+  0.4146414344564082 ]
+*/
+rnorm(5, 2, 3);
+/*[ -2.619850125711128,
+  -0.7857011041406143,
+  1.1158386596283194,
+  1.9826984817573892,
+  9.213960166573852 ]
+*/
 ```
 
-_R equivalent_
+Same values as in R
+
+_in R console_
 
 ```R
-> pnorm(c(-Inf,-4,-3,-2,-1,0), 0, 1, log.p=TRUE)
-[1]        -Inf -10.3601015  -6.6077262  -3.7831843  -1.8410216  -0.6931472
-```
-
-`rnorm(n, mean = 0, sigma = 1)`
-
-```javascript
-n.rnorm(5);
-/*[ -0.6499284414442905,
-  -0.7896970173309513,
-  -1.5623487035106534,
-  0.9510909335228415,
-  -0.1333623579729381 ]
- */
-```
-
-_R equivalent_
-
-```R
+> RNGkind("Mersenne-Twister",normal.kind="Inversion")
+> set.seed(0)
 > rnorm(5)
-[1] -0.6499284 -0.7896970 -1.5623487  0.9510909 -0.1333624
+[1]  1.2629543 -0.3262334
+[3]  1.3297993  1.2724293
+[5]  0.4146414
+> rnorm(5,2,3)
+[1] -2.6198501 -0.7857011
+[3]  1.1158387  1.9826985
+[5]  9.2139602
+>
 ```
 
-`Another Javascript Example:`
+## Other Probability Distributions
+
+#### summary
+
+`libRmath.so` contains 19 probability distributions (other then `Normal` and `Uniform`) with their specific density, quantile and random generators, all are ported and have been verified to yield the same.
+
+### Beta distribution
+
+`dbeta, qbeta, pbeta, rbeta`
+R documentation [here]()
+
+These functions are members of an object created by the `Beta` factory method. The factory method needs the return object of the `Normal` factory method. Various instantiation methods are given below.
+
+Instantiation:
 
 ```javascript
-sd.init(0); // make sure to reset SuperDuper to get the same answers below in R
-n.rnorm(5, 2, 3);
-/*[ 0.05021467566712845,
-  -0.3690910519928541,
-  -2.68704611053196,
-  4.853272800568524,
-  1.5999129260811857 ]*/
+const libR = require('lib-r-math.js');
+const { Normal, Beta, rng } = libR;
+
+// All options specified in creating Beta distribution object.
+const beta1 = Beta(Normal(
+    new rng.normal.BoxMuller( //
+        new rng.SuperDuper(0)
+    )
+));
+
+// Or
+
+//just go with Default.. uses Normal(), defaults to PRNG "Inversion" and "Mersenne-Twister"
+const betaDefault = Beta();
+const { dbeta, pbeta, qbeta, rbeta } = betaDefault;
 ```
 
-_R equivalent_
+#### `dbeta`
+
+The density function. See [R doc]()
+
+_decl:_
+
+```typescript
+function dbeta(
+  x: number | number[],
+  mu = 0,
+  sigma = 1,
+  giveLog = false
+): number | number[];
+```
+
+* `x`:scalar or array of quantiles
+* `mu`: mean (default 0)
+* `sigma`: standard deviation
+* `giveLog`: give result as log value
+
+```javascript
+const libR = require('lib-r-math.js');
+const { Normal } = libR;
+const { seq } = libR.R;
+const { rnorm, dnorm, pnorm, qnorm } = Normal();
+
+dnorm(0); //standard normal density, max value at '0'
+//0.3989422804014327
+dnorm(3, 4, 2); // standard normal with mean=4 and sigma=2, value at 3
+//0.17603266338214976
+dnorm(-10); // course the gaussian is almost zero 10 sigmas from the mean
+//7.69459862670642e-23
+dnorm([-Infinity, Infinity, NaN, -4, -3, -2, 0, 1, 2, 3, 4]);
+/*
+[ 0,
+  0,
+  NaN,
+  0.00013383022576488537,
+  0.0044318484119380075,
+  0.05399096651318806,
+  0.3989422804014327,
+  0.24197072451914337,
+  0.05399096651318806,
+  0.0044318484119380075,
+  0.00013383022576488537 ]
+*/
+dnorm(
+  seq(0)(0)(-4, 4), //[-4,-3,..., 4]
+  2, //mu = 2
+  1, //sigma = 1
+  true //give return values as log
+);
+/*
+[ -18.918938533204674,
+  -13.418938533204672,
+  -8.918938533204672,
+  -5.418938533204673,
+  -2.9189385332046727,
+  -1.4189385332046727,
+  -0.9189385332046728,
+  -1.4189385332046727,
+  -2.9189385332046727 ]
+*/
+```
+
+_in R Console_
 
 ```R
+> dnorm(seq(-4,4),2, 1, TRUE)
+[1] -18.9189385 -13.4189385
+[3]  -8.9189385  -5.4189385
+[5]  -2.9189385  -1.4189385
+[7]  -0.9189385  -1.4189385
+[9]  -2.9189385
+```
+
+#### `pnorm`
+
+```typescript
+function pnorm(
+  q: number | number[],
+  mu = 0,
+  sigma = 1,
+  lowerTail = true,
+  logP = false
+): number | number[];
+```
+
+* `q`:scalar or array of quantiles
+* `mu`: mean (default 0)
+* `sigma`: standard deviation
+* `lowerTail`: if `true` (default), probabilities are P[X ≤ x], otherwise, P[X > x].
+* `logP`: give result as log value
+
+```javascript
+const libR = require('lib-r-math.js');
+const { Normal, arrayrify } = libR;
+const { rnorm, dnorm, pnorm, qnorm } = Normal();
+
+pnorm(0);
+//0.5
+pnorm([-1, 0, 1]);
+//[ 0.15865525393145705, 0.5, 0.8413447460685429 ]
+
+pnorm([-1, 0, 1], 0, 1, false); // propability upper tail, reverse above result
+//[ 0.8413447460685429, 0.5, 0.15865525393145705 ]
+
+pnorm([-1, 0, 1], 0, 1, false, true); // probabilities as log(p)
+//[ -0.17275377902344988, -0.6931471805599453, -1.8410216450092636 ]
+
+// Above result is the same as
+const log = arrayrify(Math.log);
+log(pnorm([-1, 0, 1], 0, 1, false));
+//[ -0.1727537790234499, -0.6931471805599453, -1.8410216450092636 ]
+```
+
+_in R console_
+
+```R
+> pnorm(-1:1, 0, 1, FALSE, TRUE)
+[1] -0.1727538 -0.6931472 -1.8410216
+```
+
+#### `qnorm`
+
+The quantile function. See [R doc](http://stat.ethz.ch/r-manual/r-patched/library/stats/html/normal.html])
+
+_decl:_
+
+```typescript
+function qnorm(
+  p: number | number[],
+  mu = 0,
+  sigma = 1,
+  lowerTail = true,
+  logP = false
+): number | number[];
+```
+
+* `p`: probabilities (scalar or array).
+* `mu`: normal mean (default 0).
+* `sigma`: standard deviation (default 1).
+* `logP`: probabilities are given as log(p).
+
+```javascript
+const libR = require('lib-r-math.js');
+const { Normal, arrayrify } = libR;
+const { rnorm, dnorm, pnorm, qnorm } = Normal();
+
+// Math.log will work on both scalar or an array
+const log = arrayrify(Math.log);
+
+qnorm(0);
+//-Infinity
+
+qnorm([-1, 0, 1]); // -1 makes no sense
+//[ NaN, -Infinity, Infinity ]
+
+qnorm([0, 0.25, 0.5, 0.75, 1], 0, 2); // take quantiles of 25%
+//[ -Infinity, -1.3489795003921634, 0, 1.3489795003921634, Infinity ]
+
+qnorm([0, 0.25, 0.5, 0.75, 1], 0, 2, false); // same but use upper Tail of distribution
+//[ Infinity, 1.3489795003921634, 0, -1.3489795003921634, -Infinity ]
+
+qnorm(log([0, 0.25, 0.5, 0.75, 1]), 0, 2, false, true); //
+//[ Infinity, 1.3489795003921634, 0, -1.3489795003921634, -Infinity ]
+```
+
+_in R console_
+
+```R
+#R console
+> qnorm( c( 0, 0.05, 0.25 ,0.5 , 0.75, 0.95, 1));
+[1] -Inf -1.6448536 -0.6744898  0.0000000  0.6744898  1.6448536 Inf
+```
+
+#### `rnorm`
+
+Generates random normal deviates. See [R doc](http://stat.ethz.ch/r-manual/r-patched/library/stats/html/normal.html])
+
+_decl:_
+
+```typescript
+function rnorm(n = 1, mu = 0, sigma = 1): number | number[];
+```
+
+* `n`: number of deviates
+* `mu`: mean of the distribution. Defaults to 0.
+* `sigma`: standard deviation. Defaults to 1.
+
+```javascript
+const libR = require('lib-r-math.js');
+const { Normal } = libR;
+
+//default Mersenne-Twister/Inversion
+const { rnorm, dnorm, pnorm, qnorm } = Normal();
+
+rnorm(5);
+/*[ 1.2629542848807933,
+  -0.3262333607056494,
+  1.3297992629225006,
+  1.2724293214294047,
+  0.4146414344564082 ]
+*/
+rnorm(5, 2, 3);
+/*[ -2.619850125711128,
+  -0.7857011041406143,
+  1.1158386596283194,
+  1.9826984817573892,
+  9.213960166573852 ]
+*/
+```
+
+Same values as in R
+
+_in R console_
+
+```R
+> RNGkind("Mersenne-Twister",normal.kind="Inversion")
+> set.seed(0)
+> rnorm(5)
+[1]  1.2629543 -0.3262334
+[3]  1.3297993  1.2724293
+[5]  0.4146414
 > rnorm(5,2,3)
-[1]  0.05021468 -0.36909105 -2.68704611  4.85327280  1.59991293
+[1] -2.6198501 -0.7857011
+[3]  1.1158387  1.9826985
+[5]  9.2139602
+>
 ```

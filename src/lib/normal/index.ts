@@ -6,17 +6,17 @@ import { qnorm } from './qnorm';
 import { rnorm } from './rnorm';
 
 import { IRNGNormal, rng } from '../rng';
-const { normal: { BoxMuller }, SuperDuper } = rng;
+const { normal: { Inversion } } = rng;
 
 export interface INormal {
   rnorm: (n: number, mu: number, sigma: number) => number | number[];
-  dnorm: <T>(x: T, mu: number, sigma: number, give_log: boolean) => T;
+  dnorm: <T>(x: T, mu: number, sigma: number, giveLog: boolean) => T;
   pnorm: <T>(
     x: T,
     mu: number,
     sigma: number,
-    lower_tail: boolean,
-    log_p: boolean
+    lowerTail: boolean,
+    logP: boolean
   ) => T;
   qnorm: <T>(
     p: T,
@@ -28,8 +28,7 @@ export interface INormal {
   rng: IRNGNormal;
 }
 
-export function Normal(rng: IRNGNormal = new BoxMuller( new SuperDuper(0))): INormal {
- 
+export function Normal(rng: IRNGNormal = new Inversion()): INormal {
   
   return {
     rnorm: (n: number = 1, mu: number = 0, sigma = 1) =>

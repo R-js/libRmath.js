@@ -29,43 +29,38 @@ import * as debug from 'debug';
 const printer = debug('punif');
 
 import { ML_ERR_return_NAN, R_D_val, R_DT_0, R_DT_1 } from '../common/_general';
+import { forEach } from '../r-func';
 
 const { isNaN: ISNAN, isFinite: R_FINITE } = Number;
 
-const { isArray } = Array;
-
 export function punif(
-  x: number | number[],
-  a: number = 0,
-  b: number = 1,
-  lower_tail: boolean = true,
-  log_p: boolean = false
+  q: number | number[],
+  min: number = 0,
+  max: number = 1,
+  lowerTail: boolean = true,
+  logP: boolean = false
 ): number | number[] {
-  let fa = (() => (isArray(x) && x) || [x])();
-
-  let result = fa.map(fx => {
-    if (ISNAN(fx) || ISNAN(a) || ISNAN(b)) {
-      return fx + a + b;
+  return forEach(q)(fx => {
+    if (ISNAN(fx) || ISNAN(min) || ISNAN(max)) {
+      return fx + min + max;
     }
 
-    if (b < a) {
+    if (max < min) {
       return ML_ERR_return_NAN(printer);
     }
-    if (!R_FINITE(a) || !R_FINITE(b)) {
+    if (!R_FINITE(min) || !R_FINITE(max)) {
       return ML_ERR_return_NAN(printer);
     }
 
-    if (fx >= b) {
-      return R_DT_1(lower_tail, log_p);
+    if (fx >= max) {
+      return R_DT_1(lowerTail, logP);
     }
-    if (fx <= a) {
-      return R_DT_0(lower_tail, log_p);
+    if (fx <= min) {
+      return R_DT_0(lowerTail, logP);
     }
-    if (lower_tail) {
-      return R_D_val(log_p, (fx - a) / (b - a));
+    if (lowerTail) {
+      return R_D_val(logP, (fx - min) / (max - min));
     }
-    return R_D_val(log_p, (b - fx) / (b - a));
-  });
-
-  return result.length === 1 ? result[0] : result;
+    return R_D_val(logP, (max - fx) / (max - min));
+  }) as any; 
 }

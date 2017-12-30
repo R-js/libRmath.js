@@ -34,10 +34,10 @@
 
 import * as debug from 'debug';
 
-import { ML_ERR_return_NAN } from '~common';
+import { ML_ERR_return_NAN } from '../common/_general';
+import { seq } from '../r-func';
 
 const { isNaN: ISNAN, isFinite: R_FINITE } = Number;
-
 const printer = debug('rnorm');
 
 export function rnorm(
@@ -46,7 +46,8 @@ export function rnorm(
   sigma: number = 1,
   norm_rand: () => number
 ): number | number[] {
-  let result = new Array(n).fill(0).map(() => {
+
+  let result = seq()()(1, n).map(() => {
     if (ISNAN(mu) || !R_FINITE(sigma) || sigma < 0) {
       return ML_ERR_return_NAN(printer);
     }

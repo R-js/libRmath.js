@@ -27,7 +27,7 @@ export const special = {
   lbeta
 };
 
-function NSbeta(norm: INormal = Normal()) {
+export function Beta(norm: INormal = Normal()) {
   function dbeta<T>(
     x: T,
     shape1: number,
@@ -92,12 +92,9 @@ function NSbeta(norm: INormal = Normal()) {
   }
 
   return Object.freeze({
-   
     dbeta,
     pbeta,
     qbeta,
     rbeta
   });
 }
-
-export { NSbeta as Beta };

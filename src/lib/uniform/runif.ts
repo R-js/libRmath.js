@@ -32,17 +32,18 @@ const printer = debug('runif');
 
 export function runif(
   n: number = 1,
-  a: number = 0,
-  b: number = 1,
-  u: IRNG 
+  min: number = 0,
+  max: number = 1,
+  u: IRNG
 ): number | number[] {
-  if (!(R_FINITE(a) && R_FINITE(b) && b > a)) {
+
+  if (!(R_FINITE(min) && R_FINITE(max) && max > min)) {
     return ML_ERR_return_NAN(printer);
   }
 
   let result = new Array(n).fill(0).map(() => {
     const s = u.unif_rand();
-    return (b - a) * s + a;
+    return (max - min) * s + min;
   });
 
   return result.length === 1 ? result[0] : result;

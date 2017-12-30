@@ -52,19 +52,16 @@
 
 import * as debug from 'debug';
 
-import { ML_ERR_return_NAN, R_Q_P01_boundaries } from '~common';
-
 import { R_DT_CIv, R_DT_qIv } from '~exp-utils';
+import { ML_ERR_return_NAN, R_Q_P01_boundaries } from '../common/_general';
+import { forEach } from '../r-func';
 
 const printer = debug('qnorm');
 
-const {
-  isNaN: ISNAN,
-  NEGATIVE_INFINITY: ML_NEGINF,
-  POSITIVE_INFINITY: ML_POSINF
-} = Number;
+const { isNaN: ISNAN } = Number;
 const { log, sqrt, abs: fabs } = Math;
-const { isArray } = Array;
+const ML_NEGINF = -Infinity;
+const ML_POSINF = Infinity;
 
 export function qnorm<T>(
   p: T,
@@ -78,9 +75,8 @@ export function qnorm<T>(
 
   let r;
   let val;
-  let fa: number[] = (() => (isArray(p) && p) || [p])() as any;
 
-  let result = fa.map((fx: number) => {
+  return forEach(p)(fx => {
     if (ISNAN(fx) || ISNAN(mu) || ISNAN(sigma)) return fx + mu + sigma;
 
     let rc = R_Q_P01_boundaries(lower_tail, log_p, fx, ML_NEGINF, ML_POSINF);
@@ -222,7 +218,5 @@ export function qnorm<T>(
       /* return (q >= 0.)? r : -r ;*/
     }
     return mu + sigma * val;
-  });
-
-  return (result.length === 1 ? result[0] : result) as any;
+  }) as any;
 }

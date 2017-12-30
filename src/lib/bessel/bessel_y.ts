@@ -42,14 +42,15 @@ import {
 
 const { min: min0, PI: M_PI } = Math;
 const {
-  NEGATIVE_INFINITY: ML_NEGINF,
+  isNaN:ISNAN,
   NaN: ML_NAN,
-  isNaN: ISNAN,
-  POSITIVE_INFINITY: ML_POSINF,
   MAX_VALUE:DBL_MAX,
   MIN_VALUE:DBL_MIN,
   EPSILON:DBL_EPSILON
 } = Number;
+
+const ML_NEGINF = -Infinity;
+const ML_POSINF = Infinity;
 
 import { cospi, sinpi } from '~trigonometry';
 import { bessel_j, bessel_j_ex } from './bessel_j';

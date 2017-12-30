@@ -71,7 +71,9 @@ import {
   R_D__1,
   R_DT_0,
   R_DT_1
-} from '~common';
+} from '../common/_general';
+
+import { forEach } from '../r-func';
 
 const {
   isNaN: ISNAN,
@@ -82,7 +84,7 @@ const {
 } = Number;
 
 const { trunc, log, exp, abs: fabs, log1p } = Math;
-const { isArray } = Array;
+
 
 import { NumberW } from '../common/toms708';
 
@@ -112,15 +114,14 @@ function do_del(
 }
 
 export function pnorm5<T>(
-  x: T,
+  q: T,
   mu: number = 0,
   sigma: number = 1,
-  lower_tail: boolean = true,
-  log_p: boolean = false
+  lowerTail: boolean = true,
+  logP: boolean = false
 ): T {
-  let fa: number[] = (() => (isArray(x) && x) || [x])() as any;
 
-  let result = fa.map(fx => {
+  return forEach(q)( fx => {
     let p = new NumberW(0);
     let cp = new NumberW(0);
 
@@ -134,18 +135,17 @@ export function pnorm5<T>(
     if (sigma <= 0) {
       if (sigma < 0) return ML_ERR_return_NAN(printer);
       /* sigma = 0 : */
-      return fx < mu ? R_DT_0(lower_tail, log_p) : R_DT_1(lower_tail, log_p);
+      return fx < mu ? R_DT_0(lowerTail, logP) : R_DT_1(lowerTail, logP);
     }
     p.val = (fx - mu) / sigma;
     if (!R_FINITE(p.val))
-      return fx < mu ? R_DT_0(lower_tail, log_p) : R_DT_1(lower_tail, log_p);
+      return fx < mu ? R_DT_0(lowerTail, logP) : R_DT_1(lowerTail, logP);
     fx = p.val;
 
-    pnorm_both(fx, p, cp, !lower_tail, log_p);
+    pnorm_both(fx, p, cp, !lowerTail, logP);
 
-    return lower_tail ? p.val : cp.val;
-  });
-  return (result.length === 1 ? result[0] : result) as any;
+    return lowerTail ? p.val : cp.val;
+  }) as any;
 }
 
 export function pnorm_both(

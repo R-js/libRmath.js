@@ -24,29 +24,25 @@
  * 
  * */
 
-import { R_D__0 } from '~common';
+import { R_D__0 } from '../common/_general';
+import { forEach } from '../r-func';
 
 const { isNaN: ISNAN } = Number;
 const { log } = Math;
-const { isArray } = Array;
 
 export function dunif(
   x: number | number[],
-  a: number = 0,
-  b: number = 1,
-  giveLog: boolean = false
-): number|number[] {
-  
-  let fa = ( () => (isArray(x) && x) || [x])(); 
-
-  const result = fa.map(fx => {
-    if (ISNAN(fx) || ISNAN(a) || ISNAN(b)) {
-      return fx + a + b;
+  min: number = 0,
+  max: number = 1,
+  logP: boolean = false
+): number | number[] {
+  return forEach(x)(fx => {
+    if (ISNAN(fx) || ISNAN(min) || ISNAN(max)) {
+      return fx + min + max;
     }
-    if (a <= fx && fx <= b) {
-      return giveLog ? -log(b - a) : 1 / (b - a);
+    if (min <= fx && fx <= max) {
+      return logP ? -log(max - min) : 1 / (max - min);
     }
-    return R_D__0(giveLog); // return logP ? ML_NEGINF : 0.0;
-  });
-  return result.length === 1 ? result[0] : result;
+    return R_D__0(logP); // return logP ? ML_NEGINF : 0.0;
+  }) as any;
 }

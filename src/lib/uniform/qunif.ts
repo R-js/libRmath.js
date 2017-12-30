@@ -30,33 +30,29 @@ import { ML_ERR_return_NAN, R_Q_P01_check } from '../common/_general';
 
 import * as debug from 'debug';
 import { R_DT_qIv } from '~exp-utils';
+import { forEach } from '../r-func';
 
 const { isNaN: ISNAN, isFinite: R_FINITE } = Number;
 const printer = debug('qunif');
-const { isArray } = Array;
 
 export function qunif(
   p: number | number[],
-  a: number = 0,
-  b: number = 1,
-  lower_tail: boolean = true,
-  log_p: boolean = false
-): number| number[] {
-  let fa = (() => (isArray(p) && p) || [p])();
+  min: number = 0,
+  max: number = 1,
+  lowerTail: boolean = true,
+  logP: boolean = false
+): number | number[] {
+  return forEach(p)(fp => {
+    if (ISNAN(fp) || ISNAN(min) || ISNAN(max)) return NaN;
 
-  let result = fa.map(fp => {
-    if (ISNAN(fp) || ISNAN(a) || ISNAN(b)) return fp + a + b;
-
-    let rc = R_Q_P01_check(log_p, fp);
+    let rc = R_Q_P01_check(logP, fp);
     if (rc !== undefined) {
       return rc;
     }
-    if (!R_FINITE(a) || !R_FINITE(b)) return ML_ERR_return_NAN(printer);
-    if (b < a) return ML_ERR_return_NAN(printer);
-    if (b === a) return a;
+    if (!R_FINITE(min) || !R_FINITE(max)) return ML_ERR_return_NAN(printer);
+    if (max < min) return ML_ERR_return_NAN(printer);
+    if (max === min) return min;
 
-    return a + R_DT_qIv(lower_tail, log_p, fp) * (b - a);
-  });
-
-  return result.length === 1 ? result[0] : result;
+    return min + R_DT_qIv(lowerTail, logP, fp) * (max - min);
+  }) as any;
 }
