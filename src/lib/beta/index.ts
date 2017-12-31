@@ -43,7 +43,7 @@ export function Beta(norm: INormal = Normal()) {
   }
 
   function pbeta<T>(
-    x: T,
+    q: T,
     shape1: number,
     shape2: number,
     ncp?: number,
@@ -51,9 +51,9 @@ export function Beta(norm: INormal = Normal()) {
     logP: boolean = false
   ): T {
     if (ncp === undefined) {
-      return _pbeta(x, shape1, shape2, lowerTail, logP);
+      return _pbeta(q, shape1, shape2, lowerTail, logP);
     } else {
-      return _pnbeta(x, shape1, shape2, ncp, lowerTail, logP);
+      return _pnbeta(q, shape1, shape2, ncp, lowerTail, logP);
     }
   }
 

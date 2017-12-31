@@ -22,7 +22,7 @@
  */
 import * as debug from 'debug';
 
-import { ME, ML_ERR_return_NAN, ML_ERROR, R_P_bounds_01 } from '~common';
+import { ME, ML_ERR_return_NAN, ML_ERROR, R_P_bounds_01 } from '../common/_general';
 
 import { lgammafn } from '../gamma/lgamma_fn';
 

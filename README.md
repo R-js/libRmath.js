@@ -808,8 +808,7 @@ _in R Console_
 
 #### Inversion
 
-Inverse transform sampling [wiki](
-https://en.wikipedia.org/wiki/Inverse_transform_sampling)
+Inverse transform sampling [wiki](https://en.wikipedia.org/wiki/Inverse_transform_sampling)
 
 example usage:
 
@@ -1384,12 +1383,13 @@ _in R console_
 
 #### summary
 
-`libRmath.so` contains 19 probability distributions (other then `Normal` and `Uniform`) with their specific density, quantile and random generators, all are ported and have been verified to yield the same.
+`libRmath.so` contains 19 probability distributions (other then `Normal` and `Uniform`) with their specific density, quantile and random generators, all are ported and have been verified to yield the same output.
 
 ### Beta distribution
 
 `dbeta, qbeta, pbeta, rbeta`
-R documentation [here]()
+
+See [R doc]()
 
 These functions are members of an object created by the `Beta` factory method. The factory method needs the return object of the `Normal` factory method. Various instantiation methods are given below.
 
@@ -1400,11 +1400,11 @@ const libR = require('lib-r-math.js');
 const { Normal, Beta, rng } = libR;
 
 // All options specified in creating Beta distribution object.
-const beta1 = Beta(Normal(
-    new rng.normal.BoxMuller( //
-        new rng.SuperDuper(0)
-    )
-));
+const beta1 = Beta(
+  Normal(
+    new rng.normal.BoxMuller(new rng.SuperDuper(0)) //
+  )
+);
 
 // Or
 
@@ -1417,119 +1417,117 @@ const { dbeta, pbeta, qbeta, rbeta } = betaDefault;
 
 The density function. See [R doc]()
 
+$$ \frac{\Gamma(a+b)}{Γ(a) Γ(b)} x^{(a-1)}(1-x)^{(b-1)} $$
+
 _decl:_
 
 ```typescript
 function dbeta(
   x: number | number[],
-  mu = 0,
-  sigma = 1,
+  shape1: number,
+  shape2: number,
+  ncp = undefined,
   giveLog = false
 ): number | number[];
 ```
 
-* `x`:scalar or array of quantiles
-* `mu`: mean (default 0)
-* `sigma`: standard deviation
-* `giveLog`: give result as log value
+* `x`: scalar or array of quantiles. 0 <= x <= 1
+* `shape1`: non-negative `a` parameter of the Beta distribution.
+* `shape2`: non-negative `b` parameter of the Beta distribution.
+* `ncp`: non centrality parameter. _Note: `undefined` is different then `0`_
+* `Log`: return result as log(p)
 
 ```javascript
 const libR = require('lib-r-math.js');
-const { Normal } = libR;
-const { seq } = libR.R;
-const { rnorm, dnorm, pnorm, qnorm } = Normal();
+const { Beta } = libR;
 
-dnorm(0); //standard normal density, max value at '0'
-//0.3989422804014327
-dnorm(3, 4, 2); // standard normal with mean=4 and sigma=2, value at 3
-//0.17603266338214976
-dnorm(-10); // course the gaussian is almost zero 10 sigmas from the mean
-//7.69459862670642e-23
-dnorm([-Infinity, Infinity, NaN, -4, -3, -2, 0, 1, 2, 3, 4]);
+//just go with Default.. uses Normal(), defaults to PRNG "Inversion" and "Mersenne-Twister"
+const betaDefault = Beta();
+const { dbeta, pbeta, qbeta, rbeta } = betaDefault;
+
+// ncp argument = 1
+dbeta(0.4, 2, 2, 1);
+//1.287245740256553
+
+// give as log
+dbeta(0.4, 2, 2, undefined, true);
+//0.36464311358790935
+
+dbeta(0.4, 2, 2, 1, true);
+//0.25250485075747914
+
+dbeta([0, 0.2, 0.4, 0.8, 1, 1.2], 2, 2);
 /*
-[ 0,
-  0,
-  NaN,
-  0.00013383022576488537,
-  0.0044318484119380075,
-  0.05399096651318806,
-  0.3989422804014327,
-  0.24197072451914337,
-  0.05399096651318806,
-  0.0044318484119380075,
-  0.00013383022576488537 ]
-*/
-dnorm(
-  seq(0)(0)(-4, 4), //[-4,-3,..., 4]
-  2, //mu = 2
-  1, //sigma = 1
-  true //give return values as log
-);
-/*
-[ -18.918938533204674,
-  -13.418938533204672,
-  -8.918938533204672,
-  -5.418938533204673,
-  -2.9189385332046727,
-  -1.4189385332046727,
-  -0.9189385332046728,
-  -1.4189385332046727,
-  -2.9189385332046727 ]
+    [ 0,
+      0.9600000000000001,
+      1.4400000000000002,
+      0.9599999999999999,
+      0,
+      0 ]
 */
 ```
 
 _in R Console_
 
 ```R
-> dnorm(seq(-4,4),2, 1, TRUE)
-[1] -18.9189385 -13.4189385
-[3]  -8.9189385  -5.4189385
-[5]  -2.9189385  -1.4189385
-[7]  -0.9189385  -1.4189385
-[9]  -2.9189385
+> dbeta(0.4,2,2, ncp=1)
+> [1] 1.287246
+> dbeta(0.4,2,2, log = TRUE)
+> [1] 0.3646431
+> dbeta(0.4,2,2, ncp=1, TRUE)
+> [1] 0.2525049
+> dbeta( c(-1,0,0.2,0.4,0.8,1,1.2), 2, 2, 1)
+[1] 0.0000000 0.0000000
+[3] 0.7089305 1.2872457
+[5] 1.2392653 0.0000000
+[7] 0.0000000
 ```
 
-#### `pnorm`
+#### `pbeta`
 
 ```typescript
-function pnorm(
-  q: number | number[],
-  mu = 0,
-  sigma = 1,
-  lowerTail = true,
-  logP = false
-): number | number[];
+function pbeta(
+  q: number|number[],
+  shape1: number,
+  shape2: number,
+  ncp?: number,
+  lowerTail: boolean = true,
+  logP: boolean = false
+  ): number|number[]
 ```
 
-* `q`:scalar or array of quantiles
-* `mu`: mean (default 0)
-* `sigma`: standard deviation
-* `lowerTail`: if `true` (default), probabilities are P[X ≤ x], otherwise, P[X > x].
-* `logP`: give result as log value
+* `x`: scalar or array of quantiles. 0 <= x <= 1
+* `shape1`: non-negative `a` parameter of the Beta distribution.
+* `shape2`: non-negative `b` parameter of the Beta distribution.
+* `ncp`: non centrality parameter. _Note: `undefined` is different then `0`_
+* `lowerTail`: if TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
+* `Log`: return probabilities as log(p)
 
 ```javascript
 const libR = require('lib-r-math.js');
 const { Normal, arrayrify } = libR;
-const { rnorm, dnorm, pnorm, qnorm } = Normal();
+const { arrayrify } = libR.R;
 
-pnorm(0);
-//0.5
-pnorm([-1, 0, 1]);
-//[ 0.15865525393145705, 0.5, 0.8413447460685429 ]
+const log = arrayrify(Math.log); // Make Math.log accept/return arrays aswell as scalars
 
-pnorm([-1, 0, 1], 0, 1, false); // propability upper tail, reverse above result
-//[ 0.8413447460685429, 0.5, 0.15865525393145705 ]
+//just go with Default.. uses Normal(), defaults to PRNG "Inversion" and "Mersenne-Twister"
+const betaDefault = Beta();
+const { dbeta, pbeta, qbeta, rbeta } = betaDefault;
 
-pnorm([-1, 0, 1], 0, 1, false, true); // probabilities as log(p)
-//[ -0.17275377902344988, -0.6931471805599453, -1.8410216450092636 ]
+pbeta(0.5, 2, 5);
 
-// Above result is the same as
-const log = arrayrify(Math.log);
-log(pnorm([-1, 0, 1], 0, 1, false));
-//[ -0.1727537790234499, -0.6931471805599453, -1.8410216450092636 ]
+pbeta(0.5, 2, 5, 4);
+
+pbeta([0, 0.2, 0.4, 0.6, 0.8, 1], 2, 5, 4);
+
+pbeta([0, 0.2, 0.4, 0.6, 0.8, 1], 2, 5, 4, undefined, false);
+
+const logP = log([0, 0.2, 0.4, 0.6, 0.8, 1]);
+pbeta(logP, 2, 5, 4, undefined, false, true);
 ```
 
 _in R console_
+
 
 ```R
 > pnorm(-1:1, 0, 1, FALSE, TRUE)

@@ -1449,7 +1449,8 @@ public class toms708 {
 		return dResult;
 	}
 
-	public static void bratio (double a,
+	public static void bratio (
+		    double a,
 			double b,
 			double x,
 			double y,

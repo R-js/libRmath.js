@@ -45,8 +45,9 @@ import {
   R_DT_0,
   R_DT_1
 } from '../common/_general';
-
 import { NumberW, Toms708 } from '../common/toms708';
+import { forEach } from '../r-func';
+
 const  { isNaN: ISNAN, isFinite: R_FINITE} = Number;
 const {LN2: M_LN2 } = Math;
 
@@ -101,23 +102,21 @@ const printer_pbeta = debug('pbeta');
 
 export function pbeta<T>(
   q: T,
-  a: number = 0.5,
-  b: number = 0.5,
-  lower_tail: boolean = true,
-  log_p: boolean = false
+  a: number,
+  b: number,
+  lowerTail: boolean = true,
+  logP: boolean = false
 ): T {
-  const fa: number[] = Array.isArray(q) ? q : [q] as any;
 
-  const result = fa.map(x => {
+  return forEach(q)(x => {
     if (ISNAN(x) || ISNAN(a) || ISNAN(b)) return x + a + b;
 
     if (a < 0 || b < 0) return ML_ERR_return_NAN(printer_pbeta);
     // allowing a==0 and b==0  <==> treat as one- or two-point mass
 
-    if (x <= 0) return R_DT_0(lower_tail, log_p);
-    if (x >= 1) return R_DT_1(lower_tail, log_p);
+    if (x <= 0) return R_DT_0(lowerTail, logP);
+    if (x >= 1) return R_DT_1(lowerTail, logP);
 
-    return pbeta_raw(x, a, b, lower_tail, log_p);
-  });
-  return result.length === 1 ? result[0] : result as any;
+    return pbeta_raw(x, a, b, lowerTail, logP);
+  }) as any;
 }
