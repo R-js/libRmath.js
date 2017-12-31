@@ -35,14 +35,25 @@ dbeta([0, 0.2, 0.4, 0.8, 1, 1.2], 2, 2);
       0,
       0 ]
 */
+
+
+//1.
 pbeta(0.5, 2, 5);
 
+//2.
 pbeta(0.5, 2, 5, 4);
 
+//3.
 pbeta([0, 0.2, 0.4, 0.6, 0.8, 1], 2, 5, 4);
 
-pbeta([0, 0.2, 0.4, 0.6, 0.8, 1], 2, 5, undefined, false);
+//4.
+pbeta([0, 0.2, 0.4, 0.6, 0.8, 1], 2, 5, undefined);
 
-const logP = log([0, 0.2, 0.4, 0.6, 0.8, 1]);
-console.log(logP);
-pbeta(logP, 2, 5, undefined, false, true);
+//5. Same as 4
+pbeta([0, 0.2, 0.4, 0.6, 0.8, 1], 2, 5, undefined, false).map(v => 1 - v);
+
+//6.
+pbeta([0, 0.2, 0.4, 0.6, 0.8, 1], 2, 5, undefined, true, true);
+
+//7. Same as 6
+log(pbeta([0, 0.2, 0.4, 0.6, 0.8, 1], 2, 5, undefined, true));

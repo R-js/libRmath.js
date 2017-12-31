@@ -1487,13 +1487,13 @@ _in R Console_
 
 ```typescript
 function pbeta(
-  q: number|number[],
+  q: number | number[],
   shape1: number,
   shape2: number,
   ncp?: number,
   lowerTail: boolean = true,
   logP: boolean = false
-  ): number|number[]
+): number | number[];
 ```
 
 * `x`: scalar or array of quantiles. 0 <= x <= 1
@@ -1514,27 +1514,87 @@ const log = arrayrify(Math.log); // Make Math.log accept/return arrays aswell as
 const betaDefault = Beta();
 const { dbeta, pbeta, qbeta, rbeta } = betaDefault;
 
+//1.
 pbeta(0.5, 2, 5);
+//0.890625
 
+//2.
 pbeta(0.5, 2, 5, 4);
+//0.6392384298407979
 
+//3.
 pbeta([0, 0.2, 0.4, 0.6, 0.8, 1], 2, 5, 4);
+/*
+[ 0,
+  0.10651771838654696,
+  0.4381503446552259,
+  0.8135393957100374,
+  0.9860245167373386,
+  1 ]
+*/
 
-pbeta([0, 0.2, 0.4, 0.6, 0.8, 1], 2, 5, 4, undefined, false);
+//4.
+pbeta([0, 0.2, 0.4, 0.6, 0.8, 1], 2, 5, undefined);
+/*[ 0,
+  0.3450274742710367,
+  0.7667200000000001,
+  0.9590399999999999,
+  0.9984,
+  1 ]*/
 
-const logP = log([0, 0.2, 0.4, 0.6, 0.8, 1]);
-pbeta(logP, 2, 5, 4, undefined, false, true);
+//5. Same as 4
+pbeta([0, 0.2, 0.4, 0.6, 0.8, 1], 2, 5, undefined, false).map(v => 1 - v);
+//[ 0, 0.34502747427103664, 0.7667200000000001, 0.95904, 0.9984, 1 ]
+
+//6.
+pbeta([0, 0.2, 0.4, 0.6, 0.8, 1], 2, 5, undefined, true, true);
+/*[ -Infinity,
+  -1.0641312295532985,
+  -0.2656336029351618,
+  -0.04182249485383877,
+  -0.0016012813669738792,
+  0 ]
+  */
+
+//7. Same as 6
+log(pbeta([0, 0.2, 0.4, 0.6, 0.8, 1], 2, 5, undefined, true));
+/*[ -Infinity,
+  -1.0641312295532985,
+  -0.2656336029351618,
+  -0.04182249485383877,
+  -0.0016012813669738792,
+  0 ]*/
 ```
 
 _in R console_
 
-
 ```R
-> pnorm(-1:1, 0, 1, FALSE, TRUE)
-[1] -0.1727538 -0.6931472 -1.8410216
+> pbeta(0.5, 2, 5);
+[1] 0.890625
+
+> pbeta(0.5, 2, 5, 4)
+[1] 0.6392384
+
+> pbeta(c(0, 0.2, 0.4, 0.6, 0.8, 1), 2, 5, 4);
+[1] 0.0000000 0.1061302 0.4381503 0.8135394
+[5] 0.9860245 1.0000000
+
+> pbeta(c(0, 0.2, 0.4, 0.6, 0.8, 1), 2, 5);
+[1] 0.00000 0.34464 0.76672 0.95904 0.99840 1.00000
+
+> 1-pbeta(c(0, 0.2, 0.4, 0.6, 0.8, 1), 2, 5,lower.tail = FALSE);
+[1] 0.00000 0.34464 0.76672 0.95904 0.99840 1.00000
+
+> pbeta(c(0, 0.2, 0.4, 0.6, 0.8, 1), 2, 5, log.p=TRUE)
+[1]         -Inf -1.065254885 -0.265633603
+[4] -0.041822495 -0.001601281  0.000000000
+
+> log(pbeta(c(0, 0.2, 0.4, 0.6, 0.8, 1), 2, 5, log.p=FALSE))
+[1]         -Inf -1.065254885 -0.265633603
+[4] -0.041822495 -0.001601281  0.000000000
 ```
 
-#### `qnorm`
+#### `qbeta`
 
 The quantile function. See [R doc](http://stat.ethz.ch/r-manual/r-patched/library/stats/html/normal.html])
 

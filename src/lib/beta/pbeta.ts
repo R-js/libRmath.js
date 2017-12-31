@@ -49,7 +49,7 @@ import { NumberW, Toms708 } from '../common/toms708';
 import { forEach } from '../r-func';
 
 const  { isNaN: ISNAN, isFinite: R_FINITE} = Number;
-const {LN2: M_LN2 } = Math;
+const {LN2: M_LN2, log } = Math;
 
 const printer = debug('pbeta_raw');
 
@@ -84,7 +84,7 @@ export function pbeta_raw(
   let ierr: NumberW = new NumberW(0);
   //====
   //Toms708.bratio(a, b, x, x1, &w, &wc, &ierr, log_p); /* -> ./toms708.c */
-  Toms708.bratio(a, b, x, x1, w, wc, ierr, log_p); /* -> ./toms708.c */
+  Toms708.bratio(a, b, x, x1, w, wc, ierr); /* -> ./toms708.c */
   //====
   // ierr in {10,14} <==> bgrat() error code ierr-10 in 1:4; for 1 and 4, warned *there*
   if (ierr && ierr.val && ierr.val !== 11 && ierr.val !== 14)
@@ -95,6 +95,10 @@ export function pbeta_raw(
       b,
       ierr
     );
+  if (log_p){
+    w.val = log(w.val);
+    wc.val = log(wc.val);
+  }  
   return lower_tail ? w.val : wc.val;
 } /* pbeta_raw() */
 

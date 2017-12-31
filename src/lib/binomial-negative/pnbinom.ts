@@ -36,7 +36,7 @@ import * as debug from 'debug';
 import { ML_ERR_return_NAN, R_DT_0, R_DT_1 } from '~common';
 
 const { isNaN: ISNAN, isFinite: R_FINITE } = Number;
-const { floor } = Math;
+const { floor, log } = Math;
 
 import { pbeta } from '../beta/pbeta';
 import { NumberW, Toms708 } from '../common/toms708';
@@ -116,11 +116,14 @@ export function pnbinom_mu<T>(
         mu / (size + mu),
         w,
         wc,
-        ierr,
-        logP
+        ierr
       );
       if (ierr)
         printer('pnbinom_mu() -> bratio() gave error code %d', ierr.val);
+      if (logP) {
+        w.val = log(w.val);
+        wc.val = log(wc.val);
+      }
       return lowerTail ? w.val : wc.val;
     }
   });

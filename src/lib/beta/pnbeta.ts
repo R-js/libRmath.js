@@ -80,7 +80,7 @@ function pnbeta_raw(
   a0 = a + x0;
   lbeta = lgammafn(a0) + lgammafn(b) - lgammafn(a0 + b);
   /* temp = pbeta_raw(x, a0, b, TRUE, FALSE), but using (x, o_x): */
-  Toms708.bratio(a0, b, x, o_x, temp, tmp_c, ierr, false);
+  Toms708.bratio(a0, b, x, o_x, temp, tmp_c, ierr);
 
   gx = exp(
     a0 * log(x) + b * (x < 0.5 ? log1p(-x) : log(o_x)) - lbeta - log(a0)
