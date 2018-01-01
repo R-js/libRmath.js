@@ -1136,10 +1136,10 @@ const libR = require('lib-r-math.js');
 
 // get the suite of functions working with uniform distributions
 const { Normal } = libR;
-const { normal: { BoxMuller }, SuperDuper }
+const { normal: { BoxMuller }, SuperDuper } = libR.rng;
 
 //Create Normal family of functions using "BoxMuller" feeding from "SuperDuper"
-const norm1 = Normal(new BoxMuller( new SuperDuper(0)));
+const norm1 = Normal(new BoxMuller(new SuperDuper(0)));
 
 // using the default "Inversion" feeding from "Mersenne-Twister".
 const norm2 = Normal(); //
@@ -2300,15 +2300,22 @@ const { dnbinom, pnbinom, qnbinom, rnbinom } = NegativeBinomial();
 const log = arrayrify(Math.log);
 
 //1. inversion
-qnbinom(pnbinom([0,2,4,6, Infinity], 3, 0.5), 3, 0.5);
+qnbinom(pnbinom([0, 2, 4, 6, Infinity], 3, 0.5), 3, 0.5);
 //[ 0, 2, 4, 6, Infinity ]
 
 //2. lowerTail=false
-qnbinom(pnbinom([0,2,4,6, Infinity], 3, 0.5), 3, 0.5, undefined, false);
+qnbinom(pnbinom([0, 2, 4, 6, Infinity], 3, 0.5), 3, 0.5, undefined, false);
 //[ 6, 2, 1, 0, 0 ]
 
 //3. with logP=true
-qnbinom( log(pnbinom([0,2,4,6, Infinity], 3, 0.5)), 3, 0.5, undefined, false, true)
+qnbinom(
+  log(pnbinom([0, 2, 4, 6, Infinity], 3, 0.5)),
+  3,
+  0.5,
+  undefined,
+  false,
+  true
+);
 //[ 6, 2, 1, 0, 0 ]
 ```
 
@@ -2325,3 +2332,66 @@ _in R Console_
 [1] 6 2 2 1 0 0
 ```
 
+#### `rnbinom`
+
+Generates random negative binomial deviates. Returns the number of failures to reach `size` successes. See [R doc]()
+
+_decl:_
+
+```typescript
+declare function rnbinom(
+  n: number,
+  size: number,
+  prob: number
+): number | number[];
+```
+
+* `n`: ensemble size.
+* `size`: target of successful trials.
+* `prob`: probability of success in each trial. 0 < prob <= 1
+
+```javascript
+const libR = require('lib-r-math.js');
+const { NegativeBinomial, Normal } = libR;
+const { normal: { Inversion }, MersenneTwister } = libR.rng;
+
+const mt = new MersenneTwister(0);
+
+const { dnbinom, pnbinom, qnbinom, rnbinom } = NegativeBinomial(
+  Normal(new Inversion(mt))
+);
+
+//1. size = 100, prob=0.5, so expect success/failure to be approximatly equal
+rnbinom(7, 100, 0.5);
+//[ 109, 95, 89, 112, 88, 90, 90 ]
+
+//2. size = 100, prob=0.1, so expect failure to be approx 10 x size
+rnbinom(7, 100, 0.1);
+//[ 989, 1004, 842, 974, 820, 871, 798 ]
+
+//3. size = 100, prob=0.9, so expect failure to be approx 1/10 x size
+rnbinom(7, 100, 0.9);
+//[ 10, 14, 9, 7, 12, 11, 10 ]
+
+mt.init(0);//reset
+//4. same as (1.)
+rnbinom(7, 100, undefined, 100*(1-0.5)/0.5);
+//[ 109, 95, 89, 112, 88, 90, 90 ]
+```
+
+_in R Console_
+
+```R
+> rnbinom(7, 100, 0.5);
+[1] 109  95  89 112  88  90  90
+
+> rnbinom(7, 100, 0.1);
+[1]  989 1004  842  974  820  871  798
+
+> rnbinom(7, 100, 0.9);
+[1] 10 14  9  7 12 11 10
+
+> set.seed(0)
+> rnbinom(7, 100, mu=100*(1-0.5)/0.5);
+[1] 109  95  89 112  88  90  90
+```

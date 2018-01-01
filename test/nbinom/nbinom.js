@@ -1,19 +1,17 @@
-//process.env.DEBUG = 'do_search';
 const libR = require('../dist/lib/libR.js');
+const { NegativeBinomial, Normal } = libR;
+const { normal: { Inversion }, MersenneTwister } = libR.rng;
 
-const { Normal, NegativeBinomial, rng } = libR;
+const mt = new MersenneTwister(0);
 
-// All options specified in creating NegativeBinomial distribution object.
-const negBinom1 = NegativeBinomial(
-    Normal(
-        new rng.normal.BoxMuller(new rng.SuperDuper(0)) //
-    )
+const { dnbinom, pnbinom, qnbinom, rnbinom } = NegativeBinomial(
+    Normal(new Inversion(mt))
 );
 //
 // Or
 // Just go with defaults
 const { arrayrify } = libR.R;
-const { dnbinom, pnbinom, qnbinom, rnbinom } = NegativeBinomial();
+
 
 const log = arrayrify(Math.log);
 const seq = libR.R.seq()();
@@ -96,3 +94,20 @@ qnbinom(pnbinom([0, 2, 4, 6, Infinity], 3, 0.5), 3, 0.5, undefined, false);
 //3. with logP=true
 qnbinom(log(pnbinom([0, 2, 4, 6, Infinity], 3, 0.5)), 3, 0.5, undefined, false, true)
     //[ 6, 2, 1, 0, 0 ]
+
+//1. size = 100, prob=0.5, so expect success/failure to be approximatly equal
+rnbinom(7, 100, 0.5);
+//[ 109, 95, 89, 112, 88, 90, 90 ]
+
+//2. size = 100, prob=0.1, so expect failure to be approx 10 x size
+rnbinom(7, 100, 0.1);
+//[ 989, 1004, 842, 974, 820, 871, 798 ]
+
+//3. size = 100, prob=0.9, so expect failure to be approx 1/10 x size
+rnbinom(7, 100, 0.9);
+//[ 10, 14, 9, 7, 12, 11, 10 ]
+
+mt.init(0); //reset
+//4. same as (1.)
+rnbinom(7, 100, undefined, 100 * (1 - 0.5) / 0.5);
+//[ 109, 95, 89, 112, 88, 90, 90 ]
