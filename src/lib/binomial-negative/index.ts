@@ -46,7 +46,7 @@ export function NegativeBinomial(rng: INormal = Normal()) {
     size: number,
     prob?: number,
     mu?: number,
-    giveLog: boolean = false
+    giveLog =  false
   ) {
     const val = mu || prob;
     return select('d', mu, prob)(x, size, val, giveLog);
@@ -57,7 +57,7 @@ export function NegativeBinomial(rng: INormal = Normal()) {
     size: number,
     prob?: number,
     mu?: number,
-    lowerTail: boolean = true,
+    lowerTail = true,
     logP = false
   ) {
     const val = mu || prob;
@@ -69,7 +69,7 @@ export function NegativeBinomial(rng: INormal = Normal()) {
     size: number,
     prob?: number,
     mu?: number,
-    lowerTail: boolean = true,
+    lowerTail = true,
     logP = false
   ) {
     const val = mu || prob;

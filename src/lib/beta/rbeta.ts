@@ -41,7 +41,7 @@ const printer = debug('rbeta');
 export const expmax = DBL_MAX_EXP * M_LN2; /* = log(DBL_MAX) */
 
 export function rbeta(
-  n: number = 1,
+  n: number,
   aa: number,
   bb: number,
   normal: INormal

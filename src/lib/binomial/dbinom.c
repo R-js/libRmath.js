@@ -41,51 +41,68 @@
 #include "nmath.h"
 #include "dpq.h"
 
-double dbinom_raw(double x, double n, double p, double q, int give_log)
+double dbinom_raw(
+    double x, 
+    double n, 
+    double p, 
+    double q, 
+    int give_log)
 {
     double lf, lc;
 
-    if (p == 0) return((x == 0) ? R_D__1 : R_D__0);
-    if (q == 0) return((x == n) ? R_D__1 : R_D__0);
+    if (p == 0)
+        return ((x == 0) ? R_D__1 : R_D__0);
+    if (q == 0)
+        return ((x == n) ? R_D__1 : R_D__0);
 
-    if (x == 0) {
-	if(n == 0) return R_D__1;
-	lc = (p < 0.1) ? -bd0(n,n*q) - n*p : n*log(q);
-	return( R_D_exp(lc) );
+    if (x == 0)
+    {
+        if (n == 0)
+            return R_D__1;
+        lc = (p < 0.1) ? -bd0(n, n * q) - n * p : n * log(q);
+        return (R_D_exp(lc));
     }
-    if (x == n) {
-	lc = (q < 0.1) ? -bd0(n,n*p) - n*q : n*log(p);
-	return( R_D_exp(lc) );
+    if (x == n)
+    {
+        lc = (q < 0.1) ? -bd0(n, n * p) - n * q : n * log(p);
+        return (R_D_exp(lc));
     }
-    if (x < 0 || x > n) return( R_D__0 );
+    if (x < 0 || x > n)
+        return (R_D__0);
 
     /* n*p or n*q can underflow to zero if n and p or q are small.  This
        used to occur in dbeta, and gives NaN as from R 2.3.0.  */
-    lc = stirlerr(n) - stirlerr(x) - stirlerr(n-x) - bd0(x,n*p) - bd0(n-x,n*q);
+    lc = stirlerr(n) - stirlerr(x) - stirlerr(n - x) - bd0(x, n * p) - bd0(n - x, n * q);
 
     /* f = (M_2PI*x*(n-x))/n; could overflow or underflow */
     /* Upto R 2.7.1:
      * lf = log(M_2PI) + log(x) + log(n-x) - log(n);
      * -- following is much better for  x << n : */
-    lf = M_LN_2PI + log(x) + log1p(- x/n);
+    lf = M_LN_2PI + log(x) + log1p(-x / n);
 
-    return R_D_exp(lc - 0.5*lf);
+    return R_D_exp(lc - 0.5 * lf);
 }
 
-double dbinom(double x, double n, double p, int give_log)
+double dbinom(
+    double x, 
+    double n, 
+    double p, 
+    int give_log)
 {
 #ifdef IEEE_754
     /* NaNs propagated correctly */
-    if (ISNAN(x) || ISNAN(n) || ISNAN(p)) return x + n + p;
+    if (ISNAN(x) || ISNAN(n) || ISNAN(p))
+        return x + n + p;
 #endif
 
     if (p < 0 || p > 1 || R_D_negInonint(n))
-	ML_ERR_return_NAN;
+        ML_ERR_return_NAN;
     R_D_nonint_check(x);
-    if (x < 0 || !R_FINITE(x)) return R_D__0;
+    if (x < 0 || !R_FINITE(x))
+        return R_D__0;
 
     n = R_forceint(n);
     x = R_forceint(x);
 
-    return dbinom_raw(x, n, p, 1-p, give_log);
+    return dbinom_raw(x, n, p, 1 - p, give_log);
 }

@@ -132,8 +132,7 @@ function _rbinom(nin: number, pp: number, normal: INormal): number {
       r,
       pp,
       /*lower_tail*/ false,
-      /*log_p*/ false,
-      normal
+      /*log_p*/ false
     );
   /* else */
   n = r;

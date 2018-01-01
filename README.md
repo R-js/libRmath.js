@@ -1496,7 +1496,7 @@ function pbeta(
 ): number | number[];
 ```
 
-* `x`: scalar or array of quantiles. 0 <= x <= 1
+* `p`: quantiles. 0 <= x <= 1
 * `shape1`: non-negative `a` parameter of the Beta distribution.
 * `shape2`: non-negative `b` parameter of the Beta distribution.
 * `ncp`: non centrality parameter. _Note: `undefined` is different then `0`_
@@ -1596,92 +1596,169 @@ _in R console_
 
 #### `qbeta`
 
-The quantile function. See [R doc](http://stat.ethz.ch/r-manual/r-patched/library/stats/html/normal.html])
+The quantile function. See [R doc]()
 
 _decl:_
 
 ```typescript
-function qnorm(
+function qbeta(
   p: number | number[],
-  mu = 0,
-  sigma = 1,
+  shape1: number,
+  shape2: number,
+  ncp = undefined,
   lowerTail = true,
   logP = false
 ): number | number[];
 ```
 
-* `p`: probabilities (scalar or array).
-* `mu`: normal mean (default 0).
-* `sigma`: standard deviation (default 1).
-* `logP`: probabilities are given as log(p).
+* `p`: quantiles (scalar or array).
+* `shape1`: non-negative `a` parameter of the Beta distribution.
+* `shape2`: non-negative `b` parameter of the Beta distribution.
+* `ncp`: non centrality parameter. _Note: `undefined` is different then `0`_
+* `lowerTail`: if TRUE (default), _probabilities_ are P[X ≤ x], otherwise, P[X > x].
+* `Log`: return _probabilities_ as log(p).
 
 ```javascript
 const libR = require('lib-r-math.js');
 const { Normal, arrayrify } = libR;
-const { rnorm, dnorm, pnorm, qnorm } = Normal();
+const { arrayrify } = libR.R;
 
-// Math.log will work on both scalar or an array
-const log = arrayrify(Math.log);
+const log = arrayrify(Math.log); // Make Math.log accept/return arrays aswell as scalars
 
-qnorm(0);
-//-Infinity
+//just go with Default.. uses Normal(), defaults to PRNG "Inversion" and "Mersenne-Twister"
+const betaDefault = Beta();
+const { dbeta, pbeta, qbeta, rbeta } = betaDefault;
 
-qnorm([-1, 0, 1]); // -1 makes no sense
-//[ NaN, -Infinity, Infinity ]
+//1. always zero, regardless of shape params, because 0 ≤ x ≤ 1.
+qbeta(0, 99, 66);
 
-qnorm([0, 0.25, 0.5, 0.75, 1], 0, 2); // take quantiles of 25%
-//[ -Infinity, -1.3489795003921634, 0, 1.3489795003921634, Infinity ]
+//2.
+qbeta([0, 1], 99, 66);
+//[0, 1]
 
-qnorm([0, 0.25, 0.5, 0.75, 1], 0, 2, false); // same but use upper Tail of distribution
-//[ Infinity, 1.3489795003921634, 0, -1.3489795003921634, -Infinity ]
+//3. take quantiles of 25%
+qbeta([0, 0.25, 0.5, 0.75, 1], 4, 5);
+//[0, 0.3290834273473526, 0.4401552046347658, 0.555486315052315, 1]
 
-qnorm(log([0, 0.25, 0.5, 0.75, 1]), 0, 2, false, true); //
-//[ Infinity, 1.3489795003921634, 0, -1.3489795003921634, -Infinity ]
+//4. ncp = 3
+qbeta([0, 0.25, 0.5, 0.75, 1], 4, 5, 3);
+/*[0,
+    0.4068615143975546,
+    0.5213446410803881,
+    0.6318812884183387,
+    1
+]*/
+
+//5. ncp = undefined, lowerTail = false, logP=false(default)
+qbeta([0, 0.25, 0.5, 0.75, 1], 4, 5, undefined, false); //
+//[1, 0.555486315052315, 0.4401552046347658, 0.3290834273473526, 0]
+
+//6. same as [5] but, logP=true,
+qbeta(
+  log([0, 0.25, 0.5, 0.75, 1]), //uses log!!
+  4,
+  5,
+  undefined,
+  false,
+  true //logP=true (default=false)
+);
+//[1, 0.5554863150523149, 0.4401552046347659, 0.3290834273473526,0]
 ```
 
 _in R console_
 
 ```R
-#R console
-> qnorm( c( 0, 0.05, 0.25 ,0.5 , 0.75, 0.95, 1));
-[1] -Inf -1.6448536 -0.6744898  0.0000000  0.6744898  1.6448536 Inf
+> qbeta(0,99,66)
+[1] 0
+> qbeta(c(0,1),99,66)
+[1] 0 1
+> qbeta(c(0,.25,.5,.75,1),4,5)
+[1] 0.0000000 0.3290834 0.4401552 0.5554863
+[5] 1.0000000
+> qbeta(c(0,.25,.5,.75,1),4,5,3)
+[1] 0.0000000 0.4068615 0.5213446 0.6318813
+[5] 1.0000000
+> qbeta(c(0,.25,.5,.75,1),4,5, lower.tail = FALSE)
+[1] 1.0000000 0.5554863 0.4401552 0.3290834
+[5] 0.0000000
+> qbeta(  log(c(0,.25,.5,.75,1))  ,4,5, lower.tail = FALSE, log.p=TRUE)
+[1] 1.0000000 0.5554863 0.4401552 0.3290834
+[5] 0.0000000
 ```
 
-#### `rnorm`
+#### `rbeta`
 
-Generates random normal deviates. See [R doc](http://stat.ethz.ch/r-manual/r-patched/library/stats/html/normal.html])
+Generates random beta deviates. See [R doc]()
 
 _decl:_
 
 ```typescript
-function rnorm(n = 1, mu = 0, sigma = 1): number | number[];
+function rbeta(
+  n: number,
+  shape1: number,
+  shape2: number,
+  ncp = 0 // NOTE: normally the default is "undefined", but not here
+): number | number[];
 ```
 
 * `n`: number of deviates
-* `mu`: mean of the distribution. Defaults to 0.
-* `sigma`: standard deviation. Defaults to 1.
+* `shape1`: non-negative `a` parameter of the Beta distribution.
+* `shape2`: non-negative `b` parameter of the Beta distribution.
+* `ncp`: non centrality parameter.
 
 ```javascript
 const libR = require('lib-r-math.js');
-const { Normal } = libR;
+const { Normal, arrayrify } = libR;
+const { arrayrify } = libR.R;
 
-//default Mersenne-Twister/Inversion
-const { rnorm, dnorm, pnorm, qnorm } = Normal();
+const log = arrayrify(Math.log); //
 
-rnorm(5);
-/*[ 1.2629542848807933,
-  -0.3262333607056494,
-  1.3297992629225006,
-  1.2724293214294047,
-  0.4146414344564082 ]
+const ms = new rng.MersenneTwister();
+const normal = Normal(
+  new rng.normal.Inversion(ms) //
+);
+
+const { dbeta, pbeta, qbeta, rbeta } = Beta(normal);
+
+//1.
+rbeta(5, 0.5, 0.5);
+/*[ 
+  0.013098047643758154,
+  0.7400506805879669,
+  0.010111774256128941,
+  0.20854751527938128,
+  0.9956818177201189 ]
 */
-rnorm(5, 2, 3);
-/*[ -2.619850125711128,
-  -0.7857011041406143,
-  1.1158386596283194,
-  1.9826984817573892,
-  9.213960166573852 ]
+//2.
+rbeta(5, 2, 2, 4);
+/*[
+  0.5980046007391424,
+  0.7845364019165674,
+  0.38714281264097156,
+  0.6574810088488372,
+  0.5130534358873073 ]*/
+
+//3. // re-initialize seed
+ms.init(0);
+
+rbeta(5, 2, 2);
+/*[
+  0.8217275310624295,
+  0.40856545946555944,
+  0.8348848069043071,
+  0.6157470523244717,
+  0.12746731085753737 ]
 */
+
+//4.
+rbeta(5, 2, 2, 5);
+/*[
+  0.5980046007391424,
+  0.7845364019165674,
+  0.38714281264097156,
+  0.7444424314387296,
+  0.5130534358873073 ]
+  */
 ```
 
 Same values as in R
@@ -1699,5 +1776,294 @@ _in R console_
 [1] -2.6198501 -0.7857011
 [3]  1.1158387  1.9826985
 [5]  9.2139602
->
+> set.seed(0)
+> rbeta(5,2,2)
+[1] 0.8217275 0.4085655 0.8348848 0.6157471
+[5] 0.1274673
+> rbeta(5,2,2,5)
+[1] 0.5980046 0.7845364 0.3871428 0.7444424
+[5] 0.5130534
+```
+
+### Binomial distribution
+
+`dbinom, qbinom, pbinom, rbinom`
+
+See [R doc]()
+
+These functions are members of an object created by the `Binomial` factory method. The factory method needs the return object of the `Normal` factory method. Various instantiation methods are given below.
+
+Instantiation:
+
+```javascript
+const libR = require('lib-r-math.js');
+const { Normal, Binomial, rng } = libR;
+
+// All options specified in creating Beta distribution object.
+const binom1 = Binomial(
+  Normal(
+    new rng.normal.BoxMuller(new rng.SuperDuper(0)) //
+  )
+);
+
+// Or
+
+//just go with defaults
+const binom2 = Binomial();
+const { dbinom, pbinom, qbinom, rbinom } = binom2;
+```
+
+#### `dbinom`
+
+The density function $p(x) = \frac{n!}{x!(n-x)!} p^{x} (1-p)^{n-x}$. See [R doc]()
+
+
+
+_decl:_
+
+```typescript
+declare function dbinom(
+  x: number,
+  size: number,
+  p: number,
+  Log = false
+): number | number[];
+```
+
+* `x`: scalar or array of quantiles.
+* `size`: number of trails
+* `p`: probability of success.
+* `Log`: return result as log(p)
+
+```javascript
+const libR = require('lib-r-math.js');
+const { Binomial } = libR;
+
+//Binomial()  uses Normal() as default argument,
+const { dbinom, pbinom, qbinom, rbinom } = Binomial();
+
+//1. 2 successes out of 4 trials, with success probility 0.3
+dbinom(2, 4, 0.3);
+//0.2646000000000001
+
+//2. same as [1], but results as log
+dbinom(2,4,0.3, true);
+//-1.3295360273012813
+
+//3. all possibilities out of 4 trials
+dbinom([0,1,2,3,4], 4, 0.3);
+/*[ 0.24009999999999992,
+  0.41159999999999997,
+  0.2646000000000001,
+  0.0756,
+  0.008099999999999996 ]
+*/
+dbinom([0,1,2,3,4], 4, 0.3, true);
+/*[ -1.4266997757549298,
+  -0.8877032750222426,
+  -1.3295360273012813,
+  -2.58229899579665,
+  -4.8158912173037445 ]*/
+
+```
+
+_in R Console_
+
+```R
+> dbinom(2,4,0.3)
+[1] 0.2646
+> dbinom(2,4,0.3, TRUE)
+[1] -1.329536
+> dbinom(c(0,1,2,3,4),4,0.3)
+[1] 0.2401 0.4116 0.2646 0.0756 0.0081
+> dbinom(c(0,1,2,3,4),4,0.3, TRUE)
+[1] -1.4266998 -0.8877033 -1.3295360 -2.5822990
+[5] -4.8158912
+```
+
+#### `pbinom`
+
+```typescript
+declare function pbinom(
+  q: number | number[],
+  size: number,
+  prob: number,
+  lowerTail = true,
+  logP = false
+): number | number[];
+```
+
+* `q`: scalar or array of quantiles.
+* `size`: number of trails
+* `prob`: probability of success.
+* `lowerTail`: if TRUE (default), _probabilities_ are P[X ≤ x], otherwise, P[X > x].
+* `Log`: return result as log(p)
+
+```javascript
+const libR = require('lib-r-math.js');
+const { Binomial } = libR;
+
+//Binomial()  uses Normal() as default argument,
+const { dbinom, pbinom, qbinom, rbinom } = Binomial();
+
+//1.
+pbinom(4, 4, 0.5)
+//1
+
+//2.
+pbinom([0, 1, 2, 3, 4], 4, 0.5)
+//[ 0.0625, 0.31250000000000006, 0.6875, 0.9375, 1 ]
+
+//3.
+pbinom([0, 1, 2, 3, 4], 4, 0.5, true)
+//[ 0.0625, 0.31250000000000006, 0.6875, 0.9375, 1 ]
+
+//4.
+pbinom([0, 1, 2, 3, 4], 4, 0.5, false)
+//[ 0.9375, 0.6875, 0.31250000000000006, 0.0625, 0 ]
+
+//5.
+pbinom([0, 1, 2, 3, 4], 4, 0.5, false, true)
+/*
+[ -0.06453852113757118,
+  -0.3746934494414107,
+  -1.1631508098056806,
+  -2.772588722239781,
+  -Infinity]
+*/
+```
+
+_in R console_
+
+```R
+> pbinom(4, 4, 0.5)
+[1] 1
+
+> pbinom(c(0, 1, 2, 3, 4), 4, 0.5)
+[1] 0.0625 0.3125 0.6875 0.9375 1.0000
+
+> pbinom(c(0, 1, 2, 3, 4), 4, 0.5, TRUE)
+[1] 0.0625 0.3125 0.6875 0.9375 1.0000
+
+> pbinom(c(0, 1, 2, 3, 4), 4, 0.5, FALSE, TRUE)
+[1] -0.06453852 -0.37469345 -1.16315081
+[4] -2.77258872        -Inf
+```
+
+#### `qbinom`
+
+The quantile function. See [R doc]()
+
+_decl:_
+
+```typescript
+declare function qbinom(
+    p: number|number[],
+    size: number,
+    prob: number,
+    lowerTail = true,
+    logP = false
+): number|number[]
+```
+
+* `p`: scalar or array of quantiles.
+* `size`: number of trails
+* `prob`: probability of success.
+* `lowerTail`: if TRUE (default), _probabilities_ are P[X ≤ x], otherwise, P[X > x].
+* `LogP`: return result as log(p)
+
+```javascript
+const libR = require('lib-r-math.js');
+
+const { Binomial } = libR;
+const { arrayrify } = libR.R;
+
+const log = arrayrify(Math.log); //
+//Binomial(), uses Normal() as default argument,
+const { dbinom, pbinom, qbinom, rbinom } = Binomial();
+
+//1. always zero, regardless of shape params, because 0 ≤ x ≤ 1.
+qbinom(0.25,4,0.3)
+// 1
+
+//2.
+qbinom([0,0.25,0.5,0.75,1], 40, 0.3)
+//[0 10 12 14 40]
+
+//3.
+qbinom([0,0.25,0.5,0.75,1], 40, 0.3, false)
+//[ 40, 14, 12, 10, 0 ]
+
+//4.  same as 3.
+qbinom( log([0,0.25,0.5,0.75,1]), 40, 0.3, false, true)
+//[ 40, 14, 12, 10, 0 ]
+```
+
+_in R console_
+
+```R
+> qbinom(.25,4,.3)
+[1] 1
+> qbinom(c(0,0.25,0.5,0.75,1),40,.3)
+[1]  0 10 12 14 40
+> qbinom(c(0,0.25,0.5,0.75,1),40,.3, FALSE)
+[1] 40 14 12 10  0
+> qbinom(log(c(0,0.25,0.5,0.75,1)),40,.3, FALSE, TRUE)
+[1] 40 14 12 10  0
+```
+
+#### `rbinom`
+
+Generates random beta deviates. See [R doc]()
+
+_decl:_
+
+```typescript
+declare function rbinom(
+  n: number,
+  size: number,
+  prop: number
+): number | number[];
+```
+
+* `n`: number of deviates
+* `size`: number of trails
+* `prob`: probability of success.
+
+```javascript
+const libR = require('lib-r-math.js');
+
+const { Binomial } = libR;
+const { arrayrify } = libR.R;
+
+const log = arrayrify(Math.log); //
+//Binomial(), uses Normal() as default argument,
+const { dbinom, pbinom, qbinom, rbinom } = Binomial();
+
+//1.
+rbinom(2, 40, 0.5);
+//[ 24, 18 ]
+
+//2.
+rbinom(3, 20, 0.5);
+//[ 9, 10, 13 ]
+
+//3.
+rbinom(2, 10, 0.25);
+//[ 1, 4 ]
+```
+
+Same values as in R
+
+_in R console_
+
+```R
+> RNGkind("Mersenne-Twister",normal.kind="Inversion")
+> set.seed(0)
+> rbinom(2, 40, 0.5);
+[1] 24 18
+> rbinom(3, 20, 0.5);
+[1]  9 10 13
+> rbinom(2, 10, 0.25);
+[1] 1 4
 ```

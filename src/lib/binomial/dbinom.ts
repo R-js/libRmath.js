@@ -50,7 +50,6 @@ import * as debug from 'debug';
 
 import { bd0 } from '~deviance';
 import { stirlerr } from '~stirling';
-
 import {
   M_LN_2PI,
   ML_ERR_return_NAN,
@@ -59,7 +58,8 @@ import {
   R_D_exp,
   R_D_negInonint,
   R_D_nonint_check
-} from '~common';
+} from '../common/_general';
+import { forEach } from '../r-func';
 
 const { log, log1p, round: R_forceint } = Math;
 const { isNaN: ISNAN, isFinite: R_FINITE } = Number;
@@ -109,14 +109,13 @@ export function dbinom_raw(
   return R_D_exp(give_log, lc - 0.5 * lf);
 }
 
-export function dbinom(
-  N: number = 1,
-  x: number,
+export function dbinom<T>(
+  xx: T,
   n: number,
   p: number,
   logX: boolean = false
-): number | number[] {
-  const result = new Array(N).fill(0).map(() => {
+): T {
+  return forEach(xx)(x => {
     /* NaNs propagated correctly */
     if (ISNAN(x) || ISNAN(n) || ISNAN(p)) return x + n + p;
 
@@ -128,6 +127,5 @@ export function dbinom(
     x = R_forceint(x);
 
     return dbinom_raw(x, n, p, 1 - p, logX);
-  });
-  return result.length === 1 ? result[0] : result;
+  }) as any;
 }

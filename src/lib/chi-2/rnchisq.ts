@@ -72,7 +72,7 @@ const printer = debug('rnchisq');
 const { isFinite:R_FINITE } = Number;
 
 export function rnchisq(
-  n: number = 1,
+  n: number,
   df: number,
   lambda: number,
   normal: INormal

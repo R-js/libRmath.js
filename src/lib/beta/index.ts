@@ -21,6 +21,7 @@ import { rnchisq } from '../chi-2/rnchisq';
 import { rbeta as _rbeta } from './rbeta';
 
 import { INormal, Normal } from '~normal';
+import { forceToArray } from '../r-func';
 
 export const special = {
   beta,
@@ -73,20 +74,17 @@ export function Beta(norm: INormal = Normal()) {
   }
 
   function rbeta(
-    n: number = 1,
+    n: number,
     shape1: number,
     shape2: number,
-    ncp: number = 0
-  ) {
+    ncp = 0 // NOTE: normally the default is undefined, here it is '0'.
+  ): number | number[] {
     if (ncp === 0) {
       return _rbeta(n, shape1, shape2, norm);
     } else {
-      const result: number[] = [];
-      for (let i = 0; i < n; i++) {
-        let x = rnchisq(1, 2 * shape1, ncp, norm) as number;
-        let x2 = rchisq(1, 2 * shape2, norm) as number;
-        result.push(x / (x + x2));
-      }
+      let ax = forceToArray(rnchisq(n, 2 * shape1, ncp, norm));
+      let bx = forceToArray(rchisq(n, 2 * shape2, norm));
+      let result = ax.map((a, i) => a / (a + bx[i]));
       return result.length === 1 ? result[0] : result;
     }
   }

@@ -49,8 +49,8 @@ const { isNaN: ISNAN, isFinite: R_FINITE, EPSILON: DBL_EPSILON, } = Number;
 
 
 import { R_DT_qIv } from '~exp-utils';
-import { INormal } from '~normal';
 import { NumberW } from '../common/toms708';
+import { qnorm } from '../normal/qnorm';
 import { pbinom } from './pbinom';
 
 
@@ -90,11 +90,10 @@ export function qbinom<T>(
     n: number = 30, 
     pr: number = 0.5, 
     lowerTail: boolean = true, 
-    logP: boolean = false, 
-    rng: INormal
+    logP: boolean = false
 ): T {
     const fp: number[] = Array.isArray(pp) ? pp :[pp] as any;
-    const result = fp.map(p => _qbinom(p, n, pr, lowerTail, logP, rng));
+    const result = fp.map(p => _qbinom(p, n, pr, lowerTail, logP));
      
     return result.length === 1 ? result[0] : result as any;
 }
@@ -106,8 +105,7 @@ function _qbinom(
     n: number, 
     pr: number, 
     lower_tail: boolean, 
-    log_p: boolean, 
-    normal: INormal): number {
+    log_p: boolean): number {
 
     let q: number;
     let mu: number;
@@ -161,7 +159,7 @@ function _qbinom(
     if (p + 1.01 * DBL_EPSILON >= 1.) return n;
 
     /* y := approx.value (Cornish-Fisher expansion) :  */
-    z.val = normal.qnorm(p, 0., 1., /*lower_tail*/true, /*log_p*/false);
+    z.val = qnorm(p, 0., 1., /*lower_tail*/true, /*log_p*/false);
     y = floor(mu + sigma * (z.val + gamma * (z.val * z.val - 1) / 6) + 0.5);
 
     if (y > n) /* way off */ y = n;

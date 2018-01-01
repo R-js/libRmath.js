@@ -29,17 +29,17 @@
  */
 import * as debug from 'debug';
 
+import { pbeta } from '../beta/pbeta';
 import {
   ML_ERR_return_NAN,
   R_DT_0,
   R_DT_1,
   R_nonint
-} from '~common';
-
-import { pbeta } from '../beta/pbeta';
+} from '../common/_general';
+import { forEach } from '../r-func';
 
 const printer = debug('pbinom');
-const { floor,  round: R_forceint  } = Math;
+const { floor, round: R_forceint } = Math;
 const { isNaN: ISNAN, isFinite: R_FINITE } = Number;
 
 export function pbinom<T>(
@@ -49,32 +49,25 @@ export function pbinom<T>(
   lower_tail: boolean = true,
   log_p: boolean = false
 ): T {
+  return forEach(xx)(x => {
+    if (ISNAN(x) || ISNAN(n) || ISNAN(p)) return x + n + p;
+    if (!R_FINITE(n) || !R_FINITE(p)) {
+      return ML_ERR_return_NAN(printer);
+    }
 
-  const fx: number[] = Array.isArray(xx) ? xx :[xx] as any;
-  
-  const result = fx.map(x => {
-
-  if (ISNAN(x) || ISNAN(n) || ISNAN(p)) return x + n + p;
-  if (!R_FINITE(n) || !R_FINITE(p)) {
-    return ML_ERR_return_NAN(printer);
-  }
-
-  if (R_nonint(n)) {
-    printer('non-integer n = %d', n);
-    return ML_ERR_return_NAN(printer);
-  }
-  n = R_forceint(n);
-  /* 
+    if (R_nonint(n)) {
+      printer('non-integer n = %d', n);
+      return ML_ERR_return_NAN(printer);
+    }
+    n = R_forceint(n);
+    /* 
      PR#8560: n=0 is a valid value 
   */
-  if (n < 0 || p < 0 || p > 1) return ML_ERR_return_NAN(printer);
+    if (n < 0 || p < 0 || p > 1) return ML_ERR_return_NAN(printer);
 
-  if (x < 0) return R_DT_0(lower_tail, log_p);
-  x = floor(x + 1e-7);
-  if (n <= x) return R_DT_1(lower_tail, log_p);
-  return pbeta(p, x + 1, n - x, !lower_tail, log_p);
-  });
-
-  return result.length === 1 ? result[0] : result as any;
-
+    if (x < 0) return R_DT_0(lower_tail, log_p);
+    x = floor(x + 1e-7);
+    if (n <= x) return R_DT_1(lower_tail, log_p);
+    return pbeta(p, x + 1, n - x, !lower_tail, log_p);
+  }) as any;
 }
