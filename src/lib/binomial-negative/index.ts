@@ -10,11 +10,13 @@ const errText = Object.freeze([
   'both arguments "mu" and "prob" are undefined'
 ]);
 
+
+
 function select(
   fs: 'd' | 'p' | 'r' | 'q',
   mu?: number,
   prob?: number
-): Function {
+) {
   const selector = {
     mu: {
       d: dnbinom_mu,
@@ -37,7 +39,7 @@ function select(
     throw new Error(errText[1]);
   }
   const s = prob === undefined ? 'mu' : 'p';
-  return selector[s][fs];
+  return selector[s][fs] as any;
 }
 
 export function NegativeBinomial(rng: INormal = Normal()) {
@@ -47,7 +49,7 @@ export function NegativeBinomial(rng: INormal = Normal()) {
     prob?: number,
     mu?: number,
     giveLog =  false
-  ) {
+  ): number|number[] {
     const val = mu || prob;
     return select('d', mu, prob)(x, size, val, giveLog);
   }
@@ -59,7 +61,7 @@ export function NegativeBinomial(rng: INormal = Normal()) {
     mu?: number,
     lowerTail = true,
     logP = false
-  ) {
+  ): number | number[] {
     const val = mu || prob;
     return select('p', mu, prob)(q, size, val, lowerTail, logP);
   }
@@ -71,7 +73,7 @@ export function NegativeBinomial(rng: INormal = Normal()) {
     mu?: number,
     lowerTail = true,
     logP = false
-  ) {
+  ): number | number[] {
     const val = mu || prob;
     return select('q', mu, prob)(q, size, val, lowerTail, logP);
   }

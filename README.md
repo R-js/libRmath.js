@@ -1415,9 +1415,11 @@ const { dbeta, pbeta, qbeta, rbeta } = betaDefault;
 
 #### `dbeta`
 
-The density function. See [R doc]()
+The density function:
 
 $$ \frac{\Gamma(a+b)}{Γ(a) Γ(b)} x^{(a-1)}(1-x)^{(b-1)} $$
+
+See [R doc]()
 
 _decl:_
 
@@ -1791,7 +1793,7 @@ _in R console_
 
 See [R doc]()
 
-These functions are members of an object created by the `Binomial` factory method. The factory method needs the return object of the `Normal` factory method. Various instantiation methods are given below.
+These functions are members of an object created by the `Binomial` factory method. The factory method needs the result of a call to the function `Normal(..)` factory method. Various instantiation methods are given below.
 
 Instantiation:
 
@@ -1816,8 +1818,6 @@ const { dbinom, pbinom, qbinom, rbinom } = binom2;
 #### `dbinom`
 
 The density function $p(x) = \frac{n!}{x!(n-x)!} p^{x} (1-p)^{n-x}$. See [R doc]()
-
-
 
 _decl:_
 
@@ -1847,24 +1847,23 @@ dbinom(2, 4, 0.3);
 //0.2646000000000001
 
 //2. same as [1], but results as log
-dbinom(2,4,0.3, true);
+dbinom(2, 4, 0.3, true);
 //-1.3295360273012813
 
 //3. all possibilities out of 4 trials
-dbinom([0,1,2,3,4], 4, 0.3);
+dbinom([0, 1, 2, 3, 4], 4, 0.3);
 /*[ 0.24009999999999992,
   0.41159999999999997,
   0.2646000000000001,
   0.0756,
   0.008099999999999996 ]
 */
-dbinom([0,1,2,3,4], 4, 0.3, true);
+dbinom([0, 1, 2, 3, 4], 4, 0.3, true);
 /*[ -1.4266997757549298,
   -0.8877032750222426,
   -1.3295360273012813,
   -2.58229899579665,
   -4.8158912173037445 ]*/
-
 ```
 
 _in R Console_
@@ -1907,23 +1906,23 @@ const { Binomial } = libR;
 const { dbinom, pbinom, qbinom, rbinom } = Binomial();
 
 //1.
-pbinom(4, 4, 0.5)
+pbinom(4, 4, 0.5);
 //1
 
 //2.
-pbinom([0, 1, 2, 3, 4], 4, 0.5)
+pbinom([0, 1, 2, 3, 4], 4, 0.5);
 //[ 0.0625, 0.31250000000000006, 0.6875, 0.9375, 1 ]
 
 //3.
-pbinom([0, 1, 2, 3, 4], 4, 0.5, true)
+pbinom([0, 1, 2, 3, 4], 4, 0.5, true);
 //[ 0.0625, 0.31250000000000006, 0.6875, 0.9375, 1 ]
 
 //4.
-pbinom([0, 1, 2, 3, 4], 4, 0.5, false)
+pbinom([0, 1, 2, 3, 4], 4, 0.5, false);
 //[ 0.9375, 0.6875, 0.31250000000000006, 0.0625, 0 ]
 
 //5.
-pbinom([0, 1, 2, 3, 4], 4, 0.5, false, true)
+pbinom([0, 1, 2, 3, 4], 4, 0.5, false, true);
 /*
 [ -0.06453852113757118,
   -0.3746934494414107,
@@ -1958,12 +1957,12 @@ _decl:_
 
 ```typescript
 declare function qbinom(
-    p: number|number[],
-    size: number,
-    prob: number,
-    lowerTail = true,
-    logP = false
-): number|number[]
+  p: number | number[],
+  size: number,
+  prob: number,
+  lowerTail = true,
+  logP = false
+): number | number[];
 ```
 
 * `p`: scalar or array of quantiles.
@@ -1983,19 +1982,19 @@ const log = arrayrify(Math.log); //
 const { dbinom, pbinom, qbinom, rbinom } = Binomial();
 
 //1. always zero, regardless of shape params, because 0 ≤ x ≤ 1.
-qbinom(0.25,4,0.3)
+qbinom(0.25, 4, 0.3);
 // 1
 
 //2.
-qbinom([0,0.25,0.5,0.75,1], 40, 0.3)
+qbinom([0, 0.25, 0.5, 0.75, 1], 40, 0.3);
 //[0 10 12 14 40]
 
 //3.
-qbinom([0,0.25,0.5,0.75,1], 40, 0.3, false)
+qbinom([0, 0.25, 0.5, 0.75, 1], 40, 0.3, false);
 //[ 40, 14, 12, 10, 0 ]
 
 //4.  same as 3.
-qbinom( log([0,0.25,0.5,0.75,1]), 40, 0.3, false, true)
+qbinom(log([0, 0.25, 0.5, 0.75, 1]), 40, 0.3, false, true);
 //[ 40, 14, 12, 10, 0 ]
 ```
 
@@ -2058,7 +2057,7 @@ Same values as in R
 _in R console_
 
 ```R
-> RNGkind("Mersenne-Twister",normal.kind="Inversion")
+> RNGkind("Mersenne-Twister", normal.kind = "Inversion")
 > set.seed(0)
 > rbinom(2, 40, 0.5);
 [1] 24 18
@@ -2067,3 +2066,262 @@ _in R console_
 > rbinom(2, 10, 0.25);
 [1] 1 4
 ```
+
+### Negative Binomial distribution
+
+`dnbinom, pnbinom, qnbinom, rnbinom.`
+
+See [R doc]()
+
+These functions are members of an object created by the `NegativeBinomial` factory function. The factory method needs the result of a call to the `Normal(..)` factory function. Various instantiation methods are given below.
+
+Instantiation:
+
+```javascript
+const libR = require('lib-r-math.js');
+const { Normal, NegativeBinomial, rng } = libR;
+
+// All options specified in creating NegativeBinomial distribution object.
+const negBinom1 = NegativeBinomial(
+  Normal(
+    new rng.normal.BoxMuller(new rng.SuperDuper(0)) //
+  )
+);
+//
+// Or
+// Just go with defaults
+const negBinom2 = NegativeBinomial();
+const { dnbinom, pnbinom, qnbinom, rnbinom } = negBinom2;
+```
+
+#### `dnbinom`
+
+The density function $\frac{Γ(x+n)}{Γ(n) x!} p^{n} (1-p)^{x}$. See [R doc]()
+
+_decl:_
+
+```typescript
+declare function dnbinom(
+  x: number | number[],
+  size: number,
+  prob?: number,
+  mu?: number,
+  asLog = false
+): number | number[];
+```
+
+* `x`: non-negative integer quantiles. Number of failures before reaching `size` successes.
+* `size`: target for number of successful trials, or dispersion parameter (the shape parameter of the gamma mixing distribution). Must be strictly positive, need not be integer.
+* `prob`: probability of success in each trial. 0 < prob <= 1
+* `mu`: alternative parametrization via mean: see [‘Details’ section]().
+* `asLog`: if `true`, probabilities p are given as log(p).
+
+```javascript
+const libR = require('lib-r-math.js');
+const { NegativeBinomial } = libR;
+const seq = libR.R.seq()();
+
+const { dnbinom, pnbinom, qnbinom, rnbinom } = NegativeBinomial();
+
+//1. note: sequence has step 2
+dnbinom(
+  seq(0, 10, 2), // array[0,2,4,6,8,10]
+  3,
+  0.5
+);
+/*
+   [0.12500000000000003,
+    0.18749999999999997,
+    0.11718749999999997,
+    0.05468750000000006,
+    0.02197265624999999,
+    0.008056640624999997]
+*/
+
+//2. alternative presentation with `mu` = n*(1-p)/p
+dnbinom(
+  seq(0, 10, 2), // array[0,2,4,6,8,10]
+  3, //size
+  undefined, //prop
+  3 * (1 - 0.5) / 0.5
+);
+/*[0.12500000000000003,
+    0.18749999999999997,
+    0.11718749999999997,
+    0.05468750000000006,
+    0.02197265624999999,
+    0.008056640624999997]
+*/
+```
+
+_in R console_
+
+```R
+> dnbinom(0:10, size = 3, prob = 0.5)
+ [1] 0.125000000 0.187500000 0.187500000
+ [4] 0.156250000 0.117187500 0.082031250
+ [7] 0.054687500 0.035156250 0.021972656
+[10] 0.013427734 0.008056641
+> dnbinom(0:10, size = 3, mu = 3*(1-0.5)/0.5)
+ [1] 0.125000000 0.187500000 0.187500000
+ [4] 0.156250000 0.117187500 0.082031250
+ [7] 0.054687500 0.035156250 0.021972656
+[10] 0.013427734 0.008056641
+```
+
+#### `pnbinom`
+
+The gives the distribution function. See [R doc]()
+
+_decl:_
+
+```typescript
+ declare function pnbinom(
+    q: number | number[],
+    size: number,
+    prob?: number,
+    mu?: number,
+    lowerTail = true
+    logP =  false
+  ): number|number[]
+```
+
+* `q`: non-negative integer quantiles.
+* `size`: target for number of successful trials, or dispersion parameter (the shape parameter of the gamma mixing distribution). Must be strictly positive, need not be integer.
+* `prob`: probability of success in each trial. 0 < prob <= 1
+* `mu`: alternative parametrization via mean: see [‘Details’ section]().
+* `lowerTail`: if TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
+* `logP`: if `true`, probabilities p are given as log(p).
+
+```javascript
+const libR = require('lib-r-math.js');
+const { NegativeBinomial } = libR;
+const seq = libR.R.seq()();
+
+const { dnbinom, pnbinom, qnbinom, rnbinom } = NegativeBinomial();
+
+//1.
+pnbinom([0, 2, 3, 4, 6, 8, 10, Infinity], 3, 0.5);
+/*[ 0.12500000000000003,
+      0.5000000000000001,
+      0.65625,
+      0.7734374999999999,
+      0.91015625,
+      0.96728515625,
+      0.98876953125,
+      1
+    ]
+*/
+
+//2. alternative presentation of 1 with mu = n(1-p)/p
+pnbinom([0, 2, 3, 4, 6, Infinity], 3, undefined, 3 * (1 - 0.5) / 0.5);
+/*[0.12500000000000003,
+    0.5000000000000001,
+    0.65625,
+    0.7734374999999999,
+    0.91015625,
+    0.96728515625,
+    0.98876953125,
+    1
+]*/
+
+//3
+pnbinom([0, 2, 3, 4, 6, Infinity], 3, 0.5, undefined, false);
+/*[ 0.875,
+  0.4999999999999999,
+  0.34374999999999994,
+  0.2265625000000001,
+  0.08984375000000003,
+  0 ]
+  */
+
+//4
+pnbinom([0, 2, 3, 4, 6, Infinity], 3, 0.5, undefined, false, true);
+/*[
+  -0.13353139262452263,
+  -0.6931471805599455,
+  -1.067840630001356,
+  -1.4847344339331427,
+  -2.4096832285504126,
+  -Infinity
+]*/
+```
+
+_in R Console_
+
+```R
+> pnbinom(c(0, 2, 3, 4, 6, Inf), size=3, prob=0.5)
+[1] 0.1250000 0.5000000 0.6562500 0.7734375
+[5] 0.9101562 1.0000000
+
+> pnbinom(c(0, 2, 3, 4, 6, Inf), size=3, mu=3*(1-0.5)/0.5)
+[1] 0.1250000 0.5000000 0.6562500 0.7734375
+[5] 0.9101562 1.0000000
+
+> pnbinom(c(0, 2, 3, 4, 6, Inf), size=3, prob=0.5, lower.tail=FALSE);
+[1] 0.87500000 0.50000000 0.34375000 0.22656250 0.08984375
+[6] 0.00000000
+
+> pnbinom(c(0, 2, 3, 4, 6, Inf), size=3, prob=0.5, lower.tail=FALSE, log.p=TRUE);
+[1] -0.1335314 -0.6931472 -1.0678406 -1.4847344 -2.4096832
+[6]       -Inf
+```
+
+#### `qnbinom`
+
+The gives the quantile function. See [R doc]()
+
+_decl:_
+
+```typescript
+declare function qnbinom(
+  p: number | number[],
+  size: number,
+  prob?: number,
+  mu?: number,
+  lowerTail = true,
+  logP = false
+): number | number[];
+```
+
+* `p`: probabilities (scalar or array).
+* `size`: target for number of successful trials, or dispersion parameter (the shape parameter of the gamma mixing distribution). Must be strictly positive, need not be integer.
+* `prob`: probability of success in each trial. 0 < prob <= 1
+* `mu`: alternative parametrization via mean: see [‘Details’ section]().
+* `lowerTail`: if TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
+* `logP`: if `true`, probabilities p are given as log(p).
+
+```javascript
+const libR = require('lib-r-math.js');
+const { NegativeBinomial } = libR;
+const { arrayrify } = libR.R;
+const { dnbinom, pnbinom, qnbinom, rnbinom } = NegativeBinomial();
+
+const log = arrayrify(Math.log);
+
+//1. inversion
+qnbinom(pnbinom([0,2,4,6, Infinity], 3, 0.5), 3, 0.5);
+//[ 0, 2, 4, 6, Infinity ]
+
+//2. lowerTail=false
+qnbinom(pnbinom([0,2,4,6, Infinity], 3, 0.5), 3, 0.5, undefined, false);
+//[ 6, 2, 1, 0, 0 ]
+
+//3. with logP=true
+qnbinom( log(pnbinom([0,2,4,6, Infinity], 3, 0.5)), 3, 0.5, undefined, false, true)
+//[ 6, 2, 1, 0, 0 ]
+```
+
+_in R Console_
+
+```R
+> qnbinom(pnbinom(c(0, 2, 3, 4, 6, Inf), size=3, prob=0.5 ),3,0.5);
+[1] 0 2 3 4 6 Inf
+
+> qnbinom(pnbinom(c(0, 2, 3, 4, 6, Inf), size=3, prob=0.5 ),3,0.5, lower.tail = FALSE);
+[1] 6 2 2 1 0 0
+
+> qnbinom(log(pnbinom(c(0, 2, 3, 4, 6, Inf), size=3, prob=0.5 )),3,0.5, lower.tail = FALSE, log.p = TRUE);
+[1] 6 2 2 1 0 0
+```
+
