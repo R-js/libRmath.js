@@ -85,7 +85,7 @@ export function NegativeBinomial(rng: INormal = Normal()) {
     mu?: number
   ): number | number[] {
     const val = mu || prob;
-    return select('q', mu, prob)(n, size, val, rng);
+    return select('r', mu, prob)(n, size, val, rng);
   }
 
   return {

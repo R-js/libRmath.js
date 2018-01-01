@@ -63,6 +63,7 @@ export function rnbinom(
   prob: number,
   normal: INormal
 ): number| number[] {
+  printer_rnbinom('n:%d, size:%d, prob:%d', n, size, prob);
   const result = new Array(n).fill(0).map(() => {
     if (
       !R_FINITE(size) ||
