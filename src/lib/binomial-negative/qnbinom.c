@@ -45,45 +45,69 @@
 #include "dpq.h"
 
 static double
-do_search(double y, double *z, double p, double n, double pr, double incr)
+do_search(
+    double y,
+    double *z,
+    double p,
+    double n,
+    double pr,
+    double incr)
 {
-    if(*z >= p) {
-			/* search to the left */
-	for(;;) {
-	    if(y == 0 ||
-	       (*z = pnbinom(y - incr, n, pr, /*l._t.*/TRUE, /*log_p*/FALSE)) < p)
-		return y;
-	    y = fmax2(0, y - incr);
-	}
+    if (*z >= p)
+    {
+        /* search to the left */
+        for (;;)
+        {
+            if (y == 0 ||
+                (*z = pnbinom(y - incr, n, pr, /*l._t.*/ TRUE, /*log_p*/ FALSE)) < p)
+                return y;
+            y = fmax2(0, y - incr);
+        }
     }
-    else {		/* search to the right */
+    else
+    { /* search to the right */
 
-	for(;;) {
-	    y = y + incr;
-	    if((*z = pnbinom(y, n, pr, /*l._t.*/TRUE, /*log_p*/FALSE)) >= p)
-		return y;
-	}
+        for (;;)
+        {
+            y = y + incr;
+            if ((*z = pnbinom(y, n, pr, /*l._t.*/ TRUE, /*log_p*/ FALSE)) >= p)
+                return y;
+        }
     }
 }
 
-
-double qnbinom(double p, double size, double prob, int lower_tail, int log_p)
+double qnbinom(
+    double p, 
+    double size, 
+    double prob, 
+    int lower_tail, 
+    int log_p)
 {
-    double P, Q, mu, sigma, gamma, z, y;
+    double P, 
+    Q, 
+    mu, 
+    sigma, 
+    gamma, 
+    z, 
+    y;
+    
 
 #ifdef IEEE_754
     if (ISNAN(p) || ISNAN(size) || ISNAN(prob))
-	return p + size + prob;
+        return p + size + prob;
 #endif
 
     /* this happens if specified via mu, size, since
        prob == size/(size+mu)
     */
-    if (prob == 0 && size == 0) return 0;
+    if (prob == 0 && size == 0)
+        return 0;
 
-    if (prob <= 0 || prob > 1 || size < 0) ML_ERR_return_NAN;
- 
-    if (prob == 1 || size == 0) return 0;
+    if (prob <= 0 || prob > 1 || size < 0)
+        ML_ERR_return_NAN;
+
+    if (prob == 1 || size == 0)
+        return 0;
 
     R_Q_P01_boundaries(p, 0, ML_POSINF);
 
@@ -91,43 +115,49 @@ double qnbinom(double p, double size, double prob, int lower_tail, int log_p)
     P = (1.0 - prob) * Q;
     mu = size * P;
     sigma = sqrt(size * P * Q);
-    gamma = (Q + P)/sigma;
+    gamma = (Q + P) / sigma;
 
     /* Note : "same" code in qpois.c, qbinom.c, qnbinom.c --
      * FIXME: This is far from optimal [cancellation for p ~= 1, etc]: */
-    if(!lower_tail || log_p) {
-	p = R_DT_qIv(p); /* need check again (cancellation!): */
-	if (p == R_DT_0) return 0;
-	if (p == R_DT_1) return ML_POSINF;
+    if (!lower_tail || log_p)
+    {
+        p = R_DT_qIv(p); /* need check again (cancellation!): */
+        if (p == R_DT_0)
+            return 0;
+        if (p == R_DT_1)
+            return ML_POSINF;
     }
     /* temporary hack --- FIXME --- */
-    if (p + 1.01*DBL_EPSILON >= 1.) return ML_POSINF;
+    if (p + 1.01 * DBL_EPSILON >= 1.)
+        return ML_POSINF;
 
     /* y := approx.value (Cornish-Fisher expansion) :  */
-    z = qnorm(p, 0., 1., /*lower_tail*/TRUE, /*log_p*/FALSE);
-    y = R_forceint(mu + sigma * (z + gamma * (z*z - 1) / 6));
+    z = qnorm(p, 0., 1., /*lower_tail*/ TRUE, /*log_p*/ FALSE);
+    y = R_forceint(mu + sigma * (z + gamma * (z * z - 1) / 6));
 
-    z = pnbinom(y, size, prob, /*lower_tail*/TRUE, /*log_p*/FALSE);
+    z = pnbinom(y, size, prob, /*lower_tail*/ TRUE, /*log_p*/ FALSE);
 
     /* fuzz to ensure left continuity: */
-    p *= 1 - 64*DBL_EPSILON;
+    p *= 1 - 64 * DBL_EPSILON;
 
     /* If the C-F value is not too large a simple search is OK */
-    if(y < 1e5) return do_search(y, &z, p, size, prob, 1);
+    if (y < 1e5)
+        return do_search(y, &z, p, size, prob, 1);
     /* Otherwise be a bit cleverer in the search */
     {
-	double incr = floor(y * 0.001), oldincr;
-	do {
-	    oldincr = incr;
-	    y = do_search(y, &z, p, size, prob, incr);
-	    incr = fmax2(1, floor(incr/100));
-	} while(oldincr > 1 && incr > y*1e-15);
-	return y;
+        double incr = floor(y * 0.001), oldincr;
+        do
+        {
+            oldincr = incr;
+            y = do_search(y, &z, p, size, prob, incr);
+            incr = fmax2(1, floor(incr / 100));
+        } while (oldincr > 1 && incr > y * 1e-15);
+        return y;
     }
 }
 
 double qnbinom_mu(double p, double size, double mu, int lower_tail, int log_p)
 {
-/* FIXME!  Implement properly!! (not losing accuracy for very large size (prob ~= 1)*/
-    return qnbinom(p, size, /* prob = */ size/(size+mu), lower_tail, log_p);
+    /* FIXME!  Implement properly!! (not losing accuracy for very large size (prob ~= 1)*/
+    return qnbinom(p, size, /* prob = */ size / (size + mu), lower_tail, log_p);
 }

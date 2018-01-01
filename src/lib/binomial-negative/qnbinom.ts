@@ -47,12 +47,19 @@
 
 import * as debug from 'debug';
 
-import { ML_ERR_return_NAN, R_DT_0, R_DT_1, R_Q_P01_boundaries } from '../common/_general';
+import {
+  ML_ERR_return_NAN,
+  R_DT_0,
+  R_DT_1,
+  R_Q_P01_boundaries
+} from '../common/_general';
 
 import { NumberW } from '../common/toms708';
 
 import { R_DT_qIv } from '~exp-utils';
-import { INormal } from '~normal';
+import { INormal } from '../normal';
+import { qnorm } from '../normal/qnorm';
+import { forEach } from '../r-func';
 import { pnbinom } from './pnbinom';
 
 const {
@@ -63,6 +70,8 @@ const {
 
 const { max: fmax2, sqrt, floor, round: R_forceint } = Math;
 
+const printer_do_search = debug('do_search');
+
 function do_search(
   y: number,
   z: NumberW,
@@ -71,6 +80,15 @@ function do_search(
   pr: number,
   incr: number
 ): number {
+  printer_do_search(
+    'start: y:%d, z:%o, p:%d, n:%d, pr:%d, incr:%d',
+    y,
+    z,
+    p,
+    n,
+    pr,
+    incr
+  );
   if (z.val >= p) {
     //* search to the left
     while (true) {
@@ -83,10 +101,12 @@ function do_search(
           true, ///log_p,
           false
         )) < p
-      )
+      ) {
+        printer_do_search('exit1');
         return y;
+      }
       y = fmax2(0, y - incr);
-    }
+    } //while
   } else {
     // search to the right
 
@@ -100,10 +120,12 @@ function do_search(
           true,
           false
         )) >= p
-      )
+      ) {
+        printer_do_search('exit2');
         return y;
-    }
-  }
+      }
+    } //while
+  } //if
 }
 
 const printer_qnbinom = debug('qnbinom');
@@ -113,12 +135,9 @@ export function qnbinom<T>(
   size: number,
   prob: number,
   lower_tail: boolean,
-  log_p: boolean,
-  normal: INormal
+  log_p: boolean
 ): T {
-  const fp: number[] = Array.isArray(pp) ? pp : ([pp] as any);
-
-  const result = fp.map(p => {
+  return forEach(pp)(p => {
     let P;
     let Q;
     let mu;
@@ -126,17 +145,20 @@ export function qnbinom<T>(
     let gamma;
     let y;
 
-    let z: NumberW = new NumberW(0);
+    const z = new NumberW(0);
 
-    if (ISNAN(p) || ISNAN(size) || ISNAN(prob)) return p + size + prob;
+    if (ISNAN(p) || ISNAN(size) || ISNAN(prob)) {
+      return NaN;
+    }
 
     /* this happens if specified via mu, size, since
        prob == size/(size+mu)
     */
     if (prob === 0 && size === 0) return 0;
 
-    if (prob <= 0 || prob > 1 || size < 0)
+    if (prob <= 0 || prob > 1 || size < 0) {
       return ML_ERR_return_NAN(printer_qnbinom);
+    }
 
     if (prob === 1 || size === 0) return 0;
 
@@ -165,7 +187,7 @@ export function qnbinom<T>(
     if (p + 1.01 * DBL_EPSILON >= 1) return ML_POSINF;
 
     /* y := approx.value (Cornish-Fisher expansion) :  */
-    z.val = normal.qnorm(p, 0, 1, /*lower_tail*/ true, /*log_p*/ true);
+    z.val = qnorm(p, 0, 1, /*lower_tail*/ true, /*log_p*/ false);
     y = R_forceint(mu + sigma * (z.val + gamma * (z.val * z.val - 1) / 6));
 
     z.val = pnbinom(y, size, prob, /*lower_tail*/ true, /*log_p*/ false);
@@ -186,8 +208,7 @@ export function qnbinom<T>(
       } while (oldincr > 1 && incr > y * 1e-15);
       return y;
     }
-  });
-  return result.length === 1 ? result[0] : (result as any);
+  }) as any;
 }
 
 export function qnbinom_mu<T>(
@@ -195,20 +216,7 @@ export function qnbinom_mu<T>(
   size: number,
   mu: number,
   lower_tail: boolean,
-  log_p: boolean,
-  normal: INormal
+  log_p: boolean
 ): T {
-  const fp: number[] = Array.isArray(pp) ? pp : ([pp] as any);
-  const result = fp.map(p => {
-    /* FIXME!  Implement properly!! (not losing accuracy for very large size (prob ~= 1)*/
-    return qnbinom(
-      p,
-      size,
-      /* prob = */ size / (size + mu),
-      lower_tail,
-      log_p,
-      normal
-    );
-  });
-  return result.length === 1 ? result[0] : (result as any);
+  return qnbinom(pp, size, /* prob = */ size / (size + mu), lower_tail, log_p);
 }
