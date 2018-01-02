@@ -33,6 +33,6 @@ import {
 
 import { INormal } from '../normal';
 
-export function pchisq<T>(x: T, df: number, lowerTail: boolean= true, logP: boolean= false, normal: INormal) {
-    return pgamma(x, df / 2., 2., lowerTail, logP, normal);
+export function pchisq<T>(x: T, df: number, lowerTail: boolean= true, logP: boolean= false) {
+    return pgamma(x, df / 2., 2., lowerTail, logP);
 }

@@ -24,8 +24,8 @@ export function ChiSquared(rng: INormal = Normal()) {
     logP: boolean = false
   ) {
     return ncp === undefined
-      ? _qchisq(p, df, lowerTail, logP, rng)
-      : _qnchisq(p, df, ncp, lowerTail, logP, rng);
+      ? _qchisq(p, df, lowerTail, logP)
+      : _qnchisq(p, df, ncp, lowerTail, logP);
   }
 
   function pchisq(
@@ -36,8 +36,8 @@ export function ChiSquared(rng: INormal = Normal()) {
     logP: boolean = false
   ) {
     return ncp === undefined
-      ? _pchisq(p, df, lowerTail, logP, rng)
-      : _qnchisq(p, df, ncp, lowerTail, logP, rng);
+      ? _pchisq(p, df, lowerTail, logP)
+      : _pnchisq(p, df, ncp, lowerTail, logP);
   }
 
   function dchisq(

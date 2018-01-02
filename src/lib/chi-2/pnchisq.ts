@@ -38,23 +38,22 @@ import {
   R_D__1,
   R_D_exp,
   R_DT_0,
-  R_DT_1
+  R_DT_1,
+  R_DT_val
 } from '../common/_general';
 
-
 import { R_Log1_Exp } from '~exp-utils';
-import { INormal } from '~normal';
-import { R_DT_val } from '../common/_general';
 import { lgammafn } from '../gamma/lgamma_fn';
 import { logspace_add } from '../gamma/logspace-add';
+import { forEach } from '../r-func';
 import { pchisq } from './pchisq';
 
-const { 
-  sqrt, 
-  abs: fabs, 
-  exp, 
-  log, 
-  min: fmin2, 
+const {
+  sqrt,
+  abs: fabs,
+  exp,
+  log,
+  min: fmin2,
   max: fmax2,
   LN2: M_LN2,
   LN10: M_LN10
@@ -75,50 +74,52 @@ const _dbl_min_exp = M_LN2 * DBL_MIN_EXP;
 const { expm1, log1p } = Math;
 const printer = debug('pnchisq');
 
-
-export function pnchisq(
-  x: number,
+export function pnchisq<T>(
+  xx: T,
   df: number,
-  ncp: number,
-  lower_tail: boolean,
-  log_p: boolean,
-  normal: INormal
-): number {
-  let ans;
+  ncp = 0,
+  lower_tail = true,
+  log_p = false
+): T {
+  return forEach(xx)(x => {
+    let ans;
 
-  if (ISNAN(x) || ISNAN(df) || ISNAN(ncp)) return x + df + ncp;
-  if (!R_FINITE(df) || !R_FINITE(ncp)) {
-    return ML_ERR_return_NAN(printer);
-  }
-
-  if (df < 0 || ncp < 0) {
-    return ML_ERR_return_NAN(printer);
-  }
-
-  ans = pnchisq_raw(
-    x,
-    df,
-    ncp,
-    1e-12,
-    8 * DBL_EPSILON,
-    1000000,
-    lower_tail,
-    log_p,
-    normal
-  );
-  if (ncp >= 80) {
-    if (lower_tail) {
-      ans = fmin2(ans, R_D__1(log_p)); /* e.g., pchisq(555, 1.01, ncp = 80) */
-    } else {
-      /* !lower_tail */
-      /* since we computed the other tail cancellation is likely */
-      if (ans < (log_p ? -10 * M_LN10 : 1e-10))
-        ML_ERROR(ME.ME_PRECISION, 'pnchisq', printer);
-      if (!log_p) ans = fmax2(ans, 0.0); /* Precaution PR#7099 */
+    if (ISNAN(x) || ISNAN(df) || ISNAN(ncp)) {
+      return NaN;
     }
-  }
-  if (!log_p || ans < -1e-8) return ans;
-  else {
+    if (!R_FINITE(df) || !R_FINITE(ncp)) {
+      return ML_ERR_return_NAN(printer);
+    }
+
+    if (df < 0 || ncp < 0) {
+      return ML_ERR_return_NAN(printer);
+    }
+
+    ans = pnchisq_raw(
+      x,
+      df,
+      ncp,
+      1e-12,
+      8 * DBL_EPSILON,
+      1000000,
+      lower_tail,
+      log_p
+    );
+    if (ncp >= 80) {
+      if (lower_tail) {
+        ans = fmin2(ans, R_D__1(log_p)); /* e.g., pchisq(555, 1.01, ncp = 80) */
+      } else {
+        /* !lower_tail */
+        /* since we computed the other tail cancellation is likely */
+        if (ans < (log_p ? -10 * M_LN10 : 1e-10))
+          ML_ERROR(ME.ME_PRECISION, 'pnchisq', printer);
+        if (!log_p) ans = fmax2(ans, 0.0); /* Precaution PR#7099 */
+      }
+    }
+    if (!log_p || ans < -1e-8) {
+      return ans;
+    }
+
     // log_p  &&  ans > -1e-8
     // prob. = exp(ans) is near one: we can do better using the other tail
     printer('   pnchisq_raw(*, log_p): ans=%d => 2nd call, other tail', ans);
@@ -132,11 +133,10 @@ export function pnchisq(
       8 * DBL_EPSILON,
       1000000,
       !lower_tail,
-      false,
-      normal
+      false
     );
     return log1p(-ans);
-  }
+  }) as any;
 }
 
 export function pnchisq_raw(
@@ -147,9 +147,9 @@ export function pnchisq_raw(
   reltol: number,
   itrmax: number,
   lower_tail: boolean,
-  log_p: boolean,
-  normal: INormal
+  log_p: boolean
 ): number {
+  //double
   let lam;
   let x2;
   let f2;
@@ -159,13 +159,14 @@ export function pnchisq_raw(
   let f_2n;
   let l_lam = -1;
   let l_x = -1; /* initialized for -Wall */
-  let n;
+  //Rboolean
   let lamSml: boolean;
   let tSml: boolean;
   let is_r: boolean;
   let is_b: boolean;
   let is_it: boolean;
-
+  
+  //LDOUBLE
   let ans: number;
   let u: number;
   let v: number;
@@ -175,9 +176,16 @@ export function pnchisq_raw(
 
   if (x <= 0) {
     if (x === 0 && f === 0) {
-      return lower_tail
-        ? R_D_exp(log_p, -0.5 * theta)
-        : log_p ? R_Log1_Exp(-0.5 * theta) : -expm1(-0.5 * theta);
+      const _L = -0.5 * theta;
+      const result =
+         lower_tail ?
+         R_D_exp(log_p, _L)
+        : (log_p ? R_Log1_Exp(_L) 
+            : -expm1(_L)
+          )
+        ;
+      printer('result1:%d', result);
+      return result;  
     }
     /* x < 0  or {x==0, f > 0} */
     return R_DT_0(lower_tail, log_p);
@@ -188,7 +196,9 @@ export function pnchisq_raw(
 
   if (theta < 80) {
     /* use 110 for Inf, as ppois(110, 80/2, lower.tail=FALSE) is 2e-20 */
+    //double
     let ans;
+    //int
     let i;
     // Have  pgamma(x,s) < x^s / Gamma(s+1) (< and ~= for small x)
     // === = > pchisq(x, f) = pgamma(x, f/2, 2) = pgamma(x/2, f/2)
@@ -204,18 +214,16 @@ export function pnchisq_raw(
       // all  pchisq(x, f+2*i, lower_tail, FALSE), i=0,...,110 would underflow to 0.
       // === = > work in log scale
       let lambda = 0.5 * theta;
-      let sum;
-      let sum2;
+      let sum = ML_NEGINF;
+      let sum2 = ML_NEGINF;
       let pr = -lambda;
-      sum = sum2 = ML_NEGINF;
       /* we need to renormalize here: the result could be very close to 1 */
       for (i = 0; i < 110; pr += log(lambda) - log(++i)) {
         sum2 = logspace_add(sum2, pr);
-        sum = logspace_add(
-          sum,
-          pr + pchisq(x, f + 2 * i, lower_tail, true, normal)
-        );
-        if (sum2 >= -1e-15) /*<=> EXP(sum2) >= 1-1e-15 */ break;
+        sum = logspace_add(sum, pr + pchisq(x, f + 2 * i, lower_tail, true));
+        if (sum2 >= -1e-15) {/*<=> EXP(sum2) >= 1-1e-15 */ 
+          break;
+        }
       }
       ans = sum - sum2;
       printer(
@@ -240,7 +248,7 @@ export function pnchisq_raw(
         sum2 += pr;
         // pchisq(*, i, *) is  strictly decreasing to 0 for lower_tail=TRUE
         //                 and strictly increasing to 1 for lower_tail=FALSE
-        sum += pr * pchisq(x, f + 2 * i, lower_tail, true, normal);
+        sum += pr * pchisq(x, f + 2 * i, lower_tail, false);
         if (sum2 >= 1 - 1e-15) break;
       }
       ans = sum / sum2;
@@ -287,8 +295,9 @@ export function pnchisq_raw(
   printer('-- v=exp(-th/2)=%d, x/2= %d, f/2= %d', v, x2, f2);
 
   if (
-    f2 * DBL_EPSILON > 0.125 /* very large f and x ~= f: probably needs */ &&
-    fabs((t = x2 - f2)) /* another algorithm anyway */ < sqrt(DBL_EPSILON) * f2
+    f2 * DBL_EPSILON > 0.125 && /* very large f and x ~= f: probably needs */
+    fabs((t = x2 - f2))  < /* another algorithm anyway */
+     sqrt(DBL_EPSILON) * f2
   ) {
     /* evade cancellation error */
     /* t = exp((1 - t)*(2 - t/(f2 + 1))) / sqrt(2*M_PI*(f2 + 1));*/
@@ -304,7 +313,7 @@ export function pnchisq_raw(
 
   tSml = lt < _dbl_min_exp;
   if (tSml) {
-    printer(' is very small\n');
+    printer(' is very small');
 
     if (x > f + theta + 5 * sqrt(2 * (f + 2 * theta))) {
       /* x > E[X] + 5* sigma(X) */
@@ -319,11 +328,13 @@ export function pnchisq_raw(
   } else {
     t = exp(lt);
     printer(', t=exp(lt)= %d', t);
-    ans = term = v * t;
+    term = v * t;
+    ans = term;
   }
 
-  for (n = 1, f_2n = f + 2, f_x_2n += 2; ; n++, f_2n += 2, f_x_2n += 2) {
-    printer('\n _OL_: n=%d', n);
+  let n; //cant put it inside the for below((
+  for (n = 1, f_2n = f + 2, f_x_2n += 2 ;; n++, f_2n += 2, f_x_2n += 2 ) {
+    printer(' _OL_: n=%d', n);
     /* f_2n    === = f + 2*n
          * f_x_2n  === = f - x + 2*n   > 0  <==> (f+2n)  >   x */
     if (f_x_2n > 0) {
@@ -331,7 +342,7 @@ export function pnchisq_raw(
 
       bound = t * x / f_x_2n;
 
-      printer('\n L10: n=%d; term= %d; bound= %d', n, term, bound);
+      printer(' L10: n=%d; term= %d; bound= %d', n, term, bound);
 
       is_r = is_it = false;
       /* convergence only if BOTH absolute and relative error < 'bnd' */
@@ -340,7 +351,7 @@ export function pnchisq_raw(
         (is_it = n > itrmax)
       ) {
         printer(
-          'BREAK n=%d %s; bound= %d %s, rel.err= %d %s\n',
+          'BREAK n=%d %s; bound= %d %s, rel.err= %d %s',
           n,
           is_it ? '> itrmax' : '',
           bound,
@@ -392,8 +403,7 @@ export function pnchisq_raw(
     printer('pnchisq(x=%d, ..): not converged in %d iter.', x, itrmax);
   }
 
-  printer('\n ===  L_End: n=%d; term= %d; bound=%d', n, term, bound);
+  printer(' ===  L_End: n=%d; term= %d; bound=%d', n, term, bound);
 
-  let dans = ans;
-  return R_DT_val(lower_tail, log_p, dans);
+  return R_DT_val(lower_tail, log_p, ans);
 }
