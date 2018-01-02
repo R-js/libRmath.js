@@ -47,7 +47,7 @@ import {
   M_LN_SQRT_2PI,
   ML_ERR_return_NAN,
   R_D__0
-} from '~common';
+} from '../common/_general';
 
 const {
   isNaN: ISNAN,
