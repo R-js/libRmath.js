@@ -28,8 +28,12 @@
 #include "nmath.h"
 #include "dpq.h"
 
-double qcauchy(double p, double location, double scale,
-	       int lower_tail, int log_p)
+double qcauchy(
+	double p,
+	double location, 
+	double scale,
+	int lower_tail,
+	int log_p)
 {
 #ifdef IEEE_754
     if (ISNAN(p) || ISNAN(location) || ISNAN(scale))

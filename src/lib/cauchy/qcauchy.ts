@@ -29,38 +29,35 @@
  *	The quantile function of the Cauchy distribution.
  */
 import * as debug from 'debug';
-import {
-  ML_ERR_return_NAN,
-  R_Q_P01_check
-} from '~common';
-import { tanpi } from '~trigonometry';
+import { ML_ERR_return_NAN, R_Q_P01_check } from '../common/_general';
+
+import { forEach } from '../r-func';
+import { tanpi } from '../trigonometry/tanpi';
 
 const { expm1, exp } = Math;
-const {
-  isNaN: ISNAN,
-  isFinite: R_FINITE,
-  POSITIVE_INFINITY: ML_POSINF,
-  NEGATIVE_INFINITY: ML_NEGINF
-} = Number;
+const { isNaN: ISNAN, isFinite: R_FINITE } = Number;
+
+const { p: ML_POSINF, n: ML_NEGINF, q: ML_NAN } = {
+  p: Infinity,
+  n: -Infinity,
+  q: NaN
+};
 
 const printer = debug('qcauchy');
 
-
 export function qcauchy<T>(
   pp: T,
-  location: number,
-  scale: number,
-  lowerTail: boolean,
-  logP: boolean
+  location = 0,
+  scale = 1,
+  lowerTail = true,
+  logP = false
 ): T {
-  const fp: number[] = Array.isArray(pp) ? pp : ([pp] as any);
-
-  const result = fp.map(p => {
-    if (ISNAN(p) || ISNAN(location) || ISNAN(scale))
-      return p + location + scale;
+  return forEach(pp)(p => {
+    if (ISNAN(p) || ISNAN(location) || ISNAN(scale)) return NaN;
+    let lower_tail = lowerTail;
 
     let rc = R_Q_P01_check(logP, p);
-    if (rc === undefined) {
+    if (rc !== undefined) {
       return rc;
     }
 
@@ -69,7 +66,7 @@ export function qcauchy<T>(
       /* else */ return ML_ERR_return_NAN(printer);
     }
 
-    const my_INF = location + (lowerTail ? scale : -scale) * ML_POSINF;
+    const my_INF = location + (lower_tail ? scale : -scale) * ML_POSINF;
     if (logP) {
       if (p > -1) {
         /* when ep := exp(p),
@@ -80,21 +77,20 @@ export function qcauchy<T>(
         if (p === 0)
           /* needed, since 1/tan(-0) = -Inf  for some arch. */
           return my_INF;
-        lowerTail = !lowerTail;
+        lower_tail = !lower_tail;
         p = -expm1(p);
       } else p = exp(p);
     } else {
       if (p > 0.5) {
         if (p === 1) return my_INF;
         p = 1 - p;
-        lowerTail = !lowerTail;
+        lower_tail = !lower_tail;
       }
     }
 
     if (p === 0.5) return location; // avoid 1/Inf below
-    if (p === 0) return location + (lowerTail ? scale : -scale) * ML_NEGINF; // p = 1. is handled above
-    return location + (lowerTail ? -scale : scale) / tanpi(p);
+    if (p === 0) return location + (lower_tail ? scale : -scale) * ML_NEGINF; // p = 1. is handled above
+    return location + (lower_tail ? -scale : scale) / tanpi(p);
     /*	-1/tan(pi * p) = -cot(pi * p) = tan(pi * (p - 1/2))  */
-  });
-  return result.length === 1 ? result[0] : (result as any);
+  }) as any;
 }

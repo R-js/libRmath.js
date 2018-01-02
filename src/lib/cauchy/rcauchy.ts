@@ -40,9 +40,9 @@ const { PI: M_PI } = Math;
 const printer = debug('rcauchy');
 
 export function rcauchy(
-  n: number = 1,
-  location: number,
-  scale: number,
+  n: number,
+  location= 0,
+  scale= 1,
   rng: IRNG
 ): number | number[] {
   const result = new Array(n).fill(0).map(() => {

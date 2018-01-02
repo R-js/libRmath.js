@@ -29,10 +29,12 @@
  */
 import * as debug from 'debug';
 
-import { ML_ERR_return_NAN, R_D_val, R_DT_0, R_DT_1 } from '~common';
+import { ML_ERR_return_NAN, R_D_val, R_DT_0, R_DT_1 } from '../common/_general';
 
 import { atanpi } from '~trigonometry';
 import { R_D_Clog } from '../common/_general';
+import { forEach  } from '../r-func';
+
 
 const { isNaN: ISNAN, isFinite: R_FINITE } = Number;
 const { abs: fabs } = Math;
@@ -41,14 +43,13 @@ const printer = debug('pcauchy');
 
 export function pcauchy<T>(
   xx: T,
-  location: number,
-  scale: number,
-  lowerTail: boolean = true,
-  logP: boolean = false
+  location = 0,
+  scale = 1,
+  lowerTail = true,
+  logP = false
 ): T {
-  const fx: number[] = Array.isArray(xx) ? xx : ([xx] as any);
-
-  const result = fx.map(x => {
+  
+  return forEach(xx)(x => {
     if (ISNAN(x) || ISNAN(location) || ISNAN(scale))
       return x + location + scale;
 
@@ -76,6 +77,5 @@ export function pcauchy<T>(
     } else {
       return R_D_val(logP, 0.5 + atanpi(x));
     }
-  });
-  return result.length === 1 ? result[0] : (result as any);
+  }) as any;
 }

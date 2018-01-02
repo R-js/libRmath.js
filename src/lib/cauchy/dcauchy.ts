@@ -35,18 +35,19 @@
 import * as debug from 'debug';
 import { ML_ERR_return_NAN } from '~common';
 
+import { forEach } from '../r-func';
+
 const { isNaN: ISNAN } = Number;
 const { PI: M_PI, log } = Math;
 const printer = debug('dcauchy');
 
 export function dcauchy<T>(
   xx: T,
-  location: number,
-  scale: number,
-  giveLog: boolean
+  location = 0,
+  scale = 1,
+  giveLog = false
 ): T {
-  const fx: number[] = Array.isArray(xx) ? xx : ([xx] as any);
-  const result = fx.map(x => {
+  return forEach(xx)(x => {
     let y: number;
     /* NaNs propagated correctly */
     if (ISNAN(x) || ISNAN(location) || ISNAN(scale)) {
@@ -61,6 +62,5 @@ export function dcauchy<T>(
     return giveLog
       ? -log(M_PI * scale * (1 + y * y))
       : 1 / (M_PI * scale * (1 + y * y));
-  });
-  return result.length === 1 ? result[0] : (result as any);
+  }) as any;
 }
