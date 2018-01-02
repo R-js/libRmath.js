@@ -13,7 +13,7 @@ export function ChiSquared(rng: INormal = Normal()) {
   function rchisq(n: number = 1, df: number, ncp?: number) {
     return ncp === undefined
       ? _rchisq(n, df, rng)
-      : _rnchisq(n, df, ncp / 2, rng);
+      : _rnchisq(n, df, ncp, rng);
   }
 
   function qchisq(
