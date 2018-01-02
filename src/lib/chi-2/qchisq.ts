@@ -28,14 +28,12 @@
 
 import { qgamma } from '../gamma/qgamma';
 
-import { INormal } from '~normal';
 
 export function qchisq<T>(
   p: T,
   df: number,
   lowerTail: boolean = true,
-  logP: boolean = false,
-  normal: INormal
+  logP: boolean = false
 ): T {
-  return qgamma(p, 0.5 * df, 2.0, lowerTail, logP, normal);
+  return qgamma(p, 0.5 * df, 2.0, lowerTail, logP);
 }

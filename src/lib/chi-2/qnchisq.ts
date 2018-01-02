@@ -35,8 +35,8 @@ import {
   R_Q_P01_boundaries
 } from '../common/_general';
 
-import { INormal } from '~normal';
 import { qchisq } from '../chi-2/qchisq';
+import { forEach } from '../r-func';
 import { pnchisq_raw } from './pnchisq';
 
 const { expm1, min: fmin2 } = Math;
@@ -54,14 +54,11 @@ const printer = debug('_qnchisq');
 export function qnchisq<T>(
   pp: T,
   df: number,
-  ncp: number = 0,
-  lowerTail: boolean = true,
-  logP: boolean = false,
-  normal: INormal
+  ncp = 0,
+  lowerTail = true,
+  logP = false
 ): T {
-  const fa: number[] = Array.isArray(pp) ? pp : ([pp] as any);
-  const result = fa.map(p => _qnchisq(p, df, ncp, lowerTail, logP, normal));
-  return result.length === 1 ? result[0] : (result as any);
+  return forEach(pp)(p => _qnchisq(p, df, ncp, lowerTail, logP)) as any;
 }
 
 function _qnchisq(
@@ -69,30 +66,39 @@ function _qnchisq(
   df: number,
   ncp: number,
   lower_tail: boolean = true,
-  log_p: boolean = false,
-  normal: INormal
+  log_p: boolean = false
 ): number {
+
+  printer('start');
+  
   const accu = 1e-13;
   const racc = 4 * DBL_EPSILON;
   /* these two are for the "search" loops, can have less accuracy: */
   const Eps = 1e-11; /* must be > accu */
   const rEps = 1e-10; /* relative tolerance ... */
 
+  // double
   let ux: number;
   let lx: number;
   let ux0: number;
   let nx: number;
   let pp: number;
 
-  if (ISNAN(p) || ISNAN(df) || ISNAN(ncp)) return p + df + ncp;
+  if (ISNAN(p) || ISNAN(df) || ISNAN(ncp)) {
+    return NaN;
+  }
 
-  if (!R_FINITE(df)) return ML_ERR_return_NAN(printer);
+  if (!R_FINITE(df)) {
+    return ML_ERR_return_NAN(printer);
+  }
 
   /* Was
      * df = floor(df + 0.5);
      * if (df < 1 || ncp < 0) ML_ERR_return_NAN;
      */
-  if (df < 0 || ncp < 0) return ML_ERR_return_NAN(printer);
+  if (df < 0 || ncp < 0) {
+    return ML_ERR_return_NAN(printer);
+  }
 
   let rc = R_Q_P01_boundaries(lower_tail, log_p, p, 0, ML_POSINF);
   if (rc !== undefined) {
@@ -100,20 +106,24 @@ function _qnchisq(
   }
 
   pp = R_D_qIv(log_p, p);
-  if (pp > 1 - DBL_EPSILON) return lower_tail ? ML_POSINF : 0.0;
+  if (pp > 1 - DBL_EPSILON) {
+    return lower_tail ? ML_POSINF : 0.0;
+  }
 
   /* Invert pnchisq(.) :
      * 1. finding an upper and lower bound */
   {
     /* This is Pearson's (1959) approximation,
        which is usually good to 4 figs or so.  */
+    //double
     let b;
     let c;
     let ff;
+    
     b = ncp * ncp / (df + 3 * ncp);
     c = (df + 3 * ncp) / (df + 2 * ncp);
     ff = (df + 2 * ncp) / (c * c);
-    ux = b + c * qchisq(p, ff, lower_tail, log_p, normal);
+    ux = b + c * qchisq(p, ff, lower_tail, log_p);
     if (ux < 0) ux = 1;
     ux0 = ux;
   }
@@ -132,28 +142,28 @@ function _qnchisq(
     for (
       ;
       ux < DBL_MAX &&
-      pnchisq_raw(ux, df, ncp, Eps, rEps, 10000, true, false, normal) < pp;
+      pnchisq_raw(ux, df, ncp, Eps, rEps, 10000, true, false) < pp;
       ux *= 2
     );
     pp = p * (1 - Eps);
     for (
       lx = fmin2(ux0, DBL_MAX);
       lx > DBL_MIN &&
-      pnchisq_raw(lx, df, ncp, Eps, rEps, 10000, true, false, normal) > pp;
+      pnchisq_raw(lx, df, ncp, Eps, rEps, 10000, true, false) > pp;
       lx *= 0.5
     );
   } else {
     for (
       ;
       ux < DBL_MAX &&
-      pnchisq_raw(ux, df, ncp, Eps, rEps, 10000, false, false, normal) > pp;
+      pnchisq_raw(ux, df, ncp, Eps, rEps, 10000, false, false) > pp;
       ux *= 2
     );
     pp = p * (1 - Eps);
     for (
       lx = fmin2(ux0, DBL_MAX);
       lx > DBL_MIN &&
-      pnchisq_raw(lx, df, ncp, Eps, rEps, 10000, false, false, normal) < pp;
+      pnchisq_raw(lx, df, ncp, Eps, rEps, 10000, false, false) < pp;
       lx *= 0.5
     );
   }
@@ -162,7 +172,7 @@ function _qnchisq(
   if (lower_tail) {
     do {
       nx = 0.5 * (lx + ux);
-      if (pnchisq_raw(nx, df, ncp, accu, racc, 100000, true, false, normal) > p)
+      if (pnchisq_raw(nx, df, ncp, accu, racc, 100000, true, false) > p)
         ux = nx;
       else lx = nx;
     } while ((ux - lx) / nx > accu);
@@ -170,7 +180,7 @@ function _qnchisq(
     do {
       nx = 0.5 * (lx + ux);
       if (
-        pnchisq_raw(nx, df, ncp, accu, racc, 100000, false, false, normal) < p
+        pnchisq_raw(nx, df, ncp, accu, racc, 100000, false, false) < p
       )
         ux = nx;
       else lx = nx;
