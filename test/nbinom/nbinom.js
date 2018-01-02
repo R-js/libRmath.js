@@ -1,4 +1,5 @@
-const libR = require('../dist/lib/libR.js');
+https: //stat.ethz.ch/R-manual/R-devel/library/stats/html/NegBinomial.html
+    const libR = require('../dist/lib/libR.js');
 const { NegativeBinomial, Normal } = libR;
 const { normal: { Inversion }, MersenneTwister } = libR.rng;
 

@@ -1,3 +1,4 @@
+//http://stat.ethz.ch/R-manual/R-patched/library/stats/html/Beta.html
 const libR = require('../dist/lib/libR.js');
 const { Normal, Beta, rng } = libR;
 const { arrayrify } = libR.R;

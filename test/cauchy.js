@@ -1,3 +1,4 @@
+//https://stat.ethz.ch/R-manual/R-devel/library/stats/html/Cauchy.html
 const libR = require('../dist/lib/libR.js');
 const { Normal, Cauchy, rng: { MersenneTwister } } = libR;
 // some usefull tools

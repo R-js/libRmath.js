@@ -1,5 +1,5 @@
 const libR = require('../dist/lib/libR.js');
-
+//https://stat.ethz.ch/R-manual/R-devel/library/stats/html/Uniform.html
 const { rng, Uniform } = libR;
 
 // select specific PRNG to use with uniform
