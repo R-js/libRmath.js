@@ -46,8 +46,7 @@ export function pnf<T>(
   df2: number,
   ncp: number,
   lowerTail: boolean = true,
-  logP: boolean = false,
-  normal: INormal
+  logP: boolean = false
 ): T {
   const fx: number[] = Array.isArray(xx) ? xx : ([xx] as any);
   const result = fx.map(x => {
@@ -68,7 +67,7 @@ export function pnf<T>(
     }
     if (df2 > 1e8)
       /* avoid problems with +Inf and loss of accuracy */
-      return pnchisq(x * df1, df1, ncp, lowerTail, logP, normal);
+      return pnchisq(x * df1, df1, ncp, lowerTail, logP);
 
     y = df1 / df2 * x;
     return pnbeta2(

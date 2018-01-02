@@ -29,9 +29,8 @@
 
 import * as debug from 'debug';
 
-import { ML_ERR_return_NAN, R_Q_P01_boundaries } from '~common';
+import { ML_ERR_return_NAN, R_Q_P01_boundaries } from '../common/_general';
 
-import { INormal } from '~normal';
 import { qbeta } from '../beta/qbeta';
 import { qchisq } from '../chi-2/qchisq';
 
@@ -50,8 +49,7 @@ export function qf<T>(
   df1: number,
   df2: number,
   lower_tail: boolean,
-  log_p: boolean,
-  normal: INormal
+  log_p: boolean
 ): T {
   const fp: number[] = Array.isArray(pp) ? pp : ([pp] as any);
   const result = fp.map(p => {
@@ -73,11 +71,11 @@ export function qf<T>(
         /* df1 == df2 == Inf : */
         return 1;
       /* else */
-      return qchisq(p, df1, lower_tail, log_p, normal) / df1;
+      return qchisq(p, df1, lower_tail, log_p) / df1;
     }
     if (df1 > 4e5) {
       /* and so  df2 < df1 */
-      return df2 / qchisq(p, df2, !lower_tail, log_p, normal);
+      return df2 / qchisq(p, df2, !lower_tail, log_p);
     }
 
     // FIXME: (1/qb - 1) = (1 - qb)/qb; if we know qb ~= 1, should use other tail

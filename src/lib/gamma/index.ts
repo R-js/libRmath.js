@@ -1,4 +1,3 @@
-
 import { INormal, Normal } from '../normal';
 import { dgamma } from './dgamma';
 import { gammafn } from './gamma_fn';
@@ -12,43 +11,19 @@ import {
   trigamma
 } from './polygamma';
 import { qgamma } from './qgamma';
-import { rgamma } from './rgamma';
+import { rgamma as _rgamma } from './rgamma';
 
 export const special = {
   digamma,
-  gamma:gammafn,
-  lgamma:lgammafn,
+  gamma: gammafn,
+  lgamma: lgammafn,
   pentagamma,
   psigamma,
   tetragamma,
   trigamma
 };
 
-export interface IGamma {
-  dgamma: (
-    x: number | number[],
-    shape: number,
-    scale: number,
-    giveLog: boolean
-  ) => number | number[];
-  rgamma: (n: number, shape: number, scale: number) => number | number[];
-  pgamma: (
-    q: number | number[],
-    shape: number,
-    scale: number,
-    lowerTail: boolean,
-    logP: boolean
-  ) => number | number[];
-  qgamma: (
-    p: number | number[],
-    shape: number, //named shape
-    scale: number, //not the "rate"
-    lowerTail: boolean,
-    logP: boolean
-  ) => number | number[];
-}
-
-export function Gamma(norm: INormal = Normal()): IGamma {
+export function Gamma(norm: INormal = Normal()) {
   return {
     dgamma: (
       x: number | number[],
@@ -57,20 +32,21 @@ export function Gamma(norm: INormal = Normal()): IGamma {
       giveLog: boolean = false
     ) => dgamma(x, shape, scale, giveLog),
     rgamma: (n: number = 1, shape: number = 1, scale: number = 1) =>
-      rgamma(n, shape, scale, norm),
+      _rgamma(n, shape, scale, norm),
     pgamma: (
       q: number | number[],
       shape: number = 1,
       scale: number = 1,
       lowerTail: boolean = true,
       logP: boolean = false
-    ) => pgamma(q, shape, scale, lowerTail, logP, norm),
+    ) => pgamma(q, shape, scale, lowerTail, logP),
     qgamma: (
       p: number | number[],
-      shape: number= 1, //named shape
-      scale: number= 1, //not the "rate"
-      lowerTail: boolean= true,
-      logP: boolean= false) => qgamma(p, shape, scale, lowerTail, logP, norm)
+      shape: number = 1, //named shape
+      scale: number = 1, //not the "rate"
+      lowerTail: boolean = true,
+      logP: boolean = false
+    ) => qgamma(p, shape, scale, lowerTail, logP)
   };
 }
 

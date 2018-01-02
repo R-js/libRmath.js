@@ -63,7 +63,7 @@ import { pgamma_raw } from './pgamma';
 
 import { lgamma1p } from './pgamma';
 
-import { INormal } from '~normal';
+import { qnorm } from '../normal/qnorm';
 const { isArray } = Array;
 
 const { abs: fabs, sqrt, pow, exp, log } = Math;
@@ -84,7 +84,7 @@ export function qchisq_appr(
   lower_tail: boolean,
   log_p: boolean,
   tol: number /* EPS1 */,
-  normal: INormal
+  //normal: INormal
 ): number {
   const C7 = 4.67;
   const C8 = 6.66;
@@ -129,7 +129,7 @@ export function qchisq_appr(
   } else if (nu > 0.32) {
     /*  using Wilson and Hilferty estimate */
 
-    x = normal.qnorm(p, 0, 1, lower_tail, log_p);
+    x = qnorm(p, 0, 1, lower_tail, log_p);
     p1 = 2 / (9 * nu);
     ch = nu * pow(x * sqrt(p1) + 1 - p1, 3);
 
@@ -163,12 +163,11 @@ export function qgamma<T>(
   alpha: number = 1, //named shape
   scale: number = 1, //not the "rate"
   lowerTail: boolean = true,
-  logP: boolean = false,
-  normal: INormal
+  logP: boolean = false
 ): T {
   const fa: number[] = isArray(p) ? p : ([p] as any);
   const result = fa.map(pp =>
-    _qgamma(pp, alpha, scale, lowerTail, logP, normal)
+    _qgamma(pp, alpha, scale, lowerTail, logP)
   );
 
   return result.length === 1 ? result[0] : (result as any);
@@ -182,7 +181,7 @@ export function _qgamma(
   scale: number = 1 / alpha,
   lower_tail: boolean = true,
   log_p: boolean = false,
-  normal: INormal
+  //normal: INormal
 ): number {
   /*			shape = alpha */
   const EPS1 = 1e-2;
@@ -268,8 +267,7 @@ export function _qgamma(
     /* lgamma(nu/2)= */ g,
     lower_tail,
     log_p,
-    /* tol= */ EPS1,
-    normal
+    /* tol= */ EPS1
   );
   if (!R_FINITE(ch)) {
     /* forget about all iterations! */
@@ -312,7 +310,7 @@ export function _qgamma(
       p1 = 0.5 * ch;
       p2 =
         p_ -
-        pgamma_raw(p1, alpha, /*lower_tail*/ true, /*log_p*/ false, normal);
+        pgamma_raw(p1, alpha, /*lower_tail*/ true, /*log_p*/ false);
 
       if (i === 1) printer_qgamma(' Ph.II iter; ch=%d, p2=%d', ch, p2);
       if (i >= 2) printer_qgamma('     it=%d,  ch=%d, p2=%d', i, ch, p2);
@@ -385,11 +383,11 @@ export function _qgamma(
       const _1_p = 1 + 1e-7;
       const _1_m = 1 - 1e-7;
       x = DBL_MIN;
-      p_ = pgamma(x, alpha, scale, lower_tail, log_p, normal);
+      p_ = pgamma(x, alpha, scale, lower_tail, log_p);
       if ((lower_tail && p_ > p * _1_p) || (!lower_tail && p_ < p * _1_m))
         return 0;
       /* else:  continue, using x = DBL_MIN instead of  0  */
-    } else p_ = pgamma(x, alpha, scale, lower_tail, log_p, normal);
+    } else p_ = pgamma(x, alpha, scale, lower_tail, log_p);
     if (p_ === ML_NEGINF) return 0; /* PR#14710 */
     for (i = 1; i <= max_it_Newton; i++) {
       p1 = p_ - p;
@@ -427,7 +425,7 @@ export function _qgamma(
              */
       t = log_p ? p1 * exp(p_ - g) : p1 / g; /* = "delta x" */
       t = lower_tail ? x - t : x + t;
-      p_ = pgamma(t, alpha, scale, lower_tail, log_p, normal);
+      p_ = pgamma(t, alpha, scale, lower_tail, log_p);
       if (
         fabs(p_ - p) > fabs(p1) ||
         (i > 1 && fabs(p_ - p) === fabs(p1)) /* <- against flip-flop */

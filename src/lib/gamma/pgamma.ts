@@ -73,10 +73,11 @@ import {
   R_DT_0,
   R_DT_1,
   R_P_bounds_01
-} from '~common';
+} from '../common/_general';
 
 import { R_Log1_Exp } from '~exp-utils';
-import { INormal } from '~normal';
+import { dnorm4 as dnorm } from '../normal/dnorm';
+import { pnorm5 as pnorm } from '../normal/pnorm';
 import { dpois_raw } from '../poisson/dpois';
 import { lgammafn } from './lgamma_fn';
 import { logspace_add } from './logspace-add';
@@ -542,8 +543,7 @@ function pd_lower_series(lambda: number, y: number): number {
 function dpnorm(
   x: number,
   lowerTail: boolean,
-  lp: number,
-  normal: INormal
+  lp: number
 ): number {
   /*
    * So as not to repeat a pnorm call, we expect
@@ -572,7 +572,7 @@ function dpnorm(
 
     return 1 / sum;
   } else {
-    let d = normal.dnorm(x, 0, 1, false);
+    let d = dnorm(x, 0, 1, false);
     return d / exp(lp);
   }
 }
@@ -590,8 +590,7 @@ function ppois_asymp(
   x: number,
   lambda: number,
   lowerTail: boolean,
-  logP: boolean,
-  normal: INormal
+  logP: boolean
 ): number {
   const coefs_a = [
     -1e99 /* placeholder used for 1-indexing */,
@@ -663,10 +662,10 @@ function ppois_asymp(
 
   f = res12 / elfb;
 
-  np = normal.pnorm(s2pt, 0.0, 1.0, !lowerTail, logP);
+  np = pnorm(s2pt, 0.0, 1.0, !lowerTail, logP);
 
   if (logP) {
-    let n_d_over_p = dpnorm(s2pt, !lowerTail, np, normal);
+    let n_d_over_p = dpnorm(s2pt, !lowerTail, np);
     pr_ppois_asymp(
       'pp*_asymp(): f=%d	 np=e^%d  nd/np=%d  f*nd/np=%d',
       f,
@@ -676,7 +675,7 @@ function ppois_asymp(
     );
     return np + log1p(f * n_d_over_p);
   } else {
-    let nd = normal.dnorm(s2pt, 0, 1, logP);
+    let nd = dnorm(s2pt, 0, 1, logP);
 
     pr_ppois_asymp(
       'pp*_asymp(): f=%d	 np=%d  nd=%d  f*nd=%d',
@@ -695,8 +694,7 @@ export function pgamma_raw(
   x: number,
   alph: number,
   lowerTail: boolean = true,
-  logP: boolean = false,
-  normal: INormal
+  logP: boolean = false
 ): number {
   /* Here, assume that  (x,alph) are not NA  &  alph > 0 . */
 
@@ -753,7 +751,7 @@ export function pgamma_raw(
     /* x >= 1 and x fairly near alph. */
 
     pr_pgamma_raw(' using ppois_asymp()');
-    res = ppois_asymp(alph - 1, x, !lowerTail, logP, normal);
+    res = ppois_asymp(alph - 1, x, !lowerTail, logP);
   }
 
   /*
@@ -765,7 +763,7 @@ export function pgamma_raw(
     /* with(.Machine, double.xmin / double.eps) #|-> 1.002084e-292 */
 
     pr_pgamma_raw(' very small res=%.14g; -> recompute via log\n', res);
-    return exp(pgamma_raw(x, alph, lowerTail, true, normal));
+    return exp(pgamma_raw(x, alph, lowerTail, true));
   } else return res;
 }
 
@@ -775,8 +773,7 @@ export function pgamma<T>(
   shape: number,
   scale: number,
   lowerTail: boolean,
-  logP: boolean,
-  normal: INormal
+  logP: boolean
 ): T {
   const fa: number[] = isArray(q) ? q : ([q] as any);
 
@@ -795,7 +792,7 @@ export function pgamma<T>(
       return x <= 0
         ? R_DT_0(lowerTail, logP)
         : R_DT_1(lowerTail, logP); /* <= assert  pgamma(0,0) ==> 0 */
-    return pgamma_raw(x, shape, lowerTail, logP, normal);
+    return pgamma_raw(x, shape, lowerTail, logP);
   });
   return result.length === 1 ? result[0] : (result as any);
 }

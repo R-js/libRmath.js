@@ -50,8 +50,7 @@ export function pf<T>(
   df1: number,
   df2: number,
   lowerTail: boolean = true,
-  logP: boolean = false,
-  normal: INormal
+  logP: boolean = false
 ): T {
   const fx: number[] = Array.isArray(q) ? q : [q] as any;
 
@@ -76,12 +75,12 @@ export function pf<T>(
         if (x > 1) return R_DT_1(lowerTail, logP);
       }
 
-      return pchisq(x * df1, df1, lowerTail, logP, normal);
+      return pchisq(x * df1, df1, lowerTail, logP);
     }
 
     if (df1 === ML_POSINF)
       /* was "fudge"	'df1 > 4e5' in 2.0.x */
-      return pchisq(df2 / x, df2, !lowerTail, logP, normal);
+      return pchisq(df2 / x, df2, !lowerTail, logP);
 
     /* Avoid squeezing pbeta's first parameter against 1 :  */
     if (df1 * x > df2)

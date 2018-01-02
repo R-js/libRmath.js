@@ -47,8 +47,7 @@ export function qnf<T>(
   df2: number,
   ncp: number,
   lowerTail: boolean = true,
-  logP: boolean = false,
-  normal: INormal
+  logP: boolean = false
 ): T {
   const fp: number[] = Array.isArray(pp) ? pp : ([pp] as any);
 
@@ -77,7 +76,7 @@ export function qnf<T>(
 
     if (df2 > 1e8)
       /* avoid problems with +Inf and loss of accuracy */
-      return qnchisq(p, df1, ncp, lowerTail, logP, normal) / df1;
+      return qnchisq(p, df1, ncp, lowerTail, logP) / df1;
 
     y = qnbeta(p, df1 / 2, df2 / 2, ncp, lowerTail, logP);
     return y / (1 - y) * (df2 / df1);

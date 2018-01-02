@@ -34,9 +34,9 @@ export function FDist(rng: INormal = Normal()) {
     else .Call(C_pnf, q, df1, df2, ncp, lower.tail, log.p)
 */
     if (ncp === undefined) {
-      return _pf(q, df1, df2, lowerTail, logP, rng);
+      return _pf(q, df1, df2, lowerTail, logP);
     }
-    return pnf(q, df1, df2, ncp, lowerTail, logP, rng);
+    return pnf(q, df1, df2, ncp, lowerTail, logP);
   }
 
   function qf(
@@ -48,9 +48,9 @@ export function FDist(rng: INormal = Normal()) {
     logP: boolean = false
   ) {
     if (ncp === undefined) {
-      return _qf(p, df1, df2, lowerTail, logP, rng);
+      return _qf(p, df1, df2, lowerTail, logP);
     }
-    return qnf(p, df1, df2, ncp, lowerTail, logP, rng);
+    return qnf(p, df1, df2, ncp, lowerTail, logP);
   }
 
   return {

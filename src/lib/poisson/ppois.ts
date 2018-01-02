@@ -62,7 +62,7 @@ export function ppois<T>(
     if (!R_FINITE(x)) return R_DT_1(lowerTail, logP);
     x = floor(x + 1e-7);
 
-    return pgamma(lambda, x + 1, 1, !lowerTail, logP, normal);
+    return pgamma(lambda, x + 1, 1, !lowerTail, logP);
   });
 
   return result.length === 1 ? result[0] : result as any;
