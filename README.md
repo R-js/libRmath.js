@@ -2373,9 +2373,9 @@ rnbinom(7, 100, 0.1);
 rnbinom(7, 100, 0.9);
 //[ 10, 14, 9, 7, 12, 11, 10 ]
 
-mt.init(0);//reset
+mt.init(0); //reset
 //4. same as (1.)
-rnbinom(7, 100, undefined, 100*(1-0.5)/0.5);
+rnbinom(7, 100, undefined, 100 * (1 - 0.5) / 0.5);
 //[ 109, 95, 89, 112, 88, 90, 90 ]
 ```
 
@@ -2394,4 +2394,313 @@ _in R Console_
 > set.seed(0)
 > rnbinom(7, 100, mu=100*(1-0.5)/0.5);
 [1] 109  95  89 112  88  90  90
+```
+
+### Cauchy distribution
+
+`dcauchy, qcauchy, pcauchy, rcauchy`
+
+See [R doc](http://stat.ethz.ch/R-manual/R-devel/library/stats/html/Cauchy.html)
+
+These functions are members of an object created by the `Cauchy` factory method. The factory method needs as optional argument an instance of [one of the](#uniform-pseudo-random-number-generators) PRNG uniform generators.
+
+#### `dcauchy`
+
+[The Cauchy density](http://stat.ethz.ch/R-manual/R-devel/library/stats/html/Cauchy.html) function, with `s` is the _"scale"_ parameter and `l` is the _"location"_ parameter.
+
+$$ f(x) = \frac{1}{ π s (1 + ( \frac{x-l}{s} )^{2}) } $$
+
+_decl:_
+
+```typescript
+declare function dcauchy(
+  x: number | number[],
+  location = 0,
+  scale = 1,
+  asLog = false
+): number | number[];
+```
+
+* `x`: scalar or array of quantile(s).
+* `location`: the location parameter [https://en.wikipedia.org/wiki/Cauchy_distribution]
+* `scale`: the scale parameter [https://en.wikipedia.org/wiki/Cauchy_distribution]
+* `asLog`: return values as log(p)
+
+```javascript
+const libR = require('lib-r-math.js');
+const { Cauchy } = libR;
+// some usefull tools
+const log = arrayrify(Math.log);
+const seq = libR.R.seq()();
+// initialize
+const { dcauchy, pcauchy, qcauchy, rcauchy } = Cauchy();
+
+//1.
+dcauchy(seq(-4, 4, 2), -2, 0.5);
+/*
+[ 0.03744822190397537,
+  0.6366197723675814,
+  0.03744822190397537,
+  0.009794150344116638,
+  0.00439048118874194 ]
+*/
+
+//2.
+dcauchy(seq(-4, 4, 2), -2, 0.5, true);
+/*
+[ -3.284796049345671,
+  -0.4515827052894548,
+  -3.284796049345671,
+  -4.625969975185092,
+  -5.42831644771003 ]
+*/
+
+//3.
+dcauchy(seq(-4, 4, 2), 0, 2);
+/*[ 0.03183098861837907,
+  0.07957747154594767,
+  0.15915494309189535,
+  0.07957747154594767,
+  0.03183098861837907 ]
+*/
+```
+
+_in R console_
+
+```R
+> dcauchy(seq(-4,4,2), location=-2, scale=0.5);
+[1] 0.037448222 0.636619772 0.037448222 0.009794150 0.004390481
+
+> dcauchy(seq(-4,4,2), location=-2, scale=0.5, log=TRUE);
+[1] -3.2847960 -0.4515827 -3.2847960 -4.6259700 -5.4283164
+
+> dcauchy(seq(-4,4,2), location=0, scale=2);
+[1] 0.03183099 0.07957747 0.15915494 0.07957747 0.03183099
+```
+
+#### `pcauchy`
+
+The [Cauchy distribution](http://stat.ethz.ch/R-manual/R-devel/library/stats/html/Cauchy.html) function.
+
+_decl:_
+
+```typescript
+declare function pcauchy(
+  q: T,
+  location = 0,
+  scale = 1,
+  lowerTail = true,
+  logP = false
+): T;
+```
+
+* `q`: Scalar or array of quantile(s).
+* `location`: The location parameter ([wiki](https://en.wikipedia.org/wiki/Cauchy_distribution)].
+* `scale`: The scale parameter ([wiki](https://en.wikipedia.org/wiki/Cauchy_distribution)).
+* `lowerTail`: If TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
+* `logP`: If TRUE, probabilities p are given as log(p).
+
+```javascript
+const libR = require('lib-r-math.js');
+const { Cauchy } = libR;
+// some usefull tools
+const log = arrayrify(Math.log);
+const seq = libR.R.seq()();
+// initialize
+const { dcauchy, pcauchy, qcauchy, rcauchy } = Cauchy();
+
+//1
+pcauchy(seq(-4, 4, 2), -2, 0.5);
+/*
+[ 0.07797913037736932,
+  0.5,
+  0.9220208696226306,
+  0.9604165758394345,
+  0.9735353239404101 ]
+*/
+
+//2.
+pcauchy(seq(-4, 4, 2), -2, 0.5, true);
+/*
+[ 0.07797913037736932,
+  0.5,
+  0.9220208696226306,
+  0.9604165758394345,
+  0.9735353239404101 ]
+*/
+
+//3.
+pcauchy(seq(-4, 4, 2), 0, 2);
+/*
+[
+  0.14758361765043326,
+  0.25,
+  0.5,
+  0.75,
+  0.8524163823495667
+]
+*/
+```
+
+_in R console_
+
+```R
+> pcauchy(seq(-4,4,2), location=-2, scale=0.5);
+[1] 0.07797913 0.50000000 0.92202087 0.96041658 0.97353532
+
+> pcauchy(seq(-4,4,2), location=-2, scale=0.5, log=TRUE);
+[1] -2.55131405 -0.69314718 -0.08118742 -0.04038816 -0.02682117
+
+> pcauchy(seq(-4,4,2), location=0, scale=2);
+[1] 0.1475836 0.2500000 0.5000000 0.7500000 0.8524164
+```
+
+#### `qcauchy`
+
+The [Cauchy quantile](http://stat.ethz.ch/R-manual/R-devel/library/stats/html/Cauchy.html) function.
+
+```typescript
+declare function qcauchy(
+  p: number | number[],
+  location = 0,
+  scale = 1,
+  lowerTail = true,
+  logP = false
+): number | number[];
+```
+
+* `p`: Scalar or array of propbabilities(s).
+* `location`: The location parameter ([wiki](https://en.wikipedia.org/wiki/Cauchy_distribution)].
+* `scale`: The scale parameter ([wiki](https://en.wikipedia.org/wiki/Cauchy_distribution)).
+* `lowerTail`: If TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
+* `logP`: If TRUE, probabilities p are given as log(p).
+
+```javascript
+const libR = require('lib-r-math.js');
+const { Cauchy } = libR;
+// some usefull tools
+const log = arrayrify(Math.log);
+const seq = libR.R.seq()();
+// initialize
+const { dcauchy, pcauchy, qcauchy, rcauchy } = Cauchy();
+
+//1. qcauchy is the inverse of pcauchy, see comments below on '0'
+// Note, all results are within Number.EPSILON accuracy!!
+qcauchy(pcauchy(seq(-4, 4, 2), -2, 0.5), -2, 0.5);
+/*[ -4,
+  -2,
+  -8.881784197001252e-16, ==> 0
+  2.000000000000006, ==> 2
+  3.999999999999992 ] ==> 4
+*/
+
+//2.
+qcauchy(pcauchy(seq(-4, 4, 2), -2, 0.5, true), -2, 0.5, true);
+/*
+[
+   -4,
+  -2,
+  -8.881784197001252e-16,
+  2.000000000000006,
+  3.999999999999992
+]
+*/
+
+//3.
+qcauchy(pcauchy(seq(-4, 4, 2), 0, 2), 0, 2);
+/*
+[ -4.000000000000001,
+  -2.0000000000000004,
+  0,
+  2.0000000000000004,
+  4.000000000000001 ]
+*/
+```
+
+_in R Console_
+
+```R
+> qcauchy( pcauchy(seq(-4, 4, 2), -2, 0.5),  -2,  0.5 );
+[1] -4.000000e+00 -2.000000e+00 -8.881784e-16  2.000000e+00  4.000000e+00
+
+> qcauchy(pcauchy(seq(-4, 4, 2), -2, 0.5, lower.tail=TRUE),  -2,  0.5, lower.t$
+[1] -4.000000e+00 -2.000000e+00 -8.881784e-16  2.000000e+00  4.000000e+00
+
+> qcauchy(pcauchy(seq(-4, 4, 2), 0, 2),0,2);
+[1] -4 -2  0  2  4
+```
+
+#### `rcauchy`
+
+Generates random deviates from the [Cauchy distribution](http://stat.ethz.ch/R-manual/R-devel/library/stats/html/Cauchy.html).
+
+```typescript
+declare function rcauchy(
+  n: number,
+  location = 0,
+  scale = 1
+): number | number[];
+```
+
+* `n`: number of deviates to generate.
+* `location`: The location parameter ([wiki](https://en.wikipedia.org/wiki/Cauchy_distribution)].
+* `scale`: The scale parameter ([wiki](https://en.wikipedia.org/wiki/Cauchy_distribution)).
+
+```javascript
+const libR = require('lib-r-math.js');
+const { Cauchy, rng: { MersenneTwister } } = libR;
+// some usefull tools
+
+//initialize Cauchy
+const mt = new MersenneTwister(0);
+const cauchy1 = Cauchy(mt);
+
+const { dcauchy, pcauchy, qcauchy, rcauchy } = cauchy1;
+
+
+//1.
+rcauchy(5, 0, 0.5);
+/*
+[ -0.16821519851781444,
+  0.5512599516629566,
+  1.1769152991110212,
+  -2.146313122236451,
+  -0.14832127864320446 
+*/
+
+//2.
+rcauchy(5, 2, 2);
+/*[
+  3.4692937226517686,
+  1.3389560106559817,
+  1.6488412505516226,
+  -1.6164861613921215,
+  -2.657248785268937
+]*/
+
+//3.
+mt.init(0);
+rcauchy(5, -2, 0.25);
+/*
+[ -2.0841075992589073,
+  -1.7243700241685218,
+  -1.4115423504444893,
+  -3.0731565611182257,
+  -2.0741606393216023 ]
+*/
+```
+
+```R
+>RNGkind("Mersenne-Twister", normal.kind="Inversion")
+>set.seed(0)
+
+> rcauchy(5, 0, 0.5);
+[1] -0.1682152  0.5512600  1.1769153 -2.1463131 -0.1483213
+
+> rcauchy(5, 2, 2);
+[1]  3.469294  1.338956  1.648841 -1.616486 -2.657249
+
+> set.seed(0)
+> rcauchy(5, -2, 0.25);
+[1] -2.084108 -1.724370 -1.411542 -3.073157 -2.074161
 ```
