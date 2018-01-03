@@ -38,7 +38,7 @@ npm install --save lib-r-math.js
   * [Binomial distribution](#binomial-distribution)
   * [Negative Binomial distribution](#negative-binomial-distribution)
   * [Cauchy distribution](#cauchy-distribution)
-  * [Χ<sup>2</sup> (Non central) distribution](#Χ<sup>2</sup>-non-central-distribution)
+  * [X<sup>2</sup> (non-central) distribution](#X<sup>2</sup>-non-central-distribution)
   * [Exponential distribution](#exponential-distribution)
   * [F distribution](#f-distribution)
   * [Gamma distribution](#gamma-distribution)
@@ -2443,8 +2443,8 @@ declare function dcauchy(
 ```
 
 * `x`: scalar or array of quantile(s).
-* `location`: the location parameter [https://en.wikipedia.org/wiki/Cauchy_distribution]
-* `scale`: the scale parameter [https://en.wikipedia.org/wiki/Cauchy_distribution]
+* `location`: the location parameter [wiki](https://en.wikipedia.org/wiki/Cauchy_distribution)
+* `scale`: the scale parameter [wiki](https://en.wikipedia.org/wiki/Cauchy_distribution)
 * `asLog`: return values as log(p)
 
 ```javascript
@@ -2726,7 +2726,7 @@ rcauchy(5, -2, 0.25);
 [1] -2.084108 -1.724370 -1.411542 -3.073157 -2.074161
 ```
 
-### Χ<sup>2</sup> (Non central) distribution
+### X<sup>2</sup> (non-central) distribution
 
 `dchisq, qchisq, pchisq, rchisq`
 
