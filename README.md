@@ -38,7 +38,7 @@ npm install --save lib-r-math.js
   * [Binomial distribution](#binomial-distribution)
   * [Negative Binomial distribution](#negative-binomial-distribution)
   * [Cauchy distribution](#cauchy-distribution)
-  * [X<sup>2</sup> (non-central) distribution](#X<sup>2</sup>-non-central-distribution)
+  * [X<sup>2</sup> (non-central) distribution](#chi-squared-distribution)
   * [Exponential distribution](#exponential-distribution)
   * [F distribution](#f-distribution)
   * [Gamma distribution](#gamma-distribution)
@@ -2414,7 +2414,7 @@ const { arrayrify } = libR.R;
 const log = arrayrify(Math.log);
 const seq = libR.R.seq()();
 
-//example 1: default 
+//example 1: default
 const defaultCauchy = Cauchy();
 
 //example 2: explicit PRNG usage
@@ -2656,11 +2656,7 @@ _in R Console_
 Generates random deviates from the [Cauchy distribution](http://stat.ethz.ch/R-manual/R-devel/library/stats/html/Cauchy.html).
 
 ```typescript
-declare function rcauchy(
-  n: number,
-  location = 0,
-  scale = 1
-): number | number[];
+declare function rcauchy(n: number, location = 0, scale = 1): number | number[];
 ```
 
 * `n`: number of deviates to generate.
@@ -2677,7 +2673,6 @@ const mt = new MersenneTwister(0);
 const cauchy1 = Cauchy(mt);
 
 const { dcauchy, pcauchy, qcauchy, rcauchy } = cauchy1;
-
 
 //1.
 rcauchy(5, 0, 0.5);
@@ -2726,7 +2721,7 @@ rcauchy(5, -2, 0.25);
 [1] -2.084108 -1.724370 -1.411542 -3.073157 -2.074161
 ```
 
-### X<sup>2</sup> (non-central) distribution
+### Chi-Squared Distribution
 
 `dchisq, qchisq, pchisq, rchisq`
 
@@ -2739,10 +2734,10 @@ Usage:
 ```javascript
 const libR = require('lib-r-math.js');
 const {
-    Normal,
-    ChiSquared,
-    rng: { MersenneTwister },
-    rng: { normal: { Inversion } }
+  Normal,
+  ChiSquared,
+  rng: { MersenneTwister },
+  rng: { normal: { Inversion } }
 } = libR;
 
 //initialize ChiSquared
@@ -2760,15 +2755,15 @@ const { dchisq, pchisq, qchisq, rchisq } = customChi2;
 
 The X<sup>2</sup> density function, see [R doc](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/Chisquare.html).
 
-$$ f_{n}(x) = \frac{1}{2^{\frac{n}{2}} Γ(\frac{n}{2})} x^{\frac{n}{2}-1} e^{\frac{-x}{2}} $$
+$$ f\_{n}(x) = \frac{1}{2^{\frac{n}{2}} Γ(\frac{n}{2})} x^{\frac{n}{2}-1} e^{\frac{-x}{2}} $$
 
 ```typescript
 declare function dchisq(
-    x: number | number[],
-    df: number,
-    ncp?: number,
-    asLog: boolean = false
-  ): number|number[];
+  x: number | number[],
+  df: number,
+  ncp?: number,
+  asLog: boolean = false
+): number | number[];
 ```
 
 * `x`: quantiles (array or scalar).
@@ -2816,7 +2811,6 @@ dchisq(seq(0, 10, 2), 3, 4, true);
   -2.6483908493739903,
   -2.9806807844070144 ]
 */
-
 ```
 
 _in R Console_
@@ -2838,18 +2832,18 @@ The X<sup>2</sup> probability function, see [R doc](https://stat.ethz.ch/R-manua
 
 ```typescript
 declare function pchisq(
-    q: number | number[],
-    df: number,
-    ncp?: number,
-    lowerTail = true,
-    logP = false
-  ): number|number[];
+  q: number | number[],
+  df: number,
+  ncp?: number,
+  lowerTail = true,
+  logP = false
+): number | number[];
 ```
 
 * `q`: quantiles (array or scalar).
 * `df`: degrees of freedom.
 * `ncp`: non centrality parameter.
-* `lowerTail`:  if TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
+* `lowerTail`: if TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
 * `logP`: return probabilities as log(p)
 
 ```javascript
@@ -2912,18 +2906,18 @@ The X<sup>2</sup> quantile function, see [R doc](https://stat.ethz.ch/R-manual/R
 
 ```typescript
 declare function qchisq(
-    p: number | number[],
-    df: number,
-    ncp?: number,
-    lowerTail = true,
-    logP = false
-  ): number|number[];
+  p: number | number[],
+  df: number,
+  ncp?: number,
+  lowerTail = true,
+  logP = false
+): number | number[];
 ```
 
 * `p`: probabilities (array or scalar).
 * `df`: degrees of freedom.
 * `ncp`: non centrality parameter.
-* `lowerTail`:  if TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
+* `lowerTail`: if TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
 * `logP`: probabilities are as log(p)
 
 ```javascript
@@ -2988,11 +2982,7 @@ _in R Console_
 Creates random deviates for the X<sup>2</sup> distribution, see [R doc](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/Chisquare.html).
 
 ```typescript
-declare function rchisq(
-    n: number,
-    df: number,
-    ncp?: number
-  ): number|number[];
+declare function rchisq(n: number, df: number, ncp?: number): number | number[];
 ```
 
 * `p`: probabilities (array or scalar).
@@ -3003,18 +2993,17 @@ declare function rchisq(
 const libR = require('lib-r-math.js');
 
 const {
-    Normal,
-    ChiSquared,
-    rng: { MersenneTwister },
-    rng: { normal: { Inversion } }
+  Normal,
+  ChiSquared,
+  rng: { MersenneTwister },
+  rng: { normal: { Inversion } }
 } = libR;
-
 
 const mt = new MersenneTwister(0);
 const inv = new Inversion(mt);
 const normal = Normal(inv);
 
-const { dchisq, pchisq, qchisq, rchisq } =  ChiSquared(normal);
+const { dchisq, pchisq, qchisq, rchisq } = ChiSquared(normal);
 
 mt.init(1234);
 rchisq(5, 6);
@@ -3062,3 +3051,314 @@ _in R Console_
 [1] 19.83557 16.09560 19.03088 18.76874 11.12131
 ```
 
+### Exponential Distribution
+
+`dexp, qexp, pexp, rexp`
+
+See [R doc](http://stat.ethz.ch/R-manual/R-patched/library/stats/html/Exponential.html)
+
+These functions are members of an object created by the `Exponential` factory method. The factory method needs as optional argument an instance of an [uniform PRNG](#uniform-pseudo-random-number-generators) class.
+
+Usage:
+
+```javascript
+const libR = require('lib-r-math.js');
+const { Exponential, rng: { MersenneTwister } } = libR;
+
+//1. initialize default
+const defaultExponential = Exponential();
+
+//2. alternative: initialize with explicit uniform PRNG
+const mt = new MersenneTwister(123456); //keep reference so we can do mt.init(...)
+const customExponential = Exponential(mt);
+
+//get functions
+const { dexp, pexp, qexp, rexp } = defaultExponential;
+```
+
+#### `dexp`
+
+The exponential density function, see [R doc](http://stat.ethz.ch/R-manual/R-patched/library/stats/html/Exponential.html).
+
+$$ f(x) = λ {e}^{- λ x} $$
+
+```typescript
+declare function dexp(
+  x: number | number[],
+  rate: number = 1,
+  asLog: boolean = false
+): number | number[];
+```
+
+* `x`: quantiles (array or scalar).
+* `rate`: the λ parameter.
+* `asLog`: return probabilities as log(p)
+
+```javascript
+const libR = require('lib-r-math.js');
+const { Exponential } = libR;
+
+const { dexp, pexp, qexp, rexp } = Exponential();
+
+// some usefull tools
+const seq = libR.R.seq()();
+
+//1
+dexp(seq(0, 0.3, 0.05), 3);
+/*
+    [ 3,
+      2.5821239292751734,
+      2.2224546620451533,
+      1.9128844548653197,
+      1.6464349082820793,
+      1.4170996582230442,
+      1.2197089792217974 
+    ]
+    */
+
+//2.
+dexp(seq(0, 0.3, 0.05), 3, true);
+/*
+        [ 1.0986122886681098,
+            0.9486122886681098,
+            0.7986122886681097,
+            0.6486122886681097,
+            0.4986122886681097,
+            0.3486122886681098,
+            0.19861228866810976 ]
+    */
+
+//3
+dexp(seq(0, 10, 2), 0.2);
+/*
+    [ 0.2,
+        0.13406400920712785,
+        0.08986579282344431,
+        0.06023884238244041,
+        0.04037930359893108,
+        0.027067056647322542 ]
+    */
+```
+
+_in R Console_
+
+```R
+#1
+>  dexp(seq(0,0.3,0.05),3)
+[1] 3.000000 2.582124 2.222455 1.912884
+[5] 1.646435 1.417100 1.219709
+
+#2
+>  dexp(seq(0,0.3,0.05),3, TRUE)
+[1] 1.0986123 0.9486123 0.7986123
+[4] 0.6486123 0.4986123 0.3486123
+[7] 0.1986123
+
+#3
+> dexp(seq(0,10,2),0.2)
+[1] 0.20000000 0.13406401 0.08986579
+[4] 0.06023884 0.04037930 0.02706706
+```
+
+#### `pexp`
+
+The Exponential probability function, see [R doc](http://stat.ethz.ch/R-manual/R-patched/library/stats/html/Exponential.html).
+
+```typescript
+declare function pexp(
+  q: number | number[],
+  rate: number = 1,
+  lowerTail: boolean = true,
+  logP: boolean = false
+): number | number[];
+```
+
+* `q`: quantiles (array or scalar).
+* `rate`: the λ parameter.
+* `lowerTail`: if TRUE (default), probabilities are P[X ≤ q], otherwise, P[X > q].
+* `logP`: return probabilities as log(p)
+
+```javascript
+const libR = require('lib-r-math.js');
+const { Exponential } = libR;
+
+const seq = libR.R.seq()();
+
+const { dexp, pexp, qexp, rexp } = ChiSquared();
+
+///1
+pexp(seq(0, 0.3, 0.05), 3);
+/*[ 0,
+      0.13929202357494222,
+      0.2591817793182822,
+      0.3623718483782268,
+      0.4511883639059736,
+      0.5276334472589853,
+      0.5934303402594009 ]
+    */
+
+//2
+pexp(seq(0, 0.3, 0.05), 3, true);
+/*[ 0,
+      0.13929202357494222,
+      0.2591817793182822,
+      0.3623718483782268,
+      0.4511883639059736,
+      0.5276334472589853,
+      0.5934303402594009 ]
+    */
+
+//3
+pexp(seq(0, 10, 2), 0.2);
+/*[ 0,
+      0.32967995396436073,
+      0.5506710358827784,
+      0.6988057880877979,
+      0.7981034820053446,
+      0.8646647167633873 ]
+*/
+```
+
+_in R Console_
+
+```R
+#1
+> pexp(seq(0,0.3,0.05),3)
+[1] 0.0000000 0.1392920 0.2591818
+[4] 0.3623718 0.4511884 0.5276334
+[7] 0.5934303
+
+#2
+> pexp(seq(0,0.3,0.05),3, TRUE)
+[1] 0.0000000 0.1392920 0.2591818
+[4] 0.3623718 0.4511884 0.5276334
+[7] 0.5934303
+
+#3
+> pexp(seq(0,10,2),0.2)
+[1] 0.0000000 0.3296800 0.5506710
+[4] 0.6988058 0.7981035 0.8646647
+```
+
+#### `qexp`
+
+The Exponential quantile function, see [R doc](http://stat.ethz.ch/R-manual/R-patched/library/stats/html/Exponential.html).
+
+```typescript
+declare function qexp(
+  p: number | number[],
+  rate: number = 1,
+  lowerTail = true,
+  logP = false
+): number | number[];
+```
+
+* `p`: probabilities (array or scalar).
+* `rate`: the λ parameter.
+* `lowerTail`: if TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
+* `logP`: return probabilities as log(p)
+
+```javascript
+const libR = require('lib-r-math.js');
+const { Exponential } = libR;
+
+const log = libR.R.arrayrify(Math.log);
+const seq = libR.R.seq()();
+
+const { dexp, pexp, qexp, rexp } = ChiSquared();
+
+//1
+qexp(log(pexp(seq(0, 10, 2), 0.2)), 0.2, true, true);
+//[ 0, 2, 4, 6.000000000000001, 8.000000000000002, 10 ]
+
+//2
+qexp(pexp(seq(0, 10, 2), 0.2), 0.2);
+//[ 0, 2, 4, 6.000000000000001, 8.000000000000002, 10 ]
+
+//3
+qexp(pexp(seq(0, 0.3, 0.05), 3, true), 3, true);
+// [1] 0.00 0.05 0.10 0.15 0.20 0.25 0.30
+```
+
+_in R Console_
+
+```R
+#1
+> qexp(log(pexp(seq(0,10,2),0.2)),0.2, TRUE, TRUE)
+[1]  0  2  4  6  8 10
+
+#2
+> qexp(pexp(seq(0,10,2),0.2),0.2)
+[1]  0  2  4  6  8 10
+
+#3
+> qexp(pexp(seq(0,0.3,0.05),3, TRUE),3, TRUE)
+[1] 0.00 0.05 0.10 0.15 0.20 0.25 0.30
+```
+
+#### `rexp`
+
+Creates random deviates for the Exponential distribution, see [R doc](http://stat.ethz.ch/R-manual/R-patched/library/stats/html/Exponential.html).
+
+```typescript
+declare function rexp(n: number, rate: number = 1): number | number[];
+```
+
+* `n`: number of deviates to generate (array or scalar).
+* `rate`: the λ parameter.
+
+```javascript
+const libR = require('lib-r-math.js');
+const { Exponential, rng: { MersenneTwister } } = libR;
+
+const mt = new MersenneTwister(1234); //seed 1234
+const { dexp, pexp, qexp, rexp } = Exponential(mt);
+
+//1
+rexp(5);
+/*[ 2.501758604962226,
+  0.24675888335332274,
+  0.00658195674547719,
+  1.742746089841709,
+  0.38718258356675506 ]
+*/
+
+//2
+rexp(5, 0.1);
+/*[ 0.8994967117905617,
+  8.240815149200083,
+  2.0261790050608974,
+  8.380403192293764,
+  7.604303005662682 ]
+*/
+
+//3
+rexp(5, 3);
+/*[ 0.6266922261285862,
+  0.5320351392051192,
+  0.5528874614306372,
+  1.0174860332842828,
+  0.5835600444988374 ]
+*/
+```
+
+_in R Console_
+
+```R
+> RNGkind("Mersenne-Twister")
+> set.seed(1234)
+#1.
+> rexp(5)
+[1] 2.501758605 0.246758883 0.006581957
+[4] 1.742746090 0.387182584
+
+#2.
+> rexp(5,0.1)
+[1] 0.8994967 8.2408151 2.0261790 8.3804032
+[5] 7.6043030
+
+#3.
+> rexp(5,3)
+[1] 0.6266922 0.5320351 0.5528875 1.0174860
+[5] 0.5835600
+```
