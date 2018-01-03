@@ -38,7 +38,7 @@ npm install --save lib-r-math.js
   * [Binomial distribution](#binomial-distribution)
   * [Negative Binomial distribution](#negative-binomial-distribution)
   * [Cauchy distribution](#cauchy-distribution)
-  * [Χ<sup>2</sup> distribution](#Χ<sup>2</sup>-distribution)
+  * [Χ<sup>2</sup> (Non central) distribution](#Χ<sup>2</sup>-non-central-distribution)
   * [Exponential distribution](#exponential-distribution)
   * [F distribution](#f-distribution)
   * [Gamma distribution](#gamma-distribution)
@@ -1393,7 +1393,7 @@ See [R doc]()
 
 These functions are members of an object created by the `Beta` factory method. The factory method needs the return object of the `Normal` factory method. Various instantiation methods are given below.
 
-Instantiation:
+Usage:
 
 ```javascript
 const libR = require('lib-r-math.js');
@@ -1795,7 +1795,7 @@ See [R doc]()
 
 These functions are members of an object created by the `Binomial` factory method. The factory method needs the result of a call to the function `Normal(..)` factory method. Various instantiation methods are given below.
 
-Instantiation:
+Usage:
 
 ```javascript
 const libR = require('lib-r-math.js');
@@ -2075,7 +2075,7 @@ See [R doc]()
 
 These functions are members of an object created by the `NegativeBinomial` factory function. The factory method needs the result of a call to the `Normal(..)` factory function. Various instantiation methods are given below.
 
-Instantiation:
+Usage:
 
 ```javascript
 const libR = require('lib-r-math.js');
@@ -2404,6 +2404,27 @@ See [R doc](http://stat.ethz.ch/R-manual/R-devel/library/stats/html/Cauchy.html)
 
 These functions are members of an object created by the `Cauchy` factory method. The factory method needs as optional argument an instance of [one of the](#uniform-pseudo-random-number-generators) PRNG uniform generators.
 
+Usage:
+
+```javascript
+const libR = require('lib-r-math.js');
+const { Cauchy, rng: { MersenneTwister } } = libR;
+// some usefull tools
+const { arrayrify } = libR.R;
+const log = arrayrify(Math.log);
+const seq = libR.R.seq()();
+
+//example 1: default 
+const defaultCauchy = Cauchy();
+
+//example 2: explicit PRNG usage
+const mt = new MersenneTwister(0);
+const cauchy1 = Cauchy(mt);
+
+//strip the needed functions
+const { dcauchy, pcauchy, qcauchy, rcauchy } = cauchy1;
+```
+
 #### `dcauchy`
 
 [The Cauchy density](http://stat.ethz.ch/R-manual/R-devel/library/stats/html/Cauchy.html) function, with `s` is the _"scale"_ parameter and `l` is the _"location"_ parameter.
@@ -2704,3 +2725,341 @@ rcauchy(5, -2, 0.25);
 > rcauchy(5, -2, 0.25);
 [1] -2.084108 -1.724370 -1.411542 -3.073157 -2.074161
 ```
+
+### Χ<sup>2</sup> (Non central) distribution
+
+`dchisq, qchisq, pchisq, rchisq`
+
+See [R doc](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/Chisquare.html)
+
+These functions are members of an object created by the `ChiSquared` factory method. The factory method needs as optional argument the result produced by the [_Normal_](#normal-distribution) factory method.
+
+Usage:
+
+```javascript
+const libR = require('lib-r-math.js');
+const {
+    Normal,
+    ChiSquared,
+    rng: { MersenneTwister },
+    rng: { normal: { Inversion } }
+} = libR;
+
+//initialize ChiSquared
+const defaultChiSquared = ChiSquared();
+const mt = new MersenneTwister(0); //keep reference so we can do mt.init(123)
+const inv = new Inversion(mt);
+const normal = Normal(inv);
+
+const customChi2 = ChiSquared(normal);
+
+const { dchisq, pchisq, qchisq, rchisq } = customChi2;
+```
+
+#### `dchisq`
+
+The X<sup>2</sup> density function, see [R doc](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/Chisquare.html).
+
+$$ f_{n}(x) = \frac{1}{2^{\frac{n}{2}} Γ(\frac{n}{2})} x^{\frac{n}{2}-1} e^{\frac{-x}{2}} $$
+
+```typescript
+declare function dchisq(
+    x: number | number[],
+    df: number,
+    ncp?: number,
+    asLog: boolean = false
+  ): number|number[];
+```
+
+* `x`: quantiles (array or scalar).
+* `df`: degrees of freedom.
+* `ncp`: non centrality parameter.
+* `asLog`: return probabilities as log(p)
+
+```javascript
+const libR = require('lib-r-math.js');
+const { ChiSquared } = libR;
+
+const { dchisq, pchisq, qchisq, rchisq } = ChiSquared();
+
+// some usefull tools
+const seq = libR.R.seq()();
+
+//1. seq(0,10)=[0, 2, 4, 6, 8, 10], df=5
+dchisq(seq(0, 10, 2), 5);
+/*
+[ 0,
+  0.13836916580686492,
+  0.1439759107018348,
+  0.09730434665928292,
+  0.05511196094424547,
+  0.02833455534173448 ]
+*/
+
+//2. seq(0,10)=[0, 2, 4, 6, 8, 10], df=3, ncp=4
+dchisq(seq(0, 10, 2), 3, 4);
+/*
+[ 0,
+  0.08371765638067052,
+  0.09970211254391682,
+  0.090147417612482,
+  0.07076499302415257,
+  0.050758266663356165 ]
+*/
+//3. seq(0,10)=[0, 2, 4, 6, 8, 10], df=3, ncp=4, log=true
+dchisq(seq(0, 10, 2), 3, 4, true);
+/*
+[ -Infinity,
+  -2.4803053753380837,
+  -2.3055684132326415,
+  -2.4063089751953237,
+  -2.6483908493739903,
+  -2.9806807844070144 ]
+*/
+
+```
+
+_in R Console_
+
+```R
+> dchisq(seq(0, 10, 2), 5);
+[1] 0.00000000 0.13836917 0.14397591 0.09730435 0.05511196 0.02833456
+
+> dchisq(seq(0, 10, 2), 3, 4);
+[1] 0.00000000 0.08371766 0.09970211 0.09014742 0.07076499 0.05075827
+
+> dchisq(seq(0, 10, 2), 3, 4, TRUE);
+[1]      -Inf -2.480305 -2.305568 -2.406309 -2.648391 -2.980681
+```
+
+#### `pchisq`
+
+The X<sup>2</sup> probability function, see [R doc](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/Chisquare.html).
+
+```typescript
+declare function pchisq(
+    q: number | number[],
+    df: number,
+    ncp?: number,
+    lowerTail = true,
+    logP = false
+  ): number|number[];
+```
+
+* `q`: quantiles (array or scalar).
+* `df`: degrees of freedom.
+* `ncp`: non centrality parameter.
+* `lowerTail`:  if TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
+* `logP`: return probabilities as log(p)
+
+```javascript
+const libR = require('lib-r-math.js');
+const { ChiSquared } = libR;
+
+const { dchisq, pchisq, qchisq, rchisq } = ChiSquared();
+
+//1.
+pchisq([0, 2, 4, 6, 10, Infinity], 3);
+/*
+[ 0,
+  0.42759329552912073,
+  0.7385358700508893,
+  0.8883897749052875,
+  0.9814338645369568,
+  1 ]
+*/
+
+//2. df=8, ncp=4, lowerTail=false
+pchisq([0, 2, 4, 6, 10, Infinity], 8, 4, false);
+/*
+[ 1,
+  0.9962628039343348,
+  0.961002639616864,
+  0.8722689463714985,
+  0.5873028585053277,
+  0 ]
+*/
+
+//3. df=8, ncp=4, lowerTail=true, logP=true
+pchisq([0, 2, 4, 6, 10, Infinity], 8, 4, true, true);
+/*
+[ -Infinity,
+  -5.589419663795327,
+  -3.244261317626745,
+  -2.0578283690888397,
+  -0.8850412685992426,
+  -0 ]
+*/
+```
+
+_in R Console_
+
+```R
+> pchisq(c(0, 2, 4, 6, 10, Inf), 3);
+[1] 0.0000000 0.4275933 0.7385359 0.8883898 0.9814339 1.0000000
+
+> pchisq(c(0, 2, 4, 6, 10, Inf), 8, 4, lower.tail=FALSE);
+[1] 1.0000000 0.9962628 0.9610026 0.8722689 0.5873029 0.0000000
+
+> pchisq(c(0, 2, 4, 6, 10, Inf), 8, 4, lower.tail=FALSE, log.p=TRUE);
+[1]  0.000000000 -0.003744197 -0.039778123 -0.136657478 -0.532214649
+[6]         -Inf
+```
+
+#### `qchisq`
+
+The X<sup>2</sup> quantile function, see [R doc](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/Chisquare.html).
+
+```typescript
+declare function qchisq(
+    p: number | number[],
+    df: number,
+    ncp?: number,
+    lowerTail = true,
+    logP = false
+  ): number|number[];
+```
+
+* `p`: probabilities (array or scalar).
+* `df`: degrees of freedom.
+* `ncp`: non centrality parameter.
+* `lowerTail`:  if TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
+* `logP`: probabilities are as log(p)
+
+```javascript
+const libR = require('lib-r-math.js');
+const { ChiSquared } = libR;
+
+const { dchisq, pchisq, qchisq, rchisq } = ChiSquared();
+
+// some usefull tools
+const seq = libR.R.seq()();
+const log = libR.R.arrayrify(Math.log);
+
+//1. df=3,
+qchisq(seq(0, 1, 0.2), 3);
+/*
+[ 0,
+  1.0051740130523492,
+  1.8691684033887155,
+  2.9461660731019514,
+  4.641627676087445,
+  Infinity ]
+*/
+
+//2. df=3, ncp=undefined, lowerTail=false
+qchisq(seq(0, 1, 0.2), 50, undefined, false);
+/*
+[ Infinity,
+  58.16379657992839,
+  51.89158387457867,
+  46.86377615520892,
+  41.44921067362021,
+  0 ]
+*/
+
+//3. df=50, ncp=0, lowerTail=false, logP=true
+qchisq(log(seq(0, 1, 0.2)), 50, 0, false, true);
+/*
+[ Infinity,
+  58.16379657992839,
+  51.89158387457867,
+  46.86377615520892,
+  41.44921067362021,
+  0 ]
+*/
+```
+
+_in R Console_
+
+```R
+> qchisq(seq(0, 1, 0.2), 3);
+[1] 0.000000 1.005174 1.869168 2.946166 4.641628      Inf
+
+> qchisq(seq(0, 1, 0.2), 50, lower.tail=FALSE);
+[1]      Inf 58.16380 51.89158 46.86378 41.44921  0.00000
+
+> qchisq(log(seq(0, 1, 0.2)), 50, 0, lower.tail=FALSE, log.p=TRUE);
+[1]      Inf 58.16380 51.89158 46.86378 41.44921  0.00000
+```
+
+#### `rchisq`
+
+Creates random deviates for the X<sup>2</sup> distribution, see [R doc](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/Chisquare.html).
+
+```typescript
+declare function rchisq(
+    n: number,
+    df: number,
+    ncp?: number
+  ): number|number[];
+```
+
+* `p`: probabilities (array or scalar).
+* `df`: degrees of freedom.
+* `ncp`: non centrality parameter.
+
+```javascript
+const libR = require('lib-r-math.js');
+const { ChiSquared } = libR;
+
+const {
+    Normal,
+    ChiSquared,
+    rng: { MersenneTwister },
+    rng: { normal: { Inversion } }
+} = libR;
+
+
+const mt = new MersenneTwister(0);
+const inv = new Inversion(mt);
+const normal = Normal(inv);
+
+const { dchisq, pchisq, qchisq, rchisq } =  ChiSquared(normal);
+
+mt.init(1234);
+rchisq(5, 6);
+/*
+[ 1.9114268080337742,
+  6.043534576038884,
+  6.200716357774979,
+  2.956836564898939,
+  6.7283355255601744 ]
+*/
+
+//2. df=40, ncp=3
+rchisq(5, 40, 3);
+/**
+ [ 52.209386584322935,
+  34.70775047728965,
+  47.16016110974318,
+  46.5265673840001,
+  33.621513245840234 ]
+ */
+
+//3. df=20
+rchisq(5, 20);
+/*
+[ 19.835565127330135,
+  16.09559531198466,
+  19.030877450490838,
+  18.7687394986203,
+  11.121314102478944 ]
+*/
+```
+
+_in R Console_
+
+```R
+> RNGkind("Mersenne-Twister", normal.kind ="Inversion")
+> set.seed(1234)
+> rchisq(5, 6);
+[1] 1.911427 6.043535 6.200716 2.956837 6.728336
+
+> rchisq(5, 40, 3);
+[1] 52.20939 34.70775 47.16016 46.52657 33.62151
+
+> rchisq(5, 20);
+[1] 19.83557 16.09560 19.03088 18.76874 11.12131
+```
+
