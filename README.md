@@ -3001,7 +3001,6 @@ declare function rchisq(
 
 ```javascript
 const libR = require('lib-r-math.js');
-const { ChiSquared } = libR;
 
 const {
     Normal,
