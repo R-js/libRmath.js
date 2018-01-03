@@ -32,7 +32,7 @@
  *
  */
 
-import { ML_ERR_return_NAN } from '~common';
+import { ML_ERR_return_NAN } from '../common/_general';
 
 import * as debug from 'debug';
 import { IRNG } from '../rng/IRNG';

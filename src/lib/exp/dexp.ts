@@ -32,26 +32,21 @@
  *	The density of the exponential distribution.
  */
 
-import { ML_ERR_return_NAN, R_D__0 } from '~common';
+import { ML_ERR_return_NAN, R_D__0 } from '../common/_general';
 
 import * as debug from 'debug';
 
+import { forEach } from '../r-func';
+
 const { log, exp } = Math;
 const { isNaN: ISNAN } = Number;
-const { isArray } = Array;
 const printer = debug('dexp');
 
-export function dexp(
-  x: number | number[],
-  scale: number = 1,
-  give_log: boolean = false
-): number | number[] {
+export function dexp<T>(x: T, scale: number, give_log: boolean = false): T {
   /* NaNs propagated correctly */
-  let fa: number[] = (() => (isArray(x) && x) || [x])();
-
-  let result = fa.map(fx => {
+  return forEach(x)(fx => {
     if (ISNAN(fx) || ISNAN(scale)) {
-      return fx + scale;
+      return NaN;
     }
 
     if (scale <= 0.0) {
@@ -62,6 +57,5 @@ export function dexp(
       return R_D__0(give_log);
     }
     return give_log ? -fx / scale - log(scale) : exp(-fx / scale) / scale;
-  });
-  return result.length === 1 ? result[0] : result;
+  }) as any;
 }

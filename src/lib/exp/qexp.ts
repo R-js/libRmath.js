@@ -27,25 +27,17 @@
  *
  */
 import * as debug from 'debug';
-import { ML_ERR_return_NAN, R_DT_0, R_Q_P01_check } from '~common';
-
+import { ML_ERR_return_NAN, R_DT_0, R_Q_P01_check } from '../common/_general';
+import { forEach } from '../r-func';
 import { R_DT_Clog } from './expm1';
 
 import { forceToArray, possibleScalar } from '~R';
 
-const { isArray } = Array;
 const { isNaN: ISNAN } = Number;
 const printer = debug('qexp');
 
-export function qexp<T>(
-  _p: T,
-  scale: number = 1,
-  lower_tail: boolean = true,
-  log_p: boolean = false
-): T {
-  let fa: number[] = forceToArray(_p) as any;
-
-  let result = fa.map(p => {
+export function qexp<T>(_p: T, scale: number, lower_tail: boolean, log_p: boolean): T {
+  return forEach(_p)(p => {
     if (ISNAN(p) || ISNAN(scale)) return p + scale;
 
     if (scale < 0) return ML_ERR_return_NAN(printer);
@@ -57,6 +49,5 @@ export function qexp<T>(
     if (p === R_DT_0(lower_tail, log_p)) return 0;
 
     return -scale * R_DT_Clog(lower_tail, log_p, p);
-  });
-  return possibleScalar(result) as any;
+  }) as any;
 }

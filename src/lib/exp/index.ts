@@ -1,28 +1,30 @@
-import { dexp } from './dexp';
-import { pexp } from './pexp';
-import { qexp } from './qexp';
-import { rexp } from './rexp';
+import { dexp as _dexp } from './dexp';
+import { pexp as _pexp } from './pexp';
+import { qexp as _qexp } from './qexp';
+import { rexp as _rexp } from './rexp';
 
 import { IRNG, rng } from '../rng';
-const { normal: { Inversion }, SuperDuper } = rng;
+const { normal: { Inversion }, MersenneTwister } = rng;
 
-export interface IExponential {
-  rexp: (n: number, rate: number) => number | number[];
-  dexp: (x: number|number[], rate: number, log: boolean) => number|number[];
-  pexp: (q: number|number[], rate: number, lowerTail: boolean, logp: boolean) => number|number[];
-  qexp: (_p: number | number[], rate: number, lowerTail: boolean, logp: boolean) => number|number[];
-}
-
-export function Exponential(
-  rng: IRNG = new SuperDuper(0)
-): IExponential {
-  // underlying uniform PRNG
- // const unif_rand: () => number = rng.unif_rand.bind(rng);
+export function Exponential(rng: IRNG = new MersenneTwister(0)) {
+  /*
+  NOTE: scale = 1/rate, the R code looks like
+      > rexp
+      function (n, rate = 1) 
+        .Call(C_rexp, n, 1/rate)
+        <bytecode: 0x0000000005f90fd0>
+        <environment: namespace:stats>
+  */
   return {
-    rexp: (n: number , rate: number) =>
-      rexp(n, rate, rng),
-    dexp,
-    pexp,
-    qexp
- };
+    dexp: (x: number | number[], rate = 1, asLog = false) =>
+      _dexp(x, 1 / rate, asLog),
+
+    pexp: (q: number | number[], rate = 1, lowerTail = true, logP = false) =>
+      _pexp(q, 1 / rate, lowerTail, logP),
+
+    qexp: (p: number | number[], rate = 1, lowerTail = true, logP = false) =>
+      _qexp(p, 1 / rate, lowerTail, logP),
+
+    rexp: (n: number, rate = 1) => _rexp(n, 1 / rate, rng)
+  };
 }

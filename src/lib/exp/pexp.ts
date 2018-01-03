@@ -27,7 +27,8 @@
  *	The distribution function of the exponential distribution.
  */
 
-import { ML_ERR_return_NAN, R_D_exp, R_DT_0 } from '~common';
+import { ML_ERR_return_NAN, R_D_exp, R_DT_0 } from '../common/_general';
+import { forEach } from '../r-func';
 
 import * as debug from 'debug';
 import { R_Log1_Exp } from './expm1';
@@ -37,15 +38,13 @@ const { isNaN: ISNAN } = Number;
 const { isArray } = Array;
 const printer = debug('pexp');
 
-export function pexp(
-  x: number | number[],
-  scale: number = 1,
-  lower_tail: boolean = true,
-  log_p: boolean = false
-): number | number[] {
-  let fa: number[] = (() => (isArray(x) && x) || [x])();
-
-  let result = fa.map(fx => {
+export function pexp<T>(
+  q: T,
+  scale: number,
+  lower_tail: boolean,
+  log_p: boolean
+): T {
+  return forEach(q)(fx => {
     if (ISNAN(fx) || ISNAN(scale)) return fx + scale;
     if (scale < 0) {
       return ML_ERR_return_NAN(printer);
@@ -57,6 +56,5 @@ export function pexp(
     return lower_tail
       ? log_p ? R_Log1_Exp(fx) : -expm1(fx)
       : R_D_exp(log_p, fx);
-  });
-  return result.length === 1 ? result[0] : result;
+  }) as any;
 }
