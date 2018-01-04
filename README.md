@@ -38,9 +38,9 @@ npm install --save lib-r-math.js
   * [Binomial distribution](#binomial-distribution)
   * [Negative Binomial distribution](#negative-binomial-distribution)
   * [Cauchy distribution](#cauchy-distribution)
-  * [X<sup>2</sup> (non-central) distribution](#chi-squared-distribution)
+  * [X<sup>2</sup> (non-central) distribution](#chi-squared-non-central-distribution)
   * [Exponential distribution](#exponential-distribution)
-  * [F distribution](#f-distribution)
+  * [F (non-central) distribution](#f-non-central-distribution)
   * [Gamma distribution](#gamma-distribution)
   * [Geometric distribution](#geometric-distribution)
   * [Hypergeometric distribution](#hypergeometric-distribution)
@@ -2721,7 +2721,7 @@ rcauchy(5, -2, 0.25);
 [1] -2.084108 -1.724370 -1.411542 -3.073157 -2.074161
 ```
 
-### Chi-Squared Distribution
+### Chi-Squared (non-central) Distribution
 
 `dchisq, qchisq, pchisq, rchisq`
 
@@ -3361,4 +3361,138 @@ _in R Console_
 > rexp(5,3)
 [1] 0.6266922 0.5320351 0.5528875 1.0174860
 [5] 0.5835600
+```
+
+### F (non-central) Distribution
+
+`df, qf, pf, rf`
+
+See [R doc](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/Fdist.html)
+
+These functions are members of an object created by the `FDist` factory method. The factory method needs as optional argument the result of the factory function [Normal](#normal-distribution).
+
+Usage:
+
+```javascript
+const libR = require('lib-r-math.js');
+const {
+  Normal,
+  FDist,
+  rng: { MersenneTwister },
+  rng: { normal: { Inversion } }
+} = libR;
+
+//1. initialize default
+const defaultF = FDist();
+
+//2. alternative: initialize with explicit uniform PRNG
+const mt = new MersenneTwister(123456); //keep reference so we can do mt.init(...)
+const customF = FDist(new Inversion(mt));
+
+//get functions
+const { dexp, pexp, qexp, rexp } = customF; // or use "defaultF"
+```
+
+#### `df`
+
+The density function of the F distribution. See [R doc]((https://stat.ethz.ch/R-manual/R-devel/library/stats/html/Fdist.html)
+
+With `df1` and `df2` degrees of freedom:
+
+$$ f(x) = \frac{ Γ(\frac{df1 + df2}{2}) } { Γ(\frac{df1}{2}) Γ(\frac{df2}{2}) } {(\frac{n1}{n2})}^{(\frac{df1}{2})} x^{(\frac{df1}{2} - 1)} (1 + \frac{df1}{df2} x)^{-(n1 + n2)/2} $$
+
+```typescript
+declare function df(
+  x: number | number[],
+  df1: number,
+  df2: number,
+  ncp?: number,
+  asLog: boolean = false
+): number | number[];
+```
+
+* `x`: quantiles (array or scalar).
+* `df1`: degrees of freedom. `Infinity` is allowed.
+* `df2`: degrees of freedom. `Infinity` is allowed.
+* `ncp`: non-centrality parameter. If omitted the central F is assumed.
+* `asLog`: if TRUE, probabilities p are given as log(p).
+
+```javascript
+const libR = require('lib-r-math.js');
+const { FDist } = libR;
+
+//1. initialize default
+const seq = libR.R.seq()();
+const precision = libR.R.numberPrecision(9);
+
+//get functions
+const { dexp, pexp, qexp, rexp } = FDist();
+
+//1.
+precision(df(seq(0, 4, 0.5), 5, 10, 8));
+/*
+[ 0,
+  0.0972906993,
+  0.219523567,
+  0.270256085,
+  0.262998414,
+  0.229004229,
+  0.188412981,
+  0.150538493,
+  0.118556123 ]
+*/
+
+//2.
+precision(df(seq(0, 4, 0.5), 50, 10, undefined, true));
+/*[ -Infinity,
+  -0.688217839,
+  -0.222580527,
+  -0.940618761,
+  -1.7711223,
+  -2.55950945,
+  -3.28076319,
+  -3.93660717,
+  -4.53440492 ]*/
+
+//3.
+precision(df(seq(0, 4, 0.5), 6, 25));
+/*[ 0,
+  0.729921524,
+  0.602808536,
+  0.323999956,
+  0.155316972,
+  0.0724829398,
+  0.0340225684,
+  0.0162807852,
+  0.00798668195 ]*/
+
+//4.
+precision(df(seq(0, 4), 6, 25, 8, true));
+//[ -Infinity, -1.38207439, -1.09408866, -1.54026185, -2.22490033 ]
+```
+
+_in R Console:_
+
+```R
+#1.
+>df(seq(0,4,0.5), df1=5,df2=10, ncp=8)
+[1] 0.0000000 0.0972907 0.2195236 0.2702561
+[5] 0.2629984 0.2290042 0.1884130 0.1505385
+[9] 0.1185561
+
+#2.
+>df(seq(0,4,0.5), df1=50,df2=10, log = TRUE)
+[1]       -Inf -0.6882178 -0.2225805 -0.9406188
+[5] -1.7711223 -2.5595094 -3.2807632 -3.9366072
+[9] -4.5344049
+
+#3
+> df(seq(0, 4, 0.5), 6, 25)
+[1] 0.000000000 0.729921524 0.602808536
+[4] 0.323999956 0.155316972 0.072482940
+[7] 0.034022568 0.016280785 0.007986682
+
+#4
+> df(seq(0, 4), 6, 25, 8,log=TRUE)
+[1]      -Inf -1.382074 -1.094089 -1.540262 -2.22490
 ```
