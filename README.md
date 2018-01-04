@@ -3754,3 +3754,77 @@ qf(c(-Inf, -4.20235111, -2.29618223,
 );
 #[1] 0.0 0.5 1.0 1.5 2.0 2.5 3.0 3.5 4.0
 ```
+
+#### `rf`
+
+Generates deviates for the F distribution. See [R doc]((https://stat.ethz.ch/R-manual/R-devel/library/stats/html/Fdist.html).
+
+```typescript
+declare function rf(
+    n: number,
+    df1: number,
+    df2: number,
+    ncp?: number
+): number|number[];
+```
+
+* `n`: number of deviates to generate.
+* `df1`: degrees of freedom. `Infinity` is allowed.
+* `df2`: degrees of freedom. `Infinity` is allowed.
+* `ncp`: non-centrality parameter. If omitted the central F is assumed.
+
+```javascript
+const libR = require('lib-r-math.js');
+const {
+    FDist,
+    Normal,
+    rng: { MersenneTwister },
+    rng: { normal: { Inversion } }
+} = libR;
+
+//some tools
+const precision =  libR.R.numberPrecision(9);
+
+//init
+const mt = new MersenneTwister(1234);
+const { df, pf, qf, rf } =  FDist(Normal(new Inversion(mt)));
+
+//1.
+precision(rf(5, 8, 6));
+//[0.3986174, 2.13290818, 2.02114876, 2.5957924, 4.01140249]
+
+//2.
+precision(rf(5, Infinity, Infinity));
+//[ 1, 1, 1, 1, 1 ]
+
+//3. produces NaNs because df1 or/and df2 is Infinity and ncp !== undefined (yes, ncp=0 produces NaNs!)
+precision(rf(5, 40, Infinity, 0));
+//[ NaN, NaN, NaN, NaN, NaN ]
+
+//4.
+precision(rf(5, 400, Infinity));
+//[ 0.952329364, 1.00699208, 0.963147631, 0.997853633, 0.994844237 ]
+```
+
+_in R Console:_
+
+```R
+RNGkind("Mersenne-Twister", normal.kind="Inversion");
+set.seed(1234);
+
+#1.
+> rf(5,8,6)
+[1] 0.3986174 2.1329082 2.0211488 2.5957924 4.0114025
+
+#2.
+> rf(5, Inf, Inf)
+[1] 1 1 1 1 1
+
+#3.
+> rf(5, 40, Inf, 0)
+[1] NaN NaN NaN NaN NaN
+
+#4.
+> rf(5, 400, Inf)
+[1] 0.9523294 1.0069921 0.9631476 0.9978536 0.9948442
+```
