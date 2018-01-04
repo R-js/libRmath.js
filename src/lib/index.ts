@@ -45,6 +45,7 @@ import {
   flatten,
   forceToArray,
   forEach,
+  numberPrecision,
   selector,
   seq
 } from './r-func';
@@ -54,6 +55,7 @@ export const R = {
   flatten,
   forceToArray,
   forEach,
+  numberPrecision,
   selector,
   seq
 };

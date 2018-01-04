@@ -67,3 +67,15 @@ export function forEach<T>(xx: T): { (fn: (x: number) => number): number|number[
     return possibleScalar(result) as any;
   };
 }
+
+export function numberPrecision( prec: number= 6){
+
+  function convert(x: number): number {
+    if (isNaN(x)){
+      return NaN;
+    }
+    return Number.parseFloat(x.toPrecision(prec));
+  } 
+
+  return arrayrify(convert);
+}
