@@ -3421,7 +3421,7 @@ declare function df(
 const libR = require('lib-r-math.js');
 const { FDist } = libR;
 
-//1. initialize default
+//some usefull tools
 const seq = libR.R.seq()();
 const precision = libR.R.numberPrecision(9);
 
@@ -3495,4 +3495,262 @@ _in R Console:_
 #4
 > df(seq(0, 4), 6, 25, 8,log=TRUE)
 [1]      -Inf -1.382074 -1.094089 -1.540262 -2.22490
+```
+
+#### `pf`
+
+The probability function of the F distribution. See [R doc]((https://stat.ethz.ch/R-manual/R-devel/library/stats/html/Fdist.html).
+
+```typescript
+declare function pf(
+    q: number[] | number,
+    df1: number,
+    df2: number,
+    ncp?: number, 
+    lowerTail: boolean = true,
+    logP: boolean = false
+  ): number[]|number;
+```
+
+* `q`: quantiles (array or scalar).
+* `df1`: degrees of freedom. `Infinity` is allowed.
+* `df2`: degrees of freedom. `Infinity` is allowed.
+* `ncp`: non-centrality parameter. If omitted the central F is assumed.
+* `lowerTail`: if TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
+* `asLog`: if TRUE, probabilities p are given as log(p).
+
+```javascript
+const libR = require('lib-r-math.js');
+const { FDist } = libR;
+
+//some usefull tools
+const seq = libR.R.seq()();
+const precision = libR.R.numberPrecision(9);
+
+//strip functions
+const { dexp, pexp, qexp, rexp } = FDist();
+
+//1. df1 = 5, df2=10, ncp=8
+precision(pf(seq(0, 4, 0.5), 5, 10, 8));
+/*[
+  0,
+  0.0189961379,
+  0.100468407,
+  0.225990517,
+  0.361015189,
+  0.484609879,
+  0.588981209,
+  0.673508458,
+  0.740516322 ]
+*/
+
+//2. df1=50, df2=10, lowerTail=false
+precision(pf(seq(0, 4, 0.5), 50, 10, undefined, false));
+/*[
+  1,
+  0.946812312,
+  0.543643095,
+  0.25065625,
+  0.118135409,
+  0.0595867293,
+  0.0321901407,
+  0.0184730352,
+  0.0111614023 ]
+*/
+
+//3.
+precision(pf(seq(0, 4, 0.5), 50, 10, undefined, false, true));
+/*[
+  0,
+  -0.0546543979,
+  -0.609462324,
+  -1.3836728,
+  -2.13592378,
+  -2.82032239,
+  -3.43609506,
+  -3.99144317,
+  -4.49529367 
+]*/
+
+//4.
+precision(pf(seq(0, 4, 0.5), 6, 25, 8, true, true));
+/*[ -Infinity,
+  -4.20235111,
+  -2.29618223,
+  -1.376145,
+  -0.85773694,
+  -0.546177623,
+  -0.35253857,
+  -0.229797274,
+  -0.15099957 ]
+*/
+```
+
+```R
+#1
+> pf(seq(0, 4, 0.5), 5, 10, 8)
+[1] 0.00000000 0.01899614 0.10046841 0.22599052 0.36101519 0.48460988 0.58898121
+[8] 0.67350846 0.74051632
+
+#2
+> pf(seq(0, 4, 0.5), 50, 10, lower.tail=FALSE)
+[1] 1.00000000 0.94681231 0.54364309 0.25065625 0.11813541 0.05958673 0.03219014
+[8] 0.01847304 0.01116140
+
+#3
+> pf(seq(0, 4, 0.5), 50, 10, lower.tail=FALSE, log.p=TRUE)
+[1]  0.0000000 -0.0546544 -0.6094623 -1.3836728 -2.1359238 -2.8203224 -3.4360951
+[8] -3.9914432 -4.4952937
+
+#4
+pf(seq(0, 4, 0.5), 6, 25, 8, TRUE, TRUE);
+[1] -Inf -4.2023511 -2.2961822 -1.3761450 -0.8577369 -0.5461776 -0.3525386
+[8] -0.2297973 -0.1509996
+```
+
+#### `qf`
+
+The probability function of the F distribution. See [R doc]((https://stat.ethz.ch/R-manual/R-devel/library/stats/html/Fdist.html).
+
+```typescript
+declare function qf(
+    p: number | number[],
+    df1: number,
+    df2: number,
+    ncp?: number,
+    lowerTail: boolean = true,
+    logP: boolean = false
+  ): number|number[];
+```
+
+* `p`: probabilities (array or scalar).
+* `df1`: degrees of freedom. `Infinity` is allowed.
+* `df2`: degrees of freedom. `Infinity` is allowed.
+* `ncp`: non-centrality parameter. If omitted the central F is assumed.
+* `lowerTail`: if TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
+* `asLog`: if TRUE, probabilities p are given as log(p).
+
+```javascript
+const libR = require('lib-r-math.js');
+const { FDist } = libR;
+
+// some  usefull tools
+const seq = libR.R.seq()();
+const precision = libR.R.numberPrecision(9);
+
+//strip functions
+const { dexp, pexp, qexp, rexp } = FDist();
+
+//1
+let q1 = qf(
+    [
+        0, 0.0189961379, 0.100468407,
+        0.225990517, 0.361015189, 0.484609879,
+        0.588981209, 0.673508458, 0.740516322,
+        1
+    ],
+    5,
+    10,
+    8
+);
+precision(q1); //returns limited precsions numbers
+//[ 0, 0.5, 0.999999998, 1.5, 2, 2.5, 3, 3.5, 4, Infinity ]
+
+//2
+let q2 = qf(
+    [
+        1, 0.946812312, 0.543643095,
+        0.25065625, 0.118135409, 0.0595867293,
+        0.0321901407, 0.0184730352, 0.0111614023,
+        0
+    ],
+    50,
+    10,
+    undefined,
+    false
+);
+precision(q2);
+//[ 0, 0.5, 0.999999998, 1.5, 2, 2.5, 3, 3.5, 4, Infinity ]
+
+//3.
+let q3 = qf(
+    [
+        0, -0.0546543979, -0.609462324,
+        -1.3836728, -2.13592378, -2.82032239,
+        -3.43609506, -3.99144317, -4.49529367
+    ],
+    50,
+    10,
+    undefined,
+    false,
+    true
+);
+precision(q3);
+//[ 0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4 ]
+
+//4
+let q4 = qf(
+    [
+      -Infinity, -4.20235111, -2.29618223,
+      -1.376145, -0.85773694, -0.546177623,
+      -0.35253857, -0.229797274, -0.15099957
+    ],
+    6,
+    25,
+    8,
+    true,
+    true
+);
+precision(q4);
+//[ 0, 0.500000001, 1, 1.5, 2, 2.5, 3, 3.5, 4 ]
+```
+
+_in R Console:_
+
+```R
+#1.
+>qf(c(0, 0.0189961379, 0.100468407,
+     0.225990517, 0.361015189, 0.484609879,
+     0.588981209, 0.673508458, 0.740516322,
+     1
+    ),
+    5,
+    10,
+    8
+)
+#[1] 0.0 0.5 1.0 1.5 2.0 2.5 3.0 3.5 4.0 Inf
+
+#2.
+>qf( c(1, 0.946812312, 0.543643095, 0.25065625, 
+    0.118135409, 0.0595867293, 0.0321901407, 0.0184730352, 
+    0.0111614023, 0),
+    50,
+    10,
+    lower.tail = FALSE
+);
+# [1] 0.0 0.5 1.0 1.5 2.0 2.5 3.0 3.5 4.0 Inf
+
+#3.
+> qf(c( 0, -0.0546543979, -0.609462324,
+        -1.3836728, -2.13592378, -2.82032239,
+        -3.43609506, -3.99144317, -4.49529367
+),
+    50,
+    10,
+    lower.tail = FALSE,
+    log.p = TRUE
+);
+#[1] 0.0 0.5 1.0 1.5 2.0 2.5 3.0 3.5 4.0
+
+#4.
+qf(c(-Inf, -4.20235111, -2.29618223,
+    -1.376145, -0.85773694, -0.546177623,
+    -0.35253857, -0.229797274, -0.15099957),
+    df1 = 6,
+    df2 = 25,
+    ncp= 8,
+    lower.tail = TRUE,
+    log.p = TRUE
+);
+#[1] 0.0 0.5 1.0 1.5 2.0 2.5 3.0 3.5 4.0
 ```
