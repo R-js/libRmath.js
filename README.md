@@ -3828,3 +3828,33 @@ set.seed(1234);
 > rf(5, 400, Inf)
 [1] 0.9523294 1.0069921 0.9631476 0.9978536 0.9948442
 ```
+
+### Gamma distribution
+
+`df, qf, pf, rf`
+
+See [R doc](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/Fdist.html)
+
+These functions are members of an object created by the `FDist` factory method. The factory method needs as optional argument the result of the factory function [Normal](#normal-distribution).
+
+Usage:
+
+```javascript
+const libR = require('lib-r-math.js');
+const {
+  Normal,
+  FDist,
+  rng: { MersenneTwister },
+  rng: { normal: { Inversion } }
+} = libR;
+
+//1. initialize default
+const defaultF = FDist();
+
+//2. alternative: initialize with explicit uniform PRNG
+const mt = new MersenneTwister(123456); //keep reference so we can do mt.init(...)
+const customF = FDist(new Inversion(mt));
+
+//get functions
+const { dexp, pexp, qexp, rexp } = customF; // or use "defaultF"
+```
