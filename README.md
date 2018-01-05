@@ -3386,11 +3386,11 @@ const {
 const defaultF = FDist();
 
 //2. alternative: initialize with explicit uniform PRNG
-const mt = new MersenneTwister(123456); //keep reference so we can do mt.init(...)
-const customF = FDist(new Inversion(mt));
+const mt = new MersenneTwister(1234); //keep reference so we can do mt.init(...)
+const customF = FGDist(Normal(new Inversion(mt)));
 
 //get functions
-const { dexp, pexp, qexp, rexp } = customF; // or use "defaultF"
+const { df, pf, qf, rf } = customF; // or use "defaultF"
 ```
 
 #### `df`
@@ -3426,7 +3426,7 @@ const seq = libR.R.seq()();
 const precision = libR.R.numberPrecision(9);
 
 //get functions
-const { dexp, pexp, qexp, rexp } = FDist();
+const { df, pf, qf, rf } = FDist();
 
 //1.
 precision(df(seq(0, 4, 0.5), 5, 10, 8));
@@ -3528,7 +3528,7 @@ const seq = libR.R.seq()();
 const precision = libR.R.numberPrecision(9);
 
 //strip functions
-const { dexp, pexp, qexp, rexp } = FDist();
+const { df, pf, qf, rf } = FDist();
 
 //1. df1 = 5, df2=10, ncp=8
 precision(pf(seq(0, 4, 0.5), 5, 10, 8));
@@ -3639,7 +3639,7 @@ const seq = libR.R.seq()();
 const precision = libR.R.numberPrecision(9);
 
 //strip functions
-const { dexp, pexp, qexp, rexp } = FDist();
+const { df, pf, qf, rf } = FDist();
 
 //1
 let q1 = qf(
@@ -3831,11 +3831,11 @@ set.seed(1234);
 
 ### Gamma distribution
 
-`df, qf, pf, rf`
+`dgamma, qgamma, pgamma, rgamma`
 
-See [R doc](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/Fdist.html)
+See [R doc](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/GammaDist.html).
 
-These functions are members of an object created by the `FDist` factory method. The factory method needs as optional argument the result of the factory function [Normal](#normal-distribution).
+These functions are members of an object created by the `Gamma` factory method. The factory method needs as optional argument the result of the factory function [Normal](#normal-distribution).
 
 Usage:
 
@@ -3843,18 +3843,497 @@ Usage:
 const libR = require('lib-r-math.js');
 const {
   Normal,
-  FDist,
+  Gamma,
   rng: { MersenneTwister },
   rng: { normal: { Inversion } }
 } = libR;
 
 //1. initialize default
-const defaultF = FDist();
+const defaultGamma = Gamma();
 
 //2. alternative: initialize with explicit uniform PRNG
 const mt = new MersenneTwister(123456); //keep reference so we can do mt.init(...)
-const customF = FDist(new Inversion(mt));
+const customG = Gamma(Normal(new Inversion(mt)));
 
 //get functions
-const { dexp, pexp, qexp, rexp } = customF; // or use "defaultF"
+const { dgamma, pgamma, qgamma, rgamma } = customG; // or use "defaultF"
 ```
+
+#### `dgamma`
+
+The density function of the Gamma distribution with _shape_ parameter `a` and _scale_ parameter `s` and `x` >= 0. See [R doc](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/GammaDist.html)
+
+$$ f(x)= \frac{1}{s^{a} \Gamma(a)} x^{a-1} e^{-x/s} $$
+
+Alternative represention using _shape_ parameter `a` and _rate_ parameter `β`:
+
+$$ f(x)= \frac{β^{a}}{\Gamma(a)} x^{a-1} e^{-xβ} $$
+
+You must either specify `scale` or `rate` parameters *but not both* (unless rate = 1/scale).
+
+```typescript
+declare function dgamma(
+  x: number|number[], 
+  shape: number,
+  rate: number = 1,
+  scale: number = 1/rate,
+  asLog: boolean = false
+  ): number|number[];
+```
+
+* `x`: quantiles (scalar or array).
+* `shape`: [shape](https://en.wikipedia.org/wiki/Gamma_distribution) parameter, must be positive.
+* `rate`: The [rate](https://en.wikipedia.org/wiki/Gamma_distribution) parameter, when specified, leave `scale` undefined (or set `rate = 1/scale`).  Must be strictly positive.
+* `scale`: The [scale](https://en.wikipedia.org/wiki/Gamma_distribution) parameter, when specified, leave `rate` undefined (or set `scale = 1/rate`).  Must be strictly positive.
+* `asLog`: if _true_, probabilities/densities p are returned as log(p).
+
+Usage:
+
+```javascript
+const libR = require('lib-r-math.js');
+const { Gamma } = libR;
+
+//some tools
+const log = libR.R.arrayrify(Math.log);
+const seq = libR.R.seq()();
+const precision = libR.R.numberPrecision(9); //restrict to 9 significant digits
+
+const { dgamma, pgamma, qgamma, rgamma } = Gamma();
+
+//1.
+const d1 =  dgamma( seq(0, 10, 2), 1, 0.5);
+const d1Alt = dgamma( seq(0, 10, 2), 1, undefined, 2); //gives same as d1
+precision(d1);
+/*[ 0.5,
+  0.183939721,
+  0.0676676416,
+  0.0248935342,
+  0.00915781944,
+  0.0033689735 ]*/
+
+//2.
+const d2 =  dgamma( seq(0, 10, 2), 2, 1/2);
+const d2Alt = dgamma( seq(0, 10, 2), 2, undefined, 2); //gives same as d2
+precision(d2);
+/*[ 0,
+  0.183939721,
+  0.135335283,
+  0.0746806026,
+  0.0366312778,
+  0.0168448675 ]*/
+
+//3.
+const d3 = dgamma( seq(0, 10, 2), 5, 1) );
+const d3Alt = dgamma( seq(0, 10, 2), 5, undefined, 1); //gives same as d3
+precision(d3);
+/*[ 0,
+  0.0902235222,
+  0.195366815,
+  0.133852618,
+  0.0572522885,
+  0.0189166374 ]
+*/
+
+//4.
+const d4 = dgamma( seq(0, 10, 2), 7.5, 1, undefined true);
+const d4Alt = dgamma( seq(0, 10, 2), 7.5, undefined, 1, true);
+precision(d4);
+/*[
+  -Infinity,
+  -5.02890756,
+  -2.52345089,
+  -1.88792769,
+  -2.01799422,
+  -2.56756113 ]
+*/
+```
+
+_in R Console_
+
+```R
+#1. these 2 give the same output
+> dgamma( seq(0, 10, 2), 1, scale = 2);
+> dgamma( seq(0, 10, 2), 1, rate = 1/2);
+[1] 0.500000000 0.183939721 0.067667642 0.024893534 0.009157819 0.003368973
+
+#2.
+> dgamma( seq(0, 10, 2), 2, scale = 2);
+> dgamma( seq(0, 10, 2), 2, rate = 1/2);
+[1] 0.00000000 0.18393972 0.13533528 0.07468060 0.03663128 0.01684487
+
+#3.
+> dgamma( seq(0, 10, 2), 5, scale = 1);
+> dgamma( seq(0, 10, 2), 5, rate = 1);
+[1] 0.00000000 0.09022352 0.19536681 0.13385262 0.05725229 0.01891664
+
+#4.
+> dgamma( seq(0, 10, 2), 7.5, scale = 1, log = TRUE)
+> dgamma( seq(0, 10, 2), 7.5, rate = 1, log = TRUE)
+[1]      -Inf -5.028908 -2.523451 -1.887928 -2.017994 -2.567561
+```
+
+#### `pgamma`
+
+The probability function of the Gamma distribution. See [R doc](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/GammaDist.html).
+
+```typescript
+declare function pgamma(
+  x: number|number[], 
+  shape: number,
+  rate: number = 1,
+  scale: number = 1/rate, //alternative for rate
+  lowerTail: boolean = true,
+  logP: boolean = false
+  ): number|number[];
+```
+
+* `x`: quantiles (scalar or array).
+* `shape`: [shape](https://en.wikipedia.org/wiki/Gamma_distribution) parameter, must be positive.
+* `rate`: The [rate](https://en.wikipedia.org/wiki/Gamma_distribution) parameter, when specified, leave `scale` undefined (or set `rate = 1/scale`).  Must be strictly positive.
+* `scale`: The [scale](https://en.wikipedia.org/wiki/Gamma_distribution) parameter, when specified, leave `rate` undefined (or set `scale = 1/rate`).  Must be strictly positive.
+* `lowerTail`: if TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
+* `logP`: if _true_, probabilities/densities p are as log(p).
+
+Usage:
+
+```javascript
+const libR = require('lib-r-math.js');
+const { Gamma } = libR;
+
+//some tools
+const log = libR.R.arrayrify(Math.log);
+const seq = libR.R.seq()();
+const precision = libR.R.numberPrecision(9); //restrict to 9 significant digits
+
+const { dgamma, pgamma, qgamma, rgamma } = Gamma();
+
+
+//1.
+const p1 = pgamma(seq(0, 10, 2), 1, 0.5);
+const p1Alt = pgamma(seq(0, 10, 2), 1, undefined, 2);
+precision(p1);
+/*
+[ 0,
+  0.632120559,
+  0.864664717,
+  0.950212932,
+  0.981684361,
+  0.993262053 ]
+*/
+
+//2.
+const p2 = pgamma(seq(0, 10, 2), 2, 0.5);
+const p2Alt = pgamma(seq(0, 10, 2), 2, undefined, 2);
+precision(p2);
+/*
+[ 0,
+  0.264241118,
+  0.59399415,
+  0.800851727,
+  0.908421806,
+  0.959572318 ]
+*/
+
+//3.
+const p3 = pgamma(seq(0, 10, 2), 5, 1, undefined, false, true);
+const p3Alt = pgamma(seq(0, 10, 2), 5, undefined, 1, false, true);
+precision(p3);
+/*[ 
+  0,
+  -0.0540898509,
+  -0.4638833,
+  -1.25506787,
+  -2.30626786,
+  -3.53178381 ]
+*/
+
+//4.
+const p4 = pgamma(seq(0, 10, 2), 7.5, 1, undefined, false, true);
+const p4Alt = pgamma(seq(0, 10, 2), 7.5, undefined, 1, false, true);
+precision(p4);
+/*
+[ 0,
+  -0.00226521952,
+  -0.0792784046,
+  -0.387091358,
+  -0.96219944,
+  -1.76065222 ]
+*/
+```
+
+_in R Console_
+
+```R
+#1
+> pgamma(seq(0,10,2), 1, rate = 0.5);
+[1] 0.0000000 0.6321206 0.8646647 0.9502129 0.9816844 0.9932621
+
+#2
+> pgamma(seq(0, 10, 2), 2, rate = 0.5);
+[1] 0.0000000 0.2642411 0.5939942 0.8008517 0.9084218 0.9595723
+
+#3
+> pgamma(seq(0, 10, 2), 5, rate=1, lower.tail = FALSE, log.p = TRUE);
+[1]  0.00000000 -0.05408985 -0.46388330 -1.25506787 -2.30626786 -3.53178381
+
+#4
+pgamma(seq(0, 10, 2), 7.5, rate = 7.5, lower.tail = FALSE , log.p = TRUE );
+[1]  0.00000000 -0.00226522 -0.07927840 -0.38709136 -0.96219944 -1.76065222
+```
+
+#### `pgamma`
+
+The probability function of the Gamma distribution. See [R doc](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/GammaDist.html).
+
+```typescript
+declare function pgamma(
+  x: number|number[], 
+  shape: number,
+  rate: number = 1,
+  scale: number = 1/rate, //alternative for rate
+  lowerTail: boolean = true,
+  logP: boolean = false
+  ): number|number[];
+```
+
+* `x`: quantiles (scalar or array).
+* `shape`: [shape](https://en.wikipedia.org/wiki/Gamma_distribution) parameter, must be positive.
+* `rate`: The [rate](https://en.wikipedia.org/wiki/Gamma_distribution) parameter, when specified, leave `scale` undefined (or set `rate = 1/scale`).  Must be strictly positive.
+* `scale`: The [scale](https://en.wikipedia.org/wiki/Gamma_distribution) parameter, when specified, leave `rate` undefined (or set `scale = 1/rate`).  Must be strictly positive.
+* `lowerTail`: if TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
+* `logP`: if _true_, probabilities/densities p are as log(p).
+
+Usage:
+
+```javascript
+const libR = require('lib-r-math.js');
+const { Gamma } = libR;
+
+//some tools
+const log = libR.R.arrayrify(Math.log);
+const seq = libR.R.seq()();
+const precision = libR.R.numberPrecision(9); //restrict to 9 significant digits
+
+const { dgamma, pgamma, qgamma, rgamma } = Gamma();
+
+//1.
+const p1 = pgamma(seq(0, 10, 2), 1, 0.5);
+const p1Alt = pgamma(seq(0, 10, 2), 1, undefined, 2);
+precision(p1);
+/*
+[ 0,
+  0.632120559,
+  0.864664717,
+  0.950212932,
+  0.981684361,
+  0.993262053 ]
+*/
+
+//2.
+const p2 = pgamma(seq(0, 10, 2), 2, 0.5);
+const p2Alt = pgamma(seq(0, 10, 2), 2, undefined, 2);
+precision(p2);
+/*
+[ 0,
+  0.264241118,
+  0.59399415,
+  0.800851727,
+  0.908421806,
+  0.959572318 ]
+*/
+
+//3.
+const p3 = pgamma(seq(0, 10, 2), 5, 1, undefined, false, true);
+const p3Alt = pgamma(seq(0, 10, 2), 5, undefined, 1, false, true);
+precision(p3);
+/*[ 
+  0,
+  -0.0540898509,
+  -0.4638833,
+  -1.25506787,
+  -2.30626786,
+  -3.53178381 ]
+*/
+
+//4.
+const p4 = pgamma(seq(0, 10, 2), 7.5, 1, undefined, false, true);
+const p4Alt = pgamma(seq(0, 10, 2), 7.5, undefined, 1, false, true);
+precision(p4);
+/*
+[ 0,
+  -0.00226521952,
+  -0.0792784046,
+  -0.387091358,
+  -0.96219944,
+  -1.76065222 ]
+*/
+```
+
+_in R Console_
+
+```R
+#1
+> pgamma(seq(0,10,2), 1, rate = 0.5);
+[1] 0.0000000 0.6321206 0.8646647 0.9502129 0.9816844 0.9932621
+
+#2
+> pgamma(seq(0, 10, 2), 2, rate = 0.5);
+[1] 0.0000000 0.2642411 0.5939942 0.8008517 0.9084218 0.9595723
+
+#3
+> pgamma(seq(0, 10, 2), 5, rate=1, lower.tail = FALSE, log.p = TRUE);
+[1]  0.00000000 -0.05408985 -0.46388330 -1.25506787 -2.30626786 -3.53178381
+
+#4
+pgamma(seq(0, 10, 2), 7.5, rate = 7.5, lower.tail = FALSE , log.p = TRUE );
+[1]  0.00000000 -0.00226522 -0.07927840 -0.38709136 -0.96219944 -1.76065222
+```
+
+#### `qgamma`
+
+The quantile function of the Gamma distribution. See [R doc](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/GammaDist.html).
+
+```typescript
+declare function pgamma(
+  x: number|number[],
+  shape: number,
+  rate: number = 1,
+  scale: number = 1/rate, //alternative for rate
+  lowerTail: boolean = true,
+  logP: boolean = false
+  ): number|number[];
+```
+
+* `x`: quantiles (scalar or array).
+* `shape`: [shape](https://en.wikipedia.org/wiki/Gamma_distribution) parameter, must be positive.
+* `rate`: The [rate](https://en.wikipedia.org/wiki/Gamma_distribution) parameter, when specified, leave `scale` undefined (or set `rate = 1/scale`).  Must be strictly positive.
+* `scale`: The [scale](https://en.wikipedia.org/wiki/Gamma_distribution) parameter, when specified, leave `rate` undefined (or set `scale = 1/rate`).  Must be strictly positive.
+* `lowerTail`: if TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
+* `logP`: if _true_, probabilities/densities p are as log(p).
+
+Usage:
+
+```javascript
+const libR = require('lib-r-math.js');
+const { Gamma } = libR;
+
+//some tools
+const log = libR.R.arrayrify(Math.log);
+const seq = libR.R.seq()();
+const precision = libR.R.numberPrecision(9); //restrict to 9 significant digits
+
+const { dgamma, pgamma, qgamma, rgamma } = Gamma();
+
+//1.
+const pp1 = pgamma(seq(0, 10, 2), 1, 0.5);
+const q1 = qgamma(pp1, 1, 0.5);
+const q1Alt = qgamma(pp1, 1, undefined, 2); //alternative using 'scale'
+precision(q1);
+//[ 0, 2, 4, 6, 8, 10 ]
+
+//2.
+const pp2 = pgamma(seq(0, 10, 2), 2, 0.5);
+const q2 = qgamma(pp2, 2, 0.5);
+const q2Alt = qgamma(pp2, 2, undefined, 2); //alternative using 'scale'
+precision(q2);
+//[ 0, 2, 4, 6, 8, 10 ]
+
+//3.
+const pp3 = pgamma(seq(0, 10, 2), 5, 1, undefined, false, true);
+const q3 = qgamma(pp3, 5, undefined, 1, false, true);
+const q3Alt = qgamma(pp3, 5, undefined, 1, false, true); //alternative using 'scale'
+precision(q3);
+//[ 0, 2, 4, 6, 8, 10 ]
+
+//4.
+const pp4 = pgamma(seq(0, 10, 2), 7.5, 1, undefined, false );
+const q4 = qgamma( log( pp4 ) , 7.5, 1, undefined, false, true );
+const q4Alt = qgamma( log( pp4 ), 7.5, undefined, 1, false, true); //alternative using 'scale'
+precision(q4);
+//[ 0, 2, 4, 6, 8, 10 ]
+```
+
+#### `rgamma`
+
+Generates random deviates for the Gamma distribution. See [R doc](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/GammaDist.html).
+
+```typescript
+declare function rgamma(
+  n: number,
+  shape: number,
+  rate: number = 1,
+  scale: number = 1/rate, //alternative for rate
+  ): number|number[];
+```
+
+* `n`: number of deviates generated.
+* `shape`: [shape](https://en.wikipedia.org/wiki/Gamma_distribution) parameter, must be positive.
+* `rate`: The [rate](https://en.wikipedia.org/wiki/Gamma_distribution) parameter, when specified, leave `scale` undefined (or set `rate = 1/scale`).  Must be strictly positive.
+* `scale`: The [scale](https://en.wikipedia.org/wiki/Gamma_distribution) parameter, when specified, leave `rate` undefined (or set `scale = 1/rate`).  Must be strictly positive.
+
+Usage:
+
+```typescript
+const libR = require('lib-r-math.js');
+const {
+    Gamma,
+    Normal,
+    rng: { MersenneTwister },
+    rng: { normal: { Inversion } }
+} = libR;
+
+//some tools
+const log = libR.R.arrayrify(Math.log);
+const seq = libR.R.seq()();
+const precision = libR.R.numberPrecision(9); //restrict to 9 significant digits
+
+//init PRNG
+const mt = new MersenneTwister(1234);
+const { dgamma, pgamma, qgamma, rgamma } = Gamma(Normal(new Inversion(mt)));
+
+//1.
+mt.init(1234); // optionally re-init PRNG
+const r1 = rgamma(5, 1, 0.5);
+mt.init(1234);
+const r1Alt = rgamma(5, 1, undefined, 2); //alternative using 'scale'
+precision(r1);
+//[ 0.0214551082, 1.49399813, 1.57265591, 0.233750469, 1.84371739 ]
+
+//2.
+mt.init(0);
+const r2 = rgamma(5, 2, 0.5);
+mt.init(0);
+const r2Alt = rgamma(5, 2, undefined, 2); // alternative using 'scale'
+precision(r2);
+//[ 6.89112033, 2.25410883, 1.30227387, 4.1016237, 7.77081806 ]
+
+//3.
+mt.init(9856);
+const r3 = rgamma(5, 7.5, 1);
+mt.init(9856);
+const r3Alt = rgamma(5, 7.5, undefined, 1);
+precision(r3);
+//[ 7.13748561, 6.64198712, 13.9948926, 6.36703157, 6.7039321 ]
+```
+
+_in R Console_
+
+```R
+#1
+> RNGkind("Mersenne-Twister", normal.kind = "Inversion");
+> set.seed(1234);
+> rgamma(5, 1, 0.5);
+[1] 0.02145511 1.49399813 1.57265591 0.23375047 1.84371739
+
+#2
+> set.seed(0)
+> rgamma(5, 2, 0.5);
+[1] 6.891120 2.254109 1.302274 4.101624 7.770818
+
+#3
+> set.seed(9856);
+> rgamma(5, 7.5, 1);
+[1]  7.137486  6.641987 13.994893  6.367032  6.703932
+```
+
+

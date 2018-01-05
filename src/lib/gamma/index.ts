@@ -1,3 +1,13 @@
+/*
+In probability theory and statistics, the gamma distribution is a two-parameter family of continuous probability distributions. The exponential distribution, Erlang distribution, and chi-squared distribution are special cases of the gamma distribution. There are three different parametrizations in common use:
+
+1.With a shape parameter k and a scale parameter θ.
+2.With a shape parameter α = k and an inverse scale parameter β = 1/θ, called a rate parameter.
+3.With a shape parameter k and a mean parameter μ = k/β.
+
+In each of these three forms, both parameters are positive real numbers.
+*/
+
 import * as debug from 'debug';
 
 import { dgamma as _dgamma } from './dgamma';
@@ -51,13 +61,12 @@ export function Gamma(norm: INormal = Normal()) {
     }
 
     //C
-    if (
-      scale !== undefined &&
-      rate !== undefined &&
-      abs(scale * rate - 1) <= 1e-16
-    ) {
-      printer_n('Both scale:%d and rate:%d are defined but scale <> 1/rate');
-      return undefined;
+    if (scale !== undefined && rate !== undefined) {
+      if (abs(scale * rate - 1) >= 1e-16) {
+        printer_n('Both scale:%d and rate:%d are defined but scale <> 1/rate');
+        return undefined;
+      }
+      return scale;
     }
 
     //D
