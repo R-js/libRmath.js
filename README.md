@@ -1802,7 +1802,10 @@ const libR = require('lib-r-math.js');
 const { Normal, Binomial, rng } = libR;
 
 // All options specified in creating Beta distribution object.
-const binom1 = Binomial(new rng.MersenneTwister(1234)); //
+const binom1 = Binomial(
+  Normal(
+    new rng.normal.BoxMuller(new rng.SuperDuper(0)) //
+  )
 );
 
 // Or
@@ -1816,7 +1819,7 @@ const { dbinom, pbinom, qbinom, rbinom } = binom2;
 
 The density function $p(x) = \frac{n!}{x!(n-x)!} p^{x} (1-p)^{n-x}$. See [R doc]()
 
-_decl_
+_decl:_
 
 ```typescript
 declare function dbinom(
@@ -4339,7 +4342,7 @@ _in R Console_
 
 `dgeom, qgeom, pgeom, rgeom`
 
-See [R doc](https://stat.ethz.ch/R-manual/R-patched/library/stats/html/Geometric.html) and [wiki](https://en.wikipedia.org/wiki/Geometric_distribution).
+See [R doc](https://en.wikipedia.org/wiki/Geometric_distribution) and [wiki](https://en.wikipedia.org/wiki/Geometric_distribution).
 
 These functions are properties of an object created by the `Geometric` factory method. The factory method needs as optional argument the result of the factory function [Normal](#normal-distribution).
 
@@ -4623,11 +4626,4 @@ RNGkind("Mersenne-Twister", normal.kind = "Inversion");
  [1] 1 2 6 1 0 1 0 0 1 2
 ```
 
-### Hypergeometric distribution
-
-`dhyper, qhyper, phyper, rhyper`
-
-See [R doc](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/Hypergeometric.html) and [wiki](https://en.wikipedia.org/wiki/Hypergeometric_distribution).
-
-These functions are properties of an object created by the `Geometric` factory method. The factory method needs as optional argument the result of the factory function [Normal](#normal-distribution).
 

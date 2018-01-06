@@ -1,13 +1,13 @@
-https: //stat.ethz.ch/R-manual/R-devel/library/stats/html/NegBinomial.html
-    const libR = require('../dist/lib/libR.js');
+//
+//https: //stat.ethz.ch/R-manual/R-devel/library/stats/html/NegBinomial.html
+const libR = require('../dist/lib/libR.js');
 const { NegativeBinomial, Normal } = libR;
-const { normal: { Inversion }, MersenneTwister } = libR.rng;
+const { MersenneTwister } = libR.rng;
 
 const mt = new MersenneTwister(0);
 
-const { dnbinom, pnbinom, qnbinom, rnbinom } = NegativeBinomial(
-    Normal(new Inversion(mt))
-);
+const { dnbinom, pnbinom, qnbinom, rnbinom } = NegativeBinomial(mt);
+//
 //
 // Or
 // Just go with defaults

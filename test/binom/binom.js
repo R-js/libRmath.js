@@ -1,6 +1,6 @@
 //http://stat.ethz.ch/R-manual/R-patched/library/stats/html/Binomial.html
 const libR = require('../dist/lib/libR.js');
-const { Binomial, rng: { MersenneTwister } } = libR;
+const { Binomial } = libR;
 const { arrayrify } = libR.R;
 
 // make "log" accept arrays and scalars
