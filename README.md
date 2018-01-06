@@ -3586,6 +3586,8 @@ precision(pf(seq(0, 4, 0.5), 6, 25, 8, true, true));
 */
 ```
 
+_in R Console_
+
 ```R
 #1
 > pf(seq(0, 4, 0.5), 5, 10, 8)
@@ -3856,7 +3858,7 @@ const mt = new MersenneTwister(123456); //keep reference so we can do mt.init(..
 const customG = Gamma(Normal(new Inversion(mt)));
 
 //get functions
-const { dgamma, pgamma, qgamma, rgamma } = customG; // or use "defaultF"
+const { dgamma, pgamma, qgamma, rgamma } = customG; // or use "defaultGamma"
 ```
 
 #### `dgamma`
@@ -3978,7 +3980,7 @@ The probability function of the Gamma distribution. See [R doc](https://stat.eth
 
 ```typescript
 declare function pgamma(
-  x: number|number[], 
+  x: number|number[],
   shape: number,
   rate: number = 1,
   scale: number = 1/rate, //alternative for rate
@@ -4334,6 +4336,294 @@ _in R Console_
 > set.seed(9856);
 > rgamma(5, 7.5, 1);
 [1]  7.137486  6.641987 13.994893  6.367032  6.703932
+```
+
+### Geometric distribution.
+
+`dgeom, qgeom, pgeom, rgeom`
+
+See [R doc](https://en.wikipedia.org/wiki/Geometric_distribution) and [wiki](https://en.wikipedia.org/wiki/Geometric_distribution).
+
+These functions are properties of an object created by the `Geometric` factory method. The factory method needs as optional argument the result of the factory function [Normal](#normal-distribution).
+
+Usage:
+
+```javascript
+const libR = require('lib-r-math.js');
+const {
+  Normal,
+  Geometric,
+  rng: { MersenneTwister },
+  rng: { normal: { Inversion } }
+} = libR;
+
+//1. initialize default
+const defaultGeometric = Geometric();
+
+//2. alternative: initialize with explicit uniform PRNG
+const mt = new MersenneTwister(3456); //keep reference so we can do mt.init(...)
+const customGeometric = Geometric(Normal(new Inversion(mt)));
+
+//get functions
+const { dgeom, pgeom, qgeom, rgeom } = customGeometric; // or use "defaultGamma"
+```
+
+#### `dgeom`
+
+The density function of the [Geometric distribution](https://en.wikipedia.org/wiki/Geometric_distribution). See [R doc](https://stat.ethz.ch/R-manual/R-patched/library/stats/html/Geometric.html).
+
+$$ p(x) = p (1-p)^{x} $$
+
+_decl:_
+
+```typescript
+declare function dgeom(
+  x: number|number[],
+  prob: number,
+  asLog: boolean = false
+): number|number[];
+```
+
+* `x`: quantiles (array or scalar).
+* `prob`: probability of success in each trial. 0 < prob <= 1.
+* `asLog`: if TRUE, probabilities p are given as log(p).
+
+Usage:
+
+```javascript
+const libR = require('lib-r-math.js');
+const { Geometric } = libR;
+
+//some tools
+const seq = libR.R.seq()();
+const precision = libR.R.numberPrecision(9); //restrict to 9 significant digits
+
+const { dgeom, pgeom, qgeom, rgeom } = Geometric();
+
+//1
+const d1 = dgeom(seq(0, 4), 0.5);
+precision(d1);
+//[ 0.5, 0.25, 0.125, 0.0625, 0.03125 ]
+
+//2
+const d2 = dgeom(seq(0, 4), 0.2, true);
+precision(d2);
+//[ -1.60943791, -1.83258146, -2.05572502, -2.27886857, -2.50201212 ]
+```
+
+_in R Console_
+
+```R
+#1
+> dgeom(seq(0, 4), 0.5)
+[1] 0.50000 0.25000 0.12500 0.06250 0.03125
+
+#2
+> dgeom(seq(0, 4), 0.2, TRUE)
+[1] -1.609438 -1.832581 -2.055725 -2.278869 -2.502012
+```
+
+#### `pgeom`
+
+The distribution function of the [Geometric distribution](https://en.wikipedia.org/wiki/Geometric_distribution). See [R doc](https://stat.ethz.ch/R-manual/R-patched/library/stats/html/Geometric.html).
+
+_decl:_
+
+```typescript
+declare function pgeom(
+  q: number|number[],
+  prob: number,
+  lowerTail: boolean = true,
+  logP: boolean = false
+): number|number[];
+```
+
+* `q`: the number of failures before success.
+* `prob`: probability of success.
+* `lowerTail`: if TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
+* `logP`: if TRUE, probabilities p are given as log(p).
+
+```javascript
+const libR = require('lib-r-math.js');
+const { Geometric } = libR;
+
+//some tools
+const seq = libR.R.seq()();
+const precision = libR.R.numberPrecision(9); //restrict to 9 significant digits
+const { dgeom, pgeom, qgeom, rgeom } = Geometric();
+
+//1.
+const p1 = pgeom(seq(5, 9), 0.1);
+precision(p1);
+//[ 0.468559, 0.5217031, 0.56953279, 0.612579511, 0.65132156 ]
+
+//2.
+const p2 = pgeom(seq(5, 9), 0.1, false);
+precision(p2);
+//[ 0.531441, 0.4782969, 0.43046721, 0.387420489, 0.34867844 ]
+
+//3.
+const p3 = pgeom(seq(5, 9), 0.2, false, true);
+precision(p3);
+//[ -1.33886131, -1.56200486, -1.78514841, -2.00829196, -2.23143551 ]
+```
+
+_in R Console_
+
+```R
+#1
+> pgeom(seq(5, 9), 0.1);
+[1] 0.4685590 0.5217031 0.5695328 0.6125795 0.6513216
+
+#2
+>  pgeom(seq(5, 9), 0.1, FALSE)
+[1] 0.5314410 0.4782969 0.4304672 0.3874205 0.3486784
+
+#3
+> pgeom(seq(5, 9), 0.2, FALSE, TRUE)
+[1] -1.338861 -1.562005 -1.785148 -2.008292 -2.231436
+```
+
+#### `qgeom`
+
+The quantile function of the [Geometric distribution](https://en.wikipedia.org/wiki/Geometric_distribution). See [R doc](https://stat.ethz.ch/R-manual/R-patched/library/stats/html/Geometric.html).
+
+_decl:_
+
+```typescript
+declare function qgeom(
+  p: number|number[],
+  prob: number,
+  lowerTail: boolean = true,
+  logP: boolean = false
+): number|number[];
+```
+
+* `p`: probabilities (scalar or array).
+* `prob`: probability of success.
+* `lowerTail`: if TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
+* `logP`: if TRUE, probabilities p are given as log(p).
+
+Usage:
+
+```javascript
+const libR = require('lib-r-math.js');
+const { Geometric } = libR;
+
+//some tools
+const seq = libR.R.seq()();
+const precision = libR.R.numberPrecision(9); //restrict to 9 significant digits
+const { dgeom, pgeom, qgeom, rgeom } = Geometric();
+
+//1
+const pp1 = pgeom(seq(5, 9), 0.2, false, true);
+const q1 = qgeom(pp1, 0.2, false, true);
+precision(q1);
+//[ 5, 6, 7, 8, 9 ] returns seq(5,9)
+
+//2
+const pp2 = pgeom(seq(4, 8), 0.9, true, true);
+const q2 = qgeom(pp2, 0.9, true, true);
+precision(q2);
+//[ 4, 5, 6, 7, 8 ] returns seq(4,9)
+
+//3
+const pp3 = pgeom([...seq(0, 6), Infinity], 0.5);
+const q3 = qgeom(pp3, 0.5);
+precision(q3);
+//[ 0, 1, 2, 3, 4, 5, 6, Infinity ]
+```
+
+_in R Console_
+
+```R
+#1
+> pp1 = pgeom(seq(5, 9), 0.2, FALSE, TRUE)
+> qgeom(pp1, 0.2, FALSE, TRUE)
+[1] 5 6 7 8 9
+
+#2
+> pp2 = pgeom(seq(4, 8), 0.9, TRUE, TRUE);
+> qgeom(pp2, 0.9, TRUE, TRUE);
+[1] 4 5 6 7 8
+
+#3
+> pp3 = pgeom(c(seq(0, 6), Inf), 0.5);
+> qgeom(pp3, 0.5);
+[1]   0   1   2   3   4   5   6 Inf
+```
+
+#### `rgeom`
+
+Generates random deviates for the [Geometric distribution](https://en.wikipedia.org/wiki/Geometric_distribution). See [R doc](https://stat.ethz.ch/R-manual/R-patched/library/stats/html/Geometric.html).
+
+_decl_
+
+```typescript
+declare function rgeom(
+  n: number,
+  prob: number
+ ): number|number[];
+```
+
+* `n`: number of deviates to generate.
+* `prob`: probability of success.
+
+Usage:
+
+```javascript
+const libR = require('lib-r-math.js');
+const {
+    Geometric,
+    Normal,
+    rng: { MersenneTwister },
+    rng: { normal: { Inversion } }
+} = libR;
+
+//some tools
+const log = libR.R.arrayrify(Math.log);
+const seq = libR.R.seq()();
+const precision = libR.R.numberPrecision(9); //restrict to 9 significant digits
+
+//init PRNG
+const mt = new MersenneTwister(1234);
+const { dgeom, pgeom, qgeom, rgeom } = Geometric(Normal(new Inversion(mt)));
+
+//1
+mt.init(3456);
+rgeom(5, 0.001);
+//[ 573, 1153, 75, 82, 392 ]
+
+//2
+mt.init(9876);
+rgeom(5, 0.999);
+//[ 0, 0, 0, 0, 0 ]  low failure rate!!
+
+//3
+mt.init(934);
+rgeom(10, 0.4);
+//[ 1, 2, 6, 1, 0, 1, 0, 0, 1, 2 ]
+```
+
+_in R Console_
+
+```R
+RNGkind("Mersenne-Twister", normal.kind = "Inversion");
+
+#1.
+> set.seed(3456)
+> rgeom(5, 0.001)
+[1]  573 1153   75   82  392
+
+#2
+> set.seed(9876)
+> rgeom(5, 0.999);
+[1] 0 0 0 0 0
+
+#3
+> set.seed(934)
+> rgeom(10, 0.4);
+ [1] 1 2 6 1 0 1 0 0 1 2
 ```
 
 

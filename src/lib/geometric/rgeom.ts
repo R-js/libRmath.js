@@ -56,7 +56,7 @@ const { isFinite: R_FINITE } = Number;
 const printer = debug('rgeom');
 
 export function rgeom(
-  N: number = 1,
+  N: number,
   p: number,
   normal: INormal
 ): number | number {
