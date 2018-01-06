@@ -103,7 +103,7 @@ export function phyper<T>(
   NR: number,
   NB: number,
   n: number,
-  lower_tail: boolean = true,
+  lowerTail: boolean = true,
   log_p: boolean = false
 ): T {
   /* Sample of  n balls from  NR red  and	 NB black ones;	 x are red */
@@ -111,7 +111,7 @@ export function phyper<T>(
   return forEach(xx)(x => {
     let d: number;
     let pd: number;
-
+    let lower_tail = lowerTail; //copy it gets changed
     if (ISNAN(x) || ISNAN(NR) || ISNAN(NB) || ISNAN(n)) return x + NR + NB + n;
 
     x = floor(x + 1e-7);
