@@ -51,8 +51,9 @@
 */
 
 import * as debug from 'debug';
-import { ML_ERR_return_NAN, R_D_Lval, R_DT_0, R_DT_1 } from '~common';
 import { R_DT_log } from '~exp-utils';
+import { ML_ERR_return_NAN, R_D_Lval, R_DT_0, R_DT_1 } from '../common/_general';
+import { forEach } from '../r-func';
 import { dhyper } from './dhyper';
 
 const { floor, round: R_forceint, log1p } = Math;
@@ -107,8 +108,7 @@ export function phyper<T>(
 ): T {
   /* Sample of  n balls from  NR red  and	 NB black ones;	 x are red */
 
-  const fx: number[] = Array.isArray(xx) ? xx : ([xx] as any);
-  const result = fx.map(x => {
+  return forEach(xx)(x => {
     let d: number;
     let pd: number;
 
@@ -141,8 +141,6 @@ export function phyper<T>(
     return log_p
       ? R_DT_log(lower_tail, log_p, d + pd)
       : R_D_Lval(lower_tail, d * pd);
-  });
-
-  return result.length === 1 ? result[0] : result as any;
+  }) as any;
 
 }

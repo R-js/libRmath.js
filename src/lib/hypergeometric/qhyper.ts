@@ -24,90 +24,87 @@
  *  DESCRIPTION
  *
  *    The quantile function of the hypergeometric distribution.
- */
+*/
 
 import * as debug from 'debug';
 import { R_DT_qIv } from '~exp-utils';
 import { ML_ERR_return_NAN, R_Q_P01_boundaries } from '../common/_general';
+import { forEach } from '../r-func';
 import { lfastchoose } from './lfastchoose';
-
 
 const { log, exp, min: fmin2, max: fmax2, round: R_forceint } = Math;
 const { isNaN: ISNAN, isFinite: R_FINITE, EPSILON: DBL_EPSILON } = Number;
 
 const printer_qhyper = debug('qhyper');
+
 export function qhyper<T>(
   pp: T,
   NR: number,
   NB: number,
   n: number,
-  lowerTail: boolean= true,
-  logP: boolean= false
+  lowerTail: boolean = true,
+  logP: boolean = false
 ): T {
+  return forEach(pp)(p => {
+    /* This is basically the same code as  ./phyper.c  *used* to be --> FIXME! */
+    let N;
+    let xstart;
+    let xend;
+    let xr;
+    let xb;
+    let sum;
+    let term;
+    let small_N;
 
-  const fp: number[] = Array.isArray(pp) ? pp : [pp] as any;
-  
-  const result = fp.map(p => {
-  /* This is basically the same code as  ./phyper.c  *used* to be --> FIXME! */
-  let N;
-  let xstart;
-  let xend;
-  let xr;
-  let xb;
-  let sum;
-  let term;
-  let small_N;
+    if (ISNAN(p) || ISNAN(NR) || ISNAN(NB) || ISNAN(n)) return p + NR + NB + n;
 
-  if (ISNAN(p) || ISNAN(NR) || ISNAN(NB) || ISNAN(n)) return p + NR + NB + n;
+    if (!R_FINITE(p) || !R_FINITE(NR) || !R_FINITE(NB) || !R_FINITE(n))
+      return ML_ERR_return_NAN(printer_qhyper);
 
-  if (!R_FINITE(p) || !R_FINITE(NR) || !R_FINITE(NB) || !R_FINITE(n))
-    return ML_ERR_return_NAN(printer_qhyper);
+    NR = R_forceint(NR);
+    NB = R_forceint(NB);
+    N = NR + NB;
+    n = R_forceint(n);
+    if (NR < 0 || NB < 0 || n < 0 || n > N)
+      return ML_ERR_return_NAN(printer_qhyper);
 
-  NR = R_forceint(NR);
-  NB = R_forceint(NB);
-  N = NR + NB;
-  n = R_forceint(n);
-  if (NR < 0 || NB < 0 || n < 0 || n > N)
-    return ML_ERR_return_NAN(printer_qhyper);
-
-  /* Goal:  Find  xr (= #{red balls in sample}) such that
+    /* Goal:  Find  xr (= #{red balls in sample}) such that
      *   phyper(xr,  NR,NB, n) >= p > phyper(xr - 1,  NR,NB, n)
      */
 
-  xstart = fmax2(0, n - NB);
-  xend = fmin2(n, NR);
+    xstart = fmax2(0, n - NB);
+    xend = fmin2(n, NR);
 
-  let rc = R_Q_P01_boundaries(lowerTail, logP, p, xstart, xend);
-  if (rc !== undefined) {
-    return rc;
-  }
-  xr = xstart;
-  xb = n - xr; /* always ( = #{black balls in sample} ) */
+    let rc = R_Q_P01_boundaries(lowerTail, logP, p, xstart, xend);
+    if (rc !== undefined) {
+      return rc;
+    }
+    xr = xstart;
+    xb = n - xr; /* always ( = #{black balls in sample} ) */
 
-  small_N = N < 1000; /* won't have underflow in product below */
-  /* if N is small,  term := product.ratio( bin.coef );
+    small_N = N < 1000; /* won't have underflow in product below */
+    /* if N is small,  term := product.ratio( bin.coef );
        otherwise work with its logarithm to protect against underflow */
-  term = lfastchoose(NR, xr) + lfastchoose(NB, xb) - lfastchoose(N, n);
-  if (small_N) term = exp(term);
-  NR -= xr;
-  NB -= xb;
+    term = lfastchoose(NR, xr) + lfastchoose(NB, xb) - lfastchoose(N, n);
+    if (small_N) term = exp(term);
+    NR -= xr;
+    NB -= xb;
 
-  if (!lowerTail || logP) {
-    p = R_DT_qIv(lowerTail, logP, p);
-  }
-  p *= 1 - 1000 * DBL_EPSILON; /* was 64, but failed on FreeBSD sometimes */
-  sum = small_N ? term : exp(term);
+    if (!lowerTail || logP) {
+      p = R_DT_qIv(lowerTail, logP, p);
+    }
+    p *= 1 - 1000 * DBL_EPSILON; /* was 64, but failed on FreeBSD sometimes */
+    sum = small_N ? term : exp(term);
 
-  while (sum < p && xr < xend) {
-    xr++;
-    NB++;
-    if (small_N) term *= NR / xr * (xb / NB);
-    else term += log(NR / xr * (xb / NB));
-    sum += small_N ? term : exp(term);
-    xb--;
-    NR--;
-  }
-  return xr;
-});
- return result.length === 1 ? result[0] : result as any;
+    while (sum < p && xr < xend) {
+      xr++;
+      NB++;
+      if (small_N) term *= NR / xr * (xb / NB);
+      else term += log(NR / xr * (xb / NB));
+      sum += small_N ? term : exp(term);
+      xb--;
+      NR--;
+    }
+    return xr;
+  }) as any;
 }

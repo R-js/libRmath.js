@@ -46,20 +46,19 @@
  */
 
 import * as debug from 'debug';
+//
+import { rbinom } from '../binomial/rbinom';
 import {
   imax2,
   imin2,
   M_LN_SQRT_2PI,
   ML_ERR_return_NAN
 } from '../common/_general';
-
-import { INormal } from '~normal';
-import { rbinom } from '../binomial/rbinom';
+import { IRNG } from '../rng/irng';
 import { qhyper } from './qhyper';
-
+//
 const { log, round: R_forceint, exp, sqrt } = Math;
 const { isFinite: R_FINITE, MAX_SAFE_INTEGER: INT_MAX } = Number;
-
 const printer_afc = debug('afc');
 
 // afc(i) :=  ln( i! )	[logarithm of the factorial i]
@@ -101,15 +100,15 @@ export function afc(i: number): number {
 }
 
 export function rhyper(
-  N: number = 1,
+  N: number,
   nn1in: number,
   nn2in: number,
   kkin: number,
-  normal: INormal
+  rng: IRNG
 ): number | number[] {
 
   const result = new Array(N).fill(0).map(() => {
-    return _rhyper(nn1in, nn2in, kkin, normal);
+    return _rhyper(nn1in, nn2in, kkin, rng);
   });
   return result.length === 1 ? result[0] : result;
 
@@ -122,7 +121,7 @@ function _rhyper(
   nn1in: number,
   nn2in: number,
   kkin: number,
-  normal: INormal
+  rng: IRNG
 ): number {
   /* extern double afc(int); */
 
@@ -179,10 +178,10 @@ function _rhyper(
     // Johnson, Kotz,.. p.258 (top) mention the *four* different binomial approximations
     if (kkin === 1) {
       // Bernoulli
-      return rbinom(1, kkin, nn1in / (nn1in + nn2in), normal) as number;
+      return rbinom(1, kkin, nn1in / (nn1in + nn2in), rng) as number;
     }
     // Slow, but safe: return  F^{-1}(U)  where F(.) = phyper(.) and  U ~ U[0,1]
-    return qhyper(normal.rng.unif_rand(), nn1in, nn2in, kkin, false, false);
+    return qhyper(rng.unif_rand(), nn1in, nn2in, kkin, false, false);
   }
   nn1 = nn1in;
   nn2 = nn2in;
@@ -268,7 +267,7 @@ function _rhyper(
     while (true) {
       p = w;
       ix = minjx;
-      u = normal.rng.unif_rand() * scale;
+      u = rng.unif_rand() * scale;
 
       printer_rhyper('  _new_ u = %d', u);
 
@@ -333,8 +332,8 @@ function _rhyper(
     //L30:
     let goto_L30 = false;
     while (true) {
-      let u = normal.rng.unif_rand() * p3;
-      let v = normal.rng.unif_rand();
+      let u = rng.unif_rand() * p3;
+      let v = rng.unif_rand();
       n_uv++;
       if (n_uv >= 10000) {
         printer_rhyper(

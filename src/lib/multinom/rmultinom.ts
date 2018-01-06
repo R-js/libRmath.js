@@ -47,7 +47,7 @@ const { abs:fabs} = Math;
 import { ME, ML_ERROR } from '~common';
 
 import { rbinom } from '../binomial/rbinom';
-import { INormal } from '../normal';
+import { IRNG } from '../rng/irng';
 
 const printer_rmultinom = debug('rmultinom');
 
@@ -62,7 +62,7 @@ export function rmultinom(
   prob: number[],
   K: number,
   rN: number[],
-  normal: INormal
+  rng: IRNG
 ): void {
   /* `Return' vector  rN[1:K] {K := length(prob)}
      *  where rN[j] ~ Bin(n, prob[j]) ,  sum_j rN[j] == n,  sum_j prob[j] == 1,
@@ -109,7 +109,7 @@ export function rmultinom(
       /* printf("[%d] %.17f\n", k+1, pp); */
       rN[k] =
         pp < 1
-          ? (rbinom(1, n, pp, normal) as number)
+          ? (rbinom(1, n, pp, rng) as number)
           : /*>= 1; > 1 happens because of rounding */
             n;
       n -= rN[k];

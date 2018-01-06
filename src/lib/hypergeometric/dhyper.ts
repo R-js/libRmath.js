@@ -45,8 +45,7 @@
 
 import * as debug from 'debug';
 
-const { round: R_forceint } = Math;
-const { isNaN: ISNAN } = Number;
+import { forEach } from '../r-func';
 
 import {
   ML_ERR_return_NAN,
@@ -59,6 +58,8 @@ import {
 import { dbinom_raw } from '../binomial/dbinom';
 
 const printer = debug('dhyper');
+const { round: R_forceint } = Math;
+const { isNaN: ISNAN } = Number;
 
 export function dhyper<T>(
   xx: T,
@@ -67,8 +68,7 @@ export function dhyper<T>(
   n: number,
   give_log: boolean = false
 ): T {
-  const fx: number[] = Array.isArray(xx) ? xx : ([xx] as any);
-  const result = fx.map(x => {
+  return forEach(xx)(x => {
     let p: number;
     let q: number;
     let p1: number;
@@ -105,6 +105,6 @@ export function dhyper<T>(
     p3 = dbinom_raw(n, r + b, p, q, give_log);
 
     return give_log ? p1 + p2 - p3 : p1 * p2 / p3;
-  });
-  return result.length === 1 ? result[0] : (result as any);
+  }) as any;
+ 
 }

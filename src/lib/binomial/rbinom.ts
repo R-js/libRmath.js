@@ -39,9 +39,10 @@
  *	(Algorithm BTPEC).
  */
 import * as debug from 'debug';
-import { ML_ERR_return_NAN, R_pow_di } from '~common';
+import { ML_ERR_return_NAN, R_pow_di } from '../common/_general';
 
 import { INormal } from '../normal';
+import { IRNG } from '../rng/irng';
 import { qbinom } from './qbinom';
 
 const { log, abs: fabs, sqrt, min: fmin2, round: R_forceint } = Math;
@@ -52,16 +53,16 @@ export function rbinom(
   N: number = 1,
   nin: number,
   pp: number,
-  normal: INormal
+  rng: IRNG
 ): number | number[] {
   const result = new Array(N).fill(0).map(() => {
-    return _rbinom(nin, pp, normal);
+    return _rbinom(nin, pp, rng);
   });
 
   return result.length === 1 ? result[0] : (result as any);
 }
 
-function _rbinom(nin: number, pp: number, normal: INormal): number {
+function _rbinom(nin: number, pp: number, rng: IRNG): number {
   /* FIXME: These should become THREAD_specific globals : */
 
   let c = 0;
@@ -128,7 +129,7 @@ function _rbinom(nin: number, pp: number, normal: INormal): number {
     /* evade integer overflow,
             and r == INT_MAX gave only even values */
     return qbinom(
-      normal.rng.unif_rand(),
+      rng.unif_rand(),
       r,
       pp,
       /*lower_tail*/ false,
@@ -183,8 +184,8 @@ function _rbinom(nin: number, pp: number, normal: INormal): number {
   /*-------------------------- np = n*p >= 30 : ------------------- */
   let gotoFinis = false;
   while (true && !gotoL_np_small) {
-    u = normal.rng.unif_rand() * p4;
-    v = normal.rng.unif_rand();
+    u = rng.unif_rand() * p4;
+    v = rng.unif_rand();
     /* triangular region */
     if (u <= p1) {
       ix = xm - p1 * v + u;
@@ -278,7 +279,7 @@ function _rbinom(nin: number, pp: number, normal: INormal): number {
     while (true) {
       ix = 0;
       f = qn;
-      u = normal.rng.unif_rand();
+      u = rng.unif_rand();
       while (true) {
         if (u < f) {
           //goto finis;

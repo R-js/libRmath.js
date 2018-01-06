@@ -2,9 +2,10 @@ import { rmultinom as _rmultinom } from './rmultinom';
 
 //FIXME: convert dmultinom from pure R to ts equivalent
 
-import { INormal, Normal } from '../normal';
+import { IRNG } from '../rng/irng';
+import { MersenneTwister } from '../rng/mersenne-twister';
 
-export function MultiNomial(rng: INormal = Normal()) {
+export function MultiNomial(rng: IRNG = new MersenneTwister()) {
   
   function rmultinom(n: number, prob: number[], K: number, rN: number[]) {
     return _rmultinom(n, prob, K, rN, rng);
