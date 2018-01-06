@@ -39,8 +39,8 @@ const printer_qhyper = debug('qhyper');
 
 export function qhyper<T>(
   pp: T,
-  NR: number,
-  NB: number,
+  nr: number,
+  nb: number,
   n: number,
   lowerTail: boolean = true,
   logP: boolean = false
@@ -56,13 +56,13 @@ export function qhyper<T>(
     let term;
     let small_N;
 
-    if (ISNAN(p) || ISNAN(NR) || ISNAN(NB) || ISNAN(n)) return p + NR + NB + n;
+    if (ISNAN(p) || ISNAN(nr) || ISNAN(nb) || ISNAN(n)) return NaN;
 
-    if (!R_FINITE(p) || !R_FINITE(NR) || !R_FINITE(NB) || !R_FINITE(n))
+    if (/*!R_FINITE(p) ||*/ !R_FINITE(nr) || !R_FINITE(nb) || !R_FINITE(n))
       return ML_ERR_return_NAN(printer_qhyper);
 
-    NR = R_forceint(NR);
-    NB = R_forceint(NB);
+    let NR = R_forceint(nr);
+    let NB = R_forceint(nb);
     N = NR + NB;
     n = R_forceint(n);
     if (NR < 0 || NB < 0 || n < 0 || n > N)
