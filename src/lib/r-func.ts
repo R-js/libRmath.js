@@ -5,9 +5,11 @@ export const seq = (adjust = 0) => (adjustMin = adjust) => (
   end: number,
   step: number = 1
 ): number[] => {
+  
   let s = start + adjust;
   let e = end + adjust;
   let cursor = s;
+
   if (end < start) {
     e = start + adjustMin;
     s = end + adjustMin;
@@ -21,6 +23,7 @@ export const seq = (adjust = 0) => (adjustMin = adjust) => (
     rc.push(cursor);
     cursor += step;
   } while (cursor >= s && cursor <= e && step !== 0);
+
   return rc;
 };
 
