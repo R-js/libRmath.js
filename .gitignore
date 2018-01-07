@@ -11,6 +11,7 @@ npm-debug.log*
 !/.npmignore
 *.pdf
 *.PNG
+*.png
 
 # Runtime data
 pids
