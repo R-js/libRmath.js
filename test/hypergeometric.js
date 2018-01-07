@@ -88,7 +88,7 @@ const p2 = phyper(
     false
 );
 precision(p2);
-//[ 0.66115526, 0.328440469, 0.0980994597, 0.671559531, 0.33884474 ]
+//[ 0.66115526, 0.328440469, 0.0980994597, 0.0158348135, 0.00120998757 ]
 
 //*3. m=9, n=18, m+n=27 ,k=9 (≤ m+n).
 const p3 = phyper(
@@ -100,15 +100,13 @@ const p3 = phyper(
     true
 );
 precision(p3);
-//[ -1.1886521, -2.616312, -1.12942575, -2.76916902, -Infinity ]
+//[ -1.1886521, -2.616312, -4.83512721, -8.16733172, -Infinity ]
 
 /*
-
 qhyper(p, m, n, k, lower.tail = TRUE, log.p = FALSE);
-
 */
 
-//*1
+//1
 const q1 = qhyper(
     seq(0, 1, 0.2), //probabilities of drawing white balls
     5, //population white balls

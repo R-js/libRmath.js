@@ -98,13 +98,15 @@ function pdhyper(
 /* FIXME: The old phyper() code was basically used in ./qhyper.c as well
  * -----  We need to sync this again!
 */
+const printer_phyper = debug('phyper');
+
 export function phyper<T>(
   xx: T,
-  NR: number,
-  NB: number,
-  n: number,
+  nr: number,
+  nb: number,
+  nn: number,
   lowerTail: boolean = true,
-  log_p: boolean = false
+  logP: boolean = false
 ): T {
   /* Sample of  n balls from  NR red  and	 NB black ones;	 x are red */
 
@@ -112,6 +114,10 @@ export function phyper<T>(
     let d: number;
     let pd: number;
     let lower_tail = lowerTail; //copy it gets changed
+    let log_p = logP;
+    let NR = nr;
+    let NB = nb;
+    let n = nn;
     if (ISNAN(x) || ISNAN(NR) || ISNAN(NB) || ISNAN(n)) return x + NR + NB + n;
 
     x = floor(x + 1e-7);
@@ -120,7 +126,7 @@ export function phyper<T>(
     n = R_forceint(n);
 
     if (NR < 0 || NB < 0 || !R_FINITE(NR + NB) || n < 0 || n > NR + NB) {
-      return ML_ERR_return_NAN(printer_pdhyper);
+      return ML_ERR_return_NAN(printer_phyper);
     }
 
     if (x * (NR + NB) > n * NR) {
