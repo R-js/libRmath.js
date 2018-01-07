@@ -49,8 +49,8 @@
 */
 
 /* want to compile log1p as Rlog1p if HAVE_LOG1P && !HAVE_WORKING_LOG1P */
-
-const { abs: fabs, log, max: fmax2, min: fmin2 } = Math;
+/*
+const { abs: fabs, max: fmax2, min: fmin2 } = Math;
 const {
   NEGATIVE_INFINITY: ML_NEGINF,
   POSITIVE_INFINITY: ML_POSINF,
@@ -59,11 +59,11 @@ const {
   isFinite: R_FINITE
 } = Number;
 
-import { ME, ML_ERR_return_NAN, ML_ERROR, R_D_val } from '../common/_general';
-
+import { ME } from '../common/_general';
+*/
 //import { chebyshev_eval } from '~chebyshev';
 
-const { log1p } = Math;
+//const { log1p } = Math;
 
 /*
 export function log1p(x: number): number {
@@ -164,7 +164,7 @@ export function log1p(x: number): number {
  *		without overflow or destructive underflow.
  */
 
- function hypot(a: number, b: number) {
+ /*function hypot(a: number, b: number) {
   let p: number;
   let r: number;
   let s: number;
@@ -173,7 +173,7 @@ export function log1p(x: number): number {
   let u: number;
 
   if (ISNAN(a) || ISNAN(b)) {
-    /* propagate Na(N)s: */
+    //* propagate Na(N)s: 
     return a + b;
   }
   if (!R_FINITE(a) || !R_FINITE(b)) {
@@ -181,22 +181,22 @@ export function log1p(x: number): number {
   }
   p = fmax2(fabs(a), fabs(b));
   if (p !== 0.0) {
-    /* r = (min(|a|,|b|) / p) ^2 */
+    // r = (min(|a|,|b|) / p) ^2 
     tmp = fmin2(fabs(a), fabs(b)) / p;
     r = tmp * tmp;
     while (true) {
       t = 4.0 + r;
-      /* This was a test of 4.0 + r == 4.0, but optimizing
-            compilers nowadays infinite loop on that. */
+      // This was a test of 4.0 + r == 4.0, but optimizing
+      //      compilers nowadays infinite loop on that. 
       if (fabs(r) < 2 * DBL_EPSILON) break;
       s = r / t;
       u = 1 + 2 * s;
       p *= u;
 
-      /* r = (s / u)^2 * r */
+      // r = (s / u)^2 * r 
       tmp = s / u;
       r *= tmp * tmp;
     }
   }
   return p;
-}
+}*/

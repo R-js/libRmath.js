@@ -55,7 +55,7 @@ import { WilcoxonCache } from './WilcoxonCache';
 
 import { choose } from '../common/choose';
 
-const { round: R_forceint, trunc, floor } = Math;
+const { round: R_forceint, trunc } = Math;
 const { isNaN: ISNAN, isFinite: R_FINITE, EPSILON: DBL_EPSILON } = Number;
 
 const printer_qwilcox = debug('qwilcox');

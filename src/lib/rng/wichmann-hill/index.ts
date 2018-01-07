@@ -37,17 +37,17 @@ import { timeseed } from '../timeseed';
 const SEED_LEN = 3;
 
 export class WichmannHill extends IRNG {
-  private kind: IRNGType;
-  private name: string;
+
   private m_seed: Uint32Array;
 
   constructor(_seed: number = timeseed()) {
     super(_seed);
   }
 
+
   public _setup() {
-    this.kind = IRNGType.WICHMANN_HILL;
-    this.name = 'Wichmann-Hill';
+    this._kind = IRNGType.WICHMANN_HILL;
+    this._name = 'Wichmann-Hill';
     const buf = new ArrayBuffer(SEED_LEN * 4);
     this.m_seed = new Uint32Array(buf).fill(0);
   }
@@ -91,7 +91,7 @@ export class WichmannHill extends IRNG {
   }
 
   public set seed(_seed: number[]) {
-    let errors = 0;
+    
 
     if (_seed.length > this.m_seed.length || _seed.length === 0) {
       this.init(timeseed());

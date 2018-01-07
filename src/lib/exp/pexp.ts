@@ -35,7 +35,6 @@ import { R_Log1_Exp } from './expm1';
 
 const { expm1 } = Math;
 const { isNaN: ISNAN } = Number;
-const { isArray } = Array;
 const printer = debug('pexp');
 
 export function pexp<T>(

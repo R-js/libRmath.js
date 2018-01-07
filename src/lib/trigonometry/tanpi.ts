@@ -3,7 +3,7 @@ import * as debug from 'debug';
 import { fmod, ME, ML_ERROR } from '../common/_general';
 const { NaN: ML_NAN, isNaN: ISNAN, isFinite: R_FINITE } = Number;
 
-const { abs: fabs, PI: M_PI } = Math;
+const {  PI: M_PI } = Math;
 
 // tan(pi * x)  -- exact when x = k/2  for all integer k
 const printer_tanpi = debug('tanpi');

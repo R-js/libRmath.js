@@ -1,9 +1,5 @@
 'use strict';
 
-const { trunc } = Math;
-const frac = (x: number) => x - trunc(x);
-
-import { fixup } from '../fixup';
 import { IRNG } from '../irng';
 import { IRNGType } from '../irng-type';
 import { timeseed } from '../timeseed';
@@ -18,8 +14,6 @@ const a21 = 527612;
 const a23n = 1370589;
 
 export class LecuyerCMRG extends IRNG {
-  private kind: IRNGType;
-  private name: string;
   private m_seed: Int32Array;
 
 
@@ -28,8 +22,8 @@ export class LecuyerCMRG extends IRNG {
   }
 
   public _setup() {
-    this.kind = IRNGType.LECUYER_CMRG;
-    this.name = "L'Ecuyer-CMRG";
+    this._kind = IRNGType.LECUYER_CMRG;
+    this._name = "L'Ecuyer-CMRG";
     this.m_seed = new Int32Array(SEED_LEN).fill(0);
   }
 
@@ -55,9 +49,9 @@ export class LecuyerCMRG extends IRNG {
   public unif_rand(): number {
     const II = this.m_seed;
 
-    const { trunc, pow } = Math;
-    const pp2 = pow.bind(pow, 2);
-    const break32 = pp2(32);
+   
+    //const pp2 = pow.bind(pow, 2);
+    //const break32 = pp2(32);
 
     let k;
     let p1;
@@ -90,7 +84,7 @@ export class LecuyerCMRG extends IRNG {
   }
 
   public set seed(_seed: number[]) {
-    let errors = 0;
+   
 
     if (_seed.length > this.m_seed.length || _seed.length === 0) {
       this.init(timeseed());

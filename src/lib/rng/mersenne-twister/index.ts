@@ -39,13 +39,13 @@ const LOWER_MASK = 0x7fffffff; /* least significant r bits */
 /* Tempering parameters */
 const TEMPERING_MASK_B = 0x9d2c5680;
 const TEMPERING_MASK_C = 0xefc60000;
-const TEMPERING_SHIFT_U = (y: number) => y >>> 11;
-const TEMPERING_SHIFT_S = (y: number) => y << 7;
-const TEMPERING_SHIFT_T = (y: number) => y << 15;
-const TEMPERING_SHIFT_L = (y: number) => y >>> 18;
+//const TEMPERING_SHIFT_U = (y: number) => y >>> 11;
+//const TEMPERING_SHIFT_S = (y: number) => y << 7;
+//const TEMPERING_SHIFT_T = (y: number) => y << 15;
+//const TEMPERING_SHIFT_L = (y: number) => y >>> 18;
 
-const { trunc } = Math;
-const frac = (x: number) => x - trunc(x);
+
+
 
 import { fixup } from '../fixup';
 import { IRNG } from '../irng';
@@ -55,14 +55,13 @@ import { timeseed } from '../timeseed';
 const SEED_LEN = 625;
 
 export class MersenneTwister extends IRNG {
-  private kind: IRNGType;
-  private name: string;
+
   private m_seed: Int32Array;
   private mt: Int32Array;
   private mti: number;
 
+  
   private MT_sgenrand(seed: number) {
-    let i;
 
     for (let i = 0; i < N; i++) {
       this.mt[i] = seed & 0xffff0000;
@@ -135,8 +134,8 @@ export class MersenneTwister extends IRNG {
 
   public _setup() {
     const buf = new ArrayBuffer(SEED_LEN * 4);
-    this.kind = IRNGType.MERSENNE_TWISTER;
-    this.name = 'Mersenne-Twister';
+    this._kind = IRNGType.MERSENNE_TWISTER;
+    this._name = 'Mersenne-Twister';
     this.m_seed = new Int32Array(buf).fill(0);
     this.mt = new Int32Array(buf, 4);
     this.mti = N + 1;
@@ -163,7 +162,6 @@ export class MersenneTwister extends IRNG {
   }
 
   public set seed(_seed: number[]) {
-    let errors = 0;
 
     if (_seed.length > this.m_seed.length || _seed.length === 0) {
       this.init(timeseed());

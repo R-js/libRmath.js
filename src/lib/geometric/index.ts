@@ -4,7 +4,7 @@ import { pgeom  } from './pgeom';
 import { qgeom } from './qgeom';
 import { rgeom as _rgeom } from './rgeom';
 
-export function Geometric(rng = Normal()){
+export function Geometric(rng: INormal = Normal()){
     return {
       dgeom,
       pgeom,

@@ -235,14 +235,14 @@ function _rhyper(
   }
   /* generate random variate --- Three basic cases */
 
-  let goto_L_finis = false;
+  //let goto_L_finis = false;
   if (minjx === maxjx) {
     /* I: degenerate distribution ---------------- */
 
     printer_rhyper('rhyper(), branch I (degenerate)');
 
     ix = maxjx;
-    goto_L_finis = true;
+    //goto_L_finis = true;
     //goto L_finis; // return appropriate variate
   } else if (m - minjx < 10) {
     // II: (Scaled) algorithm HIN (inverse transformation) ----
@@ -330,7 +330,7 @@ function _rhyper(
 
     let n_uv = 0;
     //L30:
-    let goto_L30 = false;
+    //let goto_L30 = false;
     while (true) {
       let u = rng.unif_rand() * p3;
       let v = rng.unif_rand();
@@ -352,7 +352,7 @@ function _rhyper(
         /* left tail */
         ix = xl + log(v) / lamdl;
         if (ix < minjx) {
-          goto_L30 = true;
+          //goto_L30 = true;
           continue;
           //goto L30;
         }
@@ -361,7 +361,7 @@ function _rhyper(
         /* right tail */
         ix = xr - log(v) / lamdr;
         if (ix > maxjx) {
-          goto_L30 = true;
+          //goto_L30 = true;
           continue;
           //goto L30;
         }
@@ -482,7 +482,7 @@ function _rhyper(
         }
       } // else
       if (reject) {
-        goto_L30 = true;
+        //goto_L30 = true;
         continue;
       }
       break;

@@ -67,13 +67,13 @@ export function rwilcox(
 
     let r = 0.0;
     let k = trunc(m + n);
-    let x = seq()()(0, k - 1);
+    let x: number[] = seq()()(0, k - 1);
     printer_rwilcox(`------v`);
     for (let i = 0; i < n; i++) {
       let j = floor(k * rng.unif_rand());
       r += x[j];
       x[j] = x[--k];
-      printer_rwilcox(`i:${i},\tn:${n}\tj:${j}\tk:${k}\tr:${r}\tx:${x}`);
+      printer_rwilcox('i:%d,\tn:%d\tj:%d\tk:%d\tr:%d\tx:%o', i, n, j, k, x);
     }
 
     return r - n * (n - 1) / 2;

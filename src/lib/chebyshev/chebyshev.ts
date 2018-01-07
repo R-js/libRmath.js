@@ -63,7 +63,7 @@ export function chebyshev_init(
   eta: number
 ): number {
   let retCode: number = 0;
-  let ii: number;
+  //let ii: number;
   let err: number;
 
   if (nos < 1) return 0;

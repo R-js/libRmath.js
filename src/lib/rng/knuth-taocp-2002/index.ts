@@ -11,7 +11,7 @@
 /*    N.B. The MODIFICATIONS introduced in the 9th printing (2002) are
       included here; there's no backwards compatibility with the original. */
 
-import * as debug from 'debug';      
+    
 
 
 import { IRNG } from '../irng';
@@ -19,9 +19,6 @@ import { IRNGType } from '../irng-type';
 import { timeseed } from '../timeseed';
 
 import { fixup } from '../fixup';
-
-const { trunc } = Math;
-const frac = (x: number) => x - trunc(x);
 
 const QUALITY = 1009; /* recommended quality level for high-res use */
 const SEED_LEN = 101;
@@ -43,6 +40,7 @@ function is_odd(x: number): boolean {
   return x % 2 === 1;
 }
 
+
 export class KnuthTAOCP2002 extends IRNG {
   //
   //
@@ -50,8 +48,7 @@ export class KnuthTAOCP2002 extends IRNG {
   private ran_arr_buf: Uint32Array;
   //
   //
-  private kind = IRNGType.KNUTH_TAOCP2002;
-  private name = 'Knuth-TAOCP-2002';
+
   private m_seed: Uint32Array;
   private ran_x: Uint32Array;
 
@@ -163,6 +160,8 @@ export class KnuthTAOCP2002 extends IRNG {
   }
 
   public _setup() {
+    this._kind = IRNGType.KNUTH_TAOCP2002;
+    this._name = 'Knuth-TAOCP-2002';
     this.qualityBuffer = new ArrayBuffer(QUALITY * 4);
     this.ran_arr_buf = new Uint32Array(this.qualityBuffer);
     const buf = new ArrayBuffer(SEED_LEN * 4);
@@ -187,7 +186,6 @@ export class KnuthTAOCP2002 extends IRNG {
     super.init(_seed);
   }
   public set seed(_seed: number[]) {
-    let errors = 0;
 
     if (_seed.length > this.m_seed.length || _seed.length === 0) {
       this.init(timeseed());

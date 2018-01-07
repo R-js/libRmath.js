@@ -13,7 +13,7 @@ import { qt as _qt } from './qt';
 //
 import { rt as _rt } from './rt';
 
-const { sqrt } = Math;
+
 
 export function StudentT(rng: INormal = Normal()) {
   function dt(x: number | number[], df: number, ncp?: number, logP = false) {

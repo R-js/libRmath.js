@@ -31,8 +31,6 @@ import { ML_ERR_return_NAN, R_DT_0, R_Q_P01_check } from '../common/_general';
 import { forEach } from '../r-func';
 import { R_DT_Clog } from './expm1';
 
-import { forceToArray, possibleScalar } from '~R';
-
 const { isNaN: ISNAN } = Number;
 const printer = debug('qexp');
 

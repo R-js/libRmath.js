@@ -39,7 +39,7 @@ import * as debug from 'debug';
 
 import { ML_ERR_return_NAN } from '~common';
 
-import { Uniform } from 'src/lib/uniform';
+
 import { INormal } from '~normal';
 import { rchisq } from '../chi-2/rchisq';
 

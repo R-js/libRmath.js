@@ -37,10 +37,9 @@ import { tanpi } from '../trigonometry/tanpi';
 const { expm1, exp } = Math;
 const { isNaN: ISNAN, isFinite: R_FINITE } = Number;
 
-const { p: ML_POSINF, n: ML_NEGINF, q: ML_NAN } = {
+const { p: ML_POSINF, n: ML_NEGINF } = {
   p: Infinity,
-  n: -Infinity,
-  q: NaN
+  n: -Infinity
 };
 
 const printer = debug('qcauchy');

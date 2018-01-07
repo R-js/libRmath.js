@@ -80,7 +80,7 @@ import { dnorm4 as dnorm } from '../normal/dnorm';
 import { pnorm5 as pnorm } from '../normal/pnorm';
 import { dpois_raw } from '../poisson/dpois';
 import { lgammafn } from './lgamma_fn';
-import { logspace_add } from './logspace-add';
+//import { logspace_add } from './logspace-add';
 
 const {
   LN2:M_LN2,
@@ -99,7 +99,7 @@ const {
   MIN_VALUE: DBL_MIN,
   EPSILON: DBL_EPSILON,
   isFinite: R_FINITE,
-  NEGATIVE_INFINITY: ML_NEGINF,
+ // NEGATIVE_INFINITY: ML_NEGINF,
   POSITIVE_INFINITY:ML_POSINF
 } = Number;
 
@@ -260,27 +260,14 @@ export function lgamma1p(a: number) {
 } /* lgamma1p */
 
 /*
- * Compute the log of a difference from logs of terms, i.e.,
- *
- *     log (exp (logx) - exp (logy))
- *
- * without causing overflows and without throwing away large handfuls
- * of accuracy.
- */
-
-function logspace_sub(logx: number, logy: number) {
-  return logx + R_Log1_Exp(logy - logx);
-}
-
-/*
- * Compute the log of a sum from logs of terms, i.e.,
+ * Compute the; log of a sum from logs of terms, i.e.,
  *
  *     log (sum_i  exp (logx[i]) ) =
- *     log (e^M * sum_i  e^(logx[i] - M) ) =
- *     M + log( sum_i  e^(logx[i] - M)
+ *     log (e ^M * sum_i  e ^ (logx[i] - M) ) =
+ *     M + log( sum_i  e ^ (logx[i] - M)
  *
  * without causing overflows or throwing much accuracy.
- */
+ * /
 
 function logspace_sum(logx: number[], n: number): number {
   if (n === 0) return ML_NEGINF; // = log( sum(<empty>) )
@@ -294,7 +281,7 @@ function logspace_sum(logx: number[], n: number): number {
   let s = 0;
   for (i = 0; i < n; i++) s += exp(logx[i] - Mx);
   return Mx + log(s);
-}
+};
 
 // log(1 - exp(x))  in more stable form than log1p(- R_D_qIv(x)) :
 /*export function R_Log1_Exp(x: number): number {

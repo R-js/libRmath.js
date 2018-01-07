@@ -4,7 +4,7 @@ import { qexp as _qexp } from './qexp';
 import { rexp as _rexp } from './rexp';
 
 import { IRNG, rng } from '../rng';
-const { normal: { Inversion }, MersenneTwister } = rng;
+const { MersenneTwister } = rng;
 
 export function Exponential(rng: IRNG = new MersenneTwister(0)) {
   /*

@@ -23,8 +23,6 @@
  *  https://www.R-project.org/Licenses/
  */
 
-const { trunc } = Math;
-const frac = (x: number) => x - trunc(x);
 
 import { fixup } from '../fixup';
 import { IRNG } from '../irng';
@@ -35,8 +33,7 @@ const SEED_LEN = 2;
 const buf = new ArrayBuffer(SEED_LEN * 4);
 
 export class SuperDuper extends IRNG {
-  private kind: IRNGType;
-  private name: string;
+ 
   private m_seed: Int32Array;
 
   constructor(_seed: number = timeseed()) {
@@ -44,8 +41,8 @@ export class SuperDuper extends IRNG {
   }
 
   public _setup() {
-    this.kind = IRNGType.SUPER_DUPER;
-    this.name = 'Super-Duper';
+    this._kind = IRNGType.SUPER_DUPER;
+    this._name = 'Super-Duper';
     this.m_seed = new Int32Array(buf).fill(0);
   }
 
@@ -88,7 +85,7 @@ export class SuperDuper extends IRNG {
   }
 
   public set seed(_seed: number[]) {
-    let errors = 0;
+   
 
     if (_seed.length > this.m_seed.length || _seed.length === 0) {
       this.init(timeseed());

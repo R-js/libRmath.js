@@ -50,8 +50,6 @@ export function qlogis<T>(
   lower_tail: boolean = true,
   log_p: boolean = false
 ): T {
-  const fp: number[] = (Array.isArray(pp) ? pp : [pp]) as any;
-
   return forEach(pp)(p => {
     if (ISNAN(p) || ISNAN(location) || ISNAN(scale))
       return p + location + scale;

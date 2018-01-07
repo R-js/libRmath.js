@@ -45,7 +45,7 @@ const {
 } = Math;
 const { isNaN: ISNAN, NaN: ML_NAN } = Number;
 
-const nsig_BESS = 16;
+//const nsig_BESS = 16;
 const ensig_BESS = 1e16;
 const rtnsig_BESS = 1e-4;
 const enmten_BESS = 8.9e-308;
@@ -54,8 +54,8 @@ const xlrg_BESS_IJ = 1e5;
 
 import { ME, ML_ERROR } from '../common/_general';
 
-import { cospi } from '../trigonometry/cospi';
-import { sinpi } from '../trigonometry/sinpi';
+//import { cospi } from '../trigonometry/cospi';
+//import { sinpi } from '../trigonometry/sinpi';
 
 //import { bessel_y, bessel_y_ex } from './bessel_y';
 
@@ -280,7 +280,7 @@ function J_bessel(props: JBesselProperties): JBesselProperties {
   //--b;
 
   let { nb, x, alpha: nu, b, ncalc } = props;
-  let twonu = nu + nu;
+  //let twonu = nu + nu;
 
   /*-------------------------------------------------------------------
       Check for out of range arguments.
@@ -375,8 +375,8 @@ function bessel_j_recurrence(props: JBesselProperties): JBesselProperties {
   let alp2em;
   let alpem;
   let pold;
-  let psave;
-  let psavel;
+  //let psave;
+  //let psavel;
   let gotos: string | undefined;
   if (nbmx >= 3) {
     /* ------------------------------------------------------------

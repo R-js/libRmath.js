@@ -60,7 +60,7 @@ const { floor, round: R_forceint, log1p } = Math;
 const { EPSILON: DBL_EPSILON, isNaN: ISNAN, isFinite: R_FINITE } = Number;
 
 //NOTE: p[d]hyper is not  typo!!
-const printer_pdhyper = debug('pdhyper');
+//const printer_pdhyper = debug('pdhyper');
 
 function pdhyper(
   x: number,

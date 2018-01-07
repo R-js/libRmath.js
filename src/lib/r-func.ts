@@ -1,4 +1,4 @@
-const { abs, sign, trunc } = Math;
+const { abs, sign } = Math;
 
 export const seq = (adjust = 0) => (adjustMin = adjust) => (
   start: number,
@@ -17,7 +17,7 @@ export const seq = (adjust = 0) => (adjustMin = adjust) => (
   }
 
   step = abs(step) * sign(end - start);
-  const rc = [];
+  const rc: number[] = [];
 
   do {
     rc.push(cursor);
@@ -35,16 +35,16 @@ export function selector(indexes: number|number[]): { (val: any, index: number):
 }
 
 export function flatten<T>(...rest: (T | T[])[]): T[] {
-  let rc = [];
+  let rc: number[] = [];
   for (const itm of rest) {
     if (Array.isArray(itm)) {
-      let rc2 = flatten(...itm);
+      let rc2: number[] = flatten(...itm) as any;
       rc.push(...rc2);
       continue;
     }
-    rc.push(itm);
+    rc.push(itm as any);
   }
-  return rc;
+  return rc as any;
 }
 
 export function arrayrify<T, R>(fn: (x: T, ...rest: any[]) => R) {

@@ -1,11 +1,11 @@
-const { trunc, round, ceil, min, log2, pow } = Math;
+const { trunc, ceil, min, log2, pow } = Math;
 const { now } = Date;
 
 export function timeseed() {
   const n = now();
   //delay 0.5 sec
   do {
-    let x = now();
+    now(); // consume cpu, do something silly
   } while (now() - n < 500);
 
   // how many bits?

@@ -57,7 +57,6 @@ import {
 import { NumberW } from '../common/toms708';
 
 import { R_DT_qIv } from '~exp-utils';
-import { INormal } from '../normal';
 import { qnorm } from '../normal/qnorm';
 import { forEach } from '../r-func';
 import { pnbinom } from './pnbinom';

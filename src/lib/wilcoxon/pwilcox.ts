@@ -80,8 +80,8 @@ export function pwilcox<T>(
     if (q < 0.0) return R_DT_0(lower_tail, logP);
     if (q >= m * n) return R_DT_1(lower_tail, logP);
 
-    let mm = m;
-    let nn = n;
+    //let mm = m;
+   // let nn = n;
     //w_init_maybe(mm, nn);
     let c = choose(m + n, n);
     let p = 0;

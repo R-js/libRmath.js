@@ -64,7 +64,7 @@ export function dwilcox<T>(
   m = R_forceint(m);
   n = R_forceint(n);
 
-  const nm = m * n;
+  //const nm = m * n;
  
   return forEach(xx)(x => {
    
@@ -93,7 +93,7 @@ export function dwilcox<T>(
     }
     //const w = initw(m, n);
     //console.log(`0. special: ${w[4][4].length}`);
-    const c1 = cwilcox(x, m, n, w);
+    //const c1 = cwilcox(x, m, n, w);
     
     //console.log(`4. c1:${c1} <- x:${x}, m:${m}, n:${n}`);
     return giveLog

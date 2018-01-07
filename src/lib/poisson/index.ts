@@ -1,4 +1,4 @@
-import { dpois, dpois_raw } from './dpois';
+import { dpois } from './dpois';
 import { ppois } from './ppois';
 import { qpois } from './qpois';
 import { rpois } from './rpois';

@@ -41,7 +41,7 @@
 import * as debug from 'debug';
 import { ML_ERR_return_NAN, R_pow_di } from '../common/_general';
 
-import { INormal } from '../normal';
+
 import { IRNG } from '../rng/irng';
 import { qbinom } from './qbinom';
 

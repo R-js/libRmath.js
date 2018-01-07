@@ -48,7 +48,7 @@ import { INormal } from '~normal';
 import { wprob } from './wprob';
 
 import {
-  M_1_SQRT_2PI,
+  //M_1_SQRT_2PI,
   ME,
   ML_ERR_return_NAN,
   ML_ERROR,
@@ -192,7 +192,7 @@ function _ptukey(
   let otsum: number;
   let qsqz: number;
   let rotsum: number;
-  let t1: number;
+  //let t1: number;
   let twa1: number;
   let ulen: number;
   let wprb: number;

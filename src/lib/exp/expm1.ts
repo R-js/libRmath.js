@@ -51,8 +51,7 @@ import {
 
 //import { log1p } from '~log';
 
-const { EPSILON: DBL_EPSILON } = Number;
-const { exp, expm1, log, abs: fabs, log1p } = Math;
+const { exp, expm1, log, log1p } = Math;
 
 function R_DT_qIv(lower_tail: boolean, log_p: boolean, p: number) {
   return log_p ? (lower_tail ? exp(p) : -expm1(p)) : R_D_Lval(lower_tail, p);

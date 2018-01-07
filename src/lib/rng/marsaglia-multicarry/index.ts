@@ -23,8 +23,6 @@
  *  https://www.R-project.org/Licenses/
  */
 
-const { trunc } = Math;
-const frac = (x: number) => x - trunc(x);
 
 import { fixup } from '../fixup';
 import { IRNG } from '../irng';
@@ -35,8 +33,7 @@ const SEED_LEN = 2;
 const buf = new ArrayBuffer(SEED_LEN * 4);
 
 export class MarsagliaMultiCarry extends IRNG {
-  private kind: IRNGType;
-  private name: string;
+
   private m_seed: Int32Array;
 
   private fixupSeeds(): void {
@@ -65,8 +62,8 @@ export class MarsagliaMultiCarry extends IRNG {
   }
 
   public _setup() {
-    this.kind = IRNGType.MARSAGLIA_MULTICARRY;
-    this.name = 'Marsaglia-MultiCarry';
+    this._kind = IRNGType.MARSAGLIA_MULTICARRY;
+    this._name = 'Marsaglia-MultiCarry';
     this.m_seed = new Int32Array(buf).fill(0);
   }
 
@@ -86,7 +83,7 @@ export class MarsagliaMultiCarry extends IRNG {
   }
 
   public set seed(_seed: number[]) {
-    let errors = 0;
+  
 
     if (_seed.length > this.m_seed.length || _seed.length === 0) {
       this.init(timeseed());

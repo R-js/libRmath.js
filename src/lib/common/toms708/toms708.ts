@@ -13,7 +13,7 @@
 import * as debug from 'debug';
 import { NumberW } from './NumberW';
 
-const { trunc, log, log1p } = Math;
+const { trunc, log, abs, min, pow } = Math;
 const printer_bratio = debug('Toms708.bratio');
 /**
  * Computes the incomplete beta function
@@ -1586,7 +1586,7 @@ export class Toms708 {
     }
 
     z = x + y - 0.5 - 0.5;
-    if (Math.abs(z) > 3.0 * eps) {
+    if (abs(z) > 3.0 * eps) {
       ierr.val = 5;
       return;
     }
@@ -1641,7 +1641,7 @@ export class Toms708 {
     x0 = x;
     y0 = y;
 
-    if (Math.min(a0, b0) <= 1.0) {
+    if (min(a0, b0) <= 1.0) {
       // C
       // C  PROCEDURE FOR A0 <= 1 OR B0 <= 1
       // C
@@ -1654,7 +1654,7 @@ export class Toms708 {
       }
       //
 
-      if (b0 < Math.min(eps, eps * a0)) {
+      if (b0 < min(eps, eps * a0)) {
         w.val = Toms708.fpser(a0, b0, x0, eps);
         w1.val = 0.5 + (0.5 - w.val);
 
@@ -1667,7 +1667,7 @@ export class Toms708 {
           return;
         }
       }
-      if (a0 < Math.min(eps, eps * b0) && b0 * x0 <= 1.0) {
+      if (a0 < min(eps, eps * b0) && b0 * x0 <= 1.0) {
         w1.val = Toms708.apser(a0, b0, x0, eps);
         w.val = 0.5 + (0.5 - w1.val);
 
@@ -1760,7 +1760,7 @@ export class Toms708 {
       }
 
       if (x0 < 0.1) {
-        if (Math.pow(x0 * b0, a0) <= 0.7) {
+        if (pow(x0 * b0, a0) <= 0.7) {
           w.val = Toms708.bpser(a0, b0, x0, eps);
           w1.val = 0.5 + (0.5 - w.val);
 
@@ -1826,7 +1826,7 @@ export class Toms708 {
       b0 = a;
       x0 = y;
       y0 = x;
-      lambda = Math.abs(lambda);
+      lambda = abs(lambda);
     }
 
     if (b0 < 40.0 && b0 * x0 <= 0.7) {

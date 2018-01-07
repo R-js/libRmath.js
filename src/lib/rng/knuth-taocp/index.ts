@@ -8,8 +8,7 @@
    http://www-cs-faculty.stanford.edu/~knuth/programs/rng.c
 */
 
-const { trunc } = Math;
-const frac = (x: number) => x - trunc(x);
+
 
 import { fixup } from '../fixup';
 import { IRNG } from '../irng';
@@ -27,14 +26,13 @@ const qualityBuffer = new ArrayBuffer(QUALITY * 4);
 const ran_arr_buf = new Uint32Array(qualityBuffer); //uint32
 const KT = 9.31322574615479e-10; /* = 2^-30 */
 const mod_diff = (x: number, y: number) => (x - y) & (MM - 1);
-const is_odd = (x: number) => x & 1; /* units bit of x */
+//const is_odd = (x: number) => x & 1; /* units bit of x */
 
 const SEED_LEN = 101;
 
 export class KnuthTAOCP extends IRNG {
   private buf: ArrayBuffer;
-  private kind: IRNGType;
-  private name: string;
+
   private m_seed: Int32Array;
 
   private get KT_pos() {
@@ -90,8 +88,8 @@ export class KnuthTAOCP extends IRNG {
 
   public _setup() {
     this.buf = new ArrayBuffer(SEED_LEN * 4);
-    this.kind = IRNGType.KNUTH_TAOCP;
-    this.name = 'Knuth-TAOCP';
+    this._kind = IRNGType.KNUTH_TAOCP;
+    this._name = 'Knuth-TAOCP';
     this.m_seed = new Int32Array(this.buf).fill(0);
   }
 
@@ -107,7 +105,7 @@ export class KnuthTAOCP extends IRNG {
   }
 
   public set seed(_seed: number[]) {
-    let errors = 0;
+  
 
     if (_seed.length > this.m_seed.length || _seed.length === 0) {
       this.init(timeseed());

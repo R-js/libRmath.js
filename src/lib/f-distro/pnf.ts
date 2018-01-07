@@ -31,7 +31,7 @@ import { ML_ERR_return_NAN, R_P_bounds_01 } from '../common/_general';
 
 import { pnbeta2 } from '../beta/pnbeta';
 import { pnchisq } from '../chi-2/pnchisq';
-import { INormal } from '../normal';
+
 
 const {
   isNaN: ISNAN,

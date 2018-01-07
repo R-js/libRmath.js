@@ -42,7 +42,7 @@ import {
     R_Q_P01_boundaries
 } from '~common';
 
-import { IRNG } from '../rng';
+
 
 const { max:fmax2, min:fmin2, floor, sqrt} = Math;
 const { isNaN: ISNAN, isFinite: R_FINITE, EPSILON: DBL_EPSILON, } = Number;

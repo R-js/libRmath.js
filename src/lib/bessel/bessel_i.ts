@@ -127,7 +127,7 @@ export function bessel_i(x: number, alpha: number, expo: number): number {
 /* modified version of bessel_i that accepts a work array instead of
    allocating one. */
 const printer_bessel_i_ex = debug('bessel_i_ex');
-function bessel_i_ex(
+export function bessel_i_ex(
   x: number,
   alpha: number,
   expo: number,

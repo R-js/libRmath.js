@@ -1,0 +1,8 @@
+--require ts-node/register
+--full-trace
+--growl
+--recursive
+--require source-map-support/register
+--require tsconfig-paths/register
+--sort
+test/**/*.test.ts test/**/*.test.tsx

@@ -41,8 +41,6 @@
  */
 
 
-import { IRNG } from '../rng';
-
 export function exp_rand( unif_rand: () => number ): number {
 
   const q: number[] = [

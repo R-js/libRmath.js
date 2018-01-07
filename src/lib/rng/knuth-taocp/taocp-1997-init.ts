@@ -20,8 +20,8 @@
 */
 import { seq } from '~R';
 
-const { trunc, round, ceil, min, log2, pow } = Math;
-const { now } = Date;
+const { trunc } = Math;
+
 
 export function TAOCP1997init(seed: number): Uint32Array {
   const KK = 100;

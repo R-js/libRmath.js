@@ -1,9 +1,13 @@
 {
     "compilerOptions": {
+        "noImplicitAny": false,
+        "noLib": false,
+        "noUnusedLocals": true,
+        "newLine": "LF",
+        "noEmit": false,
         "listEmittedFiles": true,
         "declarationDir": "dist",
         "declaration": true,
-        "noImplicitAny": true,
         "removeComments": true,
         "allowUnreachableCode": true,
         "baseUrl": ".",

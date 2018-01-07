@@ -63,7 +63,6 @@ const {
   log,
   exp,
   floor,
-  round: R_forceint,
   round
 } = Math;
 

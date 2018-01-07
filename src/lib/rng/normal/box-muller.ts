@@ -51,7 +51,7 @@ import { IRNG } from '../';
 import { MersenneTwister } from '../mersenne-twister';
 import { IRNGNormal } from './inormal-rng';
 
-const { log, sqrt, min: fmin2, max: fmax2, abs: fabs, exp, cos, sin } = Math;
+const { log, sqrt, cos, sin } = Math;
 
 const DBL_MIN = 2.22507e-308;
 const M_PI = 3.14159265358979323846264338327950288;

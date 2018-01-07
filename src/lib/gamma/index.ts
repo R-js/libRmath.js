@@ -41,7 +41,6 @@ export const special = {
 };
 
 const { abs } = Math;
-const errMsg = ["specify 'rate' or 'scale' but not both"];
 
 export function Gamma(norm: INormal = Normal()) {
   const printer_n = debug('gamma_normalize_params');

@@ -2,7 +2,7 @@ import * as debug from 'debug';
 
 import { fmod, ME, ML_ERROR } from '../common/_general';
 
-const { abs: fabs, PI: M_PI } = Math;
+const { PI: M_PI } = Math;
 
 const { NaN: ML_NAN, isNaN: ISNAN, isFinite: R_FINITE } = Number;
 
