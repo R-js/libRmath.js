@@ -9,6 +9,8 @@ npm-debug.log*
 .*
 !/.gitignore
 !/.npmignore
+*.pdf
+*.PNG
 
 # Runtime data
 pids
