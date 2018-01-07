@@ -27,6 +27,7 @@ npm install --save lib-r-math.js
 
 # Table of Contents
 
+* [Bugs in R discovered during porting](#bugs-in-r-discovered-during-porting)
 * [Helper functions for porting R](#helper-functions-for-porting-r)
 * [Uniform Pseudo Random Number Generators](#uniform-pseudo-random-number-generators)
 * [Normal Random Number Generators](#normal-distributed-random-number-generators)
@@ -3396,7 +3397,7 @@ The density function of the F distribution. See [R doc]((https://stat.ethz.ch/R-
 
 With `df1` and `df2` degrees of freedom:
 
-$$ f(x) = \frac{ Γ(\frac{df1 + df2}{2}) } { Γ(\frac{df1}{2}) Γ(\frac{df2}{2}) } {(\frac{n1}{n2})}^{(\frac{df1}{2})} x^{(\frac{df1}{2} - 1)} (1 + \frac{df1}{df2} x)^{-(n1 + n2)/2} $$
+$$ \large f(x) = \frac{ Γ(\frac{df1 + df2}{2}) } { Γ(\frac{df1}{2}) Γ(\frac{df2}{2}) } {(\frac{n1}{n2})}^{(\frac{df1}{2})} x^{(\frac{df1}{2} - 1)} (1 + \frac{df1}{df2} x)^{-(n1 + n2)/2} $$
 
 ```typescript
 declare function df(
@@ -3500,13 +3501,13 @@ The probability function of the F distribution. See [R doc]((https://stat.ethz.c
 
 ```typescript
 declare function pf(
-    q: number[] | number,
-    df1: number,
-    df2: number,
-    ncp?: number, 
-    lowerTail: boolean = true,
-    logP: boolean = false
-  ): number[]|number;
+  q: number[] | number,
+  df1: number,
+  df2: number,
+  ncp?: number,
+  lowerTail: boolean = true,
+  logP: boolean = false
+): number[] | number;
 ```
 
 * `q`: quantiles (array or scalar).
@@ -3613,13 +3614,13 @@ The probability function of the F distribution. See [R doc]((https://stat.ethz.c
 
 ```typescript
 declare function qf(
-    p: number | number[],
-    df1: number,
-    df2: number,
-    ncp?: number,
-    lowerTail: boolean = true,
-    logP: boolean = false
-  ): number|number[];
+  p: number | number[],
+  df1: number,
+  df2: number,
+  ncp?: number,
+  lowerTail: boolean = true,
+  logP: boolean = false
+): number | number[];
 ```
 
 * `p`: probabilities (array or scalar).
@@ -3642,63 +3643,87 @@ const { df, pf, qf, rf } = FDist();
 
 //1
 let q1 = qf(
-    [
-        0, 0.0189961379, 0.100468407,
-        0.225990517, 0.361015189, 0.484609879,
-        0.588981209, 0.673508458, 0.740516322,
-        1
-    ],
-    5,
-    10,
-    8
+  [
+    0,
+    0.0189961379,
+    0.100468407,
+    0.225990517,
+    0.361015189,
+    0.484609879,
+    0.588981209,
+    0.673508458,
+    0.740516322,
+    1
+  ],
+  5,
+  10,
+  8
 );
 precision(q1); //returns limited precsions numbers
 //[ 0, 0.5, 0.999999998, 1.5, 2, 2.5, 3, 3.5, 4, Infinity ]
 
 //2
 let q2 = qf(
-    [
-        1, 0.946812312, 0.543643095,
-        0.25065625, 0.118135409, 0.0595867293,
-        0.0321901407, 0.0184730352, 0.0111614023,
-        0
-    ],
-    50,
-    10,
-    undefined,
-    false
+  [
+    1,
+    0.946812312,
+    0.543643095,
+    0.25065625,
+    0.118135409,
+    0.0595867293,
+    0.0321901407,
+    0.0184730352,
+    0.0111614023,
+    0
+  ],
+  50,
+  10,
+  undefined,
+  false
 );
 precision(q2);
 //[ 0, 0.5, 0.999999998, 1.5, 2, 2.5, 3, 3.5, 4, Infinity ]
 
 //3.
 let q3 = qf(
-    [
-        0, -0.0546543979, -0.609462324,
-        -1.3836728, -2.13592378, -2.82032239,
-        -3.43609506, -3.99144317, -4.49529367
-    ],
-    50,
-    10,
-    undefined,
-    false,
-    true
+  [
+    0,
+    -0.0546543979,
+    -0.609462324,
+    -1.3836728,
+    -2.13592378,
+    -2.82032239,
+    -3.43609506,
+    -3.99144317,
+    -4.49529367
+  ],
+  50,
+  10,
+  undefined,
+  false,
+  true
 );
 precision(q3);
 //[ 0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4 ]
 
 //4
 let q4 = qf(
-    [
-      -Infinity, -4.20235111, -2.29618223,
-      -1.376145, -0.85773694, -0.546177623,
-      -0.35253857, -0.229797274, -0.15099957
-    ],
-    6,
-    25,
-    8,
-    true,
-    true
+  [
+    -Infinity,
+    -4.20235111,
+    -2.29618223,
+    -1.376145,
+    -0.85773694,
+    -0.546177623,
+    -0.35253857,
+    -0.229797274,
+    -0.15099957
+  ],
+  6,
+  25,
+  8,
+  true,
+  true
 );
 precision(q4);
 //[ 0, 0.500000001, 1, 1.5, 2, 2.5, 3, 3.5, 4 ]
@@ -3720,8 +3745,8 @@ _in R Console:_
 #[1] 0.0 0.5 1.0 1.5 2.0 2.5 3.0 3.5 4.0 Inf
 
 #2.
->qf( c(1, 0.946812312, 0.543643095, 0.25065625, 
-    0.118135409, 0.0595867293, 0.0321901407, 0.0184730352, 
+>qf( c(1, 0.946812312, 0.543643095, 0.25065625,
+    0.118135409, 0.0595867293, 0.0321901407, 0.0184730352,
     0.0111614023, 0),
     50,
     10,
@@ -3760,11 +3785,11 @@ Generates deviates for the F distribution. See [R doc]((https://stat.ethz.ch/R-m
 
 ```typescript
 declare function rf(
-    n: number,
-    df1: number,
-    df2: number,
-    ncp?: number
-): number|number[];
+  n: number,
+  df1: number,
+  df2: number,
+  ncp?: number
+): number | number[];
 ```
 
 * `n`: number of deviates to generate.
@@ -3775,18 +3800,18 @@ declare function rf(
 ```javascript
 const libR = require('lib-r-math.js');
 const {
-    FDist,
-    Normal,
-    rng: { MersenneTwister },
-    rng: { normal: { Inversion } }
+  FDist,
+  Normal,
+  rng: { MersenneTwister },
+  rng: { normal: { Inversion } }
 } = libR;
 
 //some tools
-const precision =  libR.R.numberPrecision(9);
+const precision = libR.R.numberPrecision(9);
 
 //init
 const mt = new MersenneTwister(1234);
-const { df, pf, qf, rf } =  FDist(Normal(new Inversion(mt)));
+const { df, pf, qf, rf } = FDist(Normal(new Inversion(mt)));
 
 //1.
 precision(rf(5, 8, 6));
@@ -3868,22 +3893,22 @@ Alternative represention using _shape_ parameter `a` and _rate_ parameter `β`:
 
 $$ f(x)= \frac{β^{a}}{\Gamma(a)} x^{a-1} e^{-xβ} $$
 
-You must either specify `scale` or `rate` parameters *but not both* (unless rate = 1/scale).
+You must either specify `scale` or `rate` parameters _but not both_ (unless rate = 1/scale).
 
 ```typescript
 declare function dgamma(
-  x: number|number[], 
+  x: number | number[],
   shape: number,
   rate: number = 1,
-  scale: number = 1/rate,
+  scale: number = 1 / rate,
   asLog: boolean = false
-  ): number|number[];
+): number | number[];
 ```
 
 * `x`: quantiles (scalar or array).
 * `shape`: [shape](https://en.wikipedia.org/wiki/Gamma_distribution) parameter, must be positive.
-* `rate`: The [rate](https://en.wikipedia.org/wiki/Gamma_distribution) parameter, when specified, leave `scale` undefined (or set `rate = 1/scale`).  Must be strictly positive.
-* `scale`: The [scale](https://en.wikipedia.org/wiki/Gamma_distribution) parameter, when specified, leave `rate` undefined (or set `scale = 1/rate`).  Must be strictly positive.
+* `rate`: The [rate](https://en.wikipedia.org/wiki/Gamma_distribution) parameter, when specified, leave `scale` undefined (or set `rate = 1/scale`). Must be strictly positive.
+* `scale`: The [scale](https://en.wikipedia.org/wiki/Gamma_distribution) parameter, when specified, leave `rate` undefined (or set `scale = 1/rate`). Must be strictly positive.
 * `asLog`: if _true_, probabilities/densities p are returned as log(p).
 
 Usage:
@@ -3977,19 +4002,19 @@ The probability function of the Gamma distribution. See [R doc](https://stat.eth
 
 ```typescript
 declare function pgamma(
-  x: number|number[],
+  x: number | number[],
   shape: number,
   rate: number = 1,
-  scale: number = 1/rate, //alternative for rate
+  scale: number = 1 / rate, //alternative for rate
   lowerTail: boolean = true,
   logP: boolean = false
-  ): number|number[];
+): number | number[];
 ```
 
 * `x`: quantiles (scalar or array).
 * `shape`: [shape](https://en.wikipedia.org/wiki/Gamma_distribution) parameter, must be positive.
-* `rate`: The [rate](https://en.wikipedia.org/wiki/Gamma_distribution) parameter, when specified, leave `scale` undefined (or set `rate = 1/scale`).  Must be strictly positive.
-* `scale`: The [scale](https://en.wikipedia.org/wiki/Gamma_distribution) parameter, when specified, leave `rate` undefined (or set `scale = 1/rate`).  Must be strictly positive.
+* `rate`: The [rate](https://en.wikipedia.org/wiki/Gamma_distribution) parameter, when specified, leave `scale` undefined (or set `rate = 1/scale`). Must be strictly positive.
+* `scale`: The [scale](https://en.wikipedia.org/wiki/Gamma_distribution) parameter, when specified, leave `rate` undefined (or set `scale = 1/rate`). Must be strictly positive.
 * `lowerTail`: if TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
 * `logP`: if _true_, probabilities/densities p are as log(p).
 
@@ -4005,7 +4030,6 @@ const seq = libR.R.seq()();
 const precision = libR.R.numberPrecision(9); //restrict to 9 significant digits
 
 const { dgamma, pgamma, qgamma, rgamma } = Gamma();
-
 
 //1.
 const p1 = pgamma(seq(0, 10, 2), 1, 0.5);
@@ -4086,19 +4110,19 @@ The probability function of the Gamma distribution. See [R doc](https://stat.eth
 
 ```typescript
 declare function pgamma(
-  x: number|number[], 
+  x: number | number[],
   shape: number,
   rate: number = 1,
-  scale: number = 1/rate, //alternative for rate
+  scale: number = 1 / rate, //alternative for rate
   lowerTail: boolean = true,
   logP: boolean = false
-  ): number|number[];
+): number | number[];
 ```
 
 * `x`: quantiles (scalar or array).
 * `shape`: [shape](https://en.wikipedia.org/wiki/Gamma_distribution) parameter, must be positive.
-* `rate`: The [rate](https://en.wikipedia.org/wiki/Gamma_distribution) parameter, when specified, leave `scale` undefined (or set `rate = 1/scale`).  Must be strictly positive.
-* `scale`: The [scale](https://en.wikipedia.org/wiki/Gamma_distribution) parameter, when specified, leave `rate` undefined (or set `scale = 1/rate`).  Must be strictly positive.
+* `rate`: The [rate](https://en.wikipedia.org/wiki/Gamma_distribution) parameter, when specified, leave `scale` undefined (or set `rate = 1/scale`). Must be strictly positive.
+* `scale`: The [scale](https://en.wikipedia.org/wiki/Gamma_distribution) parameter, when specified, leave `rate` undefined (or set `scale = 1/rate`). Must be strictly positive.
 * `lowerTail`: if TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
 * `logP`: if _true_, probabilities/densities p are as log(p).
 
@@ -4194,19 +4218,19 @@ The quantile function of the Gamma distribution. See [R doc](https://stat.ethz.c
 
 ```typescript
 declare function pgamma(
-  x: number|number[],
+  x: number | number[],
   shape: number,
   rate: number = 1,
-  scale: number = 1/rate, //alternative for rate
+  scale: number = 1 / rate, //alternative for rate
   lowerTail: boolean = true,
   logP: boolean = false
-  ): number|number[];
+): number | number[];
 ```
 
 * `x`: quantiles (scalar or array).
 * `shape`: [shape](https://en.wikipedia.org/wiki/Gamma_distribution) parameter, must be positive.
-* `rate`: The [rate](https://en.wikipedia.org/wiki/Gamma_distribution) parameter, when specified, leave `scale` undefined (or set `rate = 1/scale`).  Must be strictly positive.
-* `scale`: The [scale](https://en.wikipedia.org/wiki/Gamma_distribution) parameter, when specified, leave `rate` undefined (or set `scale = 1/rate`).  Must be strictly positive.
+* `rate`: The [rate](https://en.wikipedia.org/wiki/Gamma_distribution) parameter, when specified, leave `scale` undefined (or set `rate = 1/scale`). Must be strictly positive.
+* `scale`: The [scale](https://en.wikipedia.org/wiki/Gamma_distribution) parameter, when specified, leave `rate` undefined (or set `scale = 1/rate`). Must be strictly positive.
 * `lowerTail`: if TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
 * `logP`: if _true_, probabilities/densities p are as log(p).
 
@@ -4245,9 +4269,9 @@ precision(q3);
 //[ 0, 2, 4, 6, 8, 10 ]
 
 //4.
-const pp4 = pgamma(seq(0, 10, 2), 7.5, 1, undefined, false );
-const q4 = qgamma( log( pp4 ) , 7.5, 1, undefined, false, true );
-const q4Alt = qgamma( log( pp4 ), 7.5, undefined, 1, false, true); //alternative using 'scale'
+const pp4 = pgamma(seq(0, 10, 2), 7.5, 1, undefined, false);
+const q4 = qgamma(log(pp4), 7.5, 1, undefined, false, true);
+const q4Alt = qgamma(log(pp4), 7.5, undefined, 1, false, true); //alternative using 'scale'
 precision(q4);
 //[ 0, 2, 4, 6, 8, 10 ]
 ```
@@ -4261,24 +4285,24 @@ declare function rgamma(
   n: number,
   shape: number,
   rate: number = 1,
-  scale: number = 1/rate, //alternative for rate
-  ): number|number[];
+  scale: number = 1 / rate //alternative for rate
+): number | number[];
 ```
 
 * `n`: number of deviates generated.
 * `shape`: [shape](https://en.wikipedia.org/wiki/Gamma_distribution) parameter, must be positive.
-* `rate`: The [rate](https://en.wikipedia.org/wiki/Gamma_distribution) parameter, when specified, leave `scale` undefined (or set `rate = 1/scale`).  Must be strictly positive.
-* `scale`: The [scale](https://en.wikipedia.org/wiki/Gamma_distribution) parameter, when specified, leave `rate` undefined (or set `scale = 1/rate`).  Must be strictly positive.
+* `rate`: The [rate](https://en.wikipedia.org/wiki/Gamma_distribution) parameter, when specified, leave `scale` undefined (or set `rate = 1/scale`). Must be strictly positive.
+* `scale`: The [scale](https://en.wikipedia.org/wiki/Gamma_distribution) parameter, when specified, leave `rate` undefined (or set `scale = 1/rate`). Must be strictly positive.
 
 Usage:
 
 ```typescript
 const libR = require('lib-r-math.js');
 const {
-    Gamma,
-    Normal,
-    rng: { MersenneTwister },
-    rng: { normal: { Inversion } }
+  Gamma,
+  Normal,
+  rng: { MersenneTwister },
+  rng: { normal: { Inversion } }
 } = libR;
 
 //some tools
@@ -4369,16 +4393,16 @@ const { dgeom, pgeom, qgeom, rgeom } = customGeometric; // or use "defaultGamma"
 
 The density function of the [Geometric distribution](https://en.wikipedia.org/wiki/Geometric_distribution). See [R doc](https://stat.ethz.ch/R-manual/R-patched/library/stats/html/Geometric.html).
 
-$$ p(x) = p (1-p)^{x} $$
+$$ \large p(x) = p (1-p)^{x} $$
 
 _decl:_
 
 ```typescript
 declare function dgeom(
-  x: number|number[],
+  x: number | number[],
   prob: number,
   asLog: boolean = false
-): number|number[];
+): number | number[];
 ```
 
 * `x`: quantiles (array or scalar).
@@ -4428,11 +4452,11 @@ _decl:_
 
 ```typescript
 declare function pgeom(
-  q: number|number[],
+  q: number | number[],
   prob: number,
   lowerTail: boolean = true,
   logP: boolean = false
-): number|number[];
+): number | number[];
 ```
 
 * `q`: the number of failures before success.
@@ -4489,11 +4513,11 @@ _decl:_
 
 ```typescript
 declare function qgeom(
-  p: number|number[],
+  p: number | number[],
   prob: number,
   lowerTail: boolean = true,
   logP: boolean = false
-): number|number[];
+): number | number[];
 ```
 
 * `p`: probabilities (scalar or array).
@@ -4557,10 +4581,7 @@ Generates random deviates for the [Geometric distribution](https://en.wikipedia.
 _decl_
 
 ```typescript
-declare function rgeom(
-  n: number,
-  prob: number
- ): number|number[];
+declare function rgeom(n: number, prob: number): number | number[];
 ```
 
 * `n`: number of deviates to generate.
@@ -4571,10 +4592,10 @@ Usage:
 ```javascript
 const libR = require('lib-r-math.js');
 const {
-    Geometric,
-    Normal,
-    rng: { MersenneTwister },
-    rng: { normal: { Inversion } }
+  Geometric,
+  Normal,
+  rng: { MersenneTwister },
+  rng: { normal: { Inversion } }
 } = libR;
 
 //some tools
@@ -4629,5 +4650,392 @@ RNGkind("Mersenne-Twister", normal.kind = "Inversion");
 
 See [R doc](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/Hypergeometric.html) and [wiki](https://en.wikipedia.org/wiki/Hypergeometric_distribution).
 
-These functions are properties of an object created by the `Geometric` factory method. The factory method needs as optional argument the result of the factory function [Normal](#normal-distribution).
+These functions are properties of an object created by the `HyperGeometric` factory method. The factory method needs as optional argument an instance of one of the [uniform random PRNG's](#uniform-pseudo-random-number-generators) classes.
+
+Usage:
+
+```javascript
+const libR = require('lib-r-math.js');
+const {
+    HyperGeometric,
+    rng: { MersenneTwister, SuperDuper }
+} = libR;
+
+//some tools
+const log = libR.R.arrayrify(Math.log);
+const seq = libR.R.seq()();
+const precision = libR.R.numberPrecision(9); //restrict to 9 significant digits
+
+//init PRNG
+const sd = new SuperDuper(1234);
+const hyperG = HyperGeometric(sd);
+
+//or use default  (uses MersenneTwister)
+const default = HyperGeometric();
+
+const { dhyper, phyper, qhyper, rhyper } = default;
+```
+
+#### `dhyper`
+
+The density function of the Hypergeometric distribution. See [R doc](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/Hypergeometric.html) and [wiki](https://en.wikipedia.org/wiki/Hypergeometric_distribution).
+
+$$ \large p(X = x) = \frac{choose(m, x) choose(n, k-x)}{choose(m+n, k)} $$
+
+_decl:_
+
+```typescript
+declare function dhyper(
+  x: number | number[],
+  m: number,
+  n: number,
+  k: number,
+  aslog: boolean = false
+): number | number[];
+```
+
+Where:
+
+* `x`: is the number of observed successes.
+* `m`: is the number of success states in the population
+* `n`: is the number of failure states in the population
+* `k`: is the number of draws from the population (n+m) sample.
+
+Usage:
+
+```javascript
+const libR = require('lib-r-math.js');
+const { HyperGeometric } = libR;
+
+//some tools
+const log = libR.R.arrayrify(Math.log);
+const seq = libR.R.seq()();
+const precision = libR.R.numberPrecision(9); //restrict to 9 significant digits
+
+const { dhyper, phyper, qhyper, rhyper } = HyperGeometric();
+
+//1.
+// m = 3, n = 3, m+n=6 ,k=5 (≤ m+n).
+const d1 = dhyper(
+  seq(0, 4), //success count, number of white balls drawn
+  5, //population white balls
+  3, //population red balls
+  5, //total balls drawn from (5+3)
+  false
+);
+precision(d1);
+//[ 0, 0, 0.178571429, 0.535714286, 0.267857143 ]
+
+//2.
+// m = 3, n = 4, m+n = 7, k=7 (≤ m+n).
+const d2 = dhyper(
+  seq(0, 4), //success count, number of white
+  3, //population white balls
+  4, //population red balls
+  7 //total balls drawn 7 ≤ (4+3), all balls are drawn
+);
+precision(d2);
+//[ 0, 0, 0, 1, 0 ]
+
+//3.
+// m = 3, n = 4, m+n = 7, k=5 (≤ m+n).
+const d3 = dhyper(
+  seq(0, 3), //success count, number of white balls drawn, must be ≤ 3
+  3, //population white balls
+  4, //population red balls
+  5 //total balls drawn, must be < (4+3)
+);
+precision(d3);
+//[ 0, 0.142857143, 0.571428571, 0.285714286 ]
+
+//4.
+// m = 3, = 9, m+n = 12, k = 5 (≤ m+n)
+const d4 = dhyper(
+  seq(0, 3), //success count, number of white balls drawn, must be ≤ 3
+  3, //population white balls
+  9, //population red balls
+  5 //total balls drawn, must be < (4+3)
+);
+precision(d4);
+//[ 0.159090909, 0.477272727, 0.318181818, 0.0454545455 ]
+```
+
+_in R Console_
+
+```R
+#1
+> dhyper( seq(0, 4), 5, 3, 5, FALSE );
+[1] 0.0000000 0.0000000 0.1785714 0.5357143 0.2678571
+
+#2
+ > dhyper( seq(0, 4), 3, 4, 7 );
+[1] 0 0 0 1 0
+
+#3
+> dhyper( seq(0, 3), 3, 4, 5);
+[1] 0.0000000 0.1428571 0.5714286 0.2857143
+
+#4
+> dhyper( seq(0, 3), # success count, number of white balls drawn, must be ≤ 3
+    3, #population white balls
+    9, #population red balls
+    5 #total balls drawn, must be < (4+3)
+);
+[1] 0.15909091 0.47727273 0.31818182 0.04545455
+```
+
+#### `phyper`
+
+The probablity function of the Hypergeometric distribution. See [R doc](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/Hypergeometric.html) and [wiki](https://en.wikipedia.org/wiki/Hypergeometric_distribution).
+
+_decl_
+
+```typescript
+declare function phyper(
+  q: number | number[],
+  m: number,
+  n: number,
+  k: number,
+  lowerTail: boolean = true,
+  logP: boolean = false
+): number | number[];
+```
+
+* `q`: is the number of observed successes.
+* `m`: is the number of success states in the population
+* `n`: is the number of failure states in the population
+* `k`: is the number of draws from the population (n+m) sample.
+* `lowerTail`: if TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
+* `logP`: if TRUE, probabilities p are given as log(p).
+
+Usage:
+
+```javascript
+const libR = require('lib-r-math.js');
+const { HyperGeometric } = libR;
+
+//some tools
+const log = libR.R.arrayrify(Math.log);
+const seq = libR.R.seq()();
+const precision = libR.R.numberPrecision(9); //restrict to 9 significant digits
+
+const { dhyper, phyper, qhyper, rhyper } = HyperGeometric();
+
+//1. m=5, n=3, m+n=6 ,k=5 (≤ m+n).
+const p1 = phyper(
+    seq(2, 5), //success count, number of white balls drawn
+    5, //population white balls
+    3, //population red balls
+    5 //total balls drawn from (5+3)
+);
+precision(p1);
+//[ 0.178571429, 0.714285714, 0.982142857, 1 ]
+
+//2. m=9, n=18, m+n=27 ,k=9 (≤ m+n).
+const p2 = phyper(
+    seq(2, 6), //success count, number of white balls drawn
+    9, //population white balls
+    18, //population red balls
+    9, //total balls drawn from (5+3)
+    false
+);
+precision(p2);
+//[ 0.66115526, 0.328440469, 0.0980994597, 0.0158348135, 0.00120998757 ]
+
+//3. m=9, n=18, m+n=27 ,k=9 (≤ m+n).
+const p3 = phyper(
+    seq(2, 6), //success count, number of white balls drawn
+    9, //population white balls
+    18, //population red balls
+    6, //total balls drawn (from white add red)
+    false,
+    true
+);
+precision(p3);
+//[ -1.1886521, -2.616312, -4.83512721, -8.16733172, -Infinity ]
+```
+
+_Equivalent in R Console_
+
+```R
+#1
+> phyper( seq(2, 5), 5, 3, 5 );
+[1] 0.1785714 0.7142857 0.9821429 1.0000000
+
+#2
+> phyper( seq(2, 6), 9, 18, 9, FALSE);
+[1] 0.661155260 0.328440469 0.098099460 0.015834814 0.001209988
+
+#3
+> phyper( seq(2, 6), 9, 18, 6, FALSE, TRUE);
+[1] -1.188652 -2.616312 -4.835127 -8.167332      -Inf
+```
+
+#### `qhyper`
+
+The probablity function of the Hypergeometric distribution. See [R doc](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/Hypergeometric.html) and [wiki](https://en.wikipedia.org/wiki/Hypergeometric_distribution).
+
+_decl_
+
+```typescript
+declare function qhyper(
+  p: number | number[],
+  m: number,
+  n: number,
+  k: number,
+  lowerTail: boolean = true,
+  logP: boolean = false
+): number | number[];
+```
+
+* `p`: is probability of observed successes.
+* `m`: is the number of success states in the population
+* `n`: is the number of failure states in the population
+* `k`: is the number of draws from the population (n+m) sample.
+* `lowerTail`: if TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
+* `logP`: if TRUE, probabilities p are given as log(p).
+
+Usage:
+
+```javascript
+const libR = require('lib-r-math.js');
+const { HyperGeometric } = libR;
+
+//some tools
+const log = libR.R.arrayrify(Math.log);
+const seq = libR.R.seq()();
+const precision = libR.R.numberPrecision(9); //restrict to 9 significant digits
+
+const { dhyper, phyper, qhyper, rhyper } = HyperGeometric();
+
+//1
+const q1 = qhyper(
+    seq(0, 1, 0.2), //probabilities of drawing white balls
+    5, //population white balls
+    2, //population red balls
+    3 //total balls drawn from (5+2)
+);
+precision(q1);
+//[ 1, 2, 2, 2, 3, 3 ]
+
+//2 there is a bug in R: NaN should be '3'.
+// It is corrected in qhyper
+const q2 = qhyper(
+    log(seq(0, 1, 0.2)), //probabilities of drawing white balls
+    5, //population white balls
+    2, //population red balls
+    3, //total balls drawn from (5+2)
+    false,
+    true
+);
+precision(q2);
+//[ 3, 3, 2, 2, 2, 1 ]
+
+//3 m=50, n=20, n+m=70, k=6 (≤ m+n)
+const q3 = qhyper(
+    seq(0, 1, 0.2), //probabilities of drawing white balls
+    50, // population with white balls
+    20, // population with red balls
+    6 // total picks
+);
+precision(q3);
+//[ 0, 3, 4, 5, 5, 6 ]
+```
+
+_Equivalent in R Console_
+
+```R
+#1.
+>qhyper( seq(0, 1, 0.2), 5,2,3 );
+[1] 1 2 2 2 3 3
+
+#2. There is a bug in R: 'NaN' should be '3'
+>qhyper( log(seq(0, 1, 0.2)), 5, 2, 3, FALSE, TRUE);
+[1] NaN   3   2   2   2   1
+
+#3
+>qhyper( seq(0, 1, 0.2),50,20,6 );
+[1] 0 3 4 5 5 6
+```
+
+#### `rhyper`
+
+Generates random deviates for the Hypergeometric distribution. See [R doc](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/Hypergeometric.html) and [wiki](https://en.wikipedia.org/wiki/Hypergeometric_distribution).
+
+_decl_
+
+```typescript
+declare function rhyper(
+  N: number,
+  m: number,
+  n: number,
+  k: number
+): number | number[];
+```
+
+* `N`: number of deviates to generate.
+* `m`: is the number of success states in the population
+* `n`: is the number of failure states in the population
+* `k`: is the number of draws from the total population (n+m) sample.
+
+Usage:
+
+```javascript
+const libR = require('lib-r-math.js');
+const {
+    HyperGeometric,
+    rng: { MersenneTwister }
+} = libR;
+
+//some tools
+const log = libR.R.arrayrify(Math.log);
+const seq = libR.R.seq()();
+const precision = libR.R.numberPrecision(9); //restrict to 9 significant digits
+
+//init PRNG
+const mt = new MersenneTwister(1234);
+const hyperG = HyperGeometric(mt);
+
+const { dhyper, phyper, qhyper, rhyper } = hyperG;
+
+//1. N=5, m=4, n=3, (m+n)=7,  k=5 (≤ m+n)
+// k will pick at least 2 (from m) and at most all 4 (from m).
+mt.init(1234);
+rhyper(5, 4, 3, 5);
+//[ 2, 3, 3, 3, 4 ]
+
+//2. N=5, m=40, n=19, (m+n)=59, k=13 (≤ m+n)
+mt.init(9876);
+rhyper(5, 40, 19, 13);
+//[ 7, 9, 11, 9, 9 ]
+
+//3. N=5, m=4, n=17, (m+n)=23, k=3
+mt.init(5688);
+rhyper(5, 40, 99, 33);
+//[ 12, 10, 10, 7, 12 ]
+```
+
+_Equivalent in R Console_
+
+```R
+RNGkind("Mersenne-Twister", normal.kind="Inversion")
+
+#1
+>set.seed(1234);
+>rhyper(5, 4, 3, 5);
+[1] 2 3 3 3 4
+
+#2
+>set.seed(9876);
+>rhyper(5, 40, 19, 13);
+[1]  7  9 11  9  9
+
+#3
+> set.seed(5688);
+> rhyper(5, 40, 99, 33);
+[1] 12 10 10  7 12
+```
+
+### Logistic distribution
+
 
