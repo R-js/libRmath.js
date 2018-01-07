@@ -44,7 +44,7 @@ npm install --save lib-r-math.js
   * [F (non-central) distribution](#f-non-central-distribution)
   * [Gamma distribution](#gamma-distribution)
   * [Geometric distribution](#geometric-distribution)
-  * [Hypergeometric distribution](#hypergeometric-distribution)
+  * [Hypergeometric distr,ibution](#hypergeometric-distribution)
   * [Logistic distribution](#logistic-distribution)
   * [LogNormal distribution](#lognormal-distribution)
   * [Multinomial distribution](#multinomial-distribution)
@@ -4104,114 +4104,6 @@ pgamma(seq(0, 10, 2), 7.5, rate = 7.5, lower.tail = FALSE , log.p = TRUE );
 [1]  0.00000000 -0.00226522 -0.07927840 -0.38709136 -0.96219944 -1.76065222
 ```
 
-#### `pgamma`
-
-The probability function of the Gamma distribution. See [R doc](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/GammaDist.html).
-
-```typescript
-declare function pgamma(
-  x: number | number[],
-  shape: number,
-  rate: number = 1,
-  scale: number = 1 / rate, //alternative for rate
-  lowerTail: boolean = true,
-  logP: boolean = false
-): number | number[];
-```
-
-* `x`: quantiles (scalar or array).
-* `shape`: [shape](https://en.wikipedia.org/wiki/Gamma_distribution) parameter, must be positive.
-* `rate`: The [rate](https://en.wikipedia.org/wiki/Gamma_distribution) parameter, when specified, leave `scale` undefined (or set `rate = 1/scale`). Must be strictly positive.
-* `scale`: The [scale](https://en.wikipedia.org/wiki/Gamma_distribution) parameter, when specified, leave `rate` undefined (or set `scale = 1/rate`). Must be strictly positive.
-* `lowerTail`: if TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
-* `logP`: if _true_, probabilities/densities p are as log(p).
-
-Usage:
-
-```javascript
-const libR = require('lib-r-math.js');
-const { Gamma } = libR;
-
-//some tools
-const log = libR.R.arrayrify(Math.log);
-const seq = libR.R.seq()();
-const precision = libR.R.numberPrecision(9); //restrict to 9 significant digits
-
-const { dgamma, pgamma, qgamma, rgamma } = Gamma();
-
-//1.
-const p1 = pgamma(seq(0, 10, 2), 1, 0.5);
-const p1Alt = pgamma(seq(0, 10, 2), 1, undefined, 2);
-precision(p1);
-/*
-[ 0,
-  0.632120559,
-  0.864664717,
-  0.950212932,
-  0.981684361,
-  0.993262053 ]
-*/
-
-//2.
-const p2 = pgamma(seq(0, 10, 2), 2, 0.5);
-const p2Alt = pgamma(seq(0, 10, 2), 2, undefined, 2);
-precision(p2);
-/*
-[ 0,
-  0.264241118,
-  0.59399415,
-  0.800851727,
-  0.908421806,
-  0.959572318 ]
-*/
-
-//3.
-const p3 = pgamma(seq(0, 10, 2), 5, 1, undefined, false, true);
-const p3Alt = pgamma(seq(0, 10, 2), 5, undefined, 1, false, true);
-precision(p3);
-/*[ 
-  0,
-  -0.0540898509,
-  -0.4638833,
-  -1.25506787,
-  -2.30626786,
-  -3.53178381 ]
-*/
-
-//4.
-const p4 = pgamma(seq(0, 10, 2), 7.5, 1, undefined, false, true);
-const p4Alt = pgamma(seq(0, 10, 2), 7.5, undefined, 1, false, true);
-precision(p4);
-/*
-[ 0,
-  -0.00226521952,
-  -0.0792784046,
-  -0.387091358,
-  -0.96219944,
-  -1.76065222 ]
-*/
-```
-
-_in R Console_
-
-```R
-#1
-> pgamma(seq(0,10,2), 1, rate = 0.5);
-[1] 0.0000000 0.6321206 0.8646647 0.9502129 0.9816844 0.9932621
-
-#2
-> pgamma(seq(0, 10, 2), 2, rate = 0.5);
-[1] 0.0000000 0.2642411 0.5939942 0.8008517 0.9084218 0.9595723
-
-#3
-> pgamma(seq(0, 10, 2), 5, rate=1, lower.tail = FALSE, log.p = TRUE);
-[1]  0.00000000 -0.05408985 -0.46388330 -1.25506787 -2.30626786 -3.53178381
-
-#4
-pgamma(seq(0, 10, 2), 7.5, rate = 7.5, lower.tail = FALSE , log.p = TRUE );
-[1]  0.00000000 -0.00226522 -0.07927840 -0.38709136 -0.96219944 -1.76065222
-```
-
 #### `qgamma`
 
 The quantile function of the Gamma distribution. See [R doc](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/GammaDist.html).
@@ -4274,6 +4166,30 @@ const q4 = qgamma(log(pp4), 7.5, 1, undefined, false, true);
 const q4Alt = qgamma(log(pp4), 7.5, undefined, 1, false, true); //alternative using 'scale'
 precision(q4);
 //[ 0, 2, 4, 6, 8, 10 ]
+```
+
+_Equivalent in R_
+
+```R
+#1.
+> pp1 = pgamma(seq(0, 10, 2), 1, 0.5)
+> qgamma(pp1, 1, 0.5)
+[1]  0  2  4  6  8 10
+
+#2.
+> pp2 = pgamma(seq(0, 10, 2), 2, 0.5);
+> qgamma(pp2, 2, 0.5);
+[1]  0  2  4  6  8 10
+
+#3.
+> pp3 = pgamma(seq(0, 10, 2), 5, 1, lower.tail= FALSE, log.p=TRUE);
+>  qgamma(pp3, 5, scale= 1, lower.tail=FALSE, log.p=TRUE);
+[1]  0  2  4  6  8 10
+
+#4
+>  pp4 = pgamma(seq(0, 10, 2), 7.5, 1, lower.tail=FALSE);
+>  qgamma(log(pp4), 7.5, 1, lower.tail=FALSE , log.p=TRUE);
+[1]  0  2  4  6  8 10
 ```
 
 #### `rgamma`
