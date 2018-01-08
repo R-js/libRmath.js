@@ -39,10 +39,10 @@ const printer = debug('plnorm');
 
 export function plnorm<T>(
   x: T,
-  meanlog: number,
-  sdlog: number,
-  lower_tail: boolean,
-  log_p: boolean
+  meanlog: number = 0,
+  sdlog: number = 1,
+  lower_tail: boolean = true,
+  log_p: boolean = false
 ): T {
   
   return forEach(x)(fx => {
@@ -54,5 +54,5 @@ export function plnorm<T>(
     if (fx > 0) return pnorm(log(fx), meanlog, sdlog, lower_tail, log_p);
     return R_DT_0(lower_tail, log_p);
   }) as any;
-  
+
 }

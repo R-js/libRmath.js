@@ -42,12 +42,12 @@ const sequence = seq()();
 
 export function rlnorm(
   N: number,
-  meanlog: number,
-  sdlog: number,
+  meanlog: number = 0,
+  sdlog: number = 1,
   norm: INormal
 ): number | number[] {
   if (ISNAN(meanlog) || !R_FINITE(sdlog) || sdlog < 0) {
     return forEach(sequence(N))(() => ML_ERR_return_NAN(printer));
   }
-  return exp(norm.rnorm(N, meanlog, sdlog) as number);
+  return exp(norm.rnorm(N, meanlog, sdlog));
 }

@@ -44,9 +44,9 @@ npm install --save lib-r-math.js
   * [F (non-central) distribution](#f-non-central-distribution)
   * [Gamma distribution](#gamma-distribution)
   * [Geometric distribution](#geometric-distribution)
-  * [Hypergeometric distr,ibution](#hypergeometric-distribution)
+  * [Hypergeometric distribution](#hypergeometric-distribution)
   * [Logistic distribution](#logistic-distribution)
-  * [LogNormal distribution](#lognormal-distribution)
+  * [Log Normal distribution](#log-normal-distribution)
   * [Multinomial distribution](#multinomial-distribution)
   * [Poisson distribution](#poisson-distribution)
   * [Wilcoxon signed rank statistic distribution](#wilcoxon-signed-rank-statistic-distribution)
@@ -4702,7 +4702,7 @@ _in R Console_
 
 #### `phyper`
 
-The probablity function of the Hypergeometric distribution. See [R doc](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/Hypergeometric.html) and [wiki](https://en.wikipedia.org/wiki/Hypergeometric_distribution).
+The distribution function of the Hypergeometric distribution. See [R doc](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/Hypergeometric.html) and [wiki](https://en.wikipedia.org/wiki/Hypergeometric_distribution).
 
 _decl_
 
@@ -4789,7 +4789,7 @@ _Equivalent in R Console_
 
 #### `qhyper`
 
-The probablity function of the Hypergeometric distribution. See [R doc](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/Hypergeometric.html) and [wiki](https://en.wikipedia.org/wiki/Hypergeometric_distribution).
+The quantile function of the Hypergeometric distribution. See [R doc](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/Hypergeometric.html) and [wiki](https://en.wikipedia.org/wiki/Hypergeometric_distribution).
 
 _decl_
 
@@ -5244,11 +5244,11 @@ Generates random deviates for the [Logistic distribution](https://en.wikipedia.o
 _decl_
 
 ```typescript
-declare  function rlogis(
+declare function rlogis(
   N: number,
   location: number = 0,
   scale: number = 1
-): number | number[]
+): number | number[];
 ```
 
 * `N`: number of random deviates to generate.
@@ -5300,4 +5300,378 @@ precision(r3);
 #3
 > rlogis(5, -9, 4)
 [1]  10.3948377 -14.9312628  -8.1271896 -14.0656700  -0.6090719
+```
+
+### Log Normal distribution
+
+See [R doc](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/Lognormal.html).
+
+from [wiki](https://en.wikipedia.org/wiki/Log-normal_distribution):
+
+> _In probability theory, a log-normal (or lognormal) distribution is a continuous probability distribution of a random variable whose logarithm is normally distributed. Thus, if the random variable X is log-normally distributed, then Y = ln(X) has a normal distribution. Likewise, if Y has a normal distribution, then the exponential function of Y, X = exp(Y), has a log-normal distribution. A random variable which is log-normally distributed takes only positive real values._
+
+`dlnorm, qlnorm, plnorm, rlnorm`
+
+These functions are properties of an object created by the `LogNormal` factory method. The factory method needs the result returned by the [Normal](#normal-distribution) factory method. Various instantiation methods are given as an example.
+
+Usage:
+
+```javascript
+const libR = require('lib-r-math.js');
+const {
+  Normal,
+  LogNormal,
+  rng: { MersenneTwister },
+  rng: { normal: { Inversion } }
+} = libR;
+
+//some tools
+const log = libR.R.arrayrify(Math.log);
+const seq = libR.R.seq()();
+const precision = libR.R.numberPrecision(9); //restrict to 9 significant digits
+
+//explicitly use a PRNG.
+const mt = new MersenneTwister(5321);
+const customL = LogNormal(Normal(new Inversion(mt)));
+
+//or use default  (uses "MersenneTwister" and "Inversion")
+const defaultL = LogNormal();
+//
+const { dlnorm, plnorm, qlnorm, rlnorm } = customL;
+```
+
+#### `dlnorm`
+
+The density function of the [Log Normal distribution](https://en.wikipedia.org/wiki/Log-normal_distribution). See [R doc](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/Lognormal.html).
+
+$$ f(x) = \frac{1}{x} \cdot \frac{1}{\sigma \cdot \sqrt{2 \pi}} exp \left( -\frac{(ln(x) - \mu)^{2}}{2 \cdot \sigma^{2} } \right) $$
+
+_Note:_ deviate `x` has a normal distribution with mean $\mu$ and standard deviation $\sigma$.
+
+```typescript
+declare function dlnorm(
+  x: number | number[],
+  meanLog: number = 0,
+  sdLog: number = 1,
+  asLog: boolean = false
+): number | number[];
+```
+
+* `x`: quantiles, with distribution $x ~ N(\mu, \sigma)$
+* `meanLog`: the mean of the normally distributed `x`
+* `sdLog`: the standard deviation ($\sigma$) of the normal distributed `x`.
+* `asLog`: return the densities as log(p).
+
+Usage:
+
+```javascript
+const libR = require('lib-r-math.js');
+const { LogNormal } = libR;
+
+//some tools
+const log = libR.R.arrayrify(Math.log);
+const seq = libR.R.seq()();
+const precision = libR.R.numberPrecision(9); //restrict to 9 significant digits
+
+// create log normal instance
+const { dlnorm, plnorm, qlnorm, rlnorm } = LogNormal();
+
+//data from 0 to 3, step 0.5
+const x = seq(0, 3, 0.5);
+
+//1.
+const d1 = dlnorm(x, 0, 0.25);
+precision(d1);
+/*[ 
+    0, 0.0683494951, 1.59576912, 0.285553776, 0.0170873738,
+    0.000772680788,0.0000340783543
+]*/
+
+//2.
+const d2 = dlnorm(x, 0, 0.5, true);
+precision(d2);
+/*
+[ -Infinity, -0.4935502, -0.225791353, -0.960060369, -1.87984456,
+  -2.8212595,-3.73830156 
+]
+*/
+
+//3
+const d3 = dlnorm(x, 0, 1);
+precision(d3);
+/*
+[ 
+  0, 0.627496077, 0.39894228, 0.244973652, 0.156874019,
+  0.104871067, 0.0727282561
+]
+*/
+```
+
+_Equivalent in R_
+
+```R
+# prepare
+> x = seq(0,3,0.5)
+> options(scipen=999)
+> options(digits=9)
+
+#1
+> dlnorm(x, 0, 0.25)
+[1] 0.0000000000000 0.0683494950964 1.5957691216057 0.2855537757193
+[5] 0.0170873737741 0.0007726807882 0.0000340783543
+
+#2
+> dlnorm(x, 0, 0.5, TRUE);
+[1]         -Inf -0.493550200 -0.225791353 -0.960060369 -1.879844561
+[6] -2.821259495 -3.738301563
+
+#3
+> dlnorm(x, 0, 1);
+[1] 0.0000000000 0.6274960771 0.3989422804 0.2449736517 0.1568740193
+[6] 0.1048710669 0.0727282561
+```
+
+#### `plnorm`
+
+The distribution function of the [Log Normal distribution](https://en.wikipedia.org/wiki/Log-normal_distribution). See [R doc](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/Lognormal.html).
+
+$$ f(x) = \frac{1}{2} + \frac{1}{2} \cdot erf \left( \frac{(ln(x)-\mu)}{\sigma \cdot \sqrt{2}} \right) $$
+
+_Note:_ deviate `x` has a normal distribution with mean $\mu$ and standard deviation $\sigma$.
+
+```typescript
+declare function plnorm(
+  q: number | number[],
+  meanLog: number = 0,
+  sdLog: number = 1,
+  lowerTail: boolean = true,
+  logP: boolean = false
+): number | number[];
+```
+
+* `q`: quantiles, with distribution $x ~ N(\mu, \sigma)$
+* `meanLog`: the mean of the normally distributed `x`
+* `sdLog`: the standard deviation ($\sigma$) of the normal distributed `x`.
+* `lowerTail`: if TRUE (default), probabilities are P[X <= x], otherwise, P[X > x].
+* `logP`: if TRUE, probabilities p are given as log(p).
+
+Usage:
+
+```javascript
+const libR = require('lib-r-math.js');
+const { LogNormal } = libR;
+
+//some tools
+const log = libR.R.arrayrify(Math.log);
+const seq = libR.R.seq()();
+const precision = libR.R.numberPrecision(9); //restrict to 9 significant digits
+
+// create log normal instance
+const { dlnorm, plnorm, qlnorm, rlnorm } = LogNormal();
+
+//data from 0 to 3, step 0.5
+const x = seq(0, 3, 0.5); //
+
+//1.
+const p1 = plnorm(x, 0, 0.25);
+precision(p1);
+/*[
+  0, 0.0683494951, 1.59576912, 0.285553776,
+  0.0170873738, 0.000772680788, 0.0000340783543 
+  ]*/
+
+//2.
+const p2 = plnorm(x, 0, 0.5, true);
+precision(p2);
+/*
+[
+  0, 0.082828519, 0.5, 0.791297127,
+  0.917171481, 0.966567582, 0.985997794 
+]*/
+
+//3
+const p3 = plnorm(x, 0, 1);
+precision(p3);
+/*[
+  1, 0.244108596, 0.5, 0.657432169,
+  0.755891404, 0.820242786, 0.864031392
+]*/
+```
+
+_Equivalent in R_
+
+```R
+# prepare
+> x = seq(0,3,0.5)
+> options(scipen=999)
+> options(digits=9)
+
+#1
+> plnorm(x, 0, 0.25);
+[1] 0.00000000000 0.00278061786 0.50000000000 0.94758338236 0.99721938214
+[6] 0.99987640941 0.99999444730
+
+#2
+> plnorm(x, 0, 0.5, TRUE);
+[1] 0.000000000 0.082828519 0.500000000 0.791297127 0.917171481 0.966567582
+[7] 0.985997794
+
+#3
+> plnorm(x, 0, 1);
+[1] 0.000000000 0.244108596 0.500000000 0.657432169 0.755891404 0.820242786
+[7] 0.864031392
+```
+
+#### `qlnorm`
+
+The quantile function of the [Log Normal distribution](https://en.wikipedia.org/wiki/Log-normal_distribution). See [R doc](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/Lognormal.html).
+
+```typescript
+declare function qlnorm(
+  p: number | number[],
+  meanLog: number = 0,
+  sdLog: number = 1,
+  lowerTail: boolean = true,
+  logP: boolean = false
+): number | number[];
+```
+
+* `p`: probabilities.
+* `meanLog`: the mean of the normally distributed `x`
+* `sdLog`: the standard deviation ($\sigma$) of the normal distributed `x`.
+* `lowerTail`: if TRUE (default), probabilities are P[X <= x], otherwise, P[X > x].
+* `logP`: if TRUE, probabilities p are given as log(p).
+
+Usage:
+
+```javascript
+const libR = require('lib-r-math.js');
+const { LogNormal } = libR;
+
+//some tools
+const log = libR.R.arrayrify(Math.log);
+const seq = libR.R.seq()();
+const precision = libR.R.numberPrecision(9); //restrict to 9 significant digits
+
+// create log normal instance
+const { dlnorm, plnorm, qlnorm, rlnorm } = LogNormal();
+
+//data from 0 to 3, step 0.5
+const x = seq(0, 3, 0.5);
+
+//1.
+const pp1 = plnorm(x, 0, 0.25);
+const q1 = qlnorm(pp1, 0, 0.25);
+precision(q1);
+// [ 0, 0.5, 1, 1.5, 2, 2.5, 3]
+
+//2.
+const pp2 = plnorm(x, 2, 0.5, false, true);
+const q2 = qlnorm(pp2, 2, 0.5, false, true);
+precision(q2);
+//[ 0, 0.5, 1, 1.5, 2, 2.5, 3 ]
+
+//3. //defaults mu=0, sigma =1.
+const pp3 = plnorm(x);
+const q3 = qlnorm(pp3);
+precision(q3);
+//[ 0, 0.5, 1, 1.5, 2, 2.5, 3 ]
+```
+
+_Equivalent in R_
+
+```R
+# prepare
+> x = seq(0,3,0.5)
+> options(scipen=999)
+> options(digits=9)
+
+#1.
+pp1 = plnorm(x, 0, 0.25);
+qlnorm(pp1, 0, 0.25);
+[1] 0.0 0.5 1.0 1.5 2.0 2.5 3.0
+
+#2.
+pp2 = plnorm(x, 2, 0.5, FALSE, TRUE);
+qlnorm(pp2, 2, 0.5, FALSE, TRUE);
+[1] 0.0 0.5 1.0 1.5 2.0 2.5 3.0
+
+#3. check defaults
+> pp3 = plnorm(x);
+> qlnorm(pp3);
+[1] 0.0 0.5 1.0 1.5 2.0 2.5 3.0
+```
+
+#### `rlnorm`
+
+Generates random deviates from the [Log Normal distribution](https://en.wikipedia.org/wiki/Log-normal_distribution). See [R doc](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/Lognormal.html).
+
+_decl_
+
+```typescript
+declare function rlnorm(
+  n: number,
+  meanlog: number = 0,
+  sdlog: number = 1
+): number | number[];
+```
+
+```javascript
+const libR = require('lib-r-math.js');
+const {
+    Normal,
+    LogNormal,
+    rng: { MersenneTwister },
+    rng: { normal: { Inversion } }
+} = libR;
+
+//some tools
+const precision = libR.R.numberPrecision(9); //restrict to 9 significant digits
+
+//explicitly use a PRNG.
+const mt = new MersenneTwister(0);
+const lNorm = LogNormal(Normal(new Inversion(mt)));
+//
+const { dlnorm, plnorm, qlnorm, rlnorm } = lNorm;
+
+//1
+mt.init(12345);
+const r1 = rlnorm(5);
+precision(r1);
+//[ 1.79594046, 2.03290543, 0.896458467, 0.63540215, 1.83287809 ]
+
+//2
+mt.init(56789);
+const r2 = rlnorm(5, 2, 0.3);
+precision(r2);
+//[ 10.1653549, 7.83173724, 6.60669182, 11.8165548, 6.055864 ]
+
+//3
+mt.init(332211);
+const r3 = rlnorm(5, 2, 3.2);
+precision(r3);
+//[ 1069.70113, 1.5096088, 10.8744975, 0.115348102, 562.383238 ]
+```
+
+_Equivalent in R_
+
+```R
+> options(scipen=999)
+> options(digits=9)
+> RNGkind("Mersenne-Twister", normal.kind="Inversion")
+
+#1
+> set.seed(12345)
+> rlnorm(5)
+[1] 1.795940460 2.032905433 0.896458467 0.635402150 1.832878086
+
+#2
+> set.seed(56789)
+> rlnorm(5,2,0.3)
+[1] 10.16535485  7.83173724  6.60669182 11.81655477  6.05586400
+
+#3
+> set.seed(332211)
+> rlnorm(5,2,3.2)
+[1] 1069.701128375    1.509608802   10.874497520    0.115348102  562.383238202
 ```

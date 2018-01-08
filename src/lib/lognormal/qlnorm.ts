@@ -37,10 +37,10 @@ const { isNaN: ISNAN, POSITIVE_INFINITY: ML_POSINF } = Number;
 
 export function qlnorm<T>(
   pp: T,
-  meanlog: number,
-  sdlog: number,
-  lower_tail: boolean,
-  log_p: boolean
+  meanlog: number = 0,
+  sdlog: number = 1,
+  lower_tail: boolean = true,
+  log_p: boolean = false
 ): T {
   return forEach(pp)(p => {
     if (ISNAN(p) || ISNAN(meanlog) || ISNAN(sdlog)) return p + meanlog + sdlog;

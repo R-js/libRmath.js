@@ -11,7 +11,7 @@ export function LogNormal(norm: INormal = Normal()) {
     dlnorm,
     plnorm,
     qlnorm,
-    rlnorm: (n: number, meanlog: number, sdlog: number): number | number[] =>
+    rlnorm: (n: number, meanlog: number = 0, sdlog: number = 1): number | number[] =>
       rlnorm(n, meanlog, sdlog, norm)
   };
 }
