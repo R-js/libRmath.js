@@ -2,7 +2,7 @@ const { abs, sign } = Math;
 
 export const seq = (adjust = 0) => (adjustMin = adjust) => (
   start: number,
-  end: number,
+  end: number = 1,
   step: number = 1
 ): number[] => {
   
