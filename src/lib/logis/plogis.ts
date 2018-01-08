@@ -30,10 +30,12 @@
 */
 
 import * as debug from 'debug';
-import { ML_ERR_return_NAN, R_P_bounds_Inf_01 } from '~common';
+import { ML_ERR_return_NAN, R_P_bounds_Inf_01 } from '../common/_general';
+import { forEach } from '../r-func';
 
 const { exp, log1p } = Math;
 const { isNaN: ISNAN } = Number;
+
 
 export function Rf_log1pexp(x: number): number {
   if (x <= 18) return log1p(exp(x));
@@ -51,9 +53,9 @@ export function plogis<T>(
   lower_tail: boolean = true,
   log_p: boolean = false
 ): T {
-  const fx: number[] = (Array.isArray(xx) ? xx : [xx]) as any;
 
-  const result = fx.map(x => {
+
+  return forEach(xx)(x => {
     if (ISNAN(x) || ISNAN(location) || ISNAN(scale))
       return x + location + scale;
 
@@ -76,7 +78,6 @@ export function plogis<T>(
     } else {
       return 1 / (1 + exp(lower_tail ? -x : x));
     }
-  });
+  }) as any;
 
-  return (result.length === 1 ? result[0] : result) as any;
 }

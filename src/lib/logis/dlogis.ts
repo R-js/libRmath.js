@@ -24,6 +24,7 @@
  */
 import * as debug from 'debug';
 import { ML_ERR_return_NAN } from '~common';
+import { forEach } from '../r-func';
 
 const { log, exp, abs: fabs } = Math;
 const { isNaN: ISNAN } = Number;
@@ -36,14 +37,11 @@ export function dlogis<T>(
   scale: number = 1,
   give_log: boolean = false
 ): T {
-  const fx: number[] = Array.isArray(xx) ? xx : ([xx] as any);
-
-  const result = fx.map(x => {
+  return forEach(xx)(x => {
     let e: number;
     let f: number;
 
-    if (ISNAN(x) || ISNAN(location) || ISNAN(scale))
-      return x + location + scale;
+    if (ISNAN(x) || ISNAN(location) || ISNAN(scale)) return NaN;
     if (scale <= 0.0) {
       return ML_ERR_return_NAN(printer_dlogis);
     }
@@ -52,7 +50,5 @@ export function dlogis<T>(
     e = exp(-x);
     f = 1.0 + e;
     return give_log ? -(x + log(scale * f * f)) : e / (scale * f * f);
-  });
-
-  return result.length === 1 ? result[0] : (result as any);
+  }) as any;
 }

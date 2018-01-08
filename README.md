@@ -4739,33 +4739,33 @@ const { dhyper, phyper, qhyper, rhyper } = HyperGeometric();
 
 //1. m=5, n=3, m+n=6 ,k=5 (≤ m+n).
 const p1 = phyper(
-    seq(2, 5), //success count, number of white balls drawn
-    5, //population white balls
-    3, //population red balls
-    5 //total balls drawn from (5+3)
+  seq(2, 5), //success count, number of white balls drawn
+  5, //population white balls
+  3, //population red balls
+  5 //total balls drawn from (5+3)
 );
 precision(p1);
 //[ 0.178571429, 0.714285714, 0.982142857, 1 ]
 
 //2. m=9, n=18, m+n=27 ,k=9 (≤ m+n).
 const p2 = phyper(
-    seq(2, 6), //success count, number of white balls drawn
-    9, //population white balls
-    18, //population red balls
-    9, //total balls drawn from (5+3)
-    false
+  seq(2, 6), //success count, number of white balls drawn
+  9, //population white balls
+  18, //population red balls
+  9, //total balls drawn from (5+3)
+  false
 );
 precision(p2);
 //[ 0.66115526, 0.328440469, 0.0980994597, 0.0158348135, 0.00120998757 ]
 
 //3. m=9, n=18, m+n=27 ,k=9 (≤ m+n).
 const p3 = phyper(
-    seq(2, 6), //success count, number of white balls drawn
-    9, //population white balls
-    18, //population red balls
-    6, //total balls drawn (from white add red)
-    false,
-    true
+  seq(2, 6), //success count, number of white balls drawn
+  9, //population white balls
+  18, //population red balls
+  6, //total balls drawn (from white add red)
+  false,
+  true
 );
 precision(p3);
 //[ -1.1886521, -2.616312, -4.83512721, -8.16733172, -Infinity ]
@@ -4826,10 +4826,10 @@ const { dhyper, phyper, qhyper, rhyper } = HyperGeometric();
 
 //1
 const q1 = qhyper(
-    seq(0, 1, 0.2), //probabilities of drawing white balls
-    5, //population white balls
-    2, //population red balls
-    3 //total balls drawn from (5+2)
+  seq(0, 1, 0.2), //probabilities of drawing white balls
+  5, //population white balls
+  2, //population red balls
+  3 //total balls drawn from (5+2)
 );
 precision(q1);
 //[ 1, 2, 2, 2, 3, 3 ]
@@ -4837,22 +4837,22 @@ precision(q1);
 //2 there is a bug in R: NaN should be '3'.
 // It is corrected in qhyper
 const q2 = qhyper(
-    log(seq(0, 1, 0.2)), //probabilities of drawing white balls
-    5, //population white balls
-    2, //population red balls
-    3, //total balls drawn from (5+2)
-    false,
-    true
+  log(seq(0, 1, 0.2)), //probabilities of drawing white balls
+  5, //population white balls
+  2, //population red balls
+  3, //total balls drawn from (5+2)
+  false,
+  true
 );
 precision(q2);
 //[ 3, 3, 2, 2, 2, 1 ]
 
 //3 m=50, n=20, n+m=70, k=6 (≤ m+n)
 const q3 = qhyper(
-    seq(0, 1, 0.2), //probabilities of drawing white balls
-    50, // population with white balls
-    20, // population with red balls
-    6 // total picks
+  seq(0, 1, 0.2), //probabilities of drawing white balls
+  50, // population with white balls
+  20, // population with red balls
+  6 // total picks
 );
 precision(q3);
 //[ 0, 3, 4, 5, 5, 6 ]
@@ -4898,10 +4898,7 @@ Usage:
 
 ```javascript
 const libR = require('lib-r-math.js');
-const {
-    HyperGeometric,
-    rng: { MersenneTwister }
-} = libR;
+const { HyperGeometric, rng: { MersenneTwister } } = libR;
 
 //some tools
 const log = libR.R.arrayrify(Math.log);
@@ -4954,4 +4951,353 @@ RNGkind("Mersenne-Twister", normal.kind="Inversion")
 
 ### Logistic distribution
 
+`dlogis, qlogis, plogis, rlogis`
 
+See [R doc](https://stat.ethz.ch/R-manual/R-patched/library/stats/html/Logistic.html) and [wiki](https://en.wikipedia.org/wiki/Logistic_distribution).
+
+These functions are properties of an object created by the `Logistic` factory method. The factory method needs as optional argument an instance of one of the [uniform random PRNG's](#uniform-pseudo-random-number-generators) classes.
+
+Usage:
+
+```javascript
+const libR = require('lib-r-math.js');
+const { Logistic, rng: { MersenneTwister, SuperDuper } } = libR;
+
+//some tools
+const log = libR.R.arrayrify(Math.log);
+const seq = libR.R.seq()();
+const precision = libR.R.numberPrecision(9); //restrict to 9 significant digits
+
+//init PRNG
+const sd = new SuperDuper(1234);
+const customL = Logistic(sd);
+
+//or use default  (uses MersenneTwister)
+const defaultL = Logistic();
+
+const { dlogis, plogis, qlogis, rlogis } = defaultL;
+```
+
+#### `dlogis`
+
+The density function of the [Logistic distribution](https://en.wikipedia.org/wiki/Logistic_distribution) with `location = m` and `scale = s` has density function.
+
+$$ f(x) = \large \frac{e^{-\frac{x-m}{s}}}{s \left( 1 + e^{-\frac{x-m}{s}} \right)^{2}} $$
+
+See [R doc](https://stat.ethz.ch/R-manual/R-patched/library/stats/html/Logistic.html).
+
+_decl_
+
+```typescript
+declare function dlogis(
+  x: number | number[],
+  location: number = 0,
+  scale: number = 1,
+  asLog: boolean = false
+): number | number[];
+```
+
+* `x`: quantiles (scalar or array).
+* `location`: location parameter of the [Logistic distribution](https://en.wikipedia.org/wiki/Logistic_distribution)
+* `scale`: the scale parameter of the [Logistic distribution](https://en.wikipedia.org/wiki/Logistic_distribution). Strictly positive.
+* `asLog`: if TRUE, probabilities p are given as log(p).
+
+Usage:
+
+```javascript
+const libR = require('lib-r-math.js');
+const { Logistic } = libR;
+
+//some tools
+const log = libR.R.arrayrify(Math.log);
+const seq = libR.R.seq()();
+const precision = libR.R.numberPrecision(9); //restrict to 9 significant digits
+
+const { dlogis, plogis, qlogis, rlogis } = Logistic();
+
+// some quantiles
+const x = [-Infinity, ...seq(-10, 10, 2.5), Infinity];
+
+//1
+const d1 = dlogis(x, 5, 2);
+precision(d1);
+/*[
+  0, 0.000276236536, 0.000961511178, 0.00332402834,
+  0.0112247052, 0.0350518583, 0.0865523935, 0.125,
+  0.0865523935, 0.0350518583, 0 
+]*/
+
+//2
+const d2 = dlogis(x, 0, 2, true);
+precision(d2);
+/*[ -Infinity, -5.70657788, -4.48963811, -3.35092665,
+    -2.44700534, -2.07944154, -2.44700534, -3.35092665,
+    -4.48963811, -5.70657788, -Infinity ]
+*/
+
+//3
+const d3 = dlogis(x, -9, 2);
+precision(d3);
+/*
+[ 0, 0.117501856, 0.108947497, 0.0524967927,
+  0.0179667954, 0.00543311486, 0.00158130846,
+  0.00045511059, 0.000130561049, 0.0000374203128,
+  0 ]
+*/
+```
+
+_Equivalent in R Console_
+
+```R
+> x = c(-Inf, seq(-10,10,2.5), Inf);
+#1
+> dlogis(x, 5, 2);
+ [1] 0.0000000000 0.0002762365 0.0009615112 0.0033240283 0.0112247052
+ [6] 0.0350518583 0.0865523935 0.1250000000 0.0865523935 0.0350518583
+[11] 0.0000000000
+
+#2
+> dlogis(x, 0, 2, TRUE);
+ [1]      -Inf -5.706578 -4.489638 -3.350927 -2.447005 -2.079442 -2.447005
+ [8] -3.350927 -4.489638 -5.706578      -Inf
+
+#3
+> dlogis(x, -5, 2);
+ [1] 0.0000000000 0.0350518583 0.0865523935 0.1250000000 0.0865523935
+ [6] 0.0350518583 0.0112247052 0.0033240283 0.0009615112 0.0002762365
+[11] 0.0000000000
+```
+
+#### `plogis`
+
+The distribution function of the [Logistic distribution](https://en.wikipedia.org/wiki/Logistic_distribution). See [R doc](https://stat.ethz.ch/R-manual/R-patched/library/stats/html/Logistic.html).
+
+_decl_
+
+```typescript
+declare function plogis(
+  q: number | number[],
+  location: number = 0,
+  scale: number = 1,
+  lowerTail: boolean = true,
+  logP: boolean = false
+): number | number[];
+```
+
+* `q`: quantiles (scalar or array).
+* `location`: location parameter of the [Logistic distribution](https://en.wikipedia.org/wiki/Logistic_distribution)
+* `scale`: the scale parameter of the [Logistic distribution](https://en.wikipedia.org/wiki/Logistic_distribution). Strictly positive.
+* `lowerTail`: if TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
+* `logP`: if TRUE, probabilities p are given as log(p).
+
+Usage:
+
+```javascript
+const libR = require('lib-r-math.js');
+const { Logistic } = libR;
+
+//some tools
+const log = libR.R.arrayrify(Math.log);
+const seq = libR.R.seq()();
+const precision = libR.R.numberPrecision(9); //restrict to 9 significant digits
+
+const { dlogis, plogis, qlogis, rlogis } = Logistic();
+
+// some quantiles
+const x = [-Infinity, ...seq(-10, 10, 2.5), Infinity];
+
+//1
+const p1 = plogis(x, 5, 2);
+precision(p1);
+/*
+[ 0, 0.000552778637, 0.00192673466, 0.00669285092,
+  0.0229773699, 0.07585818, 0.222700139, 0.5,
+  0.777299861, 0.92414182, 1 ]
+*/
+
+//2
+const p2 = plogis(x, 0, 2, true, true);
+precision(p2);
+/*
+[ -Infinity, -5.00671535, -3.77324546, -2.57888973,
+  -1.50192908, -0.693147181, -0.251929081, -0.0788897343,
+  -0.0232454644, -0.00671534849, 0 ]
+*/
+
+//3
+const p3 = plogis(x, -9, 2, false);
+precision(p3);
+/*
+[ 1, 0.622459331, 0.320821301, 0.119202922,
+    0.0373268873, 0.0109869426, 0.00317268284,
+    0.000911051194, 0.000261190319, 0.0000748462275,
+    0 ]
+*/
+```
+
+_Equivalent in R Console_
+
+```R
+> x = c(-Inf, seq(-10,10,2.5), Inf);
+
+#1
+>  plogis(x, 5, 2);
+ [1] 0.0000000000 0.0005527786 0.0019267347 0.0066928509 0.0229773699
+ [6] 0.0758581800 0.2227001388 0.5000000000 0.7772998612 0.9241418200
+[11] 1.0000000000
+
+#2
+>  plogis(x, 0, 2, TRUE, TRUE);
+ [1]         -Inf -5.006715348 -3.773245464 -2.578889734 -1.501929081
+ [6] -0.693147181 -0.251929081 -0.078889734 -0.023245464 -0.006715348
+[11]  0.000000000
+
+#3
+ plogis(x, -9, 2, FALSE);
+ [1] 1.000000e+00 6.224593e-01 3.208213e-01 1.192029e-01 3.732689e-02
+ [6] 1.098694e-02 3.172683e-03 9.110512e-04 2.611903e-04 7.484623e-05
+[11] 0.000000e+00
+```
+
+#### `qlogis`
+
+The quantile function of the [Logistic distribution](https://en.wikipedia.org/wiki/Logistic_distribution). See [R doc](https://stat.ethz.ch/R-manual/R-patched/library/stats/html/Logistic.html).
+
+_decl_
+
+```typescript
+declare function qlogis(
+  p: number | number[],
+  location: number = 0,
+  scale: number = 1,
+  lowerTail: boolean = true,
+  logP: boolean = false
+): number | number[];
+```
+
+* `p`: probabilities (scalar or array). 0 ≤ p ≤ 1.
+* `location`: location parameter of the [Logistic distribution](https://en.wikipedia.org/wiki/Logistic_distribution)
+* `scale`: the scale parameter of the [Logistic distribution](https://en.wikipedia.org/wiki/Logistic_distribution). Strictly positive.
+* `lowerTail`: if TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
+* `logP`: if TRUE, probabilities p are given as log(p).
+
+Usage:
+
+```javascript
+const libR = require('lib-r-math.js');
+const { Logistic } = libR;
+
+//some tools
+const log = libR.R.arrayrify(Math.log);
+const seq = libR.R.seq()();
+const precision = libR.R.numberPrecision(9); //restrict to 9 significant digits
+
+const { dlogis, plogis, qlogis, rlogis } = Logistic();
+
+// some quantiles
+const x = [-Infinity, ...seq(-10, 10, 2.5), Infinity];
+
+//1
+const pp1 = plogis(x, 5, 2);
+const q1 = qlogis(pp1, 5, 2);
+precision(q1);
+//[ -Infinity, -10, -7.5, -5, -2.5, 0, 2.5, 5, 7.5, 10, Infinity ]
+
+//2
+const pp2 = plogis(x, 0, 2);
+const q2 = qlogis(log(pp2), 0, 2, true, true);
+precision(q2);
+//[ -Infinity, -10, -7.5, -5, -2.5, 0, 2.5, 5, 7.5, 10, Infinity ]
+
+//3
+const pp3 = plogis(x, -9, 2, false);
+const q3 = qlogis(pp3, -9, 2, false);
+precision(q3);
+//[ -Infinity, -10, -7.5, -5, -2.5, 0, 2.5, 5, 7.5, 10, Infinity ]
+```
+
+_Equivalent in R_
+
+```R
+> x = c(-Inf, seq(-10,10,2.5), Inf);
+
+#1
+> pp1 = plogis(x, 5, 2);
+> qlogis(pp1, 5, 2);
+ [1]  -Inf -10.0  -7.5  -5.0  -2.5   0.0   2.5   5.0   7.5  10.0   Inf
+
+#2
+> pp2 = plogis(x, 0, 2);
+> qlogis(log(pp2), 0, 2, TRUE, TRUE);
+ [1]  -Inf -10.0  -7.5  -5.0  -2.5   0.0   2.5   5.0   7.5  10.0   Inf
+
+#3
+> pp3 = plogis(x, -9, 2, FALSE);
+> qlogis(pp3, -9, 2, FALSE);
+[1]  -Inf -10.0  -7.5  -5.0  -2.5   0.0   2.5   5.0   7.5  10.0   Inf
+```
+
+#### `rlogis`
+
+Generates random deviates for the [Logistic distribution](https://en.wikipedia.org/wiki/Logistic_distribution). See [R doc](https://stat.ethz.ch/R-manual/R-patched/library/stats/html/Logistic.html).
+
+_decl_
+
+```typescript
+declare  function rlogis(
+  N: number,
+  location: number = 0,
+  scale: number = 1
+): number | number[]
+```
+
+* `N`: number of random deviates to generate.
+* `location`: location parameter of the [Logistic distribution](https://en.wikipedia.org/wiki/Logistic_distribution)
+* `scale`: the scale parameter of the [Logistic distribution](https://en.wikipedia.org/wiki/Logistic_distribution). Strictly positive.
+
+Usage:
+
+```javascript
+const libR = require('lib-r-math.js');
+const { Logistic, rng: { MersenneTwister } } = libR;
+
+//some tools
+const log = libR.R.arrayrify(Math.log);
+const seq = libR.R.seq()();
+const precision = libR.R.numberPrecision(9); //restrict to 9 significant digits
+
+//init PRNG
+const mt = new MersenneTwister(5321);
+const { dlogis, plogis, qlogis, rlogis } = Logistic(mt);
+
+//1
+const r1 = rlogis(5, 5, 2);
+precision(r1);
+//[ 7.02446979, 6.84019548, 6.77001963, 4.01530273, 1.67362287 ]
+
+//2
+const r2 = rlogis(5, 0, 0.2);
+precision(r2);
+//[ 0.202398766, 0.25232485, -0.050656448, -0.488473577, 0.170761471 ]
+
+//3
+const r3 = rlogis(5, -9, 4);
+precision(r3);
+//[ 10.3948377, -14.9312628, -8.12718959, -14.06567, -0.609071942 ]
+```
+
+```R
+> RNGkind("Mersenne-Twister", normal.kind="Inversion");
+> set.seed(5321)
+#1
+> rlogis(5, 5, 2)
+[1] 7.024470 6.840195 6.770020 4.015303 1.673623
+
+#2
+> rlogis(5, 0, 0.2)
+[1]  0.20239877  0.25232485 -0.05065645 -0.48847358  0.17076147
+
+#3
+> rlogis(5, -9, 4)
+[1]  10.3948377 -14.9312628  -8.1271896 -14.0656700  -0.6090719
+```

@@ -28,27 +28,30 @@
 
 import * as debug from 'debug';
 
-import { ML_ERR_return_NAN } from '~common';
+import { ML_ERR_return_NAN } from '../common/_general';
+import { forEach, seq } from '../r-func';
 import { IRNG } from '../rng';
 
 const { log } = Math;
 const { isNaN: ISNAN, isFinite: R_FINITE } = Number;
-
+const sequence = seq()();
 const printer_rlogis = debug('rlogis');
 
 export function rlogis(
-  N: number = 1,
+  N: number,
   location: number = 0,
   scale: number = 1,
   rng: IRNG
-): number {
-  if (ISNAN(location) || !R_FINITE(scale)) {
-    return ML_ERR_return_NAN(printer_rlogis);
-  }
+): number | number[] {
+  return forEach(sequence(1, N))(() => {
+    if (ISNAN(location) || !R_FINITE(scale)) {
+      return ML_ERR_return_NAN(printer_rlogis);
+    }
 
-  if (scale === 0 || !R_FINITE(location)) return location;
-  else {
-    let u = rng.unif_rand();
-    return location + scale * log(u / (1 - u));
-  }
+    if (scale === 0 || !R_FINITE(location)) return location;
+    else {
+      let u = rng.unif_rand();
+      return location + scale * log(u / (1 - u));
+    }
+  }) as any;
 }

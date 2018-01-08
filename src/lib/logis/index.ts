@@ -1,13 +1,13 @@
+import { IRNG } from '../rng/irng';
+import { MersenneTwister } from '../rng/mersenne-twister';
 import { dlogis } from './dlogis';
 import { plogis } from './plogis';
 import { qlogis } from './qlogis';
 import { rlogis as _rlogis } from './rlogis';
 
-import { IRNG, rng as _rng } from '../rng';
-
-export function Logistic(rng: IRNG = new _rng.SuperDuper(0)) {
+export function Logistic(rng: IRNG = new MersenneTwister(0)) {
   //
-  function rlogis(N: number = 1, location: number = 0, scale: number = 1) {
+  function rlogis(N: number, location: number = 0, scale: number = 1) {
     return _rlogis(N, location, scale, rng);
   }
 
