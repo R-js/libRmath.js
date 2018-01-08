@@ -14,13 +14,13 @@ export function Poisson(norm: INormal = Normal()) {
       lambda: number = 1,
       lowerTail: boolean = true,
       logP: boolean = false
-    ) => ppois(q, lambda, lowerTail, logP, norm),
+    ) => ppois(q, lambda, lowerTail, logP),
     qpois: (
       p: number | number[],
       lambda: number = 1,
       lowerTail: boolean = true,
       logP: boolean = false
-    ) => qpois(p, lambda, lowerTail, logP, norm),
-    rpois: (n: number = 1, lambda: number = 1) => rpois(n, lambda, norm)
+    ) => qpois(p, lambda, lowerTail, logP),
+    rpois: (n: number, lambda: number = 1) => rpois(n, lambda, norm)
   };
 }

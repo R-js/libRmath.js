@@ -47,7 +47,7 @@ export function ppois<T>(
   lambda: number = 1,
   lowerTail: boolean = true,
   logP: boolean = false,
-  normal: INormal //pass it on to "pgamma"->"pgamma_raw"->"ppois_asymp"->(dpnorm??)->("normal.pnorm")  
+  //normal: INormal //pass it on to "pgamma"->"pgamma_raw"->"ppois_asymp"->(dpnorm??)->("normal.pnorm")  
 ): T {
   const fa: number[] = isArray(_x) ? _x : [_x] as any;
 
@@ -86,7 +86,7 @@ export function do_search(
           lambda,
           /*l._t.*/ true,
           /*log_p*/ false,
-          normal
+         // normal
         )) < p
       )
         return y;
@@ -98,7 +98,7 @@ export function do_search(
     while (true) {
       y = y + incr;
       if (
-        (z.val = ppois(y, lambda, /*l._t.*/ true, /*log_p*/ false, normal)) >= p
+        (z.val = ppois(y, lambda, /*l._t.*/ true, /*log_p*/ false/*, normal*/)) >= p
       )
         return y;
     }

@@ -7,9 +7,9 @@ import {
   rsignrank as _rsignrank
 } from './signrank';
 
-const { SuperDuper } = rng;
+const { MersenneTwister } = rng;
 
-export function SignRank(rng: IRNG = new SuperDuper(0)) {
+export function SignRank(rng: IRNG = new MersenneTwister(0)) {
   function rsignrank(nn: number, n: number) {
     return _rsignrank(nn, n, rng);
   }

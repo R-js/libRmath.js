@@ -36,7 +36,7 @@
 
 import * as debug from 'debug';
 
-import { ML_ERR_return_NAN, R_Q_P01_boundaries } from '~common';
+import { ML_ERR_return_NAN, R_Q_P01_boundaries } from '../common/_general';
 
 const { max: fmax2, sqrt, floor, round: nearbyint } = Math;
 const {
@@ -50,7 +50,7 @@ import { NumberW } from '../common/toms708';
 
 import { ppois } from './ppois';
 
-import { INormal } from '~normal';
+import { qnorm } from '../normal/qnorm';
 
 import { R_DT_qIv } from '~exp-utils';
 
@@ -59,13 +59,12 @@ function do_search(
   z: NumberW,
   p: number,
   lambda: number,
-  incr: number,
-  normal: INormal
+  incr: number
 ): number {
   if (z.val >= p) {
     // search to the left
     while (true) {
-      if (y === 0 || (z.val = ppois(y - incr, lambda, true, false, normal)) < p)
+      if (y === 0 || (z.val = ppois(y - incr, lambda, true, false)) < p)
         return y;
       y = fmax2(0, y - incr);
     }
@@ -74,7 +73,7 @@ function do_search(
 
     while (true) {
       y = y + incr;
-      if ((z.val = ppois(y, lambda, true, false, normal)) >= p) return y;
+      if ((z.val = ppois(y, lambda, true, false)) >= p) return y;
     }
   }
 }
@@ -86,11 +85,11 @@ export function qpois<T>(
   lambda: number = 1,
   lower_tail: boolean = true,
   log_p: boolean = false,
-  normal: INormal
+  //normal: INormal
 ): T {
   const fp: number[] = isArray(p) ? p : ([p] as any);
   const result = fp.map(x => {
-    return _qpois(x, lambda, lower_tail, log_p, normal);
+    return _qpois(x, lambda, lower_tail, log_p/*, normal*/);
   });
   return result.length === 1 ? result[0] : (result as any);
 }
@@ -102,7 +101,7 @@ function _qpois(
   lambda: number,
   lower_tail: boolean,
   log_p: boolean,
-  normal: INormal
+ // normal: INormal
 ): number {
   let mu;
   let sigma;
@@ -139,24 +138,24 @@ function _qpois(
   if (p + 1.01 * DBL_EPSILON >= 1) return ML_POSINF;
 
   /* y := approx.value (Cornish-Fisher expansion) :  */
-  z.val = normal.qnorm(p, 0, 1, /*lower_tail*/ true, /*log_p*/ false);
+  z.val = qnorm(p, 0, 1, /*lower_tail*/ true, /*log_p*/ false);
 
   y = nearbyint(mu + sigma * (z.val + gamma * (z.val * z.val - 1) / 6));
 
-  z.val = ppois(y, lambda, /*lower_tail*/ true, /*log_p*/ false, normal);
+  z.val = ppois(y, lambda, /*lower_tail*/ true, /*log_p*/ false);
 
   /* fuzz to ensure left continuity; 1 - 1e-7 may lose too much : */
   p *= 1 - 64 * DBL_EPSILON;
 
   /* If the mean is not too large a simple search is OK */
-  if (lambda < 1e5) return do_search(y, z, p, lambda, 1, normal);
+  if (lambda < 1e5) return do_search(y, z, p, lambda, 1);
   /* Otherwise be a bit cleverer in the search */
   {
     let incr = floor(y * 0.001);
     let oldincr;
     do {
       oldincr = incr;
-      y = do_search(y, z, p, lambda, incr, normal);
+      y = do_search(y, z, p, lambda, incr);
       incr = fmax2(1, floor(incr / 100));
     } while (oldincr > 1 && incr > lambda * 1e-15);
     return y;

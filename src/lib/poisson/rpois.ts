@@ -40,14 +40,21 @@
 
 import * as debug from 'debug';
 
-import { imax2, imin2, M_1_SQRT_2PI, ML_ERR_return_NAN } from '~common';
+import {
+  imax2,
+  imin2,
+  M_1_SQRT_2PI,
+  ML_ERR_return_NAN
+} from '../common/_general';
 
 import { INormal } from '~normal';
 import { exp_rand } from '../exp/sexp';
+import { forEach, seq } from '../r-func';
 import { fsign } from '../signrank/fsign';
 
 const { trunc, log, abs: fabs, pow, exp, floor, sqrt } = Math;
 const { isFinite: R_FINITE } = Number;
+const sequence = seq()();
 
 const a0 = -0.5;
 const a1 = 0.3333333;
@@ -63,12 +70,11 @@ const one_12 = 0.0833333333333333333;
 const one_24 = 0.0416666666666666667;
 
 export function rpois(
-  n: number = 1,
+  N: number,
   mu: number = 1,
   normal: INormal
 ): number | number[] {
-  const result = new Array(n).fill(0).map(() => _rpois(mu, normal));
-  return result.length === 1 ? result[0] : result;
+  return forEach(sequence(N))(() => _rpois(mu, normal)) as any;
 }
 
 const printer_rpois = debug('_rpois');
