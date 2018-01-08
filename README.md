@@ -5348,6 +5348,8 @@ $$ f(x) = \frac{1}{x} \cdot \frac{1}{\sigma \cdot \sqrt{2 \pi}} exp \left( -\fra
 
 _Note:_ deviate `x` has a normal distribution with mean $\mu$ and standard deviation $\sigma$.
 
+_decl_
+
 ```typescript
 declare function dlnorm(
   x: number | number[],
@@ -5439,6 +5441,8 @@ $$ f(x) = \frac{1}{2} + \frac{1}{2} \cdot erf \left( \frac{(ln(x)-\mu)}{\sigma \
 
 _Note:_ deviate `x` has a normal distribution with mean $\mu$ and standard deviation $\sigma$.
 
+_decl_
+
 ```typescript
 declare function plnorm(
   q: number | number[],
@@ -5525,6 +5529,8 @@ _Equivalent in R_
 #### `qlnorm`
 
 The quantile function of the [Log Normal distribution](https://en.wikipedia.org/wiki/Log-normal_distribution). See [R doc](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/Lognormal.html).
+
+_decl_
 
 ```typescript
 declare function qlnorm(
@@ -5615,6 +5621,8 @@ declare function rlnorm(
   sdlog: number = 1
 ): number | number[];
 ```
+
+Usage:
 
 ```javascript
 const libR = require('lib-r-math.js');
