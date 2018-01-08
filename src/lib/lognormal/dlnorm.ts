@@ -27,31 +27,26 @@
  *    The density of the lognormal distribution.
  */
 
+import * as debug from 'debug';
 import {
   M_1_SQRT_2PI,
   M_LN_SQRT_2PI,
   ML_ERR_return_NAN,
   R_D__0
 } from '../common/_general';
+import { forEach } from '../r-func';
 
-import * as debug from 'debug';
-
-const { isArray } = Array;
-const { isNaN: ISNAN, POSITIVE_INFINITY:ML_POSINF } = Number;
+const { isNaN: ISNAN, POSITIVE_INFINITY: ML_POSINF } = Number;
 const { log, exp } = Math;
-
 const printer = debug('dlnorm');
 
-export function dlnorm(
-  x: number|number[],
+export function dlnorm<T>(
+  x: T,
   meanlog: number,
   sdlog: number,
   give_log: boolean
-): number|number[] {
-
-  let fa: number[] = (() => (isArray(x) && x) || [x])() as any;
-
-  let result = fa.map(fx => {
+): T {
+  return forEach(x)(fx => {
     if (ISNAN(fx) || ISNAN(meanlog) || ISNAN(sdlog)) {
       return fx + meanlog + sdlog;
     }
@@ -70,6 +65,5 @@ export function dlnorm(
       ? -(M_LN_SQRT_2PI + 0.5 * y * y + log(fx * sdlog))
       : M_1_SQRT_2PI * exp(-0.5 * y * y) / (fx * sdlog);
     /* M_1_SQRT_2PI = 1 / sqrt(2 * pi) */
-  });
-  return (result.length === 1 ? result[0] : result) as any;
+  }) as any;
 }

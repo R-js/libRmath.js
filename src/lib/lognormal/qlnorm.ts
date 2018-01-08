@@ -27,30 +27,26 @@
  *    This the lognormal quantile function.
  */
 
-import { R_Q_P01_boundaries } from '~common';
+import { R_Q_P01_boundaries } from '../common/_general';
 
 import { qnorm } from '../normal/qnorm';
+import { forEach } from '../r-func';
 
-const { isArray } = Array;
 const { exp } = Math;
 const { isNaN: ISNAN, POSITIVE_INFINITY: ML_POSINF } = Number;
 
-export function qlnorm(
-  _p: number | number[],
+export function qlnorm<T>(
+  pp: T,
   meanlog: number,
   sdlog: number,
   lower_tail: boolean,
   log_p: boolean
-): number | number[] {
-  let fp: number[] = (() => (isArray(_p) && _p) || [_p])();
-
-  let result = fp.map(p => {
+): T {
+  return forEach(pp)(p => {
     if (ISNAN(p) || ISNAN(meanlog) || ISNAN(sdlog)) return p + meanlog + sdlog;
 
     R_Q_P01_boundaries(lower_tail, log_p, p, 0, ML_POSINF);
 
     return exp(qnorm(p, meanlog, sdlog, lower_tail, log_p));
-  });
-
-  return result.length === 1 ? result[0] : result;
+  }) as any;
 }

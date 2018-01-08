@@ -31,27 +31,23 @@
  *    Random variates from the lognormal distribution.
  */
 import * as debug from 'debug';
+import { ML_ERR_return_NAN } from '../common/_general';
+import { INormal } from '../normal';
+import { arrayrify, forEach, seq } from '../r-func';
 
-import { ML_ERR_return_NAN } from '~common';
-
-import { INormal } from '~normal';
-
-const { exp} = Math;
+const exp = arrayrify(Math.exp);
 const { isNaN: ISNAN, isFinite: R_FINITE } = Number;
-
 const printer = debug('rlnorm');
+const sequence = seq()();
 
 export function rlnorm(
-  n: number = 1,
+  N: number,
   meanlog: number,
   sdlog: number,
-  normal: INormal
-): number|number[] {
-  const result = new Array(n).fill(0).map(() => {
-    if (ISNAN(meanlog) || !R_FINITE(sdlog) || sdlog < 0) {
-      return ML_ERR_return_NAN(printer);
-    }
-    return exp(normal.rnorm(1, meanlog, sdlog) as number);
-  });
-  return result.length === 1 ? result[0] : result;
+  norm: INormal
+): number | number[] {
+  if (ISNAN(meanlog) || !R_FINITE(sdlog) || sdlog < 0) {
+    return forEach(sequence(N))(() => ML_ERR_return_NAN(printer));
+  }
+  return exp(norm.rnorm(N, meanlog, sdlog) as number);
 }

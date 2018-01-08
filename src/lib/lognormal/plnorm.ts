@@ -28,26 +28,24 @@
  */
 
 import * as debug from 'debug';
-import { ML_ERR_return_NAN, R_DT_0 } from '~common';
-
+import { ML_ERR_return_NAN, R_DT_0 } from '../common/_general';
 import { pnorm5 as pnorm } from '../normal/pnorm';
+import { forEach } from '../r-func';
 
-const { isArray } = Array;
 const { isNaN:ISNAN } = Number;
 const { log } = Math;
 
 const printer = debug('plnorm');
 
-export function plnorm(
-  x: number | number[],
+export function plnorm<T>(
+  x: T,
   meanlog: number,
   sdlog: number,
   lower_tail: boolean,
   log_p: boolean
-): number | number[] {
-  let fa: number[] = (() => (isArray(x) && x) || [x])();
-
-  let result = fa.map(fx => {
+): T {
+  
+  return forEach(x)(fx => {
     if (ISNAN(fx) || ISNAN(meanlog) || ISNAN(sdlog))
       return fx + meanlog + sdlog;
 
@@ -55,6 +53,6 @@ export function plnorm(
 
     if (fx > 0) return pnorm(log(fx), meanlog, sdlog, lower_tail, log_p);
     return R_DT_0(lower_tail, log_p);
-  });
-  return result.length === 1 ? result[0] : result;
+  }) as any;
+  
 }
