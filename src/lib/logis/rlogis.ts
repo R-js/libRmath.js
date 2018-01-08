@@ -43,7 +43,7 @@ export function rlogis(
   scale: number = 1,
   rng: IRNG
 ): number | number[] {
-  return forEach(sequence(1, N))(() => {
+  return forEach(sequence(N))(() => {
     if (ISNAN(location) || !R_FINITE(scale)) {
       return ML_ERR_return_NAN(printer_rlogis);
     }
