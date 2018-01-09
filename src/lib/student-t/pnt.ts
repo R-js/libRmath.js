@@ -63,7 +63,7 @@ import {
   ML_ERROR,
   R_DT_0,
   R_DT_1
-} from '~common';
+} from '../common/_general';
 
 import { pt } from './pt';
 
@@ -77,6 +77,8 @@ import { pbeta } from '../beta/pbeta';
 
 import { R_DT_val } from '../common/_general';
 
+import { forEach } from '../r-func';
+
 const printer_pnt = debug('pnt');
 
 export function pnt<T>(
@@ -87,11 +89,8 @@ export function pnt<T>(
   logP: boolean = false,
   normal: INormal
 ): T {
-  const ft: number[] = (Array.isArray(tt) ? tt : [tt]) as any;
 
-  const result = ft.map(t => _pnt(t, df, ncp, lowerTail, logP, normal));
-
-  return (result.length === 1 ? result[0] : result) as any;
+  return forEach(tt)(t => _pnt(t, df, ncp, lowerTail, logP, normal)) as any;
 }
 
 function _pnt(

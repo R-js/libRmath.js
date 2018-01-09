@@ -1,21 +1,11 @@
 import { special } from '../gamma';
-import { arrayrify, forceToArray } from '../r-func';
+import { any, arrayrify, forceToArray, sum } from '../r-func';
 const { isFinite } = Number;
 
 const div = arrayrify((a: number, b: number) => a / b);
 const { lgamma } = special;
 const add = arrayrify((a: number, b: number) => a + b);
 const log = arrayrify(Math.log);
-
-function any<T>(x: T[]) {
-  return function(fn: (v: T, i?: number) => boolean) {
-    return x.find(fn);
-  };
-}
-
-function sum(x: number[]) {
-  return x.reduce((sum, v) => (sum += v), 0);
-}
 
 export interface IdmultinomOptions<T extends number | number[]> {
   x: T;

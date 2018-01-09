@@ -7,8 +7,7 @@ import { INormal, Normal } from '../normal';
 
 export function Poisson(norm: INormal = Normal()) {
   return {
-    dpois: (x: number | number[], lambda: number = 1, logP: boolean = false) =>
-      dpois(x, lambda, logP),
+    dpois,
     ppois: (
       q: number | number[],
       lambda: number = 1,

@@ -50,6 +50,7 @@ import { bd0 } from '../deviance/bd0';
 import { stirlerr } from '../stirling/stirlerror';
 
 import { INormal } from '~normal';
+import { forEach } from '../r-func';
 
 const { log1p, abs: fabs, exp, log, sqrt } = Math;
 const { isNaN: ISNAN, EPSILON: DBL_EPSILON, isFinite: R_FINITE } = Number;
@@ -61,8 +62,8 @@ export function dt<T>(
   giveLog: boolean = false,
   normal: INormal
 ): T {
-  const fx: number[] = (Array.isArray(xx) ? xx : [xx]) as any;
-  const result = fx.map(x => {
+  
+  return forEach(xx)(x => {
     if (ISNAN(x) || ISNAN(n)) {
       return x + n;
     }
@@ -110,7 +111,6 @@ export function dt<T>(
     // else :  if(lrg_x2n) : sqrt(1 + 1/x2n) ='= sqrt(1) = 1
     let I_sqrt_ = lrg_x2n ? sqrt(n) / ax : exp(-l_x2n);
     return exp(t - u) * M_1_SQRT_2PI * I_sqrt_;
-  });
+  }) as any;
 
-  return (result.length === 1 ? result[0] : result) as any;
 }

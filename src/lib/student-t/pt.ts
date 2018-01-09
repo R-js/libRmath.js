@@ -24,6 +24,9 @@
 
 import * as debug from 'debug';
 
+import { INormal } from '~normal';
+import { lbeta } from '../beta/lbeta';
+import { pbeta } from '../beta/pbeta';
 import {
   M_LN2,
   ML_ERR_return_NAN,
@@ -31,12 +34,7 @@ import {
   R_DT_0,
   R_DT_1
 } from '../common/_general';
-
-import { INormal } from '~normal';
-
-import { lbeta } from '../beta/lbeta';
-
-import { pbeta } from '../beta/pbeta';
+import { forEach } from '../r-func';
 
 const { log1p, sqrt, log, abs: fabs, exp } = Math;
 const { isNaN: ISNAN, isFinite: R_FINITE } = Number;
@@ -55,8 +53,7 @@ export function pt<T>(
     
      *	--> ./pnt.c for NON-central
      */
-  const fx: number[] = (Array.isArray(xx) ? xx : [xx]) as any;
-  const result = fx.map(x => {
+  return forEach(xx)(x => {
     let val;
     let nx;
 
@@ -127,6 +124,5 @@ export function pt<T>(
       val /= 2;
       return R_D_Cval(lower_tail, val);
     }
-  });
-  return (result.length === 1 ? result[0] : result) as any;
+  }) as any;
 }

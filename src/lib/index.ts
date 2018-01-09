@@ -41,13 +41,15 @@ export const special = Object.freeze({
 });
 
 import {
+  any,
   arrayrify,
   flatten,
   forceToArray,
   forEach,
   numberPrecision,
   selector,
-  seq
+  seq,
+  sum
 } from './r-func';
 
 export const R = {
@@ -57,5 +59,7 @@ export const R = {
   forEach,
   numberPrecision,
   selector,
-  seq
+  seq,
+  sum,
+  any
 };

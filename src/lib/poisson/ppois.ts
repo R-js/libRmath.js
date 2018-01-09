@@ -29,16 +29,12 @@
 import { ML_ERR_return_NAN, R_DT_0, R_DT_1 } from '~common';
 
 const { isNaN: ISNAN, isFinite: R_FINITE } = Number;
-const { isArray } = Array;
 const { floor, max: fmax2 } = Math;
 
-import { pgamma } from '../gamma/pgamma';
-
-import { NumberW } from '../common/toms708';
-
-import { INormal } from '~normal';
-
 import * as debug from 'debug';
+import { NumberW } from '../common/toms708';
+import { pgamma } from '../gamma/pgamma';
+import { forEach } from '../r-func';
 
 const printer = debug('ppois');
 
@@ -49,9 +45,8 @@ export function ppois<T>(
   logP: boolean = false,
   //normal: INormal //pass it on to "pgamma"->"pgamma_raw"->"ppois_asymp"->(dpnorm??)->("normal.pnorm")  
 ): T {
-  const fa: number[] = isArray(_x) ? _x : [_x] as any;
 
-  const result = fa.map(x => {
+  return forEach(_x)(x => {
     if (ISNAN(x) || ISNAN(lambda)) return x + lambda;
 
     if (lambda < 0) {
@@ -63,9 +58,8 @@ export function ppois<T>(
     x = floor(x + 1e-7);
 
     return pgamma(lambda, x + 1, 1, !lowerTail, logP);
-  });
+  }) as any;
 
-  return result.length === 1 ? result[0] : result as any;
 }
 
 export function do_search(
@@ -74,7 +68,7 @@ export function do_search(
   p: number,
   lambda: number,
   incr: number,
-  normal: INormal
+ // normal: INormal
 ): number {
   if (z.val >= p) {
     /* search to the left */

@@ -38,14 +38,6 @@ import * as debug from 'debug';
 
 import { ML_ERR_return_NAN, R_Q_P01_boundaries } from '../common/_general';
 
-const { max: fmax2, sqrt, floor, round: nearbyint } = Math;
-const {
-  isNaN: ISNAN,
-  EPSILON: DBL_EPSILON,
-  POSITIVE_INFINITY: ML_POSINF,
-  isFinite: R_FINITE
-} = Number;
-
 import { NumberW } from '../common/toms708';
 
 import { ppois } from './ppois';
@@ -53,6 +45,16 @@ import { ppois } from './ppois';
 import { qnorm } from '../normal/qnorm';
 
 import { R_DT_qIv } from '~exp-utils';
+
+import { forEach } from '../r-func';
+
+const { max: fmax2, sqrt, floor, round: nearbyint } = Math;
+const {
+  isNaN: ISNAN,
+  EPSILON: DBL_EPSILON,
+  POSITIVE_INFINITY: ML_POSINF,
+  isFinite: R_FINITE
+} = Number;
 
 function do_search(
   y: number,
@@ -78,20 +80,16 @@ function do_search(
   }
 }
 
-const { isArray } = Array;
-
 export function qpois<T>(
   p: T,
   lambda: number = 1,
   lower_tail: boolean = true,
-  log_p: boolean = false,
+  log_p: boolean = false
   //normal: INormal
 ): T {
-  const fp: number[] = isArray(p) ? p : ([p] as any);
-  const result = fp.map(x => {
-    return _qpois(x, lambda, lower_tail, log_p/*, normal*/);
-  });
-  return result.length === 1 ? result[0] : (result as any);
+  return forEach(p)(x => {
+    return _qpois(x, lambda, lower_tail, log_p /*, normal*/);
+  }) as any;
 }
 
 const printer_qpois = debug('_qpois');
@@ -100,8 +98,8 @@ function _qpois(
   p: number,
   lambda: number,
   lower_tail: boolean,
-  log_p: boolean,
- // normal: INormal
+  log_p: boolean
+  // normal: INormal
 ): number {
   let mu;
   let sigma;

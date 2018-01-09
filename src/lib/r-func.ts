@@ -82,3 +82,13 @@ export function numberPrecision( prec: number= 6){
 
   return arrayrify(convert);
 }
+
+export function any<T>(x: T[]) {
+  return function(fn: (v: T, i?: number) => boolean) {
+    return x.find(fn);
+  };
+}
+
+export function sum(x: number[]) {
+  return x.reduce((sum, v) => (sum += v), 0);
+}

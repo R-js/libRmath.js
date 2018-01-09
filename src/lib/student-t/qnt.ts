@@ -24,16 +24,12 @@
  */
 
 import * as debug from 'debug';
-
 import { ML_ERR_return_NAN, R_Q_P01_boundaries } from '~common';
-
-import { INormal } from '~normal';
-
-import { pnt } from './pnt';
-
-import { qt } from './qt';
-
 import { R_DT_qIv } from '~exp-utils';
+import { INormal } from '~normal';
+import { forEach } from '../r-func';
+import { pnt } from './pnt';
+import { qt } from './qt';
 
 const { abs: fabs, max: fmax2, min: fmin2 } = Math;
 const {
@@ -54,9 +50,7 @@ export function qnt<T>(
   logP: boolean,
   normal: INormal
 ): T {
-  const fp: number[] = (Array.isArray(pp) ? pp : [pp]) as any;
-  const result = fp.map(p => _qnt(p, df, ncp, lowerTail, logP, normal));
-  return (result.length === 1 ? result[0] : result) as any;
+  return forEach(pp)(p => _qnt(p, df, ncp, lowerTail, logP, normal)) as any;
 }
 
 function _qnt(

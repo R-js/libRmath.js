@@ -64,14 +64,11 @@
  *       ==> use a direct log-space summation formula in that case
  */
 import * as debug from 'debug';
-import { 
-  M_LN_SQRT_PI, 
-  ML_ERR_return_NAN, 
-  R_D__0 
-} from '../common/_general';
+import { M_LN_SQRT_PI, ML_ERR_return_NAN, R_D__0 } from '../common/_general';
 
 import { INormal } from '~normal';
 import { lgammafn } from '../gamma/lgamma_fn';
+import { forEach } from '../r-func';
 import { dt } from './dt';
 import { pnt } from './pnt';
 
@@ -86,10 +83,7 @@ export function dnt<T>(
   giveLog: boolean = false,
   normal: INormal
 ): T {
-
-  const fx: number[] = (Array.isArray(xx) ? xx : [xx]) as any;
-  
-  const result = fx.map(x => {
+  return forEach(xx)(x => {
     if (ISNAN(x) || ISNAN(df)) return x + df;
 
     /* If non-positive df then error */
@@ -132,6 +126,5 @@ export function dnt<T>(
       }
     })();
     return giveLog ? u : exp(u);
-  });
-  return (result.length === 1 ? result[0] : result) as any;
+  }) as any;
 }

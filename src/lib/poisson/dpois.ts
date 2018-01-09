@@ -46,18 +46,17 @@ import {
   R_D_exp,
   R_D_fexp,
   R_D_nonint_check
-} from '~common';
+} from '../common/_general';
 
 import { bd0 } from '~deviance';
 import { stirlerr } from '~stirling';
 import { lgammafn } from '../gamma/lgamma_fn';
-
+import { forEach } from '../r-func';
 
 const { round: R_forceint, log, PI } = Math;
 const { isNaN: ISNAN, isFinite: R_FINITE, MIN_VALUE: DBL_MIN } = Number;
 const M_2PI = 2 * PI;
 const printer = debug('dpois');
-const { isArray } = Array;
 
 export function dpois_raw(
   x: number,
@@ -83,9 +82,7 @@ export function dpois(
   give_log: boolean = false
 ): number | number[] {
   
-  const fx: number[] = isArray(_x) ? _x : [_x];
-
-  const result = fx.map(x => {
+  return forEach(_x)(x => {
     if (ISNAN(x) || ISNAN(lambda)) {
       return x + lambda;
     }
@@ -102,6 +99,5 @@ export function dpois(
     }
     x = R_forceint(x);
     return dpois_raw(x, lambda, give_log);
-  });
-  return result.length === 1 ? result[0] : (result as any);
+  }) as any;
 }

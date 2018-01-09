@@ -35,18 +35,16 @@ import * as debug from 'debug';
 import { INormal } from '~normal';
 import { rchisq } from '../chi-2/rchisq';
 import { ML_ERR_return_NAN } from '../common/_general';
+import { forEach, seq } from '../r-func';
 
 const { sqrt } = Math;
 const { isNaN: ISNAN, isFinite: R_FINITE } = Number;
+const sequence = seq()();
 
 const printer = debug('rt');
 
-export function rt(
-  n: number = 1,
-  df: number,
-  normal: INormal
-): number | number[] {
-  const result = new Array(n).fill(0).map(() => {
+export function rt(n: number, df: number, normal: INormal): number | number[] {
+  return forEach(sequence(n))(() => {
     if (ISNAN(df) || df <= 0.0) {
       return ML_ERR_return_NAN(printer);
     }
@@ -59,6 +57,5 @@ export function rt(
       let num = normal.rng.norm_rand();
       return num / sqrt((rchisq(1, df, normal) as number) / df);
     }
-  });
-  return result.length === 1 ? result[0] : result;
+  }) as any;
 }

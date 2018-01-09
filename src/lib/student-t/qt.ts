@@ -60,6 +60,7 @@ import {
 
 import { R_D_LExp, R_DT_qIv } from '~exp-utils';
 import { INormal } from '~normal';
+import { forEach } from '../r-func';
 import { tanpi } from '../trigonometry/cospi';
 import { dt } from './dt';
 import { pt } from './pt';
@@ -96,10 +97,7 @@ export function qt<T>(
   logP: boolean,
   normal: INormal
 ): T {
-  const fp: number[] = (Array.isArray(pp) ? pp : [pp]) as any;
-  const result = fp.map(p => _qt(p, ndf, lowerTail, logP, normal));
-
-  return (result.length === 1 ? result[0] : result) as any;
+  return forEach(pp)(p => _qt(p, ndf, lowerTail, logP, normal)) as any;
 }
 
 function _qt(
