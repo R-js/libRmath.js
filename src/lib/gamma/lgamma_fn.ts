@@ -47,19 +47,11 @@
  *    library.
  */
 
+import { forEach } from '../r-func';
 import { lgammafn_sign } from './lgammafn_sign';
 
-const { isArray } = Array;
-
-
-export function lgammafn<T>(
-    x: T): T {
-
-  const fx: number[] = isArray(x) ? x : [x] as any;
-
-  const result: number[] = fx.map((fx) => {
+export function lgammafn<T>(x: T): T {
+  return forEach(x)(fx => {
     return lgammafn_sign(fx);
-  });
-
-  return result.length === 1 ? result[0] : result as any;
+  }) as any;
 }

@@ -13,7 +13,7 @@ export { Geometric } from './geometric';
 export { HyperGeometric } from './hypergeometric';
 export { Logistic } from './logis';
 export { LogNormal } from './lognormal';
-export { MultiNomial } from './multinom';
+export { MultiNomial, IdmultinomOptions } from './multinom';
 export { Normal } from './normal';
 export { Poisson } from './poisson';
 export { rng, IRNG } from './rng';
