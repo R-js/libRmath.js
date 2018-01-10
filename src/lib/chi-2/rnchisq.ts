@@ -86,7 +86,7 @@ export function rnchisq(
     if (lambda === 0) {
       return df === 0 ? 0 : (rgamma(1, df / 2, 2, normal) as number);
     } else {
-      let r = rpois(1, lambda / 2, normal) as number;
+      let r = rpois(1, lambda / 2, normal.rng) as number;
       if (r > 0) r = rchisq(1, 2 * r, normal) as number;
       if (df > 0) r += rgamma(1, df / 2, 2, normal) as number;
       return r;

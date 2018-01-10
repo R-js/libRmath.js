@@ -5926,8 +5926,285 @@ _Equivalent in R_
 
 ### Poisson distribution
 
-`dlogis, qlogis, plogis, rlogis`
+`dpois, qpois, ppois, rpois`
 
-See [R doc](https://stat.ethz.ch/R-manual/R-patched/library/stats/html/Logistic.html) and [wiki](https://en.wikipedia.org/wiki/Logistic_distribution).
+See [R doc](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/Poisson.html) and [wiki](https://en.wikipedia.org/wiki/Poisson_distribution).
 
-These functions are properties of an object created by the `Logistic` factory method. The factory method needs as optional argument an instance of one of the [uniform random PRNG's](#uniform-pseudo-random-number-generators) classes.
+These functions are properties of an object created by the `Poisson` factory method. The factory method needs as optional argument an instance of one of the [normal random PRNG's](#normal-distributed-random-number-generators) classes.
+
+Usage:
+
+```javascript
+const libR = require('lib-r-math.js');
+const {
+    Poisson,
+    rng: { SuperDuper },
+    rng: { normal: { BoxMuller } }
+} = libR;
+
+//default (uses Inversion and MersenneTwister)
+const defaultP = Poisson();
+
+//explicit use of PRNG
+const sd = new SuperDuper(123);
+const explicitP = Poisson(new BoxMuller(sd));
+
+const { dpois, ppois, qpois, rpois } = explicitP;
+```
+
+#### `dpois`
+
+The `probability mass function` of the [Poisson distribution](https://en.wikipedia.org/wiki/Poisson_distribution). See [R doc](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/Poisson.html).
+
+$$ p(x) = \frac{λ^{x}}{x!} \cdot e^{-λ} $$
+
+_decl_
+
+```typescript
+declare function dpois(
+  x: number | number[],
+  lambda: number,
+  asLog: boolean = false
+): number | number[]
+```
+
+* `x`: quantile(s). Scalar or array.
+* `lamda`: the lambda `λ` parameter from the [Poisson distribution](https://en.wikipedia.org/wiki/Poisson_distribution).
+* `asLog`: if TRUE, probabilities p are given as log(p).
+
+Usage:
+
+```javascript
+const libR = require('lib-r-math.js');
+const { Poisson } = libR;
+
+//some tools
+const seq = libR.R.seq()();
+const precision = libR.R.numberPrecision(9); //restrict to 9 significant digits
+
+const { dpois, ppois, qpois, rpois } = Poisson();
+
+const x = seq(0,10,2);
+
+//1
+const d1 = dpois(x, 1, true);
+precision(d1);
+/*
+[
+  -1, -1.69314718, -4.17805383,
+  -7.57925121, -11.6046029, -16.1044126
+]*/
+
+//2
+const d2 = dpois( x, 4 );
+precision(d2); 
+/*
+[ 0.0183156389,
+  0.146525111,
+  0.195366815,
+  0.104195635,
+  0.0297701813,
+  0.00529247668 ]
+*/
+
+//3
+const d3 = dpois( x, 10 );
+precision(d3);
+/*[
+  0.0000453999298, 0.00226999649,
+  0.0189166374,  0.063055458,
+  0.112599032,  0.125110036
+]*/
+```
+
+_Equivalent in R_
+
+```R
+options(scipen=999)
+options(digits=9)
+x = seq(0,10,2);
+
+#1
+dpois(x, 1, TRUE);
+[1]  -1.000000  -1.693147  -4.178054  -7.579251 -11.604603 -16.104413
+
+#2
+dpois(x, 4);
+[1] 0.018315639 0.146525111 0.195366815 0.104195635 0.029770181 0.005292477
+
+#3
+dpois(x, 10);
+[1] 0.0000453999298 0.0022699964881 0.0189166374010 0.0630554580035
+[5] 0.1125990321490 0.1251100357211
+```
+
+#### ppois 
+
+The cumulative distribution function of the [Poisson distribution](https://en.wikipedia.org/wiki/Poisson_distribution). See [R doc](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/Poisson.html).
+
+_decl_
+
+```typescript
+function ppois(
+  q: number|number[],
+  lambda: number,
+  lowerTail: boolean = true,
+  logP: boolean = false
+): number|number[]
+```
+
+* `q`: quantile(s). A Scalar or array.
+* `lamda`: the lambda `λ` parameter from the [Poisson distribution](https://en.wikipedia.org/wiki/Poisson_distribution).
+* `lowerTail`: if TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
+* `logP`: if TRUE, probabilities p are given as log(p).
+
+Usage:
+
+```javascript
+const libR = require('lib-r-math.js');
+const { Poisson } = libR;
+
+//some tools
+const seq = libR.R.seq()();
+const precision = libR.R.numberPrecision(9); //restrict to 9 significant digits
+
+const { dpois, ppois, qpois, rpois } = Poisson();
+
+const x = seq(0, 10, 2);
+//1
+const p1 = ppois(x, 1, false, true);
+precision(p1);
+/*[
+  -0.458675145,
+  -2.52196826,
+  -5.61033398,
+  -9.39376875,
+  -13.6975475,
+  -18.4159155 ]*/
+
+//2
+const p2 = ppois(x, 4);
+precision(p2);
+/*
+[ 0.0183156389,
+  0.238103306,
+  0.628836935,
+  0.889326022,
+  0.978636566,
+  0.997160234 ]
+*/
+
+//3
+const p3 = ppois(x, 10);
+precision(p3);
+/*[
+  0.0000453999298,
+  0.00276939572,
+  0.0292526881,
+  0.130141421,
+  0.332819679,
+  0.58303975 ]
+*/
+```
+
+_Equivalent in R_
+
+```R
+options(scipen=999)
+options(digits=9)
+x = seq(0,10,2);
+
+#1
+> ppois(x, 1, FALSE, TRUE);
+[1]  -0.458675145  -2.521968260  -5.610333983  -9.393768750 -13.697547451
+[6] -18.415915478
+
+#2
+> ppois(x, 4);
+[1] 0.0183156389 0.2381033056 0.6288369352 0.8893260216 0.9786365655
+[6] 0.9971602339
+
+#3
+> ppois(x, 10);
+[1] 0.0000453999298 0.0027693957155 0.0292526880770 0.1301414208825
+[5] 0.3328196787507 0.5830397501930
+```
+
+#### `qpois`
+
+The quantile function of the [Poisson distribution](https://en.wikipedia.org/wiki/Poisson_distribution). See [R doc](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/Poisson.html).
+
+_decl_
+
+```typescript
+ declare function qpois(
+  p: number|number[] ,
+  lambda: number,
+  lowerTail: boolean = true,
+  logP: boolean = false
+): number|number[];
+```
+
+* `p`: probabilities, scalar or array.
+* `lamda`: the lambda `λ` parameter from the [Poisson distribution](https://en.wikipedia.org/wiki/Poisson_distribution).
+* `lowerTail`: if TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
+* `logP`: if TRUE, probabilities p are given as log(p).
+
+Usage:
+
+```javascript
+const libR = require('lib-r-math.js');
+const { Poisson, R:{ arrayrify } } = libR;
+
+//some tools
+const seq = libR.R.seq()();
+const log = arrayrify(Math.log);
+const precision = libR.R.numberPrecision(9); //restrict to 9 significant digits
+
+const { dpois, ppois, qpois, rpois } = Poisson();
+
+const p = seq(0, 1, 0.2);
+
+//1
+const q1 = qpois( log(p) , 1, false, true);
+precision(q1);
+//[ Infinity, 2, 1, 1, 0, 0 ]
+
+//2
+const q2 = qpois(p, 4);
+precision(q2);
+//[ 0, 2, 3, 4, 6, Infinity ]
+
+//3
+const q3 = qpois(p, 10);
+precision(q3);
+//[ 0, 7, 9, 11, 13, Infinity ]
+```
+
+_Equivalent in R_
+
+```R
+options(scipen=999)
+options(digits=9)
+p = seq(0,10,2);
+
+#1
+> qpois( log(p) , 1, FALSE, TRUE)
+[1] Inf   2   1   1   0   0
+
+#2
+> qpois(p, 4);
+[1]   0   2   3   4   6 Inf
+
+#3
+> qpois(p, 10);
+[1]   0   7   9  11  13 Inf
+```
+
+### rpois
+
+Generate random deviates for the [Poisson distribution](https://en.wikipedia.org/wiki/Poisson_distribution). See [R doc](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/Poisson.html).
+
+_decl_
+
+

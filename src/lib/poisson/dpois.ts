@@ -99,5 +99,5 @@ export function dpois(
     }
     x = R_forceint(x);
     return dpois_raw(x, lambda, give_log);
-  }) as any;
+  });
 }

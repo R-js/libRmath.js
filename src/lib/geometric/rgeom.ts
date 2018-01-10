@@ -66,7 +66,7 @@ export function rgeom(
     return rpois(
       1,
       exp_rand(normal.rng.unif_rand) * ((1 - p) / p),
-      normal
+      normal.rng
     ) as number;
   });
   return result.length === 1 ? result[0] : (result as any);

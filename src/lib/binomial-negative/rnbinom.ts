@@ -80,7 +80,7 @@ export function rnbinom(
       : (rpois(
           1,
           rgamma(1, size, (1 - prob) / prob, normal) as number,
-          normal
+          normal.rng
         ) as number);
   });
   return result.length === 1 ? result[0] : result;
@@ -100,7 +100,7 @@ export function rnbinom_mu(n: number= 1, size: number, mu: number, normal: INorm
     : (rpois(
         1,
         rgamma(1, size, mu / size, normal) as number,
-        normal
+        normal.rng
       ) as number);
 
 });
