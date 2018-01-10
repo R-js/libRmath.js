@@ -8,7 +8,11 @@ export class NumberW {
       return this._val;
     }
     set val(a: number) {
+      if (Number.isNaN(a)){
+        throw new Error(`trying to set NaN, old value:${this._val}`);
+      }
       this._val = a;
+
     }
   }
   
