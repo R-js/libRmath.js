@@ -47,9 +47,9 @@ import {
   ML_ERR_return_NAN
 } from '../common/_general';
 
-import { INormal } from '~normal';
 import { exp_rand } from '../exp/sexp';
 import { forEach, seq } from '../r-func';
+import { IRNGNormal } from '../rng/normal';
 import { fsign } from '../signrank/fsign';
 
 const { trunc, log, abs: fabs, pow, exp, floor, sqrt } = Math;
@@ -71,14 +71,14 @@ const one_24 = 0.0416666666666666667;
 
 export function rpois(
   N: number,
-  mu: number = 1,
-  normal: INormal
+  mu: number,
+  rng: IRNGNormal
 ): number | number[] {
-  return forEach(sequence(N))(() => _rpois(mu, normal)) as any;
+  return forEach(sequence(N))(() => _rpois(mu, rng)) as any;
 }
 
 const printer_rpois = debug('_rpois');
-function _rpois(mu: number, normal: INormal): number {
+function _rpois(mu: number, rng: IRNGNormal): number {
   /* Factorial Table (0:9)! */
   const fact = [1, 1, 2, 6, 24, 120, 720, 5040, 40320, 362880];
 
@@ -162,7 +162,7 @@ function _rpois(mu: number, normal: INormal): number {
 
       while (true) {
         /* Step U. uniform sample for inversion method */
-        u = normal.rng.unif_rand();
+        u = rng.unif_rand();
         if (u <= p0) return 0;
 
         /* Step T. table comparison until the end pp[l] of the
@@ -196,7 +196,7 @@ function _rpois(mu: number, normal: INormal): number {
 
   /* Step N. normal sample */
   g =
-    mu + s * normal.rng.norm_rand(); /* norm_rand() ~ N(0,1), standard normal */
+    mu + s * rng.norm_rand(); /* norm_rand() ~ N(0,1), standard normal */
 
   if (g >= 0) {
     pois = floor(g);
@@ -205,7 +205,7 @@ function _rpois(mu: number, normal: INormal): number {
     /* Step S. squeeze acceptance */
     fk = pois;
     difmuk = mu - fk;
-    u = normal.rng.unif_rand(); /* ~ U(0,1) - sample */
+    u = rng.unif_rand(); /* ~ U(0,1) - sample */
     if (d * u >= difmuk * difmuk * difmuk) return pois;
   }
 
@@ -245,11 +245,11 @@ function _rpois(mu: number, normal: INormal): number {
     if (!gotoStepF) {
       /* Step E. Exponential Sample */
 
-      E = exp_rand(normal.rng.unif_rand); /* ~ Exp(1) (standard exponential) */
+      E = exp_rand(rng.unif_rand); /* ~ Exp(1) (standard exponential) */
 
       /*  sample t from the laplace 'hat'
                 (if t <= -0.6744 then pk < fk for all mu >= 10.) */
-      u = 2 * normal.rng.unif_rand() - 1;
+      u = 2 * rng.unif_rand() - 1;
       t = 1.8 + fsign(E, u >= 0);
     }
     if (t > -0.6744 || gotoStepF) {

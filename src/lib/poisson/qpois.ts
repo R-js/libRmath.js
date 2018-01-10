@@ -81,14 +81,14 @@ function do_search(
 }
 
 export function qpois<T>(
-  p: T,
-  lambda: number = 1,
+  pp: T,
+  lambda: number,
   lower_tail: boolean = true,
   log_p: boolean = false
   //normal: INormal
 ): T {
-  return forEach(p)(x => {
-    return _qpois(x, lambda, lower_tail, log_p /*, normal*/);
+  return forEach(pp)(p => {
+    return _qpois(p, lambda, lower_tail, log_p /*, normal*/);
   }) as any;
 }
 

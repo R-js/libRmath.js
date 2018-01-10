@@ -40,7 +40,7 @@ const printer = debug('ppois');
 
 export function ppois<T>(
   _x: T,
-  lambda: number = 1,
+  lambda: number,
   lowerTail: boolean = true,
   logP: boolean = false,
   //normal: INormal //pass it on to "pgamma"->"pgamma_raw"->"ppois_asymp"->(dpnorm??)->("normal.pnorm")  

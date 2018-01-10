@@ -5807,7 +5807,7 @@ _Equivalent in R console_
 
 #### `rmultinom`
 
-Generates deviates ( these are arrays) of the multinomial distribution. Returns
+Generates deviates ( these are arrays of arrays ) of the multinomial distribution.
 
 _decl_
 
@@ -5923,3 +5923,11 @@ _Equivalent in R_
 [3,] 3534 3145    0 2455    0  833
 [4,] 3702 3125    0 2365    0  775
 ```
+
+### Poisson distribution
+
+`dlogis, qlogis, plogis, rlogis`
+
+See [R doc](https://stat.ethz.ch/R-manual/R-patched/library/stats/html/Logistic.html) and [wiki](https://en.wikipedia.org/wiki/Logistic_distribution).
+
+These functions are properties of an object created by the `Logistic` factory method. The factory method needs as optional argument an instance of one of the [uniform random PRNG's](#uniform-pseudo-random-number-generators) classes.
