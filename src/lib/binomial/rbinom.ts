@@ -41,30 +41,28 @@
 import * as debug from 'debug';
 import { ML_ERR_return_NAN, R_pow_di } from '../common/_general';
 
-
+import { forEach, seq } from '../r-func';
 import { IRNG } from '../rng/irng';
 import { qbinom } from './qbinom';
 
-const { log, abs: fabs, sqrt, min: fmin2, round: R_forceint } = Math;
+const { log, abs: fabs, abs, sqrt, min: fmin2, trunc, round } = Math;
 const { MAX_SAFE_INTEGER: INT_MAX, isFinite: R_FINITE } = Number;
-const printer = debug('_rbinom');
+const sequence = seq()();
+
+const printer_rbinom = debug('_rbinom');
 
 export function rbinom(
-  N: number = 1,
+  N: number,
   nin: number,
   pp: number,
   rng: IRNG
 ): number | number[] {
-  const result = new Array(N).fill(0).map(() => {
-    return _rbinom(nin, pp, rng);
-  });
-
-  return result.length === 1 ? result[0] : (result as any);
+  return forEach(sequence(N))(() => _rbinom(nin, pp, rng)) as any;
 }
 
 function _rbinom(nin: number, pp: number, rng: IRNG): number {
-  /* FIXME: These should become THREAD_specific globals : */
-
+  
+ // double
   let c = 0;
   let fm = 0;
   let npq = 0;
@@ -78,11 +76,13 @@ function _rbinom(nin: number, pp: number, rng: IRNG): number {
   let xlr = 0;
   let xm = 0;
   let xr = 0;
-
   let psave = -1.0;
+  
+  //int
   let nsave = -1;
   let m = 0;
 
+//double
   let f;
   let f1;
   let f2;
@@ -105,14 +105,16 @@ function _rbinom(nin: number, pp: number, rng: IRNG): number {
   let amaxp;
   let ffm;
   let ynorm;
+
+  //int
   let i;
   let ix = 0;
   let k;
   let n;
 
-  if (!R_FINITE(nin)) return ML_ERR_return_NAN(printer);
-  r = R_forceint(nin);
-  if (r !== nin) return ML_ERR_return_NAN(printer);
+  if (!R_FINITE(nin)) return ML_ERR_return_NAN(printer_rbinom);
+  r = round(nin);
+  if (r !== nin) return ML_ERR_return_NAN(printer_rbinom);
   if (
     !R_FINITE(pp) ||
     /* n=0, p=0, p=1 are not errors <TSL>*/
@@ -120,23 +122,25 @@ function _rbinom(nin: number, pp: number, rng: IRNG): number {
     pp < 0 ||
     pp > 1
   ) {
-    return ML_ERR_return_NAN(printer);
+    return ML_ERR_return_NAN(printer_rbinom);
   }
   if (r === 0 || pp === 0) return 0;
   if (pp === 1) return r;
 
-  if (r >= INT_MAX)
+  if (r >= INT_MAX) {
     /* evade integer overflow,
             and r == INT_MAX gave only even values */
+    printer_rbinom('Evade overflow:%d > MAX_SAFE_INTEGER', r);
     return qbinom(
-      rng.unif_rand(),
+      rng.unif_rand(), //between 0 and 1
       r,
       pp,
       /*lower_tail*/ false,
       /*log_p*/ false
     );
+  }
   /* else */
-  n = r;
+  n = trunc(r);
 
   p = fmin2(pp, 1 - pp);
   q = 1 - p;
@@ -160,10 +164,10 @@ function _rbinom(nin: number, pp: number, rng: IRNG): number {
       //goto L_np_small;
     } else {
       ffm = np + p;
-      m = ffm;
+      m = trunc(ffm);
       fm = m;
       npq = np * q;
-      p1 = 2.195 * sqrt(npq) - 4.6 * q + 0.5;
+      p1 = trunc(2.195 * sqrt(npq) - 4.6 * q) + 0.5;
       xm = fm + 0.5;
       xl = xm - p1;
       xr = xm + p1;
@@ -188,7 +192,7 @@ function _rbinom(nin: number, pp: number, rng: IRNG): number {
     v = rng.unif_rand();
     /* triangular region */
     if (u <= p1) {
-      ix = xm - p1 * v + u;
+      ix = trunc(xm - p1 * v + u);
       gotoFinis = true;
       break;
       //goto finis;
@@ -198,22 +202,22 @@ function _rbinom(nin: number, pp: number, rng: IRNG): number {
       x = xl + (u - p1) / c;
       v = v * c + 1.0 - fabs(xm - x) / p1;
       if (v > 1.0 || v <= 0) continue;
-      ix = x;
+      ix = trunc(x);
     } else {
       if (u > p3) {
         /* right tail */
-        ix = xr - log(v) / xlr;
+        ix = trunc(xr - log(v) / xlr);
         if (ix > n) continue;
         v = v * (u - p3) * xlr;
       } else {
         /* left tail */
-        ix = xl + log(v) / xll;
+        ix = trunc(xl + log(v) / xll);
         if (ix < 0) continue;
         v = v * (u - p2) * xll;
       }
     }
     /* determine appropriate way to perform accept/reject test */
-    k = Math.abs(ix - m);
+    k = abs(ix - m);
     if (k <= 20 || k >= npq / 2 - 1) {
       /* explicit evaluation */
       f = 1.0;
