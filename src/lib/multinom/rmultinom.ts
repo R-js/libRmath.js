@@ -41,82 +41,102 @@
 
 import * as debug from 'debug';
 
-const { isFinite:R_FINITE } = Number;
-const { abs:fabs} = Math;
+const { isFinite: R_FINITE } = Number;
+const { abs: fabs } = Math;
 
-import { ME, ML_ERROR } from '~common';
-
+import { forceToArray, possibleReduceDim, seq, sum } from 'src/lib/r-func';
 import { rbinom } from '../binomial/rbinom';
 import { IRNG } from '../rng/irng';
 
 const printer_rmultinom = debug('rmultinom');
-
-export const ML_ERR_ret_NAN = (_k_: number, rN: number[]): void => {
-  ML_ERROR(ME.ME_DOMAIN, 'rmultinom', printer_rmultinom);
-  rN[_k_] = -1;
-  return;
-};
+const sequence = seq()();
 
 export function rmultinom(
   n: number,
-  prob: number[],
-  K: number,
-  rN: number[],
+  size: number,
+  prob: number | number[],
   rng: IRNG
-): void {
+): (number[]) | (number[][]) {
+  const result = sequence(n).map(() => _rmultinom(size, prob, rng ));
+  return possibleReduceDim(result);
+}
+
+//workhorse
+function _rmultinom(
+  size: number,
+  prob: number | number[],
+  rng: IRNG
+): number[] {
   /* `Return' vector  rN[1:K] {K := length(prob)}
      *  where rN[j] ~ Bin(n, prob[j]) ,  sum_j rN[j] == n,  sum_j prob[j] == 1,
      */
-
-  let k;
-  let pp;
-  let p_tot = 0;
+  const rN: number[] = [];
+  let p = forceToArray(prob);
+  const K = p.length;
+  //let pp;
   /* This calculation is sensitive to exact values, so we try to
        ensure that the calculations are as accurate as possible
        so different platforms are more likely to give the same
        result. */
 
-  if (K < 1) {
-    ML_ERROR(ME.ME_DOMAIN, 'rmultinom', printer_rmultinom);
-    return;
+  if (p.length === 0) {
+    printer_rmultinom('list of probabilities cannot be empty');
+    return rN;
   }
-  if (n < 0) {
-    return ML_ERR_ret_NAN(0, rN);
+  if (size < 0) {
+    printer_rmultinom('Illegal Argument:size is negative');
+    rN.splice(0);
+    return rN;
   }
-
   /* Note: prob[K] is only used here for checking  sum_k prob[k] = 1 ;
      *       Could make loop one shorter and drop that check !
      */
-  for (k = 0; k < K; k++) {
-    pp = prob[k];
-    if (!R_FINITE(pp) || pp < 0 || pp > 1) {
-      return ML_ERR_ret_NAN(k, rN);
-    }
-    p_tot += pp;
-    rN[k] = 0;
+  //check probabilities
+  if (p.find(pp => !R_FINITE(pp) || pp < 0)) {
+    printer_rmultinom('some propbabilities are invalid or negative numbers');
+    rN.splice(0);
+    return rN;
   }
-  if (fabs(p_tot - 1) > 1e-7)
-    printer_rmultinom('rbinom: probability sum should be 1, but is %d', p_tot);
-  if (n === 0) return;
-  if (K === 1 && p_tot === 0) return; /* trivial border case: do as rbinom */
 
+  rN.splice(0, rN.length, ...new Array(K).fill(0)); //remove, insert and init
+
+  if (size === 0) {
+    return rN;
+  }
   /* Generate the first K-1 obs. via binomials */
+  // context vars for the next loop
+  let _size = size;
+  let p_tot = sum(p);
 
-  for (k = 0; k < K - 1; k++) {
-    /* (p_tot, n) are for "remaining binomial" */
-    if (prob[k] !== 0) {
-      pp = prob[k] / p_tot;
-      /* printf("[%d] %.17f\n", k+1, pp); */
-      rN[k] =
-        pp < 1
-          ? (rbinom(1, n, pp, rng) as number)
-          : /*>= 1; > 1 happens because of rounding */
-            n;
-      n -= rN[k];
-    } else rN[k] = 0;
-    if (n <= 0) /* we have all*/ return;
-    p_tot -= prob[k]; /* i.e. = sum(prob[(k+1):K]) */
+  printer_rmultinom('%o', { p, p_tot, _size, K, rN });
+  for (let k = 0; k < K - 1; k++) {
+    //can happen, protect against devide by zero
+    if (fabs(p_tot) < Number.EPSILON) {
+      rN[k] = _size;
+      _size = 0;
+      p_tot = 0;
+      continue;
+    }
+
+    const pp = p[k] / p_tot;
+
+    if (pp === 0) {
+      rN[k] = 0;
+      continue;
+    }
+    // nothing left, rest will be zero
+    if (_size === 0) {
+      rN[k] = 0;
+      continue;
+    }
+    /* printf("[%d] %.17f\n", k+1, pp); */
+    rN[k] = pp < 1 ? (rbinom(1, _size, pp, rng) as number) : _size;
+    //adjust size
+    _size -= rN[k];
+    //adjust probabilities
+    p_tot -= p[k];
+    printer_rmultinom('%o', { p_tot, _size, k, rN });
   }
-  rN[K - 1] = n;
-  return;
+  rN[K - 1] = _size; //left over
+  return rN;
 }

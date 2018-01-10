@@ -7,16 +7,16 @@ const { lgamma } = special;
 const add = arrayrify((a: number, b: number) => a + b);
 const log = arrayrify(Math.log);
 
-export interface IdmultinomOptions<T extends number | number[]> {
-  x: T;
+export interface IdmultinomOptions {
+  x: number[];
   size?: number;
-  prob: T;
-  asLog: boolean;
+  prob: number[];
+  asLog?: boolean;
 }
 
-export function dmultinom<T extends number | number[]>(
-  o: IdmultinomOptions<T>
-): number | number[] {
+export function dmultinom(
+  o: IdmultinomOptions
+): number {
   // init
   // first prob and x must have the same length
   o.asLog = !!o.asLog;
@@ -28,15 +28,15 @@ export function dmultinom<T extends number | number[]>(
   if (badProb || s === 0) {
     throw new Error('probabilities must be finite, non-negative and not all 0');
   }
-  prob = div(prob, s) as any;
+  prob = forceToArray(div(prob, s));
   x = x.map(Math.round);
   if (any(x)(v => v < 0)) {
     throw new Error('probabilities must be finite, non-negative and not all 0');
   }
   const N = sum(x);
-  const size = o.size && N;
+  const size = !!o.size ? o.size : N;
   if (size !== N) {
-    throw new Error('size != sum(x), i.e. one is wrong');
+    throw new Error(`size:${size} != sum(x):${N}, i.e. one is wrong`);
   }
   const i0 = prob.map(p => p === 0);
   if (any(i0)(v => !!v)) {
@@ -45,6 +45,20 @@ export function dmultinom<T extends number | number[]>(
     }
     x = x.filter((_v, i) => i0[i]);
     prob = prob.filter((_v, i) => i0[i]);
+  }
+  // checks after cleaning
+  const errMsg: string[] = [];
+  if (prob.length <= 1 ){
+    errMsg.push(`number of propabilities need to be at least 2, it is:${prob.length}`);
+  }
+  if (x.length <= 1){
+    errMsg.push(`number of quantiles need to be at least 2, it is :${x.length}`);
+  }
+  if (x.length !== prob.length){
+    errMsg.push(`number of effective quantiles:${x.length} is not equal to number of effective probabilities:${prob.length}.`);
+  }
+  if (errMsg.length){
+    throw new Error(errMsg.join('\n'));
   }
   const s1 = lgamma(add(x, 1));
   const s2 = log(prob);
