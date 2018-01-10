@@ -7,11 +7,10 @@ import { MersenneTwister } from '../rng/mersenne-twister';
 
 export { IdmultinomOptions };
 
-export function MultiNomial(rng: IRNG = new MersenneTwister()) {
-  function rmultinom(n: number, prob: number[], K: number, rN: number[]) {
-    return _rmultinom(n, prob, K, rN, rng);
+export function Multinomial(rng: IRNG = new MersenneTwister(0)) {
+  function rmultinom(n: number, size: number, prob: number | number[]) {
+    return _rmultinom(n, size, prob, rng);
   }
-
   return {
     rmultinom,
     dmultinom
