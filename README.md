@@ -5969,7 +5969,7 @@ declare function dpois(
 ```
 
 * `x`: quantile(s). Scalar or array.
-* `lamda`: the lambda `λ` parameter from the [Poisson distribution](https://en.wikipedia.org/wiki/Poisson_distribution).
+* `lambda`: the lambda `λ` parameter from the [Poisson distribution](https://en.wikipedia.org/wiki/Poisson_distribution).
 * `asLog`: if TRUE, probabilities p are given as log(p).
 
 Usage:
@@ -6054,7 +6054,7 @@ function ppois(
 ```
 
 * `q`: quantile(s). A Scalar or array.
-* `lamda`: the lambda `λ` parameter from the [Poisson distribution](https://en.wikipedia.org/wiki/Poisson_distribution).
+* `lambda`: the lambda `λ` parameter from the [Poisson distribution](https://en.wikipedia.org/wiki/Poisson_distribution).
 * `lowerTail`: if TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
 * `logP`: if TRUE, probabilities p are given as log(p).
 
@@ -6146,7 +6146,7 @@ _decl_
 ```
 
 * `p`: probabilities, scalar or array.
-* `lamda`: the lambda `λ` parameter from the [Poisson distribution](https://en.wikipedia.org/wiki/Poisson_distribution).
+* `lambda`: the lambda `λ` parameter from the [Poisson distribution](https://en.wikipedia.org/wiki/Poisson_distribution).
 * `lowerTail`: if TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
 * `logP`: if TRUE, probabilities p are given as log(p).
 
@@ -6201,10 +6201,74 @@ p = seq(0,10,2);
 [1]   0   7   9  11  13 Inf
 ```
 
-### rpois
+#### `rpois`
 
 Generate random deviates for the [Poisson distribution](https://en.wikipedia.org/wiki/Poisson_distribution). See [R doc](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/Poisson.html).
 
 _decl_
 
+```typescript
+ declare function rpois(
+  N: number,
+  lambda: number
+): number | number[]
+```
+
+* `N`: number of deviates to generate.
+* `lambda`: the lambda `λ` parameter from the [Poisson distribution](https://en.wikipedia.org/wiki/Poisson_distribution).
+
+Usage:
+
+```javascript
+const libR = require('lib-r-math.js');
+const {
+    Poisson,
+    rng: { MersenneTwister },
+    rng: { normal: { Inversion } }
+} = libR;
+
+const precision = libR.R.numberPrecision(9); //restrict to 9 significant digits
+
+//explicit use of PRNG
+const mt = new MersenneTwister(0); // need reference so we "reset" PRNG
+
+const { dpois, ppois, qpois, rpois } =  Poisson(new Inversion(mt));
+
+mt.init(123);
+//1
+const r1 = rpois(5, 1);
+precision(r1);
+//[ 0, 2, 1, 2, 3 ]
+
+//2
+const r2 = rpois(5, 4);
+precision(r2);
+//[ 1, 4, 7, 4, 4 ]
+
+//3
+const r3 = rpois(5, 10);
+precision(r3);
+//[ 15, 11, 5, 4, 13 ]
+```
+
+_Equivalent in R_
+
+```R
+options(scipen=999)
+options(digits=9)
+RNGkind("Mersenne-Twister", normal.kind="Inversion")
+set.seed(123);
+
+#1
+> rpois(5, 1);
+[1] 0 2 1 2 3
+
+#2
+> rpois(5, 4);
+[1] 1 4 7 4 4
+
+#3
+> rpois(5, 10);
+[1] 15 11  5  4 13
+```
 

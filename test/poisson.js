@@ -18,8 +18,8 @@ const precision = libR.R.numberPrecision(9); //restrict to 9 significant digits
 const defaultP = Poisson();
 
 //explicit use of PRNG
-const sd = new SuperDuper(123);
-const explicitP = Poisson(new BoxMuller(sd));
+const mt = new MersenneTwister(0);
+const explicitP = Poisson(new Inversion(mt));
 
 const { dpois, ppois, qpois, rpois } = explicitP;
 const x = seq(0, 10, 2);
@@ -88,3 +88,36 @@ precision(p3);
   0.332819679,
   0.58303975 ]
 */
+
+const p = seq(0, 1, 0.2);
+
+//1
+const q1 = qpois(log(p), 1, false, true);
+precision(q1);
+//[ Infinity, 2, 1, 1, 0, 0 ]
+
+//2
+const q2 = qpois(p, 4);
+precision(q2);
+//[ 0, 2, 3, 4, 6, Infinity ]
+
+//3
+const q3 = qpois(p, 10);
+precision(q3);
+//[ 0, 7, 9, 11, 13, Infinity ]
+
+mt.init(123);
+//1
+const r1 = rpois(5, 1);
+precision(r1);
+//[ 0, 2, 1, 2, 3 ]
+
+//2
+const r2 = rpois(5, 4);
+precision(r2);
+//[ 1, 4, 7, 4, 4 ]
+
+//3
+const r3 = rpois(5, 10);
+precision(r3);
+//[ 15, 11, 5, 4, 13 ]
