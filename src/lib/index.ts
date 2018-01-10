@@ -13,7 +13,7 @@ export { Geometric } from './geometric';
 export { HyperGeometric } from './hypergeometric';
 export { Logistic } from './logis';
 export { LogNormal } from './lognormal';
-export { MultiNomial, IdmultinomOptions } from './multinom';
+export { Multinomial, IdmultinomOptions } from './multinom';
 export { Normal } from './normal';
 export { Poisson } from './poisson';
 export { rng, IRNG } from './rng';
@@ -43,9 +43,11 @@ export const special = Object.freeze({
 import {
   any,
   arrayrify,
+  div,
   flatten,
   forceToArray,
   forEach,
+  mult,
   numberPrecision,
   selector,
   seq,
@@ -61,5 +63,7 @@ export const R = {
   selector,
   seq,
   sum,
-  any
+  any,
+  div,
+  mult
 };

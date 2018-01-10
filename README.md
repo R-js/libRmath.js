@@ -5683,3 +5683,243 @@ _Equivalent in R_
 > rlnorm(5,2,3.2)
 [1] 1069.701128375    1.509608802   10.874497520    0.115348102  562.383238202
 ```
+
+### Multinomial distribution
+
+See [R doc](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/Multinom.html):
+
+from [wiki](https://en.wikipedia.org/wiki/Multinomial_distribution):
+
+`dmultinom, rmultinom`
+
+These functions are properties of an object created by the `Multinomial` factory method. The factory method needs as optional argument an instance of one of the [uniform random PRNG's](#uniform-pseudo-random-number-generators) classes.
+
+*Note:* Analog `pmultinom, qmultinom` are not implemented in R and hence not available in this port. In Future implementation for `pmultinom` would require an analog for $P(\vec{X} \leq  \vec{x})$ by constraining the multivariate vector `X` to a hyperplane $\vec{n} \cdot \vec{X} = d$ where `d` is the total number of draws and $\vec{n}$ is the N dimensional hyperplane vector normal $\vec{n}=(1,1,...,1)$. Elements of $\vec{X}$ have only integer values. This is potentially an expensive operation. We would need to sum over 
+
+$$\frac{(size+k)!}{k!\cdot((size+k)-k)!}$$
+
+`probability mass` values, were $k$ is the dimension of vector:$\vec{x}$ and $size = \sum_{i=1}^{k} x_{i}$.
+
+Usage:
+
+```javascript
+const libR = require('lib-r-math.js');
+const { MultiNomial, rng: { MersenneTwister, SuperDuper } } = libR;
+
+//some tools
+const log = libR.R.arrayrify(Math.log);
+const seq = libR.R.seq()();
+const precision = libR.R.numberPrecision(9); //restrict to 9 significant digits
+
+//create instance with specific PRNG
+const sd = new SuperDuper(1234);
+const customM = MultiNomial(sd);
+
+//create (default PRNG is Mersenne-Twister) Multinomial instance.
+const defaultM = MultiNomial();
+
+const { dmultinom, rmultinom } = defaultM;
+```
+
+#### `dmultinom`
+
+The `probability mass function` of the multinomial distribution. See [wiki](https://en.wikipedia.org/wiki/Multinomial_distribution) or [R doc](https://stat.ethz.ch/R-manual/R-patched/library/stats/html/Multinom.html)
+
+$$ f( x_{1} , ... , x_{k}; p_{1},...,p_{k}) = \frac{n!}{x_{1}!\cdot\cdot\cdot x_{k}!} p_{1}^{x_{1}} \times\cdot\cdot\cdot\times p_{k}^{x_{k}}, when \sum_{i=1}^{k} x_{i} = n  $$
+
+_decl_
+
+```typescript
+declare interface IdmultinomOptions {
+    x: number[];
+    prob: number[];
+    size?: number;
+    asLog?: boolean;
+}
+
+declare function dmultinom(
+  option: IdmultinomOptions
+): number[];
+```
+
+`dmultinom` needs as input an JS object (typescript interface type `IdmultinomOptions`) with the following properties:
+
+* `x`: array of quantiles (minimal item count is 2)
+* `prob`: array of corresponding non-zero probabilities corresponding with the quantiles.
+* `size`: optional, you can safely omit it, functions as a kind of checksum: size = $\sum_{i=1}^{k} x_{i}$
+* `asLog`: probabilities are returned as ln(p).
+
+Usage:
+
+```javascript
+const libR = require('lib-r-math.js');
+const { Multinomial } = libR;
+
+//some tools
+const precision = libR.R.numberPrecision(9); //restrict to 9 significant digits
+
+const { dmultinom, rmultinom } = Multinomial();
+
+//1. binomial analog
+const d1 = dmultinom({
+    x: [3, 5],
+    prob: [0.25, 0.75]
+});
+precision(d1);
+//0.207641602
+
+//2. binomial analog
+const d2 = dmultinom({
+    x: [3, 5, 9],
+    prob: [0.2, 0.7, 0.1]
+});
+precision(d2);
+//0.0000018304302
+
+//3. binomial analog
+const d3 = dmultinom({
+    x: [3, 5, 9, 4],
+    prob: [2, 8, 4, 6], // will normalized to = [ 2/20, 8/20, 4/20, 6/20 ]
+    asLog: true
+});
+precision(d3);
+//-7.96903499
+```
+
+_Equivalent in R console_
+
+```R
+> options(scipen=999)
+> options(digits=9)
+
+#1
+> dmultinom(x=c(3, 5), prob=c(0.25, 0.75));
+[1] 0.2076416
+
+#2
+> dmultinom(x=c(3, 5, 9), prob=c(0.2, 0.7, 0.1));
+[1] 0.0000018304302
+
+#3
+> dmultinom(x=c(3,5,9,4), prob=c(2,8,4,6), log=TRUE)
+[1] -7.96903499
+```
+
+#### `rmultinom`
+
+Generates deviates ( these are arrays) of the multinomial distribution. Returns
+
+_decl_
+
+```typescript
+declare function rmultinom(
+  n: number,
+  size: number,
+  prob: number | number[]
+): (number[]) | (number[][]);  //return an array of arrays n x prob.length elements. 
+```
+
+* `n`: returns an array of size `n` nested arrays of dimension `prob.length`.
+* `size`: distribute size elements amongst `prob.length` bins for each deviate.
+* `prob`: an array (in case of a scalar or array of length 1) describing the probabilities for success for ech bin.
+* `@return`: returns `n` arrays each of length `k = (prob.length)`.
+
+Usage:
+
+```javascript
+const libR = require('lib-r-math.js');
+const {
+    Multinomial,
+    rng: { MersenneTwister },
+    rng: { normal: { Inversion } },
+    R: { sum, div, mult }
+} = libR;
+
+//some tools
+const log = libR.R.arrayrify(Math.log);
+const seq = libR.R.seq()();
+const precision = libR.R.numberPrecision(9); //restrict to 9 significant digits
+
+const mt = new MersenneTwister();
+const { dmultinom, rmultinom } = Multinomial(mt);
+
+//1
+const prob1a = [167, 500, 167, 167];
+const prob1b = div(prob1a, sum(prob1a));
+
+mt.init(1234);
+rmultinom(4, 40, prob1b);
+mt.init(1234);
+rmultinom(4, 40, prob1a); //same result!!
+/*
+[ [ 4, 21, 8, 7 ],
+  [ 7, 17, 9, 7 ],
+  [ 2, 25, 7, 6 ],
+  [ 7, 18, 8, 7 ] ]*/
+
+
+//2
+const prob2a = [10, 30, 40, 90];
+const prob2b = div(prob2a, sum(prob2a));
+
+mt.init(5678);
+rmultinom(4, 5299, prob2b);
+mt.init(5678);
+rmultinom(4, 5299, prob2a); //same result
+/*
+[ [ 316, 945, 1271, 2767 ],
+  [ 308, 896, 1206, 2889 ],
+  [ 329, 871, 1292, 2807 ],
+  [ 308, 930, 1265, 2796 ] ]*/
+
+//3
+const prob3a = [9, 8, 0, 6, 0, 2];
+const prob3b = div(prob3a, sum(prob3a));
+
+mt.init(666);
+rmultinom(4, 9967, prob3b);
+mt.init(666);
+rmultinom(4, 9967, prob3a);//same result
+/*
+[ [ 3727, 3098, 0, 2299, 0, 843 ],
+  [ 3563, 3142, 0, 2447, 0, 815 ],
+  [ 3534, 3145, 0, 2455, 0, 833 ],
+  [ 3702, 3125, 0, 2365, 0, 775 ] ]  */
+```
+
+_Equivalent in R_
+
+```R
+> RNGkind("Mersenne-Twister")
+
+#1
+> prob1a=c(167,500,167,167)
+> set.seed(1234);
+# Transpose ('t') the matrix for easier inspection with JS version
+> t(rmultinom(4, 40, prob1a))
+     [,1] [,2] [,3] [,4]
+[1,]    4   21    8    7
+[2,]    7   17    9    7
+[3,]    2   25    7    6
+[4,]    7   18    8    7
+
+#2
+> prob2a=c(10, 30, 40, 90)
+> set.seed(5678)
+> t(rmultinom(4, 5299, prob2a))
+     [,1] [,2] [,3] [,4]
+[1,]  316  945 1271 2767
+[2,]  308  896 1206 2889
+[3,]  329  871 1292 2807
+[4,]  308  930 1265 2796
+
+#3
+> prob3a=c(9, 8, 0, 6, 0, 2)
+> set.seed(666)
+> t(rmultinom(4, 9967, prob3a));
+     [,1] [,2] [,3] [,4] [,5] [,6]
+[1,] 3727 3098    0 2299    0  843
+[2,] 3563 3142    0 2447    0  815
+[3,] 3534 3145    0 2455    0  833
+[4,] 3702 3125    0 2365    0  775
+```

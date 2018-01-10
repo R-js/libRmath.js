@@ -56,12 +56,14 @@ export function arrayrify<T, R>(fn: (x: T, ...rest: any[]) => R) {
 }
 
 export function forceToArray<T>(x: T | T[]): T[] {
-  return Array.isArray(x) ? x : [x];
+  return Array.isArray(x) ? x.slice(0) : [x];
 }
 
-export function possibleScalar<T>(x: T[]): T | T[] {
+function possibleScalar<T>(x: T[]): T | T[] {
   return x.length === 1 ? x[0] : x;
 }
+
+export { possibleScalar , possibleScalar as possibleReduceDim};
 
 export function forEach<T>(xx: T): { (fn: (x: number) => number): number|number[] } {
   const fx: number[] = forceToArray(xx) as any;
@@ -92,3 +94,6 @@ export function any<T>(x: T[]) {
 export function sum(x: number[]) {
   return x.reduce((sum, v) => (sum += v), 0);
 }
+
+export const div = arrayrify((a: number, b) => a / b);
+export const mult = arrayrify((a: number, b) => a * b);
