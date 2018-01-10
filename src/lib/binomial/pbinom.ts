@@ -46,14 +46,17 @@ export function pbinom<T>(
   xx: T,
   n: number,
   p: number,
-  lower_tail: boolean = true,
-  log_p: boolean = false
+  lowerTail: boolean = true,
+  logP: boolean = false
 ): T {
   return forEach(xx)(x => {
-    if (ISNAN(x) || ISNAN(n) || ISNAN(p)) return x + n + p;
+    if (ISNAN(x) || ISNAN(n) || ISNAN(p)) return NaN;
     if (!R_FINITE(n) || !R_FINITE(p)) {
       return ML_ERR_return_NAN(printer);
     }
+
+    let lower_tail = lowerTail;
+    let log_p = logP;
 
     if (R_nonint(n)) {
       printer('non-integer n = %d', n);
@@ -68,6 +71,7 @@ export function pbinom<T>(
     if (x < 0) return R_DT_0(lower_tail, log_p);
     x = floor(x + 1e-7);
     if (n <= x) return R_DT_1(lower_tail, log_p);
+    printer('calling pbeta:(q=%d,a=%d,b=%d, l.t=%s, log=%s', p, x + 1, n - x, !lower_tail, log_p);
     return pbeta(p, x + 1, n - x, !lower_tail, log_p);
   }) as any;
 }

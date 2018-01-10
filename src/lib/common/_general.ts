@@ -117,11 +117,11 @@ export function imin2(x: number, y: number): number {
 
 /* Use 0.5 - p + 0.5 to perhaps gain 1 bit of accuracy */
 export function R_D_Lval(lowerTail: boolean, p: number): number {
-  return lowerTail ? p : 0.5 - p + 0.5; /*  p  */
+  return lowerTail ? p : 1 - p; /*  p  */
 }
 
 export function R_D_Cval(lowerTail: boolean, p: number): number {
-  return lowerTail ? 0.5 - p + 0.5 : p; /*  1 - p */
+  return lowerTail ? 1 - p : p; /*  1 - p */
 }
 
 export function R_P_bounds_Inf_01(
@@ -267,8 +267,9 @@ export function R_D_negInonint(x: number) {
   return x < 0.0 || R_nonint(x);
 }
 
+
 export function R_nonint(x: number) {
-  return Math.abs(x - Math.round(x)) > 1e-7 * Math.max(1, Math.abs(x));
+  return !Number.isInteger(x); //Math.abs(x - Math.round(x)) > 1e-7 * Math.max(1, Math.abs(x));
 }
 
 export function R_D_fexp(give_log: boolean, f: number, x: number): number {

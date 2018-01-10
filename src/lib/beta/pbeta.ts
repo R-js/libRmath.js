@@ -40,18 +40,14 @@
  */
 import * as debug from 'debug';
 
-import {
-  ML_ERR_return_NAN,
-  R_DT_0,
-  R_DT_1
-} from '../common/_general';
+import { ML_ERR_return_NAN, R_DT_0, R_DT_1 } from '../common/_general';
 import { NumberW, Toms708 } from '../common/toms708';
 import { forEach } from '../r-func';
 
-const  { isNaN: ISNAN, isFinite: R_FINITE} = Number;
-const {LN2: M_LN2, log } = Math;
+const { isNaN: ISNAN, isFinite: R_FINITE } = Number;
+const { LN2: M_LN2, log } = Math;
 
-const printer = debug('pbeta_raw');
+const printer_pbeta_raw = debug('pbeta_raw');
 
 export function pbeta_raw(
   x: number,
@@ -77,28 +73,45 @@ export function pbeta_raw(
     else return R_DT_1(lower_tail, log_p);
   }
   // Now:  0 < a < Inf;  0 < b < Inf
-
   let x1 = 0.5 - x + 0.5;
   let w: NumberW = new NumberW(0);
   let wc: NumberW = new NumberW(0);
   let ierr: NumberW = new NumberW(0);
   //====
   //Toms708.bratio(a, b, x, x1, &w, &wc, &ierr, log_p); /* -> ./toms708.c */
+  printer_pbeta_raw(
+    'before Toms708.bratio, a=%d, b=%d, x=%d, w=%d,wc=%d, ierr=%d',
+    a,
+    b,
+    x,
+    w.val,
+    wc.val,
+    ierr.val
+  );
   Toms708.bratio(a, b, x, x1, w, wc, ierr); /* -> ./toms708.c */
+  printer_pbeta_raw(
+    'after Toms708.bratio, a=%d, b=%d, x=%d, w=%d,wc=%d, ierr=%d',
+    a,
+    b,
+    x,
+    w.val,
+    wc.val,
+    ierr.val
+  );
   //====
   // ierr in {10,14} <==> bgrat() error code ierr-10 in 1:4; for 1 and 4, warned *there*
-  if (ierr && ierr.val && ierr.val !== 11 && ierr.val !== 14)
-  printer(
+  if (ierr.val && ierr.val !== 11 && ierr.val !== 14)
+    printer_pbeta_raw(
       'pbeta_raw(%d, a=%d, b=%d, ..) -> bratio() gave error code %d',
       x,
       a,
       b,
       ierr
     );
-  if (log_p){
+  if (log_p) {
     w.val = log(w.val);
     wc.val = log(wc.val);
-  }  
+  }
   return lower_tail ? w.val : wc.val;
 } /* pbeta_raw() */
 
@@ -111,9 +124,9 @@ export function pbeta<T>(
   lowerTail: boolean = true,
   logP: boolean = false
 ): T {
-
+  printer_pbeta('pbeta being called');
   return forEach(q)(x => {
-    if (ISNAN(x) || ISNAN(a) || ISNAN(b)) return x + a + b;
+    if (ISNAN(x) || ISNAN(a) || ISNAN(b)) return NaN;
 
     if (a < 0 || b < 0) return ML_ERR_return_NAN(printer_pbeta);
     // allowing a==0 and b==0  <==> treat as one- or two-point mass
