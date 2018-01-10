@@ -241,11 +241,10 @@ export class Toms708 {
     c*/
     //double J0, J1, LAMBDA;
 
-    let a0 = new Array<number>(21);
-    a0.fill(0);
-    let b0 = new Array<number>(21);
-    let c = new Array<number>(21);
-    let d = new Array<number>(21);
+    let a0 = new Array<number>(21).fill(0);
+    let b0 = new Array<number>(21).fill(0);
+    let c = new Array<number>(21).fill(0);
+    let d = new Array<number>(21).fill(0);
 
     // C
     // C  NUM IS THE MAXIMUM VALUE THAT N CAN TAKE IN THE DO LOOP
@@ -1942,7 +1941,7 @@ export class Toms708 {
           return;
         }
       }
-
+      
       w.val = Toms708.basym(a0, b0, lambda, 100.0 * eps);
       w1.val = 0.5 + (0.5 - w.val);
 
