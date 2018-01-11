@@ -248,16 +248,15 @@ Using `lib-r-math.js`:
 
 ```javascript
 const libR = require('lib-r-math.js');
-const seqGenerator = libR.R.seq;
 
-let seqA = seqGenerator()();
+let seqA = libR.R.seq()();
 
 seqA(1, 5);
 //[ 1, 2, 3, 4, 5 ]
 seqA(5, -3);
 //[ 5, 4, 3, 2, 1, 0, -1, -2, -3 ]
 
-let seqB = seqGenerator(1)(-2);
+let seqB = libR.R.seq(1)(-2);
 
 seqB(0, 4); //range will be adjusted with '1'
 //[ 1, 2, 3, 4]
@@ -312,6 +311,9 @@ usage example:
 const libR = require('lib-r-math.js');
 const { MersenneTwister, timeseed } = libR.rng;
 
+//helpers
+const sequence = libR.R.seq()();
+
 const mt = new MersenneTwister(12345); // initialize with seed = 12345
 
 mt.init(timeseed()); // Use seed derived from system clock
@@ -331,7 +333,7 @@ let s = lt.seed;
   .]
 */
 
-new Array(5).fill('').map(() => mt.unif_rand());
+sequence(5).map(() => mt.unif_rand());
 /*
 [ 0.8966972001362592,
   0.2655086631421,
@@ -341,7 +343,7 @@ new Array(5).fill('').map(() => mt.unif_rand());
 */
 ```
 
-_in R console_:
+_Equivalent in R_:
 
 ```R
   > RNGkind("Mersenne-Twister")
@@ -403,6 +405,11 @@ usage example:
 const libR = require('lib-r-math.js');
 const { MarsagliaMultiCarry, timeseed } = libR.rng;
 
+//usefull helpers
+const { seq, numberPrecision } = libR.R;
+const sequence = seq()();
+const precision = libR.R.numberPrecision(9);
+
 // Some options on seeding given below
 const mmc = new MarsagliaMultiCarry(1234); // use seed = 1234 on creation
 
@@ -412,7 +419,8 @@ mmc.init(0); // also, defaults to '0' if seed is not specified
 
 mmc.seed;
 //[ -835792825, 1280795612 ]
-new Array(5).fill('').map(() => mm.unif_rand());
+
+sequence(5).map(() => mm.unif_rand());
 /*[ 0.16915375533726848,
   0.5315435299490446,
   0.5946052972214773,
@@ -426,6 +434,8 @@ _in R console_:
 ```R
 > RNGkind("Marsaglia-Multicarry")
 > set.seed(0)
+# we cannot access the PRNG directly
+# we need to use runif wrapper.
 > runif(5)
 [1] 0.1691538 0.5315435 0.5946053 0.2333154
 [5] 0.4576562
@@ -449,7 +459,7 @@ const { SuperDuper, timeseed } = libR.rng;
 // Seeding possibilities shown below
 const sd = new SuperDuper(1234); // use seed = 1234 on creation
 sd.init(timeseed()); // re-initialize with random seed based on timestamp
-sd.init(0); // re-initialize with any seed = 0.
+sd.init(0); // re-initialize with seed = 0.
 //
 sd.seed;
 //[ -835792825, 1280795613 ]
@@ -492,7 +502,7 @@ const { KnuthTAOCP, timeseed } = libR.rng;
 // Seeding possibilities shown below
 const kn97 = new KnuthTAOCP(1234); // use seed = 1234 on creation
 kn97.init(timeseed()); // re-initialize with random seed based on timestamp
-kn97.init(0); // re-initialize with any seed = 0.
+kn97.init(0); // re-initialize with seed = 0.
 
 kn97.seed;
 // 101 unsigned integer array, only shown the first few values
@@ -1126,8 +1136,8 @@ _R console_ (exactly the same values for the same seed)
 ### Normal distribution
 
 `dnorm, qnorm, pnorm, rnorm`
-R documentation [here](http://stat.ethz.ch/R-manual/R-patched/library/stats/html/Normal.html)
 
+R documentation [here](http://stat.ethz.ch/R-manual/R-patched/library/stats/html/Normal.html).
 These functions are created with the factory method `Normal` taking as argument an optional _normal PRNG_ (defaults to [Inversion](#inversion).
 
 Usage:
@@ -1151,7 +1161,7 @@ const { rnorm, dnorm, pnorm, qnorm } = norm2;
 
 #### `dnorm`
 
-The density function. See [R doc](http://stat.ethz.ch/r-manual/r-patched/library/stats/html/normal.html)
+The density function of the [Normal distribution](). See [R doc](http://stat.ethz.ch/r-manual/r-patched/library/stats/html/normal.html)
 
 _decl:_
 
@@ -1214,7 +1224,7 @@ dnorm(
 */
 ```
 
-_in R Console_
+_Equivalent in R_
 
 ```R
 > dnorm(seq(-4,4),2, 1, TRUE)
@@ -1226,6 +1236,10 @@ _in R Console_
 ```
 
 #### `pnorm`
+
+The distribution function of the [Normal distribution](). See [R doc](http://stat.ethz.ch/r-manual/r-patched/library/stats/html/normal.html)
+
+_decl_
 
 ```typescript
 function pnorm(
@@ -1274,7 +1288,7 @@ _in R console_
 
 #### `qnorm`
 
-The quantile function. See [R doc](http://stat.ethz.ch/r-manual/r-patched/library/stats/html/normal.html])
+The quantile function of the [Normal distribution](). See [R doc](http://stat.ethz.ch/r-manual/r-patched/library/stats/html/normal.html])
 
 _decl:_
 
@@ -6228,6 +6242,7 @@ const {
     rng: { normal: { Inversion } }
 } = libR;
 
+//helpers
 const precision = libR.R.numberPrecision(9); //restrict to 9 significant digits
 
 //explicit use of PRNG
@@ -6273,3 +6288,280 @@ set.seed(123);
 [1] 15 11  5  4 13
 ```
 
+### Wilcoxon signed rank statistic distribution.
+
+`dsignrank, psignrank, qsignrank, rsignrank`
+
+Density, distribution function, quantile function and random generation for the distribution of the [Wilcoxon Signed Rank statistic](https://en.wikipedia.org/wiki/Wilcoxon_signed-rank_test). See [R doc](https://stat.ethz.ch/R-manual/R-patched/library/stats/html/SignRank.html).
+
+Usage:
+
+```javascript
+const libR = require('lib-r-math.js');
+const {
+    SignRank,
+    rng: { MarsagliaMultiCarry }
+} = libR;
+
+//helpers
+const precision = libR.R.numberPrecision(9); //restrict to 9 significant digits
+
+//PRNG uses default MersenneTwister (just like R)
+const defaultSR = SignRank();
+
+//explicit use of PRNG
+const mmc = new MarsagliaMultiCarry(4535);
+const explicitSR = SignRank(mmc)
+
+const { dsignrank, psignrank, qsignrank, rsignrank } =  explicitSR;
+```
+
+#### `dsignrank`
+
+The probability mass function of the [Wilcoxon Signed Rank statistic](https://en.wikipedia.org/wiki/Wilcoxon_signed-rank_test). See [R doc](https://stat.ethz.ch/R-manual/R-patched/library/stats/html/SignRank.html).
+
+_decl_
+
+```typescript
+ declare function dsignrank(
+   x: number|number[],
+   n: number,
+   aslog: boolean = false
+   ): number|number[];
+```
+
+* `x`: quantiles (scalar or array of values the rank W+).
+* `n`: total number of observations.
+* `asLog`: give probabilities as ln(p). Default is false.
+
+Usage:
+
+```javascript
+const libR = require('lib-r-math.js');
+const { SignRank } = libR;
+
+//some usefull helpers
+const precision = libR.R.numberPrecision(9); //restrict to 9 significant digits
+
+const { dsignrank, psignrank, qsignrank, rsignrank } = SignRank();
+
+//1
+const d1 = dsignrank(seq(0,5), 9);
+precision(d1);
+/*[
+  0.001953125,
+  0.001953125,
+  0.001953125,
+  0.00390625,
+  0.00390625,
+  0.005859375 ]*/
+
+//2
+const d2 = dsignrank( seq(3,8), 4);
+precision(d2);
+//[ 0.125, 0.125, 0.125, 0.125, 0.125, 0.0625 ]
+
+//3
+const d3 = dsignrank( seq(15,20) , 11);
+precision(d3);
+/*[
+  0.0107421875,
+  0.0122070312,
+  0.013671875,
+  0.015625,
+  0.0170898438,
+  0.0190429687 ]*/
+```
+
+_Equivalent in R_
+
+```R
+#1
+> dsignrank(seq(0,5), 9);
+[1] 0.001953125 0.001953125 0.001953125 0.003906250 0.003906250 0.005859375
+
+#2
+> dsignrank(seq(3,8), 4);
+[1] 0.1250 0.1250 0.1250 0.1250 0.1250 0.0625
+
+#3
+> dsignrank( seq(15,20) , 11);
+[1] 0.01074219 0.01220703 0.01367187 0.01562500 0.01708984 0.01904297
+```
+
+#### `psignrank`
+
+The cumulative probability function of the [Wilcoxon Signed Rank statistic](https://en.wikipedia.org/wiki/Wilcoxon_signed-rank_test). See [R doc](https://stat.ethz.ch/R-manual/R-patched/library/stats/html/SignRank.html).
+
+_decl_
+
+```typescript
+declare function psignrank(
+  q: number|number[],
+  n: number,
+  lowerTail: boolean = true,
+  logP: boolean = false
+): number|number[];
+```
+
+* `q`: quantiles (scalar or array of values the rank W+).
+* `n`: total number of observations.
+* `lowerTail`: if TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
+* `logP`: if TRUE, probabilities p are given as ln(p).
+
+Usage:
+
+```javascript
+const libR = require('lib-r-math.js');
+const { SignRank } = libR;
+
+//some usefull helpers
+const precision = libR.R.numberPrecision(9); //restrict to 9 significant digits
+
+const { dsignrank, psignrank, qsignrank, rsignrank } = SignRank();
+
+//1
+const p1 = psignrank(seq(0,5), 9);
+precision(p1);
+/*
+[ 0.001953125,
+  0.00390625,
+  0.005859375,
+  0.009765625,
+  0.013671875,
+  0.01953125 ]*/
+
+//2
+const p2 = psignrank(seq(3,8), 4);
+precision(p2);
+//[ 0.3125, 0.4375, 0.5625, 0.6875, 0.8125, 0.875 ]
+
+//3
+const p3 = psignrank(seq(15, 20), 11);
+precision(p3);
+/*
+[ 0.0615234375,
+  0.0737304687,
+  0.0874023437,
+  0.103027344,
+  0.120117187,
+  0.139160156 ]
+*/
+```
+
+#### `qsignrank`
+
+The quantile function of the [Wilcoxon Signed Rank statistic](https://en.wikipedia.org/wiki/Wilcoxon_signed-rank_test). See [R doc](https://stat.ethz.ch/R-manual/R-patched/library/stats/html/SignRank.html).
+
+_decl_
+
+```typescript
+declare function qsignrank(
+  p: number|number[],
+  n: number,
+  lowerTail: boolean = true,
+  logP: boolean = false
+): number|number[];
+```
+
+* `p`: probabilities.
+* `n`: total number of observations.
+* `lowerTail`: if TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
+* `logP`: if TRUE, probabilities p are given as ln(p).
+
+Usage:
+
+```javascript
+const libR = require('lib-r-math.js');
+const { SignRank } = libR;
+
+const { dsignrank, psignrank, qsignrank, rsignrank } = SignRank();
+
+//1
+qsignrank(seq(0, 1, 0.2), 9);
+//[ 0, 15, 20, 25, 30, 45 ]
+
+//2
+qsignrank(seq(0, 1, 0.2), 4);
+//[ 0, 15, 20, 25, 30, 45 ]
+
+//3 there is a bug in R, it gives NaN instead of 66
+qsignrank(log(seq(0, 1, 0.2)), 11, false, true);
+//[ 66, 43, 36, 30, 23, 0 ]
+```
+
+_Equivalent in R_
+
+```R
+#1
+> qsignrank(seq(0, 1, 0.2), 9)
+[1]  0 15 20 25 30 45
+
+#2
+> qsignrank(seq(0, 1, 0.2), 4);
+[1]  0  3  4  6  7 10
+
+#3 Bug in R, first NaN should be 66.
+> qsignrank(log(seq(0, 1, 0.2)), 11, FALSE, TRUE);
+[1] NaN  43  36  30  23   0
+```
+
+#### `rsignrank`
+
+Generates random deviates for the [Wilcoxon Signed Rank statistic](https://en.wikipedia.org/wiki/Wilcoxon_signed-rank_test). See [R doc](https://stat.ethz.ch/R-manual/R-patched/library/stats/html/SignRank.html).
+
+_decl_
+
+```typescript
+declare function rsignrank(
+  N: number,
+  n: number
+): number|number[];
+```
+
+* `N`: Number of deviates to generate..
+* `n`: total number of observations.
+
+Usage:
+
+```javascript
+const libR = require('lib-r-math.js');
+const { SignRank } = libR;
+
+const mmc = new MarsagliaMultiCarry(0);
+
+const explicitSR = SignRank(mmc);
+const { dsignrank, psignrank, qsignrank, rsignrank } = explicitSR;
+
+//1
+mmc.init(4569);
+rsignrank(5, 9);
+//[ 17, 15, 32, 12, 20 ]
+
+//2
+rsignrank(5, 25);
+//[ 140, 80, 125, 198, 157 ]
+
+//3
+rsignrank(5, 4)
+//[ 4, 7, 8, 10, 8 ]
+```
+
+_Equivalent in R_
+
+```R
+RNGkind('Marsaglia-Multicarry');
+set.seed(4569)
+
+#1
+> rsignrank(5, 9);
+[1] 17 15 32 12 20
+
+#2
+> rsignrank(5, 25);
+[1] 140  80 125 198 157
+
+#3
+> rsignrank(5, 4)
+[1]  4  7  8 10  8
+```
