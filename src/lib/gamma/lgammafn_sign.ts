@@ -8,7 +8,7 @@ import {
   ME,
   ML_ERR_return_NAN,
   ML_ERROR
-} from '~common';
+} from '../common/_general';
 
 import { sinpi } from '~trigonometry';
 import { gammafn } from './gamma_fn';

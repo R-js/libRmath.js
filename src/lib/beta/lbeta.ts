@@ -39,7 +39,7 @@
  */
 import * as debug from 'debug';
 
-import { M_LN_SQRT_2PI, ML_ERR_return_NAN } from '~common';
+import { M_LN_SQRT_2PI, ML_ERR_return_NAN } from '../common/_general';
 
 import { gammafn } from '../gamma/gamma_fn';
 import { lgammafn } from '../gamma/lgamma_fn';

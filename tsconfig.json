@@ -50,9 +50,6 @@
             "~chi-2": [
                 "src/lib/chi-2/index.ts"
             ],
-            "~common": [
-                "src/lib/common/index.ts"
-            ],
             "~deviance": [
                 "src/lib/deviance/index.ts"
             ],

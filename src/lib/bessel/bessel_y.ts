@@ -38,7 +38,7 @@ import {
   ML_ERROR,
   thresh_BESS_Y,
   xlrg_BESS_Y
-} from '~common';
+} from '../common/_general';
 
 const { min: min0, PI: M_PI } = Math;
 const {

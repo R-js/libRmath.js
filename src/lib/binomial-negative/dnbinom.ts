@@ -49,7 +49,7 @@ import {
   R_D__1,
   R_D_exp,
   R_D_nonint_check
-} from '~common';
+} from '../common/_general';
 
 import { dbinom_raw } from '../binomial/dbinom';
 import { lgammafn } from '../gamma/lgamma_fn';

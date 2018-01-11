@@ -112,7 +112,7 @@ export function rround(x: number) {
 }
 */
 export function imin2(x: number, y: number): number {
-  return x < y ? Math.trunc(x) : Math.trunc(y);
+  return Math.trunc(Math.min(x, y));
 }
 
 /* Use 0.5 - p + 0.5 to perhaps gain 1 bit of accuracy */

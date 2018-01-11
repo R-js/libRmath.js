@@ -31,7 +31,7 @@
 
 import * as debug from 'debug';
 
-import { ML_ERR_return_NAN, R_D__0, R_D_val } from '~common';
+import { ML_ERR_return_NAN, R_D__0, R_D_val } from '../common/_general';
 
 import { dchisq } from '../chi-2/dchisq';
 import { dpois_raw } from '../poisson/dpois';

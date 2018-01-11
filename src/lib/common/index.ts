@@ -1,7 +1,7 @@
-export * from './_general';
+//export * from './_general';
 import { choose, lchoose } from './choose';
-export * from './fprec';
-export * from './fround';
+//export * from './fprec';
+//export * from './fround';
 //export * from './toms708';
 
 export const special = {

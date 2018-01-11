@@ -30,8 +30,8 @@ export { Wilcoxon } from './wilcoxon';
 */
 import { special as besselSpecial } from '~bessel';
 import { special as betaSpecial } from '~beta';
-import { special as chooseSpecial } from '~common';
 import { special as gammaSpecial } from '~gamma';
+import { special as chooseSpecial } from './common';
 
 export const special = Object.freeze({
   ...gammaSpecial,

@@ -44,7 +44,7 @@
 
 import {
     R_pow_di
-} from '~common';
+} from '../common/_general';
 
 const {floor, abs:fabs, log10, round, round:R_rint } = Math;
 const {isFinite:R_FINITE, isNaN:ISNAN } = Number;

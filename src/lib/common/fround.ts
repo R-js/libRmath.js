@@ -36,7 +36,7 @@
 
 const { round: R_rint } = Math;
 
-import { R_pow_di } from '~common';
+import { R_pow_di } from '../common/_general';
 
 const {
   MAX_SAFE_INTEGER: LONG_MAX,

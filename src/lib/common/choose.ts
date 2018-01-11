@@ -50,7 +50,7 @@
 
 /* These are recursive, so we should do a stack check */
 import * as debug from 'debug';
-import { isOdd } from '~common';
+import { isOdd } from '../common/_general';
 
 const { abs: fabs, log, exp, round } = Math;
 const { isInteger, NEGATIVE_INFINITY: ML_NEGINF, isNaN: ISNAN } = Number;

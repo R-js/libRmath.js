@@ -26,7 +26,7 @@
  *    The distribution function of the Poisson distribution.
  */
 
-import { ML_ERR_return_NAN, R_DT_0, R_DT_1 } from '~common';
+import { ML_ERR_return_NAN, R_DT_0, R_DT_1 } from '../common/_general';
 
 const { isNaN: ISNAN, isFinite: R_FINITE } = Number;
 const { floor, max: fmax2 } = Math;

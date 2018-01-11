@@ -24,9 +24,9 @@
  */
 
 import * as debug from 'debug';
-import { ML_ERR_return_NAN, R_Q_P01_boundaries } from '~common';
 import { R_DT_qIv } from '~exp-utils';
 import { INormal } from '~normal';
+import { ML_ERR_return_NAN, R_Q_P01_boundaries } from '../common/_general';
 import { forEach } from '../r-func';
 import { pnt } from './pnt';
 import { qt } from './qt';

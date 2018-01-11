@@ -27,7 +27,7 @@
  *    The quantile function of the geometric distribution.
  */
 import * as debug from 'debug';
-import { ML_ERR_return_NAN, R_Q_P01_boundaries } from '~common';
+import { ML_ERR_return_NAN, R_Q_P01_boundaries } from '../common/_general';
 
 import { R_DT_Clog } from '~exp-utils';
 

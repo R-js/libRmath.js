@@ -31,8 +31,8 @@
  *    Computes the geometric probabilities, Pr(X=x) = p(1-p)^x.
  */
 import * as debug from 'debug';
-import { ML_ERR_return_NAN, R_D__0, R_D_nonint_check } from '~common';
 import { dbinom_raw } from '../binomial/dbinom';
+import { ML_ERR_return_NAN, R_D__0, R_D_nonint_check } from '../common/_general';
 
 const { isNaN: ISNAN, isFinite: R_FINITE } = Number;
 const { round: R_forceint, log } = Math;

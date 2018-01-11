@@ -59,7 +59,7 @@ import {
   ML_ERR_return_NAN,
   R_D__0,
   R_D_exp
-} from '~common';
+} from '../common/_general';
 
 const { log, sqrt, ceil} = Math;
 const { isNaN: ISNAN, isFinite: R_FINITE } = Number;

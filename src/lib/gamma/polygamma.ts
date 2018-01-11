@@ -150,7 +150,7 @@ import {
   imin2,
   R_pow_di,
   Rf_d1mach
-} from '~common';
+} from '../common/_general';
 
 import { NumberW } from '../common/toms708';
 

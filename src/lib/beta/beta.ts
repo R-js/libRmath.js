@@ -45,8 +45,7 @@
 
 import * as debug from 'debug';
 
-import { ME, ML_ERR_return_NAN, ML_ERROR } from '~common';
-
+import { ME, ML_ERR_return_NAN, ML_ERROR } from '../common/_general';
 import { gammafn } from '../gamma/gamma_fn';
 import { lbeta } from './lbeta';
 

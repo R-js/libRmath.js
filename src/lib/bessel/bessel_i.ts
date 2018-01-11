@@ -45,7 +45,8 @@ import {
   R_pow_di,
   rtnsig_BESS,
   xlrg_BESS_IJ
-} from '~common';
+} from '../common/_general';
+
 const { pow, max: fmax2, sqrt, exp, floor, trunc, min: min0, PI: M_PI } = Math;
 const { isNaN: ISNAN, NaN: ML_NAN, POSITIVE_INFINITY: ML_POSINF } = Number;
 

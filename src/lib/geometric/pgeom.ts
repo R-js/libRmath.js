@@ -30,7 +30,7 @@
  */
 import * as debug from 'debug';
 
-import { ML_ERR_return_NAN, R_DT_0, R_DT_1 } from '~common';
+import { ML_ERR_return_NAN, R_DT_0, R_DT_1 } from '../common/_general';
 
 import { R_DT_Clog } from '~exp-utils';
 

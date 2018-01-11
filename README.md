@@ -1634,6 +1634,7 @@ const { dbeta, pbeta, qbeta, rbeta } = betaDefault;
 
 //1. always zero, regardless of shape params, because 0 ≤ x ≤ 1.
 qbeta(0, 99, 66);
+//0
 
 //2.
 qbeta([0, 1], 99, 66);

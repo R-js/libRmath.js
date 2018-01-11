@@ -31,8 +31,8 @@
  */
 
 import * as debug from 'debug';
-import { DBL_MAX_EXP, ML_ERR_return_NAN } from '~common';
 import { INormal } from '~normal';
+import { DBL_MAX_EXP, ML_ERR_return_NAN } from '../common/_general';
 
 const { LN2: M_LN2, log, min: fmin2, max: fmax2, exp, sqrt } = Math;
 const { MAX_VALUE: DBL_MAX, isFinite: R_FINITE } = Number;

@@ -46,9 +46,8 @@
  * The old (R 1.1.1) version of the code is available via `#define D_non_pois'
  */
 
-import { ML_ERR_return_NAN, R_D__0 } from '~common';
-
 import * as debug from 'debug';
+import { ML_ERR_return_NAN, R_D__0 } from '../common/_general';
 import { dpois_raw } from '../poisson/dpois';
 import { forEach } from '../r-func';
 

@@ -55,7 +55,7 @@ import * as debug from 'debug';
 
 
 
-import { ML_ERR_return_NAN } from '~common';
+import { ML_ERR_return_NAN } from '../common/_general';
 
 import { exp_rand } from '../exp/sexp';
 

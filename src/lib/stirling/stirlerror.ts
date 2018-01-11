@@ -39,7 +39,7 @@
  *
  */
 
-import { M_LN_SQRT_2PI } from '~common';
+import { M_LN_SQRT_2PI } from '../common/_general';
 import { lgammafn } from '../gamma/lgamma_fn';
 
 const { trunc , log } = Math;
