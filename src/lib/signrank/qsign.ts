@@ -8,6 +8,7 @@ import {
   R_Q_P01_check
 } from '../common/_general';
 
+import { forEach } from '../r-func';
 import { csignrank } from './signrank';
 
 const { round, trunc, LN2: M_LN2, exp } = Math;
@@ -25,15 +26,13 @@ export function qsignrank<T>(
     const u = roundN * (roundN + 1) / 2;
     const c = trunc(u / 2);
     const w = new Array(c + 1).fill(0);
-    
-    const fx: number[] = (Array.isArray(xx) ? xx : [xx]) as any;
    
-    const result = fx.map(x => {
+    return forEach(xx)(x => {
       if (ISNAN(x) || ISNAN(n)) {
-        return x + n;
+        return NaN;
       }
   
-      if (!R_FINITE(x) || !R_FINITE(n)) {
+      if (/*!R_FINITE(x) ||*/ !R_FINITE(n)) {
         return ML_ERR_return_NAN(printer_qsignrank);
       }
       let rc = R_Q_P01_check(logP, x);
@@ -76,7 +75,6 @@ export function qsignrank<T>(
         }
       }
       return q;
-    });
-    return (result.length === 1 ? result[0] : result) as any;
+    }) as any;
   }
   

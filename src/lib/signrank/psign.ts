@@ -5,6 +5,7 @@ import {
   R_DT_1,
   R_DT_val
 } from '../common/_general';
+import { forEach } from '../r-func';
 import { csignrank } from './signrank';
 
 const { round, trunc, LN2: M_LN2, exp } = Math;
@@ -23,11 +24,10 @@ export function psignrank<T>(
   const c = trunc(u / 2);
   const w = new Array(c + 1).fill(0);
 
-  const fx: number[] = (Array.isArray(xx) ? xx : [xx]) as any;
-
-  const result = fx.map(x => round(x + 1e-7)).map(x => {
+  return forEach(xx)(x => {
+    x = round(x + 1e-7);
     let lowerT = lowerTail; // temp copy on each iteration
-    if (ISNAN(x) || ISNAN(n)) return x + n;
+    if (ISNAN(x) || ISNAN(n)) return NaN;
     if (!R_FINITE(n)) return ML_ERR_return_NAN(printer_psignrank);
     if (n <= 0) return ML_ERR_return_NAN(printer_psignrank);
 
@@ -53,6 +53,5 @@ export function psignrank<T>(
       lowerT = !lowerT; /* p = 1 - p; */
     }
     return R_DT_val(lowerT, logP, p);
-  });
-  return (result.length === 1 ? result[0] : result) as any;
+  }) as any;
 } /* psignrank() */
