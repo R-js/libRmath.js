@@ -16,7 +16,6 @@
  *  along with this program; if not, a copy is available at
  *  https://www.R-project.org/Licenses/
  *  
- * 
  */
 
 import * as debug from 'debug';
@@ -24,6 +23,7 @@ import * as debug from 'debug';
 import { ML_ERR_return_NAN, R_Q_P01_boundaries } from '../common/_general';
 
 import { R_DT_qIv } from '~exp-utils';
+import { forEach } from '../r-func';
 import { pnbeta } from './pnbeta';
 
 const {
@@ -48,9 +48,7 @@ export function qnbeta<T>(
   const accu = 1e-15;
   const Eps = 1e-14; /* must be > accu */
 
-  const fa: number[] = Array.isArray(_p) ? _p : ([_p] as any);
-
-  const result = fa.map(p => {
+  return forEach(_p)(p => {
     let ux;
     let lx;
     let nx;
@@ -92,6 +90,5 @@ export function qnbeta<T>(
     } while ((ux - lx) / nx > accu);
 
     return 0.5 * (ux + lx);
-  });
-  return result.length === 1 ? result[0] : (result as any);
+  }) as any;
 }
