@@ -141,7 +141,7 @@ export class MersenneTwister extends IRNG {
     this.mti = N + 1;
   }
 
-  public init(_seed: number) {
+  public init(_seed: number =  timeseed()) {
     /* Initial scrambling */
     const s = new Uint32Array([0]);
     s[0] = _seed;

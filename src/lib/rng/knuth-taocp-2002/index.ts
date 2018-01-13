@@ -174,7 +174,7 @@ export class KnuthTAOCP2002 extends IRNG {
     return fixup(this.KT_next() * KT);
   }
 
-  public init(_seed: number) {
+  public init(_seed: number =  timeseed()) {
     /* Initial scrambling */
     const s = new Uint32Array([0]);
     s[0] = _seed;

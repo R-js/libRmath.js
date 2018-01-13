@@ -75,7 +75,7 @@ export class WichmannHill extends IRNG {
     return;
   }
 
-  public init(seed: number) {
+  public init(seed: number =  timeseed()) {
     /* Initial scrambling */
     const s = new Uint32Array([seed]);
 

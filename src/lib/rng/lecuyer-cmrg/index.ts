@@ -27,7 +27,7 @@ export class LecuyerCMRG extends IRNG {
     this.m_seed = new Int32Array(SEED_LEN).fill(0);
   }
 
-  public init(se: number) {
+  public init(se: number =  timeseed()) {
     /* Initial scrambling */
     const s = new Int32Array([0]);
 

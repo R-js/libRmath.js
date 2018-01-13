@@ -93,7 +93,7 @@ export class KnuthTAOCP extends IRNG {
     this.m_seed = new Int32Array(this.buf).fill(0);
   }
 
-  public init(_seed: number) {
+  public init(_seed: number  =  timeseed()) {
     /* Initial scrambling */
     const s = new Uint32Array([0]);
     s[0] = _seed;

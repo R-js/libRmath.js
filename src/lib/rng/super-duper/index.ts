@@ -70,7 +70,7 @@ export class SuperDuper extends IRNG {
     return;
   }
 
-  public init(_seed: number) {
+  public init(_seed: number  =  timeseed()) {
     /* Initial scrambling */
     const s = new Uint32Array([_seed]);
     for (let j = 0; j < 50; j++) {
