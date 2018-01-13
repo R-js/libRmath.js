@@ -66,8 +66,8 @@
 import * as debug from 'debug';
 import { M_LN_SQRT_PI, ML_ERR_return_NAN, R_D__0 } from '../common/_general';
 
-import { INormal } from '~normal';
 import { lgammafn } from '../gamma/lgamma_fn';
+import {  dnorm4 as dnorm } from '../normal/dnorm';
 import { forEach } from '../r-func';
 import { dt } from './dt';
 import { pnt } from './pnt';
@@ -80,8 +80,7 @@ export function dnt<T>(
   xx: T,
   df: number,
   ncp: number = 0,
-  giveLog: boolean = false,
-  normal: INormal
+  giveLog: boolean = false
 ): T {
   return forEach(xx)(x => {
     if (ISNAN(x) || ISNAN(df)) return x + df;
@@ -89,7 +88,7 @@ export function dnt<T>(
     /* If non-positive df then error */
     if (df <= 0.0) return ML_ERR_return_NAN(printer_dnt);
 
-    if (ncp === 0.0) return dt(x, df, giveLog, normal);
+    if (ncp === 0.0) return dt(x, df, giveLog);
 
     /* If x is infinite then return 0 */
     if (!R_FINITE(x)) return R_D__0(giveLog);
@@ -98,33 +97,36 @@ export function dnt<T>(
        normal distribution with mean = ncp.  However, the formula
        loses a lot of accuracy around df=1e9
     */
-    if (!R_FINITE(df) || df > 1e8) return normal.dnorm(x, ncp, 1, giveLog);
+    if (!R_FINITE(df) || df > 1e8) return dnorm(x, ncp, 1, giveLog);
 
     /* Do calculations on log scale to stabilize */
 
     /* Consider two cases: x ~= 0 or not */
-    const u = (function() {
+    const u = function() {
       if (fabs(x) > sqrt(df * DBL_EPSILON)) {
+        printer_dnt('fabs(x:%d)>sqrt(df*espsilon):%d', fabs(x), sqrt(df * DBL_EPSILON));
         return (
           log(df) -
           log(fabs(x)) +
           log(
             fabs(
-              pnt(x * sqrt((df + 2) / df), df + 2, ncp, true, false, normal) -
-                pnt(x, df, ncp, true, false, normal)
+              pnt(x * sqrt((df + 2) / df), df + 2, ncp, true, false) -
+                pnt(x, df, ncp, true, false)
             )
           )
         );
         /* FIXME: the above still suffers from cancellation (but not horribly) */
       } else {
         /* x ~= 0 : -> same value as for  x = 0 */
+        printer_dnt('fabs(x:%d)<=sqrt(df*espsilon):%d', fabs(x), sqrt(df * DBL_EPSILON));
         return (
           lgammafn((df + 1) / 2) -
           lgammafn(df / 2) -
           (M_LN_SQRT_PI + 0.5 * (log(df) + ncp * ncp))
         );
       }
-    })();
+    }();
+    printer_dnt('u=%d, giveLog=%s', u, giveLog);
     return giveLog ? u : exp(u);
   }) as any;
 }

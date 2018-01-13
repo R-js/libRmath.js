@@ -24,7 +24,6 @@
 
 import * as debug from 'debug';
 
-import { INormal } from '~normal';
 import { lbeta } from '../beta/lbeta';
 import { pbeta } from '../beta/pbeta';
 import {
@@ -34,6 +33,7 @@ import {
   R_DT_0,
   R_DT_1
 } from '../common/_general';
+import { pnorm5 as pnorm } from '../normal/pnorm';
 import { forEach } from '../r-func';
 
 const { log1p, sqrt, log, abs: fabs, exp } = Math;
@@ -45,8 +45,7 @@ export function pt<T>(
   xx: T,
   n: number,
   lowerTail: boolean = true,
-  log_p: boolean = false,
-  normal: INormal
+  log_p: boolean = false
 ): T {
   /* return  P[ T <= x ]	where
      * T ~ t_{n}  (t distrib. with n degrees of freedom).
@@ -70,14 +69,14 @@ export function pt<T>(
     }
 
     if (!R_FINITE(n)) {
-      return normal.pnorm(x, 0.0, 1.0, lower_tail, log_p);
+      return pnorm(x, 0.0, 1.0, lower_tail, log_p);
     }
 
     if (n > 4e5) {
       /*-- Fixme(?): test should depend on `n' AND `x' ! */
       /* Approx. from	 Abramowitz & Stegun 26.7.8 (p.949) */
       val = 1 / (4 * n);
-      return normal.pnorm(
+      return pnorm(
         x * (1 - val) / sqrt(1 + x * x * 2 * val),
         0.0,
         1.0,

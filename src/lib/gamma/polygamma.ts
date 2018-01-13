@@ -148,8 +148,8 @@ import {
   DBL_MAX_EXP,
   DBL_MIN_EXP,
   imin2,
-  R_pow_di,
-  Rf_d1mach
+  M_LOG10_2,
+  R_pow_di
 } from '../common/_general';
 
 import { NumberW } from '../common/toms708';
@@ -338,8 +338,8 @@ function dpsifn(
   }
   mm = m;
   nx = imin2(-DBL_MIN_EXP, DBL_MAX_EXP); /* = 1021 */
-  r1m5 = Rf_d1mach(5);
-  r1m4 = Rf_d1mach(4) * 0.5;
+  r1m5 = M_LOG10_2;
+  r1m4 = Number.EPSILON * 0.5;
   wdtol = fmax2(r1m4, 0.5e-18); /* 1.11e-16 */
 
   /* elim = approximate exponential over and underflow limit */

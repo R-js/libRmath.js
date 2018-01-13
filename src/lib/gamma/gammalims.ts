@@ -43,8 +43,7 @@
 
 import {
     ME,
-    ML_ERROR,
-    Rf_d1mach as d1mach
+    ML_ERROR
 } from '../common/_general';
 
 const { max:fmax2, log, abs:fabs } = Math;
@@ -69,7 +68,7 @@ export function gammalims(input: { xmin: number, xmax: number }, IEEE_754?: bool
     let xold: number;
     let i: number;
 
-    alnsml = log(d1mach(1));
+    alnsml = log(Number.MIN_VALUE);
     input.xmin = -alnsml;
     let find_xmax = false;
     for (i = 1; i <= 10; ++i) {
@@ -93,7 +92,7 @@ export function gammalims(input: { xmin: number, xmax: number }, IEEE_754?: bool
     //goto label
     //find_xmax:
 
-    alnbig = log(d1mach(2));
+    alnbig = log(Number.MIN_VALUE);
     input.xmax = alnbig;
     let done = false;
     for (i = 1; i <= 10; ++i) {

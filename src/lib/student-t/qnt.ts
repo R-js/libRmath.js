@@ -25,8 +25,8 @@
 
 import * as debug from 'debug';
 import { R_DT_qIv } from '~exp-utils';
-import { INormal } from '~normal';
 import { ML_ERR_return_NAN, R_Q_P01_boundaries } from '../common/_general';
+import { qnorm } from '../normal/qnorm';
 import { forEach } from '../r-func';
 import { pnt } from './pnt';
 import { qt } from './qt';
@@ -47,10 +47,9 @@ export function qnt<T>(
   df: number,
   ncp: number,
   lowerTail: boolean,
-  logP: boolean,
-  normal: INormal
+  logP: boolean
 ): T {
-  return forEach(pp)(p => _qnt(p, df, ncp, lowerTail, logP, normal)) as any;
+  return forEach(pp)(p => _qnt(p, df, ncp, lowerTail, logP)) as any;
 }
 
 function _qnt(
@@ -58,8 +57,7 @@ function _qnt(
   df: number,
   ncp: number,
   lower_tail: boolean,
-  log_p: boolean,
-  normal: INormal
+  log_p: boolean
 ) {
   const accu = 1e-13;
   const Eps = 1e-11; /* must be > accu */
@@ -77,7 +75,7 @@ function _qnt(
      */
   if (df <= 0.0) return ML_ERR_return_NAN(printer);
 
-  if (ncp === 0.0 && df >= 1.0) return qt(p, df, lower_tail, log_p, normal);
+  if (ncp === 0.0 && df >= 1.0) return qt(p, df, lower_tail, log_p);
 
   let rc = R_Q_P01_boundaries(lower_tail, log_p, p, ML_NEGINF, ML_POSINF);
   if (rc !== undefined) {
@@ -85,7 +83,7 @@ function _qnt(
   }
   if (!R_FINITE(df))
     // df = Inf ==> limit N(ncp,1)
-    return normal.qnorm(p, ncp, 1, lower_tail, log_p);
+    return qnorm(p, ncp, 1, lower_tail, log_p);
 
   p = R_DT_qIv(lower_tail, log_p, p);
 
@@ -95,20 +93,20 @@ function _qnt(
   pp = fmin2(1 - DBL_EPSILON, p * (1 + Eps));
   for (
     ux = fmax2(1, ncp);
-    ux < DBL_MAX && pnt(ux, df, ncp, true, false, normal) < pp;
+    ux < DBL_MAX && pnt(ux, df, ncp, true, false) < pp;
     ux *= 2
   );
   pp = p * (1 - Eps);
   for (
     lx = fmin2(-1, -ncp);
-    lx > -DBL_MAX && pnt(lx, df, ncp, true, false, normal) > pp;
+    lx > -DBL_MAX && pnt(lx, df, ncp, true, false) > pp;
     lx *= 2
   );
 
   /* 2. interval (lx,ux)  halving : */
   do {
     nx = 0.5 * (lx + ux); // could be zero
-    if (pnt(nx, df, ncp, true, false, normal) > p) ux = nx;
+    if (pnt(nx, df, ncp, true, false) > p) ux = nx;
     else lx = nx;
   } while (ux - lx > accu * fmax2(fabs(lx), fabs(ux)));
 

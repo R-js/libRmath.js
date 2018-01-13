@@ -46,11 +46,9 @@ import {
 } from '../common/_general';
 
 import { bd0 } from '../deviance/bd0';
-
-import { stirlerr } from '../stirling/stirlerror';
-
-import { INormal } from '~normal';
+import { dnorm4 as dnorm } from '../normal/dnorm';
 import { forEach } from '../r-func';
+import { stirlerr } from '../stirling/stirlerror';
 
 const { log1p, abs: fabs, exp, log, sqrt } = Math;
 const { isNaN: ISNAN, EPSILON: DBL_EPSILON, isFinite: R_FINITE } = Number;
@@ -59,8 +57,7 @@ const printer_dt = debug('dt');
 export function dt<T>(
   xx: T,
   n: number,
-  giveLog: boolean = false,
-  normal: INormal
+  giveLog: boolean = false
 ): T {
   
   return forEach(xx)(x => {
@@ -74,7 +71,7 @@ export function dt<T>(
       return R_D__0(giveLog);
     }
     if (!R_FINITE(n)) {
-      return normal.dnorm(x, 0, 1, giveLog);
+      return dnorm(x, 0, 1, giveLog);
     }
 
     let u: number;

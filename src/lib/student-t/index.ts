@@ -14,13 +14,12 @@ import { qt as _qt } from './qt';
 import { rt as _rt } from './rt';
 
 
-
 export function StudentT(rng: INormal = Normal()) {
   function dt(x: number | number[], df: number, ncp?: number, logP = false) {
     if (ncp === undefined) {
-      return _dt(x, df, logP, rng);
+      return _dt(x, df, logP);
     }
-    return dnt(x, df, ncp, logP, rng);
+    return dnt(x, df, ncp, logP);
   }
 
   function pt(
@@ -31,10 +30,10 @@ export function StudentT(rng: INormal = Normal()) {
     logP = false
   ) {
     if (ncp === undefined) {
-      return _pt(q, df, lowerTail, logP, rng);
+      return _pt(q, df, lowerTail, logP);
     }
 
-    return pnt(q, df, ncp, lowerTail, logP, rng);
+    return pnt(q, df, ncp, lowerTail, logP);
   }
 
   function qt(
@@ -45,23 +44,10 @@ export function StudentT(rng: INormal = Normal()) {
     logP: boolean = false
   ) {
     if (ncp === undefined) {
-      return _qt(pp, df, lowerTail, logP, rng);
+      return _qt(pp, df, lowerTail, logP);
     }
-    return qnt(pp, df, ncp, lowerTail, logP, rng);
+    return qnt(pp, df, ncp, lowerTail, logP);
   }
-  /*
-  > rt
-function (n, df, ncp) 
-{
-    if (missing(ncp)) 
-        .Call(C_rt, n, df)
-    else if (is.na(ncp)) {
-        warning("NAs produced")
-        rep(NaN, n)
-    }
-    else rnorm(n, ncp)/sqrt(rchisq(n, df)/df)
-}
-  */
 
   function rt(n: number, df: number, ncp?: number) {
     if (ncp === undefined) {

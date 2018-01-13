@@ -59,7 +59,7 @@ import {
 } from '../common/_general';
 
 import { R_D_LExp, R_DT_qIv } from '~exp-utils';
-import { INormal } from '~normal';
+import { qnorm } from '../normal/qnorm';
 import { forEach } from '../r-func';
 import { tanpi } from '../trigonometry/cospi';
 import { dt } from './dt';
@@ -94,18 +94,16 @@ export function qt<T>(
   pp: T,
   ndf: number,
   lowerTail: boolean,
-  logP: boolean,
-  normal: INormal
+  logP: boolean
 ): T {
-  return forEach(pp)(p => _qt(p, ndf, lowerTail, logP, normal)) as any;
+  return forEach(pp)(p => _qt(p, ndf, lowerTail, logP)) as any;
 }
 
 function _qt(
   p: number,
   ndf: number,
   lower_tail: boolean,
-  log_p: boolean,
-  normal: INormal
+  log_p: boolean
 ): number {
   const eps = 1e-12;
   let P;
@@ -140,13 +138,13 @@ function _qt(
     pp = fmin2(1 - DBL_EPSILON, p * (1 + Eps));
     for (
       ux = 1;
-      ux < DBL_MAX && pt(ux, ndf, true, false, normal) < pp;
+      ux < DBL_MAX && pt(ux, ndf, true, false) < pp;
       ux *= 2
     );
     pp = p * (1 - Eps);
     for (
       lx = -1;
-      lx > -DBL_MAX && pt(lx, ndf, true, false, normal) > pp;
+      lx > -DBL_MAX && pt(lx, ndf, true, false) > pp;
       lx *= 2
     );
 
@@ -155,7 +153,7 @@ function _qt(
      */
     do {
       nx = 0.5 * (lx + ux);
-      if (pt(nx, ndf, true, false, normal) > p) ux = nx;
+      if (pt(nx, ndf, true, false) > p) ux = nx;
       else lx = nx;
     } while ((ux - lx) / fabs(nx) > accu && ++iter < 1000);
 
@@ -176,7 +174,7 @@ function _qt(
      * The differences are tiny even if x ~ 1e5, and qnorm is not
      * that accurate in the extreme tails.
      */
-  if (ndf > 1e20) return normal.qnorm(p, 0, 1, lower_tail, log_p);
+  if (ndf > 1e20) return qnorm(p, 0, 1, lower_tail, log_p);
 
   P = R_D_qIv(log_p, p); /* if exp(p) underflows, we fix below */
 
@@ -247,14 +245,14 @@ function _qt(
       /* P > P0(df) */
       /* Asymptotic inverse expansion about normal */
       if (P_ok)
-        x = normal.qnorm(
+        x = qnorm(
           0.5 * P,
           0,
           1,
           /*lower_tail*/ false,
           /*log_p*/ false
         ); /* log_p && P underflowed */
-      else x = normal.qnorm(log_P2, 0, 1, lower_tail, /*log_p*/ true);
+      else x = qnorm(log_P2, 0, 1, lower_tail, /*log_p*/ true);
 
       y = x * x;
       if (ndf < 5) c += 0.3 * (ndf - 4.5) * (x + 0.6);
@@ -290,8 +288,8 @@ function _qt(
       let it = 0;
       while (
         it++ < 10 &&
-        (y = dt(q, ndf, false, normal)) > 0 &&
-        R_FINITE((x = (pt(q, ndf, false, false, normal) - P / 2) / y)) &&
+        (y = dt(q, ndf, false)) > 0 &&
+        R_FINITE((x = (pt(q, ndf, false, false) - P / 2) / y)) &&
         fabs(x) > 1e-14 * fabs(q)
       )
         /* Newton (=Taylor 1 term):

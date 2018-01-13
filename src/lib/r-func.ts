@@ -1,5 +1,10 @@
 const { abs, sign } = Math;
 
+import * as debug from 'debug';
+
+const printer_seq = debug('seq');
+const precision9 = numberPrecision(9);
+
 export const seq = (adjust = 0) => (adjustMin = adjust) => (
   start: number,
   end: number = 1,
@@ -15,16 +20,21 @@ export const seq = (adjust = 0) => (adjustMin = adjust) => (
     s = end + adjustMin;
     cursor = e;
   }
-
+  // wow: Chrome and FireFox give 
+  // 0.4+0.2 = 0.6000000000000001
+  // so we use precision to have it make sense
+  // sometimes rounding effects try something diff
   step = abs(step) * sign(end - start);
+  printer_seq('step:%d', step);
+
   const rc: number[] = [];
 
   do {
     rc.push(cursor);
     cursor += step;
-  } while (cursor >= s && cursor <= e && step !== 0);
+  } while (precision9(cursor) >= s && precision9(cursor) <= e && step !== 0);
 
-  return rc;
+  return precision9(rc) as any;
 };
 
 export function selector(indexes: number|number[]): { (val: any, index: number): boolean} {

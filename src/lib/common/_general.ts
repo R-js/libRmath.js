@@ -29,17 +29,16 @@ export const M_1_SQRT_2PI = 0.398942280401432677939946059934;
 //export const R_forceint = nearbyint;
 //export const R_rint = nearbyint;
 export const M_2PI = 6.283185307179586476925286766559;
-export const M_LN_2PI = 1.837877066409345483560659472811;
+export const M_LN_2PI = 1.837877066409345483560659472811; /* 
+   6.0E-17, we used the comments in the nmath lib to find epsilon that fullfills x == x-epsilon
+   this does not cover the internal accurace of build in functions in Math.cos, Math.sin etc
+*/
 /*export const sqrt = Math.sqrt;
 export const asin = Math.asin;
 export const acos = Math.acos;
 export const atan = Math.atan;
 export const atan2 = Math.atan2;
-*//* 
-   6.0E-17, we used the comments in the nmath lib to find epsilon that fullfills x == x-epsilon
-   this does not cover the internal accurace of build in functions in Math.cos, Math.sin etc
-*/
-/*export const DBL_EPSILON = Number.EPSILON;
+*/ /*export const DBL_EPSILON = Number.EPSILON;
 export const sinh = Math.sinh;
 export const DBL_MAX = Number.MAX_VALUE;
 export const exp = Math.exp;
@@ -47,7 +46,8 @@ export const isInteger = Number.isInteger;
 export const sin = Math.sin;
 export const cos = Math.cos;
 export const tan = Math.tan;
-*/export const M_1_PI = 1.0 / Math.PI;
+*/ export const M_1_PI =
+  1.0 / Math.PI;
 /*export const R_FINITE = (x: number) => Number.isFinite(x);
 export const NaN = Number.NaN;
 export const FLT_MIN = 2.22507e-308; //10^24  larger then Number.MIN_VALUE
@@ -59,15 +59,16 @@ export const round = Math.round;
 export const ML_POSINF = Number.POSITIVE_INFINITY;
 export const ML_NEGINF = Number.NEGATIVE_INFINITY;
 export const M_PI = 3.14159265358979323846264338327950288;
-*/export const M_PI_2 = Math.PI / 2;
-export const M_LN_SQRT_PI = 0.5723649429247; // log(sqrt(pi))
+*/ export const M_PI_2 =
+  Math.PI / 2;
+export const M_LN_SQRT_PI = 0.57236494292470008; // log(sqrt(pi))
 export const M_LN_SQRT_2PI = 0.918938533204672741780329736406; // log(sqrt(2*pi))
 export const M_LN_SQRT_PId2 = 0.225791352644727432363097614947; // log(sqrt(pi/2))
 //export const M_LN10 = 2.30258509299404568402; /* log_e 10 */
 //export const ML_VALID = (x: number) => !ISNAN(x);
 //export const floor = Math.floor;
 export const M_SQRT_2dPI = 0.797884560802865355879892119869; // sqrt(2/pi)
-export const M_LOG10_2 = 0.301029995663981195213738894724;
+export const M_LOG10_2 = 0.301029995663981195213738894724; //Math.log10(2);
 //export const FLT_RADIX = 2;
 //export const CHAR_BIT = 8;
 export const DBL_MAX_EXP = Math.log2(Number.MAX_VALUE);
@@ -196,7 +197,11 @@ export function ML_ERR_return_NAN(printer: debug.IDebugger) {
   return Number.NaN;
 }
 
-export function R_D_nonint_check(log: boolean, x: number, printer: debug.IDebugger) {
+export function R_D_nonint_check(
+  log: boolean,
+  x: number,
+  printer: debug.IDebugger
+) {
   if (R_nonint(x)) {
     printer('non-integer x = %d', x);
     return R_D__0(log);
@@ -236,6 +241,7 @@ export function isEpsilonNear(x: number, target: number): boolean {
   return false;
 }
 
+/*
 export function Rf_d1mach(i: number): number {
   switch (i) {
     case 1:
@@ -243,13 +249,15 @@ export function Rf_d1mach(i: number): number {
     case 2:
       return Number.MAX_VALUE;
 
-    case 3 /* = FLT_RADIX  ^ - DBL_MANT_DIG
-          for IEEE:  = 2^-53 = 1.110223e-16 = .5*DBL_EPSILON */:
+    case 3:
+      // = FLT_RADIX  ^ - DBL_MANT_DIG
+      //  for IEEE:  = 2^-53 = 1.110223e-16 = .5*DBL_EPSILON 
       return 0.5 * Number.EPSILON;
 
-    case 4 /* = FLT_RADIX  ^ (1- DBL_MANT_DIG) =
-          for IEEE:  = 2^-52 = DBL_EPSILON */:
-      return  Number.EPSILON;
+    case 4:
+      // = FLT_RADIX  ^ (1- DBL_MANT_DIG) =
+      //     for IEEE:  = 2^-52 = DBL_EPSILON 
+      return Number.EPSILON;
 
     case 5:
       return M_LOG10_2;
@@ -258,15 +266,10 @@ export function Rf_d1mach(i: number): number {
       return 0.0;
   }
 }
-
-export function dF77_NAME(i: number): number {
-  return Rf_d1mach(i);
-}
-
+*/
 export function R_D_negInonint(x: number) {
   return x < 0.0 || R_nonint(x);
 }
-
 
 export function R_nonint(x: number) {
   return !Number.isInteger(x); //Math.abs(x - Math.round(x)) > 1e-7 * Math.max(1, Math.abs(x));
@@ -347,7 +350,7 @@ export function R_pow(x: number, y: number): number {
   if (!Number.isFinite(x)) {
     if (x > 0)
       /* Inf ^ y */
-      return y < 0 ? 0 :  Number.POSITIVE_INFINITY;
+      return y < 0 ? 0 : Number.POSITIVE_INFINITY;
     else {
       /* (-Inf) ^ y */
       if (Number.isFinite(y) && y === Math.floor(y))
@@ -359,8 +362,8 @@ export function R_pow(x: number, y: number): number {
     if (x >= 0) {
       if (y > 0)
         /* y == +Inf */
-        return x >= 1 ?  Number.POSITIVE_INFINITY : 0; /* y == -Inf */
-      else return x < 1 ?  Number.POSITIVE_INFINITY : 0;
+        return x >= 1 ? Number.POSITIVE_INFINITY : 0; /* y == -Inf */
+      else return x < 1 ? Number.POSITIVE_INFINITY : 0;
     }
   }
   return NaN; // all other cases: (-Inf)^{+-Inf, non-int}; (neg)^{+-Inf}
@@ -381,7 +384,7 @@ export function R_powV(x: number, y: number): number /* = x ^ y */ {
   if (x === 1 || y === 0) return 1;
   if (x === 0) {
     if (y > 0) return 0;
-    /* y < 0 */ return  Number.POSITIVE_INFINITY;
+    /* y < 0 */ return Number.POSITIVE_INFINITY;
   }
   if (Number.isFinite(x) && Number.isFinite(y)) return Math.pow(x, y);
   if (Number.isNaN(x) || Number.isNaN(y)) {
@@ -390,7 +393,7 @@ export function R_powV(x: number, y: number): number /* = x ^ y */ {
   if (!Number.isFinite(x)) {
     if (x > 0)
       /* Inf ^ y */
-      return y < 0 ? 0 :  Number.POSITIVE_INFINITY;
+      return y < 0 ? 0 : Number.POSITIVE_INFINITY;
     else {
       /* (-Inf) ^ y */
       if (Number.isFinite(y) && y === Math.floor(y))
@@ -402,8 +405,8 @@ export function R_powV(x: number, y: number): number /* = x ^ y */ {
     if (x >= 0) {
       if (y > 0)
         /* y == +Inf */
-        return x >= 1 ?  Number.POSITIVE_INFINITY : 0; /* y == -Inf */
-      else return x < 1 ?  Number.POSITIVE_INFINITY : 0;
+        return x >= 1 ? Number.POSITIVE_INFINITY : 0; /* y == -Inf */
+      else return x < 1 ? Number.POSITIVE_INFINITY : 0;
     }
   }
   return NaN; /* all other cases: (-Inf)^{+-Inf,

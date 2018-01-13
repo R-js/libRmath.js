@@ -39,7 +39,6 @@
  *      as from R 2.6.0, 'log_p' partially improved over log(p..)
  */
 import * as debug from 'debug';
-
 import { ML_ERR_return_NAN, R_DT_0, R_DT_1 } from '../common/_general';
 import { NumberW, Toms708 } from '../common/toms708';
 import { forEach } from '../r-func';
@@ -124,8 +123,15 @@ export function pbeta<T>(
   lowerTail: boolean = true,
   logP: boolean = false
 ): T {
-  printer_pbeta('pbeta being called');
   return forEach(q)(x => {
+    printer_pbeta(
+      'pbeta(q=%d, a=%d, b=%d, l.t=%s, ln=%s)',
+      x,
+      a,
+      b,
+      lowerTail,
+      logP
+    );
     if (ISNAN(x) || ISNAN(a) || ISNAN(b)) return NaN;
 
     if (a < 0 || b < 0) return ML_ERR_return_NAN(printer_pbeta);

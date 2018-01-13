@@ -108,16 +108,16 @@ double pnt(
 	x = t * t;
 	rxb = df / (x + df); /* := (1 - x) {x below} -- but more accurately */
 	x = x / (x + df);	/* in [0,1) */
-#ifdef DEBUG_pnt
+
 	REprintf("pnt(t=%7g, df=%7g, ncp=%7g) ==> x= %10g:", t, df, ncp, x);
-#endif
+
 	if (x > 0.)
 	{ /* <==>  t != 0 */
 		lambda = del * del;
 		p = .5 * exp(-.5 * lambda);
-#ifdef DEBUG_pnt
+
 		REprintf("\t p=%10Lg\n", p);
-#endif
+
 		if (p == 0.)
 		{ /* underflow! */
 
@@ -126,12 +126,12 @@ double pnt(
 			ML_ERROR(ME_RANGE, "pnt"); /* |ncp| too large */
 			return R_DT_0;
 		}
-#ifdef DEBUG_pnt
+
 		REprintf("it  1e5*(godd,   geven)|          p           q           s"
 				 /* 1.3 1..4..7.9 1..4..7.9|1..4..7.901 1..4..7.901 1..4..7.901 */
 				 "        pnt(*)     errbd\n");
 		/* 1..4..7..0..34 1..4..7.9*/
-#endif
+
 		q = M_SQRT_2dPI * p * del;
 		s = .5 - p;
 		/* s = 0.5 - p = 0.5*(1 - exp(-.5 L)) =  -0.5*expm1(-.5 L)) */
@@ -166,9 +166,9 @@ double pnt(
 			if (s < -1.e-10)
 			{ /* happens e.g. for (t,df,ncp)=(40,10,38.5), after 799 it.*/
 				ML_ERROR(ME_PRECISION, "pnt");
-#ifdef DEBUG_pnt
+
 				REprintf("s = %#14.7Lg < 0 !!! ---> non-convergence!!\n", s);
-#endif
+
 				goto finis;
 			}
 			if (s <= 0 && it > 1)
@@ -176,13 +176,20 @@ double pnt(
 				goto finis;
 			}
 			errbd = (double)(2. * s * (xodd - godd));
-#ifdef DEBUG_pnt
+
 			REprintf("%3d %#9.4g %#9.4g|%#11.4Lg %#11.4Lg %#11.4Lg %#14.10Lg %#9.4g\n",
-					 it, 1e5 * (double)godd, 1e5 * (double)geven, p, q, s, tnc, errbd);
-#endif
+					 it,
+					 1e5 * (double)godd,
+					 1e5 * (double)geven,
+					 p,
+					 q,
+					 s,
+					 tnc,
+					 errbd);
+
 			if (fabs(errbd) < errmax)
 				goto finis; /*convergence*/
-		}
+		}					//for
 		/* non-convergence:*/
 		ML_ERROR(ME_NOCONV, "pnt");
 	}
