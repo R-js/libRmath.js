@@ -38,22 +38,25 @@
 import * as debug from 'debug';
 import { ML_ERR_return_NAN } from '../common/_general';
 
-import { INormal } from '~normal';
 import { rgamma } from '../gamma/rgamma';
+import { forEach, seq } from '../r-func';
+import { IRNGNormal } from '../rng/normal/inormal-rng';
 
 const { isFinite: R_FINITE } = Number;
 const printer = debug('rchisq');
+const sequence = seq()();
 
 export function rchisq(
   n: number,
   df: number,
-  normal: INormal
+  rng: IRNGNormal
 ): number | number[] {
-  const result = new Array(n).fill(0).map(() => {
+  
+  //
+  return forEach(sequence(n))(() => {
     if (!R_FINITE(df) || df < 0.0) {
       return ML_ERR_return_NAN(printer);
     }
-    return rgamma(1, df / 2.0, 2.0, normal) as number;
+    return rgamma(1, df / 2.0, 2.0, rng) as number;
   });
-  return result.length === 1 ? result[0] : result;
 }

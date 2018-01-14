@@ -1,10 +1,12 @@
-import { INormal, Normal } from '../normal';
+//aux
+import { Inversion, IRNGNormal } from '../rng/normal';
+
 import { dgeom  } from './dgeom';
 import { pgeom  } from './pgeom';
 import { qgeom } from './qgeom';
 import { rgeom as _rgeom } from './rgeom';
 
-export function Geometric(rng: INormal = Normal()){
+export function Geometric(rng: IRNGNormal = new Inversion()){
     return {
       dgeom,
       pgeom,

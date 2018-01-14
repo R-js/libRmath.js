@@ -4,10 +4,11 @@ import { qwilcox } from './qwilcox';
 import { rwilcox as _rwilc }  from './rwilcox';
 //import { WilcoxonCache } from './WilcoxonCache';
 
-import { IRNG, rng as _rng } from '../rng';
+import { IRNG } from '../rng';
+import { MersenneTwister } from '../rng/mersenne-twister';
 
 
-export function Wilcoxon(rng: IRNG = new _rng.MersenneTwister(0)){
+export function Wilcoxon(rng: IRNG = new MersenneTwister(0)){
     function rwilcox(nn: number, m: number, n: number){
         return _rwilc(nn, m, n, rng);
     }

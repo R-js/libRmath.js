@@ -1,9 +1,8 @@
+import { Inversion, IRNGNormal } from '../rng/normal';
 import { dnbinom as _dnbinom, dnbinom_mu } from './dnbinom';
 import { pnbinom as _pnbinom, pnbinom_mu } from './pnbinom';
 import { qnbinom as _qnbinom, qnbinom_mu } from './qnbinom';
 import { rnbinom as _rnbinom, rnbinom_mu } from './rnbinom';
-
-import { INormal, Normal } from '../normal';
 
 const errText = Object.freeze([
   'at most specify either argument "mu" or  "prob", but not both at the same time!',
@@ -42,7 +41,7 @@ function select(
   return selector[s][fs] as any;
 }
 
-export function NegativeBinomial(rng: INormal = Normal()) {
+export function NegativeBinomial(rng: IRNGNormal = new Inversion()) {
   function dnbinom(
     x: number | number[],
     size: number,

@@ -46,10 +46,10 @@
 
 import * as debug from 'debug';
 
-import { INormal } from '~normal';
 import { ML_ERR_return_NAN } from '../common/_general';
 import { exp_rand } from '../exp/sexp';
 import { rpois } from '../poisson/rpois';
+import { IRNGNormal } from '../rng/normal';
 
 const { isFinite: R_FINITE } = Number;
 
@@ -58,15 +58,15 @@ const printer = debug('rgeom');
 export function rgeom(
   N: number,
   p: number,
-  normal: INormal
+  rng: IRNGNormal
 ): number | number {
   const result = new Array(N).fill(0).map(() => {
     if (!R_FINITE(p) || p <= 0 || p > 1) return ML_ERR_return_NAN(printer);
 
     return rpois(
       1,
-      exp_rand(normal.rng.unif_rand) * ((1 - p) / p),
-      normal.rng
+      exp_rand(rng.unif_rand) * ((1 - p) / p),
+      rng
     ) as number;
   });
   return result.length === 1 ? result[0] : (result as any);

@@ -4,14 +4,14 @@ import { plnorm } from './plnorm';
 import { qlnorm } from './qlnorm';
 import { rlnorm } from './rlnorm';
 
-import { INormal, Normal } from '../normal';
+import { Inversion, IRNGNormal } from '../rng/normal';
 
-export function LogNormal(norm: INormal = Normal()) {
+export function LogNormal(rng: IRNGNormal = new Inversion()) {
   return {
     dlnorm,
     plnorm,
     qlnorm,
     rlnorm: (n: number, meanlog: number = 0, sdlog: number = 1): number | number[] =>
-      rlnorm(n, meanlog, sdlog, norm)
+      rlnorm(n, meanlog, sdlog, rng)
   };
 }

@@ -16,7 +16,7 @@ import { qgamma as _qgamma } from './qgamma';
 import { rgamma as _rgamma } from './rgamma';
 
 //aux
-import { INormal, Normal } from '../normal';
+import { Inversion, IRNGNormal } from '../rng/normal';
 
 //special
 import { forceToArray, possibleScalar } from 'src/lib/r-func';
@@ -42,7 +42,7 @@ export const special = {
 
 const { abs } = Math;
 
-export function Gamma(norm: INormal = Normal()) {
+export function Gamma(norm: IRNGNormal = new Inversion()) {
   const printer_n = debug('gamma_normalize_params');
 
   function gammaNormalizeParams(

@@ -32,8 +32,9 @@
  */
 import * as debug from 'debug';
 import { ML_ERR_return_NAN } from '../common/_general';
-import { INormal } from '../normal';
+import { rnorm } from '../normal/rnorm';
 import { arrayrify, forEach, seq } from '../r-func';
+import { IRNGNormal } from '../rng/normal';
 
 const exp = arrayrify(Math.exp);
 const { isNaN: ISNAN, isFinite: R_FINITE } = Number;
@@ -44,10 +45,10 @@ export function rlnorm(
   N: number,
   meanlog: number = 0,
   sdlog: number = 1,
-  norm: INormal
+  rng: IRNGNormal
 ): number | number[] {
   if (ISNAN(meanlog) || !R_FINITE(sdlog) || sdlog < 0) {
     return forEach(sequence(N))(() => ML_ERR_return_NAN(printer));
   }
-  return exp(norm.rnorm(N, meanlog, sdlog));
+  return exp(rnorm(N, meanlog, sdlog, rng));
 }

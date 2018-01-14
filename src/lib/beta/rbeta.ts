@@ -31,8 +31,8 @@
  */
 
 import * as debug from 'debug';
-import { INormal } from '~normal';
 import { DBL_MAX_EXP, ML_ERR_return_NAN } from '../common/_general';
+import { IRNGNormal } from '../rng/normal';
 
 const { LN2: M_LN2, log, min: fmin2, max: fmax2, exp, sqrt } = Math;
 const { MAX_VALUE: DBL_MAX, isFinite: R_FINITE } = Number;
@@ -44,7 +44,7 @@ export function rbeta(
   n: number,
   aa: number,
   bb: number,
-  normal: INormal
+  rng: IRNGNormal
 ): number | number[] {
   const result = new Array(n).fill(0).map(() => {
     if (aa < 0 || bb < 0) {
@@ -55,7 +55,7 @@ export function rbeta(
       return 0.5;
     if (aa === 0 && bb === 0)
       // point mass 1/2 at each of {0,1} :
-      return normal.rng.unif_rand() < 0.5 ? 0 : 1;
+      return rng.unif_rand() < 0.5 ? 0 : 1;
     // now, at least one of a, b is finite and positive
     if (!R_FINITE(aa) || bb === 0) return 1.0;
     if (!R_FINITE(bb) || aa === 0) return 0.0;
@@ -120,8 +120,8 @@ export function rbeta(
       }
       /* FIXME: "do { } while()", but not trivially because of "continue"s:*/
       for (;;) {
-        u1 = normal.rng.unif_rand();
-        u2 = normal.rng.unif_rand();
+        u1 = rng.unif_rand();
+        u2 = rng.unif_rand();
         if (u1 < 0.5) {
           y = u1 * u2;
           z = u1 * y;
@@ -149,8 +149,8 @@ export function rbeta(
         gamma = a + 1.0 / beta;
       }
       do {
-        u1 = normal.rng.unif_rand();
-        u2 = normal.rng.unif_rand();
+        u1 = rng.unif_rand();
+        u2 = rng.unif_rand();
 
         v_w_from__u1_bet(a);
 

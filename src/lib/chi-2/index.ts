@@ -1,5 +1,5 @@
 //
-import { INormal, Normal } from '../normal';
+import { Inversion, IRNGNormal } from '../rng/normal';
 import { dchisq as _dchisq } from './dchisq';
 import { dnchisq as _dnchisq } from './dnchisq';
 import { pchisq as _pchisq } from './pchisq';
@@ -9,7 +9,7 @@ import { qnchisq as _qnchisq } from './qnchisq';
 import { rchisq as _rchisq } from './rchisq';
 import { rnchisq as _rnchisq } from './rnchisq';
 
-export function ChiSquared(rng: INormal = Normal()) {
+export function ChiSquared(rng: IRNGNormal = new Inversion()) {
   function rchisq(n: number = 1, df: number, ncp?: number) {
     return ncp === undefined
       ? _rchisq(n, df, rng)

@@ -32,7 +32,7 @@ export function Normal(rng: IRNGNormal = new Inversion()): INormal {
   
   return {
     rnorm: (n: number = 1, mu: number = 0, sigma = 1) =>
-      rnorm(n, mu, sigma, rng.norm_rand),
+      rnorm(n, mu, sigma, rng),
     dnorm,
     pnorm,
     qnorm,

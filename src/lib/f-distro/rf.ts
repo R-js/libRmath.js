@@ -40,28 +40,31 @@ import * as debug from 'debug';
 import { ML_ERR_return_NAN } from '../common/_general';
 
 
-import { INormal } from '~normal';
 import { rchisq } from '../chi-2/rchisq';
+import { forEach, seq } from '../r-func';
+import { IRNGNormal } from '../rng/normal';
 
 const printer = debug('rf');
 const { isNaN: ISNAN, isFinite: R_FINITE } = Number;
+const sequence = seq()();
 
 export function rf(
-  n: number = 1,
+  n: number,
   n1: number,
   n2: number,
-  normal: INormal
+  rng: IRNGNormal
 ): number | number[] {
-  const result = new Array(n).fill(0).map(() => {
+
+  return forEach(sequence(n))(() => {
     let v1;
     let v2;
     if (ISNAN(n1) || ISNAN(n2) || n1 <= 0 || n2 <= 0) {
       return ML_ERR_return_NAN(printer);
     }
 
-    v1 = R_FINITE(n1) ? (rchisq(1, n1, normal) as number) / n1 : 1;
-    v2 = R_FINITE(n2) ? (rchisq(1, n2, normal) as number) / n2 : 1;
+    v1 = R_FINITE(n1) ? (rchisq(1, n1, rng) as number) / n1 : 1;
+    v2 = R_FINITE(n2) ? (rchisq(1, n2, rng) as number) / n2 : 1;
     return v1 / v2;
-  });
-  return result.length === 1 ? result[0] : result;
+  }) as any;
+ 
 }

@@ -62,11 +62,10 @@ import * as debug from 'debug';
 
 import { ML_ERR_return_NAN } from '../common/_general';
 
-import { INormal } from '~normal';
+import { IRNGNormal } from 'src/lib/rng/normal/inormal-rng';
 import { rgamma } from '../gamma/rgamma';
 import { rpois } from '../poisson/rpois';
 import { rchisq } from './rchisq';
-//import { unwatchFile } from 'fs';
 
 const printer = debug('rnchisq');
 const { isFinite:R_FINITE } = Number;
@@ -75,7 +74,7 @@ export function rnchisq(
   n: number,
   df: number,
   lambda: number,
-  normal: INormal
+  rng: IRNGNormal
 ): number| number[] {
   
   const result = new Array(n).fill(0).map(() => {
@@ -84,11 +83,11 @@ export function rnchisq(
       return ML_ERR_return_NAN(printer);
     }
     if (lambda === 0) {
-      return df === 0 ? 0 : (rgamma(1, df / 2, 2, normal) as number);
+      return df === 0 ? 0 : (rgamma(1, df / 2, 2, rng) as number);
     } else {
-      let r = rpois(1, lambda / 2, normal.rng) as number;
-      if (r > 0) r = rchisq(1, 2 * r, normal) as number;
-      if (df > 0) r += rgamma(1, df / 2, 2, normal) as number;
+      let r = rpois(1, lambda / 2, rng) as number;
+      if (r > 0) r = rchisq(1, 2 * r, rng) as number;
+      if (df > 0) r += rgamma(1, df / 2, 2, rng) as number;
       return r;
     }
   });

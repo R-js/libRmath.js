@@ -36,6 +36,7 @@ import * as debug from 'debug';
 
 import { ML_ERR_return_NAN } from '../common/_general';
 import { seq } from '../r-func';
+import { IRNGNormal } from '../rng/normal';
 
 const { isNaN: ISNAN, isFinite: R_FINITE } = Number;
 const printer = debug('rnorm');
@@ -44,7 +45,7 @@ export function rnorm(
   n: number = 1,
   mu: number = 0,
   sigma: number = 1,
-  norm_rand: () => number
+  rng: IRNGNormal
 ): number | number[] {
 
   let result = seq()()(1, n).map(() => {
@@ -54,7 +55,7 @@ export function rnorm(
     if (sigma === 0 || !R_FINITE(mu)) {
       return mu; /* includes mu = +/- Inf with finite sigma */
     }
-    return mu + sigma * norm_rand();
+    return mu + sigma * rng.norm_rand();
   });
 
   return result.length === 1 ? result[0] : result;

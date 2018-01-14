@@ -52,14 +52,9 @@
  */
 
 import * as debug from 'debug';
-
-
-
 import { ML_ERR_return_NAN } from '../common/_general';
-
 import { exp_rand } from '../exp/sexp';
-
-import { INormal } from '~normal';
+import { IRNGNormal } from '../rng/normal/inormal-rng';
 
 const { expm1, abs:fabs, sqrt, log, exp } = Math;
 const { isFinite:R_FINITE } = Number;
@@ -68,9 +63,9 @@ export function rgamma(
   n: number = 1,
   a: number = 1,
   scale: number = 1, //this is not the rate!!
-  normal: INormal
+  rng: IRNGNormal
 ): number | number[] {
-  const result = new Array(n).fill(0).map(() => _rgamma(a, scale, normal));
+  const result = new Array(n).fill(0).map(() => _rgamma(a, scale, rng));
 
   return result.length === 1 ? result[0] : result;
 }
@@ -80,7 +75,7 @@ const printer_rgamma = debug('_rgamma');
 export function _rgamma(
   a: number = 1,
   scale: number = 1,
-  normal: INormal
+  rng: IRNGNormal
 ): number {
   /* Constants : */
   const sqrt32 = 5.656854;
@@ -139,13 +134,13 @@ export function _rgamma(
     if (a === 0) return 0;
     e = 1.0 + exp_m1 * a;
     while (true) {
-      p = e * normal.rng.unif_rand();
+      p = e * rng.unif_rand();
       if (p >= 1.0) {
         x = -log((e - p) / a);
-        if (exp_rand(normal.rng.unif_rand) >= (1.0 - a) * log(x)) break;
+        if (exp_rand(rng.unif_rand) >= (1.0 - a) * log(x)) break;
       } else {
         x = exp(log(p) / a);
-        if (exp_rand(normal.rng.unif_rand) >= x) break;
+        if (exp_rand(rng.unif_rand) >= x) break;
       }
     }
     return scale * x;
@@ -164,13 +159,13 @@ export function _rgamma(
                x = (s,1/2) -normal deviate. */
 
   /* immediate acceptance (i) */
-  t = normal.rng.norm_rand();
+  t = rng.norm_rand();
   x = s + 0.5 * t;
   ret_val = x * x;
   if (t >= 0.0) return scale * ret_val;
 
   /* Step 3: u = 0,1 - uniform sample. squeeze acceptance (s) */
-  u = normal.rng.unif_rand();
+  u = rng.unif_rand();
   if (d * u <= t * t * t) return scale * ret_val;
 
   /* Step 4: recalculations of q0, b, si, c if necessary */
@@ -222,8 +217,8 @@ export function _rgamma(
     /* Step 8: e = standard exponential deviate
          *	u =  0,1 -uniform deviate
          *	t = (b,si)-double exponential (laplace) sample */
-    e = exp_rand(normal.rng.unif_rand);
-    u = normal.rng.unif_rand();
+    e = exp_rand(rng.unif_rand);
+    u = rng.unif_rand();
     u = u + u - 1.0;
     if (u < 0.0) t = b - si * e;
     else t = b + si * e;

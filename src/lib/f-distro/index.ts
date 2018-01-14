@@ -1,6 +1,9 @@
 //needed for rf
 import { rchisq } from '../chi-2/rchisq';
 import { rnchisq } from '../chi-2/rnchisq';
+import { seq } from '../r-func';
+import { arrayrify, forceToArray, possibleScalar } from '../r-func';
+import { Inversion, IRNGNormal } from '../rng/normal';
 //
 import { df as _df } from './df';
 import { dnf } from './dnf';
@@ -10,13 +13,11 @@ import { pnf } from './pnf';
 //
 import { qf as _qf } from './qf';
 import { qnf } from './qnf';
-//
 import { rf as _rf } from './rf';
 
-import { INormal, Normal } from '~normal';
+const sequence = seq()();
 
-import { arrayrify, forceToArray, possibleScalar } from '../r-func';
-export function FDist(rng: INormal = Normal()) {
+export function FDist(rng: IRNGNormal = new Inversion()) {
   function df(
     x: number | number[],
     df1: number,
@@ -92,7 +93,7 @@ export function FDist(rng: INormal = Normal()) {
     }
 
     if (Number.isNaN(ncp)) {
-      return possibleScalar(new Array(n).fill(NaN));
+      return possibleScalar(sequence(n).fill(NaN));
     }
     
     const div = arrayrify((a: number, b: number) => a / b);

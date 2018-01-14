@@ -18,17 +18,16 @@ import { qnbeta as _qnbeta } from './qnbeta';
 //rbeta
 import { rchisq } from '../chi-2/rchisq';
 import { rnchisq } from '../chi-2/rnchisq';
-import { rbeta as _rbeta } from './rbeta';
-
-import { INormal, Normal } from '~normal';
 import { forceToArray } from '../r-func';
+import { Inversion, IRNGNormal } from '../rng/normal';
+import { rbeta as _rbeta } from './rbeta';
 
 export const special = {
   beta,
   lbeta
 };
 
-export function Beta(norm: INormal = Normal()) {
+export function Beta(rng: IRNGNormal = new Inversion()) {
   function dbeta<T>(
     x: T,
     shape1: number,
@@ -80,10 +79,10 @@ export function Beta(norm: INormal = Normal()) {
     ncp = 0 // NOTE: normally the default is undefined, here it is '0'.
   ): number | number[] {
     if (ncp === 0) {
-      return _rbeta(n, shape1, shape2, norm);
+      return _rbeta(n, shape1, shape2, rng);
     } else {
-      let ax = forceToArray(rnchisq(n, 2 * shape1, ncp, norm));
-      let bx = forceToArray(rchisq(n, 2 * shape2, norm));
+      let ax = forceToArray(rnchisq(n, 2 * shape1, ncp, rng));
+      let bx = forceToArray(rchisq(n, 2 * shape2, rng));
       let result = ax.map((a, i) => a / (a + bx[i]));
       return result.length === 1 ? result[0] : result;
     }

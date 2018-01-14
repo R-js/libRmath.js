@@ -49,9 +49,9 @@
 import * as debug from 'debug';
 import { ML_ERR_return_NAN } from '../common/_general';
 
-import { INormal } from '~normal';
 import { rgamma } from '../gamma/rgamma';
 import { rpois } from '../poisson/rpois';
+import { IRNGNormal } from '../rng/normal/inormal-rng';
 
 const { isFinite: R_FINITE } = Number;
 
@@ -61,7 +61,7 @@ export function rnbinom(
   n: number,
   size: number,
   prob: number,
-  normal: INormal
+  rng: IRNGNormal
 ): number| number[] {
   printer_rnbinom('n:%d, size:%d, prob:%d', n, size, prob);
   const result = new Array(n).fill(0).map(() => {
@@ -79,8 +79,8 @@ export function rnbinom(
       ? 0
       : (rpois(
           1,
-          rgamma(1, size, (1 - prob) / prob, normal) as number,
-          normal.rng
+          rgamma(1, size, (1 - prob) / prob, rng) as number,
+          rng
         ) as number);
   });
   return result.length === 1 ? result[0] : result;
@@ -88,7 +88,7 @@ export function rnbinom(
 
 const printer_rnbinom_mu = debug('rnbinom_mu');
 
-export function rnbinom_mu(n: number= 1, size: number, mu: number, normal: INormal): number| number[] {
+export function rnbinom_mu(n: number= 1, size: number, mu: number, rng: IRNGNormal): number| number[] {
 
   const result = new Array(n).fill(0).map(() => {
 
@@ -99,8 +99,8 @@ export function rnbinom_mu(n: number= 1, size: number, mu: number, normal: INorm
     ? 0
     : (rpois(
         1,
-        rgamma(1, size, mu / size, normal) as number,
-        normal.rng
+        rgamma(1, size, mu / size, rng) as number,
+        rng
       ) as number);
 
 });
