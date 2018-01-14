@@ -1,5 +1,6 @@
 //http://stat.ethz.ch/R-manual/R-patched/library/stats/html/Binomial.html
-const libR = require('../dist/lib/libR.js');
+https: //en.wikipedia.org/wiki/Binomial_distribution
+    const libR = require('../dist/lib/libR.js');
 const { Binomial } = libR;
 const { arrayrify } = libR.R;
 

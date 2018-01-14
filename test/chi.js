@@ -1,4 +1,5 @@
 //jkfbogers@gmail.com
+//https://en.wikipedia.org/wiki/Chi-squared_distribution
 //docs :https://stat.ethz.ch/R-manual/R-devel/library/stats/html/Chisquare.html
 process.env.DEBUG = '_qnchisq';
 //

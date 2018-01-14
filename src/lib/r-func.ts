@@ -106,13 +106,35 @@ export function any<T>(x: T[]) {
 }
 
 export function sum(x: number[]) {
-  return x.reduce((sum, v) => (sum += v), 0);
+  return forceToArray(x).reduce((sum, v) => (sum += v), 0);
 }
 
 export const div = arrayrify((a: number, b) => a / b);
 export const mult = arrayrify((a: number, b) => a * b);
 
-export function summary(x: number[] | number) {
+export interface ISummary {
+  N: number; // number of samples in "data"
+  mu: number; // mean of "data"
+  population: {
+    variance: number, // population variance (data is seen as finite population)
+    sd: number // square root of the population variance
+  };
+  sample: {
+    variance: number, // sample variance (data is seen as a small sample from an very large population)
+    sd: number // square root of "sample variance"
+  };
+  relX; // = x-E(x)
+  relX2; // = ( x-E(x) )^2
+  stats: {
+    min: number, // minimal value from "data"
+    '1st Qu.': number, // 1st quantile from "data"
+    median: number, // median value from "data
+    '3rd Qu.': number, // 3rd quantile from "data"
+    max: number // maximum value in data
+  };
+}
+
+export function summary(x: number[]): ISummary {
   if (!Array.isArray(x)) {
     throw new Error(`Illigal argument, not an array`);
   }

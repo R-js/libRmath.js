@@ -44,7 +44,6 @@
 */
 
 import * as debug from 'debug';
-import { INormal } from '~normal';
 import { wprob } from './wprob';
 
 import {
@@ -72,10 +71,10 @@ export function ptukey<T>(
   df: number,
   lower_tail: boolean = true,
   log_p: boolean = false,
-  normal: INormal
+ // normal: INormal
 ): T {
   return forEach(qq)(q =>
-    _ptukey(q, rr, cc, df, lower_tail, log_p, normal)
+    _ptukey(q, rr, cc, df, lower_tail, log_p)
   ) as any;
 }
 
@@ -85,8 +84,7 @@ function _ptukey(
   cc: number,
   df: number,
   lower_tail: boolean,
-  log_p: boolean,
-  normal: INormal
+  log_p: boolean
 ): number {
   /*  function ptukey() [was qprob() ]:
     
@@ -213,7 +211,7 @@ function _ptukey(
 
   if (!R_FINITE(q)) return R_DT_1(lower_tail, log_p);
 
-  if (df > dlarg) return R_DT_val(lower_tail, log_p, wprob(q, rr, cc, normal));
+  if (df > dlarg) return R_DT_val(lower_tail, log_p, wprob(q, rr, cc));
 
   /* calculate leading constant */
 
@@ -267,7 +265,7 @@ function _ptukey(
 
         /* call wprob to find integral of range portion */
 
-        wprb = wprob(qsqz, rr, cc, normal);
+        wprb = wprob(qsqz, rr, cc);
         rotsum = wprb * alegq[j] * exp(t1);
         otsum += rotsum;
       }

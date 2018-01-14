@@ -50,7 +50,7 @@ const { round: R_forceint, trunc, floor } = Math;
 const { isNaN: ISNAN } = Number;
 
 export function rwilcox(
-  N: number = 1,
+  N: number,
   m: number,
   n: number,
   rng: IRNG

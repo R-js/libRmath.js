@@ -1,4 +1,5 @@
 //http://stat.ethz.ch/R-manual/R-patched/library/stats/html/Normal.html
+//https://en.wikipedia.org/wiki/Normal_distribution
 const libR = require('../dist/lib/libR.js');
 const { Normal, rng } = libR;
 const { flatten, seq, arrayrify } = libR.R;

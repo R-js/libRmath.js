@@ -1,9 +1,8 @@
 import { ptukey as _pt } from './ptukey';
 import { qtukey as _qt } from './qtukey';
 
-import { INormal, Normal } from '~normal';
 
-export function Tukey(rng: INormal = Normal()) {
+export function Tukey() {
   //
   function ptukey<T>(
     q: T,
@@ -13,7 +12,7 @@ export function Tukey(rng: INormal = Normal()) {
     lowerTail: boolean = true,
     logP: boolean = false
   ): T {
-    return _pt(q, nranges, nmeans, df, lowerTail, logP, rng);
+    return _pt(q, nranges, nmeans, df, lowerTail, logP);
   }
   //
   function qtukey<T>(
@@ -24,7 +23,7 @@ export function Tukey(rng: INormal = Normal()) {
     lowerTail: boolean = true,
     logP: boolean = false
   ): T {
-    return _qt(q, nranges, nmeans, df, lowerTail, logP, rng);
+    return _qt(q, nranges, nmeans, df, lowerTail, logP);
   }
 
   return {

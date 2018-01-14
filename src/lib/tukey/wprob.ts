@@ -1,5 +1,7 @@
-import { INormal } from '~normal';
+
+import * as debug from 'debug';
 import { M_1_SQRT_2PI } from '../common/_general';
+import { pnorm5 as pnorm } from '../normal/pnorm';
 
 const { exp, pow } = Math;
 
@@ -32,7 +34,9 @@ const aleg = [
 const C3 = 60;
 const C1 = -30;
 
-export function wprob(w: number, rr: number, cc: number, normal: INormal): number {
+const printer_wprob = debug('wprob');
+
+export function wprob(w: number, rr: number, cc: number): number {
   /*  wprob() :
       
           This function calculates probability integral of Hartley's
@@ -106,7 +110,7 @@ export function wprob(w: number, rr: number, cc: number, normal: INormal): numbe
   /* (first term in integral of hartley's form). */
 
   pr_w =
-    2 * normal.pnorm(qsqz, 0, 1, true, false) - 1; /* erf(qsqz / M_SQRT2) */
+    2 * pnorm(qsqz, 0, 1, true, false) - 1; /* erf(qsqz / M_SQRT2) */
   /* if pr_w ^ cc < 2e-22 then set pr_w = 0 */
   if (pr_w >= exp(C2 / cc)) pr_w = pow(pr_w, cc);
   else pr_w = 0.0;
@@ -158,8 +162,8 @@ export function wprob(w: number, rr: number, cc: number, normal: INormal): numbe
       qexpo = ac * ac;
       if (qexpo > C3) break;
 
-      pplus = 2 * normal.pnorm(ac, 0, 1, true, false);
-      pminus = 2 * normal.pnorm(ac, w, 1, true, false);
+      pplus = 2 * pnorm(ac, 0, 1, true, false);
+      pminus = 2 * pnorm(ac, w, 1, true, false);
 
       /* if rinsum ^ (cc-1) < 9e-14, */
       /* then doesn't contribute to integral */

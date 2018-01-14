@@ -127,7 +127,6 @@ import * as debug from 'debug';
 import { ME, ML_ERR_return_NAN, ML_ERROR, R_Q_P01_boundaries } from '../common/_general';
 
 import { R_DT_qIv } from '~exp-utils';
-import { INormal } from '~normal';
 import { forEach } from '~R';
 import { ptukey } from './ptukey';
 
@@ -141,11 +140,10 @@ export function qtukey<T>(
   cc: number,
   df: number,
   lower_tail: boolean = true,
-  log_p: boolean = false,
-  normal: INormal
+  log_p: boolean = false
 ): T {
   return forEach(pp)(p =>
-    _qtukey(p, rr, cc, df, lower_tail, log_p, normal)
+    _qtukey(p, rr, cc, df, lower_tail, log_p)
   ) as any;
 }
 
@@ -155,8 +153,7 @@ function _qtukey(
   cc: number,
   df: number,
   lower_tail: boolean,
-  log_p: boolean,
-  normal: INormal
+  log_p: boolean
 ): number {
   const eps = 0.0001;
   const maxiter = 50;
@@ -171,7 +168,7 @@ function _qtukey(
 
   if (ISNAN(p) || ISNAN(rr) || ISNAN(cc) || ISNAN(df)) {
     ML_ERROR(ME.ME_DOMAIN, 'qtukey', printer);
-    return p + rr + cc + df;
+    return NaN;
   }
 
   /* df must be > 1 ; there must be at least two values */
@@ -190,7 +187,7 @@ function _qtukey(
 
   /* Find prob(value < x0) */
 
-  valx0 = ptukey(x0, rr, cc, df, /*LOWER*/ true, /*LOG_P*/ false, normal) - p;
+  valx0 = ptukey(x0, rr, cc, df, /*LOWER*/ true, /*LOG_P*/ false) - p;
 
   /* Find the second iterate and prob(value < x1). */
   /* If the first iterate has probability value */
@@ -199,7 +196,7 @@ function _qtukey(
 
   if (valx0 > 0.0) x1 = fmax2(0.0, x0 - 1.0);
   else x1 = x0 + 1.0;
-  valx1 = ptukey(x1, rr, cc, df, /*LOWER*/ true, /*LOG_P*/ false, normal) - p;
+  valx1 = ptukey(x1, rr, cc, df, /*LOWER*/ true, /*LOG_P*/ false) - p;
 
   /* Find new iterate */
 
@@ -217,7 +214,7 @@ function _qtukey(
     /* Find prob(value < new iterate) */
 
     valx1 =
-      ptukey(ans, rr, cc, df, /*LOWER*/ true, /*LOG_P*/ false, normal) - p;
+      ptukey(ans, rr, cc, df, /*LOWER*/ true, /*LOG_P*/ false) - p;
     x1 = ans;
 
     /* If the difference between two successive */

@@ -1,5 +1,5 @@
 //http://stat.ethz.ch/R-manual/R-patched/library/stats/html/Exponential.html
-
+//https://en.wikipedia.org/wiki/Exponential_distribution
 //
 const libR = require('../dist/lib/libR.js');
 const {
