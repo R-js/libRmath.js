@@ -32,10 +32,10 @@
 
 import * as debug from 'debug';
 
-import { INormal } from '~normal';
 import { rchisq } from '../chi-2/rchisq';
 import { ML_ERR_return_NAN } from '../common/_general';
 import { forEach, seq } from '../r-func';
+import { IRNGNormal } from '../rng/normal';
 
 const { sqrt } = Math;
 const { isNaN: ISNAN, isFinite: R_FINITE } = Number;
@@ -43,19 +43,19 @@ const sequence = seq()();
 
 const printer = debug('rt');
 
-export function rt(n: number, df: number, normal: INormal): number | number[] {
+export function rt(n: number, df: number, rng: IRNGNormal): number | number[] {
   return forEach(sequence(n))(() => {
     if (ISNAN(df) || df <= 0.0) {
       return ML_ERR_return_NAN(printer);
     }
 
-    if (!R_FINITE(df)) return normal.rng.norm_rand();
+    if (!R_FINITE(df)) return rng.norm_rand();
     else {
       /* Some compilers (including MW6) evaluated this from right to left
             return norm_rand() / sqrt(rchisq(df) / df); */
 
-      let num = normal.rng.norm_rand();
-      return num / sqrt((rchisq(1, df, normal) as number) / df);
+      let num = rng.norm_rand();
+      return num / sqrt((rchisq(1, df, rng) as number) / df);
     }
   }) as any;
 }

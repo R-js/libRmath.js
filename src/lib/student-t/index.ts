@@ -1,8 +1,9 @@
 //
-import { INormal, Normal } from '~normal';
 import { rchisq } from '../chi-2/rchisq';
 import { rnorm } from '../normal/rnorm';
 import { arrayrify, forceToArray } from '../r-func';
+import { IRNGNormal } from '../rng/normal/inormal-rng';
+import { Inversion } from '../rng/normal/inversion';
 //
 import { dnt } from './dnt';
 import { dt as _dt } from './dt';
@@ -14,12 +15,12 @@ import { qt as _qt } from './qt';
 import { rt as _rt } from './rt';
 
 
-export function StudentT(rng: INormal = Normal()) {
-  function dt(x: number | number[], df: number, ncp?: number, logP = false) {
+export function StudentT(rng: IRNGNormal = new Inversion()) {
+  function dt(x: number | number[], df: number, ncp?: number, asLog = false) {
     if (ncp === undefined) {
-      return _dt(x, df, logP);
+      return _dt(x, df, asLog);
     }
-    return dnt(x, df, ncp, logP);
+    return dnt(x, df, ncp, asLog);
   }
 
   function pt(
@@ -59,8 +60,15 @@ export function StudentT(rng: INormal = Normal()) {
       const div = arrayrify((a: number, b: number) => a / b);
       const sqrt = arrayrify(Math.sqrt);
 
-      const norm = forceToArray(rnorm(n, ncp, 1, rng.rng.norm_rand)); // bleed this first from rng
-      const chisq = forceToArray(div(sqrt(rchisq(n, df, rng)), df));
+      const norm = forceToArray(rnorm(n, ncp, 1, rng)); // bleed this first from rng
+      const chisq = forceToArray(
+        sqrt(
+          div(
+            rchisq(n, df, rng), 
+            df
+          )
+        )
+      );
 
       const result = norm.map((n, i) => n / chisq[i]);
       return result.length === 1 ? result[0] : result;

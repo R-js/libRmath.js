@@ -27,7 +27,7 @@ npm install --save lib-r-math.js
 
 # Table of Contents
 
-* [Bugs in R discovered during porting](#bugs-in-r-discovered-during-porting)
+* [TODO: Bugs in R discovered during porting](#bugs-in-r-discovered-during-porting)
 * [Helper functions for porting R](#helper-functions-for-porting-r)
 * [Uniform Pseudo Random Number Generators](#uniform-pseudo-random-number-generators)
 * [Normal Random Number Generators](#normal-distributed-random-number-generators)
@@ -50,37 +50,65 @@ npm install --save lib-r-math.js
   * [Multinomial distribution](#multinomial-distribution)
   * [Poisson distribution](#poisson-distribution)
   * [Wilcoxon signed rank statistic distribution](#wilcoxon-signed-rank-statistic-distribution)
-  * [Student's t-distribution](#student's-t-distribution)
-  * [Studentized Range (_Tukey_) distribution](#studentized-range-distribution)
-  * [Weibull distribution](#weibull-distribution)
-  * [Wilcoxon rank sum statistic distribution](#wilcoxon-rank-sum-statistic-distribution)
+  * [Student T distribution](#student-t-distribution)
+  * [TODO:Studentized Range (_Tukey_) distribution](#studentized-range-distribution)
+  * [TODO:Weibull distribution](#weibull-distribution)
+  * [TODO:Wilcoxon rank sum statistic distribution](#wilcoxon-rank-sum-statistic-distribution)
 * [Special Functions of Mathematics](#special-functions-of-mathematics)
-  * [Bessel functions](#bessel-functions)
-  * [Beta functions](#beta-functions)
-  * [Gamma functions](#gamma-functions)
-  * [Functions for working with Combinatorics](#functions-for-working-with-combinatorics)
-* [Road map](#road-map)
+  * [TODO:Bessel functions](#bessel-functions)
+  * [TODO:Beta functions](#beta-functions)
+  * [TODO:Gamma functions](#gamma-functions)
+  * [TODO:Functions for working with Combinatorics](#functions-for-working-with-combinatorics)
+* [TODO:Road map](#road-map)
 
 # Helper functions for porting `R`.
 
 #### Summary
 
 R language operators and functions can work `vectors` and `list`.
-These Javascript helper functions are used to make the porting process to ES6 easier for R programmers.
+These Javascript helper functions are used to make the porting process to ES6 easier for R and JS programmers.
+
+### `div`
+
+TODO
+
+### `mult`
+
+TODO
+
+### `sum`
+
+TODO
+
+### `summary`
+
+TODO
+
+### `numberPrecision`
+
+TODO
+
+### `any`
+
+TODO
+
+### `selection`
+
+TODO
 
 ### `arrayrify`
 
-Wraps an existing function for it to accept the first argument as a scalar or vectorized input.
+Mimics R vectorized function arguments. Wraps an existing function changing the first first argument to accept both scalar (number) or an array( number[] ).
 
-_Note: Only the first function argument is vectorized_
+_Note: Only the first argument is vectorized_
 
 _decl:_
 
 ```typescript
-function arrayrify<T, R>(fn: (x: T, ...rest: any[]) => R);
+declare function arrayrify<T, R>(fn: (x: T, ...rest: any[]) => R);
 ```
 
-trivial R list example
+#### R example
 
 ```R
 # R console
@@ -89,7 +117,7 @@ trivial R list example
 [1] 0.2 0.4 0.6 0.8
 ```
 
-Javascript equivalent
+#### javascript equivalent
 
 ```javascript
  const libR = require('lib-r-math.js');
@@ -105,7 +133,7 @@ Javascript equivalent
 
 ### `flatten`
 
-Recursively flatten all arguments (some possible arrays with possible nested arrays) into one array.
+Recursively flatten all arguments (some possible arrays with possible nested arrays) into one single array.
 
 _decl:_
 
@@ -125,7 +153,7 @@ flatten(-1, 0, [1], 'r', 'b', [2, 3, [4, 5]]);
 
 ### `forceToArray`
 
-Return the first argument wrapped in an array. If it is already an array just return the reference to the array.
+Return the first argument wrapped in an array. If it is already an array then returns a copy of the array.
 
 _decl:_
 
@@ -141,7 +169,7 @@ const { forceToArray } = libR.R;
 
 forceToArray(3);
 //[3]
-forceToAray([4, 5]);
+forceToAray([4, 5]); // clones the array
 //[4,5]
 ```
 
@@ -164,7 +192,7 @@ const { forEach } = libR.R;
 forEach(11)(v => v * 2);
 //22
 
-// single element array result are forced to scalar
+// single element array result are forced to return scalar
 forEach([3])(v => v * 2);
 //6
 
@@ -224,7 +252,7 @@ const seq = (adjust = 0) => (adjustMin = adjust) => (
 ) => number[];
 ```
 
-R analog to the `seq` function in R. Generates an array between `start` and `end` (inclusive) using `step` (defaults to `1`). This function ignores the entered **sign** of the
+R analog to the `seq` function in R. Generates an array between `start` and `end` (inclusive) using `step` (defaults to `1`). The JS implementation ignores the **sign** of the
 `step` argument and only looks at its absolute value.
 
 If `(end-start)/step` is not an exact integer, `seq` will not overstep the bounds while counting up (or down).
@@ -268,11 +296,7 @@ seqB(6, 5, 0.3); //range will be adjusted with '-2', step
 
 #### Summary
 
-In 'R' numerous random number generators are documented with their particular
-distributions. For example `rt` (_random generator having a distribution of
-Student-T_) is documented with all functions related to the student-T
-distribution, like `qt` (quantile function), `pt` (cumulative probability
-function), `dt` (probability density function).
+In 'R', the functions that generate random deviates of distributions (Example: Poisson (`rpois`), Student-t (`rt`), Normal (`rnorm`), etc) use uniform PRNG's directly or indirectly (as wrapped in a normal distributed PRNG). This section discusses the uniform distributed PRNG's that have been ported from R to JS.
 
 ## The 7 samurai of Uniform Random Number Generators
 
@@ -294,8 +318,8 @@ generator has its own buffer and can therefore be used at the same time.
 
 All uniform random generator export the same functions:
 
-1. `init`: set the random generator seed (it will be pre-scrambled)
-2. `seed (read/write property)`: get/set the current seed values as an array.
+1. `init`: set the random generator seed. Same as R `set.seed()`
+2. `seed (read/write property)`: get/set the current seed values as an array. Same as R `.Random.seed`.
 3. `unif_random`: get a random value, same as `runif(1)` in R
 
 #### "Mersenne Twister"
@@ -309,15 +333,22 @@ usage example:
 
 ```javascript
 const libR = require('lib-r-math.js');
-const { MersenneTwister, timeseed } = libR.rng;
+const {
+  R: { seq, numberPrecision, forEach },
+  rng: { MersenneTwister, timeseed }
+} = libR.rng;
 
 //helpers
-const sequence = libR.R.seq()();
+const sequence = seq()();
+const precision = numberPrecision(9); //9 digits accuracy
 
+//example
 const mt = new MersenneTwister(12345); // initialize with seed = 12345
 
+//example
 mt.init(timeseed()); // Use seed derived from system clock
 
+//example
 mt.init(0); // re-initialize with seed = 0
 
 // get internal seed buffer of 625 32 bit signed integer
@@ -333,14 +364,9 @@ let s = lt.seed;
   .]
 */
 
-sequence(5).map(() => mt.unif_rand());
-/*
-[ 0.8966972001362592,
-  0.2655086631421,
-  0.37212389963679016,
-  0.5728533633518964,
-  0.9082077899947762 ]
-*/
+const rmt1 = sequence(5).map(()=>mt.unif_rand());
+precision(rmt1);
+//[ 0.8966972, 0.265508663, 0.3721239, 0.572853363, 0.90820779 ]
 ```
 
 _Equivalent in R_:
@@ -363,7 +389,14 @@ usage example:
 
 ```javascript
 const libR = require('lib-r-math.js');
-const { WichmannHill, timeseed } = libR.rng;
+const {
+  rng: { WichmannHill, timeseed },
+  R: { seq, numberPrecision }
+} = libR;
+
+// some helpers
+const sequence = seq()();
+const precision = numberPrecision(9);
 
 // Some options on seeding given below
 const wh = new WichmannHill(1234); // initialize seed with 1234 on creation (default 0)
@@ -373,13 +406,9 @@ wh.init( timeseed() ); // re-init seed with a random seed based on timestamp
 wh.init(0); // re-init seed to zero
 wh.seed; // show seed
 //[ 2882, 21792, 10079 ]
-> new Array(5).fill('').map( () => wh.unif_rand() )
-/*[ 0.4625531507458778,
-  0.2658267503314409,
-  0.5772107804324318,
-  0.5107932055258312,
-  0.33756055865261403 ]
-*/
+const rwh1 = sequence(5).map( () => wh.unif_rand() )
+precision(rwh1);
+//[ 0.462553151, 0.26582675, 0.57721078, 0.510793206, 0.337560559 ]
 ```
 
 _in R console_:
@@ -403,30 +432,26 @@ usage example:
 
 ```javascript
 const libR = require('lib-r-math.js');
-const { MarsagliaMultiCarry, timeseed } = libR.rng;
+const {
+  rng: { MarsagliaMultiCarry, timeseed },
+  R: { seq, numberPrecision }
+} = libR;
 
 //usefull helpers
-const { seq, numberPrecision } = libR.R;
 const sequence = seq()();
-const precision = libR.R.numberPrecision(9);
+const precision = numberPrecision(9); //9 significant digits
 
 // Some options on seeding given below
 const mmc = new MarsagliaMultiCarry(1234); // use seed = 1234 on creation
 
 mmc.init(timeseed());
-
 mmc.init(0); // also, defaults to '0' if seed is not specified
-
 mmc.seed;
 //[ -835792825, 1280795612 ]
 
-sequence(5).map(() => mm.unif_rand());
-/*[ 0.16915375533726848,
-  0.5315435299490446,
-  0.5946052972214773,
-  0.23331540595584438,
-  0.45765617989414736 ]
-*/
+const rmmc = sequence(5).map(() => mmc.unif_rand());
+precision(rmmc);
+//[ 0.169153755, 0.53154353, 0.594605297, 0.233315406, 0.45765618 ]
 ```
 
 _in R console_:
@@ -454,7 +479,14 @@ usage example:
 
 ```javascript
 const libR = require('lib-r-math.js');
-const { SuperDuper, timeseed } = libR.rng;
+const {
+  rng: { SuperDuper, timeseed },
+  R: { seq, numberPrecision }
+} = libR.rng;
+
+//usefull helpers
+const sequence = seq()();
+const precision = numberPrecision(9); //9 significant digits
 
 // Seeding possibilities shown below
 const sd = new SuperDuper(1234); // use seed = 1234 on creation
@@ -463,15 +495,10 @@ sd.init(0); // re-initialize with seed = 0.
 //
 sd.seed;
 //[ -835792825, 1280795613 ]
-new Array(5).fill('').map(() => sd.unif_rand());
-/*
-[ 0.6404035621416762,
-  0.5927312545461418,
-  0.41296871248934613,
-  0.18772939946216746,
-  0.26790581137591635 
-]
-*/
+
+const rsd1 = sequence(5).map(() => sd.unif_rand());
+precision(rsd1);
+//[ 0.640403562, 0.592731255, 0.412968712, 0.187729399, 0.267905811 ]
 ```
 
 _in R console_:
@@ -497,7 +524,14 @@ usage example:
 
 ```javascript
 const libR = require('lib-r-math.js');
-const { KnuthTAOCP, timeseed } = libR.rng;
+const {
+  rng: { KnuthTAOCP, timeseed },
+  R: { seq, numberPrecision }
+} = libR.rng;
+
+//usefull helpers
+const sequence = seq()();
+const precision = numberPrecision(9); //9 significant digits
 
 // Seeding possibilities shown below
 const kn97 = new KnuthTAOCP(1234); // use seed = 1234 on creation
@@ -512,12 +546,11 @@ kn97.seed;
   926003693,
  .
  .]*/
-new Array(5).fill('').map(() => kn97.unif_rand());
-/*[ 0.6274007670581344,
-  0.35418667178601043,
-  0.9898934308439498,
-  0.8624081434682015,
-  0.6622992046177391 ]*/
+
+const rkn97 = sequence(5).map(() => kn97.unif_rand());
+// limit precision to 9 digits
+precision(rkn97);
+//[ 0.627400767, 0.354186672, 0.989893431, 0.862408143, 0.662299205 ]
 ```
 
 _in R console_:
@@ -649,12 +682,9 @@ _in R console_:
 
 #### Summary
 
-These PRNG classes can be used by themselves but mostly intended to be consumed
-to generate random numbers with a particular distribution (like `Normal`,
-`Gamma`, `Weibull`, `Chi-square` etc). Type in your R-console the command
-`?RNGkind` for an overview.
+In 'R', the functions that generate random deviates of distributions (Example: Poisson (`rpois`), Student-t (`rt`), Normal (`rnorm`), etc) use uniform PRNG's directly or indirectly (as wrapped in a normal distributed PRNG). This section discusses the `normal distributed PRNG's` that have been ported from R to JS.
 
-All 6 normal random generators have been ported and tested to yield exactly the
+All 6 `normal random generators` have been ported and tested to yield exactly the
 same as their R counterpart.
 
 #### General Use
@@ -676,14 +706,19 @@ example usage:
 ```javascript
 const libR = require('lib-r-math.js');
 
-// Possible to arbitraty uniform PRNG source (example: SuperDuper)
+// explicit specify uniform PRNG
 const sd = new libR.rng.SuperDuper(0);
 const ad1 = new libR.rng.normal.AhrensDieter(sd);
+
 // At any time reset normal PRNG seed, with the reference to uniform PRNG
-sd.init(0);
+sd.init(9987);
 
 // uses default: new MersenneTwister(0)
 const ad2 = new libR.rng.normal.AhrensDieter();
+
+// some helpers
+
+const seq = 
 
 // reference to uniform PRNG under rng property
 ad2.rng.init(0);
@@ -6012,7 +6047,7 @@ precision(d1);
 
 //2
 const d2 = dpois( x, 4 );
-precision(d2); 
+precision(d2);
 /*
 [ 0.0183156389,
   0.146525111,
@@ -6448,6 +6483,24 @@ precision(p3);
   0.139160156 ]
 */
 ```
+_Equivalent in R_
+
+```R
+options(scipen=999)
+options(digits=9)
+
+#1
+psignrank(seq(0,5), 9);
+#[1] 0.001953125 0.003906250 0.005859375 0.009765625 0.013671875 0.019531250
+
+#2
+psignrank(seq(3,8), 4)
+#[1] 0.3125 0.4375 0.5625 0.6875 0.8125 0.8750
+
+#3
+psignrank(seq(15, 20), 11);
+#[1] 0.06152344 0.07373047 0.08740234 0.10302734 0.12011719 0.13916016
+```
 
 #### `qsignrank`
 
@@ -6564,4 +6617,378 @@ set.seed(4569)
 #3
 > rsignrank(5, 4)
 [1]  4  7  8 10  8
+```
+
+### Student T distribution
+
+`dt, pt, qt, rt`
+
+Density, distribution function, quantile function and random generation for the distribution of the [Student T distribution](https://en.wikipedia.org/wiki/Student's_t-distribution). See [R doc](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/TDist.html).
+
+Usage:
+
+```javascript
+const libR = require('lib-r-math.js');
+const {
+    StudentT,
+    rng: { MarsagliaMultiCarry },
+    rng: { normal: { AhrensDieter } }
+} = libR;
+
+//*.Uses default argument "Normal()".
+//*.Normal itself using default arguments.
+const defaultT = StudentT();
+
+//explicit use of PRNG's
+const mmc = new MarsagliaMultiCarry(0);
+const ad = new AhrensDieter(mmc);
+
+//*create explicit functions
+const explicitT = StudentT(ad);
+
+const { dt, pt, qt, rt } = explicitT;
+```
+
+#### `dt`
+
+The density function of the of the [Student T distribution](https://en.wikipedia.org/wiki/Student's_t-distribution). See [R doc](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/TDist.html).
+
+_decl_
+
+```typescript
+declare  function dt(
+  x: number | number[],
+  df: number,
+  ncp?: number,
+  asLog = false
+  ): number|number[];
+```
+
+* `x`: quantiles.(Scalar or array).
+* `df`: degrees of freedom.
+* `ncp`: non-central parameter.
+* `asLog`: return result as ln(p); 
+
+Usage:
+
+```javascript
+const libR = require('lib-r-math.js');
+const { StudentT } = libR;
+
+//usefull helpers
+const seq = libR.R.seq()();
+const precision = libR.R.numberPrecision(9);
+
+//init distribution
+const { dt, pt, qt, rt } = StudentT();
+
+//some testdata
+const x = seq(-2, 2, 0.5);
+//[ -2, -1.5, -1, -0.5, 0, 0.5, 1, 1.5, 2 ]
+
+//1 , degrees of freedom=4
+const d1 = dt(x, 4);
+precision(d1);
+/*[ 0.0662912607, 0.12288, 0.214662526,
+    0.322261869,  0.375,   0.322261869,
+    0.214662526,  0.12288, 0.0662912607
+]*/
+
+//2 d.freedom=6, ncp=3 ,  asLog=true
+const d2 = dt(x, 6, 3, true);
+precision(d2);
+/*[ -11.3338746, -10.0457558, -8.60952363,
+    -7.05283449, -5.46041826, -3.98130184,
+    -2.77195465, -1.92218557, -1.4276455 ]
+*/
+
+//3 d.freedom=40, ncp=0 (undefined also works), asLog=true
+const d3 = dt(x, 40, 0, true);
+precision(d3);
+/*[ -2.87904657, -2.04704833, -1.43138644,
+    -1.05291415, -0.925187883, -1.05291415,
+    -1.43138644, -2.04704833,  -2.87904657 ]
+*/
+```
+
+_Equivalent in R_
+
+```R
+options(scipen=999)
+options(digits=9)
+
+x=seq(-2, 2, 0.5);
+
+#1
+dt(x, 4);
+#[1] 0.06629126 0.12288000 0.21466253 0.32226187 0.37500000 0.32226187 0.21466253
+#[8] 0.12288000 0.06629126
+
+#2
+dt(x, 6, 3, TRUE);
+#[1] -11.333147 -10.045168  -8.608932  -7.052112  -5.460418  -3.981268  -2.771953
+#[8]  -1.922185  -1.427645
+
+#3
+dt(x, 40, 0, TRUE);
+#[1] -2.8790466 -2.0470483 -1.4313864 -1.0529142 -0.9251879 -1.0529142 -1.4313864
+#[8] -2.0470483 -2.8790466
+```
+
+#### `pt`
+
+The cumulative probability function of the of the [Student T distribution](https://en.wikipedia.org/wiki/Student's_t-distribution). See [R doc](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/TDist.html).
+
+_cdecl_
+
+```typescript
+declare function pt(
+    q: number | number[],
+    df: number,
+    ncp?: number,
+    lowerTail: boolean = true,
+    logP = false
+):number|number[];
+```
+
+* `q`: quantiles, array or scalar.
+* `df`: degrees of freedom.
+* `ncp`: non central parameter.
+* `lowerTail`: if TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
+* `logP`: if TRUE, probabilities p are given as ln(p).
+
+
+Usage:
+
+```javascript
+const libR = require('lib-r-math.js');
+const { StudentT } = libR;
+
+//usefull helpers
+const seq = libR.R.seq()();
+const precision = libR.R.numberPrecision(9);
+
+//init distribution
+const { dt, pt, qt, rt } = StudentT();
+
+//some testdata
+const x = seq(-2, 2, 0.5);
+//[ -2, -1.5, -1, -0.5, 0, 0.5, 1, 1.5, 2 ]
+
+//1
+const p1 = pt(x, 4);
+precision(p1);
+/*
+[ 0.0580582573, 0.103999986, 0.186950444,
+  0.321664726,  0.5,         0.678335274,
+  0.813049556,  0.896000014  0.941941743 ]*/
+
+//2
+const p2 = pt(x, 6, 3);
+precision(p2);
+/*[
+  0.00000552398055, 0.0000175658822, 0.000065386889,
+  0.000282969478,   0.00134989803,   0.00630091821,
+  0.0249440265,     0.0757615575,    0.173007342 ]*/
+
+//3
+const p3 = pt(x, 40, 0, true, true);
+precision(p3);
+/*
+[ -3.64347931, -2.64883812,   -1.82225529,
+  -1.17148473, -0.693147181,  -0.370928141,
+  -0.176332425,-0.0733595514, -0.0265094536 ]*/
+```
+
+_Equivalent in R_
+
+```R
+options(scipen=999)
+options(digits=9)
+
+x=seq(-2, 2, 0.5);
+
+#1
+pt(x, 4);
+# [1] 0.0580582618 0.1040000000 0.1869504832 0.3216649816 0.5000000000
+# [6] 0.6783350184 0.8130495168 0.8960000000 0.9419417382
+
+#2
+pt(x, 6, 3, TRUE);
+# [1] 0.0000055286975 0.0000175810923 0.0000654462028 0.0002832948346
+# [5] 0.0013498980316 0.0063005928526 0.0249439672347 0.0757615423360
+# [9] 0.1730073377405
+
+#3
+pt(x, 40, 0, TRUE, TRUE)
+#[1] -3.6434789672 -2.6488375624 -1.8222543111 -1.1714818403 -0.6931471806
+#[6] -0.3709294406 -0.1763326134 -0.0733595937 -0.0265094630
+```
+
+#### `qt`
+
+The quantile function of the of the [Student T distribution](https://en.wikipedia.org/wiki/Student's_t-distribution). See [R doc](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/TDist.html).
+
+_decl_
+
+```typescript
+function qt(
+    p: number | number[],
+    df: number,
+    ncp?: number,
+    lowerTail: boolean = true,
+    logP: boolean = false
+): number|number[];
+```
+
+* `p`: probabilities, array or scalar.
+* `df`: degrees of freedom.
+* `ncp`: non central parameter.
+* `lowerTail`: if TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
+* `logP`: if TRUE, probabilities p are given as ln(p).
+
+Usage:
+
+```javascript
+const libR = require('lib-r-math.js');
+const { StudentT } = libR;
+
+//usefull helpers
+const seq = libR.R.seq()();
+const precision = libR.R.numberPrecision(9);
+
+//create instance of this distribution
+const { dt, pt, qt, rt } = StudentT();
+
+const x = seq(-2, 2, 0.5);
+//[ -2, -1.5, -1, -0.5, 0, 0.5, 1, 1.5, 2 ]
+
+//1
+const pp1 = pt(x, 4);
+//qt is the inverse of pt
+const q1 = qt(pp1, 4);
+precision(q1);
+//[ -2, -1.5, -1, -0.5, 0, 0.5, 1, 1.5, 2 ]
+
+//2
+const pp2 = pt(x, 6, 3);
+//qt is the inverse of pt
+const q2 = qt(pp2, 6, 3);
+precision(q2);
+//[ -2, -1.5, -1, -0.5, 4.15840085e-162, 0.5, 1, 1.5, 2 ]
+
+//3
+const pp3 = pt(x, 40, 0, true, true);
+//qt is the inverse of pt
+const q3 = qt(pp3, 40, 0, true, true);
+precision(q3);
+//[ -2, -1.5, -1, -0.5, 0, 0.5, 1, 1.5, 2 ]
+```
+
+_Equivalent in R_
+
+```R
+options(scipen=999)
+options(digits=9)
+
+x=seq(-2, 2, 0.5);
+
+#1
+pp1= pt(x, 4);
+qt(pp1, 4)
+#[1] -2.0 -1.5 -1.0 -0.5  0.0  0.5  1.0  1.5  2.0
+
+#2
+pp2=pt(x,6,3)
+qt(pp2, 6, 3)
+#[1] -2.00000000e+00 -1.50000000e+00 -1.00000000e+00 -5.00000000e-01
+#[5]  2.54875259e-17  5.00000000e-01  1.00000000e+00  1.50000000e+00
+#[9]  2.00000000e+00
+
+#3
+pp3 = pt(x, 40, 0, TRUE, TRUE)
+qt(pp3, 40, 0, TRUE, TRUE)
+#[1] -2.0 -1.5 -1.0 -0.5  0.0  0.5  1.0  1.5  2.0
+```
+
+#### `rt`
+
+Generates deviates for the [Student T distribution](https://en.wikipedia.org/wiki/Student's_t-distribution). See [R doc](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/TDist.html).
+
+_decl_
+
+```typescript
+declare function rt(
+  n: number, 
+  df: number, 
+  ncp?: number
+): number|number[]
+```
+
+* `n`: number of random deviates to generate.
+* `df`: degrees of freedom.
+* `ncp`: non central parameter.
+
+Usage:
+
+```javascript
+const libR = require('lib-r-math.js');
+const {
+    Normal,
+    StudentT,
+    rng: { MarsagliaMultiCarry },
+    rng: {
+        normal: { AhrensDieter }
+    }
+} = libR;
+
+//some usefull helpers
+const precision = libR.R.numberPrecision(9); //restrict to 9 significant digits
+
+//explicit use of PRNG's
+const mmc = new MarsagliaMultiCarry(0);
+const ad = new AhrensDieter(mmc);
+
+const { dt, pt, qt, rt } = StudentT(ad);
+
+//1
+mmc.init(1234);
+const r1 = rt(5, 4);
+precision(r1);
+//[ 0.0231141364, 0.636030741, -0.9389398, 1.89196546, -1.9002538 ]
+
+//2
+mmc.init(4345);
+const r2 = rt(5, 11, 3);
+precision(r2);
+//[ 4.82388236, 7.39995919, 16.9449549, 9.30852366, 13.450456 ]
+
+//3
+mmc.init(9876);
+const r3 = rt(5, 26, -16);
+precision(r3);
+//[ -14.666857, -14.4664293, -17.9397007, -17.0650828, -19.7422692 ]
+```
+
+_Equivalent in R_
+
+```R
+RNGkind("Marsaglia-Multicarry",normal.kind="Ahrens-Dieter")
+options(scipen=999)
+options(digits=9)
+
+#1.
+set.seed(1234);
+rt(5, 4);
+#[1]  0.0231141364  0.6360307414 -0.9389397997  1.8919654608 -1.9002537980
+
+#2
+set.seed(4345);
+rt(5, 11, 3);
+#[1] 1.45445526 2.23117165 5.10909613 2.80662548 4.05546509
+
+#3
+set.seed(9876)
+rt(5, 26, -16);
+#[1] -14.6668570 -14.4664293 -17.9397007 -17.0650828 -19.7422692
 ```

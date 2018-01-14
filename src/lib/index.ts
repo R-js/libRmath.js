@@ -51,7 +51,8 @@ import {
   numberPrecision,
   selector,
   seq,
-  sum
+  sum,
+  summary
 } from './r-func';
 
 export const R = {
@@ -65,5 +66,6 @@ export const R = {
   sum,
   any,
   div,
-  mult
+  mult,
+  summary
 };
