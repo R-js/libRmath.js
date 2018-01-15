@@ -120,8 +120,6 @@
     ],
     "include": [
         "src/**/*.ts",
-        "src/**/*.tsx",
-        "test/**/*.ts",
-        "test/**/*.tsx"
+        "src/**/*.tsx"
     ]
 }

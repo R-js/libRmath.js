@@ -77,10 +77,10 @@ const libR = require('lib-r-math.js');
 const { div } = libR.R;
 
 //1
-div(3,5); //= 3/5
+div(3, 5); //= 3/5
 //0.6
 
-div([0,1,2,3], 5);
+div([0, 1, 2, 3], 5);
 //[0, 0.2, 0.4, 0.6]
 ```
 
@@ -95,10 +95,10 @@ const libR = require('lib-r-math.js');
 const { mult } = libR.R;
 
 //1
-mult(3,5); //= 3*5
+mult(3, 5); //= 3*5
 //15
 
-mult([0,1,2,3], 5);
+mult([0, 1, 2, 3], 5);
 //[0, 5, 10, 15]
 ```
 
@@ -115,7 +115,7 @@ sum(1);
 //:1
 
 //2
-sum([1,2,3,4]);
+sum([1, 2, 3, 4]);
 //: 10
 ```
 
@@ -126,29 +126,29 @@ Gives summary information of numeric data in an array.
 _decl_
 
 ```typescript
-declare function summary( data: number[]): ISummary;
+declare function summary(data: number[]): ISummary;
 
 interface ISummary {
-    N: number, // number of samples in "data"
-    mu: number, // mean of "data"
-    population: {
-      variance: number, // population variance (data is seen as finite population)
-      sd: number // square root of the population variance
-    },
-    sample: {
-      variance: number, // sample variance (data is seen as a small sample from an very large population)
-      sd: number // square root of "sample variance"
-    },
-    relX, // = x-E(x)
-    relX2, // = ( x-E(x) )^2
-    stats: {
-      min: number, // minimal value from "data"
-      '1st Qu.': number, // 1st quantile from "data"
-      median: number, // median value from "data
-      '3rd Qu.': number,// 3rd quantile from "data"
-      max: number // maximum value in data
-    }
-};
+  N: number; // number of samples in "data"
+  mu: number; // mean of "data"
+  population: {
+    variance: number; // population variance (data is seen as finite population)
+    sd: number; // square root of the population variance
+  };
+  sample: {
+    variance: number; // sample variance (data is seen as a small sample from an very large population)
+    sd: number; // square root of "sample variance"
+  };
+  relX; // = x-E(x)
+  relX2; // = ( x-E(x) )^2
+  stats: {
+    min: number; // minimal value from "data"
+    '1st Qu.': number; // 1st quantile from "data"
+    median: number; // median value from "data
+    '3rd Qu.': number; // 3rd quantile from "data"
+    max: number; // maximum value in data
+  };
+}
 ```
 
 Usage:
@@ -157,7 +157,7 @@ Usage:
 const libR = require('lib-r-math.js');
 const { summary } = libR.R;
 
-summary([1,2,3,4,5,6,7])
+summary([1, 2, 3, 4, 5, 6, 7]);
 /*{ N: 7,
   mu: 4,
   population: { variance: 4, sd: 2 },
@@ -179,11 +179,11 @@ const libR = require('lib-r-math.js');
 const digits4 = libR.R.numberPrecision(4);
 
 //1
-precision(1.12345678)
+precision(1.12345678);
 //1.123
 
 //2
-precision([0.4553,-2.1243])
+precision([0.4553, -2.1243]);
 //[ 0.4553, -2.124 ]
 ```
 
@@ -198,11 +198,11 @@ const libR = require('lib-r-math.js');
 const any = libR.R.any;
 
 //1
-any([1,2,3,4])(x=> x < 2)
+any([1, 2, 3, 4])(x => x < 2);
 //true
 
 //2
-any([1,2,3,4])(x=> x > 5)
+any([1, 2, 3, 4])(x => x > 5);
 //false
 ```
 
@@ -474,7 +474,7 @@ let s = lt.seed;
   .]
 */
 
-const rmt1 = sequence(5).map(()=>mt.unif_rand());
+const rmt1 = sequence(5).map(() => mt.unif_rand());
 precision(rmt1);
 //[ 0.8966972, 0.265508663, 0.3721239, 0.572853363, 0.90820779 ]
 ```
@@ -499,10 +499,7 @@ usage example:
 
 ```javascript
 const libR = require('lib-r-math.js');
-const {
-  rng: { WichmannHill, timeseed },
-  R: { seq, numberPrecision }
-} = libR;
+const { rng: { WichmannHill, timeseed }, R: { seq, numberPrecision } } = libR;
 
 // some helpers
 const sequence = seq()();
@@ -511,12 +508,12 @@ const precision = numberPrecision(9);
 // Some options on seeding given below
 const wh = new WichmannHill(1234); // initialize seed with 1234 on creation (default 0)
 //
-wh.init( timeseed() ); // re-init seed with a random seed based on timestamp
+wh.init(timeseed()); // re-init seed with a random seed based on timestamp
 
 wh.init(0); // re-init seed to zero
 wh.seed; // show seed
 //[ 2882, 21792, 10079 ]
-const rwh1 = sequence(5).map( () => wh.unif_rand() )
+const rwh1 = sequence(5).map(() => wh.unif_rand());
 precision(rwh1);
 //[ 0.462553151, 0.26582675, 0.57721078, 0.510793206, 0.337560559 ]
 ```
@@ -589,10 +586,7 @@ usage example:
 
 ```javascript
 const libR = require('lib-r-math.js');
-const {
-  rng: { SuperDuper, timeseed },
-  R: { seq, numberPrecision }
-} = libR.rng;
+const { rng: { SuperDuper, timeseed }, R: { seq, numberPrecision } } = libR.rng;
 
 //usefull helpers
 const sequence = seq()();
@@ -634,10 +628,7 @@ usage example:
 
 ```javascript
 const libR = require('lib-r-math.js');
-const {
-  rng: { KnuthTAOCP, timeseed },
-  R: { seq, numberPrecision }
-} = libR.rng;
+const { rng: { KnuthTAOCP, timeseed }, R: { seq, numberPrecision } } = libR.rng;
 
 //usefull helpers
 const sequence = seq()();
@@ -689,13 +680,10 @@ usage example:
 
 ```javascript
 const libR = require('lib-r-math.js');
-const { 
-  rng: { KnuthTAOCP2002, timeseed },
-  R: { seq }
-} = libR.rng;
+const { rng: { KnuthTAOCP2002, timeseed }, R: { seq } } = libR.rng;
 
 //helpers
-const sequence=seq()();
+const sequence = seq()();
 
 // Seeding possibilities shown below
 const kt2002 = new KnuthTAOCP2002(1234); // use seed = 1234 on creation
@@ -751,10 +739,7 @@ usage example:
 
 ```javascript
 const libR = require('lib-r-math.js');
-const {
-  rng: { LecuyerCMRG, timestamp },
-  R: { seq }
-} = libR.rng;
+const { rng: { LecuyerCMRG, timestamp }, R: { seq } } = libR.rng;
 
 const sequence = seq()();
 // Seeding possibilities shown below
@@ -841,10 +826,9 @@ const ad2 = new libR.rng.normal.AhrensDieter();
 
 // some helpers
 
-const seq = 
-
-// reference to uniform PRNG under rng property
-ad2.rng.init(0);
+const seq =
+  // reference to uniform PRNG under rng property
+  ad2.rng.init(0);
 // bleed the normal PRNG
 sequence(5).map(() => ad2.norm_rand());
 /*
@@ -1578,7 +1562,7 @@ _in R console_
 `dbeta, qbeta, pbeta, rbeta`
 
 See [R doc](http://stat.ethz.ch/R-manual/R-patched/library/stats/html/Beta.html).
-See [wiki]().
+See [wiki](https://en.wikipedia.org/wiki/Beta_distribution).
 
 These functions are members of an object created by the `Beta` factory method. The factory method needs an instance of a [normal PRNG](#normal-distributed-random-number-generators). Various instantiation methods are given below.
 
@@ -1586,13 +1570,7 @@ Usage:
 
 ```javascript
 const libR = require('lib-r-math.js');
-const {
-  Beta,
-  rng: {
-    SuperDuper,
-    normal: { BoxMuller }
-  }
-} = libR;
+const { Beta, rng: { SuperDuper, normal: { BoxMuller } } } = libR;
 
 // explicit use of PRNG's
 const explicitB = Beta(new BoxMuller(new SuperDuper(0))); //
@@ -1606,11 +1584,9 @@ const { dbeta, pbeta, qbeta, rbeta } = defaultB;
 
 #### `dbeta`
 
-The density function of the [Beta distribution](). See [R doc](http://stat.ethz.ch/R-manual/R-patched/library/stats/html/Beta.html).
+The density function of the [Beta distribution](https://en.wikipedia.org/wiki/Beta_distribution). See [R doc](http://stat.ethz.ch/R-manual/R-patched/library/stats/html/Beta.html).
 
 $$ \frac{\Gamma(a+b)}{Γ(a) Γ(b)} x^{(a-1)}(1-x)^{(b-1)} $$
-
-See [R doc](http://stat.ethz.ch/R-manual/R-patched/library/stats/html/Beta.html).
 
 _decl:_
 
@@ -1679,7 +1655,7 @@ _in R Console_
 
 #### `pbeta`
 
-The cumulative probability function of the [Beta distribution](). See [R doc](http://stat.ethz.ch/R-manual/R-patched/library/stats/html/Beta.html).
+The cumulative probability function of the [Beta distribution](https://en.wikipedia.org/wiki/Beta_distribution). See [R doc](http://stat.ethz.ch/R-manual/R-patched/library/stats/html/Beta.html).
 
 ```typescript
 function pbeta(
@@ -1701,13 +1677,7 @@ function pbeta(
 
 ```javascript
 const libR = require('lib-r-math.js');
-const {
-  Beta,
-  rng: {
-    arrayrify,
-    numberPrecision
-  }
-} = libR;
+const { Beta, rng: { arrayrify, numberPrecision } } = libR;
 
 //helpers
 const precision = numberPrecision(9);
@@ -1731,14 +1701,15 @@ const p3 = pbeta([0, 0.2, 0.4, 0.6, 0.8, 1], 2, 5, 4);
 precision(p3);
 //[ 0, 0.106517718, 0.438150345, 0.813539396, 0.986024517, 1 ]
 
-
 //4.
 const p4 = pbeta([0, 0.2, 0.4, 0.6, 0.8, 1], 2, 5, undefined);
 precision(p4);
 //[ 0, 0.345027474, 0.76672, 0.95904, 0.9984, 1 ]
 
 //5. Same as 4
-const p5 = pbeta([0, 0.2, 0.4, 0.6, 0.8, 1], 2, 5, undefined, false).map(v => 1 - v);
+const p5 = pbeta([0, 0.2, 0.4, 0.6, 0.8, 1], 2, 5, undefined, false).map(
+  v => 1 - v
+);
 precision(p5);
 //[ 0, 0.345027474, 0.76672, 0.95904, 0.9984, 1 ]
 
@@ -1789,7 +1760,7 @@ _in R console_
 
 #### `qbeta`
 
-The quantile function of the [Beta distribution](). See [R doc](http://stat.ethz.ch/R-manual/R-patched/library/stats/html/Beta.html).
+The quantile function of the [Beta distribution](https://en.wikipedia.org/wiki/Beta_distribution). See [R doc](http://stat.ethz.ch/R-manual/R-patched/library/stats/html/Beta.html).
 
 _decl:_
 
@@ -1813,10 +1784,7 @@ function qbeta(
 
 ```javascript
 const libR = require('lib-r-math.js');
-const {
-  Beta,
-  R: { arrayrify, numberPrecision }
- } = libR;
+const { Beta, R: { arrayrify, numberPrecision } } = libR;
 //helpers
 const log = arrayrify(Math.log); // Make Math.log accept/return arrays aswell as scalars
 const precision = numberPrecision(9);
@@ -1845,7 +1813,11 @@ const q4 = qbeta([0, 0.25, 0.5, 0.75, 1], 4, 5, undefined, false); //
 //5. same as [5] but, logP=true,
 const q5 = qbeta(
   log([0, 0.25, 0.5, 0.75, 1]), //uses log!!
-  4, 5, undefined,  false,  true
+  4,
+  5,
+  undefined,
+  false,
+  true
 );
 //[ 1, 0.555486315, 0.440155205, 0.329083427, 0 ]
 ```
@@ -1880,7 +1852,7 @@ qbeta(  log(c(0,.25,.5,.75,1))  ,4,5, lower.tail = FALSE, log.p=TRUE)
 
 #### `rbeta`
 
-Generates random deviates for the [Beta distribution](). See [R doc](http://stat.ethz.ch/R-manual/R-patched/library/stats/html/Beta.html).
+Generates random deviates for the [Beta distribution](https://en.wikipedia.org/wiki/Beta_distribution). See [R doc](http://stat.ethz.ch/R-manual/R-patched/library/stats/html/Beta.html).
 
 _decl:_
 
@@ -1902,10 +1874,7 @@ function rbeta(
 const libR = require('lib-r-math.js');
 const {
   Beta,
-  rng: {
-    MersenneTwister,
-    normal: { Inversion }
-  },
+  rng: { MersenneTwister, normal: { Inversion } },
   R: { arrayrify, numberPrecision }
 } = libR;
 
@@ -1913,10 +1882,9 @@ const {
 const log = arrayrify(Math.log); //
 const precision = numberPrecision(9);
 
-
 //explicit, in this case, same as default Beta()
 const mt = new MersenneTwister(0);
-const { dbeta, pbeta, qbeta, rbeta } = Beta( new Inversion(mt) );
+const { dbeta, pbeta, qbeta, rbeta } = Beta(new Inversion(mt));
 
 //1.
 const r1 = rbeta(5, 0.5, 0.5);
@@ -1975,20 +1943,15 @@ rbeta(5, 2, 2, 5);
 
 `dbinom, qbinom, pbinom, rbinom`
 
-See [R doc](http://stat.ethz.ch/R-manual/R-patched/library/stats/html/Binomial.html) and [wiki]().
+See [R doc](http://stat.ethz.ch/R-manual/R-patched/library/stats/html/Binomial.html) and [wiki](https://en.wikipedia.org/wiki/Binomial_distribution).
 
-These functions are members of an object created by the `Binomial` factory method. The factory method needs an instance of a [normal PRNG]((#normal-distributed-random-number-generators)). Various instantiation methods are given below.
+These functions are members of an object created by the `Binomial` factory method. The factory method needs an instance of a [normal PRNG](#normal-distributed-random-number-generators). Various instantiation methods are given below.
 
 Usage:
 
 ```javascript
 const libR = require('lib-r-math.js');
-const {
-  Binomial,
-  rng: {
-    LecuyerCMRG
-  }
-} = libR;
+const { Binomial, rng: { LecuyerCMRG } } = libR;
 
 // explicit use if PRNG
 const lc = new LecuyerCMRG(0);
@@ -2002,9 +1965,9 @@ const { dbinom, pbinom, qbinom, rbinom } = defaultB;
 
 #### `dbinom`
 
-The density function of the [Binomial distribution](). See [R doc](http://stat.ethz.ch/R-manual/R-patched/library/stats/html/Binomial.html)
+The density function of the [Binomial distribution](http://stat.ethz.ch/R-manual/R-patched/library/stats/html/Binomial.html). See [R doc](http://stat.ethz.ch/R-manual/R-patched/library/stats/html/Binomial.html)
 
- $$p(x) = \frac{n!}{x!(n-x)!} p^{x} (1-p)^{n-x}$$
+$$p(x) = \frac{n!}{x!(n-x)!} p^{x} (1-p)^{n-x}$$
 
 _decl_
 
@@ -2024,10 +1987,7 @@ declare function dbinom(
 
 ```javascript
 const libR = require('lib-r-math.js');
-const { 
-   Binomial,
-   R: { numberPrecision }
-} = libR;
+const { Binomial, R: { numberPrecision } } = libR;
 
 //helper
 const precision = numberPrecision(9);
@@ -2075,7 +2035,7 @@ dbinom(c(0,1,2,3,4),4,0.3, TRUE)
 
 #### `pbinom`
 
-The cumulative probability function of the [Binomial distribution](). See [R doc](http://stat.ethz.ch/R-manual/R-patched/library/stats/html/Binomial.html)
+The cumulative probability function of the [Binomial distribution](http://stat.ethz.ch/R-manual/R-patched/library/stats/html/Binomial.html). See [R doc](http://stat.ethz.ch/R-manual/R-patched/library/stats/html/Binomial.html)
 
 ```typescript
 declare function pbinom(
@@ -2095,10 +2055,7 @@ declare function pbinom(
 
 ```javascript
 const libR = require('lib-r-math.js');
-const {
-  Binomial,
-  R: { numberPrecision }
-} = libR;
+const { Binomial, R: { numberPrecision } } = libR;
 
 //helper
 const precision = numberPrecision(9);
@@ -2155,7 +2112,7 @@ pbinom(c(0, 1, 2, 3, 4), 4, 0.5, FALSE, TRUE)
 
 #### `qbinom`
 
-The quantile function of the [Binomial distribution](). See [R doc](http://stat.ethz.ch/R-manual/R-patched/library/stats/html/Binomial.html)
+The quantile function of the [Binomial distribution](http://stat.ethz.ch/R-manual/R-patched/library/stats/html/Binomial.html). See [R doc](http://stat.ethz.ch/R-manual/R-patched/library/stats/html/Binomial.html)
 
 _decl:_
 
@@ -2178,13 +2135,7 @@ declare function qbinom(
 ```javascript
 const libR = require('lib-r-math.js');
 
-const {
-  Binomial,
-  R: {
-    arrayrify,
-    numberPrecision
-  }
-} = libR;
+const { Binomial, R: { arrayrify, numberPrecision } } = libR;
 
 //helpers
 const precision = numberPrecision(9);
@@ -2231,7 +2182,7 @@ qbinom(log(c(0,0.25,0.5,0.75,1)),40,.3, FALSE, TRUE)
 
 #### `rbinom`
 
-Generates random beta deviates for the [Binomial distribution](). See [R doc](http://stat.ethz.ch/R-manual/R-patched/library/stats/html/Binomial.html).
+Generates random beta deviates for the [Binomial distribution](http://stat.ethz.ch/R-manual/R-patched/library/stats/html/Binomial.html). See [R doc](http://stat.ethz.ch/R-manual/R-patched/library/stats/html/Binomial.html).
 
 _decl:_
 
@@ -2250,13 +2201,7 @@ declare function rbinom(
 ```javascript
 const libR = require('lib-r-math.js');
 
-const {
-  Binomial,
-  rng: {
-    KnuthTAOCP2002
-  },
-  R: { numberPrecision }
-} = libR;
+const { Binomial, rng: { KnuthTAOCP2002 }, R: { numberPrecision } } = libR;
 
 //helpers
 const precision = numberPrecision(9);
@@ -2311,17 +2256,11 @@ Usage:
 
 ```javascript
 const libR = require('lib-r-math.js');
-const {
-  NegativeBinomial,
-  rng: {
-    SuperDuper,
-    normal: { BoxMuller }
-  }
-} = libR;
+const { NegativeBinomial, rng: { SuperDuper, normal: { BoxMuller } } } = libR;
 
 //explicit specify PRNG's
 const sd = new SuperDuper(0);
-const explicitNB = NegativeBinomial( new BoxMuller(sd));
+const explicitNB = NegativeBinomial(new BoxMuller(sd));
 
 //default uses PRNG "Inverion" and "MersenneTwister"
 const defaultNB = NegativeBinomial();
@@ -2331,7 +2270,12 @@ const { dnbinom, pnbinom, qnbinom, rnbinom } = defaultNB;
 
 #### `dnbinom`
 
-The density function $\frac{Γ(x+n)}{Γ(n) x!} p^{n} (1-p)^{x}$. See [R doc](https: //stat.ethz.ch/R-manual/R-devel/library/stats/html/NegBinomial.html).
+The density function of the [Negative Binomial distribution](https: //stat.ethz.ch/R-manual/R-devel/library/stats/html/NegBinomial.html).
+
+$$ \frac{Γ(x+n)}{Γ(n) x!} p^{n} (1-p)^{x} $$
+
+See [R doc]
+(https: //stat.ethz.ch/R-manual/R-devel/library/stats/html/NegBinomial.html).
 
 _decl:_
 
@@ -2353,14 +2297,10 @@ declare function dnbinom(
 
 ```javascript
 const libR = require('lib-r-math.js');
-const {
-  NegativeBinomial,
-  R: { precisionNumber }
-} = libR;
+const { NegativeBinomial, R: { precisionNumber } } = libR;
 //some helpers
 const seq = libR.R.seq()();
 const precision = precisionNumber(9);
-
 
 const { dnbinom, pnbinom, qnbinom, rnbinom } = NegativeBinomial();
 
@@ -2397,7 +2337,7 @@ dnbinom(0:10, size = 3, mu = 3*(1-0.5)/0.5)
 
 #### `pnbinom`
 
-The gives the cumulative propbability function of the [Negative Binomial distribution](wiki).
+The gives the cumulative probability function of the [Negative Binomial distribution](https: //stat.ethz.ch/R-manual/R-devel/library/stats/html/NegBinomial.html).
 See [R doc](https: //stat.ethz.ch/R-manual/R-devel/library/stats/html/NegBinomial.html).
 
 _decl:_
@@ -2422,14 +2362,10 @@ _decl:_
 
 ```javascript
 const libR = require('lib-r-math.js');
-const {
-  NegativeBinomial,
-  R: { precisionNumber }
-} = libR;
+const { NegativeBinomial, R: { precisionNumber } } = libR;
 //some helpers
 const seq = libR.R.seq()();
 const precision = precisionNumber(9);
-
 
 const { dnbinom, pnbinom, qnbinom, rnbinom } = NegativeBinomial();
 
@@ -2452,7 +2388,7 @@ const p3 = pnbinom(x, 3, 0.5, undefined, false);
 
 //4
 const p4 = pnbinom(x, 3, 0.5, undefined, false, true);
-precision(p4)
+precision(p4);
 /*[
   -0.133531393,  -0.693147181,  -1.06784063,
   -1.48473443,   -2.40968323,   -Infinity ]*/
@@ -2484,7 +2420,9 @@ pnbinom(c(0, 2, 3, 4, 6, Inf), size=3, prob=0.5, lower.tail=FALSE, log.p=TRUE);
 
 #### `qnbinom`
 
-The quantile function of the [Negative Binomial distribution](wiki).
+The quantile function of the
+[Negative Binomial distribution]
+(https: //stat.ethz.ch/R-manual/R-devel/library/stats/html/NegBinomial.html).
 See [R doc](https: //stat.ethz.ch/R-manual/R-devel/library/stats/html/NegBinomial.html).
 
 _decl:_
@@ -2509,10 +2447,7 @@ declare function qnbinom(
 
 ```javascript
 const libR = require('lib-r-math.js');
-const {
-  NegativeBinomial,
-  R: { precisionNumber }
-} = libR;
+const { NegativeBinomial, R: { precisionNumber } } = libR;
 //some helpers
 const precision = precisionNumber(9);
 const log = arrayrify(Math.log);
@@ -2531,14 +2466,7 @@ const q2 = qnbinom(pnbinom(x, 3, 0.5), 3, 0.5, undefined, false);
 //[ 6, 2, 1, 0, 0 ]
 
 //3. with logP=true
-const q3 = qnbinom(
-  log(pnbinom(x, 3, 0.5)),
-  3,
-  0.5,
-  undefined,
-  false,
-  true
-);
+const q3 = qnbinom(log(pnbinom(x, 3, 0.5)), 3, 0.5, undefined, false, true);
 //[ 6, 2, 1, 0, 0 ]
 ```
 
@@ -2560,7 +2488,9 @@ qnbinom(log(pnbinom(c(0, 2, 3, 4, 6, Inf), size=3, prob=0.5 )),3,0.5, lower.tail
 
 #### `rnbinom`
 
-Generates random deviates for the [Negative binomial distribution](wiki).
+Generates random deviates for the
+[Negative binomial distribution]
+(https: //stat.ethz.ch/R-manual/R-devel/library/stats/html/NegBinomial.html).
 See [R doc](https: //stat.ethz.ch/R-manual/R-devel/library/stats/html/NegBinomial.html).
 
 _decl:_
@@ -2579,12 +2509,9 @@ declare function rnbinom(
 
 ```javascript
 const {
-    NegativeBinomial,
-    R: { precisionNumber, arrayrify },
-    rng: {
-        SuperDuper,
-        normal: { BoxMuller }
-    }
+  NegativeBinomial,
+  R: { precisionNumber, arrayrify },
+  rng: { SuperDuper, normal: { BoxMuller } }
 } = libR;
 //some helpers
 const seq = libR.R.seq()();
@@ -2593,7 +2520,9 @@ const log = arrayrify(Math.log);
 
 //explicit use of PRNG
 const sd = new SuperDuper(12345);
-const { dnbinom, pnbinom, qnbinom, rnbinom } = NegativeBinomial(new BoxMuller(sd));
+const { dnbinom, pnbinom, qnbinom, rnbinom } = NegativeBinomial(
+  new BoxMuller(sd)
+);
 
 //1. size = 100, prob=0.5, so expect success/failure to be approximatly equal
 rnbinom(7, 100, 0.5);
@@ -2641,7 +2570,7 @@ rnbinom(7,100, mu= 100*(1-0.5)/0.5)
 
 `dcauchy, qcauchy, pcauchy, rcauchy`
 
-See [R doc](http://stat.ethz.ch/R-manual/R-devel/library/stats/html/Cauchy.html). See [wiki](wiki)
+See [R doc](http://stat.ethz.ch/R-manual/R-devel/library/stats/html/Cauchy.html). See [wiki](https://en.wikipedia.org/wiki/Cauchy_distribution)
 
 These functions are members of an object created by the `Cauchy` factory method. The factory method needs as optional argument an instance of one of the [uniform PRNG](#uniform-pseudo-random-number-generators) generators.
 
@@ -2649,10 +2578,7 @@ Usage:
 
 ```javascript
 const libR = require('lib-r-math.js');
-const {
-  Cauchy,
-  rng: { WichmannHill }
-} = libR;
+const { Cauchy, rng: { WichmannHill } } = libR;
 
 //explcit use of PRNG
 const wh = new WichmannHill(1234);
@@ -2692,10 +2618,7 @@ Usage:
 
 ```javascript
 const libR = require('lib-r-math.js');
-const {
-  Cauchy,
-  R: { precisionNumber }
-} = libR;
+const { Cauchy, R: { precisionNumber } } = libR;
 
 // some usefull tools
 const seq = libR.R.seq()();
@@ -2773,10 +2696,7 @@ Usage:
 
 ```javascript
 const libR = require('lib-r-math.js');
-const {
-  Cauchy,
-  R: { precisionNumber }
-} = libR;
+const { Cauchy, R: { precisionNumber } } = libR;
 
 // some usefull tools
 const seq = libR.R.seq()();
@@ -2785,7 +2705,7 @@ const precision = precisionNumber(9);
 // initialize
 const { dcauchy, pcauchy, qcauchy, rcauchy } = Cauchy();
 //data
-const x = seq(-4,4,2);
+const x = seq(-4, 4, 2);
 
 //1
 const p1 = pcauchy(x, -2, 0.5);
@@ -2849,10 +2769,7 @@ Usage:
 
 ```javascript
 const libR = require('lib-r-math.js');
-const {
-  Cauchy,
-  R: { precisionNumber }
-} = libR;
+const { Cauchy, R: { precisionNumber } } = libR;
 
 // some usefull tools
 const seq = libR.R.seq()();
@@ -2905,11 +2822,7 @@ Generates random deviates from the [Cauchy distribution](https://en.wikipedia.or
 _decl_
 
 ```typescript
-declare function rcauchy(
-  n: number,
-  location = 0,
-  scale = 1
-): number | number[];
+declare function rcauchy(n: number, location = 0, scale = 1): number | number[];
 ```
 
 * `n`: number of deviates to generate.
@@ -2925,7 +2838,7 @@ const { Cauchy, rng: { MersenneTwister } } = libR;
 
 //initialize Cauchy
 const sd = new SuperDuper(0);
-const { dcauchy, pcauchy, qcauchy, rcauchy } =  Cauchy(sd);
+const { dcauchy, pcauchy, qcauchy, rcauchy } = Cauchy(sd);
 
 //1.
 sd.init(43210);
@@ -2968,35 +2881,31 @@ rcauchy(5, -2, 0.25);
 
 `dchisq, qchisq, pchisq, rchisq`
 
-These functions are members of an object created by the `ChiSquared` factory method. The factory method needs as optional argument an instance of a [normal PRNG](#normal-distributed-random-number-generators). See [wiki](wiki). See [R doc](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/Chisquare.html)
+These functions are members of an object created by the `ChiSquared` factory method. The factory method needs as optional argument an instance of a [normal PRNG](#normal-distributed-random-number-generators). See [wiki](https://en.wikipedia.org/wiki/Chi-squared_distribution). See [R doc](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/Chisquare.html)
 
 Usage:
 
 ```javascript
 const libR = require('lib-r-math.js');
-const {
-  ChiSquared,
-  rng: {
-    WichmannHill,
-    normal: { AhrensDieter }
-  }
-} = libR;
+const { ChiSquared, rng: { WichmannHill, normal: { AhrensDieter } } } = libR;
 
 //uses as default: "Inversion" and "Mersenne-Twister"
 const defaultChi = ChiSquared();
 
 //uses explicit PRNG
 const wh = new WichmannHill();
-const explicitChi = ChiSquared( new AhrensDieter(wh));
+const explicitChi = ChiSquared(new AhrensDieter(wh));
 
 const { dchisq, pchisq, qchisq, rchisq } = explicitChi;
 ```
 
 #### `dchisq`
 
-The X<sup>2</sup> density function, see [R doc](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/Chisquare.html) and [wiki](wiki)
+The [X<sup>2</sup>](https://en.wikipedia.org/wiki/Chi-squared_distribution) density function, see [R doc](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/Chisquare.html).
 
 $$ f\_{n}(x) = \frac{1}{2^{\frac{n}{2}} Γ(\frac{n}{2})} x^{\frac{n}{2}-1} e^{\frac{-x}{2}} $$
+
+_decl_
 
 ```typescript
 declare function dchisq(
@@ -3012,64 +2921,64 @@ declare function dchisq(
 * `ncp`: non centrality parameter.
 * `asLog`: return probabilities as log(p)
 
+Usage:
+
 ```javascript
 const libR = require('lib-r-math.js');
-const { ChiSquared } = libR;
+const { ChiSquared, R: { precision } } = libR;
 
 const { dchisq, pchisq, qchisq, rchisq } = ChiSquared();
 
-// some usefull tools
+//helpers
 const seq = libR.R.seq()();
 
-//1. seq(0,10)=[0, 2, 4, 6, 8, 10], df=5
-dchisq(seq(0, 10, 2), 5);
-/*
-[ 0,
-  0.13836916580686492,
-  0.1439759107018348,
-  0.09730434665928292,
-  0.05511196094424547,
-  0.02833455534173448 ]
-*/
+//data
+x = seq(0, 10, 2);
 
-//2. seq(0,10)=[0, 2, 4, 6, 8, 10], df=3, ncp=4
-dchisq(seq(0, 10, 2), 3, 4);
-/*
-[ 0,
-  0.08371765638067052,
-  0.09970211254391682,
-  0.090147417612482,
-  0.07076499302415257,
-  0.050758266663356165 ]
-*/
-//3. seq(0,10)=[0, 2, 4, 6, 8, 10], df=3, ncp=4, log=true
-dchisq(seq(0, 10, 2), 3, 4, true);
-/*
-[ -Infinity,
-  -2.4803053753380837,
-  -2.3055684132326415,
-  -2.4063089751953237,
-  -2.6483908493739903,
-  -2.9806807844070144 ]
-*/
+//1. df=5
+const d1 = dchisq(x, 5);
+precision(d1);
+/*[
+  0,                0.138369166,  0.143975911,  0.0973043467,
+  0.0551119609,     0.0283345553 ]*/
+
+//2. df=3, ncp=4
+const d2 = dchisq(x, 3, 4);
+precision(d2);
+/*[
+  0,            0.0837176564,  0.0997021125,  0.0901474176,
+  0.070764993,  0.0507582667 ]*/
+
+//3. df=3, ncp=4, log=true
+const d3 = dchisq(x, 3, 4, true);
+precision(d3);
+/*[
+  -Infinity,  -2.48030538,  -2.30556841,
+  -2.40630898,-2.64839085,  -2.98068078 ]*/
 ```
 
-_in R Console_
+_Equivalent in R_
 
 ```R
-> dchisq(seq(0, 10, 2), 5);
-[1] 0.00000000 0.13836917 0.14397591 0.09730435 0.05511196 0.02833456
+x=seq(0, 10, 2);
+#1
+dchisq(x, 5);
+#[1] 0.00000000 0.13836917 0.14397591 0.09730435 0.05511196 0.02833456
 
-> dchisq(seq(0, 10, 2), 3, 4);
-[1] 0.00000000 0.08371766 0.09970211 0.09014742 0.07076499 0.05075827
+#2
+dchisq(x, 3, 4);
+#[1] 0.00000000 0.08371766 0.09970211 0.09014742 0.07076499 0.05075827
 
-> dchisq(seq(0, 10, 2), 3, 4, TRUE);
-[1]      -Inf -2.480305 -2.305568 -2.406309 -2.648391 -2.980681
+#3
+dchisq(x, 3, 4, TRUE);
+#[1]      -Inf -2.480305 -2.305568 -2.406309 -2.648391 -2.980681
 ```
 
 #### `pchisq`
 
-The X<sup>2</sup> probability function, see [R doc](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/Chisquare.html).
+The [X<sup>2</sup>](https://en.wikipedia.org/wiki/Chi-squared_distribution) cumulative probability function, see [R doc](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/Chisquare.html).
+
+_decl_
 
 ```typescript
 declare function pchisq(
@@ -3087,63 +2996,61 @@ declare function pchisq(
 * `lowerTail`: if TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
 * `logP`: return probabilities as log(p)
 
+Usage:
+
 ```javascript
 const libR = require('lib-r-math.js');
-const { ChiSquared } = libR;
+const { ChiSquared, R: { numberPrecision } } = libR;
 
 const { dchisq, pchisq, qchisq, rchisq } = ChiSquared();
 
+const x = [...seq(0, 10, 2), Infinity];
+
 //1.
-pchisq([0, 2, 4, 6, 10, Infinity], 3);
-/*
-[ 0,
-  0.42759329552912073,
-  0.7385358700508893,
-  0.8883897749052875,
-  0.9814338645369568,
-  1 ]
-*/
+const p1 = pchisq(x, 3);
+precision(p1);
+/*[
+  0,            0.427593296,  0.73853587,  0.888389775,
+  0.953988294,  0.981433865,  1 ]*/
 
 //2. df=8, ncp=4, lowerTail=false
-pchisq([0, 2, 4, 6, 10, Infinity], 8, 4, false);
-/*
-[ 1,
-  0.9962628039343348,
-  0.961002639616864,
-  0.8722689463714985,
-  0.5873028585053277,
-  0 ]
-*/
+const p2 = pchisq(x, 8, 4, false);
+precision(p2);
+/*[ 1,            0.996262804,   0.96100264,  0.872268946,
+    0.739243049,  0.587302859 ]*/
 
 //3. df=8, ncp=4, lowerTail=true, logP=true
-pchisq([0, 2, 4, 6, 10, Infinity], 8, 4, true, true);
-/*
-[ -Infinity,
-  -5.589419663795327,
-  -3.244261317626745,
-  -2.0578283690888397,
-  -0.8850412685992426,
-  -0 ]
-*/
+const p3 = pchisq(x, 8, 4, true, true);
+precision(p2);
+/*[
+  -Infinity,  -5.58941966,  -3.24426132,
+  -2.05782837,-1.34416653,  -0.885041269 ]*/
 ```
 
-_in R Console_
+_Equivalent in R_
 
 ```R
-> pchisq(c(0, 2, 4, 6, 10, Inf), 3);
-[1] 0.0000000 0.4275933 0.7385359 0.8883898 0.9814339 1.0000000
+x= c(seq(0, 10, 2), Inf);
 
-> pchisq(c(0, 2, 4, 6, 10, Inf), 8, 4, lower.tail=FALSE);
-[1] 1.0000000 0.9962628 0.9610026 0.8722689 0.5873029 0.0000000
+#1
+pchisq(x, 3);
+#[1] 0.0000000 0.4275933 0.7385359 0.8883898 0.9814339 1.0000000
 
-> pchisq(c(0, 2, 4, 6, 10, Inf), 8, 4, lower.tail=FALSE, log.p=TRUE);
-[1]  0.000000000 -0.003744197 -0.039778123 -0.136657478 -0.532214649
-[6]         -Inf
+#2
+pchisq(x, 8, 4, lower.tail=FALSE);
+#[1] 1.0000000 0.9962628 0.9610026 0.8722689 0.5873029 0.0000000
+
+#3
+pchisq(x, 8, 4, lower.tail=FALSE, log.p=TRUE);
+#[1]  0.000000000 -0.003744197 -0.039778123 -0.136657478 -0.532214649
+#[6]         -Inf
 ```
 
 #### `qchisq`
 
-The X<sup>2</sup> quantile function, see [R doc](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/Chisquare.html).
+The [X<sup>2</sup>](https://en.wikipedia.org/wiki/Chi-squared_distribution) quantile function, see [R doc](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/Chisquare.html).
+
+_decl_
 
 ```typescript
 declare function qchisq(
@@ -3161,66 +3068,62 @@ declare function qchisq(
 * `lowerTail`: if TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
 * `logP`: probabilities are as log(p)
 
+Usage:
+
 ```javascript
 const libR = require('lib-r-math.js');
-const { ChiSquared } = libR;
+const { ChiSquared, R: { arrayrify, numberPrecision } } = libR;
+
+//helpers
+const seq = libR.R.seq()();
+const log = arrayrify(Math.log);
+const precision = numberPrecision(9);
 
 const { dchisq, pchisq, qchisq, rchisq } = ChiSquared();
 
-// some usefull tools
-const seq = libR.R.seq()();
-const log = libR.R.arrayrify(Math.log);
+// data
+const x = seq(0, 1, 0.2);
 
 //1. df=3,
-qchisq(seq(0, 1, 0.2), 3);
-/*
-[ 0,
-  1.0051740130523492,
-  1.8691684033887155,
-  2.9461660731019514,
-  4.641627676087445,
-  Infinity ]
-*/
+const q1 = qchisq(x, 3);
+precision(q1);
+//[ 0, 1.00517401, 1.8691684, 2.94616607, 4.64162768, Infinity ]
 
 //2. df=3, ncp=undefined, lowerTail=false
-qchisq(seq(0, 1, 0.2), 50, undefined, false);
-/*
-[ Infinity,
-  58.16379657992839,
-  51.89158387457867,
-  46.86377615520892,
-  41.44921067362021,
-  0 ]
-*/
+const q2 = qchisq(x, 50, undefined, false);
+precision(q2);
+//[ Infinity, 58.1637966, 51.8915839, 46.8637762, 41.4492107, 0 ]
 
 //3. df=50, ncp=0, lowerTail=false, logP=true
-qchisq(log(seq(0, 1, 0.2)), 50, 0, false, true);
-/*
-[ Infinity,
-  58.16379657992839,
-  51.89158387457867,
-  46.86377615520892,
-  41.44921067362021,
-  0 ]
-*/
+const q3 = qchisq(log(x), 50, 0, false, true);
+//[ Infinity, 58.1637966, 51.8915839, 46.8637762, 41.4492107, 0 ]
 ```
 
-_in R Console_
+_Equivalence in R_
 
 ```R
-> qchisq(seq(0, 1, 0.2), 3);
-[1] 0.000000 1.005174 1.869168 2.946166 4.641628      Inf
+#R-script
+#data
+x=seq(0, 1, 0.2);
 
-> qchisq(seq(0, 1, 0.2), 50, lower.tail=FALSE);
-[1]      Inf 58.16380 51.89158 46.86378 41.44921  0.00000
+#1
+qchisq(x, 3);
+#[1] 0.000000 1.005174 1.869168 2.946166 4.641628      Inf
 
-> qchisq(log(seq(0, 1, 0.2)), 50, 0, lower.tail=FALSE, log.p=TRUE);
-[1]      Inf 58.16380 51.89158 46.86378 41.44921  0.00000
+#2
+qchisq(x, 50, lower.tail=FALSE);
+#[1]      Inf 58.16380 51.89158 46.86378 41.44921  0.00000
+
+#3
+qchisq(log(x), 50, 0, lower.tail=FALSE, log.p=TRUE);
+#[1]      Inf 58.16380 51.89158 46.86378 41.44921  0.00000
 ```
 
 #### `rchisq`
 
-Creates random deviates for the X<sup>2</sup> distribution, see [R doc](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/Chisquare.html).
+Creates random deviates for the [X<sup>2</sup> distribution](https://en.wikipedia.org/wiki/Chi-squared_distribution), see [R doc](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/Chisquare.html).
+
+_decl_
 
 ```typescript
 declare function rchisq(n: number, df: number, ncp?: number): number | number[];
@@ -3232,64 +3135,60 @@ declare function rchisq(n: number, df: number, ncp?: number): number | number[];
 
 ```javascript
 const libR = require('lib-r-math.js');
-
 const {
-  Normal,
   ChiSquared,
-  rng: { MersenneTwister },
-  rng: { normal: { Inversion } }
+  rng: {
+    LecuyerCMRG:,
+    normal: { AhrensDieter }
+  },
+  R: { arrayrify, numberPrecision }
 } = libR;
 
-const mt = new MersenneTwister(0);
-const inv = new Inversion(mt);
-const normal = Normal(inv);
+//helpers
+const seq = libR.R.seq()();
+const log = arrayrify(Math.log);
+const precision = numberPrecision(9);
 
-const { dchisq, pchisq, qchisq, rchisq } = ChiSquared(normal);
+//explicit use of PRNG
+const lc = new LecuyerCMRG(0);
+const { dchisq, pchisq, qchisq, rchisq } = ChiSquared(new AhrensDieter(lc));
 
-mt.init(1234);
-rchisq(5, 6);
-/*
-[ 1.9114268080337742,
-  6.043534576038884,
-  6.200716357774979,
-  2.956836564898939,
-  6.7283355255601744 ]
-*/
+//1
+lc.init(1234);
+const r1 = rchisq(5, 6);
+precision(r1);
+//[ 12.4101973, 6.79954177, 9.80911877, 4.64604085, 0.351985504 ]
+
 
 //2. df=40, ncp=3
-rchisq(5, 40, 3);
-/**
- [ 52.209386584322935,
-  34.70775047728965,
-  47.16016110974318,
-  46.5265673840001,
-  33.621513245840234 ]
- */
+const r2 = rchisq(5, 40, 3);
+precision(r2);
+//[ 22.2010553, 44.033609, 36.3201158, 44.6212447, 40.1142555 ]
+
 
 //3. df=20
-rchisq(5, 20);
-/*
-[ 19.835565127330135,
-  16.09559531198466,
-  19.030877450490838,
-  18.7687394986203,
-  11.121314102478944 ]
-*/
+const r3 = rchisq(5, 20);
+precisio(r3);
+//[ 24.4339678, 19.0379177, 26.6965258, 18.1288566, 26.7243317 ]
 ```
 
-_in R Console_
+_Equivalent in R_
 
 ```R
-> RNGkind("Mersenne-Twister", normal.kind ="Inversion")
-> set.seed(1234)
-> rchisq(5, 6);
-[1] 1.911427 6.043535 6.200716 2.956837 6.728336
+RNGkind("L'Ecuyer-CMRG", normal.kind="Ahrens-Dieter")
+set.seed(1234)
 
-> rchisq(5, 40, 3);
-[1] 52.20939 34.70775 47.16016 46.52657 33.62151
+#1
+rchisq(5, 6);
+#[1] 12.4101973  6.7995418  9.8091188  4.6460409  0.3519855
 
-> rchisq(5, 20);
-[1] 19.83557 16.09560 19.03088 18.76874 11.12131
+#2
+rchisq(5, 40, 3);
+#[1] 22.20106 44.03361 36.32012 44.62124 40.11426
+
+#3
+rchisq(5, 20);
+#[1] 24.43397 19.03792 26.69653 18.12886 26.72433
 ```
 
 ### Exponential Distribution
@@ -3304,14 +3203,14 @@ Usage:
 
 ```javascript
 const libR = require('lib-r-math.js');
-const { Exponential, rng: { MersenneTwister } } = libR;
+const { Exponential, rng: { MarsagliaMultiCarry } } = libR;
 
 //1. initialize default
 const defaultExponential = Exponential();
 
 //2. alternative: initialize with explicit uniform PRNG
-const mt = new MersenneTwister(123456); //keep reference so we can do mt.init(...)
-const customExponential = Exponential(mt);
+const mmc = new MarsagliaMultiCarry(123456); //keep reference so we can do mt.init(...)
+const customExponential = Exponential(mmc);
 
 //get functions
 const { dexp, pexp, qexp, rexp } = defaultExponential;
@@ -3319,7 +3218,7 @@ const { dexp, pexp, qexp, rexp } = defaultExponential;
 
 #### `dexp`
 
-The exponential density function, see [R doc](http://stat.ethz.ch/R-manual/R-patched/library/stats/html/Exponential.html).
+The [Exponential density function](https://en.wikipedia.org/wiki/Exponential_distribution), see [R doc](http://stat.ethz.ch/R-manual/R-patched/library/stats/html/Exponential.html).
 
 $$ f(x) = λ {e}^{- λ x} $$
 
@@ -3337,73 +3236,59 @@ declare function dexp(
 
 ```javascript
 const libR = require('lib-r-math.js');
-const { Exponential } = libR;
+const { Exponential, R: { precisionNumber } } = libR;
+
+//helpers
+const seq = libR.R.seq()();
+const precision = numberPrecision(9); //9 significant digits
 
 const { dexp, pexp, qexp, rexp } = Exponential();
 
-// some usefull tools
-const seq = libR.R.seq()();
+const x = seq(0, 0.3, 0.05);
 
 //1
-dexp(seq(0, 0.3, 0.05), 3);
-/*
-    [ 3,
-      2.5821239292751734,
-      2.2224546620451533,
-      1.9128844548653197,
-      1.6464349082820793,
-      1.4170996582230442,
-      1.2197089792217974 
-    ]
-    */
+const d1 = dexp(x, 3);
+precision(d1);
+/*[ 3,          2.58212393, 2.22245466, 1.91288445,
+    1.64643491, 1.41709966, 1.21970898 ]*/
 
 //2.
-dexp(seq(0, 0.3, 0.05), 3, true);
-/*
-        [ 1.0986122886681098,
-            0.9486122886681098,
-            0.7986122886681097,
-            0.6486122886681097,
-            0.4986122886681097,
-            0.3486122886681098,
-            0.19861228866810976 ]
-    */
+const d2 = dexp(x, 3, true);
+precision(d2);
+/*[ 1.09861229,  0.948612289,  0.798612289, 0.648612289,
+    0.498612289, 0.348612289,  0.198612289 ]*/
 
 //3
-dexp(seq(0, 10, 2), 0.2);
-/*
-    [ 0.2,
-        0.13406400920712785,
-        0.08986579282344431,
-        0.06023884238244041,
-        0.04037930359893108,
-        0.027067056647322542 ]
-    */
+const d3 = dexp(x, 0.2);
+precision(d3);
+/*[
+    0.2,          0.198009967,  0.196039735,  0.194089107,
+    0.192157888,  0.190245885,  0.188352907 ]*/
 ```
 
-_in R Console_
+_Equivalent in R_
 
 ```R
+x = seq(0, 0.3, 0.05);
+
 #1
->  dexp(seq(0,0.3,0.05),3)
-[1] 3.000000 2.582124 2.222455 1.912884
-[5] 1.646435 1.417100 1.219709
+dexp(x, 3)
+#[1] 3.000000 2.582124 2.222455 1.912884 1.646435 1.417100 1.219709
 
 #2
->  dexp(seq(0,0.3,0.05),3, TRUE)
-[1] 1.0986123 0.9486123 0.7986123
-[4] 0.6486123 0.4986123 0.3486123
-[7] 0.1986123
+dexp(x, 3, TRUE)
+#[1] 1.0986123 0.9486123 0.7986123 0.6486123 0.4986123 0.3486123 0.1986123
 
 #3
-> dexp(seq(0,10,2),0.2)
-[1] 0.20000000 0.13406401 0.08986579
-[4] 0.06023884 0.04037930 0.02706706
+dexp(x, 0.2)
+#[1] 0.2000000 0.1980100 0.1960397 0.1940891 0.1921579 0.1902459 0.1883529
 ```
 
 #### `pexp`
 
-The Exponential probability function, see [R doc](http://stat.ethz.ch/R-manual/R-patched/library/stats/html/Exponential.html).
+The cumulative probability of the [Exponential distribution](https://en.wikipedia.org/wiki/Exponential_distribution), see [R doc](http://stat.ethz.ch/R-manual/R-patched/library/stats/html/Exponential.html).
+
+_decl_
 
 ```typescript
 declare function pexp(
@@ -3419,71 +3304,68 @@ declare function pexp(
 * `lowerTail`: if TRUE (default), probabilities are P[X ≤ q], otherwise, P[X > q].
 * `logP`: return probabilities as log(p)
 
+Usage:
+
 ```javascript
 const libR = require('lib-r-math.js');
-const { Exponential } = libR;
+const { Exponential, R: { numberPrecision } } = libR;
 
+//helpers
 const seq = libR.R.seq()();
+const precision = numberPrecision(9);
 
-const { dexp, pexp, qexp, rexp } = ChiSquared();
+const { dexp, pexp, qexp, rexp } = Exponential();
+
+//data
+const q = seq(0, 0.3, 0.05);
 
 ///1
-pexp(seq(0, 0.3, 0.05), 3);
-/*[ 0,
-      0.13929202357494222,
-      0.2591817793182822,
-      0.3623718483782268,
-      0.4511883639059736,
-      0.5276334472589853,
-      0.5934303402594009 ]
-    */
+const p1 = pexp(q, 3);
+precision(p1);
+/*[
+  0,            0.139292024,  0.259181779,
+  0.362371848,  0.451188364,  0.527633447,
+  0.59343034
+  ]*/
 
 //2
-pexp(seq(0, 0.3, 0.05), 3, true);
-/*[ 0,
-      0.13929202357494222,
-      0.2591817793182822,
-      0.3623718483782268,
-      0.4511883639059736,
-      0.5276334472589853,
-      0.5934303402594009 ]
-    */
+const p2 = pexp(q, 7, false, true);
+precision(p2);
+//[ 0, -0.35, -0.7, -1.05, -1.4, -1.75, -2.1 ]
 
 //3
-pexp(seq(0, 10, 2), 0.2);
-/*[ 0,
-      0.32967995396436073,
-      0.5506710358827784,
-      0.6988057880877979,
-      0.7981034820053446,
-      0.8646647167633873 ]
-*/
+const p3 = pexp(seq(0, 10, 2), 0.2);
+precision(p3);
+/*[
+  0,            0.329679954,  0.550671036,
+  0.698805788,  0.798103482,  0.864664717
+  ]*/
 ```
 
-_in R Console_
+_Equivalent in R_
 
 ```R
+#data
+q = seq(0, 0.3, 0.05);
+
 #1
-> pexp(seq(0,0.3,0.05),3)
-[1] 0.0000000 0.1392920 0.2591818
-[4] 0.3623718 0.4511884 0.5276334
-[7] 0.5934303
+pexp(q, 3);
+#[1] 0.0000000 0.1392920 0.2591818 0.3623718 0.4511884 0.5276334 0.5934303
 
 #2
-> pexp(seq(0,0.3,0.05),3, TRUE)
-[1] 0.0000000 0.1392920 0.2591818
-[4] 0.3623718 0.4511884 0.5276334
-[7] 0.5934303
+pexp(q, 7, FALSE, TRUE);
+#[1]  0.00 -0.35 -0.70 -1.05 -1.40 -1.75 -2.10
 
 #3
-> pexp(seq(0,10,2),0.2)
-[1] 0.0000000 0.3296800 0.5506710
-[4] 0.6988058 0.7981035 0.8646647
+pexp(seq(0,10,2),0.2)
+#[1] 0.0000000 0.3296800 0.5506710 0.6988058 0.7981035 0.8646647
 ```
 
 #### `qexp`
 
-The Exponential quantile function, see [R doc](http://stat.ethz.ch/R-manual/R-patched/library/stats/html/Exponential.html).
+The quantile function of the [Exponential distribution](https://en.wikipedia.org/wiki/Exponential_distribution), see [R doc](http://stat.ethz.ch/R-manual/R-patched/library/stats/html/Exponential.html).
+
+_decl_
 
 ```typescript
 declare function qexp(
@@ -3499,47 +3381,66 @@ declare function qexp(
 * `lowerTail`: if TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
 * `logP`: return probabilities as log(p)
 
+Usage:
+
 ```javascript
 const libR = require('lib-r-math.js');
-const { Exponential } = libR;
+const { Exponential, R: { arrayrify, numberPrecision } } = libR;
 
-const log = libR.R.arrayrify(Math.log);
+//helpers
+const log = arrayrify(Math.log);
 const seq = libR.R.seq()();
+const precision = numberPrecision(9);
 
-const { dexp, pexp, qexp, rexp } = ChiSquared();
+const { dexp, pexp, qexp, rexp } = Exponential();
 
+//data
+const q = seq(0, 10, 2);
 //1
-qexp(log(pexp(seq(0, 10, 2), 0.2)), 0.2, true, true);
-//[ 0, 2, 4, 6.000000000000001, 8.000000000000002, 10 ]
+const pp1 = pexp(q, 0.2);
+const q1 = qexp(log(pp1), 0.2, true, true);
+precision(q1);
+//[ 0, 2, 4, 6, 8, 10 ]
 
 //2
-qexp(pexp(seq(0, 10, 2), 0.2), 0.2);
-//[ 0, 2, 4, 6.000000000000001, 8.000000000000002, 10 ]
+const pp2 = pexp(seq(0, 10, 2), 0.2);
+const q2 = qexp(pp1, 0.2);
+precision(q2);
+//[ 0, 2, 4, 6, 8, 10 ]
 
 //3
-qexp(pexp(seq(0, 0.3, 0.05), 3, true), 3, true);
-// [1] 0.00 0.05 0.10 0.15 0.20 0.25 0.30
+const pp3 = pexp(seq(0, 0.3, 0.05), 3);
+const q3 = qexp(pp3, 3);
+precision(q3);
+//[ 0, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3 ]
 ```
 
-_in R Console_
+_Equivalent in R_
 
 ```R
+q = seq(0,10,2);
+
 #1
-> qexp(log(pexp(seq(0,10,2),0.2)),0.2, TRUE, TRUE)
-[1]  0  2  4  6  8 10
+pp1 = pexp(q,0.2);
+qexp(log(pp1),0.2, TRUE, TRUE)
+#[1]  0  2  4  6  8 10
 
 #2
-> qexp(pexp(seq(0,10,2),0.2),0.2)
-[1]  0  2  4  6  8 10
+pp2 = pexp(q ,0.2);
+qexp(pp2,0.2)
+#[1]  0  2  4  6  8 10
 
 #3
-> qexp(pexp(seq(0,0.3,0.05),3, TRUE),3, TRUE)
-[1] 0.00 0.05 0.10 0.15 0.20 0.25 0.30
+pp3 = pexp(seq(0, 0.3, 0.05), 3);
+q3 = qexp(pp3,3)
+#[1] 0.00 0.05 0.10 0.15 0.20 0.25 0.30
 ```
 
 #### `rexp`
 
-Creates random deviates for the Exponential distribution, see [R doc](http://stat.ethz.ch/R-manual/R-patched/library/stats/html/Exponential.html).
+Creates random deviates for the [Exponential distribution](https://en.wikipedia.org/wiki/Exponential_distribution), see [R doc](http://stat.ethz.ch/R-manual/R-patched/library/stats/html/Exponential.html).
+
+_decl_
 
 ```typescript
 declare function rexp(n: number, rate: number = 1): number | number[];
@@ -3548,60 +3449,52 @@ declare function rexp(n: number, rate: number = 1): number | number[];
 * `n`: number of deviates to generate (array or scalar).
 * `rate`: the λ parameter.
 
+Usage:
+
 ```javascript
 const libR = require('lib-r-math.js');
-const { Exponential, rng: { MersenneTwister } } = libR;
+const { Exponential, rng: { WichmannHill }, R: { precisionNumber } } = libR;
 
-const mt = new MersenneTwister(1234); //seed 1234
-const { dexp, pexp, qexp, rexp } = Exponential(mt);
+//helper
+const precision = precisionNumber(9);
+
+const wh = new WichmannHill(1234); //seed 1234
+const { dexp, pexp, qexp, rexp } = Exponential(wh);
 
 //1
-rexp(5);
-/*[ 2.501758604962226,
-  0.24675888335332274,
-  0.00658195674547719,
-  1.742746089841709,
-  0.38718258356675506 ]
-*/
+wh.init(12345);
+const r1 = rexp(5);
+precision(r1);
+//[ 0.189141121, 1.56731395, 3.80442336, 3.15394116, 2.66186551 ]
 
 //2
-rexp(5, 0.1);
-/*[ 0.8994967117905617,
-  8.240815149200083,
-  2.0261790050608974,
-  8.380403192293764,
-  7.604303005662682 ]
-*/
+const r2 = rexp(5, 0.1);
+precision(r2);
+//[ 6.23691783, 3.69025109, 4.06170046, 9.35617011, 17.9486493 ]
 
 //3
-rexp(5, 3);
-/*[ 0.6266922261285862,
-  0.5320351392051192,
-  0.5528874614306372,
-  1.0174860332842828,
-  0.5835600444988374 ]
-*/
+const r3 = rexp(5, 3);
+precision(r3);
+//[ 0.103834413, 0.18975976, 0.329332554, 0.462307908, 0.426360565 ]
 ```
 
-_in R Console_
+_Equivalent in R_
 
 ```R
-> RNGkind("Mersenne-Twister")
-> set.seed(1234)
-#1.
-> rexp(5)
-[1] 2.501758605 0.246758883 0.006581957
-[4] 1.742746090 0.387182584
+RNGkind("Wichmann-Hill")
+set.seed(12345)
 
-#2.
-> rexp(5,0.1)
-[1] 0.8994967 8.2408151 2.0261790 8.3804032
-[5] 7.6043030
+#1
+rexp(5)
+#[1] 0.1891411 1.5673139 3.8044234 3.1539412 2.6618655
 
-#3.
-> rexp(5,3)
-[1] 0.6266922 0.5320351 0.5528875 1.0174860
-[5] 0.5835600
+#2
+rexp(5,0.1)
+#[1]  6.236918  3.690251  4.061700  9.356170 17.948649
+
+#3
+rexp(5,3)
+#[1] 0.1038344 0.1897598 0.3293326 0.4623079 0.4263606
 ```
 
 ### F (non-central) Distribution
@@ -3610,17 +3503,18 @@ _in R Console_
 
 See [R doc](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/Fdist.html)
 
-These functions are members of an object created by the `FDist` factory method. The factory method needs as optional argument the result of the factory function [Normal](#normal-distribution).
+These functions are members of an object created by the `FDist` factory method. The factory method needs as optional argument an instance of one of the [normal PRNG's](#normal-distributed-random-number-generators).
 
 Usage:
 
 ```javascript
 const libR = require('lib-r-math.js');
 const {
-  Normal,
   FDist,
-  rng: { MersenneTwister },
-  rng: { normal: { Inversion } }
+  rng: {
+    MersenneTwister,
+    normal: { KindermanRamage }
+  }
 } = libR;
 
 //1. initialize default
@@ -3628,7 +3522,7 @@ const defaultF = FDist();
 
 //2. alternative: initialize with explicit uniform PRNG
 const mt = new MersenneTwister(1234); //keep reference so we can do mt.init(...)
-const customF = FGDist(Normal(new Inversion(mt)));
+const customF = FDist(new KindermanRamage(mt));
 
 //get functions
 const { df, pf, qf, rf } = customF; // or use "defaultF"
@@ -3636,11 +3530,13 @@ const { df, pf, qf, rf } = customF; // or use "defaultF"
 
 #### `df`
 
-The density function of the F distribution. See [R doc]((https://stat.ethz.ch/R-manual/R-devel/library/stats/html/Fdist.html)
+The density function of the [F distribution](https://en.wikipedia.org/wiki/F-distribution). See [R doc](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/Fdist.html)
 
 With `df1` and `df2` degrees of freedom:
 
 $$ \large f(x) = \frac{ Γ(\frac{df1 + df2}{2}) } { Γ(\frac{df1}{2}) Γ(\frac{df2}{2}) } {(\frac{n1}{n2})}^{(\frac{df1}{2})} x^{(\frac{df1}{2} - 1)} (1 + \frac{df1}{df2} x)^{-(n1 + n2)/2} $$
+
+_decl_
 
 ```typescript
 declare function df(
@@ -3658,89 +3554,83 @@ declare function df(
 * `ncp`: non-centrality parameter. If omitted the central F is assumed.
 * `asLog`: if TRUE, probabilities p are given as log(p).
 
+Usage:
+
 ```javascript
 const libR = require('lib-r-math.js');
-const { FDist } = libR;
+const { FDist, R: { numberPrecision } } = libR;
 
-//some usefull tools
+//helpers
 const seq = libR.R.seq()();
-const precision = libR.R.numberPrecision(9);
+const precision = numberPrecision(9);
 
-//get functions
 const { df, pf, qf, rf } = FDist();
 
+const x = seq(0, 4, 0.5);
+
 //1.
-precision(df(seq(0, 4, 0.5), 5, 10, 8));
-/*
-[ 0,
-  0.0972906993,
-  0.219523567,
-  0.270256085,
-  0.262998414,
-  0.229004229,
-  0.188412981,
-  0.150538493,
-  0.118556123 ]
-*/
+const d1 = df(x, 5, 10, 8);
+precision(d1);
+/*[
+  0,            0.0972906993,  0.219523567,  0.270256085,
+  0.262998414,  0.229004229,   0.188412981,  0.150538493,
+  0.118556123 ]*/
 
 //2.
-precision(df(seq(0, 4, 0.5), 50, 10, undefined, true));
-/*[ -Infinity,
-  -0.688217839,
-  -0.222580527,
-  -0.940618761,
-  -1.7711223,
-  -2.55950945,
-  -3.28076319,
-  -3.93660717,
+const d2 = df(x, 50, 10, undefined, true);
+precision(d2);
+/*[
+  -Infinity,  -0.688217839,  -0.222580527,  -0.940618761,
+  -1.7711223, -2.55950945,   -3.28076319,   -3.93660717,
   -4.53440492 ]*/
 
 //3.
-precision(df(seq(0, 4, 0.5), 6, 25));
-/*[ 0,
-  0.729921524,
-  0.602808536,
-  0.323999956,
-  0.155316972,
-  0.0724829398,
-  0.0340225684,
-  0.0162807852,
+const d3 = df(x, 6, 25);
+precision(d3);
+/*[
+  0,            0.729921524,  0.602808536,  0.323999956,
+  0.155316972,  0.0724829398, 0.0340225684, 0.0162807852,
   0.00798668195 ]*/
 
 //4.
-precision(df(seq(0, 4), 6, 25, 8, true));
-//[ -Infinity, -1.38207439, -1.09408866, -1.54026185, -2.22490033 ]
+const d4 = df(x, 6, 25, 8, true);
+precision(d4);
+/*[ -Infinity,  -2.43273687,  -1.38207439,  -1.08123445,
+  -1.09408866,  -1.27043349,  -1.54026185,  -1.86581606,
+  -2.22490033 ]*/
 ```
 
-_in R Console:_
+_Equivalence in R_
 
 ```R
+x = seq(0, 4, 0.5);
+
 #1.
->df(seq(0,4,0.5), df1=5,df2=10, ncp=8)
-[1] 0.0000000 0.0972907 0.2195236 0.2702561
-[5] 0.2629984 0.2290042 0.1884130 0.1505385
-[9] 0.1185561
+df(x, df1=5,df2=10, ncp=8)
+#[1] 0.0000000 0.0972907 0.2195236 0.2702561 0.2629984 0.2290042 0.1884130
+#[8] 0.1505385 0.1185561
 
 #2.
->df(seq(0,4,0.5), df1=50,df2=10, log = TRUE)
-[1]       -Inf -0.6882178 -0.2225805 -0.9406188
-[5] -1.7711223 -2.5595094 -3.2807632 -3.9366072
-[9] -4.5344049
+df(x, df1=50,df2=10, log = TRUE)
+#[1]       -Inf -0.6882178 -0.2225805 -0.9406188 -1.7711223 -2.5595094 -3.2807632
+#[8] -3.9366072 -4.5344049
 
 #3
-> df(seq(0, 4, 0.5), 6, 25)
-[1] 0.000000000 0.729921524 0.602808536
-[4] 0.323999956 0.155316972 0.072482940
-[7] 0.034022568 0.016280785 0.007986682
+df(x, 6, 25)
+#[1] 0.000000000 0.729921524 0.602808536 0.323999956 0.155316972 0.072482940
+#[7] 0.034022568 0.016280785 0.007986682
 
 #4
-> df(seq(0, 4), 6, 25, 8,log=TRUE)
-[1]      -Inf -1.382074 -1.094089 -1.540262 -2.22490
+df(x, 6, 25, 8, log=TRUE)
+#[1]      -Inf -2.432737 -1.382074 -1.081234 -1.094089 -1.270433 -1.540262
+#[8] -1.865816 -2.224900
 ```
 
 #### `pf`
 
-The probability function of the F distribution. See [R doc]((https://stat.ethz.ch/R-manual/R-devel/library/stats/html/Fdist.html).
+The cumulative probability function of the [F distribution](https://en.wikipedia.org/wiki/F-distribution). See [R doc](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/Fdist.html).
+
+_decl_
 
 ```typescript
 declare function pf(
@@ -3760,100 +3650,88 @@ declare function pf(
 * `lowerTail`: if TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
 * `asLog`: if TRUE, probabilities p are given as log(p).
 
+Usage:
+
 ```javascript
 const libR = require('lib-r-math.js');
-const { FDist } = libR;
+const {
+  FDist,
+  R: { numberPrecision }
+} = libR;
 
 //some usefull tools
 const seq = libR.R.seq()();
-const precision = libR.R.numberPrecision(9);
+const precision = numberPrecision(9);
 
 //strip functions
 const { df, pf, qf, rf } = FDist();
 
+const x = seq(0, 4, 0.5);
+
 //1. df1 = 5, df2=10, ncp=8
-precision(pf(seq(0, 4, 0.5), 5, 10, 8));
+const p1 = pf(x, 5, 10, 8);
+precision(p1);
 /*[
-  0,
-  0.0189961379,
-  0.100468407,
-  0.225990517,
-  0.361015189,
-  0.484609879,
-  0.588981209,
-  0.673508458,
-  0.740516322 ]
-*/
+  0,            0.0189961379,  0.100468407,  0.225990517,
+  0.361015189,  0.484609879,   0.588981209,  0.673508458,
+  0.740516322 ]*/
 
 //2. df1=50, df2=10, lowerTail=false
-precision(pf(seq(0, 4, 0.5), 50, 10, undefined, false));
+const p2 = pf(x, 50, 10, undefined, false);
+pecision(p2);
 /*[
-  1,
-  0.946812312,
-  0.543643095,
-  0.25065625,
-  0.118135409,
-  0.0595867293,
-  0.0321901407,
-  0.0184730352,
-  0.0111614023 ]
-*/
+  1,            0.946812312,  0.543643095,  0.25065625,
+  0.118135409,  0.0595867293, 0.0321901407, 0.0184730352,
+  0.0111614023 ]*/
 
 //3.
-precision(pf(seq(0, 4, 0.5), 50, 10, undefined, false, true));
+const p3 = pf(x, 50, 10, undefined, false, true);
+precision(p3);
 /*[
-  0,
-  -0.0546543979,
-  -0.609462324,
-  -1.3836728,
-  -2.13592378,
-  -2.82032239,
-  -3.43609506,
-  -3.99144317,
-  -4.49529367 
-]*/
+  0,            -0.0546543979,  -0.609462324,
+  -1.3836728,   -2.13592378,    -2.82032239,
+  -3.43609506,  -3.99144317,    -4.49529367 ]*/
 
-//4.
-precision(pf(seq(0, 4, 0.5), 6, 25, 8, true, true));
-/*[ -Infinity,
-  -4.20235111,
-  -2.29618223,
-  -1.376145,
-  -0.85773694,
-  -0.546177623,
-  -0.35253857,
-  -0.229797274,
-  -0.15099957 ]
-*/
+//4. "undefined" will skip and use defaults (if specified)
+const p4 = pf(x, 6, 25, 8, undefined, true);
+precision(p4);
+/*[
+  -Infinity,    -4.20235111,  -2.29618223,  -1.376145,
+  -0.85773694,  -0.546177623, -0.35253857,  -0.229797274,
+  -0.15099957 ]*/
 ```
 
-_in R Console_
+_Equivalent in R_
 
 ```R
+x = seq(0, 4, 0.5);
+
 #1
-> pf(seq(0, 4, 0.5), 5, 10, 8)
-[1] 0.00000000 0.01899614 0.10046841 0.22599052 0.36101519 0.48460988 0.58898121
-[8] 0.67350846 0.74051632
+pf(x, 5, 10, 8);
+#[1] 0.00000000 0.01899614 0.10046841 0.22599052 0.36101519 0.48460988 0.58898121
+#[8] 0.67350846 0.74051632
 
 #2
-> pf(seq(0, 4, 0.5), 50, 10, lower.tail=FALSE)
-[1] 1.00000000 0.94681231 0.54364309 0.25065625 0.11813541 0.05958673 0.03219014
-[8] 0.01847304 0.01116140
+pf(x, 50, 10, lower.tail=FALSE);
+#[1] 1.00000000 0.94681231 0.54364309 0.25065625 0.11813541 0.05958673 0.03219014
+#[8] 0.01847304 0.01116140
 
 #3
-> pf(seq(0, 4, 0.5), 50, 10, lower.tail=FALSE, log.p=TRUE)
-[1]  0.0000000 -0.0546544 -0.6094623 -1.3836728 -2.1359238 -2.8203224 -3.4360951
-[8] -3.9914432 -4.4952937
+pf(x, 50, 10,  lower.tail=FALSE, log.p=TRUE);
+#[1]  0.0000000 -0.0546544 -0.6094623 -1.3836728 -2.1359238 -2.8203224 -3.4360951
+#[8] -3.9914432 -4.4952937
 
 #4
-pf(seq(0, 4, 0.5), 6, 25, 8, TRUE, TRUE);
-[1] -Inf -4.2023511 -2.2961822 -1.3761450 -0.8577369 -0.5461776 -0.3525386
-[8] -0.2297973 -0.1509996
+pf(x, 6, 25, 8, log.p=TRUE);
+#[1]       -Inf -4.2023511 -2.2961822 -1.3761450 -0.8577369 -0.5461776 -0.3525386
+#[8] -0.2297973 -0.1509996
 ```
 
 #### `qf`
 
-The probability function of the F distribution. See [R doc]((https://stat.ethz.ch/R-manual/R-devel/library/stats/html/Fdist.html).
+The quantile function of the [F distribution](https://en.wikipedia.org/wiki/F-distribution). See [R doc](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/Fdist.html).
+
+_decl_
 
 ```typescript
 declare function qf(
@@ -3873,158 +3751,75 @@ declare function qf(
 * `lowerTail`: if TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
 * `asLog`: if TRUE, probabilities p are given as log(p).
 
+Usage:
+
 ```javascript
 const libR = require('lib-r-math.js');
 const { FDist } = libR;
 
-// some  usefull tools
+//helpers
 const seq = libR.R.seq()();
 const precision = libR.R.numberPrecision(9);
 
 //strip functions
 const { df, pf, qf, rf } = FDist();
 
+//data
+const q = [ ...seq(0,4), Infinity];
+
 //1
-let q1 = qf(
-  [
-    0,
-    0.0189961379,
-    0.100468407,
-    0.225990517,
-    0.361015189,
-    0.484609879,
-    0.588981209,
-    0.673508458,
-    0.740516322,
-    1
-  ],
-  5,
-  10,
-  8
-);
-precision(q1); //returns limited precsions numbers
-//[ 0, 0.5, 0.999999998, 1.5, 2, 2.5, 3, 3.5, 4, Infinity ]
+const pp1 = pf(q, 50,  10,  undefined,  false);
+const q1 = qf( pp1, 50, 10, undefined, false);
+precision(q1);
+//[ 0, 1, 2, 3, 4, Infinity ]
 
 //2
-let q2 = qf(
-  [
-    1,
-    0.946812312,
-    0.543643095,
-    0.25065625,
-    0.118135409,
-    0.0595867293,
-    0.0321901407,
-    0.0184730352,
-    0.0111614023,
-    0
-  ],
-  50,
-  10,
-  undefined,
-  false
-);
+const pp2 = pf(q, 50, 10, 9, false, true);
+const q2 = qf(pp2, 50, 10, 9, false, true);
 precision(q2);
-//[ 0, 0.5, 0.999999998, 1.5, 2, 2.5, 3, 3.5, 4, Infinity ]
+//[ 0, 1, 2, 3, 4, Infinity ]
 
 //3.
-let q3 = qf(
-  [
-    0,
-    -0.0546543979,
-    -0.609462324,
-    -1.3836728,
-    -2.13592378,
-    -2.82032239,
-    -3.43609506,
-    -3.99144317,
-    -4.49529367
-  ],
-  50,
-  10,
-  undefined,
-  false,
-  true
-);
+const pp3 = pf(q, 6, 25, 8);
+const q3 = qf(pp3, 6, 25, 8);
 precision(q3);
-//[ 0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4 ]
+//[ 0, 1, 2, 3, 4, Infinity ]
 
 //4
-let q4 = qf(
-  [
-    -Infinity,
-    -4.20235111,
-    -2.29618223,
-    -1.376145,
-    -0.85773694,
-    -0.546177623,
-    -0.35253857,
-    -0.229797274,
-    -0.15099957
-  ],
-  6,
-  25,
-  8,
-  true,
-  true
-);
-precision(q4);
-//[ 0, 0.500000001, 1, 1.5, 2, 2.5, 3, 3.5, 4 ]
+const pp4 = pf(q, 3, 9000, undefined, false);
+const q4 = qf(pp4, 3, 9000, undefined, false);
+//[ 0, 1, 2, 3, 4, Infinity ]
 ```
 
-_in R Console:_
+_Equivlent in R_
 
 ```R
+q = c( seq(0,4), Inf);
+
 #1.
->qf(c(0, 0.0189961379, 0.100468407,
-     0.225990517, 0.361015189, 0.484609879,
-     0.588981209, 0.673508458, 0.740516322,
-     1
-    ),
-    5,
-    10,
-    8
-)
-#[1] 0.0 0.5 1.0 1.5 2.0 2.5 3.0 3.5 4.0 Inf
+pp1=pf(q, 50, 10, lower.tail=FALSE);
+qf(pp1, 50, 10, lower.tail=FALSE);
+#[1]   0   1   2   3   4 Inf
 
-#2.
->qf( c(1, 0.946812312, 0.543643095, 0.25065625,
-    0.118135409, 0.0595867293, 0.0321901407, 0.0184730352,
-    0.0111614023, 0),
-    50,
-    10,
-    lower.tail = FALSE
-);
-# [1] 0.0 0.5 1.0 1.5 2.0 2.5 3.0 3.5 4.0 Inf
+#2
+pp2 = pf(q, 50, 10, 9, lower.tail=FALSE, log.p=TRUE);
+qf(pp2, 50, 10, 9, lower.tail=FALSE, log.p=TRUE);
+#[1]   0   1   2   3   4 Inf
 
-#3.
-> qf(c( 0, -0.0546543979, -0.609462324,
-        -1.3836728, -2.13592378, -2.82032239,
-        -3.43609506, -3.99144317, -4.49529367
-),
-    50,
-    10,
-    lower.tail = FALSE,
-    log.p = TRUE
-);
-#[1] 0.0 0.5 1.0 1.5 2.0 2.5 3.0 3.5 4.0
+#3
+pp3 = pf(q, 6, 25, 8);
+qf(pp3, 6, 25, 8);
+#[1]   0   1   2   3   4 Inf
 
-#4.
-qf(c(-Inf, -4.20235111, -2.29618223,
-    -1.376145, -0.85773694, -0.546177623,
-    -0.35253857, -0.229797274, -0.15099957),
-    df1 = 6,
-    df2 = 25,
-    ncp= 8,
-    lower.tail = TRUE,
-    log.p = TRUE
-);
-#[1] 0.0 0.5 1.0 1.5 2.0 2.5 3.0 3.5 4.0
+#4
+pp4 = pf(q, 3, 9000, lower.tail=FALSE);
+qf(pp4, 3, 9000, lower.tail=FALSE);
+#[1]   0   1   2   3   4 Inf
 ```
 
 #### `rf`
 
-Generates deviates for the F distribution. See [R doc]((https://stat.ethz.ch/R-manual/R-devel/library/stats/html/Fdist.html).
+Generates deviates for the [F distribution](https://en.wikipedia.org/wiki/F-distribution). See [R doc]((https://stat.ethz.ch/R-manual/R-devel/library/stats/html/Fdist.html).
 
 ```typescript
 declare function rf(
@@ -4043,22 +3838,25 @@ declare function rf(
 ```javascript
 const libR = require('lib-r-math.js');
 const {
-  FDist,
-  Normal,
-  rng: { MersenneTwister },
-  rng: { normal: { Inversion } }
+    FDist,
+    rng: {
+        MersenneTwister,
+        normal: { KindermanRamage }
+    },
+    R: { numberPrecision }
 } = libR;
 
-//some tools
-const precision = libR.R.numberPrecision(9);
+//helpers
+const seq = libR.R.seq()();
+const precision = numberPrecision(9);
 
-//init
 const mt = new MersenneTwister(1234);
-const { df, pf, qf, rf } = FDist(Normal(new Inversion(mt)));
+const { df, pf, qf, rf } = FDist(new KindermanRamage(mt));
 
+//seed is already set to 1234
 //1.
 precision(rf(5, 8, 6));
-//[0.3986174, 2.13290818, 2.02114876, 2.5957924, 4.01140249]
+//[ 0.391172977, 0.528225588, 1.09478902, 2.4961292, 0.143678921 ]
 
 //2.
 precision(rf(5, Infinity, Infinity));
@@ -4070,30 +3868,30 @@ precision(rf(5, 40, Infinity, 0));
 
 //4.
 precision(rf(5, 400, Infinity));
-//[ 0.952329364, 1.00699208, 0.963147631, 0.997853633, 0.994844237 ]
+//[ 1.00424008, 1.00269156, 1.03619851, 0.965292995, 0.904786448 ]
 ```
 
 _in R Console:_
 
 ```R
-RNGkind("Mersenne-Twister", normal.kind="Inversion");
+RNGkind("Mersenne-Twister", normal.kind="Kinderman-Ramage");
 set.seed(1234);
 
 #1.
-> rf(5,8,6)
-[1] 0.3986174 2.1329082 2.0211488 2.5957924 4.0114025
+rf(5,8,6)
+#[1] 0.3986174 2.1329082 2.0211488 2.5957924 4.0114025
 
 #2.
-> rf(5, Inf, Inf)
-[1] 1 1 1 1 1
+rf(5, Inf, Inf)
+#[1] 1 1 1 1 1
 
 #3.
-> rf(5, 40, Inf, 0)
-[1] NaN NaN NaN NaN NaN
+rf(5, 40, Inf, 0)
+#[1] NaN NaN NaN NaN NaN
 
 #4.
-> rf(5, 400, Inf)
-[1] 0.9523294 1.0069921 0.9631476 0.9978536 0.9948442
+rf(5, 400, Inf)
+#[1] 1.0042401 1.0026916 1.0361985 0.9652930 0.9047864
 ```
 
 ### Gamma distribution
@@ -5870,10 +5668,10 @@ Usage:
 ```javascript
 const libR = require('lib-r-math.js');
 const {
-    Normal,
-    LogNormal,
-    rng: { MersenneTwister },
-    rng: { normal: { Inversion } }
+  Normal,
+  LogNormal,
+  rng: { MersenneTwister },
+  rng: { normal: { Inversion } }
 } = libR;
 
 //some tools
@@ -5937,11 +5735,11 @@ from [wiki](https://en.wikipedia.org/wiki/Multinomial_distribution):
 
 These functions are properties of an object created by the `Multinomial` factory method. The factory method needs as optional argument an instance of one of the [uniform random PRNG's](#uniform-pseudo-random-number-generators) classes.
 
-*Note:* Analog `pmultinom, qmultinom` are not implemented in R and hence not available in this port. In Future implementation for `pmultinom` would require an analog for $P(\vec{X} \leq  \vec{x})$ by constraining the multivariate vector `X` to a hyperplane $\vec{n} \cdot \vec{X} = d$ where `d` is the total number of draws and $\vec{n}$ is the N dimensional hyperplane vector normal $\vec{n}=(1,1,...,1)$. Elements of $\vec{X}$ have only integer values. This is potentially an expensive operation. We would need to sum over 
+_Note:_ Analog `pmultinom, qmultinom` are not implemented in R and hence not available in this port. In Future implementation for `pmultinom` would require an analog for $P(\vec{X} \leq \vec{x})$ by constraining the multivariate vector `X` to a hyperplane $\vec{n} \cdot \vec{X} = d$ where `d` is the total number of draws and $\vec{n}$ is the N dimensional hyperplane vector normal $\vec{n}=(1,1,...,1)$. Elements of $\vec{X}$ have only integer values. This is potentially an expensive operation. We would need to sum over
 
 $$\frac{(size+k)!}{k!\cdot((size+k)-k)!}$$
 
-`probability mass` values, were $k$ is the dimension of vector:$\vec{x}$ and $size = \sum_{i=1}^{k} x_{i}$.
+`probability mass` values, were $k$ is the dimension of vector:$\vec{x}$ and $size = \sum*{i=1}^{k} x*{i}$.
 
 Usage:
 
@@ -5968,28 +5766,26 @@ const { dmultinom, rmultinom } = defaultM;
 
 The `probability mass function` of the multinomial distribution. See [wiki](https://en.wikipedia.org/wiki/Multinomial_distribution) or [R doc](https://stat.ethz.ch/R-manual/R-patched/library/stats/html/Multinom.html)
 
-$$ f( x_{1} , ... , x_{k}; p_{1},...,p_{k}) = \frac{n!}{x_{1}!\cdot\cdot\cdot x_{k}!} p_{1}^{x_{1}} \times\cdot\cdot\cdot\times p_{k}^{x_{k}}, when \sum_{i=1}^{k} x_{i} = n  $$
+$$ f( x*{1} , ... , x*{k}; p*{1},...,p*{k}) = \frac{n!}{x*{1}!\cdot\cdot\cdot x*{k}!} p*{1}^{x*{1}} \times\cdot\cdot\cdot\times p*{k}^{x*{k}}, when \sum*{i=1}^{k} x*{i} = n $$
 
 _decl_
 
 ```typescript
 declare interface IdmultinomOptions {
-    x: number[];
-    prob: number[];
-    size?: number;
-    asLog?: boolean;
+  x: number[];
+  prob: number[];
+  size?: number;
+  asLog?: boolean;
 }
 
-declare function dmultinom(
-  option: IdmultinomOptions
-): number[];
+declare function dmultinom(option: IdmultinomOptions): number[];
 ```
 
 `dmultinom` needs as input an JS object (typescript interface type `IdmultinomOptions`) with the following properties:
 
 * `x`: array of quantiles (minimal item count is 2)
 * `prob`: array of corresponding non-zero probabilities corresponding with the quantiles.
-* `size`: optional, you can safely omit it, functions as a kind of checksum: size = $\sum_{i=1}^{k} x_{i}$
+* `size`: optional, you can safely omit it, functions as a kind of checksum: size = $\sum*{i=1}^{k} x*{i}$
 * `asLog`: probabilities are returned as ln(p).
 
 Usage:
@@ -6005,25 +5801,25 @@ const { dmultinom, rmultinom } = Multinomial();
 
 //1. binomial analog
 const d1 = dmultinom({
-    x: [3, 5],
-    prob: [0.25, 0.75]
+  x: [3, 5],
+  prob: [0.25, 0.75]
 });
 precision(d1);
 //0.207641602
 
 //2. binomial analog
 const d2 = dmultinom({
-    x: [3, 5, 9],
-    prob: [0.2, 0.7, 0.1]
+  x: [3, 5, 9],
+  prob: [0.2, 0.7, 0.1]
 });
 precision(d2);
 //0.0000018304302
 
 //3. binomial analog
 const d3 = dmultinom({
-    x: [3, 5, 9, 4],
-    prob: [2, 8, 4, 6], // will normalized to = [ 2/20, 8/20, 4/20, 6/20 ]
-    asLog: true
+  x: [3, 5, 9, 4],
+  prob: [2, 8, 4, 6], // will normalized to = [ 2/20, 8/20, 4/20, 6/20 ]
+  asLog: true
 });
 precision(d3);
 //-7.96903499
@@ -6059,7 +5855,7 @@ declare function rmultinom(
   n: number,
   size: number,
   prob: number | number[]
-): (number[]) | (number[][]);  //return an array of arrays n x prob.length elements. 
+): (number[]) | (number[][]); //return an array of arrays n x prob.length elements.
 ```
 
 * `n`: returns an array of size `n` nested arrays of dimension `prob.length`.
@@ -6072,10 +5868,10 @@ Usage:
 ```javascript
 const libR = require('lib-r-math.js');
 const {
-    Multinomial,
-    rng: { MersenneTwister },
-    rng: { normal: { Inversion } },
-    R: { sum, div, mult }
+  Multinomial,
+  rng: { MersenneTwister },
+  rng: { normal: { Inversion } },
+  R: { sum, div, mult }
 } = libR;
 
 //some tools
@@ -6100,7 +5896,6 @@ rmultinom(4, 40, prob1a); //same result!!
   [ 2, 25, 7, 6 ],
   [ 7, 18, 8, 7 ] ]*/
 
-
 //2
 const prob2a = [10, 30, 40, 90];
 const prob2b = div(prob2a, sum(prob2a));
@@ -6122,7 +5917,7 @@ const prob3b = div(prob3a, sum(prob3a));
 mt.init(666);
 rmultinom(4, 9967, prob3b);
 mt.init(666);
-rmultinom(4, 9967, prob3a);//same result
+rmultinom(4, 9967, prob3a); //same result
 /*
 [ [ 3727, 3098, 0, 2299, 0, 843 ],
   [ 3563, 3142, 0, 2447, 0, 815 ],
@@ -6179,11 +5974,7 @@ Usage:
 
 ```javascript
 const libR = require('lib-r-math.js');
-const {
-    Poisson,
-    rng: { SuperDuper },
-    rng: { normal: { BoxMuller } }
-} = libR;
+const { Poisson, rng: { SuperDuper }, rng: { normal: { BoxMuller } } } = libR;
 
 //default (uses Inversion and MersenneTwister)
 const defaultP = Poisson();
@@ -6208,7 +5999,7 @@ declare function dpois(
   x: number | number[],
   lambda: number,
   asLog: boolean = false
-): number | number[]
+): number | number[];
 ```
 
 * `x`: quantile(s). Scalar or array.
@@ -6227,7 +6018,7 @@ const precision = libR.R.numberPrecision(9); //restrict to 9 significant digits
 
 const { dpois, ppois, qpois, rpois } = Poisson();
 
-const x = seq(0,10,2);
+const x = seq(0, 10, 2);
 
 //1
 const d1 = dpois(x, 1, true);
@@ -6239,7 +6030,7 @@ precision(d1);
 ]*/
 
 //2
-const d2 = dpois( x, 4 );
+const d2 = dpois(x, 4);
 precision(d2);
 /*
 [ 0.0183156389,
@@ -6251,7 +6042,7 @@ precision(d2);
 */
 
 //3
-const d3 = dpois( x, 10 );
+const d3 = dpois(x, 10);
 precision(d3);
 /*[
   0.0000453999298, 0.00226999649,
@@ -6281,7 +6072,7 @@ dpois(x, 10);
 [5] 0.1125990321490 0.1251100357211
 ```
 
-#### ppois 
+#### ppois
 
 The cumulative distribution function of the [Poisson distribution](https://en.wikipedia.org/wiki/Poisson_distribution). See [R doc](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/Poisson.html).
 
@@ -6289,11 +6080,11 @@ _decl_
 
 ```typescript
 function ppois(
-  q: number|number[],
+  q: number | number[],
   lambda: number,
   lowerTail: boolean = true,
   logP: boolean = false
-): number|number[]
+): number | number[];
 ```
 
 * `q`: quantile(s). A Scalar or array.
@@ -6380,12 +6171,12 @@ The quantile function of the [Poisson distribution](https://en.wikipedia.org/wik
 _decl_
 
 ```typescript
- declare function qpois(
-  p: number|number[] ,
+declare function qpois(
+  p: number | number[],
   lambda: number,
   lowerTail: boolean = true,
   logP: boolean = false
-): number|number[];
+): number | number[];
 ```
 
 * `p`: probabilities, scalar or array.
@@ -6397,7 +6188,7 @@ Usage:
 
 ```javascript
 const libR = require('lib-r-math.js');
-const { Poisson, R:{ arrayrify } } = libR;
+const { Poisson, R: { arrayrify } } = libR;
 
 //some tools
 const seq = libR.R.seq()();
@@ -6409,7 +6200,7 @@ const { dpois, ppois, qpois, rpois } = Poisson();
 const p = seq(0, 1, 0.2);
 
 //1
-const q1 = qpois( log(p) , 1, false, true);
+const q1 = qpois(log(p), 1, false, true);
 precision(q1);
 //[ Infinity, 2, 1, 1, 0, 0 ]
 
@@ -6451,10 +6242,7 @@ Generate random deviates for the [Poisson distribution](https://en.wikipedia.org
 _decl_
 
 ```typescript
- declare function rpois(
-  N: number,
-  lambda: number
-): number | number[]
+declare function rpois(N: number, lambda: number): number | number[];
 ```
 
 * `N`: number of deviates to generate.
@@ -6465,9 +6253,9 @@ Usage:
 ```javascript
 const libR = require('lib-r-math.js');
 const {
-    Poisson,
-    rng: { MersenneTwister },
-    rng: { normal: { Inversion } }
+  Poisson,
+  rng: { MersenneTwister },
+  rng: { normal: { Inversion } }
 } = libR;
 
 //helpers
@@ -6476,7 +6264,7 @@ const precision = libR.R.numberPrecision(9); //restrict to 9 significant digits
 //explicit use of PRNG
 const mt = new MersenneTwister(0); // need reference so we "reset" PRNG
 
-const { dpois, ppois, qpois, rpois } =  Poisson(new Inversion(mt));
+const { dpois, ppois, qpois, rpois } = Poisson(new Inversion(mt));
 
 mt.init(123);
 //1
@@ -6526,10 +6314,7 @@ Usage:
 
 ```javascript
 const libR = require('lib-r-math.js');
-const {
-    SignRank,
-    rng: { MarsagliaMultiCarry }
-} = libR;
+const { SignRank, rng: { MarsagliaMultiCarry } } = libR;
 
 //helpers
 const precision = libR.R.numberPrecision(9); //restrict to 9 significant digits
@@ -6539,9 +6324,9 @@ const defaultSR = SignRank();
 
 //explicit use of PRNG
 const mmc = new MarsagliaMultiCarry(4535);
-const explicitSR = SignRank(mmc)
+const explicitSR = SignRank(mmc);
 
-const { dsignrank, psignrank, qsignrank, rsignrank } =  explicitSR;
+const { dsignrank, psignrank, qsignrank, rsignrank } = explicitSR;
 ```
 
 #### `dsignrank`
@@ -6551,11 +6336,11 @@ The probability mass function of the [Wilcoxon Signed Rank statistic](https://en
 _decl_
 
 ```typescript
- declare function dsignrank(
-   x: number|number[],
-   n: number,
-   aslog: boolean = false
-   ): number|number[];
+declare function dsignrank(
+  x: number | number[],
+  n: number,
+  aslog: boolean = false
+): number | number[];
 ```
 
 * `x`: quantiles (scalar or array of values the rank W+).
@@ -6574,7 +6359,7 @@ const precision = libR.R.numberPrecision(9); //restrict to 9 significant digits
 const { dsignrank, psignrank, qsignrank, rsignrank } = SignRank();
 
 //1
-const d1 = dsignrank(seq(0,5), 9);
+const d1 = dsignrank(seq(0, 5), 9);
 precision(d1);
 /*[
   0.001953125,
@@ -6585,12 +6370,12 @@ precision(d1);
   0.005859375 ]*/
 
 //2
-const d2 = dsignrank( seq(3,8), 4);
+const d2 = dsignrank(seq(3, 8), 4);
 precision(d2);
 //[ 0.125, 0.125, 0.125, 0.125, 0.125, 0.0625 ]
 
 //3
-const d3 = dsignrank( seq(15,20) , 11);
+const d3 = dsignrank(seq(15, 20), 11);
 precision(d3);
 /*[
   0.0107421875,
@@ -6625,11 +6410,11 @@ _decl_
 
 ```typescript
 declare function psignrank(
-  q: number|number[],
+  q: number | number[],
   n: number,
   lowerTail: boolean = true,
   logP: boolean = false
-): number|number[];
+): number | number[];
 ```
 
 * `q`: quantiles (scalar or array of values the rank W+).
@@ -6649,7 +6434,7 @@ const precision = libR.R.numberPrecision(9); //restrict to 9 significant digits
 const { dsignrank, psignrank, qsignrank, rsignrank } = SignRank();
 
 //1
-const p1 = psignrank(seq(0,5), 9);
+const p1 = psignrank(seq(0, 5), 9);
 precision(p1);
 /*
 [ 0.001953125,
@@ -6660,7 +6445,7 @@ precision(p1);
   0.01953125 ]*/
 
 //2
-const p2 = psignrank(seq(3,8), 4);
+const p2 = psignrank(seq(3, 8), 4);
 precision(p2);
 //[ 0.3125, 0.4375, 0.5625, 0.6875, 0.8125, 0.875 ]
 
@@ -6676,6 +6461,7 @@ precision(p3);
   0.139160156 ]
 */
 ```
+
 _Equivalent in R_
 
 ```R
@@ -6703,11 +6489,11 @@ _decl_
 
 ```typescript
 declare function qsignrank(
-  p: number|number[],
+  p: number | number[],
   n: number,
   lowerTail: boolean = true,
   logP: boolean = false
-): number|number[];
+): number | number[];
 ```
 
 * `p`: probabilities.
@@ -6759,10 +6545,7 @@ Generates random deviates for the [Wilcoxon Signed Rank statistic](https://en.wi
 _decl_
 
 ```typescript
-declare function rsignrank(
-  N: number,
-  n: number
-): number|number[];
+declare function rsignrank(N: number, n: number): number | number[];
 ```
 
 * `N`: Number of deviates to generate..
@@ -6789,7 +6572,7 @@ rsignrank(5, 25);
 //[ 140, 80, 125, 198, 157 ]
 
 //3
-rsignrank(5, 4)
+rsignrank(5, 4);
 //[ 4, 7, 8, 10, 8 ]
 ```
 
@@ -6823,9 +6606,9 @@ Usage:
 ```javascript
 const libR = require('lib-r-math.js');
 const {
-    StudentT,
-    rng: { MarsagliaMultiCarry },
-    rng: { normal: { AhrensDieter } }
+  StudentT,
+  rng: { MarsagliaMultiCarry },
+  rng: { normal: { AhrensDieter } }
 } = libR;
 
 //*.Uses default argument "Normal()".
@@ -6849,18 +6632,18 @@ The density function of the of the [Student T distribution](https://en.wikipedia
 _decl_
 
 ```typescript
-declare  function dt(
+declare function dt(
   x: number | number[],
   df: number,
   ncp?: number,
   asLog = false
-  ): number|number[];
+): number | number[];
 ```
 
 * `x`: quantiles.(Scalar or array).
 * `df`: degrees of freedom.
 * `ncp`: non-central parameter.
-* `asLog`: return result as ln(p); 
+* `asLog`: return result as ln(p);
 
 Usage:
 
@@ -6936,12 +6719,12 @@ _cdecl_
 
 ```typescript
 declare function pt(
-    q: number | number[],
-    df: number,
-    ncp?: number,
-    lowerTail: boolean = true,
-    logP = false
-):number|number[];
+  q: number | number[],
+  df: number,
+  ncp?: number,
+  lowerTail: boolean = true,
+  logP = false
+): number | number[];
 ```
 
 * `q`: quantiles, array or scalar.
@@ -6949,7 +6732,6 @@ declare function pt(
 * `ncp`: non central parameter.
 * `lowerTail`: if TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
 * `logP`: if TRUE, probabilities p are given as ln(p).
-
 
 Usage:
 
@@ -7026,12 +6808,12 @@ _decl_
 
 ```typescript
 function qt(
-    p: number | number[],
-    df: number,
-    ncp?: number,
-    lowerTail: boolean = true,
-    logP: boolean = false
-): number|number[];
+  p: number | number[],
+  df: number,
+  ncp?: number,
+  lowerTail: boolean = true,
+  logP: boolean = false
+): number | number[];
 ```
 
 * `p`: probabilities, array or scalar.
@@ -7111,11 +6893,7 @@ Generates deviates for the [Student T distribution](https://en.wikipedia.org/wik
 _decl_
 
 ```typescript
-declare function rt(
-  n: number, 
-  df: number, 
-  ncp?: number
-): number|number[]
+declare function rt(n: number, df: number, ncp?: number): number | number[];
 ```
 
 * `n`: number of random deviates to generate.
@@ -7127,12 +6905,10 @@ Usage:
 ```javascript
 const libR = require('lib-r-math.js');
 const {
-    Normal,
-    StudentT,
-    rng: { MarsagliaMultiCarry },
-    rng: {
-        normal: { AhrensDieter }
-    }
+  Normal,
+  StudentT,
+  rng: { MarsagliaMultiCarry },
+  rng: { normal: { AhrensDieter } }
 } = libR;
 
 //some usefull helpers

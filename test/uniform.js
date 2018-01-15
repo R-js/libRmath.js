@@ -1,4 +1,5 @@
 const libR = require('../dist/lib/libR.js');
+//https://en.wikipedia.org/wiki/Uniform_distribution_(continuous)
 //https://stat.ethz.ch/R-manual/R-devel/library/stats/html/Uniform.html
 const { rng, Uniform } = libR;
 

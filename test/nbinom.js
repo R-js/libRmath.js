@@ -1,4 +1,4 @@
-//https://en.wikipedia.org/wiki/Exponential_distribution
+//https: //stat.ethz.ch/R-manual/R-devel/library/stats/html/NegBinomial.html
 //https: //stat.ethz.ch/R-manual/R-devel/library/stats/html/NegBinomial.html
 const libR = require('../dist/lib/libR.js');
 const {

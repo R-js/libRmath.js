@@ -1,5 +1,4 @@
 
-import * as debug from 'debug';
 import { M_1_SQRT_2PI } from '../common/_general';
 import { pnorm5 as pnorm } from '../normal/pnorm';
 
@@ -33,8 +32,6 @@ const aleg = [
 
 const C3 = 60;
 const C1 = -30;
-
-const printer_wprob = debug('wprob');
 
 export function wprob(w: number, rr: number, cc: number): number {
   /*  wprob() :
