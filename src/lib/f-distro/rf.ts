@@ -41,7 +41,7 @@ import { ML_ERR_return_NAN } from '../common/_general';
 
 
 import { rchisq } from '../chi-2/rchisq';
-import { forEach, seq } from '../r-func';
+import { map, seq } from '../r-func';
 import { IRNGNormal } from '../rng/normal';
 
 const printer = debug('rf');
@@ -55,7 +55,7 @@ export function rf(
   rng: IRNGNormal
 ): number | number[] {
 
-  return forEach(sequence(n))(() => {
+  return map(sequence(n))(() => {
     let v1;
     let v2;
     if (ISNAN(n1) || ISNAN(n2) || n1 <= 0 || n2 <= 0) {

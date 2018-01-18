@@ -24,7 +24,7 @@
  */
 import * as debug from 'debug';
 import { ML_ERR_return_NAN } from '../common/_general';
-import { forEach } from '../r-func';
+import { map } from '../r-func';
 
 const { log, exp, abs: fabs } = Math;
 const { isNaN: ISNAN } = Number;
@@ -37,7 +37,7 @@ export function dlogis<T>(
   scale: number = 1,
   give_log: boolean = false
 ): T {
-  return forEach(xx)(x => {
+  return map(xx)(x => {
     let e: number;
     let f: number;
 

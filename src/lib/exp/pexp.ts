@@ -28,7 +28,7 @@
  */
 
 import { ML_ERR_return_NAN, R_D_exp, R_DT_0 } from '../common/_general';
-import { forEach } from '../r-func';
+import { map } from '../r-func';
 
 import * as debug from 'debug';
 import { R_Log1_Exp } from './expm1';
@@ -43,7 +43,7 @@ export function pexp<T>(
   lower_tail: boolean,
   log_p: boolean
 ): T {
-  return forEach(q)(fx => {
+  return map(q)(fx => {
     if (ISNAN(fx) || ISNAN(scale)) return fx + scale;
     if (scale < 0) {
       return ML_ERR_return_NAN(printer);

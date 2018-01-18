@@ -59,7 +59,7 @@ import {
   R_D_negInonint,
   R_D_nonint_check
 } from '../common/_general';
-import { forEach } from '../r-func';
+import { map } from '../r-func';
 
 const { log, log1p, round: R_forceint } = Math;
 const { isNaN: ISNAN, isFinite: R_FINITE } = Number;
@@ -115,7 +115,7 @@ export function dbinom<T>(
   p: number,
   logX: boolean = false
 ): T {
-  return forEach(xx)(x => {
+  return map(xx)(x => {
     /* NaNs propagated correctly */
     if (ISNAN(x) || ISNAN(n) || ISNAN(p)) return x + n + p;
 

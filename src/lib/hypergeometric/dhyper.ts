@@ -45,7 +45,7 @@
 
 import * as debug from 'debug';
 
-import { forEach } from '../r-func';
+import { map } from '../r-func';
 
 import {
   ML_ERR_return_NAN,
@@ -68,7 +68,7 @@ export function dhyper<T>(
   n: number,
   give_log: boolean = false
 ): T {
-  return forEach(xx)(x => {
+  return map(xx)(x => {
     let p: number;
     let q: number;
     let p1: number;

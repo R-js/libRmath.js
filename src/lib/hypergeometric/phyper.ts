@@ -53,7 +53,7 @@
 import * as debug from 'debug';
 import { R_DT_log } from '~exp-utils';
 import { ML_ERR_return_NAN, R_D_Lval, R_DT_0, R_DT_1 } from '../common/_general';
-import { forEach } from '../r-func';
+import { map } from '../r-func';
 import { dhyper } from './dhyper';
 
 const { floor, round: R_forceint, log1p } = Math;
@@ -110,7 +110,7 @@ export function phyper<T>(
 ): T {
   /* Sample of  n balls from  NR red  and	 NB black ones;	 x are red */
 
-  return forEach(xx)(x => {
+  return map(xx)(x => {
     let d: number;
     let pd: number;
     let lower_tail = lowerTail; //copy it gets changed

@@ -34,7 +34,7 @@ import * as debug from 'debug';
 
 import { rchisq } from '../chi-2/rchisq';
 import { ML_ERR_return_NAN } from '../common/_general';
-import { forEach, seq } from '../r-func';
+import { map, seq } from '../r-func';
 import { IRNGNormal } from '../rng/normal';
 
 const { sqrt } = Math;
@@ -44,7 +44,7 @@ const sequence = seq()();
 const printer = debug('rt');
 
 export function rt(n: number, df: number, rng: IRNGNormal): number | number[] {
-  return forEach(sequence(n))(() => {
+  return map(sequence(n))(() => {
     if (ISNAN(df) || df <= 0.0) {
       return ML_ERR_return_NAN(printer);
     }

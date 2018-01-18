@@ -30,7 +30,7 @@
 import * as debug from 'debug';
 
 import { ML_ERR_return_NAN, R_D__0 } from '../common/_general';
-import { forEach } from '../r-func';
+import { map } from '../r-func';
 
 const { pow, log, exp } = Math;
 const {
@@ -46,7 +46,7 @@ export function dweibull<T>(
   scale: number = 1,
   give_log: boolean = false
 ): T {
-  return forEach(xx)(x => {
+  return map(xx)(x => {
     if (ISNAN(x) || ISNAN(shape) || ISNAN(scale)) return x + shape + scale;
     if (shape <= 0 || scale <= 0) return ML_ERR_return_NAN(printer);
 

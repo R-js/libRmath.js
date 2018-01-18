@@ -47,7 +47,7 @@ import {
 
 import { bd0 } from '../deviance/bd0';
 import { dnorm4 as dnorm } from '../normal/dnorm';
-import { forEach } from '../r-func';
+import { map } from '../r-func';
 import { stirlerr } from '../stirling/stirlerror';
 
 const { log1p, abs: fabs, exp, log, sqrt } = Math;
@@ -60,7 +60,7 @@ export function dt<T>(
   giveLog: boolean = false
 ): T {
   
-  return forEach(xx)(x => {
+  return map(xx)(x => {
     if (ISNAN(x) || ISNAN(n)) {
       return x + n;
     }

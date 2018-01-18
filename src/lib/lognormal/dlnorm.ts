@@ -34,7 +34,7 @@ import {
   ML_ERR_return_NAN,
   R_D__0
 } from '../common/_general';
-import { forEach } from '../r-func';
+import { map } from '../r-func';
 
 const { isNaN: ISNAN, POSITIVE_INFINITY: ML_POSINF } = Number;
 const { log, exp } = Math;
@@ -46,7 +46,7 @@ export function dlnorm<T>(
   sdlog: number,
   give_log: boolean
 ): T {
-  return forEach(x)(fx => {
+  return map(x)(fx => {
     if (ISNAN(fx) || ISNAN(meanlog) || ISNAN(sdlog)) {
       return fx + meanlog + sdlog;
     }

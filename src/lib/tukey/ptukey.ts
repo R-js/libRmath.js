@@ -55,7 +55,7 @@ import {
   R_DT_1
 } from '../common/_general';
 
-import { forEach } from '~R';
+import { map } from '~R';
 import { R_DT_val } from '../common/_general';
 import { lgammafn } from '../gamma/lgamma_fn';
 
@@ -73,7 +73,7 @@ export function ptukey<T>(
   log_p: boolean = false,
  // normal: INormal
 ): T {
-  return forEach(qq)(q =>
+  return map(qq)(q =>
     _ptukey(q, rr, cc, df, lower_tail, log_p)
   ) as any;
 }

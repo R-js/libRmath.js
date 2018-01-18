@@ -5,7 +5,7 @@ import {
   R_DT_1,
   R_DT_val
 } from '../common/_general';
-import { forEach } from '../r-func';
+import { map } from '../r-func';
 import { csignrank } from './signrank';
 
 const { round, trunc, LN2: M_LN2, exp } = Math;
@@ -24,7 +24,7 @@ export function psignrank<T>(
   const c = trunc(u / 2);
   const w = new Array(c + 1).fill(0);
 
-  return forEach(xx)(x => {
+  return map(xx)(x => {
     x = round(x + 1e-7);
     let lowerT = lowerTail; // temp copy on each iteration
     if (ISNAN(x) || ISNAN(n)) return NaN;

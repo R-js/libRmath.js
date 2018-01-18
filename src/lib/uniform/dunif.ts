@@ -25,7 +25,7 @@
  * */
 
 import { R_D__0 } from '../common/_general';
-import { forEach } from '../r-func';
+import { map } from '../r-func';
 
 const { isNaN: ISNAN } = Number;
 const { log } = Math;
@@ -36,7 +36,7 @@ export function dunif(
   max: number = 1,
   logP: boolean = false
 ): number | number[] {
-  return forEach(x)(fx => {
+  return map(x)(fx => {
     if (ISNAN(fx) || ISNAN(min) || ISNAN(max)) {
       return fx + min + max;
     }

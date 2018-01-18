@@ -34,7 +34,7 @@ const { floor, max: fmax2 } = Math;
 import * as debug from 'debug';
 import { NumberW } from '../common/toms708';
 import { pgamma } from '../gamma/pgamma';
-import { forEach } from '../r-func';
+import { map } from '../r-func';
 
 const printer = debug('ppois');
 
@@ -46,7 +46,7 @@ export function ppois<T>(
   //normal: INormal //pass it on to "pgamma"->"pgamma_raw"->"ppois_asymp"->(dpnorm??)->("normal.pnorm")  
 ): T {
 
-  return forEach(_x)(x => {
+  return map(_x)(x => {
     if (ISNAN(x) || ISNAN(lambda)) return x + lambda;
 
     if (lambda < 0) {

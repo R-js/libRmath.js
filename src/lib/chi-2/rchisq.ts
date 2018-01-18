@@ -39,7 +39,7 @@ import * as debug from 'debug';
 import { ML_ERR_return_NAN } from '../common/_general';
 
 import { rgamma } from '../gamma/rgamma';
-import { forEach, seq } from '../r-func';
+import { map, seq } from '../r-func';
 import { IRNGNormal } from '../rng/normal/inormal-rng';
 
 const { isFinite: R_FINITE } = Number;
@@ -53,7 +53,7 @@ export function rchisq(
 ): number | number[] {
   
   //
-  return forEach(sequence(n))(() => {
+  return map(sequence(n))(() => {
     if (!R_FINITE(df) || df < 0.0) {
       return ML_ERR_return_NAN(printer);
     }

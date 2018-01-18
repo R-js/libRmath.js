@@ -35,7 +35,7 @@
 import * as debug from 'debug';
 import { ML_ERR_return_NAN } from '../common/_general';
 
-import { forEach } from '../r-func';
+import { map } from '../r-func';
 
 const { isNaN: ISNAN } = Number;
 const { PI: M_PI, log } = Math;
@@ -47,7 +47,7 @@ export function dcauchy<T>(
   scale = 1,
   giveLog = false
 ): T {
-  return forEach(xx)(x => {
+  return map(xx)(x => {
     let y: number;
     /* NaNs propagated correctly */
     if (ISNAN(x) || ISNAN(location) || ISNAN(scale)) {

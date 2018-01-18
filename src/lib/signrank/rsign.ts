@@ -1,6 +1,6 @@
 import * as debug from 'debug';
 import { ML_ERR_return_NAN } from '../common/_general';
-import { forEach, seq } from '../r-func';
+import { map, seq } from '../r-func';
 import { IRNG } from '../rng/irng';
 
 const { isNaN: ISNAN } = Number;
@@ -9,7 +9,7 @@ const printer_rsignrank = debug('rsignrank');
 const sequence = seq()();
 
 export function rsignrank(nn: number, n: number, rng: IRNG): number | number[] {
-  return forEach(sequence(nn))(() => {
+  return map(sequence(nn))(() => {
     /* NaNs propagated correctly */
     if (ISNAN(n)) return n;
     const nRound = round(n);

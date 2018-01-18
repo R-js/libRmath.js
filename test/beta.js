@@ -7,9 +7,7 @@ const { arrayrify } = libR.R;
 const log = arrayrify(Math.log); // Make Math.log accept/return arrays aswell as scalars
 
 const ms = new rng.MersenneTwister();
-const normal = Normal(
-    new rng.normal.Inversion(ms) //
-);
+const normal = new rng.normal.Inversion(ms);
 
 const { dbeta, pbeta, qbeta, rbeta } = Beta(normal);
 

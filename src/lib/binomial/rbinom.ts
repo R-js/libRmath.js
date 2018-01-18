@@ -41,7 +41,7 @@
 import * as debug from 'debug';
 import { ML_ERR_return_NAN, R_pow_di } from '../common/_general';
 
-import { forEach, seq } from '../r-func';
+import { map, seq } from '../r-func';
 import { IRNG } from '../rng/irng';
 import { qbinom } from './qbinom';
 
@@ -57,7 +57,7 @@ export function rbinom(
   pp: number,
   rng: IRNG
 ): number | number[] {
-  return forEach(sequence(N))(() => _rbinom(nin, pp, rng)) as any;
+  return map(sequence(N))(() => _rbinom(nin, pp, rng)) as any;
 }
 
 function _rbinom(nin: number, pp: number, rng: IRNG): number {

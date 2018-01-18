@@ -78,11 +78,11 @@ function possibleScalar<T>(x: T[]): T | T[] {
 
 export { possibleScalar, possibleScalar as possibleReduceDim };
 
-export function forEach<T>(
+export function map<T>(
   xx: T
-): { (fn: (x: number) => number): number | number[] } {
+): { (fn: (x: number, idx?: number) => number): number | number[] } {
   const fx: number[] = forceToArray(xx) as any;
-  return function(fn: (x: number) => number): number | number[] {
+  return function(fn: (x: number, idx?: number) => number): number | number[] {
     const result: number[] = fx.map(fn);
     return possibleScalar(result) as any;
   };

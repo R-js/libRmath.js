@@ -30,7 +30,7 @@
 import { R_Q_P01_boundaries } from '../common/_general';
 
 import { qnorm } from '../normal/qnorm';
-import { forEach } from '../r-func';
+import { map } from '../r-func';
 
 const { exp } = Math;
 const { isNaN: ISNAN, POSITIVE_INFINITY: ML_POSINF } = Number;
@@ -42,7 +42,7 @@ export function qlnorm<T>(
   lower_tail: boolean = true,
   log_p: boolean = false
 ): T {
-  return forEach(pp)(p => {
+  return map(pp)(p => {
     if (ISNAN(p) || ISNAN(meanlog) || ISNAN(sdlog)) return p + meanlog + sdlog;
 
     R_Q_P01_boundaries(lower_tail, log_p, p, 0, ML_POSINF);

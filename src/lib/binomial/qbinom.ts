@@ -45,7 +45,7 @@ const { isNaN: ISNAN, isFinite: R_FINITE, EPSILON: DBL_EPSILON } = Number;
 import { R_DT_qIv } from '~exp-utils';
 import { NumberW } from '../common/toms708';
 import { qnorm } from '../normal/qnorm';
-import { forEach } from '../r-func';
+import { map } from '../r-func';
 import { pbinom } from './pbinom';
 
 const printer_do_search = debug('do_search');
@@ -104,7 +104,7 @@ export function qbinom<T>(
   lowerTail: boolean = true,
   logP: boolean = false
 ): T {
-  return forEach(pp)(p => _qbinom(p, n, pr, lowerTail, logP)) as any;
+  return map(pp)(p => _qbinom(p, n, pr, lowerTail, logP)) as any;
 }
 
 const printer_qbinom = debug('_qbinom');

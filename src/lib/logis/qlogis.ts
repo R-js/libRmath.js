@@ -31,7 +31,7 @@ import { ML_ERR_return_NAN, R_Q_P01_boundaries } from '../common/_general';
 
 import { R_Log1_Exp } from '~exp-utils';
 
-import { forEach } from '../r-func';
+import { map } from '../r-func';
 
 const {
   isNaN: ISNAN,
@@ -50,7 +50,7 @@ export function qlogis<T>(
   lower_tail: boolean = true,
   log_p: boolean = false
 ): T {
-  return forEach(pp)(p => {
+  return map(pp)(p => {
     if (ISNAN(p) || ISNAN(location) || ISNAN(scale))
       return p + location + scale;
 

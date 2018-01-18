@@ -54,7 +54,7 @@ import * as debug from 'debug';
 
 import { R_DT_CIv, R_DT_qIv } from '~exp-utils';
 import { ML_ERR_return_NAN, R_Q_P01_boundaries } from '../common/_general';
-import { forEach } from '../r-func';
+import { map } from '../r-func';
 
 const printer = debug('qnorm');
 
@@ -76,7 +76,7 @@ export function qnorm<T>(
   let r;
   let val;
 
-  return forEach(p)(fx => {
+  return map(p)(fx => {
     if (ISNAN(fx) || ISNAN(mu) || ISNAN(sigma)) return fx + mu + sigma;
 
     let rc = R_Q_P01_boundaries(lower_tail, log_p, fx, ML_NEGINF, ML_POSINF);

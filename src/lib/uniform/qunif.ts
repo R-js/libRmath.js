@@ -30,7 +30,7 @@ import { ML_ERR_return_NAN, R_Q_P01_check } from '../common/_general';
 
 import * as debug from 'debug';
 import { R_DT_qIv } from '~exp-utils';
-import { forEach } from '../r-func';
+import { map } from '../r-func';
 
 const { isNaN: ISNAN, isFinite: R_FINITE } = Number;
 const printer = debug('qunif');
@@ -42,7 +42,7 @@ export function qunif(
   lowerTail: boolean = true,
   logP: boolean = false
 ): number | number[] {
-  return forEach(p)(fp => {
+  return map(p)(fp => {
     if (ISNAN(fp) || ISNAN(min) || ISNAN(max)) return NaN;
 
     let rc = R_Q_P01_check(logP, fp);

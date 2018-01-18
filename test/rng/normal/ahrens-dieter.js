@@ -1,4 +1,4 @@
-const libR = require('../dist/lib/libR.js');
+import { AhrensDieter } from '~rng';
 
 // Possible to arbitraty uniform PRNG source (example: SuperDuper)
 const sd = new libR.rng.SuperDuper(0);

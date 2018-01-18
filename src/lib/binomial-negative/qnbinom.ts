@@ -58,7 +58,7 @@ import { NumberW } from '../common/toms708';
 
 import { R_DT_qIv } from '~exp-utils';
 import { qnorm } from '../normal/qnorm';
-import { forEach } from '../r-func';
+import { map } from '../r-func';
 import { pnbinom } from './pnbinom';
 
 const {
@@ -136,7 +136,7 @@ export function qnbinom<T>(
   lower_tail: boolean,
   log_p: boolean
 ): T {
-  return forEach(pp)(p => {
+  return map(pp)(p => {
     let P;
     let Q;
     let mu;

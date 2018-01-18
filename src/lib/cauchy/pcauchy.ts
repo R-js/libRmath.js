@@ -33,7 +33,7 @@ import { ML_ERR_return_NAN, R_D_val, R_DT_0, R_DT_1 } from '../common/_general';
 
 import { atanpi } from '~trigonometry';
 import { R_D_Clog } from '../common/_general';
-import { forEach  } from '../r-func';
+import { map  } from '../r-func';
 
 
 const { isNaN: ISNAN, isFinite: R_FINITE } = Number;
@@ -49,7 +49,7 @@ export function pcauchy<T>(
   logP = false
 ): T {
   
-  return forEach(xx)(x => {
+  return map(xx)(x => {
     if (ISNAN(x) || ISNAN(location) || ISNAN(scale))
       return x + location + scale;
 

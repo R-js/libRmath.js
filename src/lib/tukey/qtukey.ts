@@ -127,7 +127,7 @@ import * as debug from 'debug';
 import { ME, ML_ERR_return_NAN, ML_ERROR, R_Q_P01_boundaries } from '../common/_general';
 
 import { R_DT_qIv } from '~exp-utils';
-import { forEach } from '~R';
+import { map } from '~R';
 import { ptukey } from './ptukey';
 
 const { isNaN: ISNAN, POSITIVE_INFINITY: ML_POSINF } = Number;
@@ -142,7 +142,7 @@ export function qtukey<T>(
   lower_tail: boolean = true,
   log_p: boolean = false
 ): T {
-  return forEach(pp)(p =>
+  return map(pp)(p =>
     _qtukey(p, rr, cc, df, lower_tail, log_p)
   ) as any;
 }

@@ -31,7 +31,7 @@
 
 import * as debug from 'debug';
 import { ML_ERR_return_NAN, R_P_bounds_Inf_01 } from '../common/_general';
-import { forEach } from '../r-func';
+import { map } from '../r-func';
 
 const { exp, log1p } = Math;
 const { isNaN: ISNAN } = Number;
@@ -55,7 +55,7 @@ export function plogis<T>(
 ): T {
 
 
-  return forEach(xx)(x => {
+  return map(xx)(x => {
     if (ISNAN(x) || ISNAN(location) || ISNAN(scale))
       return x + location + scale;
 

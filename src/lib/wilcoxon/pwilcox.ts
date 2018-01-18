@@ -44,7 +44,7 @@ import * as debug from 'debug';
 
 import { ML_ERR_return_NAN, R_DT_0, R_DT_1, R_DT_val } from '../common/_general';
 import { choose } from '../common/choose';
-import { forEach } from '../r-func';
+import { map } from '../r-func';
 
 import { WilcoxonCache } from './WilcoxonCache';
 
@@ -65,7 +65,7 @@ export function pwilcox<T>(
   n = R_forceint(n);
  
 
-  return forEach(qq)(q => {
+  return map(qq)(q => {
     
     const w = new WilcoxonCache();
 

@@ -36,7 +36,7 @@ import {
   R_DT_1,
   R_nonint
 } from '../common/_general';
-import { forEach } from '../r-func';
+import { map } from '../r-func';
 
 const printer = debug('pbinom');
 const { floor, round: R_forceint } = Math;
@@ -49,7 +49,7 @@ export function pbinom<T>(
   lowerTail: boolean = true,
   logP: boolean = false
 ): T {
-  return forEach(xx)(x => {
+  return map(xx)(x => {
     if (ISNAN(x) || ISNAN(n) || ISNAN(p)) return NaN;
     if (!R_FINITE(n) || !R_FINITE(p)) {
       return ML_ERR_return_NAN(printer);

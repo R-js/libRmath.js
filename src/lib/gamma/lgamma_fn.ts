@@ -47,11 +47,11 @@
  *    library.
  */
 
-import { forEach } from '../r-func';
+import { map } from '../r-func';
 import { lgammafn_sign } from './lgammafn_sign';
 
 export function lgammafn<T>(x: T): T {
-  return forEach(x)(fx => {
+  return map(x)(fx => {
     return lgammafn_sign(fx);
   }) as any;
 }

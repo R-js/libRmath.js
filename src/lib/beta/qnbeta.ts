@@ -23,7 +23,7 @@ import * as debug from 'debug';
 import { ML_ERR_return_NAN, R_Q_P01_boundaries } from '../common/_general';
 
 import { R_DT_qIv } from '~exp-utils';
-import { forEach } from '../r-func';
+import { map } from '../r-func';
 import { pnbeta } from './pnbeta';
 
 const {
@@ -48,7 +48,7 @@ export function qnbeta<T>(
   const accu = 1e-15;
   const Eps = 1e-14; /* must be > accu */
 
-  return forEach(_p)(p => {
+  return map(_p)(p => {
     let ux;
     let lx;
     let nx;

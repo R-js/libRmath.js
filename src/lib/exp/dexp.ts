@@ -36,7 +36,7 @@ import { ML_ERR_return_NAN, R_D__0 } from '../common/_general';
 
 import * as debug from 'debug';
 
-import { forEach } from '../r-func';
+import { map } from '../r-func';
 
 const { log, exp } = Math;
 const { isNaN: ISNAN } = Number;
@@ -44,7 +44,7 @@ const printer = debug('dexp');
 
 export function dexp<T>(x: T, scale: number, give_log: boolean = false): T {
   /* NaNs propagated correctly */
-  return forEach(x)(fx => {
+  return map(x)(fx => {
     if (ISNAN(fx) || ISNAN(scale)) {
       return NaN;
     }

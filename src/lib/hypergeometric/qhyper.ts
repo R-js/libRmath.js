@@ -29,7 +29,7 @@
 import * as debug from 'debug';
 import { R_DT_qIv } from '~exp-utils';
 import { ML_ERR_return_NAN, R_Q_P01_boundaries } from '../common/_general';
-import { forEach } from '../r-func';
+import { map } from '../r-func';
 import { lfastchoose } from './lfastchoose';
 
 const { log, exp, min: fmin2, max: fmax2, round: R_forceint } = Math;
@@ -45,7 +45,7 @@ export function qhyper<T>(
   lowerTail: boolean = true,
   logP: boolean = false
 ): T {
-  return forEach(pp)(p => {
+  return map(pp)(p => {
     /* This is basically the same code as  ./phyper.c  *used* to be --> FIXME! */
     let N;
     let xstart;

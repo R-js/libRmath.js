@@ -73,7 +73,7 @@ import {
   R_DT_1
 } from '../common/_general';
 
-import { forEach } from '../r-func';
+import { map } from '../r-func';
 
 const {
   isNaN: ISNAN,
@@ -121,7 +121,7 @@ export function pnorm5<T>(
   logP: boolean = false
 ): T {
 
-  return forEach(q)( fx => {
+  return map(q)( fx => {
     let p = new NumberW(0);
     let cp = new NumberW(0);
 

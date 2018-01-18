@@ -68,7 +68,7 @@ import { M_LN_SQRT_PI, ML_ERR_return_NAN, R_D__0 } from '../common/_general';
 
 import { lgammafn } from '../gamma/lgamma_fn';
 import {  dnorm4 as dnorm } from '../normal/dnorm';
-import { forEach } from '../r-func';
+import { map } from '../r-func';
 import { dt } from './dt';
 import { pnt } from './pnt';
 
@@ -82,7 +82,7 @@ export function dnt<T>(
   ncp: number = 0,
   giveLog: boolean = false
 ): T {
-  return forEach(xx)(x => {
+  return map(xx)(x => {
     if (ISNAN(x) || ISNAN(df)) return x + df;
 
     /* If non-positive df then error */

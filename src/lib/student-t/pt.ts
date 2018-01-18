@@ -34,7 +34,7 @@ import {
   R_DT_1
 } from '../common/_general';
 import { pnorm5 as pnorm } from '../normal/pnorm';
-import { forEach } from '../r-func';
+import { map } from '../r-func';
 
 const { log1p, sqrt, log, abs: fabs, exp } = Math;
 const { isNaN: ISNAN, isFinite: R_FINITE } = Number;
@@ -52,7 +52,7 @@ export function pt<T>(
     
      *	--> ./pnt.c for NON-central
      */
-  return forEach(xx)(x => {
+  return map(xx)(x => {
     let val;
     let nx;
 

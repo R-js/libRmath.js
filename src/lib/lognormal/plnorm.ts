@@ -30,7 +30,7 @@
 import * as debug from 'debug';
 import { ML_ERR_return_NAN, R_DT_0 } from '../common/_general';
 import { pnorm5 as pnorm } from '../normal/pnorm';
-import { forEach } from '../r-func';
+import { map } from '../r-func';
 
 const { isNaN:ISNAN } = Number;
 const { log } = Math;
@@ -45,7 +45,7 @@ export function plnorm<T>(
   log_p: boolean = false
 ): T {
   
-  return forEach(x)(fx => {
+  return map(x)(fx => {
     if (ISNAN(fx) || ISNAN(meanlog) || ISNAN(sdlog))
       return fx + meanlog + sdlog;
 

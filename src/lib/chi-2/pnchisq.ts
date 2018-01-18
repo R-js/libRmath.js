@@ -45,7 +45,7 @@ import {
 import { R_Log1_Exp } from '~exp-utils';
 import { lgammafn } from '../gamma/lgamma_fn';
 import { logspace_add } from '../gamma/logspace-add';
-import { forEach } from '../r-func';
+import { map } from '../r-func';
 import { pchisq } from './pchisq';
 
 const {
@@ -81,7 +81,7 @@ export function pnchisq<T>(
   lower_tail = true,
   log_p = false
 ): T {
-  return forEach(xx)(x => {
+  return map(xx)(x => {
     let ans;
 
     if (ISNAN(x) || ISNAN(df) || ISNAN(ncp)) {

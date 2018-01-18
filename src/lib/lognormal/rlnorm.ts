@@ -33,7 +33,7 @@
 import * as debug from 'debug';
 import { ML_ERR_return_NAN } from '../common/_general';
 import { rnorm } from '../normal/rnorm';
-import { arrayrify, forEach, seq } from '../r-func';
+import { arrayrify, map, seq } from '../r-func';
 import { IRNGNormal } from '../rng/normal';
 
 const exp = arrayrify(Math.exp);
@@ -48,7 +48,7 @@ export function rlnorm(
   rng: IRNGNormal
 ): number | number[] {
   if (ISNAN(meanlog) || !R_FINITE(sdlog) || sdlog < 0) {
-    return forEach(sequence(N))(() => ML_ERR_return_NAN(printer));
+    return map(sequence(N))(() => ML_ERR_return_NAN(printer));
   }
   return exp(rnorm(N, meanlog, sdlog, rng));
 }

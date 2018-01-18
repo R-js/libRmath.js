@@ -29,7 +29,7 @@
 import * as debug from 'debug';
 
 import { ML_ERR_return_NAN } from '../common/_general';
-import { forEach, seq } from '../r-func';
+import { map, seq } from '../r-func';
 import { IRNG } from '../rng';
 
 const { log } = Math;
@@ -43,7 +43,7 @@ export function rlogis(
   scale: number = 1,
   rng: IRNG
 ): number | number[] {
-  return forEach(sequence(N))(() => {
+  return map(sequence(N))(() => {
     if (ISNAN(location) || !R_FINITE(scale)) {
       return ML_ERR_return_NAN(printer_rlogis);
     }

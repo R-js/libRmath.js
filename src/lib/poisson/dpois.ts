@@ -51,7 +51,7 @@ import {
 import { bd0 } from '~deviance';
 import { stirlerr } from '~stirling';
 import { lgammafn } from '../gamma/lgamma_fn';
-import { forEach } from '../r-func';
+import { map } from '../r-func';
 
 const { round: R_forceint, log, PI } = Math;
 const { isNaN: ISNAN, isFinite: R_FINITE, MIN_VALUE: DBL_MIN } = Number;
@@ -82,7 +82,7 @@ export function dpois(
   give_log: boolean = false
 ): number | number[] {
   
-  return forEach(_x)(x => {
+  return map(_x)(x => {
     if (ISNAN(x) || ISNAN(lambda)) {
       return x + lambda;
     }

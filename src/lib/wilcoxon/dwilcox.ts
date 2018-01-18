@@ -43,7 +43,7 @@ import * as debug from 'debug';
 
 import { ML_ERR_return_NAN, R_D__0 } from '../common/_general';
 import { choose, lchoose } from '../common/choose';
-import { forEach } from '../r-func';
+import { map } from '../r-func';
 import { cwilcox } from './cwilcox';
 import { WilcoxonCache } from './WilcoxonCache';
 
@@ -66,7 +66,7 @@ export function dwilcox<T>(
 
   //const nm = m * n;
  
-  return forEach(xx)(x => {
+  return map(xx)(x => {
    
     const w = new WilcoxonCache();
     //#ifdef IEEE_754
