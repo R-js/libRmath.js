@@ -153,6 +153,7 @@ export function summary(x: number[]): ISummary {
   const populationVariance = sampleVariance * (N - 1) / N;
   const sampleSD = Math.sqrt(sampleVariance);
   const populationSD = Math.sqrt(populationVariance);
+  // quantiles
   const o = x.sort((a, b) => a - b);
   const min = o[0];
   const max = o[N - 1];
@@ -162,7 +163,7 @@ export function summary(x: number[]): ISummary {
     const q = i.map(index => {
       const f1 = 1 - (index - floor(index));
       const f2 = 1 - f1;
-      return x[trunc(index)] * f1 + x[trunc(index) + 1] * f2;
+      return o[trunc(index)] * f1 + o[trunc(index) + 1] * f2;
     });
     return {
       q1: q[0],
