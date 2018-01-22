@@ -62,7 +62,7 @@ import { lgammafn } from '../gamma/lgamma_fn';
 const { isNaN: ISNAN, isFinite: R_FINITE } = Number;
 const { exp, sqrt, log, LN2: M_LN2 } = Math;
 
-const printer_ptukey = debug('ptukey');
+const printer_ptukey = debug('_ptukey');
 
 export function ptukey<T>(
   qq: T,
@@ -78,7 +78,22 @@ export function ptukey<T>(
   ) as any;
 }
 
-function _ptukey(
+/*
+> ptukey
+function (q, nmeans, df, nranges = 1, lower.tail = TRUE, log.p = FALSE)
+.Call(C_ptukey, q, nranges, nmeans, df, lower.tail, log.p)
+<bytecode: 0x000000001cde3048>
+<environment: namespace:stats>
+
+double ptukey(
+	double q, // q
+	double rr, // nranges
+	double cc, // nmeans
+	double df, // df
+  int lower_tail, // lowertail
+	int log_p //logp
+*/
+export function _ptukey(
   q: number,
   rr: number,
   cc: number,

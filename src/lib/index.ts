@@ -43,22 +43,27 @@ export const special = Object.freeze({
 import {
   any,
   arrayrify,
+  asVector,
   div,
+ // forceToArray,
   flatten,
-  forceToArray,
+  ISummary,
   map,
   mult,
   numberPrecision,
   selector,
   seq,
   sum,
-  summary
+  summary,
+  Welch_Satterthwaite
 } from './r-func';
+
+export { ISummary };
 
 export const R = {
   arrayrify,
   flatten,
-  forceToArray,
+  //forceToArray,
   map,
   numberPrecision,
   selector,
@@ -67,5 +72,7 @@ export const R = {
   any,
   div,
   mult,
-  summary
+  summary,
+  Welch_Satterthwaite,
+  asVector
 };

@@ -208,13 +208,32 @@ static double wprob(double w, double rr, double cc)
 	return pr_w;
 } /* wprob() */
 
+/*
+WARNING:
+WARNING:
+WARNING:
+  The ptukey looks like this in R, as you can see, 
+  the function-arguments in R language have different order
+  then in C-language.
+
+> ptukey
+function (q, nmeans, df, nranges = 1, lower.tail = TRUE, log.p = FALSE)
+.Call(C_ptukey, q, nranges, nmeans, df, lower.tail, log.p)
+<bytecode: 0x000000001cde3048>
+<environment: namespace:stats>
+
+WARNING:
+WARNING:
+WARNING:
+*/
 double ptukey(
-	double q, 
-	double rr, 
-	double cc, 
-	double df,
-    int lower_tail, 
-	int log_p)
+	double q, // q
+	double rr, // nranges
+	double cc, // nmeans
+	double df, // df
+    int lower_tail, // lowertail
+	int log_p //logp
+)
 {
 /*  function ptukey() [was qprob() ]:
 

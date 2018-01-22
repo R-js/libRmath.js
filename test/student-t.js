@@ -6,8 +6,8 @@ const libR = require('../dist/lib/libR.js');
 const {
     Normal,
     StudentT,
-    rng: { MarsagliaMultiCarry },
     rng: {
+        MarsagliaMultiCarry,
         normal: { AhrensDieter }
     }
 } = libR;

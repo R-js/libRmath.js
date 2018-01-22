@@ -128,24 +128,32 @@ import { ME, ML_ERR_return_NAN, ML_ERROR, R_Q_P01_boundaries } from '../common/_
 
 import { R_DT_qIv } from '~exp-utils';
 import { map } from '~R';
-import { ptukey } from './ptukey';
+import { _ptukey } from './ptukey';
 
 const { isNaN: ISNAN, POSITIVE_INFINITY: ML_POSINF } = Number;
 const { abs: fabs, max: fmax2 } = Math;
 const printer = debug('qtukey');
+/**
+> qtukey
+function (p, nmeans, df, nranges = 1, lower.tail = TRUE, log.p = FALSE)
+.Call(C_qtukey, p, nranges, nmeans, df, lower.tail, log.p)
+<bytecode: 0x000000001cde4a80>
+<environment: namespace:stats>
 
+*/
 export function qtukey<T>(
-  pp: T,
-  rr: number,
-  cc: number,
-  df: number,
-  lower_tail: boolean = true,
-  log_p: boolean = false
+  pp: T, //p
+  rr: number, //ranges
+  cc: number, //nmeans
+  df: number, //df
+  lower_tail: boolean = true, //lower.tail
+  log_p: boolean = false //log.p
 ): T {
   return map(pp)(p =>
     _qtukey(p, rr, cc, df, lower_tail, log_p)
   ) as any;
 }
+
 
 function _qtukey(
   p: number,
@@ -187,7 +195,7 @@ function _qtukey(
 
   /* Find prob(value < x0) */
 
-  valx0 = ptukey(x0, rr, cc, df, /*LOWER*/ true, /*LOG_P*/ false) - p;
+  valx0 = _ptukey(x0, rr, cc, df, /*LOWER*/ true, /*LOG_P*/ false) - p;
 
   /* Find the second iterate and prob(value < x1). */
   /* If the first iterate has probability value */
@@ -196,7 +204,7 @@ function _qtukey(
 
   if (valx0 > 0.0) x1 = fmax2(0.0, x0 - 1.0);
   else x1 = x0 + 1.0;
-  valx1 = ptukey(x1, rr, cc, df, /*LOWER*/ true, /*LOG_P*/ false) - p;
+  valx1 = _ptukey(x1, rr, cc, df, /*LOWER*/ true, /*LOG_P*/ false) - p;
 
   /* Find new iterate */
 
@@ -214,7 +222,7 @@ function _qtukey(
     /* Find prob(value < new iterate) */
 
     valx1 =
-      ptukey(ans, rr, cc, df, /*LOWER*/ true, /*LOG_P*/ false) - p;
+      _ptukey(ans, rr, cc, df, /*LOWER*/ true, /*LOG_P*/ false) - p;
     x1 = ans;
 
     /* If the difference between two successive */

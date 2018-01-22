@@ -71,6 +71,7 @@ export function arrayrify<T, R>(fn: (x: T, ...rest: any[]) => R) {
 export function forceToArray<T>(x: T | T[]): T[] {
   return Array.isArray(x) ? x.slice(0) : [x];
 }
+export { forceToArray as asVector };
 
 function possibleScalar<T>(x: T[]): T | T[] {
   return x.length === 1 ? x[0] : x;
@@ -78,12 +79,37 @@ function possibleScalar<T>(x: T[]): T | T[] {
 
 export { possibleScalar, possibleScalar as possibleReduceDim };
 
+function coerceToArray(o: any): { key: string|number, val: any }[] {
+  if (o === null || o === undefined){
+    throw new TypeError('Illegal argument excepton: input needs to NOT be "null" or "undefined".');
+  }
+  if (typeof o === 'number' ){
+    return [{ key:0, val: o}] as any; 
+  }
+  if (isArray(o)){
+    return o.map((x, idx) => ({key:idx, val:x}) as any);
+  }
+  if (typeof o === 'string'){
+    return o.split('').map((x, idx) => ({key:idx, val:x} as any));
+  }
+  if (typeof o === 'object'){
+    const names = Object.getOwnPropertyNames(o);
+    if (names.length === 0){
+      throw new Error('Input argument is an Object with no properties');
+    }
+    return names.map( name => ({ key:name, val :o[name] })) as any;
+  }
+  throw new Error('unreachable code');
+}
+
 export function map<T>(
   xx: T
-): { (fn: (x: number, idx?: number) => number): number | number[] } {
-  const fx: number[] = forceToArray(xx) as any;
-  return function(fn: (x: number, idx?: number) => number): number | number[] {
-    const result: number[] = fx.map(fn);
+): { (fn: (x: any, idx?: number| string) => any): any | any[] } {
+  //let i = 0;
+  const fx: { key: string|number, val: any }[]  = coerceToArray(xx) as any;
+  return function(fn: (x: any , idx?: number| string) => any): any | any[]{
+    //console.log({id:i++});
+    const result = fx.map(o => fn(o.val, o.key));
     return possibleScalar(result) as any;
   };
 }
@@ -192,4 +218,16 @@ export function summary(x: number[]): ISummary {
       max
     }
   };
+}
+
+// https://en.wikipedia.org/wiki/Welch%E2%80%93Satterthwaite_equation
+
+export function Welch_Satterthwaite(s: number[], n: number[]): number {
+   
+    const elts = forceToArray(map(s)((_s, i) => {
+       return _s * _s / n[i as number];
+    }));
+    const dom = elts.map((e, i) => e * e / (n[i as number] - 1) );
+
+    return Math.pow(sum(elts), 2) / sum(dom);
 }

@@ -5,7 +5,7 @@ import * as libR from '../src/lib';
 import { selector } from '../src/lib/r-func';
 const {
   Beta,
-  R: { arrayrify, numberPrecision, forEach },
+  R: { arrayrify, numberPrecision, map },
   rng: { SuperDuper, normal: { BoxMuller } }
 } = libR;
 const { abs } = Math;
