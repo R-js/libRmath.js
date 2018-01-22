@@ -75,7 +75,7 @@ import {
   R_P_bounds_01
 } from '../common/_general';
 
-import { R_Log1_Exp } from '~exp-utils';
+import { R_Log1_Exp } from '../exp/expm1';
 import { dnorm4 as dnorm } from '../normal/dnorm';
 import { pnorm5 as pnorm } from '../normal/pnorm';
 import { dpois_raw } from '../poisson/dpois';

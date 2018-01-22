@@ -53,7 +53,7 @@ import {
   R_Q_P01_check
 } from '../common/_general';
 
-import { R_DT_Clog, R_DT_log, R_DT_qIv } from '~exp-utils';
+import { R_DT_Clog, R_DT_log, R_DT_qIv } from '../exp/expm1';
 
 import { dgamma } from '../gamma/dgamma';
 import { lgammafn } from '../gamma/lgamma_fn';

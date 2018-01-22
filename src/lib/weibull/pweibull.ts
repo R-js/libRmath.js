@@ -29,9 +29,9 @@ import * as debug from 'debug';
 
 import { ML_ERR_return_NAN, R_D_exp, R_DT_0 } from '../common/_general';
 
-import { R_Log1_Exp } from '~exp-utils';
+import { R_Log1_Exp } from '../exp/expm1';
 
-import { map } from '~R';
+import { map } from '../r-func';
 
 const { expm1, pow } = Math;
 const { isNaN: ISNAN } = Number;

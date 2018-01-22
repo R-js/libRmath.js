@@ -29,7 +29,7 @@
 import { ML_ERR_return_NAN, R_Q_P01_check } from '../common/_general';
 
 import * as debug from 'debug';
-import { R_DT_qIv } from '~exp-utils';
+import { R_DT_qIv } from '../exp/expm1';
 import { map } from '../r-func';
 
 const { isNaN: ISNAN, isFinite: R_FINITE } = Number;

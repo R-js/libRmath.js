@@ -31,7 +31,7 @@ import * as debug from 'debug';
 
 import { ML_ERR_return_NAN, R_Q_P01_boundaries } from '../common/_general';
 
-import { R_DT_Clog } from '~exp-utils';
+import { R_DT_Clog } from '../exp/expm1';
 import { map } from '../r-func';
 
 const { pow } = Math;

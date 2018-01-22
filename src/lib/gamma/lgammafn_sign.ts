@@ -10,7 +10,7 @@ import {
   ML_ERROR
 } from '../common/_general';
 
-import { sinpi } from '~trigonometry';
+import { sinpi } from '../trigonometry';
 import { gammafn } from './gamma_fn';
 import { lgammacor } from './lgammacor';
 

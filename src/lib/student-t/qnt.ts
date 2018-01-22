@@ -24,8 +24,8 @@
  */
 
 import * as debug from 'debug';
-import { R_DT_qIv } from '~exp-utils';
 import { ML_ERR_return_NAN, R_Q_P01_boundaries } from '../common/_general';
+import { R_DT_qIv } from '../exp/expm1';
 import { qnorm } from '../normal/qnorm';
 import { map } from '../r-func';
 import { pnt } from './pnt';

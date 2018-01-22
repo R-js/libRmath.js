@@ -51,8 +51,8 @@
 */
 
 import * as debug from 'debug';
-import { R_DT_log } from '~exp-utils';
 import { ML_ERR_return_NAN, R_D_Lval, R_DT_0, R_DT_1 } from '../common/_general';
+import { R_DT_log } from '../exp/expm1'; 
 import { map } from '../r-func';
 import { dhyper } from './dhyper';
 

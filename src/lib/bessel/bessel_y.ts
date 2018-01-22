@@ -52,7 +52,7 @@ const {
 const ML_NEGINF = -Infinity;
 const ML_POSINF = Infinity;
 
-import { cospi, sinpi } from '~trigonometry';
+import { cospi, sinpi } from '../trigonometry';
 import { bessel_j, bessel_j_ex } from './bessel_j';
 
 const { cos, pow, sin, floor, trunc, abs: fabs, sqrt, log } = Math;

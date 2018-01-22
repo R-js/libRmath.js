@@ -49,7 +49,7 @@ import {
   R_D_Lval
 } from '../common/_general';
 
-//import { log1p } from '~log';
+//import { log1p } from '../exp/expm1'log';
 
 const { exp, expm1, log, log1p } = Math;
 

@@ -1,6 +1,6 @@
 'use strict';
 
-export { Beta } from '~beta';
+export { Beta } from './beta';
 export { Binomial } from './binomial';
 export { NegativeBinomial } from './binomial-negative';
 export { Cauchy } from './cauchy';
@@ -28,10 +28,10 @@ export { Wilcoxon } from './wilcoxon';
 /*
   Class of Special functions collected here.  
 */
-import { special as besselSpecial } from '~bessel';
-import { special as betaSpecial } from '~beta';
-import { special as gammaSpecial } from '~gamma';
+import { special as besselSpecial } from './bessel';
+import { special as betaSpecial } from './beta';
 import { special as chooseSpecial } from './common';
+import { special as gammaSpecial } from './gamma';
 
 export const special = Object.freeze({
   ...gammaSpecial,

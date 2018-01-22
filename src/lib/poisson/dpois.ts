@@ -48,10 +48,10 @@ import {
   R_D_nonint_check
 } from '../common/_general';
 
-import { bd0 } from '~deviance';
-import { stirlerr } from '~stirling';
+import { bd0 } from '../deviance'; 
 import { lgammafn } from '../gamma/lgamma_fn';
 import { map } from '../r-func';
+import { stirlerr } from '../stirling';
 
 const { round: R_forceint, log, PI } = Math;
 const { isNaN: ISNAN, isFinite: R_FINITE, MIN_VALUE: DBL_MIN } = Number;

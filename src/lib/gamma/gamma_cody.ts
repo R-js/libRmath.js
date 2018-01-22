@@ -27,7 +27,7 @@
  * 
  */
 
-import { sinpi } from '~trigonometry';
+import { sinpi } from '../trigonometry';
 
 const { PI: M_PI, log, exp, trunc } = Math;
 

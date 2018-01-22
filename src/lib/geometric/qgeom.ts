@@ -29,7 +29,7 @@
 import * as debug from 'debug';
 import { ML_ERR_return_NAN, R_Q_P01_boundaries } from '../common/_general';
 
-import { R_DT_Clog } from '~exp-utils';
+import { R_DT_Clog } from '../exp/expm1'; 
 
 const { ceil, max: fmax2, log1p } = Math;
 const { POSITIVE_INFINITY: ML_POSINF, isNaN: ISNAN } = Number;

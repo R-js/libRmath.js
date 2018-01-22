@@ -44,7 +44,7 @@ import { ppois } from './ppois';
 
 import { qnorm } from '../normal/qnorm';
 
-import { R_DT_qIv } from '~exp-utils';
+import { R_DT_qIv } from '../exp/expm1'; 
 
 import { map } from '../r-func';
 

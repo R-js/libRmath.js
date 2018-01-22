@@ -42,13 +42,13 @@
  
 import * as debug from 'debug';
 
-import { R_DT_qIv } from '~exp-utils';
 import {
   ML_ERR_return_NAN,
   R_DT_0,
   R_DT_1,
   R_Q_P01_check
 } from '../common/_general';
+import { R_DT_qIv } from '../exp/expm1';
 import { map } from '../r-func';
 import { cwilcox } from './cwilcox';
 import { WilcoxonCache } from './WilcoxonCache';

@@ -48,8 +48,6 @@
 
 import * as debug from 'debug';
 
-import { bd0 } from '~deviance';
-import { stirlerr } from '~stirling';
 import {
   M_LN_2PI,
   ML_ERR_return_NAN,
@@ -59,7 +57,9 @@ import {
   R_D_negInonint,
   R_D_nonint_check
 } from '../common/_general';
+import { bd0 } from '../deviance';
 import { map } from '../r-func';
+import { stirlerr } from '../stirling';
 
 const { log, log1p, round: R_forceint } = Math;
 const { isNaN: ISNAN, isFinite: R_FINITE } = Number;

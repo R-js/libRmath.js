@@ -42,8 +42,8 @@ import { ML_ERR_return_NAN, R_Q_P01_boundaries } from '../common/_general';
 const { max: fmax2, min: fmin2, floor, sqrt } = Math;
 const { isNaN: ISNAN, isFinite: R_FINITE, EPSILON: DBL_EPSILON } = Number;
 
-import { R_DT_qIv } from '~exp-utils';
 import { NumberW } from '../common/toms708';
+import { R_DT_qIv } from '../exp/expm1';
 import { qnorm } from '../normal/qnorm';
 import { map } from '../r-func';
 import { pbinom } from './pbinom';

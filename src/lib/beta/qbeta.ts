@@ -51,7 +51,7 @@ import {
   R_DT_log,
   R_DT_qIv,
   R_Log1_Exp
-} from '~exp-utils';
+} from '../exp/expm1';
 
 import { lbeta } from '../beta/lbeta';
 import { pbeta_raw } from '../beta/pbeta';

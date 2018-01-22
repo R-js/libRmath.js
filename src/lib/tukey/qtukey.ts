@@ -126,8 +126,8 @@ import * as debug from 'debug';
 
 import { ME, ML_ERR_return_NAN, ML_ERROR, R_Q_P01_boundaries } from '../common/_general';
 
-import { R_DT_qIv } from '~exp-utils';
-import { map } from '~R';
+import { R_DT_qIv } from '../exp/expm1';
+import { map } from '../r-func';
 import { _ptukey } from './ptukey';
 
 const { isNaN: ISNAN, POSITIVE_INFINITY: ML_POSINF } = Number;

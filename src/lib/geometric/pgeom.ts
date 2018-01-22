@@ -32,7 +32,7 @@ import * as debug from 'debug';
 
 import { ML_ERR_return_NAN, R_DT_0, R_DT_1 } from '../common/_general';
 
-import { R_DT_Clog } from '~exp-utils';
+import { R_DT_Clog } from '../exp/expm1'; 
 
 const { expm1, log1p, log, exp, floor } = Math;
 const { isNaN: ISNAN, isFinite: R_FINITE } = Number;

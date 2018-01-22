@@ -31,9 +31,9 @@ import * as debug from 'debug';
 
 import { ML_ERR_return_NAN, R_D_val, R_DT_0, R_DT_1 } from '../common/_general';
 
-import { atanpi } from '~trigonometry';
 import { R_D_Clog } from '../common/_general';
 import { map  } from '../r-func';
+import { atanpi } from '../trigonometry';
 
 
 const { isNaN: ISNAN, isFinite: R_FINITE } = Number;

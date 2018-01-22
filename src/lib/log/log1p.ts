@@ -61,7 +61,7 @@ const {
 
 import { ME } from '../common/_general';
 */
-//import { chebyshev_eval } from '~chebyshev';
+//import { chebyshev_eval } from '../exp/expm1'chebyshev';
 
 //const { log1p } = Math;
 

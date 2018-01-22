@@ -55,9 +55,9 @@ import {
   R_DT_1
 } from '../common/_general';
 
-import { map } from '~R';
 import { R_DT_val } from '../common/_general';
 import { lgammafn } from '../gamma/lgamma_fn';
+import { map } from '../r-func';
 
 const { isNaN: ISNAN, isFinite: R_FINITE } = Number;
 const { exp, sqrt, log, LN2: M_LN2 } = Math;
