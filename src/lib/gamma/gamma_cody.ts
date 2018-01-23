@@ -179,9 +179,12 @@ export function Rf_gamma_cody(x: number) {
   ];
 
   /* Local variables */
+  //int
   let i: number;
   let n: number;
   let parity: number; /*logical*/
+
+  //double
   let fact: number;
   let xden: number;
   let xnum: number;
@@ -204,7 +207,9 @@ export function Rf_gamma_cody(x: number) {
     yi = trunc(y);
     res = y - yi;
     if (res !== 0) {
-      if (yi !== trunc(yi * 0.5) * 2) parity = 1;
+      if (yi !== trunc(yi * 0.5) * 2) {
+        parity = 1;
+      }
       fact = -M_PI / sinpi(res);
       y += 1;
     } else {

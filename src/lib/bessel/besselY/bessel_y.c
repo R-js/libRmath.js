@@ -1,4 +1,6 @@
 /*
+ *  Adjusted on 2018 Jan 23 as a pre-port removing pointers, and memory allocation
+ * 
  *  Mathlib : A C Library of Special Functions
  *  Copyright (C) 1998-2015 Ross Ihaka and the R Core team.
  *
@@ -341,19 +343,24 @@ static BesselRC Y_bessel(const double x, const double alpha, const int nb)
 		p = f;
 		g = -q / s;
 		q = g;
-	L220:
-		en -= 1.;
-		if (en > 0.) {
-			r = en1 * (2. - p) - 2.;
-			s = b + en1 * q;
-			d = (en - 1. + c / en) / (r * r + s * s);
-			p = d * r;
-			q = d * s;
-			e = f + 1.;
-			f = p * e - g * q;
-			g = q * e + p * g;
-			en1 = en;
-			goto L220;
+	
+		for (;;) {
+			//L220:
+			en -= 1.;
+			if (en > 0.) {
+				r = en1 * (2. - p) - 2.;
+				s = b + en1 * q;
+				d = (en - 1. + c / en) / (r * r + s * s);
+				p = d * r;
+				q = d * s;
+				e = f + 1.;
+				f = p * e - g * q;
+				g = q * e + p * g;
+				en1 = en;
+				continue;
+				//goto L220;
+			}
+			break;
 		}
 		f = 1. + f;
 		d = f * f + g * g;
@@ -451,22 +458,23 @@ static BesselRC Y_bessel(const double x, const double alpha, const int nb)
 			for (i = 2; i < nb; ++i) {
 				if (twobyx < 1.) {
 					if (fabs(by[i - 1]) * twobyx >= DBL_MAX / aye)
-						goto L450;
+						break;
+						//goto L450;
 				}
 				else {
 					if (fabs(by[i - 1]) >= DBL_MAX / aye / twobyx)
-						goto L450;
+						break;
+						//goto L450;
 				}
 				by[i] = twobyx * aye * by[i - 1] - by[i - 2];
 				aye += 1.;
 				++(ncalc);
-			}
-		}
-	}
-L450:
+			}//for
+		}//if
+	}//if
+//L450:
 	for (i = ncalc; i < nb; ++i)
 		by[i] = ML_NEGINF;/* was 0 */
-	return (BesselRC){ by[ncalc-1] ,  nb, ncalc };
-
+	return (BesselRC) { by[ncalc - 1], nb, ncalc };
 }
 

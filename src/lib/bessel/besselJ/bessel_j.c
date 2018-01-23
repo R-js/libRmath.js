@@ -1,4 +1,8 @@
 /*
+ *  This C code was changed first before porting to JS (remove pointers and heap allocation).
+ *  
+ *  pre-JS Post by Jacob Bogers jkfbogers@gmail.com
+
  *  Mathlib : A C Library of Special Functions
  *  Copyright (C) 1998-2015 Ross Ihaka and the R Core team.
  *

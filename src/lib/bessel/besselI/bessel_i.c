@@ -1,4 +1,9 @@
 /*
+ *  23 jan 2018 Jacob Bogers jkfbogers@gmail.com
+ *   
+ *	removed C pointers and dynamic memory allocation
+ *
+ *
  *  Mathlib : A C Library of Special Functions
  *  Copyright (C) 1998-2014 Ross Ihaka and the R Core team.
  *
@@ -79,7 +84,10 @@ double bessel_i(double x, double alpha, bool expo)
 	return x;
 }
 
-static BesselRC I_bessel(const double x, const double alpha, const int nb,
+static BesselRC I_bessel(
+	const double x, 
+	const double alpha, 
+	const int nb,
 	const int ize)
 {
 	/* -------------------------------------------------------------------
@@ -423,7 +431,7 @@ static BesselRC I_bessel(const double x, const double alpha, const int nb,
 			}//for loop for "goto" simulation
 
 		//L220:
-			if (gotoL230 == false) {
+			if (gotoL230 === false) {
 				sum = sum + sum + bi2[0];
 			}
 
