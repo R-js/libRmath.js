@@ -104,7 +104,8 @@ export function bessel_j(x: number, alpha: number): number {
   let nb: number;
 
   ({ alpha, b: bj, nb, ncalc, x } = J_bessel({
-    alpha: alpha - floor(alpha),
+    //alpha -= (nb-1) , nb= 1+(int)(floor(alpha))
+    alpha: alpha - ( (1 + floor(alpha)) - 1),
     b: new Array(floor(alpha + 1)).fill(0),
     nb: floor(alpha) + 1,
     ncalc: 0,

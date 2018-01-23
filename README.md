@@ -49,7 +49,7 @@ npm install --save lib-r-math.js
   * [Poisson distribution](#poisson-distribution)
   * [Wilcoxon signed rank statistic distribution](#wilcoxon-signed-rank-statistic-distribution)
   * [Student T distribution](#student-t-distribution)
-  * [Studentized Range distribution, (_Tukey HSD_)](#studentized-range-distribution-tukey-hsd)
+  * [Studentized Range distribution, (_Tukey_)](#studentized-range-distribution-tukey-hsd)
   * [Weibull distribution](#weibull-distribution)
   * [TODO:Wilcoxon rank sum statistic distribution](#wilcoxon-rank-sum-statistic-distribution)
 * [Special Functions of Mathematics](#special-functions-of-mathematics)
@@ -64,7 +64,7 @@ npm install --save lib-r-math.js
 #### Summary
 
 R language operators and functions can work `vectors` and `list`.
-These Javascript helper functions are used to make the porting process to ES6 easier for R and JS programmers.
+These Javascript helper functions are used to make the porting process to ES6 easier.
 
 ### `div`
 
