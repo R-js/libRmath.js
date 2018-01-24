@@ -79,35 +79,90 @@ function possibleScalar<T>(x: T[]): T | T[] {
 
 export { possibleScalar, possibleScalar as possibleReduceDim };
 
-function coerceToArray(o: any): { key: string|number, val: any }[] {
-  if (o === null || o === undefined){
+function coerceToArray(o: any): { key: string | number, val: any }[] {
+  if (o === null || o === undefined) {
     throw new TypeError('Illegal argument excepton: input needs to NOT be "null" or "undefined".');
   }
-  if (typeof o === 'number' ){
-    return [{ key:0, val: o}] as any; 
+  if (typeof o === 'number') {
+    return [{ key: 0, val: o }] as any;
   }
-  if (isArray(o)){
-    return o.map((x, idx) => ({key:idx, val:x}) as any);
+  if (isArray(o)) {
+    return o.map((x, idx) => ({ key: idx, val: x }) as any);
   }
-  if (typeof o === 'string'){
-    return o.split('').map((x, idx) => ({key:idx, val:x} as any));
+  if (typeof o === 'string') {
+    return o.split('').map((x, idx) => ({ key: idx, val: x } as any));
   }
-  if (typeof o === 'object'){
+  if (typeof o === 'object') {
     const names = Object.getOwnPropertyNames(o);
-    if (names.length === 0){
+    if (names.length === 0) {
       throw new Error('Input argument is an Object with no properties');
     }
-    return names.map( name => ({ key:name, val :o[name] })) as any;
+    return names.map(name => ({ key: name, val: o[name] })) as any;
   }
   throw new Error('unreachable code');
 }
 
+
+export function multiplexer(...rest: (any | any[])[]) {
+  //analyze  
+  const analyzed: any[] = [];
+
+  for (let k = 0; k < rest.length; k++) {
+    const arg = rest[k];
+    if (arg === undefined || arg === null) {
+      continue; //skip
+    }
+    if (typeof arg === 'number') {
+      analyzed.push([arg]);
+      continue;
+    }
+    if (typeof arg === 'string') {
+      analyzed.push(arg.split(''));
+      continue;
+    }
+    if (Array.isArray(arg)) {
+      analyzed.push(arg);
+      continue;
+    }
+    if (arg instanceof Object) {
+      throw new Error('Sorry, looping over properties not yet supported');
+    }
+    if (arg instanceof Function) {
+      throw new Error('Sorry function arguments are not yet supported');
+    }
+  }//for
+  // find the longest array
+  const max = Math.max(...analyzed.map(a => a.length));
+
+  return function(fn: (...rest: any[]) => void) {
+    for (let k = 0; k < max; k++) {
+      const result: any[] = [];
+      for (let j = 0; j < analyzed.length; j++) {
+        const arr: any[] = analyzed[j];
+        const idx = k % arr.length;
+        result.push(arr[idx]);
+      }
+      fn(...result);
+    }
+  };
+}
+
+/**
+ * 
+ *  xx can be an array or a "pojo"-object with properties
+ * 
+ */
+
 export function map<T>(
   xx: T
-): { (fn: (x: any, idx?: number| string) => any): any | any[] } {
+): { (fn: (x: any, idx?: number | string) => any): any | any[] } {
   //let i = 0;
-  const fx: { key: string|number, val: any }[]  = coerceToArray(xx) as any;
-  return function(fn: (x: any , idx?: number| string) => any): any | any[]{
+  type ArrayElt = { key: string | number, val: any };
+
+  const fx: ArrayElt[] = coerceToArray(xx) as any;
+  //TODO: create looping like in R
+  //const fy: ArrayElt[] | undefined = yy && coerceToArray(yy) as any;
+  return function(fn: (x: any, idx?: number | string) => any): any | any[] {
     //console.log({id:i++});
     const result = fx.map(o => fn(o.val, o.key));
     return possibleScalar(result) as any;
@@ -126,8 +181,11 @@ export function numberPrecision(prec: number = 6) {
 }
 
 export function any<T>(x: T[]) {
-  return function(fn: (v: T, i?: number) => boolean) {
-    return x.find(fn);
+  return function(fn: any | ((v: T, i?: number) => boolean)) {
+    if (fn instanceof Function) {
+      return x.find(fn);
+    }
+    return x.find(d => d === fn);
   };
 }
 
@@ -223,11 +281,11 @@ export function summary(x: number[]): ISummary {
 // https://en.wikipedia.org/wiki/Welch%E2%80%93Satterthwaite_equation
 
 export function Welch_Satterthwaite(s: number[], n: number[]): number {
-   
-    const elts = forceToArray(map(s)((_s, i) => {
-       return _s * _s / n[i as number];
-    }));
-    const dom = elts.map((e, i) => e * e / (n[i as number] - 1) );
 
-    return Math.pow(sum(elts), 2) / sum(dom);
+  const elts = forceToArray(map(s)((_s, i) => {
+    return _s * _s / n[i as number];
+  }));
+  const dom = elts.map((e, i) => e * e / (n[i as number] - 1));
+
+  return Math.pow(sum(elts), 2) / sum(dom);
 }

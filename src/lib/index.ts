@@ -50,6 +50,7 @@ import {
   ISummary,
   map,
   mult,
+  multiplexer,
   numberPrecision,
   selector,
   seq,
@@ -74,5 +75,6 @@ export const R = {
   mult,
   summary,
   Welch_Satterthwaite,
-  asVector
+  asVector,
+  multiplexer
 };
