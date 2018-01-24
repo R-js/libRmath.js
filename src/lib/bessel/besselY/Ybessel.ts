@@ -1,4 +1,5 @@
 
+import * as debug from 'debug';
 import { cospi } from '../../trigonometry/cospi';
 import { sinpi } from '../../trigonometry/sinpi';
 import { M_eps_sinc, thresh_BESS_Y, xlrg_BESS_Y } from '../bessel-constants';
@@ -8,6 +9,7 @@ const M_SQRT_2dPI = 0.797884560802865355879892119869;
 const M_1_PI = 0.3183098861837907;
 const M_PI_2 = 1.5707963267948966;
 
+
 const { min, trunc, sqrt, sin, cos, log, abs, pow, PI: M_PI } = Math;
 const {
     MIN_VALUE: DBL_MIN,
@@ -16,6 +18,7 @@ const {
     MAX_VALUE: DBL_MAX
 } = Number;
 
+const printer = debug('Y_bessel');
 
 export function Y_bessel(x: number, alpha: number, nb: number): IBesselRC {
     /* ----------------------------------------------------------------------
@@ -176,6 +179,7 @@ export function Y_bessel(x: number, alpha: number, nb: number): IBesselRC {
     if (
         !(nb > 0 && 0. <= nu && nu < 1.)
     ) {
+        printer('violaton: abort nb=%d, nu=%d', nb, nu);
         by[0] = 0.;
         ncalc = min(nb, 0) - 1;
         return { x: 0, nb, ncalc };
@@ -185,6 +189,7 @@ export function Y_bessel(x: number, alpha: number, nb: number): IBesselRC {
         /* Warning is not really appropriate, give
              * proper limit:
              * ML_ERROR(ME_RANGE, "Y_bessel"); */
+        printer('range issue: x < DBL_MIN but still bigger then 1e8 x=(%d)', ex);
         ncalc = nb;
         if (ex > xlrg_BESS_Y) by[0] = 0.; /*was ML_POSINF */
         else if (ex < DBL_MIN) by[0] = ML_NEGINF;

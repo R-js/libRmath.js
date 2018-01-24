@@ -1,4 +1,4 @@
-
+import * as debug from 'debug';
 import { Rf_gamma_cody } from '../../gamma/gamma_cody';
 import { enmten_BESS, ensig_BESS, enten_BESS, exparg_BESS, nsig_BESS, rtnsig_BESS, xlrg_BESS_IJ } from '../bessel-constants';
 import { IBesselRC } from '../IBesselRC';
@@ -6,10 +6,12 @@ import { IBesselRC } from '../IBesselRC';
 const { sqrt, pow, min, max: fmax, exp, trunc } = Math;
 const { POSITIVE_INFINITY: ML_POSINF } = Number;
 
+const printer = debug('I_bessel');
+
 export function I_bessel(
-    x: number, 
-    alpha: number, 
-    nb: number, 
+    x: number,
+    alpha: number,
+    nb: number,
     ize: number
 ): IBesselRC {
     /* -------------------------------------------------------------------
@@ -272,7 +274,7 @@ export function I_bessel(
             en += 2.;
             bb = 0.;
             aa = 1. / p;
-            em =  n - 1.;
+            em = n - 1.;
             empal = em + nu;
             emp2al = em - 1. + twonu;
             sum = aa * empal * emp2al / em;
@@ -401,7 +403,9 @@ export function I_bessel(
                 else
                     bi2[n - 1] /= sum;
             }
-            return { x: bi2[nb - 1], nb, ncalc };
+            const rc = { x: bi2[nb - 1], nb, ncalc };
+            printer('normalize, devide all  Bi[N] by sum, result:%o', rc);
+            return rc;
         }
         else { /* small x  < 1e-4 */
             /* -----------------------------------------------------------
@@ -452,6 +456,8 @@ export function I_bessel(
     else { /* argument out of range */
         ncalc = min(nb, 0) - 1;
     }
-    return { x: bi2[nb - 1], nb, ncalc };
+    const rc = { x: bi2[nb - 1], nb, ncalc };
+    printer('drop off, result:%o', rc);
+    return rc;
 }
 

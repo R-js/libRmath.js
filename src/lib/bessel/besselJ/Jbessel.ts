@@ -115,13 +115,12 @@ export function J_bessel(x: number, alpha: number, nb: number): IBesselRC {
     let b2 = new Array(nb).fill(0);
 
     //START ints
-    let nend;
+    let i_nend;
     let nbmx;
     let i;
     let j;
-    let k;
     let l;
-    let m;
+    let i_m;
     let n;
     let nstart;
     //END ints 
@@ -191,10 +190,7 @@ export function J_bessel(x: number, alpha: number, nb: number): IBesselRC {
         return { x: 0, nb, ncalc };
     }
     let intxj = trunc(x);
-    /* Initialize result array to zero. */
-    for (i = 1; i <= nb; ++i)
-        b2[i - 1] = 0.;
-
+   
     /*===================================================================
       Branch into  3 cases :
       1) use 2-term ascending series for small X
@@ -251,10 +247,10 @@ export function J_bessel(x: number, alpha: number, nb: number): IBesselRC {
            ------------------------------------------------------------ */
         xc = sqrt(pi2 / x);
         xin = 1 / (64 * x * x);
-        if (x >= 130.) m = 4;
-        else if (x >= 35.) m = 8;
-        else m = 11;
-        xm = 4. * m;
+        if (x >= 130.) i_m = 4;
+        else if (x >= 35.) i_m = 8;
+        else i_m = 11;
+        xm = 4. * i_m;
         /* ------------------------------------------------
            Argument reduction for SIN and COS routines.
            ------------------------------------------------ */
@@ -267,7 +263,7 @@ export function J_bessel(x: number, alpha: number, nb: number): IBesselRC {
             s = (xm - 1. - gnu) * (xm - 1. + gnu) * xin * .5;
             t = (gnu - (xm - 3.)) * (gnu + (xm - 3.));
             t1 = (gnu - (xm + 1.)) * (gnu + (xm + 1.));
-            k = m + m;
+            let k = i_m + i_m;
             capp = s * t / fact[k];
             capq = s * t1 / fact[k + 1];
             xk = xm;
@@ -320,9 +316,9 @@ export function J_bessel(x: number, alpha: number, nb: number): IBesselRC {
                ---------------------------------------------------------- */
             tover = enten_BESS / ensig_BESS;
             nstart = intxj + 2;
-            nend = nb - 1;
+            i_nend = nb - 1;
             en = (nstart + nstart) - 2. + twonu;
-            for (k = nstart; k <= nend; ++k) {
+            for (let k = nstart; k <= i_nend; ++k) {
                 n = k;
                 en += 2.;
                 pold = plast;
@@ -357,8 +353,8 @@ export function J_bessel(x: number, alpha: number, nb: number): IBesselRC {
                     p = plast * tover;
                     --n;
                     en -= 2.;
-                    nend = min(nb, n);
-                    for (l = nstart; l <= nend; ++l) {
+                    i_nend = min(nb, n);
+                    for (l = nstart; l <= i_nend; ++l) {
                         pold = psavel;
                         psavel = psave;
                         psave = en * psavel / x - pold;
@@ -372,7 +368,7 @@ export function J_bessel(x: number, alpha: number, nb: number): IBesselRC {
                     break;
                 }//if
             }//for
-            n = nend;
+            n = i_nend;
             en = (n + n) + twonu;
             /* -----------------------------------------------------
                Calculate special significance test for NBMX > 2.
@@ -397,31 +393,30 @@ export function J_bessel(x: number, alpha: number, nb: number): IBesselRC {
         en += 2.;
         bb = 0.;
         aa = 1. / p;
-        m = n / 2;
-        em = m;
-        m = (n << 1) - (m << 2); /* = 2 n - 4 (n/2)
+        em = i_m = n >> 1; //integer devide by 2 with sign preservation 
+        i_m = (n << 1) - (i_m << 2); /* = 2 n - 4 (n/2)
                = 0 for even, 2 for odd n */
-        if (m === 0)
+        if (i_m === 0)
             sum = 0.;
         else {
             alpem = em - 1. + nu;
             alp2em = em + em + nu;
             sum = aa * alpem * alp2em / em;
         }
-        nend = n - nb;
+        i_nend = n - nb;
         /* if (nend > 0) */
         /* --------------------------------------------------------
            Recur backward via difference equation, calculating
            (but not storing) b[N], until N = NB.
            -------------------------------------------------------- */
-        for (l = 1; l <= nend; ++l) {
+        for (l = 1; l <= i_nend; ++l) {
             --n;
             en -= 2.;
             cc = bb;
             bb = aa;
             aa = en * bb / x - cc;
-            m = m ? 0 : 2; /* m = 2 - m failed on gcc4-20041019 */
-            if (m !== 0) {
+            i_m = i_m ? 0 : 2; /* m = 2 - m failed on gcc4-20041019 */
+            if (i_m !== 0) {
                 em -= 1.;
                 alp2em = em + em + nu;
                 if (n === 1)
@@ -441,7 +436,7 @@ export function J_bessel(x: number, alpha: number, nb: number): IBesselRC {
         let gotoL240 = false;
         let gotoL250 = false;
         for (let cnt = 1; cnt > 0; cnt--) {
-            if (nend >= 0) {
+            if (i_nend >= 0) {
                 if (nb <= 1) {
                     if (nu + 1. === 1.)
                         alp2em = 1.;
@@ -462,8 +457,8 @@ export function J_bessel(x: number, alpha: number, nb: number): IBesselRC {
                         break;
                     }
 
-                    m = m ? 0 : 2; /* m = 2 - m failed on gcc4-20041019 */
-                    if (m !== 0) {
+                    i_m = i_m ? 0 : 2; /* m = 2 - m failed on gcc4-20041019 */
+                    if (i_m !== 0) {
                         em -= 1.;
                         alp2em = em + em + nu;
                         alpem = em - 1. + nu;
@@ -484,8 +479,8 @@ export function J_bessel(x: number, alpha: number, nb: number): IBesselRC {
             for (n = n - 1; n >= 2; n--) {
                 en -= 2.;
                 b2[n - 1] = en * b2[n + 1 - 1] / x - b2[n + 2 - 1];
-                m = m ? 0 : 2; /* m = 2 - m failed on gcc4-20041019 */
-                if (m !== 0) {
+                i_m = i_m ? 0 : 2; /* m = 2 - m failed on gcc4-20041019 */
+                if (i_m !== 0) {
                     em -= 1.;
                     alp2em = em + em + nu;
                     alpem = em - 1. + nu;
