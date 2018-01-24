@@ -33,7 +33,7 @@ const proto = {
                 ]
             },
             // Tells ATL to use Babel
-            useBabel: true,
+            useBabel: false,
             // Cache output for quicker compilation
             useCache: true
         }, o)
