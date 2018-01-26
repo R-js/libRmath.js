@@ -47,6 +47,7 @@ import {
   div,
  // forceToArray,
   flatten,
+  isOdd,
   ISummary,
   map,
   mult,
@@ -62,19 +63,20 @@ import {
 export { ISummary };
 
 export const R = {
+  any,
   arrayrify,
+  asVector,
+  div,
+ // forceToArray,
   flatten,
-  //forceToArray,
+  isOdd,
   map,
+  mult,
+  multiplexer,
   numberPrecision,
   selector,
   seq,
   sum,
-  any,
-  div,
-  mult,
   summary,
-  Welch_Satterthwaite,
-  asVector,
-  multiplexer
+  Welch_Satterthwaite
 };

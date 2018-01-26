@@ -71,7 +71,7 @@ export function bessel_j(x: number, alpha: number): number  {
     alpha -= (nb - 1); // ==> alpha' in [0, 1)
     const rc = J_bessel(x, alpha, nb);
   
-    if (rc.ncalc !== rc.nb) {/* error input */
+    if (rc.ncalc !== nb) {/* error input */
       if (rc.ncalc < 0)
         printer('bessel_j(%d): ncalc (=%d) != nb (=%d); alpha=%d. Arg. out of range?',
           x, rc.ncalc, rc.nb, alpha);

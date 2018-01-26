@@ -79,7 +79,7 @@
           printer('bessel_i(%d): ncalc (=%d) != nb (=%d); alpha=%d. Arg. out of range?',
                   x, rc.ncalc, rc.nb, alpha);
           else
-          printer('bessel_i(%g,nu=%g): precision lost in result\n',
+          printer('bessel_i(%d,nu=%d): precision lost in result\n',
                   rc.x, alpha + rc.nb - 1);
       }
       x = rc.x; // bi[nb - 1];

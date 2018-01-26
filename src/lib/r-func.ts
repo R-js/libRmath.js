@@ -1,4 +1,4 @@
-const { abs, sign, floor, trunc } = Math;
+const { abs, sign, floor, trunc, max } = Math;
 const { isNaN } = Number;
 const { isArray } = Array;
 
@@ -6,6 +6,13 @@ import * as debug from 'debug';
 
 const printer_seq = debug('seq');
 const precision9 = numberPrecision(9);
+
+export function isOdd(n: number): boolean {
+  if (isFinite(n)){
+    return floor(n / 2) * 2 < n;
+  }
+  throw new Error(`Not a finite Number: ${n}`);
+}
 
 export const seq = (adjust = 0) => (adjustMin = adjust) => (
   start: number,
@@ -132,18 +139,21 @@ export function multiplexer(...rest: (any | any[])[]) {
     }
   }//for
   // find the longest array
-  const max = Math.max(...analyzed.map(a => a.length));
+  const _max = max(...analyzed.map(a => a.length));
 
-  return function(fn: (...rest: any[]) => void) {
-    for (let k = 0; k < max; k++) {
+  return function(fn: (...rest: any[]) => void): any|any[] {
+    const result: any[] = [];
+
+    for (let k = 0; k < _max; k++) {
       const result: any[] = [];
       for (let j = 0; j < analyzed.length; j++) {
         const arr: any[] = analyzed[j];
         const idx = k % arr.length;
         result.push(arr[idx]);
       }
-      fn(...result);
+      result.push(fn(...result));
     }
+    return possibleScalar(result);
   };
 }
 
