@@ -142,7 +142,7 @@ export function multiplexer(...rest: (any | any[])[]) {
   const _max = max(...analyzed.map(a => a.length));
 
   return function(fn: (...rest: any[]) => void): any|any[] {
-    const result: any[] = [];
+    const rc: any[] = [];
 
     for (let k = 0; k < _max; k++) {
       const result: any[] = [];
@@ -151,9 +151,9 @@ export function multiplexer(...rest: (any | any[])[]) {
         const idx = k % arr.length;
         result.push(arr[idx]);
       }
-      result.push(fn(...result));
+      rc.push(fn(...result));
     }
-    return possibleScalar(result);
+    return possibleScalar(rc);
   };
 }
 

@@ -75,10 +75,10 @@ export function bessel_y(x: number, alpha: number): number {
       return ML_POSINF;
     }
     else if (rc.ncalc < -1)
-      printer('bessel_y(%g): ncalc (=%d) != nb (=%d); alpha=%g. Arg. out of range?\n',
+      printer('bessel_y(%d): ncalc (=%d) != nb (=%d); alpha=%d. Arg. out of range?\n',
         rc.x, rc.ncalc, nb, alpha);
     else /* ncalc >= 0 */
-      printer('bessel_y(%g,nu=%g): precision lost in result\n',
+      printer('bessel_y(%d,nu=%d): precision lost in result\n',
         rc.x, alpha + nb - 1);
   }
   x = rc.x;
