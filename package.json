@@ -94,13 +94,13 @@
     "main": "dist/lib/libR.js",
     "module:disabled": "",
     "module:doc": "https://github.com/dherman/defense-of-dot-js/blob/master/proposal.md",
-    "name": "lib-r-math.js",
+    "name": "lib-r-math",
     "repository": {
         "type": "git",
         "url": "git+https://github.com/jacobbogers/libRmath.js.git"
     },
     "scripts": {
-        "DISABLEDstart": "cross-env DEBUGx=express-session,cookie node dist/server/server.js",
+        "DISABLED:start": "cross-env DEBUGx=express-session,cookie node dist/server/server.js",
         "build": "webpack  --progress --color --display-error-details --config config/webpack/config",
         "cleanup": "rimraf ./dist ./.nyc_output ./coverage ./.awcache ./report.txt",
         "coverage": "npm run coverage:test && npm run coverage:view",
