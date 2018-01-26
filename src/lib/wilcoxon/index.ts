@@ -17,6 +17,5 @@ export function Wilcoxon(rng: IRNG = new MersenneTwister(0)){
         pwilcox,
         qwilcox,
         rwilcox
-     //   WilcoxonCache
     };
 }
