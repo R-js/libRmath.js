@@ -73,6 +73,14 @@ export function arrayrify<T, R>(fn: (x: T, ...rest: any[]) => R) {
   };
 }
 
+export function multiplex(fn: (...rest: (any|any[])[]) => any){
+   
+  return function(...rest: (any|any[])[]){
+      return multiplexer(...rest)(fn);
+  };
+}
+
+
 /*export function forceToArray<T>(x: T | T[]): T[] {
   return Array.isArray(x) ? x.slice(0) : [x];
 }
@@ -142,7 +150,7 @@ export function multiplexer(...rest: (any | any[])[]) {
   // find the longest array
   const _max = max(...analyzed.map(a => a.length));
 
-  return function(fn: (...rest: any[]) => void): any|any[] {
+  return function(fn: (...rest: any[]) => any): any|any[] {
     const rc: any[] = [];
 
     for (let k = 0; k < _max; k++) {
