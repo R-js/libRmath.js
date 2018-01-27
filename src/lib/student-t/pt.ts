@@ -24,7 +24,7 @@
 
 import * as debug from 'debug';
 
-import { lbeta } from '../beta/lbeta';
+import { internal_lbeta } from '../beta/lbeta';
 import { pbeta } from '../beta/pbeta';
 import {
   M_LN2,
@@ -98,7 +98,7 @@ export function pt<T>(
       let lval;
       lval =
         -0.5 * n * (2 * log(fabs(x)) - log(n)) -
-        lbeta(0.5 * n, 0.5) -
+        internal_lbeta(0.5 * n, 0.5) -
         log(0.5 * n);
       val = log_p ? lval : exp(lval);
     } else {

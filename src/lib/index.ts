@@ -43,10 +43,11 @@ export const special = Object.freeze({
 import {
   any,
   arrayrify,
-  asVector,
+  //asVector,
   div,
  // forceToArray,
   flatten,
+  flatten as c, //alias
   isOdd,
   ISummary,
   map,
@@ -65,9 +66,8 @@ export { ISummary };
 export const R = {
   any,
   arrayrify,
-  asVector,
+  //asVector,
   div,
- // forceToArray,
   flatten,
   isOdd,
   map,
@@ -78,5 +78,6 @@ export const R = {
   seq,
   sum,
   summary,
-  Welch_Satterthwaite
+  Welch_Satterthwaite,
+  c
 };

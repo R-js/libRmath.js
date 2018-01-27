@@ -30,14 +30,19 @@
 
 import * as debug from 'debug';
 import { ME, ML_ERROR } from '../../common/_general';
+import { multiplexer } from '../../r-func';
+import { boolVector, numVector } from '../../types';
 import { K_bessel } from './Kbessel';
-
 
 const { isNaN: ISNAN } = Number;
 const { floor } = Math;
 const printer = debug('bessel_k');
 
-export function bessel_k(x: number, alpha: number, expo: boolean = false): number {
+export function bessel_k(_x: numVector, _alpha: numVector, _expo: boolVector): numVector {
+  return multiplexer(_x, _alpha, _expo)((x, alpha, expo) => internal_bessel_k(x, alpha, expo));
+}
+
+export function internal_bessel_k(x: number, alpha: number, expo: boolean = false): number {
   let nb;
   let ize;
 
@@ -68,8 +73,6 @@ export function bessel_k(x: number, alpha: number, expo: boolean = false): numbe
         rc.x, alpha + rc.nb - 1);
   }
   x = rc.x; // bk[nb - 1];
-
-
   return x;
 }
 

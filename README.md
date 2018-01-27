@@ -70,7 +70,7 @@ npm install --save lib-r-math
   * [Wilcoxon rank sum statistic distribution](#wilcoxon-rank-sum-statistic-distribution)
 * [Special Functions of Mathematics](#special-functions-of-mathematics)
   * [Bessel functions](#bessel-functions)
-  * [TODO:Beta functions](#beta-functions)
+  * [Beta functions](#beta-functions)
   * [TODO:Gamma functions](#gamma-functions)
   * [TODO:Functions for working with Combinatorics](#functions-for-working-with-combinatorics)
 * [TODO:Road map](#road-map)
@@ -8001,8 +8001,9 @@ _typescript decl_
 
 ```typescript
 declare function besselJ(
-  x: number,
-  nu: number): number;
+  x: number|number[],
+  nu: number|number[]
+): number|number[];
 ```
 
 * `x`: input value x ≥ 0.
@@ -8014,25 +8015,18 @@ Usage:
 const libR = require('lib-r-math');
 const {
     special: { besselJ, besselK, besselI, besselY },
-    R: { map }
+    R: { map, numberPrecision, flatten:c }
 } = libR;
 
-//create testdata
-const dataJ = 
-[ { x: 1, nu: 11.02 },
-  { x: 7.389, nu: 0.1353 },
-  { x: 20.09, nu: 0.4066 },
-  { x: 7.389, nu: 54.6 },
-  { x: 403.4, nu: 63.43 },
-  { x: 1097, nu: 73.7 },
-  { x: 0.3679, nu: -3.669 },
-  { x: 8103, nu: -0.4066 },
-  { x: 22030, nu: -1.221 },
-  { x: 0.04979, nu: -63.43 },
-  { x: 7.389, nu: -54.6 },
-  { x: 1097, nu: -73.7 } ];
+const precision9 = numberPrecision(9);
 
-map(dataJ)(o=> besselJ(o.x, o.nu));
+let xJ = c(1, 7.389, 20.09, 7.389, 403.4, 1097,
+    0.3679, 8103, 22030, 0.04979, 7.389, 1097);
+
+let nuJ = c(11.02, 0.1353, 0.4066, 54.6, 63.43, 73.7,
+ -3.669, -0.4066, -1.221, -63.43, -54.6, -73.7);
+
+const bJ = precision9(besselJ(xJ, nuJ));
 /*[
   1.12519947e-11,  0.291974134,     0.174941202,    2.98608934e-42,
   0.0397764164,   -0.0222595064,    -557.732938,    -0.00685960111,
@@ -8062,9 +8056,9 @@ _typescript decl_
 
 ```typescript
 export function besselY(
-  x: number,
-  nu: number
-): number;
+  x: number|number[],
+  nu: number|number[]
+): number|number[];
 ```
 
 * `x`: input value x ≥ 0.
@@ -8076,26 +8070,16 @@ Usage:
 const libR = require('lib-r-math');
 const {
     special: { besselJ, besselK, besselI, besselY },
-    R: { map, numberPrecision }
+    R: { map, numberPrecision, flatten:c }
 } = libR;
 
 const precision9 = numberPrecision(9);
 
-const dataY = 
-[ { x: 0.1353, nu: 1.221 },
-  { x: 148.4, nu: 3.669 },
-  { x: 22030, nu: 1.221 },
-  { x: 20.09, nu: 63.43 },
-  { x: 403.4, nu: 63.43 },
-  { x: 1097, nu: 73.7 },
-  { x: 0.1353, nu: -1.221 },
-  { x: 2.718, nu: -33.12 },
-  { x: 2981, nu: -0.1353 },
-  { x: 1, nu: -63.43 },
-  { x: 8103, nu: -63.43 },
-  { x: 22030, nu: -73.7 } ];
+let xY = c(0.1353, 148.4, 22030, 20.09, 403.4, 1097, 0.1353, 2.718, 2981, 1, 8103, 22030);
+let nuY = c(1.221, 3.669, 1.221, 63.43, 63.43,
+    73.7, -1.221, -33.12, -0.1353, -63.43, -63.43, -73.7);
 
-precision9( map(dataY)(o=> besselY(o.x, o.nu)) );
+const bY = precision9(besselY(xY, nuY));
 /*[
   -7.91004116,      -0.0327873748,   -0.00537461924,
   -8.53963626e+22,  0.0039810489,     0.00928204725,
@@ -8107,12 +8091,12 @@ _Equivalent in R_
 
 ```R
 #data
-x = c(0.1353, 148.4, 22030, 20.09, 403.4, 1097, 0.1353, 2.718, 2981, 1, 8103, 22030);
-nu = c(1.221, 3.669,  1.221, 63.43, 63.43,
+xY = c(0.1353, 148.4, 22030, 20.09, 403.4, 1097, 0.1353, 2.718, 2981, 1, 8103, 22030);
+nuY = c(1.221, 3.669,  1.221, 63.43, 63.43,
 73.7, -1.221, -33.12, -0.1353, -63.43, -63.43, -73.7);
 
 #1
-besselY(x, nu);
+besselY(xY, nuY);
 # [1]  -7.91004116e+00  -3.27873748e-02  -5.37461924e-03  -8.53963626e+22
 # [5]   3.98104890e-03   9.28204725e-03   6.05755099e+00   4.84943314e+30
 # [9]   1.18386468e-02  1.61596294e+104   5.00459988e-03  -1.01862107e-04
@@ -8126,9 +8110,9 @@ _typescript decl_
 
 ```typescript
 declare function besselI(
-  x: number,
-  nu: number,
-  expo: boolean = false
+  x: number|number[],
+  nu: number|number[],
+  expo: boolean|boolean[] = false
 ): number;
 ```
 
@@ -8142,27 +8126,19 @@ Usage:
 const libR = require('lib-r-math');
 const {
     special: { besselJ, besselK, besselI, besselY },
-    R: { map, numberPrecision }
+    R: { map, numberPrecision, flatten:c }
 } = libR;
 
 const precision9 = numberPrecision(9);
 
-const dataI =
-[ { x: 0.3679, nu: 3.669 },
-  { x: 1, nu: 11.02 },
-  { x: 22030, nu: 1.221 },
-  { x: 0.04979, nu: 63.43 },
-  { x: 54.6, nu: 73.7 },
-  { x: 403.4, nu: 63.43 },
-  { x: 0.04979, nu: -0.4066 },
-  { x: 2981, nu: -0.1353 },
-  { x: 8103, nu: -0.4066 },
-  { x: 0.1353, nu: -73.7 },
-  { x: 0.3679, nu: -54.6 },
-  { x: 2.718, nu: -73.7} ];
+//just to show parameter combinations
+let xI = c(0.3679, 1, 22030,  0.04979,  54.6,  403.4,
+  0.04979,  2981,  8103, 0.1353, 0.3679, 2.718);
+let nuI = c(3.669, 11.02, 1.221, 63.43, 73.7, 63.43,
+  -0.4066, -0.1353, -0.4066, -73.7, -54.6, -73.7);
 
 // besselI doesnt take vactorized input like R counterpart. So we use a map
-precision9( map(dataI)(o => besselI(o.x,o.nu, true)) );
+const bI = precision9(  besselI(xI, nuI, true)  );
 /*[
   0.0000947216027,  4.31519634e-12,  0.00268776062,     1.48153081e-190,
   1.82886482e-21,   0.000136207159,  2.8416423,         0.00730711526,
@@ -8172,12 +8148,12 @@ precision9( map(dataI)(o => besselI(o.x,o.nu, true)) );
 _Equivalent in R_
 
 ```R
-x=c(0.3679, 1, 22030,  0.04979,  54.6,  403.4,
+xI=c(0.3679, 1, 22030,  0.04979,  54.6,  403.4,
   0.04979,  2981,  8103, 0.1353, 0.3679, 2.718);
-nu=c(3.669, 11.02, 1.221, 63.43, 73.7, 63.43,
+nuI=c(3.669, 11.02, 1.221, 63.43, 73.7, 63.43,
   -0.4066, -0.1353, -0.4066, -73.7, -54.6, -73.7);
 
-besselI(x,nu,TRUE)
+besselI(xI, nuI, TRUE)
 # [1]   9.47216027e-05   4.31519634e-12   2.68776062e-03  1.48153081e-190
 # [5]   1.82886482e-21   1.36207159e-04   2.84164230e+00   7.30711526e-03
 # [9]   4.43189452e-03 -4.48726014e+190  1.37338633e+110  -3.10304642e+93
@@ -8191,9 +8167,9 @@ _typescript decl_
 
 ```typescript
 declare function besselK(
-  x: number,
-  nu: number,
-  expo: boolean = false
+  x: number|number[],
+  nu: number|number[],
+  expo: boolean|boolean[] = false
 ): number;
 ```
 
@@ -8201,32 +8177,27 @@ declare function besselK(
 * `nu`: order, (may be fractional!)
 * `expo`: if TRUE, the results are scaled in order to avoid underflow `exp(x)*BesselK(x;nu)`.
 
+_**Note:** if `x`, `nu`, or `expo` are arrays or (scalar/array combinations)
+of unequal length then R argument cycling rules apply._
+
 Usage:
 
 ```javascript
 const libR = require('lib-r-math');
 const {
     special: { besselJ, besselK, besselI, besselY },
-    R: { map, numberPrecision }
+    R: { map, numberPrecision, flatten:c }
 } = libR;
 
 const precision9 = numberPrecision(9);
 
-const dataK =
-[ { x: 0.3679, nu: 3.669 },
-  { x: 2.718, nu: 33.12 },
-  { x: 403.4, nu: 11.02 },
-  { x: 1, nu: 63.43 },
-  { x: 54.6, nu: 73.7 },
-  { x: 2981, nu: 54.6 },
-  { x: 0.3679, nu: -3.669 },
-  { x: 148.4, nu: -3.669 },
-  { x: 22030, nu: -1.221 },
-  { x: 0.1353, nu: -73.7 },
-  { x: 2.718, nu: -73.7 },
-  { x: 148.4, nu: -54.6 } ]
+let xK=c(0.3679,  2.718,  403.4,  1,  54.6,  2981,  0.3679,  148.4,
+  22030,  0.1353,  2.718,  148.4 );
 
-precision9( map(dataK)(o => besselK(o.x,o.nu, true)) );
+let nuK= c(3.669, 33.12, 11.02, 63.43, 73.7, 54.6, -3.669, -3.669,
+ -1.221, -73.7, -73.7, -54.6);
+
+const bK = precision9(  besselK(xK, nuK, true)  );
 /*[
   1430.97872,     1.10637213e+32,  0.0725008692,    3.13780349e+105,
   2.98065514e+18, 0.0378422686,    1430.97872,      0.107549709,
@@ -8238,16 +8209,114 @@ _Equivalent in R_
 
 ```R
 options(digits=9)
-x=c(0.3679,  2.718,  403.4,  1,  54.6,  2981,  0.3679,  148.4,
+xK=c(0.3679,  2.718,  403.4,  1,  54.6,  2981,  0.3679,  148.4,
   22030,  0.1353,  2.718,  148.4 );
-nu= c(3.669, 33.12, 11.02, 63.43, 73.7, 54.6, -3.669, -3.669, -1.221, -73.7, -73.7, -54.6);
+nuK= c(3.669, 33.12, 11.02, 63.43, 73.7, 54.6, -3.669, -3.669, -1.221, -73.7, -73.7, -54.6);
 
 #1
-besselK(x,nu, TRUE);
+besselK(xK, nuK, TRUE);
 # [1]  1.43097872e+03  1.10637213e+32  7.25008692e-02 3.13780349e+105
 # [5]  2.98065514e+18  3.78422686e-02  1.43097872e+03  1.07549709e-01
 # [9]  8.44432462e-03 1.14199333e+191  1.38285074e+96  2.05665995e+03
 ```
 
+### Beta functions
+
+`beta, lbeta`
+
+The functions `beta` and `lbeta` return the [beta function](https://en.wikipedia.org/wiki/Beta_function) and the natural logarithm of the beta function.
+See [R doc](https://stat.ethz.ch/R-manual/R-devel/library/base/html/Special.html).
+
+#### `beta`
+
+The beta function defined for postive `x` and `y` by:
+
+$$ \mathrm {B}(x,y) = \frac{ \Gamma(x) \cdot \Gamma(y)}{\Gamma(x+y)} $$
+
+_typescript decl_
+
+```typescript
+declare function beta(
+  a: number | number[],
+  b: number | number[]
+): number | number[];
+```
+
+* `a`: non-negative (scalar or array). See [wiki](https://en.wikipedia.org/wiki/Beta_function)
+* `b`: non-negative (scalar or array). See [wiki](https://en.wikipedia.org/wiki/Beta_function)
+
+Usage:
+
+```javascript
+const {
+    special: { beta, lbeta },
+    R: { flatten: c }
+} = libR;
+
+//1
+const b1 = beta(4, 5);
+//0.0035714285714285718
+
+//2
+const b2 = beta(c(0.5, 100), c(0.25, 50));
+//[ 5.24411510858424, 1.49041211109555e-42 ]
+```
+
+_Equivalence in R_
+
+```R
+#1
+beta(4, 5);
+#[1] 0.00357142857
+
+#2
+beta(c(0.5, 100), c(0.25, 50));
+#[1] 5.24411511e+00 1.49041211e-42
+```
+
+#### `lbeta`
+
+The natural logarithm of the [beta function](#beta).
+
+_typescript decl_
+
+```typescript
+declare function lbeta(
+  a: number | number[],
+  b: number | number[]
+): number | number[];
+```
+
+* `a`: non-negative (scalar or array). See [wiki](https://en.wikipedia.org/wiki/Beta_function)
+* `b`: non-negative (scalar or array). See [wiki](https://en.wikipedia.org/wiki/Beta_function)
+
+Usage:
+
+```javascript
+const {
+    special: { beta, lbeta },
+    R: { flatten: c }
+} = libR;
+
+//1
+const lb1 = lbeta(4, 5);
+//-5.634789603169249
+
+//2
+const lb2 = lbeta(c(0.5, 100), c(0.25, 50));
+//[1.6571065161914822, -96.30952123940715]
+```
+
+_Equivalence in R_
+
+```R
+#1
+lbeta(4, 5);
+#[1] -5.6347896
+
+#2
+lbeta(c(0.5, 100), c(0.25, 50))
+#[1]   1.65710652 -96.30952124
+```
 
 

@@ -2,7 +2,7 @@
 import { rchisq } from '../chi-2/rchisq';
 import { rnchisq } from '../chi-2/rnchisq';
 import { seq } from '../r-func';
-import { arrayrify, forceToArray, possibleScalar } from '../r-func';
+import { arrayrify, multiplexer, possibleScalar } from '../r-func';
 import { Inversion, IRNGNormal } from '../rng/normal';
 //
 import { df as _df } from './df';
@@ -98,10 +98,10 @@ export function FDist(rng: IRNGNormal = new Inversion()) {
     
     const div = arrayrify((a: number, b: number) => a / b);
 
-    const numerator = forceToArray(div(rnchisq(n, df1, ncp, rng), df1));
-    const denominator = forceToArray(div(rchisq(n, df2, rng), df2));
+    const numerator = div(rnchisq(n, df1, ncp, rng), df1);
+    const denominator = div(rchisq(n, df2, rng), df2);
 
-    return possibleScalar(numerator.map((x1, i) => x1 / denominator[i]));
+    return multiplexer(numerator, denominator)((x1, d) => x1 / d);
   }
 
   return {

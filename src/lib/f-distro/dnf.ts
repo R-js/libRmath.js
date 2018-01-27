@@ -109,7 +109,7 @@ export function dnf<T>(
     }
 
     y = df1 / df2 * x;
-    z = dnbeta(y / (1 + y), df1 / 2, df2 / 2, ncp, giveLog);
+    z = dnbeta(y / (1 + y), df1 / 2, df2 / 2, ncp, giveLog) as number;
     return giveLog
       ? z + log(df1) - log(df2) - 2 * log1p(y)
       : z * (df1 / df2) / (1 + y) / (1 + y);

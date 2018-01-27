@@ -55,13 +55,13 @@ import { isOdd } from '../common/_general';
 const { abs: fabs, log, exp, round } = Math;
 const { isInteger, NEGATIVE_INFINITY: ML_NEGINF, isNaN: ISNAN } = Number;
 
-import { lbeta } from '../beta/lbeta';
+import { internal_lbeta } from '../beta/lbeta';
 import { lgammafn } from '../gamma/lgamma_fn';
 import { lgammafn_sign } from '../gamma/lgammafn_sign';
 
 // used by "qhyper"
 function lfastchoose(n: number, k: number) {
-  return -log(n + 1) - lbeta(n - k + 1, k + 1);
+  return -log(n + 1) - internal_lbeta(n - k + 1, k + 1);
 }
 /* mathematically the same:
    less stable typically, but useful if n-k+1 < 0 : */

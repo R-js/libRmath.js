@@ -1,5 +1,5 @@
 import { special } from '../gamma';
-import { any, arrayrify, forceToArray, sum } from '../r-func';
+import { any, arrayrify, flatten , sum } from '../r-func';
 const { isFinite } = Number;
 
 const div = arrayrify((a: number, b: number) => a / b);
@@ -20,15 +20,15 @@ export function dmultinom(
   // init
   // first prob and x must have the same length
   o.asLog = !!o.asLog;
-  let x: number[] = forceToArray(o.x).filter(f => !!f) as any;
+  let x: number[] = flatten(o.x).filter(f => !!f) as any;
   //
-  let prob: number[] = forceToArray(o.prob) as any;
+  let prob: number[] = flatten(o.prob) as any;
   let badProb = !!prob.find(f => !isFinite(f) || f < 0);
   let s = sum(prob);
   if (badProb || s === 0) {
     throw new Error('probabilities must be finite, non-negative and not all 0');
   }
-  prob = forceToArray(div(prob, s));
+  prob = flatten(div(prob, s));
   x = x.map(Math.round);
   if (any(x)(v => v < 0)) {
     throw new Error('probabilities must be finite, non-negative and not all 0');

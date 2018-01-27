@@ -1,7 +1,7 @@
 //
 import { rchisq } from '../chi-2/rchisq';
 import { rnorm } from '../normal/rnorm';
-import { arrayrify, forceToArray } from '../r-func';
+import { arrayrify, flatten } from '../r-func';
 import { IRNGNormal } from '../rng/normal/inormal-rng';
 import { Inversion } from '../rng/normal/inversion';
 //
@@ -60,8 +60,8 @@ export function StudentT(rng: IRNGNormal = new Inversion()) {
       const div = arrayrify((a: number, b: number) => a / b);
       const sqrt = arrayrify(Math.sqrt);
 
-      const norm = forceToArray(rnorm(n, ncp, 1, rng)); // bleed this first from rng
-      const chisq = forceToArray(
+      const norm = flatten(rnorm(n, ncp, 1, rng)); // bleed this first from rng
+      const chisq = flatten(
         sqrt(
           div(
             rchisq(n, df, rng), 

@@ -44,7 +44,7 @@ import * as debug from 'debug';
 const { isFinite: R_FINITE } = Number;
 const { abs: fabs } = Math;
 
-import { forceToArray, possibleReduceDim, seq, sum } from 'src/lib/r-func';
+import { flatten, possibleScalar, seq, sum } from 'src/lib/r-func';
 import { rbinom } from '../binomial/rbinom';
 import { IRNG } from '../rng/irng';
 
@@ -58,7 +58,7 @@ export function rmultinom(
   rng: IRNG
 ): (number[]) | (number[][]) {
   const result = sequence(n).map(() => _rmultinom(size, prob, rng ));
-  return possibleReduceDim(result);
+  return possibleScalar(result);
 }
 
 //workhorse
@@ -71,7 +71,7 @@ function _rmultinom(
      *  where rN[j] ~ Bin(n, prob[j]) ,  sum_j rN[j] == n,  sum_j prob[j] == 1,
      */
   const rN: number[] = [];
-  let p = forceToArray(prob);
+  let p = flatten(prob);
   const K = p.length;
   //let pp;
   /* This calculation is sensitive to exact values, so we try to

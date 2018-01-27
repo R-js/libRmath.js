@@ -19,7 +19,7 @@ import { rgamma as _rgamma } from './rgamma';
 import { Inversion, IRNGNormal } from '../rng/normal';
 
 //special
-import { forceToArray, possibleScalar } from 'src/lib/r-func';
+import { multiplexer } from 'src/lib/r-func';
 import { gammafn } from './gamma_fn';
 import { lgammafn } from './lgamma_fn';
 import {
@@ -96,7 +96,7 @@ export function Gamma(norm: IRNGNormal = new Inversion()) {
       return _dgamma(x, shape, _scale, asLog);
     }
     printer_d('Cannot normalize to [scale]');
-    return possibleScalar(forceToArray(x).fill(NaN));
+    return multiplexer(x)(() => NaN);
   }
 
   const printer_p = debug('pgamma');
@@ -114,7 +114,7 @@ export function Gamma(norm: IRNGNormal = new Inversion()) {
       return _pgamma(q, shape, _scale, lowerTail, logP);
     }
     printer_p('Cannot normalize to [scale]');
-    return possibleScalar(forceToArray(q).fill(NaN));
+    return multiplexer(q)(() => NaN);
   }
 
   const printer_q = debug('qgamma');
@@ -133,7 +133,7 @@ export function Gamma(norm: IRNGNormal = new Inversion()) {
       return _qgamma(q, shape, _scale, lowerTail, logP);
     }
     printer_q('Cannot normalize to [scale]');
-    return possibleScalar(forceToArray(q).fill(NaN));
+    return multiplexer(q)(() => NaN);
   }
 
   const printer_r = debug('rgamma');

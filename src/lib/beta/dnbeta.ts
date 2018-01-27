@@ -54,35 +54,34 @@
  * and then sums outwards to both sides from the 'mid'.
  */
 import * as debug from 'debug';
-
 import {
   ML_ERR_return_NAN,
   R_D__0,
   R_D_exp
 } from '../common/_general';
+import { dpois_raw } from '../poisson/dpois';
+import { multiplexer } from '../r-func';
+import { boolVector, numVector } from '../types';
+import { dbeta } from './dbeta';
 
-const { log, sqrt, ceil} = Math;
+
+const { log:ln, sqrt, ceil } = Math;
 const { isNaN: ISNAN, isFinite: R_FINITE } = Number;
 const printer = debug('dnbeta');
 
-import { dbeta } from './dbeta';
+//also used by f-distriution
+export function dnbeta(
+  _x: numVector,
+  _shape1: numVector,
+  _shape2: numVector,
+  _ncp: numVector,
+  _asLog: boolVector): numVector {
 
-import { dpois_raw } from '../poisson/dpois';
-
-//used by f-distriution
-
-export function dnbeta<T>(
-    xx: T,
-    shape1: number = 0.5,
-    shape2: number = 0.5,
-    ncp: number = 0,
-    log: boolean): T
-    {
-        const fa: number[] = Array.isArray(xx) ? xx :[xx] as any;
-        const result = fa.map( x => _dnbeta(x, shape1, shape2, ncp, log));
-        
-        return result.length === 1 ? result[0] : result as any;
-    }
+  return multiplexer(_x, _shape1, _shape2, _ncp, _asLog)(
+    function(x: number, shape1, shape2, ncp, asLog){
+      return _dnbeta(x, shape1, shape2, ncp, asLog);
+    }) ;
+}
 
 function _dnbeta(
   x: number,
@@ -119,7 +118,7 @@ function _dnbeta(
     return R_D__0(give_log);
   }
   if (ncp === 0) {
-    return dbeta(x, a, b, give_log);
+    return dbeta(x, a, b, give_log) as number;
   }
   /* New algorithm, starting with *largest* term : */
   ncp2 = 0.5 * ncp;
@@ -167,5 +166,5 @@ function _dnbeta(
     sum += term;
   } while (term > sum * eps);
 
-  return R_D_exp(give_log, p_k + log(sum));
+  return R_D_exp(give_log, p_k + ln(sum));
 }

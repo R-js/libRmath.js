@@ -73,16 +73,17 @@ export function arrayrify<T, R>(fn: (x: T, ...rest: any[]) => R) {
   };
 }
 
-export function forceToArray<T>(x: T | T[]): T[] {
+/*export function forceToArray<T>(x: T | T[]): T[] {
   return Array.isArray(x) ? x.slice(0) : [x];
 }
 export { forceToArray as asVector };
+*/
 
 function possibleScalar<T>(x: T[]): T | T[] {
   return x.length === 1 ? x[0] : x;
 }
 
-export { possibleScalar, possibleScalar as possibleReduceDim };
+export { possibleScalar };
 
 function coerceToArray(o: any): { key: string | number, val: any }[] {
   if (o === null || o === undefined) {
@@ -114,10 +115,12 @@ export function multiplexer(...rest: (any | any[])[]) {
 
   for (let k = 0; k < rest.length; k++) {
     const arg = rest[k];
-    if (arg === undefined || arg === null) {
-      continue; //skip
+    // null is special
+    if (arg === null) {
+      analyzed.push([arg]);
+      continue; 
     }
-    if (typeof arg === 'number') {
+    if (['undefined', 'boolean', 'number'].indexOf(typeof arg) >= 0){
       analyzed.push([arg]);
       continue;
     }
@@ -198,7 +201,7 @@ export function any<T>(x: T[]) {
 }
 
 export function sum(x: number[]) {
-  return forceToArray(x).reduce((sum, v) => (sum += v), 0);
+  return flatten(x).reduce((sum, v) => (sum += v), 0);
 }
 
 export const div = arrayrify((a: number, b) => a / b);
@@ -290,7 +293,7 @@ export function summary(x: number[]): ISummary {
 
 export function Welch_Satterthwaite(s: number[], n: number[]): number {
 
-  const elts = forceToArray(map(s)((_s, i) => {
+  const elts = flatten(map(s)((_s, i) => {
     return _s * _s / n[i as number];
   }));
   const dom = elts.map((e, i) => e * e / (n[i as number] - 1));

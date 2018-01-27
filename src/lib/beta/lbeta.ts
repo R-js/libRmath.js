@@ -44,6 +44,7 @@ import { M_LN_SQRT_2PI, ML_ERR_return_NAN } from '../common/_general';
 import { gammafn } from '../gamma/gamma_fn';
 import { lgammafn } from '../gamma/lgamma_fn';
 import { lgammacor } from '../gamma/lgammacor';
+import { multiplexer }  from '../r-func';
 
 const { log, log1p } = Math;
 
@@ -56,7 +57,11 @@ const {
 
 const printer = debug('lbeta');
 
-export function lbeta(a: number, b: number): number {
+export function lbeta(_a: number | number[], _b: number|number[]): number|number[] {
+  return multiplexer(_a, _b)((a, b) => internal_lbeta(a, b));
+} 
+
+export function internal_lbeta(a: number, b: number): number {
   let corr: number;
   let p: number;
   let q: number;
