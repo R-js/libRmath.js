@@ -41,7 +41,7 @@ npm install --save lib-r-math
 
 # Table of Contents
 
-* [TODO: Improvements on R](#Improvements-on-R)
+* [TODO: Differences with R](#differences-with-R)
 * [Helper functions for porting R programs](#helper-functions-for-porting-r-programs)
 * [Uniform Pseudo Random Number Generators](#uniform-pseudo-random-number-generators)
 * [Normal Random Number Generators](#normal-distributed-random-number-generators)
@@ -7092,6 +7092,13 @@ declare function ptukey(
 ): number|number[]
 ```
 
+* `q`: number of random deviates to generate.
+* `nmeans`: sample size for range (same for each group).
+* `df`: degrees of freedom of S². 
+* `nranges`: number of groups whose maximum range is considered.
+* `lowerTail`: if TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
+* `logP`: if TRUE, probabilities p are given as log(p).
+
 Usage:
 
 ```javascript
@@ -7127,7 +7134,7 @@ _typescript decl_
 
 ```typescript
 declare function qtukey(
-    q: number|number[],
+    p: number|number[],
     nmeans: number,
     df: number,
     nranges: number = 1,
@@ -7135,6 +7142,13 @@ declare function qtukey(
     logP: boolean = false
 ): number|number[]
 ```
+
+* `q`: probabilities.
+* `nmeans`: sample size for range (same for each group).
+* `df`: degrees of freedom of S². 
+* `nranges`: number of groups whose maximum range is considered.
+* `lowerTail`: if TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
+* `logP`: if TRUE, probabilities p are given as log(p).
 
 Usage:
 
@@ -7791,6 +7805,8 @@ precision(p3);
 _Equivalent in R_
 
 ```R
+options(scipen=999)
+options(digits=9)
 q = seq(0, 10, 2)^2;
 #[1]   0   4  16  36  64 100
 
@@ -7977,9 +7993,9 @@ const {
 
 #### `besselJ`
 
-Bessel function of first kind.
+[Bessel function](https://en.wikipedia.org/wiki/Bessel_function) of first kind. See [R doc](https://stat.ethz.ch/R-manual/R-devel/library/base/html/Bessel.html).
 
-**Warning:** It does not accept vectorized input arguments like in R.
+**Warning:** `besselJ` does not accept vectorized input arguments like in R.
 
 _typescript decl_
 
@@ -7998,14 +8014,240 @@ Usage:
 const libR = require('lib-r-math');
 const {
     special: { besselJ, besselK, besselI, besselY },
-    R: { seq: _seq, numberPrecision, mult, multiplexer }
+    R: { map }
 } = libR;
 
-//helper functions
-const seq = _seq()();
-const precision = numberPrecision(9);
-
 //create testdata
+const dataJ = 
+[ { x: 1, nu: 11.02 },
+  { x: 7.389, nu: 0.1353 },
+  { x: 20.09, nu: 0.4066 },
+  { x: 7.389, nu: 54.6 },
+  { x: 403.4, nu: 63.43 },
+  { x: 1097, nu: 73.7 },
+  { x: 0.3679, nu: -3.669 },
+  { x: 8103, nu: -0.4066 },
+  { x: 22030, nu: -1.221 },
+  { x: 0.04979, nu: -63.43 },
+  { x: 7.389, nu: -54.6 },
+  { x: 1097, nu: -73.7 } ];
 
-
+map(dataJ)(o=> besselJ(o.x, o.nu));
+/*[
+  1.12519947e-11,  0.291974134,     0.174941202,    2.98608934e-42,
+  0.0397764164,   -0.0222595064,    -557.732938,    -0.00685960111,
+  -0.00352068533, -3.14515803e+187, 1.87402835e+39, -0.00557447564 ]*/
 ```
+
+_Equivalent in R_
+
+```R
+# define data
+x = c(1, 7.389, 20.09, 7.389, 403.4, 1097, 0.3679, 8103, 22030, 0.04979, 7.389, 1097);
+nu = c(11.02, 0.1353, 0.4066, 54.6, 63.43, 73.7, -3.669, -0.4066, -1.221, -63.43, -54.6, -73.7);
+
+besselJ(x,nu);
+# [1]   1.12519947e-11   2.91974134e-01   1.74941202e-01   2.98608934e-42
+# [5]   3.97764164e-02  -2.22595064e-02  -5.57732938e+02  -6.85960111e-03
+# [9]  -3.52068533e-03 -3.14515803e+187   1.87402835e+39  -5.57447564e-03
+```
+
+#### `besselY`
+
+[Bessel function](https://en.wikipedia.org/wiki/Bessel_function) of the second kind. See [R doc](https://stat.ethz.ch/R-manual/R-devel/library/base/html/Bessel.html).
+
+**Warning:** `BesselY` does not accept vectorized input arguments like in R.
+
+_typescript decl_
+
+```typescript
+export function besselY(
+  x: number,
+  nu: number
+): number;
+```
+
+* `x`: input value x ≥ 0.
+* `nu`: order, (may be fractional!)
+
+Usage:
+
+```javascript
+const libR = require('lib-r-math');
+const {
+    special: { besselJ, besselK, besselI, besselY },
+    R: { map, numberPrecision }
+} = libR;
+
+const precision9 = numberPrecision(9);
+
+const dataY = 
+[ { x: 0.1353, nu: 1.221 },
+  { x: 148.4, nu: 3.669 },
+  { x: 22030, nu: 1.221 },
+  { x: 20.09, nu: 63.43 },
+  { x: 403.4, nu: 63.43 },
+  { x: 1097, nu: 73.7 },
+  { x: 0.1353, nu: -1.221 },
+  { x: 2.718, nu: -33.12 },
+  { x: 2981, nu: -0.1353 },
+  { x: 1, nu: -63.43 },
+  { x: 8103, nu: -63.43 },
+  { x: 22030, nu: -73.7 } ];
+
+precision9( map(dataY)(o=> besselY(o.x, o.nu)) );
+/*[
+  -7.91004116,      -0.0327873748,   -0.00537461924,
+  -8.53963626e+22,  0.0039810489,     0.00928204725,
+  6.05755099,       4.84943314e+30,   0.0118386468,
+  1.61596294e+104,  0.00500459988,  -0.000101862107 ]*/
+```
+
+_Equivalent in R_
+
+```R
+#data
+x = c(0.1353, 148.4, 22030, 20.09, 403.4, 1097, 0.1353, 2.718, 2981, 1, 8103, 22030);
+nu = c(1.221, 3.669,  1.221, 63.43, 63.43,
+73.7, -1.221, -33.12, -0.1353, -63.43, -63.43, -73.7);
+
+#1
+besselY(x, nu);
+# [1]  -7.91004116e+00  -3.27873748e-02  -5.37461924e-03  -8.53963626e+22
+# [5]   3.98104890e-03   9.28204725e-03   6.05755099e+00   4.84943314e+30
+# [9]   1.18386468e-02  1.61596294e+104   5.00459988e-03  -1.01862107e-04
+```
+
+#### `besselI`
+
+Modified Bessel functions of first kind. See [R doc](https://stat.ethz.ch/R-manual/R-devel/library/base/html/Bessel.html).
+
+_typescript decl_
+
+```typescript
+declare function besselI(
+  x: number,
+  nu: number,
+  expo: boolean = false
+): number;
+```
+
+* `x`: input value x ≥ 0.
+* `nu`: order, (may be fractional!)
+* `expo`: if TRUE, the results are scaled in order to avoid overflow `exp(-x)*BesselI(x;nu)`.
+
+Usage:
+
+```javascript
+const libR = require('lib-r-math');
+const {
+    special: { besselJ, besselK, besselI, besselY },
+    R: { map, numberPrecision }
+} = libR;
+
+const precision9 = numberPrecision(9);
+
+const dataI =
+[ { x: 0.3679, nu: 3.669 },
+  { x: 1, nu: 11.02 },
+  { x: 22030, nu: 1.221 },
+  { x: 0.04979, nu: 63.43 },
+  { x: 54.6, nu: 73.7 },
+  { x: 403.4, nu: 63.43 },
+  { x: 0.04979, nu: -0.4066 },
+  { x: 2981, nu: -0.1353 },
+  { x: 8103, nu: -0.4066 },
+  { x: 0.1353, nu: -73.7 },
+  { x: 0.3679, nu: -54.6 },
+  { x: 2.718, nu: -73.7} ];
+
+// besselI doesnt take vactorized input like R counterpart. So we use a map
+precision9( map(dataI)(o => besselI(o.x,o.nu, true)) );
+/*[
+  0.0000947216027,  4.31519634e-12,  0.00268776062,     1.48153081e-190,
+  1.82886482e-21,   0.000136207159,  2.8416423,         0.00730711526,
+  0.00443189452,   -4.48726014e+190, 1.37338633e+110,  -3.10304642e+93 ]*/
+```
+
+_Equivalent in R_
+
+```R
+x=c(0.3679, 1, 22030,  0.04979,  54.6,  403.4,
+  0.04979,  2981,  8103, 0.1353, 0.3679, 2.718);
+nu=c(3.669, 11.02, 1.221, 63.43, 73.7, 63.43,
+  -0.4066, -0.1353, -0.4066, -73.7, -54.6, -73.7);
+
+besselI(x,nu,TRUE)
+# [1]   9.47216027e-05   4.31519634e-12   2.68776062e-03  1.48153081e-190
+# [5]   1.82886482e-21   1.36207159e-04   2.84164230e+00   7.30711526e-03
+# [9]   4.43189452e-03 -4.48726014e+190  1.37338633e+110  -3.10304642e+93
+```
+
+#### `besselK`
+
+Modified Bessel functions of third kind. See [R doc](https://stat.ethz.ch/R-manual/R-devel/library/base/html/Bessel.html).
+
+_typescript decl_
+
+```typescript
+declare function besselK(
+  x: number,
+  nu: number,
+  expo: boolean = false
+): number;
+```
+
+* `x`: input value x ≥ 0.
+* `nu`: order, (may be fractional!)
+* `expo`: if TRUE, the results are scaled in order to avoid underflow `exp(x)*BesselK(x;nu)`.
+
+Usage:
+
+```javascript
+const libR = require('lib-r-math');
+const {
+    special: { besselJ, besselK, besselI, besselY },
+    R: { map, numberPrecision }
+} = libR;
+
+const precision9 = numberPrecision(9);
+
+const dataK =
+[ { x: 0.3679, nu: 3.669 },
+  { x: 2.718, nu: 33.12 },
+  { x: 403.4, nu: 11.02 },
+  { x: 1, nu: 63.43 },
+  { x: 54.6, nu: 73.7 },
+  { x: 2981, nu: 54.6 },
+  { x: 0.3679, nu: -3.669 },
+  { x: 148.4, nu: -3.669 },
+  { x: 22030, nu: -1.221 },
+  { x: 0.1353, nu: -73.7 },
+  { x: 2.718, nu: -73.7 },
+  { x: 148.4, nu: -54.6 } ]
+
+precision9( map(dataK)(o => besselK(o.x,o.nu, true)) );
+/*[
+  1430.97872,     1.10637213e+32,  0.0725008692,    3.13780349e+105,
+  2.98065514e+18, 0.0378422686,    1430.97872,      0.107549709,
+  0.00844432462,  1.14199333e+191, 1.38285074e+96,  2056.65995 ]
+*/
+```
+
+_Equivalent in R_
+
+```R
+options(digits=9)
+x=c(0.3679,  2.718,  403.4,  1,  54.6,  2981,  0.3679,  148.4,
+  22030,  0.1353,  2.718,  148.4 );
+nu= c(3.669, 33.12, 11.02, 63.43, 73.7, 54.6, -3.669, -3.669, -1.221, -73.7, -73.7, -54.6);
+
+#1
+besselK(x,nu, TRUE);
+# [1]  1.43097872e+03  1.10637213e+32  7.25008692e-02 3.13780349e+105
+# [5]  2.98065514e+18  3.78422686e-02  1.43097872e+03  1.07549709e-01
+# [9]  8.44432462e-03 1.14199333e+191  1.38285074e+96  2.05665995e+03
+```
+
+
+

@@ -45,12 +45,10 @@ export const seq = (adjust = 0) => (adjustMin = adjust) => (
   return precision9(rc) as any;
 };
 
-export function selector(
-  indexes: number | number[]
-): { (val: any, index: number): boolean } {
-  const ind = forceToArray(indexes);
+export function selector(...rest: (number|number[])[] ): { (val: any, index: number): boolean; } {
+  const flat = flatten(rest);
   return (val: any, idx: number) => {
-    return ind.indexOf(idx) >= 0;
+    return flat.indexOf(idx) >= 0;
   };
 }
 

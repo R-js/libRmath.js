@@ -43,7 +43,7 @@
 
   const printer = debug('bessel_i');
   /* .Internal(besselI(*)) : */
-  export function bessel_i(x: number, alpha: number, expo: boolean): number  {
+  export function bessel_i(x: number, alpha: number, expo: boolean = false): number  {
     
     //int
     let nb;

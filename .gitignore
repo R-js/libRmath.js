@@ -3,6 +3,7 @@ logs
 dist/
 r-source-trunk/
 *.log
+docs/
 TODO
 npm-debug.log*
 *.pem
