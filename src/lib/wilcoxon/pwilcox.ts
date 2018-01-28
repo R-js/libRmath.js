@@ -43,7 +43,7 @@
 import * as debug from 'debug';
 
 import { ML_ERR_return_NAN, R_DT_0, R_DT_1, R_DT_val } from '../common/_general';
-import { choose } from '../common/choose';
+import { internal_choose } from '../common/choose';
 import { map } from '../r-func';
 
 import { WilcoxonCache } from './WilcoxonCache';
@@ -83,7 +83,7 @@ export function pwilcox<T>(
     //let mm = m;
    // let nn = n;
     //w_init_maybe(mm, nn);
-    let c = choose(m + n, n);
+    let c = internal_choose(m + n, n);
     let p = 0;
     /* Use summation of probs over the shorter range */
     if (q <= m * n / 2) {

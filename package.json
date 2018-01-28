@@ -94,7 +94,7 @@
     "main": "dist/lib/libR.js",
     "module:disabled": "",
     "module:doc": "https://github.com/dherman/defense-of-dot-js/blob/master/proposal.md",
-    "name": "lib-r-math",
+    "name": "lib-r-math.js",
     "repository": {
         "type": "git",
         "url": "git+https://github.com/jacobbogers/libRmath.js.git"
@@ -121,7 +121,7 @@
         "postuninstall": "echo postuninstall",
         "postversion": "echo postversion",
         "pre-test": "echo prestest",
-        "preinstall": "echo preinstall",
+        "preinstall": "echo install",
         "prepare": "echo 'prepare'",
         "prepublish": "echo 'prepublish'",
         "prepublishOnly": "echo prepublishOnly",

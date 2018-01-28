@@ -212,8 +212,8 @@ export function sum(x: number[]) {
   return flatten(x).reduce((sum, v) => (sum += v), 0);
 }
 
-export const div = arrayrify((a: number, b) => a / b);
-export const mult = arrayrify((a: number, b) => a * b);
+export const div = multiplex((a: number, b) => a / b);
+export const mult = multiplex((a: number, b) => a * b);
 
 export interface ISummary {
   N: number; // number of samples in "data"

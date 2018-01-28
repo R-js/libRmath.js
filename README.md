@@ -5,11 +5,15 @@ Javascript ( TypeScript ) Pure Implementation of Statistical R "core" numerical
 
 #### Summary
 
-libRmath.js port of its `R` counterpart contains functions related to 21 
-distributions, 4 special function types (`Bessel`,`Gamma`,`Beta`), 
-7 uniform PRNG's and 6 normally distributed PRNG's. The output produced by the ported function have full fidelity with their R counterpart and this is _VERIFIED_ by the many examples in this document.
+libRmath.js port contains all functions implemented in R `nmath` counterpart:
 
-Like in R, it becomes trivial to implement hypothesis test with this library (example: `ANOVA` uses the F-distribution). Tukey HSD uses `ptukey` functions. etc.
+* probability and quantile functions related to 21 distributions.
+* functions to work with `Special functions  in mathematics` (`Bessel`,`Gamma`,`Beta`).
+* 7 uniform PRNG's. (same sequence in R for the same initial seeding).
+* 6 normally distributed PRNG's. (same sequence in R for te same initial seeding).
+* Function vector (array) arguments follow the [R recycling rule](https://cran.r-project.org/doc/manuals/r-release/R-intro.html#The-recycling-rule).
+
+With this library it becomes trivial to implement hypothesis testing in javascript, calculating p-values and (1 - α) confidence intervals. (`ANOVA` uses the F-distribution. Tukey HSD uses `ptukey` functions. etc).
 
 All functions in `libRmath.so` has been re-written to `Javascript` (`Typescript`).
 Use the library with either vanilla `Javascript` or `Typescript`.
@@ -25,24 +29,26 @@ as in server side node environment.
 #### serverside
 
 ```bash
-npm install --save lib-r-math
+npm install --save lib-r-math.js
 ```
 
 #### web
+
+The module directory contains a minimized bundle for use in html `<script>` tag. The library is attached to the `window.libR` object after loading.
 
 ```html
 <script src="your_server_url/libR.min.js"></script>
 <script>
   const libR = window.libR.;
-  //fetch some distributions
+  //fetch some distribution namespaces
   const { Tukey, Normal, Beta, StudentT, Wilcoxon } = libR;
 </script>
 ```
 
 # Table of Contents
 
-* [TODO: Differences with R](#differences-with-R)
-* [Helper functions for porting R programs](#helper-functions-for-porting-r-programs)
+* [Differences with R](#differences-with-R)
+* [*Read this first*: Helper functions](#helper-functions-for-porting-r-programs)
 * [Uniform Pseudo Random Number Generators](#uniform-pseudo-random-number-generators)
 * [Normal Random Number Generators](#normal-distributed-random-number-generators)
 * [Canonical distributions](#canonical-distributions)
@@ -72,24 +78,30 @@ npm install --save lib-r-math
   * [Bessel functions](#bessel-functions)
   * [Beta functions](#beta-functions)
   * [Gamma functions](#gamma-functions)
-  * [TODO:Functions for working with Combinatorics](#functions-for-working-with-combinatorics)
-* [TODO:Road map](#road-map)
+  * [Binomial coefficient functions](#binomial-coefficient-functions)
+
+# Differences with R.
+
+Some implementation differences exist with R `nmath`
+
+* PRNG's are not global singletons, but separate object instances and you can have as many as you want. The programmer can have deviate generators share PRNG's.
+* Wilcoxon Sum Rank functions `dwilcox, pwilcox, qwilcox` use a fraction of the memory, (R will give memory allocation errors for samples ~1000). The JS solution allocates sparse memory.
 
 # Helper functions for porting `R` programs.
 
 #### Summary
 
 R language operators and function arguments can work with `vectorized input`.
-These Javascript helper functions are used to mimic this functionality and assist porting of scripts from the R ecosystem using `libRmath.js`.
+These helper functions are used to mimic this functionality and assist porting of scripts from the R ecosystem using `libRmath.js`.
 
 ### `div`
 
-Divides scalar or an array of values with the second argument.
+Divides scalar or an array of values with element of the second array or scalar.
 
 Usage:
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 const { div } = libR.R;
 
 //1
@@ -98,24 +110,28 @@ div(3, 5); //= 3/5
 
 div([0, 1, 2, 3], 5);
 //[0, 0.2, 0.4, 0.6]
+
+div([10,2,3],[2,4]);// Uses R recycling rules
+//[ 5, 0.5, 1.5 ]
 ```
 
 ### `mult`
 
-Multiplies scalar or an array of values with the second argument.
+Multiplies scalar or an array of values with another scalar or array of values.
+Applies [R recycling rules](https://cran.r-project.org/doc/manuals/r-release/R-intro.html#The-recycling-rule) in case of arguments of unequal array length.
 
 Usage:
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 const { mult } = libR.R;
 
 //1
 mult(3, 5); //= 3*5
 //15
 
-mult([0, 1, 2, 3], 5);
-//[0, 5, 10, 15]
+mult([0, 1, 2, 3], [5,2]); // R recycling rules apply
+//[ 0, 2, 10, 6 ]
 ```
 
 ### `sum`
@@ -123,7 +139,7 @@ mult([0, 1, 2, 3], 5);
 Analog to `R`'s `sum` function. Calculates the sum of all elements of an array.
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 const { sum } = libR.R;
 
 //1
@@ -144,6 +160,7 @@ _typescript decl_
 ```typescript
 declare function summary(data: number[]): ISummary;
 
+//output
 interface ISummary {
   N: number; // number of samples in "data"
   mu: number; // mean of "data"
@@ -170,7 +187,7 @@ interface ISummary {
 Usage:
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 const { summary } = libR.R;
 
 summary([360, 352, 294, 160, 146, 142, 318, 200, 142, 116])
@@ -188,21 +205,20 @@ summary([360, 352, 294, 160, 146, 142, 318, 200, 142, 116])
 ### `numberPrecision`
 
 Truncates numbers to a specified significant digits.
-Akin to R's `options(digits=<number of digits>)` command.
 Takes single numeric value as argument or an array of numbers.
 
 Usage:
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 const digits4 = libR.R.numberPrecision(4);
 
 //1 single value
-precision(1.12345678);
+const pr4a = precision(1.12345678);
 //1.123
 
 //2 works with arrays
-precision([0.4553, -2.1243]);
+const pr4b = precision([0.4553, -2.1243]);
 //[ 0.4553, -2.124 ]
 ```
 
@@ -213,7 +229,7 @@ Test a Predicate for each element in an Array. Returns true or false depending o
 Usage:
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 const any = libR.R.any;
 
 //1
@@ -248,7 +264,7 @@ c(1,2,3,4)^2
 #### Javascript equivalent
 
 ```javascript
- const libR = require('lib-r-math');
+ const libR = require('lib-r-math.js');
  const { arrayrify } = libR.R;
 
  // create vectorize "/" operator
@@ -272,7 +288,7 @@ declare function flatten<T>(...rest: (T | T[])[]): T[];
 Example:
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 const { flatten } = libR.R;
 
 flatten(-1, 0, [1], 'r', 'b', [2, 3, [4, 5]]);
@@ -292,7 +308,7 @@ declare function asVector<T>(x: T | T[]): T[];
 Example:
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 const { asVector } = libR.R;
 
 asVector(3);
@@ -316,7 +332,7 @@ declare function map<T>( xx: T )
 Example:
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 const { map } = libR.R;
 
 map(11)(v => v * 2);
@@ -352,7 +368,7 @@ declare function selector(
 Example:
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 const { selector } = libR.R;
 
 ['an', 'array', 'with', 'some', 'elements'].filter(
@@ -409,7 +425,7 @@ seq(7,-2, -1.3)
 _Equivalent in Javascript_
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 
 let seqA = libR.R.seq()();
 
@@ -477,7 +493,7 @@ that set.
 usage example:
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 const {
   R: { seq, numberPrecision, forEach },
   rng: { MersenneTwister, timeseed }
@@ -532,7 +548,7 @@ article).
 usage example:
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 const { rng: { WichmannHill, timeseed }, R: { seq, numberPrecision } } = libR;
 
 // some helpers
@@ -572,7 +588,7 @@ values allowed).
 usage example:
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 const {
   rng: { MarsagliaMultiCarry, timeseed },
   R: { seq, numberPrecision }
@@ -619,7 +635,7 @@ _We use the implementation by Reeds et al (1982–84)._
 usage example:
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 const { rng: { SuperDuper, timeseed }, R: { seq, numberPrecision } } = libR.rng;
 
 //usefull helpers
@@ -661,7 +677,7 @@ seeds.
 usage example:
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 const { rng: { KnuthTAOCP, timeseed }, R: { seq, numberPrecision } } = libR.rng;
 
 //usefull helpers
@@ -713,7 +729,7 @@ numbers, the last being a cyclic shift of the buffer). The period is around
 usage example:
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 const { rng: { KnuthTAOCP2002, timeseed }, R: { seq } } = libR.rng;
 
 //helpers
@@ -772,7 +788,7 @@ multiple streams used in package parallel.
 usage example:
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 const { rng: { LecuyerCMRG, timestamp }, R: { seq } } = libR.rng;
 
 const sequence = seq()();
@@ -843,7 +859,7 @@ sampling from the normal distribution. Mathematics of Computation 27, 927-937.
 example usage:
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 
 //helper
 const sequence = libR.R.seq()();
@@ -904,7 +920,7 @@ is reseted with `init`.
 example usage:
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 //helper
 const sequence = libR.R.seq()();
 
@@ -956,7 +972,7 @@ The Kinderman-Ramage generator used in versions prior to 1.7.0 (now called "Bugg
 example usage:
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 
 //helper
 const sequence = libR.R.seq()();
@@ -1007,7 +1023,7 @@ Inverse transform sampling [wiki](https://en.wikipedia.org/wiki/Inverse_transfor
 example usage:
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 // Possible to arbitraty uniform PRNG source (example: SuperDuper)
 
 //helper
@@ -1060,7 +1076,7 @@ _Non "buggy" version_
 example usage:
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 // Possible to arbitraty uniform PRNG source (example: SuperDuper)
 
 //helper
@@ -1129,7 +1145,7 @@ These functions are created with the factory method `Uniform` taking as argument
 Usage:
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 
 // get the suite of functions working with uniform distributions
 const { Uniform, rng } = libR;
@@ -1167,7 +1183,7 @@ declare function dunif(
 Example:
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 const uni = libR.Uniform(); // use default Mersenne-Twister PRNG
 const { runif, dunif, punif, qunif } = uni;
 
@@ -1210,7 +1226,7 @@ declare function punif(
 Example:
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 const uni = libR.Uniform(); // use default Mersenne-Twister PRNG
 const { runif, dunif, punif, qunif } = uni;
 
@@ -1254,7 +1270,7 @@ declare function qunif(
 Example:
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 const uni = libR.Uniform(); // use default Mersenne-Twister PRNG
 const { runif, dunif, punif, qunif } = uni;
 
@@ -1290,7 +1306,7 @@ declare function runif(
 Example:
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 const uni = libR.Uniform(); // use default Mersenne-Twister PRNG
 const { runif, dunif, punif, qunif } = uni;
 
@@ -1334,7 +1350,7 @@ These functions are created with the factory method `Normal` taking as argument 
 Usage:
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 
 // get the suite of functions working with uniform distributions
 const { Normal } = libR;
@@ -1371,7 +1387,7 @@ declare function dnorm(
 * `giveLog`: give result as log value
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 const { Normal } = libR;
 const { seq } = libR.R;
 const { rnorm, dnorm, pnorm, qnorm } = Normal();
@@ -1449,7 +1465,7 @@ declare function pnorm(
 * `logP`: give result as log value
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 const { Normal, arrayrify } = libR;
 const { rnorm, dnorm, pnorm, qnorm } = Normal();
 
@@ -1499,7 +1515,7 @@ declare function qnorm(
 * `logP`: probabilities are given as ln(p).
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 const { Normal, arrayrify } = libR;
 const { rnorm, dnorm, pnorm, qnorm } = Normal();
 
@@ -1545,7 +1561,7 @@ declare function rnorm(n = 1, mu = 0, sigma = 1): number | number[];
 * `sigma`: standard deviation. Defaults to 1.
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 const { Normal } = libR;
 
 //default Mersenne-Twister/Inversion
@@ -1603,7 +1619,7 @@ These functions are members of an object created by the `Beta` factory method. T
 Usage:
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 const { Beta, rng: { SuperDuper, normal: { BoxMuller } } } = libR;
 
 // explicit use of PRNG's
@@ -1641,7 +1657,7 @@ declare function dbeta(
 * `Log`: return result as ln(p)
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 const { Beta, R: { numberPrecision } } = libR;
 
 //helpers
@@ -1717,7 +1733,7 @@ declare function pbeta(
 * `Log`: return probabilities as ln(p)
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 const { Beta, rng: { arrayrify, numberPrecision } } = libR;
 
 //helpers
@@ -1833,7 +1849,7 @@ declare function qbeta(
 * `Log`: return _probabilities_ as ln(p).
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 const { Beta, R: { arrayrify, numberPrecision } } = libR;
 //helpers
 const log = arrayrify(Math.log); // Make Math.log accept/return arrays aswell as scalars
@@ -1924,7 +1940,7 @@ declare function rbeta(
 * `ncp`: non centrality parameter.
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 const {
   Beta,
   rng: { MersenneTwister, normal: { Inversion } },
@@ -2003,7 +2019,7 @@ These functions are members of an object created by the `Binomial` factory metho
 Usage:
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 const { Binomial, rng: { LecuyerCMRG } } = libR;
 
 // explicit use if PRNG
@@ -2039,7 +2055,7 @@ declare function dbinom(
 * `asLog`: return result as ln(p)
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 const { Binomial, R: { numberPrecision } } = libR;
 
 //helper
@@ -2107,7 +2123,7 @@ declare function pbinom(
 * `Log`: return result as ln(p)
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 const { Binomial, R: { numberPrecision } } = libR;
 
 //helper
@@ -2186,7 +2202,7 @@ declare function qbinom(
 * `LogP`: return result as ln(p)
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 
 const { Binomial, R: { arrayrify, numberPrecision } } = libR;
 
@@ -2256,7 +2272,7 @@ declare function rbinom(
 * `prob`: probability of success.
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 
 const { Binomial, rng: { KnuthTAOCP2002 }, R: { numberPrecision } } = libR;
 
@@ -2313,7 +2329,7 @@ These functions are members of an object created by the `NegativeBinomial` facto
 Usage:
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 const { NegativeBinomial, rng: { SuperDuper, normal: { BoxMuller } } } = libR;
 
 //explicit specify PRNG's
@@ -2356,7 +2372,7 @@ declare function dnbinom(
 Usage:
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 const { NegativeBinomial, R: { numberPrecision } } = libR;
 //some helpers
 const seq = libR.R.seq()();
@@ -2423,7 +2439,7 @@ _typescript decl_
 Usage:
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 const { NegativeBinomial, R: { numberPrecision } } = libR;
 //some helpers
 const seq = libR.R.seq()();
@@ -2510,7 +2526,7 @@ declare function qnbinom(
 Usage:
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 const { NegativeBinomial, R: { numberPrecision } } = libR;
 //some helpers
 const precision = numberPrecision(9);
@@ -2643,7 +2659,7 @@ These functions are members of an object created by the `Cauchy` factory method.
 Usage:
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 const { Cauchy, rng: { WichmannHill } } = libR;
 
 //explcit use of PRNG
@@ -2683,7 +2699,7 @@ declare function dcauchy(
 Usage:
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 const { Cauchy, R: { numberPrecision } } = libR;
 
 // some usefull tools
@@ -2761,7 +2777,7 @@ declare function pcauchy(
 Usage:
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 const { Cauchy, R: { numberPrecision } } = libR;
 
 // some usefull tools
@@ -2834,7 +2850,7 @@ declare function qcauchy(
 Usage:
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 const { Cauchy, R: { numberPrecision } } = libR;
 
 // some usefull tools
@@ -2902,7 +2918,7 @@ declare function rcauchy(
 Usage:
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 const {
   Cauchy,
   rng: {
@@ -2961,7 +2977,7 @@ These functions are members of an object created by the `ChiSquared` factory met
 Usage:
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 const { ChiSquared, rng: { WichmannHill, normal: { AhrensDieter } } } = libR;
 
 //uses as default: "Inversion" and "Mersenne-Twister"
@@ -2999,7 +3015,7 @@ declare function dchisq(
 Usage:
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 const { ChiSquared, R: { precision } } = libR;
 
 const { dchisq, pchisq, qchisq, rchisq } = ChiSquared();
@@ -3075,7 +3091,7 @@ declare function pchisq(
 Usage:
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 const { ChiSquared, R: { numberPrecision } } = libR;
 
 const { dchisq, pchisq, qchisq, rchisq } = ChiSquared();
@@ -3147,7 +3163,7 @@ declare function qchisq(
 Usage:
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 const { ChiSquared, R: { arrayrify, numberPrecision } } = libR;
 
 //helpers
@@ -3210,7 +3226,7 @@ declare function rchisq(n: number, df: number, ncp?: number): number | number[];
 * `ncp`: non centrality parameter.
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 const {
   ChiSquared,
   rng: {
@@ -3278,7 +3294,7 @@ These functions are members of an object created by the `Exponential` factory me
 Usage:
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 const { Exponential, rng: { MarsagliaMultiCarry } } = libR;
 
 //1. initialize default
@@ -3315,7 +3331,7 @@ declare function dexp(
 Usage:
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 const { Exponential, R: { numberPrecision } } = libR;
 
 //helpers
@@ -3387,7 +3403,7 @@ declare function pexp(
 Usage:
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 const { Exponential, R: { numberPrecision } } = libR;
 
 //helpers
@@ -3464,7 +3480,7 @@ declare function qexp(
 Usage:
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 const { Exponential, R: { arrayrify, numberPrecision } } = libR;
 
 //helpers
@@ -3532,7 +3548,7 @@ declare function rexp(n: number, rate: number = 1): number | number[];
 Usage:
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 const { Exponential, rng: { WichmannHill }, R: { numberPrecision } } = libR;
 
 //helper
@@ -3588,7 +3604,7 @@ These functions are members of an object created by the `FDist` factory method. 
 Usage:
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 const {
   FDist,
   rng: {
@@ -3637,7 +3653,7 @@ declare function df(
 Usage:
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 const { FDist, R: { numberPrecision } } = libR;
 
 //helpers
@@ -3733,7 +3749,7 @@ declare function pf(
 Usage:
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 const {
   FDist,
   R: { numberPrecision }
@@ -3834,7 +3850,7 @@ declare function qf(
 Usage:
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 const { FDist } = libR;
 
 //helpers
@@ -3920,7 +3936,7 @@ declare function rf(
 Usage:
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 const {
     FDist,
     rng: {
@@ -3989,7 +4005,7 @@ These functions are members of an object created by the `Gamma` factory method. 
 Usage:
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 const {
   Gamma,
   rng: { 
@@ -4046,7 +4062,7 @@ declare function dgamma(
 Usage:
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 const {
   Gamma,
   R: { numberPrecision, arrayrify }
@@ -4138,7 +4154,7 @@ declare function pgamma(
 Usage:
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 const {
   Gamma,
   R: { arrayrify, numberPrecision }
@@ -4235,7 +4251,7 @@ declare function pgamma(
 Usage:
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 const {
   Gamma,
   R: { numberPrecision, arrayrify }
@@ -4322,7 +4338,7 @@ declare function rgamma(
 Usage:
 
 ```typescript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 const {
   Gamma,
   rng: {
@@ -4387,7 +4403,7 @@ These functions are properties of an object created by the `Geometric` factory m
 Usage:
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 const {
   Geometric,
   rng: {
@@ -4430,7 +4446,7 @@ declare function dgeom(
 Usage:
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 const { 
   Geometric,
   R: { numberPrecision }
@@ -4490,7 +4506,7 @@ declare function pgeom(
 * `logP`: if TRUE, probabilities p are given as ln(p).
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 const {
   Geometric,
   R: { numberPrecision }
@@ -4559,7 +4575,7 @@ declare function qgeom(
 Usage:
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 const {
   Geometric,
   R:{ numberPrecision }
@@ -4632,7 +4648,7 @@ declare function rgeom(
 Usage:
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 const {
   Geometric,
   rng: {
@@ -4699,7 +4715,7 @@ These functions are properties of an object created by the `HyperGeometric` fact
 Usage:
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 const {
     HyperGeometric,
     rng: { MersenneTwister, SuperDuper }
@@ -4748,7 +4764,7 @@ Where:
 Usage:
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 const { HyperGeometric } = libR;
 
 //some tools
@@ -4855,7 +4871,7 @@ declare function phyper(
 Usage:
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 const { HyperGeometric } = libR;
 
 //some tools
@@ -4942,7 +4958,7 @@ declare function qhyper(
 Usage:
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 const { HyperGeometric } = libR;
 
 //some tools
@@ -5025,7 +5041,7 @@ declare function rhyper(
 Usage:
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 const { HyperGeometric, rng: { MersenneTwister } } = libR;
 
 //some tools
@@ -5088,7 +5104,7 @@ These functions are properties of an object created by the `Logistic` factory me
 Usage:
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 const { Logistic, rng: { MersenneTwister, SuperDuper } } = libR;
 
 //some tools
@@ -5133,7 +5149,7 @@ declare function dlogis(
 Usage:
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 const { Logistic } = libR;
 
 //some tools
@@ -5221,7 +5237,7 @@ declare function plogis(
 Usage:
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 const { Logistic } = libR;
 
 //some tools
@@ -5312,7 +5328,7 @@ declare function qlogis(
 Usage:
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 const { Logistic } = libR;
 
 //some tools
@@ -5386,7 +5402,7 @@ declare function rlogis(
 Usage:
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 const { Logistic, rng: { MersenneTwister } } = libR;
 
 //some tools
@@ -5445,7 +5461,7 @@ These functions are properties of an object created by the `LogNormal` factory m
 Usage:
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 const {
   Normal,
   LogNormal,
@@ -5495,7 +5511,7 @@ declare function dlnorm(
 Usage:
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 const { LogNormal } = libR;
 
 //some tools
@@ -5590,7 +5606,7 @@ declare function plnorm(
 Usage:
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 const { LogNormal } = libR;
 
 //some tools
@@ -5679,7 +5695,7 @@ declare function qlnorm(
 Usage:
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 const { LogNormal } = libR;
 
 //some tools
@@ -5753,7 +5769,7 @@ declare function rlnorm(
 Usage:
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 const {
   Normal,
   LogNormal,
@@ -5831,7 +5847,7 @@ $$\frac{(size+k)!}{k!\cdot((size+k)-k)!}$$
 Usage:
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 const { MultiNomial, rng: { MersenneTwister, SuperDuper } } = libR;
 
 //some tools
@@ -5878,7 +5894,7 @@ declare function dmultinom(option: IdmultinomOptions): number[];
 Usage:
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 const { Multinomial } = libR;
 
 //some tools
@@ -5953,7 +5969,7 @@ declare function rmultinom(
 Usage:
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 const {
   Multinomial,
   rng: { MersenneTwister },
@@ -6060,7 +6076,7 @@ These functions are properties of an object created by the `Poisson` factory met
 Usage:
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 const { Poisson, rng: { SuperDuper }, rng: { normal: { BoxMuller } } } = libR;
 
 //default (uses Inversion and MersenneTwister)
@@ -6096,7 +6112,7 @@ declare function dpois(
 Usage:
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 const { Poisson } = libR;
 
 //some tools
@@ -6182,7 +6198,7 @@ declare function ppois(
 Usage:
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 const { Poisson } = libR;
 
 //some tools
@@ -6274,7 +6290,7 @@ declare function qpois(
 Usage:
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 const { Poisson, R: { arrayrify } } = libR;
 
 //some tools
@@ -6338,7 +6354,7 @@ declare function rpois(N: number, lambda: number): number | number[];
 Usage:
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 const {
   Poisson,
   rng: { MersenneTwister },
@@ -6400,7 +6416,7 @@ Density, distribution function, quantile function and random generation for the 
 Usage:
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 const { SignRank, rng: { MarsagliaMultiCarry } } = libR;
 
 //helpers
@@ -6437,7 +6453,7 @@ declare function dsignrank(
 Usage:
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 const { SignRank } = libR;
 
 //some usefull helpers
@@ -6512,7 +6528,7 @@ declare function psignrank(
 Usage:
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 const { SignRank } = libR;
 
 //some usefull helpers
@@ -6591,7 +6607,7 @@ declare function qsignrank(
 Usage:
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 const { SignRank } = libR;
 
 const { dsignrank, psignrank, qsignrank, rsignrank } = SignRank();
@@ -6641,7 +6657,7 @@ declare function rsignrank(N: number, n: number): number | number[];
 Usage:
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 const { SignRank } = libR;
 
 const mmc = new MarsagliaMultiCarry(0);
@@ -6691,7 +6707,7 @@ Density, distribution function, quantile function and random generation for the 
 Usage:
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 const {
   StudentT,
   rng: { MarsagliaMultiCarry },
@@ -6735,7 +6751,7 @@ declare function dt(
 Usage:
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 const { StudentT } = libR;
 
 //usefull helpers
@@ -6823,7 +6839,7 @@ declare function pt(
 Usage:
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 const { StudentT } = libR;
 
 //usefull helpers
@@ -6912,7 +6928,7 @@ declare function qt(
 Usage:
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 const { StudentT } = libR;
 
 //usefull helpers
@@ -6990,7 +7006,7 @@ declare function rt(n: number, df: number, ncp?: number): number | number[];
 Usage:
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 const {
   StudentT,
   rng: { MarsagliaMultiCarry },
@@ -7102,7 +7118,7 @@ declare function ptukey(
 Usage:
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 const { Tukey } = libR;
 
 const { abs } = Math;
@@ -7153,7 +7169,7 @@ declare function qtukey(
 Usage:
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 const {
   Tukey,
   R: { seq:_seq, numberPrecision }
@@ -7285,7 +7301,7 @@ Density, distribution function, quantile function and random generation for the 
 Usage:
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 const {
     Weibull,
     rng: { WichmannHill }
@@ -7325,7 +7341,7 @@ declare function dweibull(
 Usage:
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 const {
   Weibull,
   R: { seq: _seq, numberPrecision }
@@ -7410,7 +7426,7 @@ declare function pweibull(
 Usage:
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 const {
   Weibull,
   R: { seq:_seq, numberPrecision }
@@ -7494,7 +7510,7 @@ declare function qweibull(
 Usage:
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 const {
   Weibull,
   R: { seq:_seq, numberPrecision }
@@ -7565,7 +7581,7 @@ declare function rweibull(
 Usage:
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 const {
     Weibull,
     rng: { WichmannHill },
@@ -7630,7 +7646,7 @@ Read about it [here]((#what-is-improved-on-r).
 Usage:
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 const {
   Wilcoxon
   rng: { SuperDuper }
@@ -7671,7 +7687,7 @@ Note: if `m` ≥ `n` the values are swapped internally.
 Usage:
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 const {
   Wilcoxon,
   R: { seq:_seq , numberPrecision, arrayrify }
@@ -7764,7 +7780,7 @@ Usage:
 
 ```javascript
 
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 const {
   Wilcoxon,
   R: { seq:_seq , numberPrecision, arrayrify }
@@ -7853,7 +7869,7 @@ Note: if `m` ≥ `n` the values are swapped internally.
 Usage:
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 const {
   Wilcoxon,
   R: { seq:_seq }
@@ -7925,7 +7941,7 @@ Note: if `m` ≥ `n` the values are swapped internally.
 Usage:
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 const {
   Wilcoxon,
   rng: { SuperDuper }
@@ -7985,7 +8001,7 @@ Bessel Functions of integer and fractional order, of first and second kind, J(nu
 Usage:
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 const {
     special: { besselJ, besselK, besselI, besselY }
 } = libR;
@@ -8012,7 +8028,7 @@ declare function besselJ(
 Usage:
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 const {
     special: { besselJ, besselK, besselI, besselY },
     R: { map, numberPrecision, flatten:c }
@@ -8067,7 +8083,7 @@ export function besselY(
 Usage:
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 const {
     special: { besselJ, besselK, besselI, besselY },
     R: { map, numberPrecision, flatten:c }
@@ -8123,7 +8139,7 @@ declare function besselI(
 Usage:
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 const {
     special: { besselJ, besselK, besselI, besselY },
     R: { map, numberPrecision, flatten:c }
@@ -8183,7 +8199,7 @@ of unequal length then R argument cycling rules apply._
 Usage:
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 const {
     special: { besselJ, besselK, besselI, besselY },
     R: { map, numberPrecision, flatten:c }
@@ -8248,7 +8264,7 @@ declare function beta(
 Usage:
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 const {
     special: { beta, lbeta },
     R: { flatten: c }
@@ -8294,7 +8310,7 @@ declare function lbeta(
 Usage:
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 const {
     special: { beta, lbeta },
     R: { flatten: c }
@@ -8323,9 +8339,9 @@ lbeta(c(0.5, 100), c(0.25, 50))
 
 ### Gamma functions
 
-`digamma, trigamma, pentagamma, tetragamma, psigamma,   gammma, lgamma`
+`digamma, trigamma, pentagamma, tetragamma, psigamma`, `gammma`, `lgamma`.
 
-The functions [gamma](#gamma)and [lgamma](#gamma) return the gamma function [Γ(x)]() and the natural logarithm of the absolute value of the gamma function: `ln|[Γ(x)|`.
+The functions [gamma](#gamma)and [lgamma](#lgamma) return the gamma function [Γ(x)](https://en.wikipedia.org/wiki/Gamma_function) and the natural logarithm of the absolute value of the gamma function: `ln|[Γ(x)|`.
 
 The functions `digamma`, `trigamma`, `pentagamma`, `tetragamma` and `psigamma`
 return repectivily the first, second, third and fourth derivatives and n-th derivatives
@@ -8350,7 +8366,7 @@ declare function digamma(
 Usage:
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 const {
     special: { digamma },
     R: { numberPrecision, seq: _seq, flatten: c }
@@ -8386,7 +8402,7 @@ digamma(x);
 
 The 2nd derivative of  `ln Γ(x)`. See [R doc]()
 
-$$ ψ(x)² = \frac{d²}{dx²}  (ln Γ(x) )$$
+$$ ψ(x)' = \frac{d²}{dx²}  (ln Γ(x) )$$
 
 _typescript decl_
 
@@ -8401,7 +8417,7 @@ declare function trigamma(
 Usage:
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 const {
     special: { trigamma },
     R: { numberPrecision, seq: _seq, flatten: c }
@@ -8436,7 +8452,7 @@ trigamma(x);
 The 3rd derivative of  `ln Γ(x)`. This function is deprecated in `R`. 
 `tetragamma(x)` is an alias for `psigamma(x,2)`.
 
-$$ ψ(x)³ = \frac{d³}{dx³}  (ln Γ(x) )$$
+$$ ψ(x)³ = \frac{d²}{dx²}  (ln Γ(x) )$$
 
 _typescript decl_
 
@@ -8451,7 +8467,7 @@ declare function tetragamma(
 Usage:
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 const {
     special: { tetragamma },
     R: { numberPrecision, seq: _seq, flatten: c }
@@ -8487,8 +8503,7 @@ psigamma(x,2);
 The 4th derivative of  `ln Γ(x)`. This function is deprecated in `R`.
 `pentagamma(x)` is an alias for `psigamma(x,3)`.
 
-TODO: put raised to the power 4 in ascii in underlying formula
-$$ ψ(x) = \frac{d³}{dx³}  (ln Γ(x) )$$
+$$ ψ³(x) = \frac{d⁴}{dx⁴}  (ln Γ(x) )$$
 
 _typescript decl_
 
@@ -8503,7 +8518,7 @@ declare function pentagamma(
 Usage:
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 const {
     special: { pentagamma },
     R: { numberPrecision, seq: _seq, flatten: c }
@@ -8554,7 +8569,7 @@ declare function psigamma(
 Usage:
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 const {
     special: { psigamma },
     R: { numberPrecision, seq: _seq, flatten: c }
@@ -8585,7 +8600,7 @@ psigamma(x, 9)
 
 #### `gammma`
 
-The [gammma function](TODO) Γ(x). See [R doc](https://stat.ethz.ch/R-manual/R-devel/library/base/html/Special.html).
+The [gammma function](https://en.wikipedia.org/wiki/Gamma_function) Γ(x). See [R doc](https://stat.ethz.ch/R-manual/R-devel/library/base/html/Special.html).
 
 _typescript decl_
 
@@ -8598,7 +8613,7 @@ declare function gamma(
 Usage:
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 const {
     special: { gamma },
     R: { numberPrecision, seq: _seq, flatten: c }
@@ -8629,7 +8644,7 @@ gamma(gx);
 
 #### `lgammma`
 
-The [logarithmic gammma function](TODO) Γ(x). See [R doc](https://stat.ethz.ch/R-manual/R-devel/library/base/html/Special.html).
+The [logarithmic gammma function](https://en.wikipedia.org/wiki/Gamma_function) Γ(x). See [R doc](https://stat.ethz.ch/R-manual/R-devel/library/base/html/Special.html).
 
 _typescript decl_
 
@@ -8642,7 +8657,7 @@ declare function lgamma(
 Usage:
 
 ```javascript
-const libR = require('lib-r-math');
+const libR = require('lib-r-math.js');
 const {
     special: { lgamma },
     R: { numberPrecision, seq: _seq, flatten: c }
@@ -8668,4 +8683,126 @@ gx = seq(2,5,.5)^2-9;
 lgamma(gx);
 #[1]          Inf  0.004487898          Inf  0.935801931  6.579251212
 #[6] 15.695301377 27.899271384
+```
+
+### Binomial coefficient functions.
+
+`choose, lchoose`
+
+The functions `choose` and `lchoose` return [binomial coefficients](https://en.wikipedia.org/wiki/Combination) and the logarithms of their absolute values.See [R doc](https://stat.ethz.ch/R-manual/R-devel/library/base/html/Special.html).
+
+#### `choose`
+
+Returns the binomial coefficient of `n over k` ${n}\choose{k}$. 
+
+_typescript decl_
+
+```typescript
+declare function choose(
+  n: number|number[],
+  k: number|number[]
+): number|number[]
+```
+
+* `n`: scalar or array of numbers
+* `k`: scalar or array of numbers
+
+**Note:** if `n` and `k` are unequal sized arrays then R argument cycling rules apply.
+
+Usage:
+
+```javascript
+const libR = require('lib-r-math.js');
+const {
+    special: { choose },
+    R: { seq: _seq, flatten: c }
+} = libR;
+
+//1  All coefficeints of the expanded (x+y)⁴.
+const coef1 = choose(4, c(0, 1, 2, 3, 4));
+//[ 1, 4, 6, 4, 1 ]
+
+//2
+const coef2 = choose(4000, 30);
+//3.8975671313115776e+75
+
+//3
+const coef3 = choose(2000, 998);
+//Infinity
+```
+
+_Equivalent in R_
+
+```R
+#1
+choose(4, c(0,1,2,3,4) );
+#[1] 1 4 6 4 1
+
+#2
+choose(4000,30);
+#[1] 3.897567e+75
+
+#3
+choose(2000,998);
+#[1] Inf
+```
+
+#### `lchoose`
+
+Returns the natural logarithm binomial coefficient of `n over k` ${n}\choose{k}$.
+
+_typescript decl_
+
+```typescript
+declare function choose(
+  n: number|number[],
+  k: number|number[]
+): number|number[]
+```
+
+* `n`: scalar or array of numbers
+* `k`: scalar or array of numbers
+
+**Note:** if `n` and `k` are unequal sized arrays then R argument cycling rules apply.
+
+Usage:
+
+```javascript
+const libR = require('lib-r-math.js');
+const {
+    special: { choose },
+    R: { seq: _seq, flatten: c }
+} = libR;
+
+//1  All ln's of the coefficeints of the expanded (x+y)⁴.
+const lcoef1 = lchoose(4, c(0, 1, 2, 3, 4));
+/*[
+  0,                  1.3862943611198906,  1.7917594692280552, 
+  1.3862943611198906, 0
+]*/
+
+
+//2
+const lcoef2 = lchoose(4000, 30);
+//174.05423452055285
+
+//3
+const lcoef3 = lchoose(2000, 998);
+//1382.2639955341506
+```
+
+_Equivalent in R_
+
+```R
+#1
+lchoose(4, c(0,1,2,3,4) );
+#[1] 0.000000 1.386294 1.791759 1.386294 0.000000
+
+#2
+lchoose(4000,30);
+#[1] 174.0542
+
+#3
+lchoose(2000,998);
+#[1] 1382.264
 ```
