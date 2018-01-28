@@ -71,7 +71,7 @@ npm install --save lib-r-math
 * [Special Functions of Mathematics](#special-functions-of-mathematics)
   * [Bessel functions](#bessel-functions)
   * [Beta functions](#beta-functions)
-  * [TODO:Gamma functions](#gamma-functions)
+  * [Gamma functions](#gamma-functions)
   * [TODO:Functions for working with Combinatorics](#functions-for-working-with-combinatorics)
 * [TODO:Road map](#road-map)
 
@@ -8248,6 +8248,7 @@ declare function beta(
 Usage:
 
 ```javascript
+const libR = require('lib-r-math');
 const {
     special: { beta, lbeta },
     R: { flatten: c }
@@ -8293,6 +8294,7 @@ declare function lbeta(
 Usage:
 
 ```javascript
+const libR = require('lib-r-math');
 const {
     special: { beta, lbeta },
     R: { flatten: c }
@@ -8319,4 +8321,351 @@ lbeta(c(0.5, 100), c(0.25, 50))
 #[1]   1.65710652 -96.30952124
 ```
 
+### Gamma functions
 
+`digamma, trigamma, pentagamma, tetragamma, psigamma,   gammma, lgamma`
+
+The functions [gamma](#gamma)and [lgamma](#gamma) return the gamma function [Γ(x)]() and the natural logarithm of the absolute value of the gamma function: `ln|[Γ(x)|`.
+
+The functions `digamma`, `trigamma`, `pentagamma`, `tetragamma` and `psigamma`
+return repectivily the first, second, third and fourth derivatives and n-th derivatives
+of the logarithm of the gamma function ln{ Γ(x) }. See [R doc](https://stat.ethz.ch/R-manual/R-devel/library/base/html/Special.html).
+
+#### `digamma`
+
+The first derivative ψ(x) of the natural logarithm of the [gamma function](#gamma)
+Alias for [psigmma](#psigamma) function with the `deriv` argument set to `0`.
+Aka `psigamma(x, 0)`.
+
+$$ ψ(x) = \frac{d}{dx}  (ln Γ(x) )= \frac{Γ'(x)}{ Γ(x)} $$
+
+_typescript decl_
+
+```typescript
+declare function digamma(
+  x: number|number[]
+): number|number[];
+```
+
+Usage:
+
+```javascript
+const libR = require('lib-r-math');
+const {
+    special: { digamma },
+    R: { numberPrecision, seq: _seq, flatten: c }
+} = libR;
+
+//some helpers
+const seq = _seq()();
+const pow = multiplex(Math.pow);
+const precision9 = numberPrecision(9); //truncate past 9 digits
+
+//data
+const x = c(0, pow(4, seq(1, 10, 2)), Infinity);
+
+//1
+const dig1 = precision9(digamma(x));
+//[ NaN, 1.25611767, 4.15105024, 6.93098344, 9.70403001, 12.4766473, Infinity ]
+```
+
+_Equivalent in R_
+
+```R
+#Some data
+x = c(0, 4^seq(1, 10, 2), Inf);
+#[1]      0      4     64   1024  16384 262144    Inf
+
+#1
+digamma(x);
+#[1]         NaN  1.25611767  4.15105024  6.93098344  9.70403001 12.47664734
+#[7]         Inf
+```
+
+#### `trigamma`
+
+The 2nd derivative of  `ln Γ(x)`. See [R doc]()
+
+$$ ψ(x)² = \frac{d²}{dx²}  (ln Γ(x) )$$
+
+_typescript decl_
+
+```typescript
+declare function trigamma(
+  x:number|number[]
+):number|number[];
+```
+
+* `x`: 0 ≤ x ≤ Infinity.
+
+Usage:
+
+```javascript
+const libR = require('lib-r-math');
+const {
+    special: { trigamma },
+    R: { numberPrecision, seq: _seq, flatten: c }
+} = libR;
+
+//some helpers
+const seq = _seq()();
+const pow = multiplex(Math.pow);
+const precision9 = numberPrecision(9); //truncate past 9 digits
+
+//data
+const x = c(0, pow(4, seq(1, 10, 2)), Infinity);
+
+const tri1 = precision9(trigamma(x));
+//[ Infinity,, 0.283822956, 0.0157477061, 0.000977039492, 0.0000610370189, 0.00000381470454, 0 ]
+```
+
+_Equivalent in R_
+
+```R
+# the data
+x = c(0, 4^seq(1, 10, 2), Inf );
+
+#1
+trigamma(x);
+#[1]              Inf 0.28382295573712 0.01574770606434 0.00097703949238
+#[5] 0.00006103701893 0.00000381470454 0.00000000000000
+```
+
+#### `tetragamma`
+
+The 3rd derivative of  `ln Γ(x)`. This function is deprecated in `R`. 
+`tetragamma(x)` is an alias for `psigamma(x,2)`.
+
+$$ ψ(x)³ = \frac{d³}{dx³}  (ln Γ(x) )$$
+
+_typescript decl_
+
+```typescript
+declare function tetragamma(
+  x:number|number[]
+):number|number[];
+```
+
+* `x`: 0 ≤ x ≤ Infinity.
+
+Usage:
+
+```javascript
+const libR = require('lib-r-math');
+const {
+    special: { tetragamma },
+    R: { numberPrecision, seq: _seq, flatten: c }
+} = libR;
+
+//some helpers
+const seq = _seq()();
+const pow = multiplex(Math.pow);
+const precision9 = numberPrecision(9); //truncate past 9 digits
+
+//data
+const x = c(0, pow(4, seq(1, 10, 2)), Infinity);
+
+const tetra1 = precision9(tetragamma(x));
+/*[ NaN,            -0.0800397322,    -0.000247985122,
+   -9.54606094e-7,  -3.72551768e-9,   -1.45519707e-11 ]*/
+```
+
+_Equivalent in R_
+
+```R
+# the data
+x = c(0, 4^seq(1, 10, 2), Inf );
+
+# alias for pentagamma
+psigamma(x,2);
+#[1]           NaN -8.003973e-02 -2.479851e-04 -9.546061e-07 -3.725518e-09
+#[6] -1.455197e-11  0.000000e+00
+```
+
+#### `pentagamma`
+
+The 4th derivative of  `ln Γ(x)`. This function is deprecated in `R`.
+`pentagamma(x)` is an alias for `psigamma(x,3)`.
+
+TODO: put raised to the power 4 in ascii in underlying formula
+$$ ψ(x) = \frac{d³}{dx³}  (ln Γ(x) )$$
+
+_typescript decl_
+
+```typescript
+declare function pentagamma(
+  x:number|number[]
+):number|number[];
+```
+
+* `x`: 0 ≤ x ≤ Infinity.
+
+Usage:
+
+```javascript
+const libR = require('lib-r-math');
+const {
+    special: { pentagamma },
+    R: { numberPrecision, seq: _seq, flatten: c }
+} = libR;
+
+//some helpers
+const seq = _seq()();
+const pow = multiplex(Math.pow);
+const precision9 = numberPrecision(9); //truncate past 9 digits
+
+//data
+const x = c(0, pow(4, seq(1, 10, 2)), Infinity);
+
+const penta1 = precision9(pentagamma(x));
+/*[
+  Infinity,       0.0448653282,   0.00000781007088,
+  1.86537541e-9,  4.54788986e-13, 1.11022938e-16
+]*/
+```
+
+_Equivalent in R_
+
+```R
+# the data
+x = c(0, 4^seq(1, 10, 2), Inf );
+
+# alias for pentagamma
+psigamma(x,3);
+[1]          Inf 4.486533e-02 7.810071e-06 1.865375e-09 4.547890e-13
+[6] 1.110229e-16 0.000000e+00
+```
+
+#### `psigamma`
+
+The nth derivative of  `ln Γ(x)`.
+
+$$ ψ(x)^{n} = \frac{d^{n}}{dx^{n}}  (ln Γ(x) )$$
+
+_typescript decl_
+
+```typescript
+declare function psigamma(
+  x:number|number[],
+  deriv: number|number[]
+):number|number[];
+```
+
+Usage:
+
+```javascript
+const libR = require('lib-r-math');
+const {
+    special: { psigamma },
+    R: { numberPrecision, seq: _seq, flatten: c }
+} = libR;
+
+//some helpers
+const seq = _seq()();
+const pow = multiplex(Math.pow);
+const precision9 = numberPrecision(9); //truncate past 9 digits
+
+const psi1 = precision9(psigamma(x, 9));
+/*[
+  NaN,        1.25611767,  4.15105024,  6.93098344,
+  9.70403001, 12.4766473,  Infinity 
+]*/
+```
+
+_Equivalent in R_
+
+```R
+# the data
+x = c(0, 4^seq(1, 10, 2), Inf );
+
+psigamma(x, 9)
+#[1]          Inf 3.910177e-01 2.399680e-12 3.271360e-23 4.740895e-34
+#[6] 6.897134e-45 0.000000e+00
+```
+
+#### `gammma`
+
+The [gammma function](TODO) Γ(x). See [R doc](https://stat.ethz.ch/R-manual/R-devel/library/base/html/Special.html).
+
+_typescript decl_
+
+```typescript
+declare function gamma(
+  x: number|number[]
+): number|number[] 
+```
+
+Usage:
+
+```javascript
+const libR = require('lib-r-math');
+const {
+    special: { gamma },
+    R: { numberPrecision, seq: _seq, flatten: c }
+} = libR;
+
+//some helpers
+const seq = _seq()();
+const precision9 = numberPrecision(9); //truncate past 9 digits
+
+//generate data
+const gx = seq(2,5,.5).map(x=> x*x-9);
+//[ -5, -2.75, 0, 3.25, 7, 11.25, 16 ]
+
+const g = precision9(gamma(gx));
+//[ NaN, -1.00449798, NaN, 2.54925697, 720, 6552134.14, 1307674370000 ]
+```
+
+_Equivalent in R_
+
+```R
+gx => seq(2, 5, .5)^2 - 9.125;
+#[1] -5.125 -2.875 -0.125  3.125  6.875 11.125 15.875
+
+gamma(gx);
+#[1]           NaN -1.004498e+00           NaN  2.549257e+00  7.200000e+02
+#[6]  6.552134e+06  1.307674e+12
+```
+
+#### `lgammma`
+
+The [logarithmic gammma function](TODO) Γ(x). See [R doc](https://stat.ethz.ch/R-manual/R-devel/library/base/html/Special.html).
+
+_typescript decl_
+
+```typescript
+declare function lgamma(
+  x: number|number[]
+): number|number[] 
+```
+
+Usage:
+
+```javascript
+const libR = require('lib-r-math');
+const {
+    special: { lgamma },
+    R: { numberPrecision, seq: _seq, flatten: c }
+} = libR;
+
+//some helpers
+const seq = _seq()();
+const precision9 = numberPrecision(9); //truncate past 9 digits
+
+//generate data
+const gx = seq(2,5,.5).map(x=> x*x-9);
+//[ -5, -2.75, 0, 3.25, 7, 11.25, 16 ]
+
+const g = precision9(lgamma(gx));
+//[ Infinity,  0.00448789754,  Infinity,  0.935801931,  6.57925121,  15.6953014, 27.8992714 ]
+```
+
+_Equivalent in R_
+
+```R
+gx = seq(2,5,.5)^2-9;
+
+lgamma(gx);
+#[1]          Inf  0.004487898          Inf  0.935801931  6.579251212
+#[6] 15.695301377 27.899271384
+```

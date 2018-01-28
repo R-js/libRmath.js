@@ -590,7 +590,7 @@ function dpsifn(
 */
 const print_psigamma = debug('psigamma');
 
-export function psigamma(_x: number | number[], _deriv: number | number[]): number | number[] {
+export function psigamma(_x: number | number[], _deriv: number | number[] = 0): number | number[] {
   /* n-th derivative of psi(x);  e.g., psigamma(x,0) === digamma(x) */
   // double
   let ans = [0];
