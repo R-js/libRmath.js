@@ -42,7 +42,7 @@
 import * as debug from 'debug';
 
 import { ML_ERR_return_NAN, R_D__0 } from '../common/_general';
-import { choose, lchoose } from '../common/choose';
+import { internal_choose, internal_lchoose } from '../common/choose';
 import { map } from '../r-func';
 import { cwilcox } from './cwilcox';
 import { WilcoxonCache } from './WilcoxonCache';
@@ -97,7 +97,7 @@ export function dwilcox<T>(
     
     //console.log(`4. c1:${c1} <- x:${x}, m:${m}, n:${n}`);
     return giveLog
-      ? log(cwilcox(x, m, n, w)) - lchoose(m + n, n)
-      : cwilcox(x, m, n, w) / choose(m + n, n);
+      ? log(cwilcox(x, m, n, w)) - internal_lchoose(m + n, n)
+      : cwilcox(x, m, n, w) / internal_choose(m + n, n);
   }) as any;
 }

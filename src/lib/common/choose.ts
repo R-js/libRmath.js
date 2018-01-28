@@ -58,6 +58,8 @@ const { isInteger, NEGATIVE_INFINITY: ML_NEGINF, isNaN: ISNAN } = Number;
 import { internal_lbeta } from '../beta/lbeta';
 import { lgammafn } from '../gamma/lgamma_fn';
 import { lgammafn_sign } from '../gamma/lgammafn_sign';
+import { multiplexer } from '../r-func';
+import { numVector } from '../types';
 
 // used by "qhyper"
 function lfastchoose(n: number, k: number) {
@@ -72,8 +74,18 @@ function lfastchoose2(n: number, k: number, sChoose?: number[]) {
   return lgammafn(n + 1) - lgammafn(k + 1) - r;
 }
 
+
+export function choose(_n: numVector, _k: numVector): numVector {
+  return multiplexer(_n, _k)((n, k) => internal_choose(n, k));
+}
+
+export function lchoose(_n: numVector, _k: numVector): numVector {
+ return multiplexer(_n, _k)((n, k) => internal_lchoose(n, k));
+}
+
 const printer_lchoose = debug('lchoose');
-export function lchoose(n: number, k: number): number {
+
+export function internal_lchoose(n: number, k: number): number {
   let k0 = k;
   k = Math.round(k);
   /* NaNs propagated correctly */
@@ -88,12 +100,12 @@ export function lchoose(n: number, k: number): number {
   }
   /* else: k >= 2 */
   if (n < 0) {
-    return lchoose(-n + k - 1, k);
+    return internal_lchoose(-n + k - 1, k);
   } else if (isInteger(n)) {
     n = round(n);
     if (n < k) return ML_NEGINF;
     /* k <= n :*/
-    if (n - k < 2) return lchoose(n, n - k); /* <- Symmetry */
+    if (n - k < 2) return internal_lchoose(n, n - k); /* <- Symmetry */
     /* else: n >= k+2 */
     return lfastchoose(n, k);
   }
@@ -111,7 +123,7 @@ const k_small_max = 30;
 */
 const printer_choose = debug('choose');
 
-export function choose(n: number, k: number): number {
+export function internal_choose(n: number, k: number): number {
   let r: number;
   let k0 = k;
   k = round(k);
@@ -132,13 +144,13 @@ export function choose(n: number, k: number): number {
   }
   /* else: k >= k_small_max */
   if (n < 0) {
-    r = choose(-n + k - 1, k);
+    r = internal_choose(-n + k - 1, k);
     if (isOdd(k)) r = -r;
     return r;
   } else if (isInteger(n)) {
     n = round(n);
     if (n < k) return 0;
-    if (n - k < k_small_max) return choose(n, n - k); /* <- Symmetry */
+    if (n - k < k_small_max) return internal_choose(n, n - k); /* <- Symmetry */
     return round(exp(lfastchoose(n, k)));
   }
   /* else non-integer n >= 0 : */

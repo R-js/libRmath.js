@@ -5,11 +5,14 @@ Javascript ( TypeScript ) Pure Implementation of Statistical R "core" numerical
 
 #### Summary
 
-libRmath.js port of its `R` counterpart contains functions related to 21 
-distributions, 4 special function types (`Bessel`,`Gamma`,`Beta`), 
-7 uniform PRNG's and 6 normally distributed PRNG's. The output produced by the ported function have full fidelity with their R counterpart and this is _VERIFIED_ by the many examples in this document.
+libRmath.js port contains all functions implemented in R `nmath` counterpart:
 
-Like in R, it becomes trivial to implement hypothesis test with this library (example: `ANOVA` uses the F-distribution). Tukey HSD uses `ptukey` functions. etc.
+* probability and quantile functions related to 21 distributions.
+* functions to work with `Special functions  in mathematics` (`Bessel`,`Gamma`,`Beta`).
+* 7 uniform PRNG's. (same sequence in R for the same initial seeding).
+* 6 normally distributed PRNG's. (same sequence in R for te same initial seeding).
+
+With this library it becomes trivial to implement hypothesis testing in javascript, calculating p-values and (1 - α) confidence intervals. (`ANOVA` uses the F-distribution. Tukey HSD uses `ptukey` functions. etc).
 
 All functions in `libRmath.so` has been re-written to `Javascript` (`Typescript`).
 Use the library with either vanilla `Javascript` or `Typescript`.
@@ -25,23 +28,25 @@ as in server side node environment.
 #### serverside
 
 ```bash
-npm install --save lib-r-math
+npm install --save lib-r-math.js
 ```
 
 #### web
+
+This repository uses webpack to build an UMD bundle for inclusion in `<script>` tag.
 
 ```html
 <script src="your_server_url/libR.min.js"></script>
 <script>
   const libR = window.libR.;
-  //fetch some distributions
+  //fetch some distribution namespaces
   const { Tukey, Normal, Beta, StudentT, Wilcoxon } = libR;
 </script>
 ```
 
 # Table of Contents
 
-* [TODO: Differences with R](#differences-with-R)
+* [TODO:Differences with R](#differences-with-R)
 * [Helper functions for porting R programs](#helper-functions-for-porting-r-programs)
 * [Uniform Pseudo Random Number Generators](#uniform-pseudo-random-number-generators)
 * [Normal Random Number Generators](#normal-distributed-random-number-generators)
@@ -72,8 +77,14 @@ npm install --save lib-r-math
   * [Bessel functions](#bessel-functions)
   * [Beta functions](#beta-functions)
   * [Gamma functions](#gamma-functions)
-  * [TODO:Functions for working with Combinatorics](#functions-for-working-with-combinatorics)
-* [TODO:Road map](#road-map)
+  * [Binomial coefficient functions](#binomial-coefficient-functions)
+
+# Differences with R.
+
+Some implementation differences exist with R `nmath`
+
+* PRNG's are not global singletons, but separate object instances and you can have as many as you want. The programmer can have deviate generators share PRNG's.
+* Wilcoxon Sum Rank functions `dwilcox, pwilcox, qwilcox` use a fraction of the memory
 
 # Helper functions for porting `R` programs.
 
@@ -8323,9 +8334,9 @@ lbeta(c(0.5, 100), c(0.25, 50))
 
 ### Gamma functions
 
-`digamma, trigamma, pentagamma, tetragamma, psigamma,   gammma, lgamma`
+`digamma, trigamma, pentagamma, tetragamma, psigamma`, `gammma`, `lgamma`.
 
-The functions [gamma](#gamma)and [lgamma](#gamma) return the gamma function [Γ(x)]() and the natural logarithm of the absolute value of the gamma function: `ln|[Γ(x)|`.
+The functions [gamma](#gamma)and [lgamma](#lgamma) return the gamma function [Γ(x)](https://en.wikipedia.org/wiki/Gamma_function) and the natural logarithm of the absolute value of the gamma function: `ln|[Γ(x)|`.
 
 The functions `digamma`, `trigamma`, `pentagamma`, `tetragamma` and `psigamma`
 return repectivily the first, second, third and fourth derivatives and n-th derivatives
@@ -8386,7 +8397,7 @@ digamma(x);
 
 The 2nd derivative of  `ln Γ(x)`. See [R doc]()
 
-$$ ψ(x)² = \frac{d²}{dx²}  (ln Γ(x) )$$
+$$ ψ(x)' = \frac{d²}{dx²}  (ln Γ(x) )$$
 
 _typescript decl_
 
@@ -8436,7 +8447,7 @@ trigamma(x);
 The 3rd derivative of  `ln Γ(x)`. This function is deprecated in `R`. 
 `tetragamma(x)` is an alias for `psigamma(x,2)`.
 
-$$ ψ(x)³ = \frac{d³}{dx³}  (ln Γ(x) )$$
+$$ ψ(x)³ = \frac{d²}{dx²}  (ln Γ(x) )$$
 
 _typescript decl_
 
@@ -8487,8 +8498,7 @@ psigamma(x,2);
 The 4th derivative of  `ln Γ(x)`. This function is deprecated in `R`.
 `pentagamma(x)` is an alias for `psigamma(x,3)`.
 
-TODO: put raised to the power 4 in ascii in underlying formula
-$$ ψ(x) = \frac{d³}{dx³}  (ln Γ(x) )$$
+$$ ψ³(x) = \frac{d⁴}{dx⁴}  (ln Γ(x) )$$
 
 _typescript decl_
 
@@ -8585,7 +8595,7 @@ psigamma(x, 9)
 
 #### `gammma`
 
-The [gammma function](TODO) Γ(x). See [R doc](https://stat.ethz.ch/R-manual/R-devel/library/base/html/Special.html).
+The [gammma function](https://en.wikipedia.org/wiki/Gamma_function) Γ(x). See [R doc](https://stat.ethz.ch/R-manual/R-devel/library/base/html/Special.html).
 
 _typescript decl_
 
@@ -8629,7 +8639,7 @@ gamma(gx);
 
 #### `lgammma`
 
-The [logarithmic gammma function](TODO) Γ(x). See [R doc](https://stat.ethz.ch/R-manual/R-devel/library/base/html/Special.html).
+The [logarithmic gammma function](https://en.wikipedia.org/wiki/Gamma_function) Γ(x). See [R doc](https://stat.ethz.ch/R-manual/R-devel/library/base/html/Special.html).
 
 _typescript decl_
 
@@ -8668,4 +8678,126 @@ gx = seq(2,5,.5)^2-9;
 lgamma(gx);
 #[1]          Inf  0.004487898          Inf  0.935801931  6.579251212
 #[6] 15.695301377 27.899271384
+```
+
+### Binomial coefficient functions.
+
+`choose, lchoose`
+
+The functions `choose` and `lchoose` return [binomial coefficients](https://en.wikipedia.org/wiki/Combination) and the logarithms of their absolute values.See [R doc](https://stat.ethz.ch/R-manual/R-devel/library/base/html/Special.html).
+
+#### `choose`
+
+Returns the binomial coefficient of `n over k` ${n}\choose{k}$. 
+
+_typescript decl_
+
+```typescript
+declare function choose(
+  n: number|number[],
+  k: number|number[]
+): number|number[]
+```
+
+* `n`: scalar or array of numbers
+* `k`: scalar or array of numbers
+
+**Note:** if `n` and `k` are unequal sized arrays then R argument cycling rules apply.
+
+Usage:
+
+```javascript
+const libR = require('lib-r-math');
+const {
+    special: { choose },
+    R: { seq: _seq, flatten: c }
+} = libR;
+
+//1  All coefficeints of the expanded (x+y)⁴.
+const coef1 = choose(4, c(0, 1, 2, 3, 4));
+//[ 1, 4, 6, 4, 1 ]
+
+//2
+const coef2 = choose(4000, 30);
+//3.8975671313115776e+75
+
+//3
+const coef3 = choose(2000, 998);
+//Infinity
+```
+
+_Equivalent in R_
+
+```R
+#1
+choose(4, c(0,1,2,3,4) );
+#[1] 1 4 6 4 1
+
+#2
+choose(4000,30);
+#[1] 3.897567e+75
+
+#3
+choose(2000,998);
+#[1] Inf
+```
+
+#### `lchoose`
+
+Returns the natural logarithm binomial coefficient of `n over k` ${n}\choose{k}$.
+
+_typescript decl_
+
+```typescript
+declare function choose(
+  n: number|number[],
+  k: number|number[]
+): number|number[]
+```
+
+* `n`: scalar or array of numbers
+* `k`: scalar or array of numbers
+
+**Note:** if `n` and `k` are unequal sized arrays then R argument cycling rules apply.
+
+Usage:
+
+```javascript
+const libR = require('lib-r-math');
+const {
+    special: { choose },
+    R: { seq: _seq, flatten: c }
+} = libR;
+
+//1  All ln's of the coefficeints of the expanded (x+y)⁴.
+const lcoef1 = lchoose(4, c(0, 1, 2, 3, 4));
+/*[
+  0,                  1.3862943611198906,  1.7917594692280552, 
+  1.3862943611198906, 0
+]*/
+
+
+//2
+const lcoef2 = lchoose(4000, 30);
+//174.05423452055285
+
+//3
+const lcoef3 = lchoose(2000, 998);
+//1382.2639955341506
+```
+
+_Equivalent in R_
+
+```R
+#1
+lchoose(4, c(0,1,2,3,4) );
+#[1] 0.000000 1.386294 1.791759 1.386294 0.000000
+
+#2
+lchoose(4000,30);
+#[1] 174.0542
+
+#3
+lchoose(2000,998);
+#[1] 1382.264
 ```

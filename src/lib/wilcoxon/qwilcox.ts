@@ -53,7 +53,7 @@ import { map } from '../r-func';
 import { cwilcox } from './cwilcox';
 import { WilcoxonCache } from './WilcoxonCache';
 
-import { choose } from '../common/choose';
+import { internal_choose } from '../common/choose';
 
 const { round: R_forceint, trunc } = Math;
 const { isNaN: ISNAN, isFinite: R_FINITE, EPSILON: DBL_EPSILON } = Number;
@@ -85,7 +85,7 @@ export function qwilcox<T>(
     if (logP || !lowerTail)
       x = R_DT_qIv(lowerTail, logP, x); /* lower_tail,non-log "p" */
 
-    let c = choose(m + n, n);
+    let c = internal_choose(m + n, n);
     let p = 0;
     let q = 0;
     if (x <= 0.5) {
