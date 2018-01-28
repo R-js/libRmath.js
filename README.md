@@ -9,8 +9,8 @@ libRmath.js port contains all functions implemented in R `nmath` counterpart:
 
 * probability and quantile functions related to 21 distributions.
 * functions to work with `Special functions  in mathematics` (`Bessel`,`Gamma`,`Beta`).
-* 7 uniform PRNG's. (same sequence in R for the same initial seeding).
-* 6 normally distributed PRNG's. (same sequence in R for te same initial seeding).
+* 7 uniform PRNG's. (same output pseudo-random sequence in R for the same initial seeding).
+* 6 normally distributed PRNG's. (same output sequence in R for te same initial seeding).
 * Function vector (array) arguments follow the [R recycling rule](https://cran.r-project.org/doc/manuals/r-release/R-intro.html#The-recycling-rule).
 
 With this library it becomes trivial to implement hypothesis testing in javascript, calculating p-values and (1 - α) confidence intervals. (`ANOVA` uses the F-distribution. Tukey HSD uses `ptukey` functions. etc).
