@@ -47,7 +47,7 @@ The module directory contains a minimized bundle for use in html `<script>` tag.
 
 # Table of Contents
 
-* [Differences with R](#differences-with-R)
+* [Differences with R](#differences-with-r)
 * [*Read this first*: Helper functions](#helper-functions-for-porting-r-programs)
 * [Uniform Pseudo Random Number Generators](#uniform-pseudo-random-number-generators)
 * [Normal Random Number Generators](#normal-distributed-random-number-generators)
