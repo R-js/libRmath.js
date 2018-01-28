@@ -80,14 +80,14 @@ The module directory contains a minimized bundle for use in html `<script>` tag.
   * [Gamma functions](#gamma-functions)
   * [Binomial coefficient functions](#binomial-coefficient-functions)
 
-# Differences with R.
+# Differences with R
 
 Some implementation differences exist with R `nmath`
 
 * PRNG's are not global singletons, but separate object instances and you can have as many as you want. The programmer can have deviate generators share PRNG's.
 * Wilcoxon Sum Rank functions `dwilcox, pwilcox, qwilcox` use a fraction of the memory, (R will give memory allocation errors for samples ~1000). The JS solution allocates sparse memory.
 
-# Helper functions for porting `R` programs.
+# Helper functions for porting `R` programs
 
 #### Summary
 
@@ -453,7 +453,7 @@ All parameters are recycled to that length.
 
 --
 
-# Uniform Pseudo Random Number Generators.
+# Uniform Pseudo Random Number Generators
 
 #### Summary
 
@@ -833,7 +833,7 @@ _in R console_:
 [5] 0.3952391
 ```
 
-## Normal distributed Random Number Generators.
+## Normal distributed Random Number Generators
 
 #### Summary
 
@@ -4392,7 +4392,7 @@ rgamma(5, 7.5, 1);
 #[1]  8.871102  5.348633 10.805079  9.077132  9.393374
 ```
 
-### Geometric distribution.
+### Geometric distribution
 
 `dgeom, qgeom, pgeom, rgeom`
 
@@ -6407,7 +6407,7 @@ set.seed(123);
 [1] 15 11  5  4 13
 ```
 
-### Wilcoxon signed rank statistic distribution.
+### Wilcoxon signed rank statistic distribution
 
 `dsignrank, psignrank, qsignrank, rsignrank`
 
@@ -8685,7 +8685,7 @@ lgamma(gx);
 #[6] 15.695301377 27.899271384
 ```
 
-### Binomial coefficient functions.
+### Binomial coefficient functions
 
 `choose, lchoose`
 
