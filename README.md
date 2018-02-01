@@ -52,7 +52,7 @@ The module directory contains a minimized bundle for use in html `<script>` tag.
 * [Uniform Pseudo Random Number Generators](#uniform-pseudo-random-number-generators)
 * [Normal Random Number Generators](#normal-distributed-random-number-generators)
 * [Canonical distributions](#canonical-distributions)
-  * [Uniform distribution](#uniform-distributions)
+  * [Uniform distribution](#uniform-distribution)
   * [Normal distribution](#normal-distribution)
 * [Other Probability Distributions](#other-probability-distributions)
   * [Beta distribution](#beta-distribution)
