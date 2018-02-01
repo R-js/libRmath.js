@@ -2921,9 +2921,7 @@ Usage:
 const libR = require('lib-r-math.js');
 const {
   Cauchy,
-  rng: {
-    MersenneTwister
-  }
+  rng: { SuperDuper }
 } = libR;
 // some usefull tools
 

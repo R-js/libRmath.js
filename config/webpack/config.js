@@ -14,7 +14,7 @@ module.exports = [{
         path: resolve('dist/lib'),
         filename: '[name].js',
         libraryTarget: 'umd2',
-        library: 'libRMath'
+        library: 'libR'
     },
     node: {
         __dirname: false,
@@ -30,7 +30,7 @@ module.exports = [{
     },
     plugins: [
         rm({ paths: ['lib'] }),
-        //uglify()
+        uglify()
     ],
     resolve: {
         extensions,
