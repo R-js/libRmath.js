@@ -13,7 +13,7 @@ libRmath.js port contains all functions implemented in R `nmath` counterpart:
 * 6 normally distributed PRNG's. (same output sequence in R for te same initial seeding).
 * Function vector (array) arguments follow the [R recycling rule](https://cran.r-project.org/doc/manuals/r-release/R-intro.html#The-recycling-rule).
 
-With this library it becomes trivial to implement hypothesis testing in javascript, calculating p-values and (1 - α) confidence intervals. (`ANOVA` uses the F-distribution. Tukey HSD uses `ptukey` functions. etc).
+With this library it becomes trivial to implement hypothesis testing in javascript, calculating p-values and (1 - α) confidence intervals. (`ANOVA` uses the F-distribution. Tukey HSD uses `ptukey` function, etc, etc).
 
 All functions in `libRmath.so` has been re-written to `Javascript` (`Typescript`).
 Use the library with either vanilla `Javascript` or `Typescript`.
@@ -84,8 +84,8 @@ The module directory contains a minimized bundle for use in html `<script>` tag.
 
 Some implementation differences exist with R `nmath`
 
-* PRNG's are not global singletons, but separate object instances and you can have as many as you want. The programmer can have deviate generators share PRNG's.
-* Wilcoxon Sum Rank functions `dwilcox, pwilcox, qwilcox` use a fraction of the memory, (R will give memory allocation errors for samples ~1000). The JS solution allocates sparse memory.
+* PRNG's are not global singletons, but separate object instances and you can have as many as you want. The programmer can has the choice of having different deviate generators sharing a common source PRNG.
+* Wilcoxon Sum Rank functions `dwilcox, pwilcox, qwilcox` use a fraction of the memory, (R will give memory allocation errors for samples ~1000). The JS solution allocates memory sparsely.
 
 # Helper functions for porting `R` programs
 
@@ -211,14 +211,15 @@ Usage:
 
 ```javascript
 const libR = require('lib-r-math.js');
+
 const digits4 = libR.R.numberPrecision(4);
 
 //1 single value
-const pr4a = precision(1.12345678);
+const pr4a = digits4(1.12345678);
 //1.123
 
 //2 works with arrays
-const pr4b = precision([0.4553, -2.1243]);
+const pr4b = digits4([0.4553, -2.1243]);
 //[ 0.4553, -2.124 ]
 ```
 

@@ -200,11 +200,11 @@ export function numberPrecision(prec: number = 6) {
 }
 
 export function any<T>(x: T[]) {
-  return function(fn: any | ((v: T, i?: number) => boolean)) {
+  return function(fn: any | ((v: T, i?: number) => boolean)): boolean {
     if (fn instanceof Function) {
-      return x.find(fn);
+      return x.find(fn) !== undefined ;
     }
-    return x.find(d => d === fn);
+    return x.find(d => d === fn) !== undefined;
   };
 }
 

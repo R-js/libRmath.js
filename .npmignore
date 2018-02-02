@@ -3,6 +3,11 @@ src
 docs
 extra
 config
+*.pem
+spell.json
+tsconfig.json
+tslint.json
+yarn.lock
 
 # everything except the package.json i hope
 
