@@ -501,9 +501,9 @@ usage example:
 ```javascript
 const libR = require('lib-r-math.js');
 const {
-  R: { numberPrecision },
-  rng: { MersenneTwister, timeseed }
-} = libR.rng;
+    R: { numberPrecision },
+    rng: { MersenneTwister, timeseed }
+} = libR;
 
 //helpers
 const precision = numberPrecision(9); //9 digits accuracy
@@ -518,7 +518,7 @@ mt.init(timeseed()); // Use seed derived from system clock
 mt.init(0); // re-initialize with seed = 0
 
 // show first 8 values of the seed buffer of the mt instance.
-mt.seed.slice(0,8);
+mt.seed.slice(0, 8);
 /*[ 624,   1280795612,  -169270483,  -442010614,  -603558397,  -222347416,
   1489374793, 865871222 ]
 */
@@ -554,10 +554,13 @@ usage example:
 
 ```javascript
 const libR = require('lib-r-math.js');
-const { rng: { WichmannHill, timeseed }, R: { seq, numberPrecision } } = libR;
+const {
+  rng: { WichmannHill, timeseed },
+  R: { numberPrecision }
+} = libR;
 
 // some helpers
-const sequence = seq()();
+
 const precision = numberPrecision(9);
 
 // Some options on seeding given below
@@ -568,7 +571,7 @@ wh.init(timeseed()); // re-init seed with a random seed based on timestamp
 wh.init(0); // re-init seed to zero
 wh.seed; // show seed
 //[ 2882, 21792, 10079 ]
-const rwh1 = sequence(5).map(() => wh.unif_rand());
+const rwh1 = wh.unif_rand(5);
 precision(rwh1);
 //[ 0.462553151, 0.26582675, 0.57721078, 0.510793206, 0.337560559 ]
 ```
@@ -596,7 +599,7 @@ usage example:
 const libR = require('lib-r-math.js');
 const {
   rng: { MarsagliaMultiCarry, timeseed },
-  R: { seq, numberPrecision }
+  R: { numberPrecision }
 } = libR;
 
 //usefull helpers
@@ -611,7 +614,7 @@ mmc.init(0); // also, defaults to '0' if seed is not specified
 mmc.seed;
 //[ -835792825, 1280795612 ]
 
-const rmmc = sequence(5).map(() => mmc.unif_rand());
+const rmmc =  mmc.unif_rand(5);
 precision(rmmc);
 //[ 0.169153755, 0.53154353, 0.594605297, 0.233315406, 0.45765618 ]
 ```
