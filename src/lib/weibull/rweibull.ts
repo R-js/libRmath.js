@@ -50,7 +50,7 @@ export function rweibull(
       return ML_ERR_return_NAN(printer);
     }
 
-    return scale * pow(-log(rng.unif_rand()), 1.0 / shape);
+    return scale * pow(-log((rng.unif_rand() as number)), 1.0 / shape);
   });
   return possibleScalar(result);
 }

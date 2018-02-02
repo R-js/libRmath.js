@@ -1,5 +1,6 @@
 'use strict';
 
+
 import { IRNG } from '../irng';
 import { IRNGType } from '../irng-type';
 import { timeseed } from '../timeseed';
@@ -46,9 +47,9 @@ export class LecuyerCMRG extends IRNG {
     super.init(se);
   }
 
-  public unif_rand(): number {
+  protected internal_unif_rand(): number {
+        
     const II = this.m_seed;
-
    
     //const pp2 = pow.bind(pow, 2);
     //const break32 = pp2(32);

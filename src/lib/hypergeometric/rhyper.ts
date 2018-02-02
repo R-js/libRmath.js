@@ -181,7 +181,7 @@ function _rhyper(
       return rbinom(1, kkin, nn1in / (nn1in + nn2in), rng) as number;
     }
     // Slow, but safe: return  F^{-1}(U)  where F(.) = phyper(.) and  U ~ U[0,1]
-    return qhyper(rng.unif_rand(), nn1in, nn2in, kkin, false, false);
+    return qhyper(rng.unif_rand() as number, nn1in, nn2in, kkin, false, false);
   }
   nn1 = nn1in;
   nn2 = nn2in;
@@ -267,7 +267,7 @@ function _rhyper(
     while (true) {
       p = w;
       ix = minjx;
-      u = rng.unif_rand() * scale;
+      u = (rng.unif_rand() as number) * scale;
 
       printer_rhyper('  _new_ u = %d', u);
 
@@ -332,8 +332,8 @@ function _rhyper(
     //L30:
     //let goto_L30 = false;
     while (true) {
-      let u = rng.unif_rand() * p3;
-      let v = rng.unif_rand();
+      let u: number = (rng.unif_rand() as number) * p3;
+      let v: number = rng.unif_rand() as number;
       n_uv++;
       if (n_uv >= 10000) {
         printer_rhyper(

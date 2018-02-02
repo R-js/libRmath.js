@@ -42,7 +42,7 @@ export function runif(
   }
 
   let result = new Array(n).fill(0).map(() => {
-    const s = u.unif_rand();
+    const s = u.unif_rand() as number;
     return (max - min) * s + min;
   });
 

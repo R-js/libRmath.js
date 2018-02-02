@@ -7,11 +7,17 @@ export abstract class IRNGNormal {
     this.rng = _rng;
     this.unif_rand = this.unif_rand.bind(this);
     this.norm_rand = this.norm_rand.bind(this);
+    this.internal_norm_rand = this.internal_norm_rand.bind(this);
   }
 
-  public abstract norm_rand(n?: number): number| number[];
+  public norm_rand(n: number = 1): number|number[]{
+    n = !n || n < 0 ? 1 : n;
+    return map(seq()()(n))(() => this.internal_norm_rand());
+  } 
+
+  protected abstract internal_norm_rand(): number;
+
   public unif_rand(n: number = 1): number|number[] {
-    n = ( !n || n < 0 ) ? 1 : n;
-    return map(seq(n))(() => this.rng.unif_rand());
+     return this.rng.unif_rand(n);
   }
 }

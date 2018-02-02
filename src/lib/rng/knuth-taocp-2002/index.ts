@@ -14,11 +14,11 @@
     
 
 
+
+import { fixup } from '../fixup';
 import { IRNG } from '../irng';
 import { IRNGType } from '../irng-type';
 import { timeseed } from '../timeseed';
-
-import { fixup } from '../fixup';
 
 const QUALITY = 1009; /* recommended quality level for high-res use */
 const SEED_LEN = 101;
@@ -169,7 +169,7 @@ export class KnuthTAOCP2002 extends IRNG {
     this.ran_x = this.m_seed;
   }
 
-  public unif_rand(): number {
+  protected internal_unif_rand(): number {
     const KT = 9.31322574615479e-10;
     return fixup(this.KT_next() * KT);
   }

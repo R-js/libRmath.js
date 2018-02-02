@@ -1,4 +1,5 @@
 
+import { map , seq } from '../r-func';
 import { IRNGType } from './irng-type';
 
 export type MessageType = 'INIT';
@@ -14,6 +15,7 @@ export abstract class IRNG {
     this.emit = this.emit.bind(this);
     this.register = this.register.bind(this);
     this.unif_rand = this.unif_rand.bind(this);
+    this.internal_unif_rand = this.internal_unif_rand.bind(this);
     this.init = this.init.bind(this);
     this._setup(); 
     this.init(_seed);
@@ -34,8 +36,13 @@ export abstract class IRNG {
   }
 
   public abstract set seed(_seed: number[]);
-  
-  public abstract unif_rand(): number ;
+  public unif_rand(n: number = 1): number|number[] {
+    n = ( !n || n < 0 ) ? 1 : n;
+    return map(seq()()(n))(() => this.internal_unif_rand());
+  }
+
+  protected abstract internal_unif_rand(): number;
+
   public abstract get seed(): number[];
   // event stuff
   public register(event: MessageType, handler: () => void){

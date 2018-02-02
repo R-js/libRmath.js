@@ -52,7 +52,7 @@ export function rexp(
       /* else */
       return ML_ERR_return_NAN(printer);
     }
-    return scale * exp_rand(rng.unif_rand); // --> in ./sexp.c
+    return scale * exp_rand(rng.unif_rand as any); // --> in ./sexp.c
   });
 
   return result.length === 1 ? result[0] : result;

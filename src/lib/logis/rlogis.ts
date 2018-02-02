@@ -50,7 +50,7 @@ export function rlogis(
 
     if (scale === 0 || !R_FINITE(location)) return location;
     else {
-      let u = rng.unif_rand();
+      let u: number = rng.unif_rand() as number;
       return location + scale * log(u / (1 - u));
     }
   }) as any;

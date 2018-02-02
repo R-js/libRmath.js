@@ -46,7 +46,7 @@ export class SuperDuper extends IRNG {
     this.m_seed = new Int32Array(buf).fill(0);
   }
 
-  public unif_rand(): number {
+  protected internal_unif_rand(): number {
     const s = this.m_seed;
     /* This is Reeds et al (1984) implementation;
                * modified using __unsigned__	seeds instead of signed ones
@@ -86,7 +86,6 @@ export class SuperDuper extends IRNG {
 
   public set seed(_seed: number[]) {
    
-
     if (_seed.length > this.m_seed.length || _seed.length === 0) {
       this.init(timeseed());
       return;

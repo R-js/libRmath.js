@@ -70,7 +70,7 @@ export function rwilcox(
     let x: number[] = seq()()(0, k - 1);
     printer_rwilcox(`------v`);
     for (let i = 0; i < n; i++) {
-      let j = floor(k * rng.unif_rand());
+      let j = floor(k * (rng.unif_rand() as number));
       r += x[j];
       x[j] = x[--k];
       printer_rwilcox('i:%d,\tn:%d\tj:%d\tk:%d\tr:%d\tx:%o', i, n, j, k, x);

@@ -9,7 +9,6 @@
 */
 
 
-
 import { fixup } from '../fixup';
 import { IRNG } from '../irng';
 import { IRNGType } from '../irng-type';
@@ -114,8 +113,8 @@ export class KnuthTAOCP extends IRNG {
     this.m_seed.set(_seed);
   }
 
-  public unif_rand(): number {
-    return fixup(this.KT_next() * KT);
+  protected internal_unif_rand(): number {
+     return fixup(this.KT_next() * KT);
   }
 
   public get seed() {

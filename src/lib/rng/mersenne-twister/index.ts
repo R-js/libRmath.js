@@ -46,7 +46,6 @@ const TEMPERING_MASK_C = 0xefc60000;
 
 
 
-
 import { fixup } from '../fixup';
 import { IRNG } from '../irng';
 import { IRNGType } from '../irng-type';
@@ -156,9 +155,11 @@ export class MersenneTwister extends IRNG {
     super.init(_seed);
   }
 
-  public unif_rand(): number {
+  public internal_unif_rand(): number {
+     
     let rc = this.MT_genrand();
     return fixup(rc);
+    
   }
 
   public set seed(_seed: number[]) {

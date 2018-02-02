@@ -87,7 +87,7 @@ function _rbinom(nin: number, pp: number, rng: IRNG): number {
   let f1;
   let f2;
   let u;
-  let v;
+  let v: number;
   let w;
   let w2;
   let x;
@@ -132,7 +132,7 @@ function _rbinom(nin: number, pp: number, rng: IRNG): number {
             and r == INT_MAX gave only even values */
     printer_rbinom('Evade overflow:%d > MAX_SAFE_INTEGER', r);
     return qbinom(
-      rng.unif_rand(), //between 0 and 1
+      rng.unif_rand() as number, //between 0 and 1
       r,
       pp,
       /*lower_tail*/ false,
@@ -188,8 +188,8 @@ function _rbinom(nin: number, pp: number, rng: IRNG): number {
   /*-------------------------- np = n*p >= 30 : ------------------- */
   let gotoFinis = false;
   while (true && !gotoL_np_small) {
-    u = rng.unif_rand() * p4;
-    v = rng.unif_rand();
+    u = (rng.unif_rand() as number) * p4;
+    v = (rng.unif_rand() as number);
     /* triangular region */
     if (u <= p1) {
       ix = trunc(xm - p1 * v + u);
