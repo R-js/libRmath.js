@@ -1442,6 +1442,8 @@ declare function dnorm(
 * `sigma`: standard deviation, default `1`.
 * `asLog`: give result as ln(..) value
 
+Usage:
+
 ```javascript
 const libR = require('lib-r-math.js');
 const {
@@ -1546,6 +1548,8 @@ declare function pnorm(
 * `lowerTail`: if `true` (default), probabilities are P[X ≤ x], otherwise, P[X > x].
 * `logP`: give result as log value
 
+Usage:
+
 ```javascript
 const libR = require('lib-r-math.js');
 const {
@@ -1587,7 +1591,7 @@ pnorm(-1:1, log.p= TRUE);
 
 #### `qnorm`
 
-The quantile function of the [Normal distribution](). See [R doc](http://stat.ethz.ch/r-manual/r-patched/library/stats/html/normal.html])
+The quantile function of the [Normal distribution](https://en.wikipedia.org/wiki/Normal_distribution). See [R doc](http://stat.ethz.ch/r-manual/r-patched/library/stats/html/normal.html])
 
 _typescript decl_
 
@@ -1606,36 +1610,56 @@ declare function qnorm(
 * `sigma`: standard deviation (default 1).
 * `logP`: probabilities are given as ln(p).
 
+Usage:
+
 ```javascript
 const libR = require('lib-r-math.js');
-const { Normal, arrayrify } = libR;
+const {
+    Normal,
+    R: { multiplex, seq: _seq, numberPrecision }
+} = libR;
+
+//some helpers
+const log = multiplex(Math.log);
+const _9 = numberPrecision(9);
+const seq = _seq()();
+
 const { rnorm, dnorm, pnorm, qnorm } = Normal();
 
-// Math.log will work on both scalar or an array
-const log = arrayrify(Math.log);
+//some data
+const p = seq(0, 1, 0.25);
+//[0, 0.25, 0.5, 0.75, 1]
 
-qnorm(0);
+const q1 = _9(qnorm(0));
 //-Infinity
 
-qnorm([-1, 0, 1]); // -1 makes no sense
-//[ NaN, -Infinity, Infinity ]
+const q2 = _9(qnorm(p, 0, 2));
+//[ -Infinity, -1.3489795, 0, 1.3489795, Infinity ]
 
-qnorm([0, 0.25, 0.5, 0.75, 1], 0, 2); // take quantiles of 25%
-//[ -Infinity, -1.3489795003921634, 0, 1.3489795003921634, Infinity ]
+const q3 = _9(qnorm(p, 0, 2, false));
+//[ Infinity, 1.3489795, 0, -1.3489795, -Infinity ]
 
-qnorm([0, 0.25, 0.5, 0.75, 1], 0, 2, false); // same but use upper Tail of distribution
-//[ Infinity, 1.3489795003921634, 0, -1.3489795003921634, -Infinity ]
-
-qnorm(log([0, 0.25, 0.5, 0.75, 1]), 0, 2, false, true); //
-//[ Infinity, 1.3489795003921634, 0, -1.3489795003921634, -Infinity ]
+//same as q3
+const q4 = _9(qnorm(log(p), 0, 2, false, true));
+//[ Infinity, 1.3489795, 0, -1.3489795, -Infinity ]
 ```
 
-_in R console_
+_Equivalent in R_
 
 ```R
-#R console
-> qnorm( c( 0, 0.05, 0.25 ,0.5 , 0.75, 0.95, 1));
-[1] -Inf -1.6448536 -0.6744898  0.0000000  0.6744898  1.6448536 Inf
+p = seq(0, 1, 0.25);
+
+qnorm(0);
+#[1] -Inf
+
+qnorm(p, 0, 2);
+#[1]     -Inf -1.34898  0.00000  1.34898      Inf
+
+qnorm(p, 0, 2, FALSE);
+#[1]      Inf  1.34898  0.00000 -1.34898     -Inf
+
+qnorm(log(p), 0, 2, FALSE, TRUE);
+#[1]      Inf  1.34898  0.00000 -1.34898     -Inf
 ```
 
 #### `rnorm`
@@ -1652,45 +1676,43 @@ declare function rnorm(n = 1, mu = 0, sigma = 1): number | number[];
 * `mu`: mean of the distribution. Defaults to 0.
 * `sigma`: standard deviation. Defaults to 1.
 
+Usage:
+
 ```javascript
 const libR = require('lib-r-math.js');
-const { Normal } = libR;
+const {
+    Normal,
+    R: { numberPrecision }
+} = libR;
+
+//helper
+const _9 = numberPrecision(9); // 9 digits
 
 //default Mersenne-Twister/Inversion
 const { rnorm, dnorm, pnorm, qnorm } = Normal();
 
-rnorm(5);
-/*[ 1.2629542848807933,
-  -0.3262333607056494,
-  1.3297992629225006,
-  1.2724293214294047,
-  0.4146414344564082 ]
-*/
-rnorm(5, 2, 3);
-/*[ -2.619850125711128,
-  -0.7857011041406143,
-  1.1158386596283194,
-  1.9826984817573892,
-  9.213960166573852 ]
-*/
+const r1 = _9(rnorm(5));
+//[ 1.26295428, -0.326233361, 1.32979926, 1.27242932, 0.414641434 ]
+
+const r2 = _9(rnorm(5, 2, 3));
+//[ -2.61985013, -0.785701104, 1.11583866, 1.98269848, 9.21396017 ]
 ```
 
-Same values as in R
-
-_in R console_
+_Equivalent in R_
 
 ```R
-> RNGkind("Mersenne-Twister",normal.kind="Inversion")
-> set.seed(0)
-> rnorm(5)
-[1]  1.2629543 -0.3262334
-[3]  1.3297993  1.2724293
-[5]  0.4146414
-> rnorm(5,2,3)
-[1] -2.6198501 -0.7857011
-[3]  1.1158387  1.9826985
-[5]  9.2139602
->
+RNGkind("Mersenne-Twister",normal.kind="Inversion")
+set.seed(0)
+
+rnorm(5)
+#[1]  1.2629543 -0.3262334
+#[3]  1.3297993  1.2724293
+#[5]  0.4146414
+
+rnorm(5,2,3)
+#[1] -2.6198501 -0.7857011
+#[3]  1.1158387  1.9826985
+#[5]  9.2139602
 ```
 
 ## Other Probability Distributions
