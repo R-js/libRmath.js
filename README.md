@@ -1397,31 +1397,34 @@ runif(5,-1,1);
 
 `dnorm, qnorm, pnorm, rnorm`
 
-R documentation [here](http://stat.ethz.ch/R-manual/R-patched/library/stats/html/Normal.html).
-These functions are created with the factory method `Normal` taking as argument an optional _normal PRNG_ (defaults to [Inversion](#inversion).
+Density, distribution function, quantile function and random generation for the normal distribution with mean equal to `mean` and standard deviation equal to `sd`. See [R doc](http://stat.ethz.ch/R-manual/R-patched/library/stats/html/Normal.html).
+These functions are created with the factory method `Normal` taking as optional argument a _normal PRNG_ (defaults to [Inversion](#inversion).
 
 Usage:
 
 ```javascript
 const libR = require('lib-r-math.js');
+const {
+    Normal,
+    rng: {
+        SuperDuper,
+        normal: { AhrensDieter }
+    }
+} = libR;
 
-// get the suite of functions working with uniform distributions
-const { Normal } = libR;
-const { normal: { BoxMuller }, SuperDuper } = libR.rng;
+//specify explicit PRNG's
+const norm1 = Normal(new AhrensDieter(new SuperDuper(1234)));
 
-//Create Normal family of functions using "BoxMuller" feeding from "SuperDuper"
-const norm1 = Normal(new BoxMuller(new SuperDuper(0)));
-
-// using the default "Inversion" feeding from "Mersenne-Twister".
+//OR just go with defaults: "Inversion" and "Mersenne-Twister".
 const norm2 = Normal(); //
 
-// functions exactly named as in `R`
+//strip and use
 const { rnorm, dnorm, pnorm, qnorm } = norm2;
 ```
 
 #### `dnorm`
 
-The density function of the [Normal distribution](). See [R doc](http://stat.ethz.ch/r-manual/r-patched/library/stats/html/normal.html)
+The density function of the [Normal distribution](https://en.wikipedia.org/wiki/Normal_distribution). See [R doc](http://stat.ethz.ch/r-manual/r-patched/library/stats/html/normal.html)
 
 _typescript decl_
 
@@ -1430,74 +1433,100 @@ declare function dnorm(
   x: number | number[],
   mu = 0,
   sigma = 1,
-  giveLog = false
+  asLog = false
 ): number | number[];
 ```
 
 * `x`:scalar or array of quantiles
-* `mu`: mean (default 0)
-* `sigma`: standard deviation
-* `giveLog`: give result as log value
+* `mu`: mean, default `0`.
+* `sigma`: standard deviation, default `1`.
+* `asLog`: give result as ln(..) value
 
 ```javascript
 const libR = require('lib-r-math.js');
-const { Normal } = libR;
-const { seq } = libR.R;
+const {
+    Normal,
+    R: {
+        numberPrecision,
+        seq: _seq,
+        c
+    }
+} = libR;
+
+//helpers
+const seq = _seq()();
+const _9 = numberPrecision(9); //9 digits significance
+
 const { rnorm, dnorm, pnorm, qnorm } = Normal();
 
-dnorm(0); //standard normal density, max value at '0'
-//0.3989422804014327
-dnorm(3, 4, 2); // standard normal with mean=4 and sigma=2, value at 3
-//0.17603266338214976
-dnorm(-10); // course the gaussian is almost zero 10 sigmas from the mean
-//7.69459862670642e-23
-dnorm([-Infinity, Infinity, NaN, -4, -3, -2, 0, 1, 2, 3, 4]);
-/*
-[ 0,
+const d1 = _9(dnorm(0));
+//0.39894228
+
+//x=3, µ=4, sd=2
+const d2 = _9(dnorm(3, 4, 2));
+//0.176032663
+
+const d3 = _9(dnorm(-10));
+//7.69459863e-23
+
+//feed it also some *non-numeric*
+const x = c(-Infinity, Infinity, NaN, seq(-4, 4));
+const d4 = _9(dnorm(x));
+/*[
   0,
+  0,  
   NaN,
-  0.00013383022576488537,
-  0.0044318484119380075,
-  0.05399096651318806,
-  0.3989422804014327,
-  0.24197072451914337,
-  0.05399096651318806,
-  0.0044318484119380075,
-  0.00013383022576488537 ]
-*/
-dnorm(
-  seq(0)(0)(-4, 4), //[-4,-3,..., 4]
-  2, //mu = 2
-  1, //sigma = 1
-  true //give return values as log
-);
-/*
-[ -18.918938533204674,
-  -13.418938533204672,
-  -8.918938533204672,
-  -5.418938533204673,
-  -2.9189385332046727,
-  -1.4189385332046727,
-  -0.9189385332046728,
-  -1.4189385332046727,
-  -2.9189385332046727 ]
-*/
+  0.000133830226,
+  0.00443184841,
+  0.0539909665,
+  0.241970725,
+  0.39894228,
+  0.241970725,
+  0.0539909665,
+  0.00443184841,
+  0.000133830226 ]*/
+
+const d5 = _9(dnorm(x, 0, 1, true));
+/*[ -Infinity,
+    -Infinity,
+    NaN,
+    -8.91893853,
+    -5.41893853,
+    -2.91893853,
+    -1.41893853,
+    -0.918938533,
+    -1.41893853,
+    -2.91893853,
+    -5.41893853,
+    -8.91893853 ]*/
 ```
 
 _Equivalent in R_
 
 ```R
-> dnorm(seq(-4,4),2, 1, TRUE)
-[1] -18.9189385 -13.4189385
-[3]  -8.9189385  -5.4189385
-[5]  -2.9189385  -1.4189385
-[7]  -0.9189385  -1.4189385
-[9]  -2.9189385
+dnorm(0);
+#[1] 0.3989423
+
+dnorm(3, 4, 2);
+#[1] 0.1760327
+
+dnorm(-10)
+#[1] 7.694599e-23
+
+x = c(-Inf, Inf, NaN, seq(-4, 4));
+dnorm(x)
+# [1] 0.0000000000 0.0000000000          NaN 0.0001338302 0.0044318484
+# [6] 0.0539909665 0.2419707245 0.3989422804 0.2419707245 0.0539909665
+#[11] 0.0044318484 0.0001338302
+
+dnorm(x, 0,1, TRUE);
+# [1]       -Inf       -Inf        NaN -8.9189385 -5.4189385 -2.9189385
+# [7] -1.4189385 -0.9189385 -1.4189385 -2.9189385 -5.4189385 -8.9189385
 ```
 
 #### `pnorm`
 
-The distribution function of the [Normal distribution](). See [R doc](http://stat.ethz.ch/r-manual/r-patched/library/stats/html/normal.html)
+The distribution function of the [Normal distribution](https://en.wikipedia.org/wiki/Normal_distribution). See [R doc](http://stat.ethz.ch/r-manual/r-patched/library/stats/html/normal.html)
 
 _typescript decl_
 
@@ -1513,37 +1542,47 @@ declare function pnorm(
 
 * `q`:scalar or array of quantiles
 * `mu`: mean (default 0)
-* `sigma`: standard deviation
+* `sigma`: standard deviation (default 1)
 * `lowerTail`: if `true` (default), probabilities are P[X ≤ x], otherwise, P[X > x].
 * `logP`: give result as log value
 
 ```javascript
 const libR = require('lib-r-math.js');
-const { Normal, arrayrify } = libR;
+const {
+    Normal,
+    R: { numberPrecision, multiplex, seq: _seq }
+} = libR;
+
 const { rnorm, dnorm, pnorm, qnorm } = Normal();
 
-pnorm(0);
-//0.5
-pnorm([-1, 0, 1]);
-//[ 0.15865525393145705, 0.5, 0.8413447460685429 ]
+// some helpers
+const seq = _seq()();
+const _9 = numberPrecision(9); //9 digit significance
 
-pnorm([-1, 0, 1], 0, 1, false); // propability upper tail, reverse above result
-//[ 0.8413447460685429, 0.5, 0.15865525393145705 ]
+//data
+const q = seq(-1, 1);
 
-pnorm([-1, 0, 1], 0, 1, false, true); // probabilities as ln(p)
-//[ -0.17275377902344988, -0.6931471805599453, -1.8410216450092636 ]
+const p1 = _9(pnorm(q));
+//[ 0.158655254, 0.5, 0.841344746 ]
 
-// Above result is the same as
-const log = arrayrify(Math.log);
-log(pnorm([-1, 0, 1], 0, 1, false));
-//[ -0.1727537790234499, -0.6931471805599453, -1.8410216450092636 ]
+const p2 = _9(pnorm(q, 0, 1, false));
+//[ 0.841344746, 0.5, 0.158655254 ]
+
+const p3 = _9(pnorm(q, 0, 1, false, true));
+//[ -0.172753779, -0.693147181, -1.84102165 ]
 ```
 
-_in R console_
+_Equivalent in R_
 
 ```R
-> pnorm(-1:1, 0, 1, FALSE, TRUE)
-[1] -0.1727538 -0.6931472 -1.8410216
+pnorm(-1:1);
+#[1] 0.1586553 0.5000000 0.8413447
+
+pnorm(-1:1, lower.tail=FALSE);
+#[1] 0.8413447 0.5000000 0.1586553
+
+pnorm(-1:1, log.p= TRUE);
+#[1] -0.1727538 -0.6931472 -1.8410216
 ```
 
 #### `qnorm`
