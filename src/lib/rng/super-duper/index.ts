@@ -24,7 +24,7 @@
  */
 
 
-import { fixup } from '../fixup';
+import { fixup, i2_32m1 } from '../fixup';
 import { IRNG } from '../irng';
 import { IRNGType } from '../irng-type';
 import { timeseed } from '../timeseed';
@@ -59,7 +59,7 @@ export class SuperDuper extends IRNG {
     un[0] = s[0];
     un[1] = s[1];
     un[0] = un[0] ^ un[1];
-    return fixup(un[0] * fixup.prototype.i2_32m1); /* in [0,1) */
+    return fixup(un[0] * i2_32m1); /* in [0,1) */
   }
 
   private fixupSeeds(): void {
