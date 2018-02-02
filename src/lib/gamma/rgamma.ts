@@ -134,13 +134,13 @@ export function _rgamma(
     if (a === 0) return 0;
     e = 1.0 + exp_m1 * a;
     while (true) {
-      p = e * rng.unif_rand();
+      p = e * (rng.unif_rand() as number);
       if (p >= 1.0) {
         x = -log((e - p) / a);
-        if (exp_rand(rng.unif_rand) >= (1.0 - a) * log(x)) break;
+        if (exp_rand(rng.unif_rand as any) >= (1.0 - a) * log(x)) break;
       } else {
         x = exp(log(p) / a);
-        if (exp_rand(rng.unif_rand) >= x) break;
+        if (exp_rand(rng.unif_rand as any) >= x) break;
       }
     }
     return scale * x;
@@ -159,13 +159,13 @@ export function _rgamma(
                x = (s,1/2) -normal deviate. */
 
   /* immediate acceptance (i) */
-  t = rng.norm_rand();
+  t = rng.norm_rand() as number;
   x = s + 0.5 * t;
   ret_val = x * x;
   if (t >= 0.0) return scale * ret_val;
 
   /* Step 3: u = 0,1 - uniform sample. squeeze acceptance (s) */
-  u = rng.unif_rand();
+  u = rng.unif_rand() as number;
   if (d * u <= t * t * t) return scale * ret_val;
 
   /* Step 4: recalculations of q0, b, si, c if necessary */
@@ -217,8 +217,8 @@ export function _rgamma(
     /* Step 8: e = standard exponential deviate
          *	u =  0,1 -uniform deviate
          *	t = (b,si)-double exponential (laplace) sample */
-    e = exp_rand(rng.unif_rand);
-    u = rng.unif_rand();
+    e = exp_rand(rng.unif_rand as any);
+    u = rng.unif_rand() as number;
     u = u + u - 1.0;
     if (u < 0.0) t = b - si * e;
     else t = b + si * e;

@@ -55,7 +55,7 @@ export function rnorm(
     if (sigma === 0 || !R_FINITE(mu)) {
       return mu; /* includes mu = +/- Inf with finite sigma */
     }
-    return mu + sigma * rng.norm_rand();
+    return mu + sigma * (rng.norm_rand() as number);
   });
 
   return result.length === 1 ? result[0] : result;

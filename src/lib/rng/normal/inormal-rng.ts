@@ -1,4 +1,5 @@
 import { IRNG } from '../';
+import { map, seq } from '../../r-func';
 
 export abstract class IRNGNormal {
   protected rng: IRNG;
@@ -8,8 +9,9 @@ export abstract class IRNGNormal {
     this.norm_rand = this.norm_rand.bind(this);
   }
 
-  public abstract norm_rand(): number;
-  public unif_rand() {
-    return this.rng.unif_rand();
+  public abstract norm_rand(n?: number): number| number[];
+  public unif_rand(n: number = 1): number|number[] {
+    n = ( !n || n < 0 ) ? 1 : n;
+    return map(seq(n))(() => this.rng.unif_rand());
   }
 }

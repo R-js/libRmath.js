@@ -65,7 +65,7 @@ export function rgeom(
 
     return rpois(
       1,
-      exp_rand(rng.unif_rand) * ((1 - p) / p),
+      exp_rand(rng.unif_rand as any) * ((1 - p) / p),
       rng
     ) as number;
   });

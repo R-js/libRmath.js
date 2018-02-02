@@ -54,7 +54,7 @@ export function rt(n: number, df: number, rng: IRNGNormal): number | number[] {
       /* Some compilers (including MW6) evaluated this from right to left
             return norm_rand() / sqrt(rchisq(df) / df); */
 
-      let num = rng.norm_rand();
+      let num = rng.norm_rand() as number;
       return num / sqrt((rchisq(1, df, rng) as number) / df);
     }
   }) as any;

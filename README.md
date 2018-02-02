@@ -242,7 +242,7 @@ any([1, 2, 3, 4])(x => x > 5);
 //false
 ```
 
-### `arrayrify`
+### `arrayrify` **(DEPRICATED use [`multiplex`](#multiplex))**
 
 Mimics R vectorized function arguments. Wraps an existing function changing the first first argument to accept both scalar (number) or an array( number[] ).
 
@@ -276,59 +276,26 @@ c(1,2,3,4)^2
  pow([3, 4, 5], 4); //81 256 625
 ```
 
-### `flatten`
+### `flatten` or `c` (alias)
 
-Recursively flatten all arguments (some possible arrays with possible nested arrays) into one single array.
-
-_typescript decl_
-
-```typescript
-declare function flatten<T>(...rest: (T | T[])[]): T[];
-```
+Analog to R's `c` function. Constructs a final array by (recursively) flattening and merging all of its arguments which can be a combination of scalars and arrays.
 
 Example:
 
 ```javascript
 const libR = require('lib-r-math.js');
-const { flatten } = libR.R;
 
-flatten(-1, 0, [1], 'r', 'b', [2, 3, [4, 5]]);
+// optionally rename as `c` to make it look like `R`
+const { c } = libR.R;
+
+c(-1, 0, [1], 'r', 'b', [2, 3, [4, 5]]);
 // [ -1, 0, 1, 'r', 'b', 2, 3, 4, 5 ]
-```
-
-### `asVector`
-
-Return the first argument wrapped in an array. If it is already an array then returns a copy of the array.
-
-_typescript decl_
-
-```typescript
-declare function asVector<T>(x: T | T[]): T[];
-```
-
-Example:
-
-```javascript
-const libR = require('lib-r-math.js');
-const { asVector } = libR.R;
-
-asVector(3);
-//[3]
-asVector([4, 5]); // clones the array
-//[4,5]
 ```
 
 ### `map`
 
 Functional analog to `Array.prototype.map`, but can also loop over object properties.
 The return type can be either an new array or a scalar (see `Example`).
-
-_typescript decl_
-
-```typescript
-declare function map<T>( xx: T )
-      : { (fn: (x: number) => number): number | number[]};
-```
 
 Example:
 
@@ -357,14 +324,6 @@ Filter function generator, to be used with `Array.prototype.filter` to pick elem
 Usually used together with `seq` to pick items from an array.
 
 **NOTE:** Always returns an instance of Array.
-
-_typescript decl_
-
-```typescript
-declare function selector(
-  indexes: number | number[]
-): { (val: any, index: number): boolean };
-```
 
 Example:
 
@@ -396,30 +355,35 @@ const seq = libR.R.seq()(); // see "seq" for defaults.
 _typescript decl_
 
 ```typescript
-const seq = (adjust = 0) => (adjustMin = adjust) => (
+const seq = (adjustUp = 0) => (adjustDown = adjust) => (
   start: number,
-  end: number,
-  step?: number
+  end: number = 1,
+  step: number = 1
 ) => number[];
 ```
 
 R analog to the `seq` function in R. Generates an array between `start` and `end` (inclusive) using `step` (defaults to `1`). The JS implementation ignores the **sign** of the
 `step` argument and only looks at its absolute value.
 
-If `(end-start)/step` is not an exact integer, `seq` will not overstep the bounds while counting up (or down).
+Like in R, If `(end-start)/step` is not an exact integer, `seq` will not overstep the bounds while counting up (or down).
 
-* `adjust`: If `end` >= `start` then `adjust` value is added to every element in the array.
-* `adjustMin`: if `start` >= `end` then `adjustMin` value is added to every element in the array.
+Arguments:
+
+* `adjustUp`: (default 0). If `end` >= `start` then `adjust` value is added to every element in the array.
+* `adjustDown`: (default 0). If `start` >= `end` then `adjustMin` value is added to every element in the array.
+* `start`: (inclusive) the sequence start value
+* `stop`: defaults to `1`. (inclusive) the sequence stop value if possible with `step`
+* `step`: defaults to `1`, sign is ignored. Sign is inferred from the values of `start` and `stop`.
 
 First we look how `seq` works in R.
 
 _R_
 
 ```R
-seq(1,3,0.5)
+seq(1,3,0.5);
 #[1] 1.0 1.5 2.0 2.5 3.0
 
-seq(7,-2, -1.3)
+seq(7,-2, -1.3);
 #[1]  7.0  5.7  4.4  3.1  1.8  0.5 -0.8
 ```
 
@@ -428,31 +392,77 @@ _Equivalent in Javascript_
 ```javascript
 const libR = require('lib-r-math.js');
 
+// seqA is a sequence generator
 let seqA = libR.R.seq()();
 
 seqA(1, 5);
 //[ 1, 2, 3, 4, 5 ]
+
 seqA(5, -3);
 //[ 5, 4, 3, 2, 1, 0, -1, -2, -3 ]
 
+seqA(3)
+//[3, 2, 1]
+
+//add 1 if stepping upwards, add -2 if stepping downwards
 let seqB = libR.R.seq(1)(-2);
 
 seqB(0, 4); //range will be adjusted with '1'
 //[ 1, 2, 3, 4]
 seqB(6, 5, 0.3); //range will be adjusted with '-2', step
-//[ 4, 4.7, 4.4, 4.1 ]  will not overstep boundery '4'
+//[4, 3.7, 3.4, 3.1]
+
 ```
 
 ### `multiplex`
 
-Like the `Array.prototype.map`,
-but multiplexes the value of several array arguments into one array with the
+Turns an existing javascript function into one that follows the [R argument recycling rule](https://cran.r-project.org/doc/manuals/r-release/R-intro.html#The-recycling-rule).
+
+Multiplexes the value of several array arguments into one array with the
 use of a mapping function.
 
 The length of the result is the maximum of the lengths of the parameters.
 All parameters are recycled to that length.
 
---
+```javascript
+const libR = require('lib-r-math.js');
+
+const { multiplex, c } = libR.R;
+
+//make the build in Math function follow R-recycling rule
+const pow = multiplex(Math.pow);
+//
+pow([1, 2, 3, 4], 2); //squared
+//[ 1, 4, 9, 16 ]
+
+//powers of 2
+pow(2, [2, 3, 4])
+    //[ 4, 8, 16 ]
+
+//R recycling rule
+pow([2, 3], [2, 3, 4, 5]);
+//[4, 27, 16, 243]
+//4 = 2 ^ 2
+//27 = 3 ^ 3
+//16 = 2 ^ 4
+//243 = 3 ^ 5
+```
+
+### `timeseed`
+
+Generates a number based by on your system time clock. Intended use is with
+PRNG (re)initialization. Its a synchronized function that will wait for some milliseconds before sampling the system clock and returning a result.
+
+Usage:
+
+```javascript
+const libR = require('lib-r-math.js');
+
+const { rng: { timeseed } } = libR;
+
+timeseed();
+//2632999169 , based on timestamp
+```
 
 # Uniform Pseudo Random Number Generators
 
@@ -460,12 +470,7 @@ All parameters are recycled to that length.
 
 In 'R', the functions that generate random deviates of distributions (Example: Poisson (`rpois`), Student-t (`rt`), Normal (`rnorm`), etc) use uniform PRNG's directly or indirectly (as wrapped in a normal distributed PRNG). This section discusses the uniform distributed PRNG's that have been ported from R to JS.
 
-## The 7 samurai of Uniform Random Number Generators
-
-These PRNG classes can be used "stand alone", but mostly intended to be consumed
-to generate random numbers with a particular distribution (like `Normal`,
-`Gamma`, `Weibull`, `Chi-square` etc). Type in your R-console the command
-`?RNGkind` for an overview.
+## The 7 Uniform Random Number Generators
 
 All 7 uniform random generators have been ported and tested to yield exactly the
 same as their R counterpart.
@@ -474,11 +479,11 @@ same as their R counterpart.
 
 In R it is impossible to use different types of uniform random generators at the
 same time because of a global shared seed buffer. In our port every random
-generator has its own buffer and can therefore be used at the same time.
+generator has its own buffer and can therefore be used concurrently.
 
 #### General Usage
 
-All uniform random generator export the same functions:
+All uniform random generator classes have these public methods:
 
 1. `init`: set the random generator seed. Same as R `set.seed()`
 2. `seed (read/write property)`: get/set the current seed values as an array. Same as R `.Random.seed`.
@@ -496,12 +501,11 @@ usage example:
 ```javascript
 const libR = require('lib-r-math.js');
 const {
-  R: { seq, numberPrecision, forEach },
+  R: { numberPrecision },
   rng: { MersenneTwister, timeseed }
 } = libR.rng;
 
 //helpers
-const sequence = seq()();
 const precision = numberPrecision(9); //9 digits accuracy
 
 //example
@@ -519,7 +523,7 @@ mt.seed.slice(0,8);
   1489374793, 865871222 ]
 */
 
-const rmt1 = sequence(5).map(() => mt.unif_rand());
+const rmt1 = mt.unif_rand(5);
 precision(rmt1);
 //[ 0.8966972, 0.265508663, 0.3721239, 0.572853363, 0.90820779 ]
 ```
@@ -8030,7 +8034,7 @@ Usage:
 const libR = require('lib-r-math.js');
 const {
     special: { besselJ, besselK, besselI, besselY },
-    R: { map, numberPrecision, flatten:c }
+    R: { map, numberPrecision, c }
 } = libR;
 
 const precision9 = numberPrecision(9);
@@ -8085,7 +8089,7 @@ Usage:
 const libR = require('lib-r-math.js');
 const {
     special: { besselJ, besselK, besselI, besselY },
-    R: { map, numberPrecision, flatten:c }
+    R: { map, numberPrecision, c }
 } = libR;
 
 const precision9 = numberPrecision(9);
@@ -8141,7 +8145,7 @@ Usage:
 const libR = require('lib-r-math.js');
 const {
     special: { besselJ, besselK, besselI, besselY },
-    R: { map, numberPrecision, flatten:c }
+    R: { map, numberPrecision, c }
 } = libR;
 
 const precision9 = numberPrecision(9);

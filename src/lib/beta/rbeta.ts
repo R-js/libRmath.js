@@ -120,8 +120,8 @@ export function rbeta(
       }
       /* FIXME: "do { } while()", but not trivially because of "continue"s:*/
       for (;;) {
-        u1 = rng.unif_rand();
-        u2 = rng.unif_rand();
+        u1 = rng.unif_rand() as number;
+        u2 = rng.unif_rand() as number;
         if (u1 < 0.5) {
           y = u1 * u2;
           z = u1 * y;
@@ -149,8 +149,8 @@ export function rbeta(
         gamma = a + 1.0 / beta;
       }
       do {
-        u1 = rng.unif_rand();
-        u2 = rng.unif_rand();
+        u1 = rng.unif_rand() as number;
+        u2 = rng.unif_rand() as number;
 
         v_w_from__u1_bet(a);
 

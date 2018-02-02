@@ -162,7 +162,7 @@ function _rpois(mu: number, rng: IRNGNormal): number {
 
       while (true) {
         /* Step U. uniform sample for inversion method */
-        u = rng.unif_rand();
+        u = rng.unif_rand() as number;
         if (u <= p0) return 0;
 
         /* Step T. table comparison until the end pp[l] of the
@@ -196,7 +196,7 @@ function _rpois(mu: number, rng: IRNGNormal): number {
 
   /* Step N. normal sample */
   g =
-    mu + s * rng.norm_rand(); /* norm_rand() ~ N(0,1), standard normal */
+    mu + s * (rng.norm_rand() as number); /* norm_rand() ~ N(0,1), standard normal */
 
   if (g >= 0) {
     pois = floor(g);
@@ -205,7 +205,7 @@ function _rpois(mu: number, rng: IRNGNormal): number {
     /* Step S. squeeze acceptance */
     fk = pois;
     difmuk = mu - fk;
-    u = rng.unif_rand(); /* ~ U(0,1) - sample */
+    u = rng.unif_rand() as number; /* ~ U(0,1) - sample */
     if (d * u >= difmuk * difmuk * difmuk) return pois;
   }
 
@@ -245,11 +245,11 @@ function _rpois(mu: number, rng: IRNGNormal): number {
     if (!gotoStepF) {
       /* Step E. Exponential Sample */
 
-      E = exp_rand(rng.unif_rand); /* ~ Exp(1) (standard exponential) */
+      E = exp_rand(rng.unif_rand as any); /* ~ Exp(1) (standard exponential) */
 
       /*  sample t from the laplace 'hat'
                 (if t <= -0.6744 then pk < fk for all mu >= 10.) */
-      u = 2 * rng.unif_rand() - 1;
+      u = 2 * (rng.unif_rand() as number) - 1;
       t = 1.8 + fsign(E, u >= 0);
     }
     if (t > -0.6744 || gotoStepF) {
