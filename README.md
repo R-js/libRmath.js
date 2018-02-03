@@ -2139,34 +2139,43 @@ declare function dbinom(
 * `p`: probability of success.
 * `asLog`: return result as ln(p)
 
+Usage:
+
 ```javascript
 const libR = require('lib-r-math.js');
-const { Binomial, R: { numberPrecision } } = libR;
+const {
+    Binomial,
+    R: { numberPrecision, seq: _seq }
+} = libR;
 
-//helper
-const precision = numberPrecision(9);
+//helper, 9 digits precision
+const _9 = numberPrecision(9);
+const seq = _seq()();
+
+//some data
+const x = seq(1, 4);
 
 //Binomial()  uses Normal() as default argument,
 const { dbinom, pbinom, qbinom, rbinom } = Binomial();
 
 //1. 2 successes out of 4 trials, with success probility 0.3
-const d1 = dbinom(2, 4, 0.3);
-precision(d1);
+const d1 = _9(dbinom(2, 4, 0.3));
 //0.2646
 
 //2. same as [1], but results as log
-const d2 = dbinom(2, 4, 0.3, true);
+const d2 = _9(dbinom(2, 4, 0.3, true));
 //-1.32953603
 
 //3. all possibilities out of 4 trials
-dbinom([0, 1, 2, 3, 4], 4, 0.3);
-//[ 0.2401, 0.4116, 0.2646, 0.0756, 0.0081 ]
+const d3 = _9(dbinom(x, 4, 0.3));
+//[ 0.4116, 0.2646, 0.0756, 0.0081 ]
 
-dbinom([0, 1, 2, 3, 4], 4, 0.3, true);
-//[ -1.42669978, -0.887703275, -1.32953603, -2.582299, -4.81589122 ]
+//4
+const d4 = _9(dbinom(x, 4, 0.3, true));
+//[ -0.887703275, -1.32953603, -2.582299, -4.81589122 ]
 ```
 
-_in R Console_
+_Equivalent in R_
 
 ```R
 #1
@@ -2178,13 +2187,12 @@ dbinom(2,4,0.3, TRUE)
 #[1] -1.329536
 
 #3
-dbinom(c(0,1,2,3,4),4,0.3)
-#[1] 0.2401 0.4116 0.2646 0.0756 0.0081
+dbinom(c(1,2,3,4),4,0.3)
+#[1] 0.4116 0.2646 0.0756 0.0081
 
 #4
-dbinom(c(0,1,2,3,4),4,0.3, TRUE)
-#[1] -1.4266998 -0.8877033 -1.3295360 -2.5822990
-#[5] -4.8158912
+dbinom(c(1,2,3,4),4,0.3, TRUE)
+#[1] -0.8877033 -1.3295360 -2.5822990  -4.8158912
 ```
 
 #### `pbinom`
@@ -2205,61 +2213,53 @@ declare function pbinom(
 * `size`: number of trails
 * `prob`: probability of success.
 * `lowerTail`: if TRUE (default), _probabilities_ are P[X ≤ x], otherwise, P[X > x].
-* `Log`: return result as ln(p)
+* `logP`: return result as ln(p)
+
+Usage:
 
 ```javascript
 const libR = require('lib-r-math.js');
-const { Binomial, R: { numberPrecision } } = libR;
+const {
+    Binomial,
+    R: { numberPrecision, seq: _seq }
+} = libR;
 
-//helper
-const precision = numberPrecision(9);
+//helper, 9 digits precision
+const _9 = numberPrecision(9);
+const seq = _seq()();
 
 const { dbinom, pbinom, qbinom, rbinom } = Binomial();
+//some data
 
+const q = seq(0, 4);
 //1.
 const p1 = pbinom(4, 4, 0.5);
 //1
 
 //2.
-pbinom([0, 1, 2, 3, 4], 4, 0.5);
-//[ 0.0625, 0.3125, 0.6875, 0.9375, 1 ]
-
-//3.
-pbinom([0, 1, 2, 3, 4], 4, 0.5, true);
+const p2 = _9(pbinom(q, 4, 0.5));
 //[ 0.0625, 0.3125, 0.6875, 0.9375, 1 ]
 
 //4.
-pbinom([0, 1, 2, 3, 4], 4, 0.5, false);
-//[ 0.9375, 0.6875, 0.3125, 0.0625, 0 ]
-
-//5.
-pbinom([0, 1, 2, 3, 4], 4, 0.5, false, true);
-/*[
-  -0.0645385211,
-  -0.374693449,
-  -1.16315081,
-  -2.77258872,
-  -Infinity
+const p3 = _9(pbinom(q, 4, 0.5, false, true));
+/*[ -0.0645385211,  -0.374693449,  -1.16315081,  -2.77258872,  -Infinity
 ]*/
 ```
 
-_in R console_
+_Equivalent in R_
 
 ```R
+q = c(0, 1, 2, 3, 4);
 #1
 pbinom(4, 4, 0.5)
 #[1] 1
 
 #2
-pbinom(c(0, 1, 2, 3, 4), 4, 0.5)
+pbinom(q, 4, 0.5)
 #[1] 0.0625 0.3125 0.6875 0.9375 1.0000
 
 #3
-pbinom(c(0, 1, 2, 3, 4), 4, 0.5, TRUE)
-#[1] 0.0625 0.3125 0.6875 0.9375 1.0000
-
-#4
-pbinom(c(0, 1, 2, 3, 4), 4, 0.5, FALSE, TRUE)
+pbinom(q, 4, 0.5, FALSE, TRUE)
 #[1] -0.06453852 -0.37469345 -1.16315081
 #[4] -2.77258872        -Inf
 ```
@@ -2286,40 +2286,46 @@ declare function qbinom(
 * `lowerTail`: if TRUE (default), _probabilities_ are P[X ≤ x], otherwise, P[X > x].
 * `LogP`: return result as ln(p)
 
+Usage:
+
 ```javascript
 const libR = require('lib-r-math.js');
-
-const { Binomial, R: { arrayrify, numberPrecision } } = libR;
+const {
+    Binomial,
+    R: { multiplex, numberPrecision, seq: _seq }
+} = libR;
 
 //helpers
-const precision = numberPrecision(9);
-const log = arrayrify(Math.log);
+const _9 = numberPrecision(9);
+const log = multiplex(Math.log);
+const seq = _seq()();
 
 const { dbinom, pbinom, qbinom, rbinom } = Binomial();
 
-const p = [0, 0.25, 0.5, 0.75, 1];
+//data
+const p = seq(0, 1, 0.25); //[0, 0.25, 0.5, 0.75, 1];
 
 //1
-qbinom(0.25, 4, 0.3);
+const q1 = _9(qbinom(0.25, 4, 0.3));
 //1
 
 //2.
-qbinom(p, 40, 0.3);
+const q2 = _9(qbinom(p, 40, 0.3));
 //[0 10 12 14 40]
 
 //3.
-qbinom(p, 40, 0.3, false);
+const q3 = _9(qbinom(p, 40, 0.3, false));
 //[ 40, 14, 12, 10, 0 ]
 
 //4.  same as 3.
-qbinom(ln(p), 40, 0.3, false, true);
+const q4 = _9(qbinom(log(p), 40, 0.3, false, true));
 //[ 40, 14, 12, 10, 0 ]
 ```
 
 _Equivalent in R_
 
 ```R
-p = c(0,0.25,0.5,0.75,1);
+p = seq(0,1,0.25); #c(0, 0.25, 0.5, 0.75, 1);
 
 #1
 qbinom(.25,4,.3)
@@ -2334,7 +2340,7 @@ qbinom(p, 40,.3, FALSE)
 #[1] 40 14 12 10  0
 
 #4
-qbinom(ln(p), 40,.3, FALSE, TRUE)
+qbinom(log(p), 40,.3, FALSE, TRUE)
 #[1] 40 14 12 10  0
 ```
 
@@ -2356,34 +2362,32 @@ declare function rbinom(
 * `size`: number of trails
 * `prob`: probability of success.
 
+Usage:
+
 ```javascript
 const libR = require('lib-r-math.js');
+const {
+    Binomial,
+    rng: { KnuthTAOCP2002 }
+} = libR;
 
-const { Binomial, rng: { KnuthTAOCP2002 }, R: { numberPrecision } } = libR;
-
-//helpers
-const precision = numberPrecision(9);
-
-const kn = new KnuthTAOCP2002(0);
+const kn = new KnuthTAOCP2002(1234);
 const { dbinom, pbinom, qbinom, rbinom } = Binomial(kn);
 
-kn.init(1234);
 //1.
-rbinom(2, 40, 0.5);
+const r1 = rbinom(2, 40, 0.5);
 //[ 24, 19 ]
 
 //2.
-rbinom(3, 20, 0.5);
+const r2 = rbinom(3, 20, 0.5);
 //[ 11, 13, 13 ]
 
 //3.
-rbinom(2, 10, 0.25);
+const r3 = rbinom(2, 10, 0.25);
 //[ 2, 2 ]
 ```
 
-Same values as in R
-
-_in R console_
+_Equivalent in R_
 
 ```R
 RNGkind("Knuth-TAOCP-2002")
