@@ -1476,7 +1476,7 @@ const x = c(-Infinity, Infinity, NaN, seq(-4, 4));
 const d4 = _9(dnorm(x));
 /*[
   0,
-  0,  
+  0,
   NaN,
   0.000133830226,
   0.00443184841,
@@ -1728,7 +1728,7 @@ rnorm(5,2,3)
 See [R doc](http://stat.ethz.ch/R-manual/R-patched/library/stats/html/Beta.html).
 See [wiki](https://en.wikipedia.org/wiki/Beta_distribution).
 
-These functions are members of an object created by the `Beta` factory method. The factory method needs an instance of a [normal PRNG](#normal-distributed-random-number-generators). Various instantiation methods are given below.
+These functions are members of an object created by the `Beta` factory method. The factory method needs an instance of an optional [normal PRNG](#normal-distributed-random-number-generators). Various instantiation methods are given below.
 
 Usage:
 
@@ -1739,16 +1739,17 @@ const { Beta, rng: { SuperDuper, normal: { BoxMuller } } } = libR;
 // explicit use of PRNG's
 const explicitB = Beta(new BoxMuller(new SuperDuper(0))); //
 
-// got with defaults 'MersenneTwister" and "Inversion"
+// go with defaults 'MersenneTwister" and "Inversion"
 const defaultB = Beta();
 
-//just go with Default.. uses Normal(), defaults to PRNG "Inversion" and "Mersenne-Twister"
+// Or just go with Default.. defaults to PRNG "Inversion" and "Mersenne-Twister"
 const { dbeta, pbeta, qbeta, rbeta } = defaultB;
 ```
 
 #### `dbeta`
 
-The density function of the [Beta distribution](https://en.wikipedia.org/wiki/Beta_distribution). See [R doc](http://stat.ethz.ch/R-manual/R-patched/library/stats/html/Beta.html).
+The density function of the [Beta distribution](https://en.wikipedia.org/wiki/Beta_distribution).
+See [R doc](http://stat.ethz.ch/R-manual/R-patched/library/stats/html/Beta.html).
 
 $$ \frac{\Gamma(a+b)}{Γ(a) Γ(b)} x^{(a-1)}(1-x)^{(b-1)} $$
 
@@ -1760,7 +1761,7 @@ declare function dbeta(
   shape1: number,
   shape2: number,
   ncp = undefined,
-  giveLog = false
+  asLog = false
 ): number | number[];
 ```
 
@@ -1768,40 +1769,41 @@ declare function dbeta(
 * `shape1`: non-negative `a` parameter of the Beta distribution.
 * `shape2`: non-negative `b` parameter of the Beta distribution.
 * `ncp`: non centrality parameter. _Note: `undefined` is different then `0`_
-* `Log`: return result as ln(p)
+* `asLog`: return result as ln(p)
 
 ```javascript
 const libR = require('lib-r-math.js');
 const { Beta, R: { numberPrecision } } = libR;
 
-//helpers
-const precision = numberPrecision(9);
+//helpers, 9 digits precision
+const _9 = numberPrecision(9);
 
 //just go with Default.. uses Normal(), defaults to PRNG "Inversion" and "Mersenne-Twister"
 const { dbeta, pbeta, qbeta, rbeta } = Beta();
 
 //1. ncp argument = 1
-const d1 = dbeta(0.4, 2, 2, 1);
-precision(d1);
+const d1 = _9(dbeta(0.4, 2, 2, 1));
 //1.28724574
 
-//2.
-const d2 = dbeta(0.4, 2, 2, undefined, true);
-precision(d2);
+//2., No named arguments in JS, so use undefined to skip
+const d2 = _9(dbeta(0.4, 2, 2, undefined, true));
 //0.364643114
 
 //3
-const d3 = dbeta(0.4, 2, 2, 1, true);
-precision(d3);
+const d3 = _9(dbeta(0.4, 2, 2, 1, true));
 //0.252504851
 
 //4
-const d4 = dbeta([0, 0.2, 0.4, 0.8, 1, 1.2], 2, 2);
-precision(d4);
+const d4 = _9(
+    dbeta(
+        [0, 0.2, 0.4, 0.8, 1, 1.2],
+        2,
+        2)
+);
 //[ 0, 0.96, 1.44, 0.96, 0, 0 ]
 ```
 
-_in R Console_
+_Equivalent in R_
 
 ```R
 #1
@@ -1817,11 +1819,8 @@ dbeta(0.4,2,2, ncp=1, TRUE)
 #[1] 0.2525049
 
 #4
-dbeta( c(-1,0,0.2,0.4,0.8,1,1.2), 2, 2, 1)
-#[1] 0.0000000 0.0000000
-#[3] 0.7089305 1.2872457
-#[5] 1.2392653 0.0000000
-#[7] 0.0000000
+dbeta( c(0, 0.2, 0.4, 0.8, 1, 1.2), 2, 2)
+#[1] 0.00 0.96 1.44 0.96 0.00 0.00
 ```
 
 #### `pbeta`
@@ -1844,60 +1843,48 @@ declare function pbeta(
 * `shape2`: non-negative `b` parameter of the Beta distribution.
 * `ncp`: non centrality parameter. _Note: `undefined` is different then `0`_
 * `lowerTail`: if TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
-* `Log`: return probabilities as ln(p)
+* `logP`: return probabilities as ln(p)
+
+Usage:
 
 ```javascript
 const libR = require('lib-r-math.js');
-const { Beta, rng: { arrayrify, numberPrecision } } = libR;
+const {
+    Beta,
+    R: { multiplex, numberPrecision, seq: _seq }
+} = libR;
 
 //helpers
-const precision = numberPrecision(9);
-const log = arrayrify(Math.log); // Make Math.log accept/return arrays aswell as scalars
+// 9 digit precision
+const _9 = numberPrecision(9);
+const log = multiplex(Math.log);
+const seq = _seq()();
 
 //just go with Default.. uses Normal(), defaults to PRNG "Inversion" and "Mersenne-Twister"
 const { dbeta, pbeta, qbeta, rbeta } = Beta();
-const q = [0, 0.2, 0.4, 0.6, 0.8, 1];
+const q = seq(0, 1, 0.2);
+
 //1.
-const p1 = pbeta(0.5, 2, 5);
-precision(p1);
+const p1 = _9(pbeta(0.5, 2, 5));
 //0.890625
 
 //2.
-const p2 = pbeta(0.5, 2, 5, 4);
-precision(p2);
+const p2 = _9(pbeta(0.5, 2, 5, 4));
 //0.63923843
 
 //3.
-const p3 = pbeta(q, 2, 5, 4);
-precision(p3);
+const p3 = _9(pbeta(q, 2, 5, 4));
 //[ 0, 0.106517718, 0.438150345, 0.813539396, 0.986024517, 1 ]
 
 //4.
-const p4 = pbeta(q, 2, 5, undefined);
-precision(p4);
+const p4 = _9(pbeta(q, 2, 5, undefined));
 //[ 0, 0.345027474, 0.76672, 0.95904, 0.9984, 1 ]
 
-//5. Same as 4
-const p5 = pbeta(q, 2, 5, undefined, false).map(
-  v => 1 - v
-);
-precision(p5);
-//[ 0, 0.345027474, 0.76672, 0.95904, 0.9984, 1 ]
-
-//6.
-const p6 = pbeta(q, 2, 5, undefined, true, true);
-precision(p6);
+//5. result as as ln(p)
+const p5 = _9(pbeta(q, 2, 5, undefined, true, true));
 /*[
   -Infinity,     -1.06413123,    -0.265633603,
   -0.0418224949, -0.00160128137,  0
-  ]*/
-
-//7. Same as 6
-const p7 = log(pbeta(q, 2, 5, undefined, true));
-precision(p7);
-/*[
-  -Infinity,      -1.06413123,  -0.265633603,  -0.0418224949,
-  -0.00160128137, 0 
   ]*/
 ```
 
@@ -1924,16 +1911,7 @@ pbeta(q, 2, 5);
 #[1] 0.00000 0.34464 0.76672 0.95904 0.99840 1.00000
 
 #5
-1-pbeta(q, 2, 5,lower.tail = FALSE);
-#[1] 0.00000 0.34464 0.76672 0.95904 0.99840 1.00000
-
-#6
 pbeta(q, 2, 5, log.p=TRUE)
-#[1]         -Inf -1.065254885 -0.265633603
-#[4] -0.041822495 -0.001601281  0.000000000
-
-#7
-log(pbeta(q, 2, 5, log.p=FALSE))
 #[1]         -Inf -1.065254885 -0.265633603
 #[4] -0.041822495 -0.001601281  0.000000000
 ```
@@ -1960,47 +1938,48 @@ declare function qbeta(
 * `shape2`: non-negative `b` parameter of the Beta distribution.
 * `ncp`: non centrality parameter. _Note: `undefined` is different then `0`_
 * `lowerTail`: if TRUE (default), _probabilities_ are P[X ≤ x], otherwise, P[X > x].
-* `Log`: return _probabilities_ as ln(p).
+* `logP`: return _probabilities_ as ln(p).
+
+Usage:
 
 ```javascript
 const libR = require('lib-r-math.js');
-const { Beta, R: { arrayrify, numberPrecision } } = libR;
-//helpers
-const log = arrayrify(Math.log); // Make Math.log accept/return arrays aswell as scalars
-const precision = numberPrecision(9);
+const { Beta, R: { multiplex, numberPrecision } } = libR;
 
-//just go with Default.. uses Normal(), defaults to PRNG "Inversion" and "Mersenne-Twister"
+//helpers
+const ln = multiplex(Math.log);
+const _9 = numberPrecision(9); // 9 digits precision
+
 const { dbeta, pbeta, qbeta, rbeta } = Beta();
 
+//take probabilities in steps of 25%
 const p = [0, 0.25, 0.5, 0.75, 1];
 
 //1. always zero, regardless of shape params, because 0 ≤ x ≤ 1.
-qbeta(0, 99, 66);
+const q1 = _9(qbeta(0, 99, 66));
 //0
 
-//2. take quantiles of 25%
-const q2 = qbeta(p, 4, 5);
-precision(q2);
+//2. 
+const q2 = _9(qbeta(p, 4, 5));
 //[ 0, 0.329083427, 0.440155205, 0.555486315, 1 ]
 
 //3 ncp = 3
-const q3 = qbeta(p, 4, 5, 3);
-precision(q3);
+const q3 = _9(qbeta(p, 4, 5, 3));
 //[ 0, 0.406861514, 0.521344641, 0.631881288, 1 ]
 
 //4. ncp = undefined, lowerTail = false, logP=false(default)
-const q4 = qbeta(p, 4, 5, undefined, false); //
+const q4 = _9(qbeta(p, 4, 5, undefined, false)); //
 //[ 1, 0.555486315, 0.440155205, 0.329083427, 0 ]
 
 //5. same as [5] but, logP=true,
-const q5 = qbeta(
-  ln(p), //uses log!!
-  4,
-  5,
-  undefined,
-  false,
-  true
-);
+const q5 = _9(qbeta(
+    ln(p),
+    4,
+    5,
+    undefined,
+    false,
+    true //p as ln(p)
+));
 //[ 1, 0.555486315, 0.440155205, 0.329083427, 0 ]
 ```
 
@@ -2009,28 +1988,25 @@ _Equivalent in R_
 ```R
 p = c(0,.25,.5,.75,1);
 #1
-qbeta(0,99,66)
+qbeta(0,99,66);
 #[1] 0
 
 #2
-qbeta(p, 4,5)
-#[1] 0.0000000 0.3290834 0.4401552 0.5554863
-#[5] 1.0000000
+qbeta(p, 4,5);
+#[1] 0.0000000 0.3290834 0.4401552 0.5554863 1.0000000
 
 #3
-qbeta(p, 4,5,3)
-#[1] 0.0000000 0.4068615 0.5213446 0.6318813
-#[5] 1.0000000
+qbeta(p, 4,5,3);
+#[1] 0.0000000 0.4068615 0.5213446 0.6318813 1.0000000
 
 #4
-qbeta(p, 4,5, lower.tail = FALSE)
+qbeta(p, 4,5, lower.tail = FALSE);
 #[1] 1.0000000 0.5554863 0.4401552 0.3290834
 #[5] 0.0000000
 
 #5
-qbeta(  ln(p)  ,4,5, lower.tail = FALSE, log.p=TRUE)
-#[1] 1.0000000 0.5554863 0.4401552 0.3290834
-#[5] 0.0000000
+qbeta(  log(p)  ,4,5, lower.tail = FALSE, log.p=TRUE);
+#[1] 1.0000000 0.5554863 0.4401552 0.3290834 0.0000000
 ```
 
 #### `rbeta`
@@ -2056,70 +2032,65 @@ declare function rbeta(
 ```javascript
 const libR = require('lib-r-math.js');
 const {
-  Beta,
-  rng: { MersenneTwister, normal: { Inversion } },
-  R: { arrayrify, numberPrecision }
+    Beta,
+    rng: {
+        LecuyerCMRG,
+        normal: { Inversion }
+    },
+    R: { multiplex, numberPrecision }
 } = libR;
 
 //helpers
-const log = arrayrify(Math.log); //
-const precision = numberPrecision(9);
+const ln = multiplex(Math.log); //
+const _9 = numberPrecision(9);
 
-//explicit, in this case, same as default Beta()
-const mt = new MersenneTwister(0);
-const { dbeta, pbeta, qbeta, rbeta } = Beta(new Inversion(mt));
+const lc = new LecuyerCMRG(0);
+const { dbeta, pbeta, qbeta, rbeta } = Beta(new Inversion(lc));
 
 //1.
-const r1 = rbeta(5, 0.5, 0.5);
-precision(r1);
-/*[
-  0.0130980476,  0.740050681,  0.0101117743,
-  0.208547515,  0.995681818
-  ]*/
+const r1 = _9(rbeta(5, 0.5, 0.5));
+//[ 0.800583949,  0.962961579, 0.700710737,  0.169742664, 0.0169845581 ]
 
 //2.
-const r2 = rbeta(5, 2, 2, 4);
-precision(r2);
-//[ 0.598004601, 0.784536402, 0.387142813, 0.657481009, 0.513053436 ]
+const r2 = _9(rbeta(5, 2, 2, 4));
+//[ 0.940977213, 0.803938008, 0.762066155, 0.775315234, 0.0395894783 ]
 
 //3. // re-initialize seed
-ms.init(0);
+lc.init(0);
 
 //3
-const r3 = rbeta(5, 2, 2);
-precision(r3);
-//[ 0.821727531, 0.408565459, 0.834884807, 0.615747052, 0.127467311 ]
+const r3 = _9(rbeta(5, 2, 2));
+//[ 0.37955891, 0.240142694, 0.425371111, 0.935280271, 0.636741506 ]
 
 //4.
-const r4 = rbeta(5, 2, 2, 5);
-//[ 0.598004601, 0.784536402, 0.387142813, 0.744442431, 0.513053436 ]
+const r4 = _9(rbeta(5, 2, 2, 5));
+//[ 0.532034853, 0.985042931, 0.724819159, 0.67645358, 0.837372377 ]
 ```
 
 Same values as in R
 
-_in R console_
+_Equivalent in R_
 
 ```R
-RNGkind("Mersenne-Twister",normal.kind="Inversion")
+RNGkind("L'Ecuyer-CMRG", normal.kind ="Inversion")
 set.seed(0)
 
 #1
 rbeta(5, 0.5, 0.5)
-#[1] 0.01309805 0.74005068 0.01011177 0.20854752 0.99568182
+#[1] 0.80058395 0.96296158 0.70071074 0.16974266 0.01698456
 
 #2
 rbeta(5, 2, 2, 4)
-#[1] 0.5980046 0.7845364 0.3871428 0.6574810 0.5130534
+#[1] 0.94097721 0.80393801 0.76206615 0.77531523 0.03958948
 
 set.seed(0)
-
 #3
 rbeta(5, 2, 2);
-#[1] 0.8217275 0.4085655 0.8348848 0.6157471 0.1274673
+#[1] 0.3795589 0.2401427 0.4253711 0.9352803 0.6367415
 
 #4
 rbeta(5, 2, 2, 5);
-#[1] 0.5980046 0.7845364 0.3871428 0.7444424 0.5130534
+#[1] 0.5320349 0.9850429 0.7248192 0.6764536 0.8373724
 ```
 
 ### Binomial distribution
