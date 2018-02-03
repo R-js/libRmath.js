@@ -2803,19 +2803,22 @@ declare function dcauchy(
 ```
 
 * `x`: scalar or array of quantile(s).
-* `location`: the location parameter.
-* `scale`: the scale parameter.
+* `location`: the location parameter, default 0.
+* `scale`: the scale parameter, default 1.
 * `asLog`: return values as ln(p)
 
 Usage:
 
 ```javascript
 const libR = require('lib-r-math.js');
-const { Cauchy, R: { numberPrecision } } = libR;
+const {
+    Cauchy,
+    R: { numberPrecision, seq: _seq }
+} = libR;
 
 // some usefull tools
-const seq = libR.R.seq()();
-const precision = numberPrecision(9);
+const seq = _seq()();
+const _9 = numberPrecision(9);
 
 // initialize
 const { dcauchy, pcauchy, qcauchy, rcauchy } = Cauchy();
@@ -2824,22 +2827,19 @@ const { dcauchy, pcauchy, qcauchy, rcauchy } = Cauchy();
 const x = seq(-4, 4, 2);
 
 //1.
-const d1 = dcauchy(x, -2, 0.5);
-precision(d1);
+const d1 = _9(dcauchy(x, -2, 0.5));
 /*[
   0.0374482219,  0.636619772,  0.0374482219,
   0.00979415034,  0.00439048119 ]*/
 
 //2.
-const d2 = dcauchy(x, -2, 0.5, true);
-precision(d2);
+const d2 = _9(dcauchy(x, -2, 0.5, true));
 /*[
   -3.28479605,  -0.451582705,  -3.28479605,
   -4.62596998,  -5.42831645 ]*/
 
 //3.
-const d3 = dcauchy(x, 0, 2);
-precision(d3);
+const d3 = _9(dcauchy(x, 0, 2));
 /*[
   0.0318309886,  0.0795774715,  0.159154943,
   0.0795774715,  0.0318309886 ]*/
@@ -2880,8 +2880,8 @@ declare function pcauchy(
 ```
 
 * `q`: Scalar or array of quantile(s).
-* `location`: The location parameter.
-* `scale`: The scale parameter.
+* `location`: The location parameter, default 0.
+* `scale`: The scale parameter, default 1.
 * `lowerTail`: If TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
 * `logP`: If TRUE, probabilities p are given as ln(p).
 
@@ -2893,28 +2893,24 @@ const { Cauchy, R: { numberPrecision } } = libR;
 
 // some usefull tools
 const seq = libR.R.seq()();
-const precision = numberPrecision(9);
+const _9 = numberPrecision(9);
 
 // initialize
 const { dcauchy, pcauchy, qcauchy, rcauchy } = Cauchy();
+
 //data
 const x = seq(-4, 4, 2);
 
 //1
-const p1 = pcauchy(x, -2, 0.5);
-precision(p1);
+const p1 = _9(pcauchy(x, -2, 0.5));
 //[ 0.0779791304, 0.5, 0.92202087, 0.960416576, 0.973535324 ]
 
 //2.
-const p2 = pcauchy(x, -2, 0.5, true, true);
-precision(p2);
-/*[
-  -2.55131405,  -0.693147181,  -0.0811874205,
-  -0.0403881555,-0.0268211693 ]*/
+const p2 = _9(pcauchy(x, -2, 0.5, true, true));
+/*[ -2.55131405,  -0.693147181,  -0.0811874205, -0.0403881555,-0.0268211693 ]*/
 
 //3.
-const p3 = pcauchy(x, 0, 2);
-precision(p3);
+const p3 = _9(pcauchy(x, 0, 2));
 //[ 0.147583618, 0.25, 0.5, 0.75, 0.852416382 ]
 ```
 
@@ -2924,15 +2920,15 @@ _Equivalent in R_
 x=seq(-4,4,2)
 
 #1
-pcauchy(seq(-4,4,2), location=-2, scale=0.5);
+pcauchy(x, location=-2, scale=0.5);
 #[1] 0.07797913 0.50000000 0.92202087 0.96041658 0.97353532
 
 #2
-pcauchy(seq(-4,4,2), location=-2, scale=0.5, log=TRUE);
+pcauchy(x, location=-2, scale=0.5, log=TRUE);
 #[1] -2.55131405 -0.69314718 -0.08118742 -0.04038816 -0.02682117
 
 #3
-pcauchy(seq(-4,4,2), location=0, scale=2);
+pcauchy(x, location=0, scale=2);
 #[1] 0.1475836 0.2500000 0.5000000 0.7500000 0.8524164
 ```
 
@@ -2953,8 +2949,8 @@ declare function qcauchy(
 ```
 
 * `p`: Scalar or array of probabilities(s).
-* `location`: The location parameter.
-* `scale`: The scale parameter.
+* `location`: The location parameter, default 0.
+* `scale`: The scale parameter, default 1.
 * `lowerTail`: If TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
 * `logP`: If TRUE, probabilities p are given as ln(p).
 
@@ -2962,50 +2958,48 @@ Usage:
 
 ```javascript
 const libR = require('lib-r-math.js');
-const { Cauchy, R: { numberPrecision } } = libR;
+const { Cauchy, R: { numberPrecision, seq: _seq } } = libR;
 
-// some usefull tools
-const seq = libR.R.seq()();
-const precision = numberPrecision(9);
+//some usefull tools
+const seq = _seq()();
+const _9 = numberPrecision(9);
 
-// initialize
+//initialize
 const { dcauchy, pcauchy, qcauchy, rcauchy } = Cauchy();
 
-// data
-const x = seq(-4, 4, 2);
+//data
+const x = seq(0, 1, 0.2);
 
 //1
-const q1 = qcauchy(pcauchy(x, -2, 0.5), -2, 0.5);
-precision(q1);
-//[ -4, -2, -8.8817842e-16, 2, 4 ]
+const q1 = _9(qcauchy(x, -2, 0.5));
+//[ -Infinity, -2.68819096, -2.16245985, -1.83754015, -1.31180904, Infinity ]
 
 //2.
-const q2 = qcauchy(pcauchy(x, -2, 0.5, false), -2, 0.5, false);
-precision(q2);
-//[ -4, -2, 0, 2, 4 ]
+const q2 = _9(qcauchy(x, -2, 0.5, false));
+//[ Infinity, -1.31180904, -1.83754015, -2.16245985, -2.68819096, -Infinity ]
 
 //3.
-const q3 = qcauchy(pcauchy(x, 0, 2), 0, 2);
-precision(q3);
-//[ -4, -2, 0, 2, 4 ]
+const q3 = _9(qcauchy(x, 0, 2));
+//[ -Infinity, -2.75276384, -0.649839392, 0.649839392, 2.75276384, Infinity ]
 ```
 
 _Equivalent in R_
 
 ```R
-x=seq(-4, 4, 2);
+x = seq(0, 1, 0.2);
+#[1] 0.0 0.2 0.4 0.6 0.8 1.0
 
 #1
-qcauchy( pcauchy(x, -2, 0.5),  -2,  0.5 );
-#[1] -4.000000e+00 -2.000000e+00 -8.881784e-16  2.000000e+00  4.000000e+00
+qcauchy(x, -2, 0.5);
+#[1]      -Inf -2.688191 -2.162460 -1.837540 -1.311809       Inf
 
 #2
-qcauchy(pcauchy(x, -2, 0.5, lower.tail=FALSE),  -2,  0.5, lower.tail=FALSE)
-#[1] -4 -2  0  2  4
+qcauchy(x, -2,  0.5, lower.tail=FALSE)
+#[1]       Inf -1.311809 -1.837540 -2.162460 -2.688191      -Inf
 
 #3
-qcauchy(pcauchy(x, 0, 2), 0, 2);
-#[1] -4 -2  0  2  4
+qcauchy(x, 0, 2);
+#[1]       -Inf -2.7527638 -0.6498394  0.6498394  2.7527638        Inf
 ```
 
 #### `rcauchy`
@@ -3023,37 +3017,38 @@ declare function rcauchy(
 ```
 
 * `n`: number of deviates to generate.
-* `location`: The location parameter.
-* `scale`: The scale parameter.
+* `location`: The location parameter, default 0.
+* `scale`: The scale parameter, default 1.
 
 Usage:
 
 ```javascript
 const libR = require('lib-r-math.js');
 const {
-  Cauchy,
-  rng: { SuperDuper }
+    Cauchy,
+    rng: { SuperDuper },
+    R: { numberPrecision }
 } = libR;
-// some usefull tools
+
+// helpers
+const _9 = numberPrecision(9);
 
 //initialize Cauchy
-const sd = new SuperDuper(0);
+const sd = new SuperDuper();
 const { dcauchy, pcauchy, qcauchy, rcauchy } = Cauchy(sd);
 
 //1.
 sd.init(43210);
-const r1 = rcauchy(5, 0, 0.5);
+const r1 = _9(rcauchy(5, 0, 0.5));
 //[ 0.0472614703, 0.577704013, 6.76536712, -0.0360997453, 0.719042522 ]
 
 //2.
-const r2 = rcauchy(5, 2, 2);
-precision(r2);
+const r2 = _9(rcauchy(5, 2, 2));
 //[ 3.19844084, 3.28147192, 1.24543133, 2.04599347, 3.5392328 ]
 
 //3.
 sd.init(9876);
-const r3 = rcauchy(5, -2, 0.25);
-precision(r3);
+const r3 = _9(rcauchy(5, -2, 0.25));
 //[ -9.8223614, 3.25884168, -0.918724179, -1.7870667, -1.76212205 ]
 ```
 
