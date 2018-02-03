@@ -2413,17 +2413,23 @@ rbinom(2, 10, 0.25);
 See [R doc](https: //stat.ethz.ch/R-manual/R-devel/library/stats/html/NegBinomial.html)
 See [wiki](https://en.wikipedia.org/wiki/Negative_binomial_distribution)
 
-These functions are members of an object created by the `NegativeBinomial` factory function. The factory method needs an instance of a [normal PRNG](#normal-distributed-random-number-generators). Various instantiation methods are given below.
+These functions are members of an object created by the `NegativeBinomial` factory method. This factory method needs an instance of a [normal PRNG](#normal-distributed-random-number-generators). Various instantiation methods are given below.
 
 Usage:
 
 ```javascript
 const libR = require('lib-r-math.js');
-const { NegativeBinomial, rng: { SuperDuper, normal: { BoxMuller } } } = libR;
+const {
+    NegativeBinomial,
+    rng: {
+        SuperDuper,
+        normal: { BoxMuller }
+    }
+} = libR;
 
-//explicit specify PRNG's
-const sd = new SuperDuper(0);
-const explicitNB = NegativeBinomial(new BoxMuller(sd));
+//explicit use PRNG's
+const bm = new BoxMuller(new SuperDuper(0));
+const explicitNB = NegativeBinomial(bm);
 
 //default uses PRNG "Inverion" and "MersenneTwister"
 const defaultNB = NegativeBinomial();
@@ -2462,10 +2468,14 @@ Usage:
 
 ```javascript
 const libR = require('lib-r-math.js');
-const { NegativeBinomial, R: { numberPrecision } } = libR;
+const {
+    NegativeBinomial,
+    R: { seq: _seq, numberPrecision }
+} = libR;
+
 //some helpers
-const seq = libR.R.seq()();
-const precision = numberPrecision(9);
+const seq = _seq()();
+const _9 = numberPrecision(9);
 
 const { dnbinom, pnbinom, qnbinom, rnbinom } = NegativeBinomial();
 
@@ -2473,31 +2483,36 @@ const { dnbinom, pnbinom, qnbinom, rnbinom } = NegativeBinomial();
 const x = seq(0, 10, 2);
 
 //1.
-const d1 = dnbinom(x, 3, 0.5);
-precision(d1);
+const d1 = _9(dnbinom(x, 3, 0.5));
 //[ 0.125, 0.1875, 0.1171875, 0.0546875, 0.0219726562, 0.00805664062 ]
 
 //2. alternative presentation with `mu` = n*(1-p)/p
-const d2 = dnbinom(x, 3, undefined, 3 * (1 - 0.5) / 0.5);
+const d2 = _9(dnbinom(x, 3, undefined, 3 * (1 - 0.5) / 0.5));
 //[ 0.125, 0.1875, 0.1171875, 0.0546875, 0.0219726562, 0.00805664062 ]
+
+//3
+const d3 = _9(dnbinom(x, 3, undefined, 3 * (1 - 0.5) / 0.5, true));
+/*[ -2.07944154, -1.67397643,  -2.14398006, -2.90612011,
+    -3.8179565,  -4.82125861
+]*/
 ```
 
 _Equivalent in R_
 
 ```R
 #1
-dnbinom(0:10, size = 3, prob = 0.5)
-# [1] 0.125000000 0.187500000 0.187500000
-# [4] 0.156250000 0.117187500 0.082031250
-# [7] 0.054687500 0.035156250 0.021972656
-#[10] 0.013427734 0.008056641
+dnbinom(0:10, size = 3, prob = 0.5);
+# [1] 0.125000000 0.187500000 0.187500000 0.156250000 0.117187500 0.082031250
+# [7] 0.054687500 0.035156250 0.021972656 0.013427734 0.008056641
 
 #2
-dnbinom(0:10, size = 3, mu = 3*(1-0.5)/0.5)
-# [1] 0.125000000 0.187500000 0.187500000
-# [4] 0.156250000 0.117187500 0.082031250
-# [7] 0.054687500 0.035156250 0.021972656
-# [10] 0.013427734 0.008056641
+dnbinom(0:10, size = 3, mu = 3*(1-0.5)/0.5);
+# [1] 0.125000000 0.187500000 0.187500000 0.156250000 0.117187500 0.082031250
+# [7] 0.054687500 0.035156250 0.021972656 0.013427734 0.008056641
+
+dnbinom(0:10, size = 3, mu = 3*(1-0.5)/0.5, log=T);
+# [1] -2.079442 -1.673976 -1.673976 -1.856298 -2.143980 -2.500655 -2.906120
+# [8] -3.347953 -3.817956 -4.310433 -4.821259
 ```
 
 #### `pnbinom`
@@ -2529,60 +2544,65 @@ Usage:
 
 ```javascript
 const libR = require('lib-r-math.js');
-const { NegativeBinomial, R: { numberPrecision } } = libR;
+const {
+    NegativeBinomial,
+    R: { numberPrecision, seq: _seq, c }
+} = libR;
+
 //some helpers
-const seq = libR.R.seq()();
-const precision = numberPrecision(9);
+const seq = _seq()();
+const _9 = numberPrecision(9);
 
 const { dnbinom, pnbinom, qnbinom, rnbinom } = NegativeBinomial();
 
 //some data
-const x = [0, 2, 3, 4, 6, Infinity];
+const x = c(seq(0, 6), Infinity);
+//[ 0, 1, 2, 3, 4, 5, 6, Infinity ]
 
 //1.
-const p1 = pnbinom(x, 3, 0.5);
-precision(p1);
-//[ 0.125, 0.5, 0.65625, 0.7734375, 0.91015625, 1 ]
+const p1 = _9(pnbinom(x, 3, 0.5));
+//[ 0.125, 0.3125, 0.5, 0.65625, 0.7734375, 0.85546875, 0.91015625, 1 ]
 
 //2. alternative presentation of 1 with mu = n(1-p)/p
-const p2 = pnbinom(x, 3, undefined, 3 * (1 - 0.5) / 0.5);
-precision(p2);
-//[ 0.125, 0.5, 0.65625, 0.7734375, 0.91015625, 1 ]
+const p2 = _9(pnbinom(x, 3, undefined, 3 * (1 - 0.5) / 0.5));
+//[ 0.125, 0.3125, 0.5, 0.65625, 0.7734375, 0.85546875, 0.91015625, 1 ]
 
 //3
-const p3 = pnbinom(x, 3, 0.5, undefined, false);
-//[ 0.875, 0.5, 0.34375, 0.2265625, 0.08984375, 0 ]
+const p3 = _9(pnbinom(x, 3, 0.5, undefined, false));
+//[ 0.875, 0.6875, 0.5, 0.34375, 0.2265625, 0.14453125, 0.08984375, 0 ]
 
 //4
-const p4 = pnbinom(x, 3, 0.5, undefined, false, true);
-precision(p4);
-/*[
-  -0.133531393,  -0.693147181,  -1.06784063,
-  -1.48473443,   -2.40968323,   -Infinity ]*/
+const p4 = _9(pnbinom(x, 3, 0.5, undefined, false, true));
+/*[ 
+  -0.133531393,  -0.374693449,  -0.693147181,  -1.06784063,  -1.48473443,  -1.93425953,
+  -2.40968323,   -Infinity ]
+*/
 ```
 
 _Equivalent in R_
 
 ```R
+x = c(seq(0, 6), Inf);
+
 #1
-pnbinom(c(0, 2, 3, 4, 6, Inf), size=3, prob=0.5)
-#[1] 0.1250000 0.5000000 0.6562500 0.7734375
-#[5] 0.9101562 1.0000000
+pnbinom(x, 3, 0.5)
+#[1] 0.1250000 0.3125000 0.5000000 0.6562500 0.7734375 0.8554688 0.9101562
+#[8] 1.0000000
 
 #2
-pnbinom(c(0, 2, 3, 4, 6, Inf), size=3, mu=3*(1-0.5)/0.5)
-#[1] 0.1250000 0.5000000 0.6562500 0.7734375
-#[5] 0.9101562 1.0000000
+pnbinom(x, size=3, mu=3*(1-0.5)/0.5)
+#[1] 0.87500000 0.68750000 0.50000000 0.34375000 0.22656250 0.14453125 0.08984375
+#[8] 0.00000000
 
 #3
-pnbinom(c(0, 2, 3, 4, 6, Inf), size=3, prob=0.5, lower.tail=FALSE);
-#[1] 0.87500000 0.50000000 0.34375000 0.22656250 0.08984375
-#[6] 0.00000000
+pnbinom(x, size=3, prob=0.5, lower.tail=FALSE);
+#[1] 0.87500000 0.68750000 0.50000000 0.34375000 0.22656250 0.14453125 0.08984375
+#[8] 0.00000000
 
 #4
-pnbinom(c(0, 2, 3, 4, 6, Inf), size=3, prob=0.5, lower.tail=FALSE, log.p=TRUE);
-#[1] -0.1335314 -0.6931472 -1.0678406 -1.4847344 -2.4096832
-#[6]       -Inf
+pnbinom(x, size=3, prob=0.5, lower.tail=FALSE, log.p=TRUE);
+#[1] -0.1335314 -0.3746934 -0.6931472 -1.0678406 -1.4847344 -1.9342595 -2.4096832
+#[8]       -Inf
 ```
 
 #### `qnbinom`
@@ -2590,7 +2610,7 @@ pnbinom(c(0, 2, 3, 4, 6, Inf), size=3, prob=0.5, lower.tail=FALSE, log.p=TRUE);
 The quantile function of the
 [Negative Binomial distribution]
 (https://en.wikipedia.org/wiki/Negative_binomial_distribution).
-See [R doc](https: //stat.ethz.ch/R-manual/R-devel/library/stats/html/NegBinomial.html).
+See [R doc](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/NegBinomial.html).
 
 _typescript decl_
 
@@ -2616,43 +2636,51 @@ Usage:
 
 ```javascript
 const libR = require('lib-r-math.js');
-const { NegativeBinomial, R: { numberPrecision } } = libR;
+const {
+    NegativeBinomial,
+    R: { numberPrecision, seq: _seq, multiplex }
+} = libR;
+
 //some helpers
-const precision = numberPrecision(9);
-const log = arrayrify(Math.log);
+const _9 = numberPrecision(9);
+const log = multiplex(Math.log);
+const seq = _seq()();
 
 const { dnbinom, pnbinom, qnbinom, rnbinom } = NegativeBinomial();
 
 //some data
-const x = [0, 2, 3, 4, 6, Infinity];
+const p = seq(0, 1, 0.2);
+//[ 0, 0.2, 0.4, 0.6, 0.8, 1 ]
 
 //1. inversion
-const q1 = qnbinom(pnbinom(x, 3, 0.5), 3, 0.5);
-//[ 0, 2, 4, 6, Infinity ]
+const q1 = _9(qnbinom(p, 3, 0.5));
+//[ 0, 1, 2, 3, 5, Infinity ]
 
 //2. lowerTail=false
-const q2 = qnbinom(pnbinom(x, 3, 0.5), 3, 0.5, undefined, false);
-//[ 6, 2, 1, 0, 0 ]
+const q2 = _9(qnbinom(p, 3, 0.5, undefined, false));
+//[ Infinity, 5, 3, 2, 1, 0 ]
 
-//3. with logP=true
-const q3 = qnbinom(log(pnbinom(x, 3, 0.5)), 3, 0.5, undefined, false, true);
-//[ 6, 2, 1, 0, 0 ]
+//3. with logP=true, get your input sequence back
+const q3 = _9(qnbinom(log(p), 3, 0.5, undefined, false, true));
+//[ Infinity, 5, 3, 2, 1, 0 ]
 ```
 
 _Equivalent in R_
 
 ```R
+p = seq(0, 1, 0.2);
+
 #1
-qnbinom(pnbinom(c(0, 2, 3, 4, 6, Inf), size=3, prob=0.5 ),3,0.5);
-#[1] 0 2 3 4 6 Inf
+qnbinom(p, 3, 0.5);
+#[1] 0 1 2 3 5  Inf
 
 #2
-qnbinom(pnbinom(c(0, 2, 3, 4, 6, Inf), size=3, prob=0.5 ),3,0.5, lower.tail = FALSE);
-#[1] 6 2 2 1 0 0
+qnbinom(p, 3, 0.5, lower.tail = FALSE);
+#[1] Inf  5  3  2  1  0
 
 #3
-qnbinom(log(pnbinom(c(0, 2, 3, 4, 6, Inf), size=3, prob=0.5 )),3,0.5, lower.tail = FALSE, log.p = TRUE);
-#[1] 6 2 2 1 0 0
+qnbinom(log(p),3,0.5, lower.tail = FALSE, log.p = TRUE);
+#[1] Inf 5 3 2 1 0
 ```
 
 #### `rnbinom`
@@ -2679,37 +2707,31 @@ declare function rnbinom(
 Usage:
 
 ```javascript
+const libR = require('lib-r-math.js');
 const {
-  NegativeBinomial,
-  R: { numberPrecision, arrayrify },
-  rng: { SuperDuper, normal: { BoxMuller } }
+    NegativeBinomial,
+    rng: { SuperDuper, normal: { BoxMuller } }
 } = libR;
-//some helpers
-const seq = libR.R.seq()();
-const precision = numberPrecision(9);
-const log = arrayrify(Math.log);
 
-//explicit use of PRNG
-const sd = new SuperDuper(12345);
-const { dnbinom, pnbinom, qnbinom, rnbinom } = NegativeBinomial(
-  new BoxMuller(sd)
-);
+//explicit use of RNG
+const bm = new BoxMuller(new SuperDuper(12345));
+const { dnbinom, pnbinom, qnbinom, rnbinom } = NegativeBinomial(bm);
 
-//1. size = 100, prob=0.5, so expect success/failure to be approximatly equal
-rnbinom(7, 100, 0.5);
+//1
+const r1 = rnbinom(7, 100, 0.5);
 //[ 94, 81, 116, 101, 71, 112, 85 ]
 
-//2. size = 100, prob=0.1, so expect failure to be approx 10 x size
-rnbinom(7, 100, 0.1);
+//2. 
+const r2 = rnbinom(7, 100, 0.1);
 //[ 889, 747, 1215, 912, 1105, 993, 862 ]
 
-//3. size = 100, prob=0.9, so expect failure to be approx 1/10 x size
-rnbinom(7, 100, 0.9);
+//3.
+const r3 = rnbinom(7, 100, 0.9);
 //[ 9, 14, 12, 18, 15, 14, 7 ]
 
 //4
-sd.init(98765); //reset
-rnbinom(7, 100, undefined, 100 * (1 - 0.5) / 0.5);
+bm.rng.init(98765); //set new seed
+const r4 = rnbinom(7, 100, undefined, 100 * (1 - 0.5) / 0.5);
 //[ 87, 120, 113, 107, 87, 95, 88 ]
 ```
 
