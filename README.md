@@ -3115,40 +3115,45 @@ declare function dchisq(
 
 * `x`: quantiles (array or scalar).
 * `df`: degrees of freedom.
-* `ncp`: non centrality parameter.
-* `asLog`: return probabilities as ln(p)
+* `ncp`: non centrality parameter, default undefined.
+* `asLog`: return probabilities as ln(p), default false.
 
 Usage:
 
 ```javascript
 const libR = require('lib-r-math.js');
-const { ChiSquared, R: { precision } } = libR;
+const {
+    ChiSquared,
+    R: {
+        numberPrecision,
+        seq: _seq
+    }
+} = libR;
 
 const { dchisq, pchisq, qchisq, rchisq } = ChiSquared();
 
 //helpers
-const seq = libR.R.seq()();
+const seq = _seq()();
+const _9 = numberPrecision(9);
 
 //data
-x = seq(0, 10, 2);
+const x = seq(0, 10, 2);
+//[ 0, 2, 4, 6, 8, 10 ]
 
 //1. df=5
-const d1 = dchisq(x, 5);
-precision(d1);
+const d1 = _9(dchisq(x, 5));
 /*[
-  0,                0.138369166,  0.143975911,  0.0973043467,
-  0.0551119609,     0.0283345553 ]*/
+  0,            0.138369166,  0.143975911,  0.0973043467,  0.0551119609, 
+  0.0283345553 ]*/
 
 //2. df=3, ncp=4
-const d2 = dchisq(x, 3, 4);
-precision(d2);
+const d2 = _9(dchisq(x, 3, 4));
 /*[
   0,            0.0837176564,  0.0997021125,  0.0901474176,
   0.070764993,  0.0507582667 ]*/
 
 //3. df=3, ncp=4, log=true
-const d3 = dchisq(x, 3, 4, true);
-precision(d3);
+const d3 = _9(dchisq(x, 3, 4, true));
 /*[
   -Infinity,  -2.48030538,  -2.30556841,
   -2.40630898,-2.64839085,  -2.98068078 ]
@@ -3198,28 +3203,33 @@ Usage:
 
 ```javascript
 const libR = require('lib-r-math.js');
-const { ChiSquared, R: { numberPrecision } } = libR;
+const {
+    ChiSquared,
+    R: { numberPrecision, seq: _seq, c }
+} = libR;
+
+//helpers
+const _9 = numberPrecision(9);
+const seq = _seq()();
 
 const { dchisq, pchisq, qchisq, rchisq } = ChiSquared();
 
-const x = [...seq(0, 10, 2), Infinity];
+const q = c(seq(0, 10, 2), Infinity);
+//[ 0, 2, 4, 6, 8, 10, Infinity ]
 
 //1.
-const p1 = pchisq(x, 3);
-precision(p1);
+const p1 = _9(pchisq(q, 3));
 /*[
   0,            0.427593296,  0.73853587,  0.888389775,
   0.953988294,  0.981433865,  1 ]*/
 
 //2. df=8, ncp=4, lowerTail=false
-const p2 = pchisq(x, 8, 4, false);
-precision(p2);
+const p2 = _9(pchisq(q, 8, 4, false));
 /*[ 1,            0.996262804,   0.96100264,  0.872268946,
-    0.739243049,  0.587302859 ]*/
+    0.739243049,  0.587302859    0 ]*/
 
 //3. df=8, ncp=4, lowerTail=true, logP=true
-const p3 = pchisq(x, 8, 4, true, true);
-precision(p2);
+const p3 = _9(pchisq(q, 8, 4, true, true));
 /*[
   -Infinity,  -5.58941966,  -3.24426132,
   -2.05782837,-1.34416653,  -0.885041269 ]*/
@@ -3228,20 +3238,19 @@ precision(p2);
 _Equivalent in R_
 
 ```R
-x= c(seq(0, 10, 2), Inf);
+q = c(seq(0, 10, 2), Inf);
 
 #1
-pchisq(x, 3);
+pchisq(q, 3);
 #[1] 0.0000000 0.4275933 0.7385359 0.8883898 0.9814339 1.0000000
 
 #2
-pchisq(x, 8, 4, lower.tail=FALSE);
+pchisq(q, 8, 4, lower.tail=FALSE);
 #[1] 1.0000000 0.9962628 0.9610026 0.8722689 0.5873029 0.0000000
 
 #3
-pchisq(x, 8, 4, lower.tail=FALSE, log.p=TRUE);
-#[1]  0.000000000 -0.003744197 -0.039778123 -0.136657478 -0.532214649
-#[6]         -Inf
+pchisq(q, 8, 4, lower.tail=TRUE, log.p=TRUE);
+#[1]  -Inf -5.5894197 -3.2442613 -2.0578284 -1.3441665 -0.8850413  0.0000000
 ```
 
 #### `qchisq`
@@ -3270,30 +3279,31 @@ Usage:
 
 ```javascript
 const libR = require('lib-r-math.js');
-const { ChiSquared, R: { arrayrify, numberPrecision } } = libR;
+const {
+    ChiSquared,
+    R: { multiplex, numberPrecision, seq: _seq }
+} = libR;
 
 //helpers
-const seq = libR.R.seq()();
-const log = arrayrify(Math.log);
-const precision = numberPrecision(9);
+const seq = _seq()();
+const log = multiplex(Math.log);
+const _9 = numberPrecision(9);
 
 const { dchisq, pchisq, qchisq, rchisq } = ChiSquared();
 
 // data
-const x = seq(0, 1, 0.2);
+const p = seq(0, 1, 0.2);
 
 //1. df=3,
-const q1 = qchisq(x, 3);
-precision(q1);
+const q1 = _9(qchisq(p, 3));
 //[ 0, 1.00517401, 1.8691684, 2.94616607, 4.64162768, Infinity ]
 
 //2. df=3, ncp=undefined, lowerTail=false
-const q2 = qchisq(x, 50, undefined, false);
-precision(q2);
+const q2 = _9(qchisq(p, 50, undefined, false));
 //[ Infinity, 58.1637966, 51.8915839, 46.8637762, 41.4492107, 0 ]
 
 //3. df=50, ncp=0, lowerTail=false, logP=true
-const q3 = qchisq(log(x), 50, 0, false, true);
+const q3 = _9(qchisq(log(p), 50, 0, false, true));
 //[ Infinity, 58.1637966, 51.8915839, 46.8637762, 41.4492107, 0 ]
 ```
 
@@ -3302,18 +3312,18 @@ _Equivalence in R_
 ```R
 #R-script
 #data
-x=seq(0, 1, 0.2);
+p=seq(0, 1, 0.2);
 
 #1
-qchisq(x, 3);
+qchisq(p, 3);
 #[1] 0.000000 1.005174 1.869168 2.946166 4.641628      Inf
 
 #2
-qchisq(x, 50, lower.tail=FALSE);
+qchisq(p, 50, lower.tail=FALSE);
 #[1]      Inf 58.16380 51.89158 46.86378 41.44921  0.00000
 
 #3
-qchisq(log(x), 50, 0, lower.tail=FALSE, log.p=TRUE);
+qchisq(log(p), 50, 0, lower.tail=FALSE, log.p=TRUE);
 #[1]      Inf 58.16380 51.89158 46.86378 41.44921  0.00000
 ```
 
@@ -3324,49 +3334,48 @@ Creates random deviates for the [X<sup>2</sup> distribution](https://en.wikipedi
 _typescript decl_
 
 ```typescript
-declare function rchisq(n: number, df: number, ncp?: number): number | number[];
+declare function rchisq(
+  n: number,
+  df: number,
+  ncp?: number
+): number | number[];
 ```
 
 * `p`: probabilities (array or scalar).
 * `df`: degrees of freedom.
 * `ncp`: non centrality parameter.
 
+Usage:
+
 ```javascript
 const libR = require('lib-r-math.js');
 const {
-  ChiSquared,
-  rng: {
-    LecuyerCMRG:,
-    normal: { AhrensDieter }
-  },
-  R: { arrayrify, numberPrecision }
+    ChiSquared,
+    rng: {
+        LecuyerCMRG,
+        normal: { AhrensDieter }
+    },
+    R: { numberPrecision }
 } = libR;
 
 //helpers
-const seq = libR.R.seq()();
-const log = arrayrify(Math.log);
-const precision = numberPrecision(9);
+const _9 = numberPrecision(9);
 
 //explicit use of PRNG
-const lc = new LecuyerCMRG(0);
+const lc = new LecuyerCMRG(1234);
 const { dchisq, pchisq, qchisq, rchisq } = ChiSquared(new AhrensDieter(lc));
 
 //1
-lc.init(1234);
-const r1 = rchisq(5, 6);
-precision(r1);
+const r1 = _9(rchisq(5, 6));
 //[ 12.4101973, 6.79954177, 9.80911877, 4.64604085, 0.351985504 ]
 
 
 //2. df=40, ncp=3
-const r2 = rchisq(5, 40, 3);
-precision(r2);
+const r2 = _9(rchisq(5, 40, 3));
 //[ 22.2010553, 44.033609, 36.3201158, 44.6212447, 40.1142555 ]
 
-
 //3. df=20
-const r3 = rchisq(5, 20);
-precisio(r3);
+const r3 = _9(rchisq(5, 20));
 //[ 24.4339678, 19.0379177, 26.6965258, 18.1288566, 26.7243317 ]
 ```
 
