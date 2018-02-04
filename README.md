@@ -1,7 +1,9 @@
 # libRmath.js
 
-Javascript ( TypeScript ) Pure Implementation of Statistical R "core" numerical
-`libRmath.so` library found [here](https://svn.r-project.org/R/trunk/src/nmath/).
+This is a 100% Pure Javascript ( TypeScript ) re-write of Statistical R `nmath` "core" numerical
+ library found [here](https://svn.r-project.org/R/trunk/src/nmath/).
+This is a manual re-write, ["emscripten"](https://kripken.github.io/emscripten-site) was not used.
+
 
 #### Summary
 
@@ -84,7 +86,7 @@ The module directory contains a minimized bundle for use in html `<script>` tag.
 
 Some implementation differences exist with R `nmath`
 
-* PRNG's are not global singletons, but separate object instances and you can have as many as you want. The programmer can has the choice of having different deviate generators sharing a common source PRNG.
+* PRNG's are not global singletons, but separate object instances and you can have as many as you want. The programmer has the choice of having different deviate generators sharing a common source PRNG.
 * Wilcoxon Sum Rank functions `dwilcox, pwilcox, qwilcox` use a fraction of the memory, (R will give memory allocation errors for samples ~1000). The JS solution allocates memory sparsely.
 
 # Helper functions for porting `R` programs
