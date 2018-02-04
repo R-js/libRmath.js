@@ -101,7 +101,8 @@
     },
     "scripts": {
         "DISABLED:start": "cross-env DEBUGx=express-session,cookie node dist/server/server.js",
-        "build": "webpack  --progress --color --display-error-details --config config/webpack/config",
+        "build": "webpack --progress --color --display-error-details --config config/webpack/config",
+        "build:prod": "webpack --progress --color --display-error-details --config config/webpack/config --env=prod",
         "cleanup": "rimraf ./dist ./.nyc_output ./coverage ./.awcache ./report.txt",
         "coverage": "npm run coverage:test && npm run coverage:view",
         "coverage:codecov": "nyc report --reporter=text-lcov > coverage.lcov && codecov",
