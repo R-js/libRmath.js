@@ -1,5 +1,6 @@
 {
     "compilerOptions": {
+        "strictPropertyInitialization": false, 
         "noImplicitAny": false,
         "noLib": false,
         "noUnusedLocals": true,
@@ -10,7 +11,7 @@
         "declaration": true,
         "removeComments": true,
         "allowUnreachableCode": true,
-        "baseUrl": ".",
+        "baseUrl": "./",
         "experimentalDecorators": true,
         "jsx": "react",
         "lib": [
