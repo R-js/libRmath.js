@@ -339,7 +339,7 @@ const { selector } = libR.R;
 //[ 'an', 'with', 'some']
 
 ['an', 'array', 'with', 'some', 'elements'].filter(
-  selector(3) // just one value at postion 3
+  selector(3) // just one value at position 3
 );
 //['some']
 const seq = libR.R.seq()(); // see "seq" for defaults.
