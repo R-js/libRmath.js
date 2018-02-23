@@ -1,18 +1,23 @@
 {
-  "extension": [
-      ".ts"
-  ],
-  "require": [
-      "ts-node/register"
-  ],
-  "include": [
-      "src/**/*.ts"
-  ],
-  "exclude": [
-      "**/*.d.ts"
-  ],
-  "reporter": [
-      "html"
-  ],
-  "all": true
+    "all": true,
+    "clean": true,
+    "exclude": [
+        "**/*.d.ts"
+    ],
+    "extension": [
+        ".ts",
+        ".tsx"
+    ],
+    "include": [
+        "src/**/*.ts"
+    ],
+    "reporter": [
+        "html",
+        "text"
+    ],
+    "require": [
+        "ts-node/register",
+        "babel-register"
+    ],
+    "show-process-tree": true
 }
