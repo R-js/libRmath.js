@@ -38,7 +38,7 @@
         "markdown-it": "^8.4.0",
         "markdown-it-katex": "^2.0.3",
         "mocha": "^4.1.0",
-        "nyc": "^11.4.1",
+        "nyc": "^11.5.0",
         "opn-cli": "^3.1.0",
         "schema-utils": "^0.4.3",
         "source-map-support": "^0.5.3",
