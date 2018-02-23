@@ -13,7 +13,8 @@
     ],
     "reporter": [
         "html",
-        "text-lcov"
+        "text",
+        "text-summary"
     ],
     "require": [
         "ts-node/register",
