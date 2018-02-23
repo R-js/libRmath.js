@@ -143,5 +143,5 @@
         "version": "echo version"
     },
     "types": "./dist/src/lib/index.d.ts",
-    "version": "1.0.69"
+    "version": "1.0.70"
 }
