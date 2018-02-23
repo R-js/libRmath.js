@@ -10,6 +10,7 @@ npm-debug.log*
 .*
 !/.gitignore
 !/.npmignore
+!/.nycrc
 *.pdf
 *.PNG
 *.png

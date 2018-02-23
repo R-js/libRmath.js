@@ -21,22 +21,22 @@ describe('beta distribution', function() {
     let testNr = 1;
 
     it(`density test: ${testNr++}`, function() {
-      const d1 = dbeta(0.4, 2, 2, 1);
+      const d1 = dbeta(0.4, 2, 2, 1) as number;
       assert.approximately(d1, 1.28724574, 1e-9, 'numbers are close');
     });
 
     it(`density test: ${testNr++}`, function() {
-      const d2 = dbeta(0.4, 2, 2, undefined, true);
+      const d2 = dbeta(0.4, 2, 2, undefined, true) as number;
       assert.approximately(d2, 0.364643114, 1e-9, 'numbers are close');
     });
 
     it(`density test: ${testNr++}`, function() {
-      const d3 = dbeta(0.4, 2, 2, 1, true);
+      const d3 = dbeta(0.4, 2, 2, 1, true) as number;
       assert.approximately(d3, 0.252504851, 1e-9, 'numbers are close');
     });
 
     it(`density test: ${testNr++}`, function() {
-      const d4 = dbeta([0, 0.2, 0.4, 0.8, 1, 1.2], 2, 2);
+      const d4 = dbeta([0, 0.2, 0.4, 0.8, 1, 1.2], 2, 2) as number[];
       const fixture = [0, 0.96, 1.44, 0.96, 0, 0];
       d4.map((v, i) =>
         assert.approximately(v, fixture[i], 1e-9, 'numbers are close')
@@ -44,13 +44,13 @@ describe('beta distribution', function() {
     });
   });
 
-  describe('pbeta cumulative probability', () => {
+  describe('pbeta cumulative probability', function() {
     let testNr = 1;
     let prefix = 'cumulative probability';
     const q = [0, 0.2, 0.4, 0.6, 0.8, 1];
 
     it(`${prefix}: ${testNr++}`, function() {
-      const p1 = pbeta(0.5, 2, 5);
+      const p1 = pbeta<number>(0.5, 2, 5);
       assert.approximately(p1, 0.890625, 1e-9, 'numbers are close');
     });
 
