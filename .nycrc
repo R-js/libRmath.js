@@ -13,11 +13,10 @@
     ],
     "reporter": [
         "html",
-        "text"
+        "text-lcov"
     ],
     "require": [
         "ts-node/register",
         "babel-register"
-    ],
-    "show-process-tree": true
+    ]
 }
