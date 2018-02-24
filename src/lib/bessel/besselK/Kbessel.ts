@@ -1,8 +1,8 @@
 import * as debug from 'debug';
 
-import { IBesselRC } from 'src/lib/bessel/IBesselRC';
 import { ME, ML_ERROR } from '../../common/_general';
 import { sqxmin_BESS_K, xmax_BESS_K } from '../bessel-constants';
+import { IBesselRC } from '../IBesselRC';
 
 const M_SQRT_2dPI = 0.797884560802865355879892119869;
 const { min, log, exp, abs: fabs, sinh, trunc, sqrt, max } = Math;

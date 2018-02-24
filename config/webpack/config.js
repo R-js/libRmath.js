@@ -3,7 +3,7 @@
 const { resolve } = require('path');
 const { lint, tsc } = require('./module/rules')
 const { rm, uglify } = require('./plugins');
-const { extensions, plugins } = require('./resolve');
+const { extensions, /* plugins*/ } = require('./resolve');
 const { wPackN_Ext } = require('./externals');
 //
 module.exports = function(env) {
@@ -38,7 +38,7 @@ module.exports = function(env) {
         ],
         resolve: {
             extensions,
-            plugins
+            //   plugins
         },
     }];
 

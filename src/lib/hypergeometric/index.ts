@@ -3,8 +3,8 @@ import { phyper } from './phyper';
 import { qhyper } from './qhyper';
 import { rhyper as _rhyper } from './rhyper';
 
-import { MersenneTwister } from 'src/lib/rng/mersenne-twister';
 import { IRNG } from '../rng/irng';
+import { MersenneTwister } from '../rng/mersenne-twister';
 
 
 export function HyperGeometric(rng: IRNG = new MersenneTwister()) {

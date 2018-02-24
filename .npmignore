@@ -1,17 +1,14 @@
 src
 !dist/src
 docs
-extra
 config
-*.pem
+coverage
+nyc.md
+.*
 spell.json
 tsconfig.json
 tslint.json
 yarn.lock
-
-# everything except the package.json i hope
-
-scripts
+package-lock.json
 test
 node_modules
-.*
