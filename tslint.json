@@ -1,5 +1,29 @@
 {
     "rules": {
+        "arrow-parens": false,
+        "class-name": true,
+        "eofline": true,
+        "indent": [
+            true,
+            "spaces"
+        ],
+        "linebreak-style": [
+            false,
+            "LF"
+        ],
+        "new-parens": true,
+        "no-construct": true,
+        "no-unused-variable": true,
+        "no-use-before-declare": true,
+        "no-var-keyword": true,
+        "object-literal-key-quotes": [
+            true,
+            "as-needed"
+        ],
+        "one-variable-per-declaration": [
+            true,
+            "ignore-for-loop"
+        ],
         "ordered-imports": [
             true,
             {
@@ -7,46 +31,31 @@
                 "named-imports-order": "case-insensitive"
             }
         ],
-        "quotemark": [true, "single", "jsx-double", "avoid-escape"],
-        "class-name": true,
-        "new-parens": true,
-        "variable-name": [
-            false,
-            "check-format",
-            "allow-leading-underscore",
-            "allow-pascal-case"
+        "quotemark": [
+            true,
+            "single",
+            "jsx-double",
+            "avoid-escape"
         ],
-        "one-variable-per-declaration": [true, "ignore-for-loop"],
+        "semicolon": [
+            false,
+            "always"
+        ],
         "space-before-function-paren": [
             true,
             {
                 "anonymous": "never",
-                "named": "never",
                 "asyncArrow": "always",
+                "constructor": "never",
                 "method": "never",
-                "constructor": "never"
+                "named": "never"
             }
         ],
-        "object-literal-key-quotes": [true, "as-needed"],
-        "arrow-parens": false,
-        "eofline": true,
-        "linebreak-style": [false, "LF"],
-        "no-var-keyword": true,
         "switch-default": true,
-        "triple-equals": [true, "allow-null-check"],
-        //"no-use-before-declare": true,
-        //"no-unused-variable": true,
-        "no-construct": true,
-        "indent": [true, "spaces"],
-        "whitespace": [
+        "triple-equals": [
             true,
-            "check-branch",
-            "check-decl",
-            "check-operator",
-            "check-separator",
-            "check-module"
+            "allow-null-check"
         ],
-        "semicolon": [true, "always"],
         "typedef-whitespace": [
             true,
             {
@@ -63,6 +72,20 @@
                 "property-declaration": "onespace",
                 "variable-declaration": "onespace"
             }
+        ],
+        "variable-name": [
+            false,
+            "check-format",
+            "allow-leading-underscore",
+            "allow-pascal-case"
+        ],
+        "whitespace": [
+            true,
+            "check-branch",
+            "check-decl",
+            "check-operator",
+            "check-separator",
+            "check-module"
         ]
     }
 }

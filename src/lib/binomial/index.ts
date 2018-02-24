@@ -1,5 +1,5 @@
-import { MersenneTwister } from 'src/lib/rng/mersenne-twister';
 import { IRNG } from '../rng/irng';
+import { MersenneTwister } from '../rng/mersenne-twister';
 import { dbinom } from './dbinom';
 import { pbinom } from './pbinom';
 import { qbinom } from './qbinom';

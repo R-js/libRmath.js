@@ -15,5 +15,5 @@ module.exports = {
         //'.ttf',
         //'.eot'
     ],
-    plugins: [new TsConfigPathsPlugin()]
+    // plugins: [new TsConfigPathsPlugin()]
 };

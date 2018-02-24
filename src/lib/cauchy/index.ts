@@ -3,7 +3,7 @@ import { pcauchy } from './pcauchy';
 import { qcauchy } from './qcauchy';
 import { rcauchy } from './rcauchy';
 
-import { MersenneTwister } from 'src/lib/rng/mersenne-twister';
+import { MersenneTwister } from '../rng/mersenne-twister';
 
 export function Cauchy(rng = new MersenneTwister(0)) {
   return {

@@ -1,23 +1,24 @@
 {
-    "all": true,
-    "clean": true,
-    "exclude": [
-        "**/*.d.ts"
-    ],
-    "extension": [
-        ".ts",
-        ".tsx"
-    ],
-    "include": [
-        "src/**/*.ts"
-    ],
-    "reporter": [
-        "html",
-        "text",
-        "text-summary"
-    ],
-    "require": [
-        "ts-node/register",
-        "babel-register"
-    ]
+  "check-coverage": false,
+  "clean": true,
+  "compact": true,
+  "extension": [
+    ".ts",
+    ".js"
+  ],
+  "include": [
+    "src/**/*.ts"
+  ],
+  "instrument": true,
+  "preserve-comments": false,
+  "reporter": [
+    "lcov",
+    "text",
+    "text-summary"
+  ],
+  "require": [
+    "ts-node/register"
+  ],
+  "show-process-tree": true,
+  "sourceMap": true
 }

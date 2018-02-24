@@ -44,8 +44,8 @@ import * as debug from 'debug';
 const { isFinite: R_FINITE } = Number;
 const { abs: fabs } = Math;
 
-import { flatten, possibleScalar, seq, sum } from 'src/lib/r-func';
 import { rbinom } from '../binomial/rbinom';
+import { flatten, possibleScalar, seq, sum } from '../r-func';
 import { IRNG } from '../rng/irng';
 
 const printer_rmultinom = debug('rmultinom');
@@ -57,7 +57,7 @@ export function rmultinom(
   prob: number | number[],
   rng: IRNG
 ): (number[]) | (number[][]) {
-  const result = sequence(n).map(() => _rmultinom(size, prob, rng ));
+  const result = sequence(n).map(() => _rmultinom(size, prob, rng));
   return possibleScalar(result);
 }
 

@@ -62,24 +62,24 @@ import * as debug from 'debug';
 
 import { ML_ERR_return_NAN } from '../common/_general';
 
-import { IRNGNormal } from 'src/lib/rng/normal/inormal-rng';
 import { rgamma } from '../gamma/rgamma';
 import { rpois } from '../poisson/rpois';
+import { IRNGNormal } from '../rng/normal/inormal-rng';
 import { rchisq } from './rchisq';
 
 const printer = debug('rnchisq');
-const { isFinite:R_FINITE } = Number;
+const { isFinite: R_FINITE } = Number;
 
 export function rnchisq(
   n: number,
   df: number,
   lambda: number,
   rng: IRNGNormal
-): number| number[] {
-  
+): number | number[] {
+
   const result = new Array(n).fill(0).map(() => {
 
-    if (!R_FINITE(df) || !R_FINITE(lambda) || df < 0 || lambda < 0){
+    if (!R_FINITE(df) || !R_FINITE(lambda) || df < 0 || lambda < 0) {
       return ML_ERR_return_NAN(printer);
     }
     if (lambda === 0) {
@@ -91,5 +91,5 @@ export function rnchisq(
       return r;
     }
   });
-  return result.length === 1 ? result[0] :result;
+  return result.length === 1 ? result[0] : result;
 }

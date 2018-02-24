@@ -19,7 +19,7 @@ import { rgamma as _rgamma } from './rgamma';
 import { Inversion, IRNGNormal } from '../rng/normal';
 
 //special
-import { multiplexer } from 'src/lib/r-func';
+import { multiplexer } from '../r-func';
 import { gammafn } from './gamma_fn';
 import { lgammafn } from './lgamma_fn';
 import {
