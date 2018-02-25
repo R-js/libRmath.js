@@ -12,6 +12,7 @@ npm-debug.log*
 !/.npmignore
 !/.nycrc
 !/.travis.yml
+!/.codecov.yml
 
 *.pdf
 *.PNG
