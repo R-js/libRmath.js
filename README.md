@@ -8126,8 +8126,6 @@ const {
 
 [Bessel function](https://en.wikipedia.org/wiki/Bessel_function) of first kind. See [R doc](https://stat.ethz.ch/R-manual/R-devel/library/base/html/Bessel.html).
 
-**Warning:** `besselJ` does not accept vectorized input arguments like in R.
-
 _typescript decl_
 
 ```typescript
@@ -8140,6 +8138,9 @@ declare function besselJ(
 * `x`: input value x ≥ 0.
 * `nu`: order, (may be fractional!)
 
+_**Note:** if `x` and `nu` are arrays or (scalar/array combinations)
+of unequal length then R argument cycling rules apply._
+
 Usage:
 
 ```javascript
@@ -8149,7 +8150,7 @@ const {
     R: { map, numberPrecision, c }
 } = libR;
 
-const precision9 = numberPrecision(9);
+const _9 = numberPrecision(9);
 
 let xJ = c(1, 7.389, 20.09, 7.389, 403.4, 1097,
     0.3679, 8103, 22030, 0.04979, 7.389, 1097);
@@ -8157,7 +8158,7 @@ let xJ = c(1, 7.389, 20.09, 7.389, 403.4, 1097,
 let nuJ = c(11.02, 0.1353, 0.4066, 54.6, 63.43, 73.7,
  -3.669, -0.4066, -1.221, -63.43, -54.6, -73.7);
 
-const bJ = precision9(besselJ(xJ, nuJ));
+const bJ = _9(besselJ(xJ, nuJ));
 /*[
   1.12519947e-11,  0.291974134,     0.174941202,    2.98608934e-42,
   0.0397764164,   -0.0222595064,    -557.732938,    -0.00685960111,
@@ -8181,8 +8182,6 @@ besselJ(x,nu);
 
 [Bessel function](https://en.wikipedia.org/wiki/Bessel_function) of the second kind. See [R doc](https://stat.ethz.ch/R-manual/R-devel/library/base/html/Bessel.html).
 
-**Warning:** `BesselY` does not accept vectorized input arguments like in R.
-
 _typescript decl_
 
 ```typescript
@@ -8195,6 +8194,9 @@ export function besselY(
 * `x`: input value x ≥ 0.
 * `nu`: order, (may be fractional!)
 
+_**Note:** if `x`, `nu`, or `expo` are arrays or (scalar/array combinations)
+of unequal length then R argument cycling rules apply._
+
 Usage:
 
 ```javascript
@@ -8204,13 +8206,13 @@ const {
     R: { map, numberPrecision, c }
 } = libR;
 
-const precision9 = numberPrecision(9);
+const _9 = numberPrecision(9);
 
 let xY = c(0.1353, 148.4, 22030, 20.09, 403.4, 1097, 0.1353, 2.718, 2981, 1, 8103, 22030);
 let nuY = c(1.221, 3.669, 1.221, 63.43, 63.43,
     73.7, -1.221, -33.12, -0.1353, -63.43, -63.43, -73.7);
 
-const bY = precision9(besselY(xY, nuY));
+const bY = _9(besselY(xY, nuY));
 /*[
   -7.91004116,      -0.0327873748,   -0.00537461924,
   -8.53963626e+22,  0.0039810489,     0.00928204725,
@@ -8251,6 +8253,9 @@ declare function besselI(
 * `nu`: order, (may be fractional!)
 * `expo`: if TRUE, the results are scaled in order to avoid overflow `exp(-x)*BesselI(x;nu)`.
 
+_**Note:** if `x`, `nu`, or `expo` are arrays or (scalar/array combinations)
+of unequal length then R argument cycling rules apply._
+
 Usage:
 
 ```javascript
@@ -8260,7 +8265,7 @@ const {
     R: { map, numberPrecision, c }
 } = libR;
 
-const precision9 = numberPrecision(9);
+const _9 = numberPrecision(9);
 
 //just to show parameter combinations
 let xI = c(0.3679, 1, 22030,  0.04979,  54.6,  403.4,
@@ -8269,7 +8274,7 @@ let nuI = c(3.669, 11.02, 1.221, 63.43, 73.7, 63.43,
   -0.4066, -0.1353, -0.4066, -73.7, -54.6, -73.7);
 
 // besselI doesnt take vactorized input like R counterpart. So we use a map
-const bI = precision9(  besselI(xI, nuI, true)  );
+const bI = _9(  besselI(xI, nuI, true)  );
 /*[
   0.0000947216027,  4.31519634e-12,  0.00268776062,     1.48153081e-190,
   1.82886482e-21,   0.000136207159,  2.8416423,         0.00730711526,
@@ -8320,7 +8325,7 @@ const {
     R: { map, numberPrecision, flatten:c }
 } = libR;
 
-const precision9 = numberPrecision(9);
+const _9 = numberPrecision(9);
 
 let xK=c(0.3679,  2.718,  403.4,  1,  54.6,  2981,  0.3679,  148.4,
   22030,  0.1353,  2.718,  148.4 );
@@ -8328,7 +8333,7 @@ let xK=c(0.3679,  2.718,  403.4,  1,  54.6,  2981,  0.3679,  148.4,
 let nuK= c(3.669, 33.12, 11.02, 63.43, 73.7, 54.6, -3.669, -3.669,
  -1.221, -73.7, -73.7, -54.6);
 
-const bK = precision9(  besselK(xK, nuK, true)  );
+const bK = _9(  besselK(xK, nuK, true)  );
 /*[
   1430.97872,     1.10637213e+32,  0.0725008692,    3.13780349e+105,
   2.98065514e+18, 0.0378422686,    1430.97872,      0.107549709,
@@ -8722,7 +8727,7 @@ _typescript decl_
 ```typescript
 declare function gamma(
   x: number|number[]
-): number|number[] 
+): number|number[]
 ```
 
 Usage:
