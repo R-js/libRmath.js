@@ -35,7 +35,8 @@ export function Beta(rng: IRNGNormal = new Inversion()) {
     ncp?: numVector,
     log?: boolVector
   ): numVector {
-    if (ncp === undefined) {
+    // I added the === 0 here, because dnbeta will go back to dbeta if 0 (c source code)
+    if (ncp === undefined || ncp === 0) {
       return _dbeta(x, shape1, shape2, log || false);
     } else {
       return _dnbeta(x, shape1, shape2, ncp || 0, log || false);
@@ -83,7 +84,7 @@ export function Beta(rng: IRNGNormal = new Inversion()) {
     } else {
       let ax = rnchisq(n, 2 * shape1, ncp, rng);
       let bx = rchisq(n, 2 * shape2, rng);
-      let result = multiplexer(ax, bx)((a, b) => a / (a + b) );
+      let result = multiplexer(ax, bx)((a, b) => a / (a + b));
       return result.length === 1 ? result[0] : result;
     }
   }
