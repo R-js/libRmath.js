@@ -1,9 +1,7 @@
-//import { expect } from 'chai';
-
-import { assert, expect } from 'chai';
+import { assert } from 'chai';
 import * as libR from '../src/lib';
-
 import { fixture } from './beta_fixture';
+import { approximitly } from './test-helpers';
 
 const {
   Beta,
@@ -12,6 +10,8 @@ const {
 } = libR;
 const { abs } = Math;
 const { isNaN, isFinite } = Number;
+
+
 
 describe('beta distribution', function n() {
   //
@@ -32,22 +32,7 @@ describe('beta distribution', function n() {
 
       it(`density test: ${key}/${desc}`, function t() {
         const actuals = dbeta(inn.x, inn.shape1, inn.shape2, inn.ncp, inn.asLog);
-        multiplexer(actuals, expectation)((act, exp) => {
-          switch (true) {
-            case isNaN(act):
-              assert.isNaN(exp);
-              break;
-            case isFinite(act):
-              assert.approximately(act, exp, 1e-9, 'numbers are close');
-              break;
-            case !isFinite(act):
-              assert.equal(act, exp);
-              break;
-            default:
-              throw 'Unknown number';
-          }
-        });
-
+        multiplexer(actuals, expectation)(approximitly);
       });
     });
   });
