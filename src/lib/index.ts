@@ -45,7 +45,8 @@ import {
   arrayrify,
   //asVector,
   div,
- // forceToArray,
+  each,
+  // forceToArray,
   flatten,
   flatten as c, //alias
   isOdd,
@@ -72,6 +73,7 @@ export const R = {
   flatten,
   isOdd,
   map,
+  each,
   mult,
   multiplex,
   multiplexer,

@@ -8,7 +8,7 @@ const printer_seq = debug('seq');
 const precision9 = numberPrecision(9);
 
 export function isOdd(n: number): boolean {
-  if (isFinite(n)){
+  if (isFinite(n)) {
     return floor(n / 2) * 2 < n;
   }
   throw new Error(`Not a finite Number: ${n}`);
@@ -45,7 +45,7 @@ export const seq = (adjust = 0) => (adjustMin = adjust) => (
   return precision9(rc) as any;
 };
 
-export function selector(...rest: (number|number[])[] ): { (val: any, index: number): boolean; } {
+export function selector(...rest: (number | number[])[]): { (val: any, index: number): boolean; } {
   const flat = flatten(rest);
   return (val: any, idx: number) => {
     return flat.indexOf(idx) >= 0;
@@ -73,10 +73,10 @@ export function arrayrify<T, R>(fn: (x: T, ...rest: any[]) => R) {
   };
 }
 
-export function multiplex(fn: (...rest: (any|any[])[]) => any){
-   
-  return function(...rest: (any|any[])[]){
-      return multiplexer(...rest)(fn);
+export function multiplex(fn: (...rest: (any | any[])[]) => any) {
+
+  return function(...rest: (any | any[])[]) {
+    return multiplexer(...rest)(fn);
   };
 }
 
@@ -126,9 +126,9 @@ export function multiplexer(...rest: (any | any[])[]) {
     // null is special
     if (arg === null) {
       analyzed.push([arg]);
-      continue; 
+      continue;
     }
-    if (['undefined', 'boolean', 'number'].indexOf(typeof arg) >= 0){
+    if (['undefined', 'boolean', 'number'].indexOf(typeof arg) >= 0) {
       analyzed.push([arg]);
       continue;
     }
@@ -150,7 +150,7 @@ export function multiplexer(...rest: (any | any[])[]) {
   // find the longest array
   const _max = max(...analyzed.map(a => a.length));
 
-  return function(fn: (...rest: any[]) => any): any|any[] {
+  return function(fn: (...rest: any[]) => any): any | any[] {
     const rc: any[] = [];
 
     for (let k = 0; k < _max; k++) {
@@ -172,21 +172,19 @@ export function multiplexer(...rest: (any | any[])[]) {
  * 
  */
 
-export function map<T>(
-  xx: T
-): { (fn: (x: any, idx?: number | string) => any): any | any[] } {
-  //let i = 0;
-  type ArrayElt = { key: string | number, val: any };
+type ArrayElt = { key: string | number, val: any };
 
-  const fx: ArrayElt[] = coerceToArray(xx) as any;
-  //TODO: create looping like in R
-  //const fy: ArrayElt[] | undefined = yy && coerceToArray(yy) as any;
-  return function(fn: (x: any, idx?: number | string) => any): any | any[] {
-    //console.log({id:i++});
-    const result = fx.map(o => fn(o.val, o.key));
-    return possibleScalar(result) as any;
-  };
+function iter<T>(wantMap = true) {
+  return function(xx: T): { (fn: (x: any, idx?: number | string) => any): any | any[] } {
+    const fx: ArrayElt[] = coerceToArray(xx) as any;
+    return function(fn: (x: any, idx?: number | string) => any): any | any[] {
+      return wantMap ? possibleScalar(fx.map(o => fn(o.val, o.key))) : fx.forEach(o => fn(o.val, o.key));
+    };
+  }
 }
+
+export const map = iter();
+export const each = iter(false);
 
 export function numberPrecision(prec: number = 6) {
   function convert(x: number): number {
@@ -202,7 +200,7 @@ export function numberPrecision(prec: number = 6) {
 export function any<T>(x: T[]) {
   return function(fn: any | ((v: T, i?: number) => boolean)): boolean {
     if (fn instanceof Function) {
-      return x.find(fn) !== undefined ;
+      return x.find(fn) !== undefined;
     }
     return x.find(d => d === fn) !== undefined;
   };

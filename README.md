@@ -278,6 +278,29 @@ c(1,2,3,4)^2
  pow([3, 4, 5], 4); //81 256 625
 ```
 
+
+### `each`
+
+Functional analog to `Array.prototype.forEach`, but can also loop over object properties.
+The return type can be either an new array or a scalar (see `Example`).
+
+Example:
+
+```javascript
+const libR = require('lib-r-math.js');
+const { each } = libR.R;
+
+each(11)(v => console.log(v * 2)) ;
+
+// single element array result are forced to return scalar
+each([3])(v => console.log(v * 2));
+
+each([11, 12])( (v, idx) => console.log({ v, idx}));
+
+//looping over object properties
+each({ p:1, name:'myname' })( (value, key) => console.log(`${key}=${value}`))
+```
+
 ### `flatten` or `c` (alias)
 
 Analog to R's `c` function. Constructs a final array by (recursively) flattening and merging all of its arguments which can be a combination of scalars and arrays.
