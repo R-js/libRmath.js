@@ -51,7 +51,7 @@ export function Beta(rng: IRNGNormal = new Inversion()) {
     lowerTail: boolean = true,
     logP: boolean = false
   ): T {
-    if (ncp === undefined) {
+    if (ncp === undefined || ncp === 0) {
       return _pbeta(q, shape1, shape2, lowerTail, logP);
     } else {
       return _pnbeta(q, shape1, shape2, ncp, lowerTail, logP);

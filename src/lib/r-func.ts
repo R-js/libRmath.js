@@ -174,18 +174,17 @@ export function multiplexer(...rest: (any | any[])[]) {
 
 type ArrayElt = { key: string | number, val: any };
 
-function iter<T>(noReturns = false) {
+function iter<T>(wantMap = true) {
   return function(xx: T): { (fn: (x: any, idx?: number | string) => any): any | any[] } {
     const fx: ArrayElt[] = coerceToArray(xx) as any;
     return function(fn: (x: any, idx?: number | string) => any): any | any[] {
-      const result = noReturns ? possibleScalar(fx.map(o => fn(o.val, o.key))) : fx.forEach(o => fn(o.val, o.key));
-      return noReturns ? undefined : result;
+      return wantMap ? possibleScalar(fx.map(o => fn(o.val, o.key))) : fx.forEach(o => fn(o.val, o.key));
     };
   }
 }
 
-export const map = iter(false);
-export const each = iter(true);
+export const map = iter();
+export const each = iter(false);
 
 export function numberPrecision(prec: number = 6) {
   function convert(x: number): number {

@@ -21,8 +21,8 @@ describe('beta distribution', function n() {
   const seq = libR.R.seq()();
   //
 
+
   describe('dbeta density', () => {
-    let testNr = 1;
 
     //construct tests for dbeta from fixtures
     const { dbeta: testData } = fixture;
@@ -36,4 +36,22 @@ describe('beta distribution', function n() {
       });
     });
   });
+
+  describe('pbeta probability', () => {
+
+    //construct tests for dbeta from fixtures
+    const { pbeta: testData } = fixture;
+    //abuse as a for-each loop
+    //make sure it is an arrow function for `map` but not an arrow function for `it`
+    each(testData)(({ input: inn, output: expectation, desc }, key) => {
+
+      it(`propability test: ${key}/${desc}`, function t() {
+        const actuals = pbeta(inn.x, inn.shape1, inn.shape2, inn.ncp, inn.lowerTail, inn.asLog);
+        multiplexer(actuals, expectation)(approximitly);
+      });
+    });
+  });
+
+
+
 });

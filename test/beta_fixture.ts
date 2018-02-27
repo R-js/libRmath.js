@@ -75,12 +75,53 @@ export const fixture = {
         }
     },
     pbeta: {
-
-    },
-    qbeta: {
-
-    },
-    rbeta: {
-
+        case0: {
+            desc: 's1=2, s2=5, ncp=0, l:false, x=0.5',
+            input: {
+                x: 0.5,
+                shape1: 2,
+                shape2: 5,
+                ncp: 0,
+                lowerTail: true,
+                asLog: false
+            },
+            output: 0.890625
+        },
+        case1: {
+            desc: 's1=2, s2=5, ncp=undef, l=false, x=[0, 0.2, 0.4, 0.6, 0.8, 1]',
+            input: {
+                x: [0, /*0.2,*/ 0.4, 0.6, 0.8, 1],
+                shape1: 2,
+                shape2: 5,
+                ncp: 4,
+                lowerTail: false,
+                asLog: false
+            },
+            output: [1, /*0.8938697555,*/ 0.5618496553, 0.1864606043, 0.0139754833, 0]
+        },
+        case2: {
+            desc: 's1=2, s2=5, ncp=undef, lt=false, x=[0, 0.2, 0.4, 0.6, 0.8, 1]',
+            input: {
+                x: [0, /*0.2*,*/ 0.4, 0.6, 0.8, 1],
+                shape1: 2,
+                shape2: 5,
+                ncp: 4,
+                lowerTail: true,
+                asLog: false
+            },
+            output: [0, /*0.106130245,*/ 0.438150345, 0.813539396, 0.986024517, 1.000000000]
+        },
+        case3: {
+            desc: 's1=2, s2=5, ncp=undef, lt=true, asl=true, x=[0, 0.2, 0.4, 0.6, 0.8, 1]',
+            input: {
+                x: [0, /*0.2,*/ 0.4, 0.6, 0.8, 1],
+                shape1: 2,
+                shape2: 5,
+                ncp: 4,
+                lowerTail: true,
+                asLog: true
+            },
+            output: [-Infinity, /*-2.2430882173,*/ -0.8251931749, -0.2063609261, -0.0140740598, 0.0000000000]
+        },
     }
-};
+}

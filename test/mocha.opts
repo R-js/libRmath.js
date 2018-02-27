@@ -3,5 +3,4 @@
 --recursive
 --require source-map-support/register
 --sort
---bail
 test/**/*.test.ts
