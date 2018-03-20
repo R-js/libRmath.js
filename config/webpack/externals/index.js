@@ -5,7 +5,7 @@ module.exports = {
     wPackN_Ext: (options) => {
         return webpackNodeExternals(merge({
             //defaults:
-            whitelist: [], // no whitelist
+            whitelist: ['debug', 'ms'], // 
             importType: 'commonjs', //externalize as commonjs
             modulesDir: 'node_modules', //directory name of node_modules
             modulesFromFile: false //dont use package.json to get node_module names

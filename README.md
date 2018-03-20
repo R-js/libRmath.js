@@ -39,7 +39,9 @@ npm install --save lib-r-math.js
 The module directory contains a minimized bundle for use in html `<script>` tag. The library is attached to the `window.libR` object after loading.
 
 ```html
-<script src="your_server_url/libR.min.js"></script>
+<!-- script src="your_server_url/libR.min.js"></script -->
+<!-- this example uses unpkg as CDN -->
+<script src="https://unpkg.com/lib-r-math.js@1.0.74/dist/lib/libR.min.js">
 <script>
   const libR = window.libR;
   //fetch some distribution namespaces
