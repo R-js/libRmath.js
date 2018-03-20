@@ -41,7 +41,7 @@ The module directory contains a minimized bundle for use in html `<script>` tag.
 ```html
 <script src="your_server_url/libR.min.js"></script>
 <script>
-  const libR = window.libR.;
+  const libR = window.libR;
   //fetch some distribution namespaces
   const { Tukey, Normal, Beta, StudentT, Wilcoxon } = libR;
 </script>
