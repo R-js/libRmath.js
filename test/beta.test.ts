@@ -5,7 +5,7 @@ import { approximitly } from './test-helpers';
 
 const {
   Beta,
-  R: { arrayrify, numberPrecision, each, multiplexer },
+  R: { numberPrecision, each, multiplexer },
   rng: { SuperDuper, normal: { BoxMuller } }
 } = libR;
 const { abs } = Math;
@@ -51,7 +51,4 @@ describe('beta distribution', function n() {
       });
     });
   });
-
-
-
 });
