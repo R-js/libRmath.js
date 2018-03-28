@@ -1,37 +1,14 @@
-/*
- *  AUTHOR
- *  Jacob Bogers, jkfbogers@gmail.com
- *  Feb 25, 2017
- * 
- *  ORIGINAL AUTHOR
- *  Unknown (from standard C99 library) found on 
- *      http://www.johndcook.com/stand_alone_code.html  
- * 
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  License for JS language implementation
- *  https://www.jacob-bogers/libRmath.js/Licenses/
- * 
- *  SYNOPSIS
- * 
- *  MOTIVATION
- * 
- *  libRmath has the functions "gamma_sign", "lgammafn" and "gammafn"" 
- *  It also  uses the C99 lgamma (see module dnbinom.c), so this is the reason for also porting those
- *
- * 
- *  DESCRIPTION
- *
- *
- */
+/* GNUv3 License
+
+Copyright (c) Jacob K. F. Bogers <jkfbogers@gmail.com>
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+*/
 import * as debug from 'debug';
 // Note that the functions Gamma and LogGamma are mutually dependent.
 import {
@@ -39,11 +16,11 @@ import {
   ML_ERROR,
 } from '../common/_general';
 
-const { floor, exp, log, abs:fabs} = Math;
-const  { MAX_VALUE: DBL_MAX, NaN: ML_NAN } = Number;
+const { floor, exp, log, abs: fabs } = Math;
+const { MAX_VALUE: DBL_MAX, NaN: ML_NAN } = Number;
 const printer_tgamma = debug('tgamma');
 
- function tgamma(x: number): number {
+function tgamma(x: number): number {
 
   if (x <= 0.0) {
     ML_ERROR(ME.ME_DOMAIN, 'gamma', printer_tgamma);
@@ -150,7 +127,7 @@ const printer_tgamma = debug('tgamma');
   return exp(lgamma_c99(x));
 }
 
- function lgamma_c99(x: number) {
+function lgamma_c99(x: number) {
 
   if (x <= 0.0) {
     ML_ERROR(ME.ME_DOMAIN, 'gamma', printer_tgamma);
@@ -180,8 +157,8 @@ const printer_tgamma = debug('tgamma');
   ];
 
   let z = 1.0 / (x * x);
-  let  sum = c[7];
-  for (let i = 6; i >= 0; i--){
+  let sum = c[7];
+  for (let i = 6; i >= 0; i--) {
     sum *= z;
     sum += c[i];
   }

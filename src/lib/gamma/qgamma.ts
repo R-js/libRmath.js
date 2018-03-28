@@ -1,48 +1,14 @@
-/*  AUTHOR
- *  Jacob Bogers, jkfbogers@gmail.com
- *  March 18, 2017
- *
- *  ORIGINAL AUTHOR
- *  Mathlib : A C Library of Special Functions
- *  Copyright (C) 1998 Ross Ihaka
- *  Copyright (C) 2000--2015 The R Core Team
- *  Copyright (C) 2004--2015 The R Foundation
- *  based on AS 91 (C) 1979 Royal Statistical Society
- *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
- *
- *  This program is distributed in the hope that it will be useful, but
- *  WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- *  General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, a copy is available at
- *  https://www.R-project.org/Licenses/
- *
- *  DESCRIPTION
- *
- *	Compute the quantile function of the gamma distribution.
- *
- *  NOTES
- *
- *	This function is based on the Applied Statistics
- *	Algorithm AS 91 ("ppchi2") and via pgamma(.) AS 239.
- *
- *	R core improvements:
- *	o  lower_tail, log_p
- *      o  non-trivial result for p outside [0.000002, 0.999998]
- *	o  p ~ 1 no longer gives +Inf; final Newton step(s)
- *
- *  REFERENCES
- *
- *	Best, D. J. and D. E. Roberts (1975).
- *	Percentage Points of the Chi-Squared Distribution.
- *	Applied Statistics 24, page 385.  */
+/* GNUv3 License
 
+Copyright (c) Jacob K. F. Bogers <jkfbogers@gmail.com>
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+*/
 import * as debug from 'debug';
 
 import {

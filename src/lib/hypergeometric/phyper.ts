@@ -1,58 +1,18 @@
-/*
- *  AUTHOR
- *  Jacob Bogers, jkfbogers@gmail.com
- *  March 14, 2017
- *
- *  ORIGINAL AUTHOR
- *  Mathlib : A C Library of Special Functions
- *  Copyright (C) 1998 Ross Ihaka
- *  Copyright (C) 1999-2014  The R Core Team
- *  Copyright (C) 2004	     Morten Welinder
- *  Copyright (C) 2004	     The R Foundation
- *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, a copy is available at
- *  https://www.R-project.org/Licenses/
- *
- *  DESCRIPTION
- *
- *	The distribution function of the hypergeometric distribution.
- *
- * Current implementation based on posting
- * From: Morten Welinder <terra@gnome.org>
- * Cc: R-bugs@biostat.ku.dk
- * Subject: [Rd] phyper accuracy and efficiency (PR#6772)
- * Date: Thu, 15 Apr 2004 18:06:37 +0200 (CEST)
- ......
+/* GNUv3 License
 
- The current version has very serious cancellation issues.  For example,
- if you ask for a small right-tail you are likely to get total cancellation.
- For example,  phyper(59, 150, 150, 60, FALSE, FALSE) gives 6.372680161e-14.
- The right answer is dhyper(0, 150, 150, 60, FALSE) which is 5.111204798e-22.
+Copyright (c) Jacob K. F. Bogers <jkfbogers@gmail.com>
 
- phyper is also really slow for large arguments.
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
- Therefore, I suggest using the code below. This is a sniplet from Gnumeric ...
- The code isn't perfect.  In fact, if  x*(NR+NB)  is close to	n*NR,
- then this code can take a while. Not longer than the old code, though.
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
- -- Thanks to Ian Smith for ideas.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 */
 
 import * as debug from 'debug';
 import { ML_ERR_return_NAN, R_D_Lval, R_DT_0, R_DT_1 } from '../common/_general';
-import { R_DT_log } from '../exp/expm1'; 
+import { R_DT_log } from '../exp/expm1';
 import { map } from '../r-func';
 import { dhyper } from './dhyper';
 

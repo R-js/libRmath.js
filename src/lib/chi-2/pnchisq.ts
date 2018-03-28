@@ -1,33 +1,14 @@
-/*
- *  AUTHOR
- *  Jacob Bogers, jkfbogers@gmail.com
- *  March 14, 2017
- * 
- *  ORGINAL AUTHOR
- *  Algorithm AS 275 Appl.Statist. (1992), vol.41, no.2
- *  original  (C) 1992	     Royal Statistical Society
- *
- *  Computes the noncentral chi-squared distribution function with
- *  positive real degrees of freedom df and nonnegative noncentrality
- *  parameter ncp.  pnchisq_raw is based on
- *
- *    Ding, C. G. (1992)
- *    Algorithm AS275: Computing the non-central chi-squared
- *    distribution function. Appl.Statist., 41, 478-482.
+/* GNUv3 License
 
- *  Other parts
- *  Copyright (C) 2000-2015  The R Core Team
- *  Copyright (C) 2003-2015  The R Foundation
- */
+Copyright (c) Jacob K. F. Bogers <jkfbogers@gmail.com>
 
-/*----------- DEBUGGING -------------
- *
- *	make CFLAGS='-DDEBUG_pnch ....'
-(cd `R-devel RHOME`/src/nmath; gcc -I. -I../../src/include -I../../../R/src/include -I/usr/local/include -DHAVE_CONFIG_H -fopenmp -g -O0 -pedantic -Wall --std=gnu99 -DDEBUG_pnch -DDEBUG_q -Wcast-align -Wclobbered  -c ../../../R/src/nmath/pnchisq.c -o pnchisq.o )
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
- * -- Feb.6, 2000 (R pre0.99); M.Maechler:  still have
- * bad precision & non-convergence in some cases (x ~= f, both LARGE)
- */
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+*/
 import * as debug from 'debug';
 
 import {

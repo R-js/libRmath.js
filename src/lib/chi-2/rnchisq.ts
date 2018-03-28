@@ -1,63 +1,14 @@
-/*  AUTHOR
- *  Jacob Bogers, jkfbogers@gmail.com
- *  March 23, 2017
- * 
- *  ORGINAL AUTHOR
- *  Mathlib : A C Library of Special Functions
- *  Copyright (C) 2003--2015 The R Foundation
- *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, a copy is available at
- *  https://www.R-project.org/Licenses/
- *
- *  SYNOPSIS
- *
- *    #include <Rmath.h>
- *    double rnchisq(double df, double lambda);
- *
- *  DESCRIPTION
- *
- *    Random variates from the NON CENTRAL chi-squared distribution.
- *
- *  NOTES
- *
- According to Hans R. Kuensch's suggestion (30 sep 2002):
+/* GNUv3 License
 
-  It should be easy to do the general case (ncp > 0) by decomposing it
-  as the sum of a central chisquare with df degrees of freedom plus a
-  noncentral chisquare with zero degrees of freedom (which is a Poisson
-  mixture of central chisquares with integer degrees of freedom),
-  see Formula (29.5b-c) in Johnson, Kotz, Balakrishnan (1995).
+Copyright (c) Jacob K. F. Bogers <jkfbogers@gmail.com>
 
-  The noncentral chisquare with arbitary degrees of freedom is of interest
-  for simulating the Cox-Ingersoll-Ross model for interest rates in
-  finance.
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
-  R code that works is
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
-    rchisq0 <- function(n, ncp) {
-	p <- 0 < (K <- rpois(n, lambda = ncp / 2))
-	r <- numeric(n)
-	r[p] <- rchisq(sum(p), df = 2*K[p])
-	r
-    }
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-    rchisq <- function(n, df, ncp=0) {
-	if(missing(ncp)) .Internal(rchisq(n, df))
-	else rchisq0(n, ncp) + .Internal(rchisq(n, df))
-    }
- */
-
+*/
 import * as debug from 'debug';
 
 import { ML_ERR_return_NAN } from '../common/_general';

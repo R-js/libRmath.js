@@ -1,51 +1,14 @@
-/*
- *  AUTHOR
- *  Jacob Bogers, jkfbogers@gmail.com
- *  feb 25, 2017
- * 
- *
- *  ORIGINAL AUTHOR
- *    Catherine Loader, catherine@research.bell-labs.com.
- *    October 23, 2000.
- *
- *  Merge in to R:
- *	Copyright (C) 2000, The R Core Team
- *  Changes to case a, b < 2, use logs to avoid underflow
- *	Copyright (C) 2006-2014 The R Core Team
- *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, a copy is available at
- * 
- *  License for JS language implementation
- *  https://www.jacob-bogers/libRmath.js/Licenses/
- * 
- *  License for R statistical package
- *  https://www.r-project.org/Licenses/
- *
- *
- *  DESCRIPTION
- *    Beta density,
- *                   (a+b-1)!     a-1       b-1
- *      p(x;a,b) = ------------ x     (1-x)
- *                 (a-1)!(b-1)!
- *
- *               = (a+b-1) dbinom(a-1; a+b-2,x)
- *
- *    The basic formula for the log density is thus
- *    (a-1) log x + (b-1) log (1-x) - lbeta(a, b)
- *    If either a or b <= 2 then 0 < lbeta(a, b) < 710 and so no
- *    term is large.  We use Loader's code only if both a and b > 2.
- */
+/* GNUv3 License
+
+Copyright (c) Jacob K. F. Bogers <jkfbogers@gmail.com>
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+*/
 
 import * as debug from 'debug';
 

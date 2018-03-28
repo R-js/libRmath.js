@@ -1,63 +1,22 @@
-/*  AUTHOR
- *  Jacob Bogers, jkfbogers@gmail.com
- *  March 20, 2017
- * 
- *  ORGINAL AUTHOR
- *  Mathlib : A C Library of Special Functions
- *  Copyright (C) 1998 Ross Ihaka
- *  Copyright (C) 2000--2008 The R Core Team
- *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, a copy is available at
- *  https://www.R-project.org/Licenses/
- *
- *  SYNOPSIS
- *
- *    #include <Rmath.h>
- *    double rgamma(double a, double scale);
- *
- *  DESCRIPTION
- *
- *    Random variates from the gamma distribution.
- *
- *  REFERENCES
- *
- *    [1] Shape parameter a >= 1.  Algorithm GD in:
- *
- *	  Ahrens, J.H. and Dieter, U. (1982).
- *	  Generating gamma variates by a modified
- *	  rejection technique.
- *	  Comm. ACM, 25, 47-54.
- *
- *
- *    [2] Shape parameter 0 < a < 1. Algorithm GS in:
- *
- *	  Ahrens, J.H. and Dieter, U. (1974).
- *	  Computer methods for sampling from gamma, beta,
- *	  poisson and binomial distributions.
- *	  Computing, 12, 223-246.
- *
- *    Input: a = parameter (mean) of the standard gamma distribution.
- *    Output: a variate from the gamma(a)-distribution
- */
+/* GNUv3 License
+
+Copyright (c) Jacob K. F. Bogers <jkfbogers@gmail.com>
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+*/
 
 import * as debug from 'debug';
 import { ML_ERR_return_NAN } from '../common/_general';
 import { exp_rand } from '../exp/sexp';
 import { IRNGNormal } from '../rng/normal/inormal-rng';
 
-const { expm1, abs:fabs, sqrt, log, exp } = Math;
-const { isFinite:R_FINITE } = Number;
+const { expm1, abs: fabs, sqrt, log, exp } = Math;
+const { isFinite: R_FINITE } = Number;
 
 export function rgamma(
   n: number = 1,
@@ -203,10 +162,10 @@ export function _rgamma(
       q =
         q0 +
         0.5 *
-          t *
-          t *
-          ((((((a7 * v + a6) * v + a5) * v + a4) * v + a3) * v + a2) * v + a1) *
-          v;
+        t *
+        t *
+        ((((((a7 * v + a6) * v + a5) * v + a4) * v + a3) * v + a2) * v + a1) *
+        v;
     else q = q0 - s * t + 0.25 * t * t + (s2 + s2) * log(1.0 + v);
 
     /* Step 7: quotient acceptance (q) */
@@ -230,11 +189,11 @@ export function _rgamma(
         q =
           q0 +
           0.5 *
-            t *
-            t *
-            ((((((a7 * v + a6) * v + a5) * v + a4) * v + a3) * v + a2) * v +
-              a1) *
-            v;
+          t *
+          t *
+          ((((((a7 * v + a6) * v + a5) * v + a4) * v + a3) * v + a2) * v +
+            a1) *
+          v;
       else q = q0 - s * t + 0.25 * t * t + (s2 + s2) * log(1.0 + v);
       /* Step 11:	 hat acceptance (h) */
       /* (if q not positive go to step 8) */

@@ -1,15 +1,14 @@
-/*
- *  AUTHOR
- *  Jacob Bogers, jkfbogers@gmail.com
- *  Javascript port
- *  March 14, 2017
- * 
- *  ORIGNINAL AUTHORS
- *  @author Armido Didonato, Alfred Morris (F77 version)
- *  @author John V. Burkhardt
- *  @author James Curran (j.curran@auckland.ac.nz) (Java version)
-*/
+/* GNUv3 License
 
+Copyright (c) Jacob K. F. Bogers <jkfbogers@gmail.com>
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+*/
 import * as debug from 'debug';
 import { NumberW } from './NumberW';
 
@@ -151,7 +150,7 @@ export class Toms708 {
     t = Math.pow(1.0 / b, 2);
     w =
       ((((c5 * s11 * t + c4 * s9) * t + c3 * s7) * t + c2 * s5) * t + c1 * s3) *
-        t +
+      t +
       c0;
     w *= c / b;
     // C
@@ -415,7 +414,7 @@ export class Toms708 {
     t = Math.pow(1.0 / b, 2);
     w =
       ((((c5 * s11 * t + c4 * s9) * t + c3 * s7) * t + c2 * s5) * t + c1 * s3) *
-        t +
+      t +
       c0;
     w = w * (c / b);
 
@@ -1493,7 +1492,7 @@ export class Toms708 {
     return dResult;
   }
 
-  
+
 
   public static bratio(
     a: number,
@@ -1629,9 +1628,9 @@ export class Toms708 {
     //
     eps = Math.max(eps, 1e-15);
     if (Math.max(a, b) < 1.0e-3 * eps) {
-        w.val = b / (a + b);
-        w1.val = a / (a + b);
-        return; 
+      w.val = b / (a + b);
+      w1.val = a / (a + b);
+      return;
     }
     //
     ind = 0;
@@ -1941,7 +1940,7 @@ export class Toms708 {
           return;
         }
       }
-      
+
       w.val = Toms708.basym(a0, b0, lambda, 100.0 * eps);
       w1.val = 0.5 + (0.5 - w.val);
 
@@ -2179,14 +2178,14 @@ export class Toms708 {
             p[5]) *
             ax +
             p[6]) *
-            ax +
+          ax +
           p[7];
         bot =
           ((((((q[0] * ax + q[1]) * ax + q[2]) * ax + q[3]) * ax + q[4]) * ax +
             q[5]) *
             ax +
             q[6]) *
-            ax +
+          ax +
           q[7];
 
         return x < 0
@@ -2309,14 +2308,14 @@ export class Toms708 {
           p[5]) *
           ax +
           p[6]) *
-          ax +
+        ax +
         p[7];
       bot =
         ((((((q[0] * ax + q[2]) * ax + q[2]) * ax + q[3]) * ax + q[5]) * ax +
           q[5]) *
           ax +
           q[6]) *
-          ax +
+        ax +
         q[7];
       dResult = top / bot;
     } else {
@@ -2691,7 +2690,7 @@ export class Toms708 {
     } else if (t > 0) {
       top =
         (((((p[6] * t + p[5]) * t + p[4]) * t + p[3]) * t + p[2]) * t + p[1]) *
-          t +
+        t +
         p[0];
       bot = (((q[4] * t + q[3]) * t + q[2]) * t + q[1]) * t + 1.0;
       w = top / bot;
@@ -2710,7 +2709,7 @@ export class Toms708 {
           r[2]) *
           t +
           r[1]) *
-          t +
+        t +
         r[0];
       bot = (s2 * t + s1) * t + 1.0;
       w = top / bot;

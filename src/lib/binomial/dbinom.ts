@@ -1,50 +1,14 @@
-/*
- *  AUTHOR
- *  Jacob Bogers, jkfbogers@gmail.com
- *  feb 25, 2017
- *
- *  ORIGINAL AUTHOR
- *   Catherine Loader, catherine@research.bell-labs.com.
- *   October 23, 2000.
- *
- *  Merge in to R and further tweaks :
- *	Copyright (C) 2000-2015 The R Core Team
- *	Copyright (C) 2008 The R Foundation
- *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, a copy is available at
- * 
- *  License for JS language implementation
- *  https://www.jacob-bogers/libRmath.js/Licenses/
- * 
- *  License for R statistical package
- *  https://www.r-project.org/Licenses/
- *
- * DESCRIPTION
- *
- *   To compute the binomial probability, call dbinom(x,n,p).
- *   This checks for argument validity, and calls dbinom_raw().
- *
- *   dbinom_raw() does the actual computation; note this is called by
- *   other functions in addition to dbinom().
- *     (1) dbinom_raw() has both p and q arguments, when one may be represented
- *         more accurately than the other (in particular, in df()).
- *     (2) dbinom_raw() does NOT check that inputs x and n are integers. This
- *         should be done in the calling function, where necessary.
- *         -- but is not the case at all when called e.g., from df() or dbeta() !
- *     (3) Also does not check for 0 <= p <= 1 and 0 <= q <= 1 or NaN's.
- *         Do this in the calling function.
- */
+/* GNUv3 License
+
+Copyright (c) Jacob K. F. Bogers <jkfbogers@gmail.com>
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+*/
 
 import * as debug from 'debug';
 

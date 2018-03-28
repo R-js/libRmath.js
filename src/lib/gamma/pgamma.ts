@@ -1,67 +1,14 @@
-/*
+/* GNUv3 License
 
- *  AUTHOR
- *  Jacob Bogers, jkfbogers@gmail.com
- *  March 09, 2017
- *
- *  ORIGINAL AUTHOR
- *  Mathlib : A C Library of Special Functions
- *  Copyright (C) 2005-6 Morten Welinder <terra@gnome.org>
- *  Copyright (C) 2005-10 The R Foundation
- *  Copyright (C) 2006-2015 The R Core Team
- *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, a copy is available at
- *  https://www.R-project.org/Licenses/
- *
- *  SYNOPSIS
- *
- *	#include <Rmath.h>
- *
- *	double pgamma (double x, double alph, double scale,
- *		       int lowerTail, int logP)
- *
- *	double log1pmx	(double x)
- *	double lgamma1p (double a)
- *
- *	double logspace_add (double logx, double logy)
- *	double logspace_sub (double logx, double logy)
- *	double logspace_sum (double* logx, int n)
- *
- *
- *  DESCRIPTION
- *
- *	This function computes the distribution function for the
- *	gamma distribution with shape parameter alph and scale parameter
- *	scale.	This is also known as the incomplete gamma function.
- *	See Abramowitz and Stegun (6.5.1) for example.
- *
- *  NOTES
- *
- *	Complete redesign by Morten Welinder, originally for Gnumeric.
- *	Improvements (e.g. "while NEEDED_SCALE") by Martin Maechler
- *
- *  REFERENCES
- *
- */
+Copyright (c) Jacob K. F. Bogers <jkfbogers@gmail.com>
 
-/*----------- DEBUGGING -------------
- * make CFLAGS='-DDEBUG_p -g'
- * (cd `R-devel RHOME`/src/nmath; gcc -I. -I../../src/include -I../../../R/src/include  -DHAVE_CONFIG_H -fopenmp -DDEBUG_p -g -c ../../../R/src/nmath/pgamma.c -o pgamma.o)
- */
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
-/* Scalefactor:= (2^32)^8 = 2^256 = 1.157921e+77 */
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+*/
 import * as debug from 'debug';
 
 import {
@@ -83,7 +30,7 @@ import { lgammafn } from './lgamma_fn';
 //import { logspace_add } from './logspace-add';
 
 const {
-  LN2:M_LN2,
+  LN2: M_LN2,
   log1p,
   expm1,
   sqrt,
@@ -99,8 +46,8 @@ const {
   MIN_VALUE: DBL_MIN,
   EPSILON: DBL_EPSILON,
   isFinite: R_FINITE,
- // NEGATIVE_INFINITY: ML_NEGINF,
-  POSITIVE_INFINITY:ML_POSINF
+  // NEGATIVE_INFINITY: ML_NEGINF,
+  POSITIVE_INFINITY: ML_POSINF
 } = Number;
 
 const { isArray } = Array;
