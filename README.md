@@ -138,6 +138,28 @@ mult([0, 1, 2, 3], [5,2]); // R recycling rules apply
 //[ 0, 2, 10, 6 ]
 ```
 
+### `asArray`
+
+Creates a new function from an existing one for it to always return its result as an array.
+
+Usage:
+
+```typescript
+
+const libR = require('lib-r-math.js');
+const { asArray } = libR.R;
+
+const r = asArray(Math.random);
+
+//always returns the result wrapped in an array
+r()
+//[ 0.39783583929513 ]
+r()
+//[ 0.04431401890179831 ]
+r()
+//[ 0.7629304997301447 ]
+```
+
 ### `sum`
 
 Analog to `R`'s `sum` function. Calculates the sum of all elements of an array.

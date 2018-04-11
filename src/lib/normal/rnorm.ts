@@ -35,11 +35,12 @@
 import * as debug from 'debug';
 
 import { ML_ERR_return_NAN } from '../common/_general';
-import { seq } from '../r-func';
+import { multiplexer, seq as crSeq } from '../r-func';
 import { IRNGNormal } from '../rng/normal';
 
 const { isNaN: ISNAN, isFinite: R_FINITE } = Number;
 const printer = debug('rnorm');
+const seq = crSeq()();
 
 export function rnorm(
   n: number = 1,
@@ -48,7 +49,7 @@ export function rnorm(
   rng: IRNGNormal
 ): number | number[] {
 
-  let result = seq()()(1, n).map(() => {
+  let result = multiplexer(seq(n))(() => {
     if (ISNAN(mu) || !R_FINITE(sigma) || sigma < 0) {
       return ML_ERR_return_NAN(printer);
     }

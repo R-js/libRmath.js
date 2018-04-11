@@ -82,11 +82,14 @@ export function multiplex(fn: (...rest: (any | any[])[]) => any) {
 }
 
 
-/*export function forceToArray<T>(x: T | T[]): T[] {
-  return Array.isArray(x) ? x.slice(0) : [x];
+export function asArray(fn: (...rest: (any | any[])[]) => any) {
+
+  return function(...rest: (any | any[])[]) {
+    const ans = fn(...rest);
+    return Array.isArray(ans) ? ans : [ans];
+  };
 }
-export { forceToArray as asVector };
-*/
+
 
 function possibleScalar<T>(x: T[]): T | T[] {
   return x.length === 1 ? x[0] : x;

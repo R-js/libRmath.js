@@ -44,6 +44,7 @@ import {
   any,
   arrayrify,
   //asVector,
+  asArray,
   div,
   each,
   // forceToArray,
@@ -68,6 +69,7 @@ export { ISummary };
 export const R = {
   any,
   arrayrify,
+  asArray,
   //asVector,
   div,
   flatten,

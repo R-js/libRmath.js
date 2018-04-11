@@ -146,6 +146,6 @@
         "uninstall": "echo uninstall",
         "version": "echo version"
     },
-    "types": "./dist/src/lib/index.d.ts",
+    "types": "dist/src/lib/index.d.ts",
     "version": "1.0.76"
 }
