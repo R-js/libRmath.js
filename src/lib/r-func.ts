@@ -17,9 +17,15 @@ export function isOdd(n: number): boolean {
 
 export const seq = (adjust = 0) => (adjustMin = adjust) => (
   start: number,
-  end: number = 1,
+  end?: number,
   step: number = 1
 ): number[] => {
+  if (end === undefined) {
+    if (start <= 0 || start === undefined) {
+      return []
+    }
+    end = 1;
+  }
   let s = start + adjust;
   let e = end + adjust;
   let cursor = s;
