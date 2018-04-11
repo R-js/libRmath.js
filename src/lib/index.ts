@@ -16,7 +16,7 @@ export { LogNormal } from './lognormal';
 export { Multinomial, IdmultinomOptions } from './multinom';
 export { Normal } from './normal';
 export { Poisson } from './poisson';
-export { rng, IRNG } from './rng';
+export { rng, IRNG, IRNGNormal } from './rng';
 export { SignRank } from './signrank';
 //  stirling, no need to export, it is a util
 export { StudentT } from './student-t';
