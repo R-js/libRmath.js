@@ -1,12 +1,13 @@
 
 'use strict';
-import { dnorm4 as dnorm } from './dnorm';
-import { pnorm5 as pnorm } from './pnorm';
-import { qnorm } from './qnorm';
-import { rnorm } from './rnorm';
+import { dnorm4 } from './dnorm';
+import { pnorm5 } from './pnorm';
+import { qnorm as _qnorm } from './qnorm';
+import { rnorm as _rnorm } from './rnorm';
 
-import { IRNGNormal, rng } from '../rng';
-const { normal: { Inversion } } = rng;
+import { IRNGNormal, rng as _rng } from '../rng';
+const { normal: { Inversion } } = _rng;
+
 
 export interface INormal {
   rnorm: (n: number, mu: number, sigma: number) => number | number[];
@@ -28,14 +29,15 @@ export interface INormal {
   rng: IRNGNormal;
 }
 
-export function Normal(rng: IRNGNormal = new Inversion()): INormal {
-  
+export function Normal(prng: IRNGNormal = new Inversion()): INormal {
+
   return {
     rnorm: (n: number = 1, mu: number = 0, sigma = 1) =>
-      rnorm(n, mu, sigma, rng),
-    dnorm,
-    pnorm,
-    qnorm,
-    rng,
+      _rnorm(n, mu, sigma, prng)
+    ,
+    dnorm: dnorm4,
+    pnorm: pnorm5,
+    qnorm: _qnorm,
+    rng: prng,
   };
 }
