@@ -9,7 +9,7 @@ import { IRNGNormal, rng as _rng } from '../rng';
 const { normal: { Inversion } } = _rng;
 
 
-export interface INormal {
+/*export interface INormal {
   rnorm: (n: number, mu: number, sigma: number) => number | number[];
   dnorm: <T>(x: T, mu: number, sigma: number, giveLog: boolean) => T;
   pnorm: <T>(
@@ -27,9 +27,9 @@ export interface INormal {
     log_p: boolean
   ) => T;
   rng: IRNGNormal;
-}
+}*/
 
-export function Normal(prng: IRNGNormal = new Inversion()): INormal {
+export function Normal(prng: IRNGNormal = new Inversion()) {
 
   return {
     rnorm: (n: number = 1, mu: number = 0, sigma = 1) =>
