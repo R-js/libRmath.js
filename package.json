@@ -1,6 +1,6 @@
 {
     "author": "Jacob K.F. Bogers",
-    "browser:disabled": "./dist/client/bundle.js",
+    "browser": "./dist/web/libR.js",
     "browser:doc": "https://github.com/defunctzombie/package-browser-field-spec",
     "bugs": {
         "url": "https://github.com/jacobbogers/libRmath.js/issues"
