@@ -1,67 +1,22 @@
-/*  AUTHOR
-*  Jacob Bogers, jkfbogers@gmail.com
-*  March 17, 2017
-* 
-*  ORGINAL AUTHOR
- *  Mathlib : A C Library of Special Functions
- *  Copyright (C) 1998	    Ross Ihaka
- *  Copyright (C) 2000-2013 The R Core Team
- *  Copyright (C) 2003	    The R Foundation
- *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, a copy is available at
- *  https://www.R-project.org/Licenses/
- *
- *  SYNOPSIS
- *
- *   #include <Rmath.h>
- *
- *   double pnorm5(double x, double mu, double sigma, int lower_tail,int log_p);
- *	   {pnorm (..) is synonymous and preferred inside R}
- *
- *   void   pnorm_both(double x, double *cum, double *ccum,
- *		       int i_tail, int log_p);
- *
- *  DESCRIPTION
- *
- *	The main computation evaluates near-minimax approximations derived
- *	from those in "Rational Chebyshev approximations for the error
- *	function" by W. J. Cody, Math. Comp., 1969, 631-637.  This
- *	transportable program uses rational functions that theoretically
- *	approximate the normal distribution function to at least 18
- *	significant decimal digits.  The accuracy achieved depends on the
- *	arithmetic system, the compiler, the intrinsic functions, and
- *	proper selection of the machine-dependent constants.
- *
- *  REFERENCE
- *
- *	Cody, W. D. (1993).
- *	ALGORITHM 715: SPECFUN - A Portable FORTRAN Package of
- *	Special Function Routines and Test Drivers".
- *	ACM Transactions on Mathematical Software. 19, 22-32.
- *
- *  EXTENSIONS
- *
- *  The "_both" , lower, upper, and log_p  variants were added by
- *  Martin Maechler, Jan.2000;
- *  as well as log1p() and similar improvements later on.
- *
- *  James M. Rath contributed bug report PR#699 and patches correcting SIXTEN
- *  and if() clauses {with a bug: "|| instead of &&" -> PR #2883) more in line
- *  with the original Cody code.
- */
+'use strict'
+/* This is a conversion from libRmath.so to Typescript/Javascript
+Copyright (C) 2018  Jacob K.F. Bogers  info@mail.jacob-bogers.com
 
-import * as debug from 'debug';
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+import * as debug from 'debug'
 
 import {
   M_1_SQRT_2PI,
@@ -72,8 +27,6 @@ import {
   R_DT_0,
   R_DT_1
 } from '../common/_general';
-
-import { map } from '../r-func';
 
 const {
   isNaN: ISNAN,
@@ -113,42 +66,42 @@ function do_del(
   }
 }
 
-export function pnorm5<T>(
-  q: T,
+export function pnorm5(
+  q: number,
   mu: number = 0,
   sigma: number = 1,
   lowerTail: boolean = true,
   logP: boolean = false
-): T {
+): number {
 
-  return map(q)( fx => {
-    let p = new NumberW(0);
-    let cp = new NumberW(0);
+  
+  let p = new NumberW(0);
+  let cp = new NumberW(0);
 
-    /* Note: The structure of these checks has been carefully thought through.
-     * For example, if x == mu and sigma == 0, we get the correct answer 1.
-     */
+  /* Note: The structure of these checks has been carefully thought through.
+   * For example, if x == mu and sigma == 0, we get the correct answer 1.
+   */
 
-    if (ISNAN(fx) || ISNAN(mu) || ISNAN(sigma)) return fx + mu + sigma;
+  if (ISNAN(q) || ISNAN(mu) || ISNAN(sigma)) return q + mu + sigma;
 
-    if (!R_FINITE(fx) && mu === fx) return ML_NAN; /* x-mu is NaN */
-    if (sigma <= 0) {
-      if (sigma < 0) return ML_ERR_return_NAN(printer);
-      /* sigma = 0 : */
-      return fx < mu ? R_DT_0(lowerTail, logP) : R_DT_1(lowerTail, logP);
-    }
-    p.val = (fx - mu) / sigma;
-    if (!R_FINITE(p.val))
-      return fx < mu ? R_DT_0(lowerTail, logP) : R_DT_1(lowerTail, logP);
-    fx = p.val;
+  if (!R_FINITE(q) && mu === q) return ML_NAN; /* x-mu is NaN */
+  if (sigma <= 0) {
+    if (sigma < 0) return ML_ERR_return_NAN(printer);
+    /* sigma = 0 : */
+    return q < mu ? R_DT_0(lowerTail, logP) : R_DT_1(lowerTail, logP);
+  }
+  p.val = (q - mu) / sigma;
+  if (!R_FINITE(p.val))
+    return q < mu ? R_DT_0(lowerTail, logP) : R_DT_1(lowerTail, logP);
+  q = p.val;
 
-    pnorm_both(fx, p, cp, !lowerTail, logP);
+  pnorm_both(q, p, cp, !lowerTail, logP);
 
-    return lowerTail ? p.val : cp.val;
-  }) as any;
+  return lowerTail ? p.val : cp.val;
 }
 
-export function pnorm_both(
+
+function pnorm_both(
   x: number,
   cum: NumberW,
   ccum: NumberW,
