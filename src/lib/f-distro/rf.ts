@@ -15,7 +15,7 @@ import * as debug from 'debug';
 import { ML_ERR_return_NAN } from '../common/_general';
 
 
-import { rchisq } from '../chi-2/rchisq';
+import { rchisqOne } from '../chi-2/rchisq';
 import { map, seq } from '../r-func';
 import { IRNGNormal } from '../rng/normal';
 
@@ -37,8 +37,8 @@ export function rf(
       return ML_ERR_return_NAN(printer);
     }
 
-    v1 = R_FINITE(n1) ? (rchisq(1, n1, rng) as number) / n1 : 1;
-    v2 = R_FINITE(n2) ? (rchisq(1, n2, rng) as number) / n2 : 1;
+    v1 = R_FINITE(n1) ? rchisqOne(n1, rng) / n1 : 1;
+    v2 = R_FINITE(n2) ? rchisqOne(n2, rng) / n2 : 1;
     return v1 / v2;
   }) as any;
 

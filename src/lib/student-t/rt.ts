@@ -32,7 +32,7 @@
 
 import * as debug from 'debug';
 
-import { rchisq } from '../chi-2/rchisq';
+import { rchisqOne } from '../chi-2/rchisq';
 import { ML_ERR_return_NAN } from '../common/_general';
 import { map, seq } from '../r-func';
 import { IRNGNormal } from '../rng/normal';
@@ -55,7 +55,7 @@ export function rt(n: number, df: number, rng: IRNGNormal): number | number[] {
             return norm_rand() / sqrt(rchisq(df) / df); */
 
       let num = rng.norm_rand() as number;
-      return num / sqrt((rchisq(1, df, rng) as number) / df);
+      return num / sqrt(rchisqOne(df, rng) / df);
     }
   }) as any;
 }

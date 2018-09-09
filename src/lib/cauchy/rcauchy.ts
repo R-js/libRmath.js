@@ -17,8 +17,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import * as debug from 'debug';
 import { ML_ERR_return_NAN } from '../common/_general';
-import { IRNG } from '../rng';
 import { randomGenHelper } from '../r-func';
+import { IRNG } from '../rng';
 
 const { isNaN: ISNAN, isFinite: R_FINITE } = Number;
 const { PI: M_PI } = Math;
