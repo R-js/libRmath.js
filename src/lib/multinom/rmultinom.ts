@@ -15,25 +15,24 @@ import * as debug from 'debug';
 const { isFinite: R_FINITE } = Number;
 const { abs: fabs } = Math;
 
-import { rbinom } from '../binomial/rbinom';
-import { flatten, possibleScalar, seq, sum } from '../r-func';
+import { rbinomOne } from '../binomial/rbinom';
+import { flatten, randomGenHelper, sum } from '../r-func';
 import { IRNG } from '../rng/irng';
 
 const printer_rmultinom = debug('rmultinom');
-const sequence = seq()();
+
 
 export function rmultinom(
   n: number,
   size: number,
   prob: number | number[],
   rng: IRNG
-): (number[]) | (number[][]) {
-  const result = sequence(n).map(() => _rmultinom(size, prob, rng));
-  return possibleScalar(result);
+): number[] {
+  return randomGenHelper(n, rmultinomOne, size, prob, rng)
 }
 
 //workhorse
-function _rmultinom(
+export function rmultinomOne(
   size: number,
   prob: number | number[],
   rng: IRNG
@@ -101,7 +100,7 @@ function _rmultinom(
       continue;
     }
     /* printf("[%d] %.17f\n", k+1, pp); */
-    rN[k] = pp < 1 ? (rbinom(1, _size, pp, rng) as number) : _size;
+    rN[k] = pp < 1 ? (rbinomOne(_size, pp, rng) as number) : _size;
     //adjust size
     _size -= rN[k];
     //adjust probabilities

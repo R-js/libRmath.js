@@ -17,6 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import * as debug from 'debug';
 import { DBL_MAX_EXP, ML_ERR_return_NAN } from '../common/_general';
+import { randomGenHelper } from '../r-func'
 import { IRNGNormal } from '../rng/normal';
 
 const { LN2: M_LN2, log, min: fmin2, max: fmax2, exp, sqrt } = Math;
@@ -26,28 +27,10 @@ const printer = debug('rbeta');
 export const expmax = DBL_MAX_EXP * M_LN2; /* = log(DBL_MAX) */
 
 export function rbeta(n: number|number[], aa: number, bb: number, rng: IRNGNormal){
-
-  let result: number[]
-
-  if (n === 0){
-    return []
-  }
-  else if (n > 0){
-    result = Array.from({ length: <number>n })
-  }
-  else if (n instanceof Array){
-    result = n
-  }
-  else {
-    throw new TypeError(`n argument is not a number or a number array`)
-  }
-  for (let i = 0; i < result.length; i++){
-    result[i] = _rbeta(aa,bb,rng)
-  }
-  return result
+  return randomGenHelper(n, rbetaOne, aa, bb, rng);
 }
 
-function _rbeta(
+export function rbetaOne(
   aa: number,
   bb: number,
   rng: IRNGNormal

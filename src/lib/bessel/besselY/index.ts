@@ -12,10 +12,8 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 import * as debug from 'debug';
 import { ME, ML_ERROR } from '../../common/_general';
-import { multiplexer } from '../../r-func';
 import { cospi } from '../../trigonometry/cospi';
 import { sinpi } from '../../trigonometry/sinpi';
-import { numVector } from '../../types';
 import { bessel_j } from '../besselJ';
 import { Y_bessel } from './Ybessel';
 

@@ -11,7 +11,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 */
 import * as debug from 'debug';
 //
-import { rbinom } from '../binomial/rbinom';
+import { rbinomOne } from '../binomial/rbinom';
 import {
   imax2,
   imin2,
@@ -142,7 +142,7 @@ function _rhyper(
     // Johnson, Kotz,.. p.258 (top) mention the *four* different binomial approximations
     if (kkin === 1) {
       // Bernoulli
-      return rbinom(1, kkin, nn1in / (nn1in + nn2in), rng) as number;
+      return rbinomOne(kkin, nn1in / (nn1in + nn2in), rng);
     }
     // Slow, but safe: return  F^{-1}(U)  where F(.) = phyper(.) and  U ~ U[0,1]
     return qhyper(rng.unif_rand() as number, nn1in, nn2in, kkin, false, false);

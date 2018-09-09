@@ -316,3 +316,26 @@ export function Welch_Satterthwaite(s: number[], n: number[]): number {
 
   return Math.pow(sum(elts), 2) / sum(dom);
 }
+
+
+export function randomGenHelper(n: number | number[], fn: Function, ...arg: any[]) {
+
+  let result: number[]
+
+  if (n === 0) {
+    return []
+  }
+  else if (n > 0) {
+    result = Array.from({ length: <number>n })
+  }
+  else if (n instanceof Array) {
+    result = n
+  }
+  else {
+    throw new TypeError(`n argument is not a number or a number array`)
+  }
+  for (let i = 0; i < result.length; i++) {
+    result[i] = fn(...arg)
+  }
+  return result
+}
