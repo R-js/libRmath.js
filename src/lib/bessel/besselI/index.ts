@@ -12,25 +12,18 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 import * as debug from 'debug';
 import { ME, ML_ERROR } from '../../common/_general';
-import { multiplexer } from '../../r-func';
 import { sinpi } from '../../trigonometry/sinpi';
-import { boolVector, numVector } from '../../types';
 import { internal_bessel_k } from '../besselK';
 import { I_bessel } from './IBessel';
-
-
 
 const { isNaN: ISNAN } = Number;
 const { exp, trunc, floor, PI: M_PI } = Math;
 
 const printer = debug('bessel_i');
 
-export function bessel_i(_x: numVector, _alpha: numVector, _expo: boolVector): numVector {
-    return multiplexer(_x, _alpha, _expo)((x, alpha, expo) => internal_bessel_i(x, alpha, expo));
-}
 
 /* .Internal(besselI(*)) : */
-export function internal_bessel_i(x: number, alpha: number, expo: boolean = false): number {
+export function bessel_i(x: number, alpha: number, expo: boolean = false): number {
 
     //int
     let nb;
@@ -50,7 +43,7 @@ export function internal_bessel_i(x: number, alpha: number, expo: boolean = fals
     if (alpha < 0) {
         /* Using Abramowitz & Stegun  9.6.2 & 9.6.6
          * this may not be quite optimal (CPU and accuracy wise) */
-        return (internal_bessel_i(x, -alpha, expo) +
+        return (bessel_i(x, -alpha, expo) +
             ((alpha === na) ? /* sin(pi * alpha) = 0 */ 0 :
                 internal_bessel_k(x, -alpha, expo) *
                 ((ize === 1) ? 2. : 2. * exp(-2. * x)) / M_PI * sinpi(-alpha)));

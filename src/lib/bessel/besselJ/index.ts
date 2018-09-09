@@ -12,11 +12,10 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 import * as debug from 'debug';
 import { ME, ML_ERROR } from '../../common/_general';
-import { multiplexer } from '../../r-func';
+
 import { cospi } from '../../trigonometry/cospi';
 import { sinpi } from '../../trigonometry/sinpi';
-import { numVector } from '../../types';
-import { internal_bessel_y } from '../besselY';
+import { bessel_y } from '../besselY';
 import { J_bessel } from './Jbessel';
 
 const { isNaN: ISNAN }  = Number;
@@ -24,11 +23,7 @@ const { floor, trunc } = Math;
 
 const printer = debug('bessel_j');
 
-export function bessel_j(_x: numVector, _alpha: numVector): numVector {
-   return multiplexer(_x, _alpha)((x, alpha) => internal_bessel_j(x, alpha));
-}
-
-export function internal_bessel_j(x: number, alpha: number): number  {
+export function bessel_j(x: number, alpha: number): number  {
     //int
     let nb; 
     //double
@@ -44,8 +39,8 @@ export function internal_bessel_j(x: number, alpha: number): number  {
     if (alpha < 0) {
       /* Using Abramowitz & Stegun  9.1.2
        * this may not be quite optimal (CPU and accuracy wise) */
-      return(((alpha - na === 0.5) ? 0 : internal_bessel_j(x, -alpha) * cospi(alpha)) +
-        ((alpha === na) ? 0 : internal_bessel_y(x, -alpha) * sinpi(alpha)));
+      return(((alpha - na === 0.5) ? 0 : bessel_j(x, -alpha) * cospi(alpha)) +
+        ((alpha === na) ? 0 : bessel_y(x, -alpha) * sinpi(alpha)));
     }
     else if (alpha > 1e7) {
       printer(
@@ -69,5 +64,3 @@ export function internal_bessel_j(x: number, alpha: number): number  {
     x = rc.x; // bj[nb - 1];
     return x;
   }
-  
-  

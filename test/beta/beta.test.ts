@@ -1,7 +1,6 @@
-import { assert } from 'chai';
-import * as libR from '../src/lib';
+import * as libR from '../../src/lib';
 import { fixture } from './beta_fixture';
-import { approximitly } from './test-helpers';
+import { creatApproximator } from '../test-helpers';
 
 const {
   Beta,
@@ -10,7 +9,7 @@ const {
 } = libR;
 const { abs } = Math;
 const { isNaN, isFinite } = Number;
-
+const approximitly = creatApproximator(1E-9)
 
 
 describe('beta distribution', function n() {
@@ -29,7 +28,7 @@ describe('beta distribution', function n() {
     //abuse as a for-each loop
     //make sure it is an arrow function for `map` but not an arrow function for `it`
     each(testData)(({ input: inn, output: expectation, desc }, key) => {
-
+     
       it(`density test: ${key}/${desc}`, function t() {
         const actuals = dbeta(inn.x, inn.shape1, inn.shape2, inn.ncp, inn.asLog);
         multiplexer(actuals, expectation)(approximitly);

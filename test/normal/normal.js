@@ -10,50 +10,8 @@ const {
 const log = arrayrify(Math.log);
 const seq = seq()();
 const precision = numberPrecision(9);
-
-//
 const { rnorm, dnorm, pnorm, qnorm } = Normal();
 
-
-dnorm(0); //standard normal density, max value at '0'
-//0.3989422804014327
-dnorm(3, 4, 2); // standard normal with mean=4 and sigma=2, value at 3
-//0.17603266338214976
-dnorm(-10); // course the gaussian is almost zero 10 sigmas from the mean
-//7.69459862670642e-23
-const d1 = dnorm([-Infinity, Infinity, NaN, -4, -3, -2, 0, 1, 2, 3, 4]);
-precision(d1);
-/*
-[ 0,
-  0,
-  NaN,
-  0.00013383022576488537,
-  0.0044318484119380075,
-  0.05399096651318806,
-  0.3989422804014327,
-  0.24197072451914337,
-  0.05399096651318806,
-  0.0044318484119380075,
-  0.00013383022576488537 ]
-*/
-const d2 = dnorm(
-    seq(0)(0)(-4, 4), //[-4,-3,..., 4]
-    2, //mu = 2
-    1, //sigma = 1
-    true //give return values as log
-);
-precision(d2);
-/*
-[ -18.918938533204674,
-  -13.418938533204672,
-  -8.918938533204672,
-  -5.418938533204673,
-  -2.9189385332046727,
-  -1.4189385332046727,
-  -0.9189385332046728,
-  -1.4189385332046727,
-  -2.9189385332046727 ]
-*/
 const q = [-1, 0, 1];
 pnorm(0);
 //0.5

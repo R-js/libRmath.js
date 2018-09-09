@@ -16,7 +16,7 @@ import { multiplexer } from '../../r-func';
 import { cospi } from '../../trigonometry/cospi';
 import { sinpi } from '../../trigonometry/sinpi';
 import { numVector } from '../../types';
-import { internal_bessel_j } from '../besselJ';
+import { bessel_j } from '../besselJ';
 import { Y_bessel } from './Ybessel';
 
 const { floor } = Math;
@@ -24,12 +24,7 @@ const { isNaN:ISNAN, POSITIVE_INFINITY: ML_POSINF } = Number;
 
 const printer = debug('bessel_y');
 
-
-export function bessel_y(_x: numVector, _alpha: numVector): numVector {
-  return multiplexer(_x, _alpha)((x, alpha) => internal_bessel_y(x, alpha));
-}
-
-export function internal_bessel_y(x: number, alpha: number): number {
+export function bessel_y(x: number, alpha: number): number {
   //double
   
   /* NaNs propagated correctly */
@@ -43,8 +38,8 @@ export function internal_bessel_y(x: number, alpha: number): number {
   if (alpha < 0) {
     /* Using Abramowitz & Stegun  9.1.2
      * this may not be quite optimal (CPU and accuracy wise) */
-    return (((alpha - na === 0.5) ? 0 : internal_bessel_y(x, -alpha) * cospi(alpha)) -
-      ((alpha === na) ? 0 : internal_bessel_j(x, -alpha) * sinpi(alpha)));
+    return (((alpha - na === 0.5) ? 0 : bessel_y(x, -alpha) * cospi(alpha)) -
+      ((alpha === na) ? 0 : bessel_j(x, -alpha) * sinpi(alpha)));
   }
   else if (alpha > 1e7) {
     printer('besselY(x, nu): nu=%d too large for bessel_y() algorithm',

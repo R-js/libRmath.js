@@ -15,12 +15,12 @@
         "experimentalDecorators": true,
         "jsx": "react",
         "lib": [
-            "es6",
+            "es7",
             "dom",
             "esnext.asynciterable"
         ],
         "module": "commonjs",
-        "target": "es2016",
+        "target": "es2015",
         "moduleResolution": "node",
         "outDir": "dist",
         "rootDir": "./",
