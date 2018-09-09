@@ -1,60 +1,26 @@
-/*  AUTHOR
- *  Jacob Bogers, jkfbogers@gmail.com
- *  March 19, 2017
- *
- *  ORIGINAL AUTHOR
- *  Mathlib : A C Library of Special Functions
- *  Copyright (C) 1998       Ross Ihaka
- *  Copyright (C) 2000--2005 The R Core Team
- *  based on AS 111 (C) 1977 Royal Statistical Society
- *  and   on AS 241 (C) 1988 Royal Statistical Society
- *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, a copy is available at
- *  https://www.R-project.org/Licenses/
- *
- *  SYNOPSIS
- *
- *	double qnorm5(double p, double mu, double sigma,
- *		      int lower_tail, int log_p)
- *            {qnorm (..) is synonymous and preferred inside R}
- *
- *  DESCRIPTION
- *
- *	Compute the quantile function for the normal distribution.
- *
- *	For small to moderate probabilities, algorithm referenced
- *	below is used to obtain an initial approximation which is
- *	polished with a final Newton step.
- *
- *	For very large arguments, an algorithm of Wichura is used.
- *
- *  REFERENCE
- *
- *	Beasley, J. D. and S. G. Springer (1977).
- *	Algorithm AS 111: The percentage points of the normal distribution,
- *	Applied Statistics, 26, 118-121.
- *
- *      Wichura, M.J. (1988).
- *      Algorithm AS 241: The Percentage Points of the Normal Distribution.
- *      Applied Statistics, 37, 477-484.
- */
+'use strict'
+/* This is a conversion from libRmath.so to Typescript/Javascript
+Copyright (C) 2018  Jacob K.F. Bogers  info@mail.jacob-bogers.com
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 
 import * as debug from 'debug';
 
 import { ML_ERR_return_NAN, R_Q_P01_boundaries } from '../common/_general';
 import { R_DT_CIv, R_DT_qIv } from '../exp/expm1';
-import { map } from '../r-func';
 
 const printer = debug('qnorm');
 
@@ -63,30 +29,30 @@ const { log, sqrt, abs: fabs } = Math;
 const ML_NEGINF = -Infinity;
 const ML_POSINF = Infinity;
 
-export function qnorm<T>(
-  p: T,
+export function qnorm(
+  p: number,
   mu: number = 0,
   sigma: number = 1,
   lower_tail: boolean = true,
   log_p: boolean = false
-): T {
+): number {
   let q;
   let p_;
 
   let r;
   let val;
 
-  return map(p)(fx => {
-    if (ISNAN(fx) || ISNAN(mu) || ISNAN(sigma)) return fx + mu + sigma;
+  
+    if (ISNAN(p) || ISNAN(mu) || ISNAN(sigma)) return p + mu + sigma;
 
-    let rc = R_Q_P01_boundaries(lower_tail, log_p, fx, ML_NEGINF, ML_POSINF);
+    let rc = R_Q_P01_boundaries(lower_tail, log_p, p, ML_NEGINF, ML_POSINF);
     if (rc !== undefined) {
       return rc;
     }
     if (sigma < 0) return ML_ERR_return_NAN(printer);
     if (sigma === 0) return mu;
 
-    p_ = R_DT_qIv(lower_tail, log_p, fx); /* real lower_tail prob. p */
+    p_ = R_DT_qIv(lower_tail, log_p, p); /* real lower_tail prob. p */
     q = p_ - 0.5;
 
     printer(
@@ -142,7 +108,7 @@ export function qnorm<T>(
       /* closer than 0.075 from {0,1} boundary */
 
       /* r = min(p, 1-p) < 0.075 */
-      if (q > 0) r = R_DT_CIv(lower_tail, log_p, fx); /* 1-p */
+      if (q > 0) r = R_DT_CIv(lower_tail, log_p, p); /* 1-p */
       else r = p_; /* = R_DT_Iv(p) ^=  p */
 
       r = sqrt(
@@ -218,5 +184,5 @@ export function qnorm<T>(
       /* return (q >= 0.)? r : -r ;*/
     }
     return mu + sigma * val;
-  }) as any;
+  
 }
