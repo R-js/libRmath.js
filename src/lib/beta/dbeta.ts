@@ -1,13 +1,18 @@
-/* GNUv3 License
+/* This is a conversion from BLAS to Typescript/Javascript
+Copyright (C) 2018  Jacob K.F. Bogers  info@mail.jacob-bogers.com
 
-Copyright (c) Jacob K. F. Bogers <jkfbogers@gmail.com>
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
 
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import * as debug from 'debug';
@@ -19,13 +24,12 @@ import {
   R_D_val
 } from '../common/_general';
 
-import { boolVector, numVector } from '../types';
 
 import { dbinom_raw } from '../binomial/dbinom';
-import { multiplexer } from '../r-func';
+
 import { internal_lbeta } from './lbeta';
 
-const { log , log1p } = Math;
+const { log, log1p } = Math;
 const {
   isNaN: ISNAN,
   isFinite: R_FINITE,
@@ -34,56 +38,54 @@ const {
 
 const printer = debug('dbeta');
 
-export function dbeta(_x: numVector, _a: numVector, _b: numVector, _asLog: boolVector): numVector {
-  
-  return multiplexer(_x, _a, _b, _asLog)((x, a, b, asLog) => {
-    
-    if (ISNAN(x) || ISNAN(a) || ISNAN(b)) return x + a + b;
+export function dbeta(x: number, a: number, b: number, asLog: boolean): number {
 
-    if (a < 0 || b < 0) return ML_ERR_return_NAN(printer);
-    if (x < 0 || x > 1) return R_D__0(asLog);
+  if (ISNAN(x) || ISNAN(a) || ISNAN(b)) return x + a + b;
 
-    // limit cases for (a,b), leading to point masses
+  if (a < 0 || b < 0) return ML_ERR_return_NAN(printer);
+  if (x < 0 || x > 1) return R_D__0(asLog);
 
-    if (a === 0 || b === 0 || !R_FINITE(a) || !R_FINITE(b)) {
-      if (a === 0 && b === 0) {
-        // point mass 1/2 at each of {0,1} :
-        if (x === 0 || x === 1) return ML_POSINF;
-        else return R_D__0(asLog);
-      }
-      if (a === 0 || a / b === 0) {
-        // point mass 1 at 0
-        if (x === 0) return ML_POSINF;
-        else return R_D__0(asLog);
-      }
-      if (b === 0 || b / a === 0) {
-        // point mass 1 at 1
-        if (x === 1) return ML_POSINF;
-        else return R_D__0(asLog);
-      }
-      // else, remaining case:  a = b = Inf : point mass 1 at 1/2
-      if (x === 0.5) return ML_POSINF;
+  // limit cases for (a,b), leading to point masses
+
+  if (a === 0 || b === 0 || !R_FINITE(a) || !R_FINITE(b)) {
+    if (a === 0 && b === 0) {
+      // point mass 1/2 at each of {0,1} :
+      if (x === 0 || x === 1) return ML_POSINF;
       else return R_D__0(asLog);
     }
+    if (a === 0 || a / b === 0) {
+      // point mass 1 at 0
+      if (x === 0) return ML_POSINF;
+      else return R_D__0(asLog);
+    }
+    if (b === 0 || b / a === 0) {
+      // point mass 1 at 1
+      if (x === 1) return ML_POSINF;
+      else return R_D__0(asLog);
+    }
+    // else, remaining case:  a = b = Inf : point mass 1 at 1/2
+    if (x === 0.5) return ML_POSINF;
+    else return R_D__0(asLog);
+  }
 
-    if (x === 0) {
-      if (a > 1) return R_D__0(asLog);
-      if (a < 1) return ML_POSINF;
+  if (x === 0) {
+    if (a > 1) return R_D__0(asLog);
+    if (a < 1) return ML_POSINF;
       /* a == 1 : */ return R_D_val(asLog, b);
-    }
-    if (x === 1) {
-      if (b > 1) return R_D__0(asLog);
-      if (b < 1) return ML_POSINF;
+  }
+  if (x === 1) {
+    if (b > 1) return R_D__0(asLog);
+    if (b < 1) return ML_POSINF;
       /* b == 1 : */ return R_D_val(asLog, a);
-    }
+  }
 
-    let lval: number;
-    if (a <= 2 || b <= 2)
-      lval = (a - 1) * log(x) + (b - 1) * log1p(-x) - internal_lbeta(a, b);
-    else {
-      lval = log(a + b - 1) + dbinom_raw(a - 1, a + b - 2, x, 1 - x, true);
-    }
-    return R_D_exp(asLog, lval);
-  });
+  let lval: number;
+  if (a <= 2 || b <= 2)
+    lval = (a - 1) * log(x) + (b - 1) * log1p(-x) - internal_lbeta(a, b);
+  else {
+    lval = log(a + b - 1) + dbinom_raw(a - 1, a + b - 2, x, 1 - x, true);
+  }
+  return R_D_exp(asLog, lval);
+
 
 }
