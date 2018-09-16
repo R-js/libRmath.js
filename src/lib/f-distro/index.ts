@@ -1,19 +1,23 @@
-/* GNUv3 License
+/* This is a conversion from BLAS to Typescript/Javascript
+Copyright (C) 2018  Jacob K.F. Bogers  info@mail.jacob-bogers.com
 
-Copyright (c) Jacob K. F. Bogers <jkfbogers@gmail.com>
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
 
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 //needed for rf
-import { rchisq } from '../chi-2/rchisq';
-import { rnchisq } from '../chi-2/rnchisq';
-import { seq } from '../r-func';
-import { arrayrify, multiplexer, possibleScalar } from '../r-func';
+import { rchisqOne } from '../chi-2/rchisq';
+import { rnchisqOne } from '../chi-2/rnchisq';
+import { randomGenHelper } from '../r-func';
 import { Inversion, IRNGNormal } from '../rng/normal';
 //
 import { df as _df } from './df';
@@ -24,13 +28,11 @@ import { pnf } from './pnf';
 //
 import { qf as _qf } from './qf';
 import { qnf } from './qnf';
-import { rf as _rf } from './rf';
-
-const sequence = seq()();
+import { rfOne as _rfOne } from './rf';
 
 export function FDist(rng: IRNGNormal = new Inversion()) {
   function df(
-    x: number | number[],
+    x: number,
     df1: number,
     df2: number,
     ncp?: number,
@@ -50,11 +52,11 @@ export function FDist(rng: IRNGNormal = new Inversion()) {
     return dnf(x, df1, df2, ncp, log);
   }
   function pf(
-    q: number[] | number,
+    q: number,
     df1: number,
     df2: number,
     ncp?: number,
-    lowerTail: boolean = true,
+    lowerTail = true,
     logP = false
   ) {
     /*  if (missing(ncp)) 
@@ -68,7 +70,7 @@ export function FDist(rng: IRNGNormal = new Inversion()) {
   }
 
   function qf(
-    p: number | number[],
+    p: number,
     df1: number,
     df2: number,
     ncp?: number,
@@ -81,38 +83,26 @@ export function FDist(rng: IRNGNormal = new Inversion()) {
     return qnf(p, df1, df2, ncp, lowerTail, logP);
   }
 
-  function rf(n: number, df1: number, df2: number, ncp?: number) {
-    /* function (n, df1, df2, ncp) 
-{
-    if (missing(ncp)) 
-        .Call(C_rf, n, df1, df2)
-    else if (is.na(ncp)) {
-        warning("NAs produced")
-        rep(NaN, n)
-    }
-    else (
-      rchisq(n, df1, ncp = ncp)/df1
-    )
-    /
-    ( rchisq(n, df2) 
-    / df2
-    );
-}
-*/
+ 
+  function rf(n: number|number, n1: number, n2: number, rng: IRNGNormal): number[] {
+    return randomGenHelper(n, rfOne, n1,n2, rng);
+  }
+
+  function rfOne(df1: number, df2: number, ncp?: number) {
+
     if (ncp === undefined) {
-      return _rf(n, df1, df2, rng);
+      return _rfOne(df1, df2, rng);
     }
 
     if (Number.isNaN(ncp)) {
-      return possibleScalar(sequence(n).fill(NaN));
+      return NaN;
     }
 
-    const div = arrayrify((a: number, b: number) => a / b);
 
-    const numerator = div(rnchisq(n, df1, ncp, rng), df1);
-    const denominator = div(rchisq(n, df2, rng), df2);
+    const numerator = rnchisqOne(df1, ncp, rng)/df1;
+    const denominator = rchisqOne(df2, rng)/ df2;
 
-    return multiplexer(numerator, denominator)((x1, d) => x1 / d);
+    return numerator/denominator;
   }
 
   return {
