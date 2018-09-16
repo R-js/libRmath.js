@@ -1,13 +1,18 @@
-/* GNUv3 License
+/* This is a conversion from BLAS to Typescript/Javascript
+Copyright (C) 2018  Jacob K.F. Bogers  info@mail.jacob-bogers.com
 
-Copyright (c) Jacob K. F. Bogers <jkfbogers@gmail.com>
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
 
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import * as debug from 'debug';
@@ -15,13 +20,12 @@ import * as debug from 'debug';
 import { dgamma as _dgamma } from './dgamma';
 import { pgamma as _pgamma } from './pgamma';
 import { qgamma as _qgamma } from './qgamma';
-import { rgamma as _rgamma } from './rgamma';
+import { rgammaOne as _rgammaOne } from './rgamma';
 
 //aux
 import { Inversion, IRNGNormal } from '../rng/normal';
 
 //special
-import { multiplexer } from '../r-func';
 import { gammafn } from './gamma_fn';
 import { lgammafn } from './lgamma_fn';
 import {
@@ -41,6 +45,8 @@ export const special = {
   tetragamma,
   trigamma
 };
+
+import { randomGenHelper } from '../r-func'
 
 const { abs } = Math;
 
@@ -86,7 +92,7 @@ export function Gamma(norm: IRNGNormal = new Inversion()) {
   const printer_d = debug('dgamma');
 
   function dgamma(
-    x: number | number[],
+    x: number,
     shape: number,
     rate?: number,
     scale?: number,
@@ -98,12 +104,12 @@ export function Gamma(norm: IRNGNormal = new Inversion()) {
       return _dgamma(x, shape, _scale, asLog);
     }
     printer_d('Cannot normalize to [scale]');
-    return multiplexer(x)(() => NaN);
+    return NaN;
   }
 
   const printer_p = debug('pgamma');
   function pgamma(
-    q: number | number[],
+    q: number,
     shape: number,
     rate?: number,
     scale?: number,
@@ -116,13 +122,13 @@ export function Gamma(norm: IRNGNormal = new Inversion()) {
       return _pgamma(q, shape, _scale, lowerTail, logP);
     }
     printer_p('Cannot normalize to [scale]');
-    return multiplexer(q)(() => NaN);
+    return NaN
   }
 
   const printer_q = debug('qgamma');
 
   function qgamma(
-    q: number | number[],
+    q: number,
     shape: number,
     rate?: number,
     scale?: number,
@@ -135,17 +141,24 @@ export function Gamma(norm: IRNGNormal = new Inversion()) {
       return _qgamma(q, shape, _scale, lowerTail, logP);
     }
     printer_q('Cannot normalize to [scale]');
-    return multiplexer(q)(() => NaN);
+    return NaN
   }
 
-  const printer_r = debug('rgamma');
-  function rgamma(n: number, shape: number, rate?: number, scale?: number) {
+  const printer_rgamma = debug('rgammaOne');
+  
+  function rgamma(n: number|number[],shape: number, rate?: number, scale?: number): number[]{
+    return randomGenHelper(n, rgammaOne, shape, rate, scale);
+  }
+
+
+  function rgammaOne(shape: number, rate?: number, scale?: number): number {
     let _scale = gammaNormalizeParams(rate, scale);
     if (_scale !== undefined) {
-      return _rgamma(n, shape, _scale, norm);
+      return _rgammaOne(shape, _scale, norm);
     }
-    printer_r('Cannot normalize to [scale]');
-  }
+    printer_rgamma('Cannot normalize to [scale]');
+    return NaN
+  } 
 
   return Object.freeze({
     dgamma,
