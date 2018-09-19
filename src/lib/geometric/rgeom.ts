@@ -18,7 +18,7 @@ import * as debug from 'debug';
 
 import { ML_ERR_return_NAN } from '../common/_general';
 import { exp_rand } from '../exp/sexp';
-import { rpois } from '../poisson/rpois';
+import { rpoisOne } from '../poisson/rpois';
 import { IRNGNormal } from '../rng/normal';
 
 const { isFinite: R_FINITE } = Number;
@@ -36,8 +36,7 @@ export function rgeomOne(
  
     if (!R_FINITE(p) || p <= 0 || p > 1) return ML_ERR_return_NAN(printer);
 
-    return rpois(
-      1,
+    return rpoisOne(
       exp_rand(rng.unif_rand as any) * ((1 - p) / p),
       rng
     ) as number;

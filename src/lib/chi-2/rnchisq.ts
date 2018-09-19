@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import * as debug from 'debug';
 import { ML_ERR_return_NAN } from '../common/_general';
 import { rgammaOne } from '../gamma/rgamma';
-import { rpois } from '../poisson/rpois';
+import { rpoisOne } from '../poisson/rpois';
 import { randomGenHelper } from '../r-func'
 import { IRNGNormal } from '../rng/normal/inormal-rng';
 import { rchisqOne } from './rchisq';
@@ -48,12 +48,9 @@ export function rnchisqOne(
   if (lambda === 0) {
     return df === 0 ? 0 : (rgammaOne(df / 2, 2, rng) as number);
   } else {
-    let r = rpois(1, lambda / 2, rng) as number;
-    if (r > 0) r = rchisqOne(2 * r, rng);
-    if (df > 0) r += rgammaOne(Q*£  
-      
-                   
-                                                                                                                                                                                      A8E df / 2, 2, rng) as number;
+    let r = rpoisOne(lambda / 2, rng)
+    if (r > 0) r = rchisqOne(2 * r, rng)
+    if (df > 0) r +=  rgammaOne(df / 2, 2, rng)
     return r;
   }
 }

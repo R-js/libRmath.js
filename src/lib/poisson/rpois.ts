@@ -1,42 +1,20 @@
-/*  AUTHOR
- *  Jacob Bogers, jkfbogers@gmail.com
- *  March 26, 2017
- * 
- *  ORGINAL AUTHOR
- *  Mathlib : A C Library of Special Functions
- *  Copyright (C) 1998 Ross Ihaka
- *  Copyright (C) 2000-2011 The R Core Team
- *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, a copy is available at
- *  https://www.R-project.org/Licenses/
- *
- *  SYNOPSIS
- *
- *    #include <Rmath.h>
- *    double rpois(double lambda)
- *
- *  DESCRIPTION
- *
- *    Random variates from the Poisson distribution.
- *
- *  REFERENCE
- *
- *    Ahrens, J.H. and Dieter, U. (1982).
- *    Computer generation of Poisson deviates
- *    from modified normal distributions.
- *    ACM Trans. Math. Software 8, 163-179.
- */
+/* 
+This is a conversion from BLAS to Typescript/Javascript
+Copyright (C) 2018  Jacob K.F. Bogers  info@mail.jacob-bogers.com
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
 
 import * as debug from 'debug';
 
@@ -48,13 +26,12 @@ import {
 } from '../common/_general';
 
 import { exp_rand } from '../exp/sexp';
-import { map, seq } from '../r-func';
 import { IRNGNormal } from '../rng/normal';
 import { fsign } from '../signrank/fsign';
 
 const { trunc, log, abs: fabs, pow, exp, floor, sqrt } = Math;
 const { isFinite: R_FINITE } = Number;
-const sequence = seq()();
+
 
 const a0 = -0.5;
 const a1 = 0.3333333;
@@ -70,15 +47,15 @@ const one_12 = 0.0833333333333333333;
 const one_24 = 0.0416666666666666667;
 
 export function rpois(
-  N: number,
+  n: number,
   mu: number,
   rng: IRNGNormal
-): number | number[] {
-  return map(sequence(N))(() => _rpois(mu, rng)) as any;
+): number[] {
+  return Array.from({length: n}).map(() => rpoisOne(mu, rng));
 }
 
 const printer_rpois = debug('_rpois');
-function _rpois(mu: number, rng: IRNGNormal): number {
+export function rpoisOne(mu: number, rng: IRNGNormal): number {
   /* Factorial Table (0:9)! */
   const fact = [1, 1, 2, 6, 24, 120, 720, 5040, 40320, 362880];
 
