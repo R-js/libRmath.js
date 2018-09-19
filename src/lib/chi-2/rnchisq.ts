@@ -50,7 +50,10 @@ export function rnchisqOne(
   } else {
     let r = rpois(1, lambda / 2, rng) as number;
     if (r > 0) r = rchisqOne(2 * r, rng);
-    if (df > 0) r += rgammaOne(df / 2, 2, rng) as number;
+    if (df > 0) r += rgammaOne(Q*£  
+      
+                   
+                                                                                                                                                                                      A8E df / 2, 2, rng) as number;
     return r;
   }
 }

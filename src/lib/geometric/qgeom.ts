@@ -1,13 +1,18 @@
-/* GNUv3 License
+/* This is a conversion from BLAS to Typescript/Javascript
+Copyright (C) 2018  Jacob K.F. Bogers  info@mail.jacob-bogers.com
 
-Copyright (c) Jacob K. F. Bogers <jkfbogers@gmail.com>
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
 
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 import * as debug from 'debug';
 import { ML_ERR_return_NAN, R_Q_P01_boundaries } from '../common/_general';
@@ -18,15 +23,13 @@ const { ceil, max: fmax2, log1p } = Math;
 const { POSITIVE_INFINITY: ML_POSINF, isNaN: ISNAN } = Number;
 const printer = debug('qgeom');
 
-export function qgeom<T>(
-  pp: T,
+export function qgeom(
+  p: number,
   prob: number,
   lower_tail: boolean = true,
   log_p: boolean = false
-): T {
-  const fp: number[] = Array.isArray(pp) ? pp : ([pp] as any);
+): number {
 
-  const result = fp.map(p => {
     if (prob <= 0 || prob > 1) {
       return ML_ERR_return_NAN(printer);
     }
@@ -44,6 +47,5 @@ export function qgeom<T>(
       0,
       ceil(R_DT_Clog(lower_tail, log_p, p) / log1p(-prob) - 1 - 1e-12)
     );
-  });
-  return result.length === 1 ? result[0] : result as any;
+
 }
