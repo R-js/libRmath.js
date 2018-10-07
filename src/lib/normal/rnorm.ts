@@ -26,13 +26,14 @@ const { isNaN: ISNAN, isFinite: R_FINITE } = Number;
 const printer = debug('rnorm');
 
 
-export function rnorm(n: number|number[], mu= 0, sigma = 1, rng: IRNGNormal ){
-  return randomGenHelper(n, _rnorm, mu, sigma, rng);
+
+export function rnorm(n: number, mu= 0, sigma = 1, rng: IRNGNormal ): number[]{
+  return randomGenHelper(n, rnormOne, mu, sigma, rng);
 }
 
 
 
-function _rnorm(
+export function rnormOne(
   mu: number = 0,
   sigma: number = 1,
   rng: IRNGNormal

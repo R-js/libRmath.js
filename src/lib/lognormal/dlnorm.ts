@@ -21,19 +21,18 @@ import {
   ML_ERR_return_NAN,
   R_D__0
 } from '../common/_general';
-import { map } from '../r-func';
 
 const { isNaN: ISNAN, POSITIVE_INFINITY: ML_POSINF } = Number;
 const { log, exp } = Math;
 const printer = debug('dlnorm');
 
-export function dlnorm<T>(
-  x: T,
+export function dlnorm(
+  fx: number,
   meanlog: number,
   sdlog: number,
   give_log: boolean
-): T {
-  return map(x)(fx => {
+): number {
+ 
     if (ISNAN(fx) || ISNAN(meanlog) || ISNAN(sdlog)) {
       return fx + meanlog + sdlog;
     }
@@ -52,5 +51,5 @@ export function dlnorm<T>(
       ? -(M_LN_SQRT_2PI + 0.5 * y * y + log(fx * sdlog))
       : M_1_SQRT_2PI * exp(-0.5 * y * y) / (fx * sdlog);
     /* M_1_SQRT_2PI = 1 / sqrt(2 * pi) */
-  }) as any;
+
 }

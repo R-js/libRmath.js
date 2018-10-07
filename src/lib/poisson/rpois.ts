@@ -1,5 +1,4 @@
-/* 
-This is a conversion from BLAS to Typescript/Javascript
+/* This is a conversion from BLAS to Typescript/Javascript
 Copyright (C) 2018  Jacob K.F. Bogers  info@mail.jacob-bogers.com
 
 This program is free software: you can redistribute it and/or modify
@@ -26,6 +25,7 @@ import {
 } from '../common/_general';
 
 import { exp_rand } from '../exp/sexp';
+import { randomGenHelper } from '../r-func';
 import { IRNGNormal } from '../rng/normal';
 import { fsign } from '../signrank/fsign';
 
@@ -53,7 +53,7 @@ export function rpois(
   mu: number,
   rng: IRNGNormal
 ): number[] {
-  return Array.from({length: n}).map(() => rpoisOne(mu, rng));
+  return randomGenHelper(n, rpoisOne, mu, rng);
 }
 
 

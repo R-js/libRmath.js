@@ -16,23 +16,31 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 import * as debug from 'debug';
 import { ML_ERR_return_NAN } from '../common/_general';
-import { rnorm } from '../normal/rnorm';
-import { arrayrify, map, seq } from '../r-func';
+import { rnormOne } from '../normal/rnorm';
+import { randomGenHelper } from '../r-func';
 import { IRNGNormal } from '../rng/normal';
 
-const exp = arrayrify(Math.exp);
+const { exp } = Math;
 const { isNaN: ISNAN, isFinite: R_FINITE } = Number;
 const printer = debug('rlnorm');
-const sequence = seq()();
+
 
 export function rlnorm(
   N: number,
   meanlog: number = 0,
   sdlog: number = 1,
   rng: IRNGNormal
-): number | number[] {
+): number[] {
+  return randomGenHelper(N, rlnormOne, meanlog, sdlog, rng);
+}
+
+export function rlnormOne(
+  meanlog: number = 0,
+  sdlog: number = 1,
+  rng: IRNGNormal
+): number {
   if (ISNAN(meanlog) || !R_FINITE(sdlog) || sdlog < 0) {
-    return map(sequence(N))(() => ML_ERR_return_NAN(printer));
+    return ML_ERR_return_NAN(printer);
   }
-  return exp(rnorm(N, meanlog, sdlog, rng));
+  return exp(rnormOne(meanlog, sdlog, rng));
 }

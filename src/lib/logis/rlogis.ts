@@ -18,19 +18,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import * as debug from 'debug';
 
 import { ML_ERR_return_NAN } from '../common/_general';
-import { map, seq } from '../r-func';
 import { IRNG } from '../rng';
 
 const { log } = Math;
 const { isNaN: ISNAN, isFinite: R_FINITE } = Number;
-const sequence = seq()();
 const printer_rlogis = debug('rlogis');
 
 
 export function rlogis( N: number, location: number = 0,
   scale: number = 1,
   rng: IRNG): number[] {
-    return Array.from({length:N}).map(() => rlogisOne(location,scale,rng));
+    return Array.from({length:N}).map(() => rlogisOne(location, scale, rng));
 }
 
 export function rlogisOne(

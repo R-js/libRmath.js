@@ -24,13 +24,13 @@ const { log } = Math;
 
 const printer = debug('plnorm');
 
-export function plnorm<T>(
-  x: T,
+export function plnorm(
+  x: number,
   meanlog: number = 0,
   sdlog: number = 1,
   lower_tail: boolean = true,
   log_p: boolean = false
-): T {
+): number {
 
   return map(x)(fx => {
     if (ISNAN(fx) || ISNAN(meanlog) || ISNAN(sdlog))

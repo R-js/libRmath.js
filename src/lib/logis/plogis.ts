@@ -16,7 +16,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 import * as debug from 'debug';
 import { ML_ERR_return_NAN, R_P_bounds_Inf_01 } from '../common/_general';
-import { map } from '../r-func';
+
 
 const { exp, log1p } = Math;
 const { isNaN: ISNAN } = Number;

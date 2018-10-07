@@ -17,23 +17,21 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import { R_Q_P01_boundaries } from '../common/_general';
 
 import { qnorm } from '../normal/qnorm';
-import { map } from '../r-func';
 
 const { exp } = Math;
 const { isNaN: ISNAN, POSITIVE_INFINITY: ML_POSINF } = Number;
 
-export function qlnorm<T>(
-  pp: T,
+export function qlnorm(
+  p: number,
   meanlog: number = 0,
   sdlog: number = 1,
   lower_tail: boolean = true,
   log_p: boolean = false
-): T {
-  return map(pp)(p => {
+): number {
+  
     if (ISNAN(p) || ISNAN(meanlog) || ISNAN(sdlog)) return p + meanlog + sdlog;
 
     R_Q_P01_boundaries(lower_tail, log_p, p, 0, ML_POSINF);
 
     return exp(qnorm(p, meanlog, sdlog, lower_tail, log_p));
-  }) as any;
 }
