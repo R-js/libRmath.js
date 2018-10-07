@@ -1,55 +1,20 @@
-/*  AUTHOR
- *  Jacob Bogers, jkfbogers@gmail.com
- *  March 14, 2017
- *
- *  ORIGINAL AUTHOR
- *  Mathlib : A C Library of Special Functions
- *  Copyright (C) 1998-2015 The R Core Team
- *  based on AS243 (C) 1989 Royal Statistical Society
- *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, a copy is available at
- *  https://www.R-project.org/Licenses/
- */
+'use strict'
+/* This is a conversion from libRmath.so to Typescript/Javascript
+Copyright (C) 2018  Jacob K.F. Bogers  info@mail.jacob-bogers.com
 
-/*  Algorithm AS 243  Lenth,R.V. (1989). Appl. Statist., Vol.38, 185-189.
- *  ----------------
- *  Cumulative probability at t of the non-central t-distribution
- *  with df degrees of freedom (may be fractional) and non-centrality
- *  parameter delta.
- *
- *  NOTE
- *
- *    Requires the following auxiliary routines:
- *
- *	lgammafn(x)	- log gamma function
- *	pbeta(x, a, b)	- incomplete beta function
- *	pnorm(x)	- normal distribution function
- *
- *  CONSTANTS
- *
- *    M_SQRT_2dPI  = 1/ {gamma(1.5) * sqrt(2)} = sqrt(2 / pi)
- *    M_LN_SQRT_PI = ln(sqrt(pi)) = ln(pi)/2
- */
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
 
-/*----------- DEBUGGING -------------
- *
- *	make CFLAGS='-DDEBUG_pnt -g'
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
 
- * -- Feb.3, 1999; M.Maechler:
-    - For 't > ncp > 20' (or so)	the result is completely WRONG!  <== no longer true
-    - but for ncp > 100
- */
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
 
 import * as debug from 'debug';
 import { pbeta } from '../beta/pbeta';

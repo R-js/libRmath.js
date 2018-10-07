@@ -1,64 +1,20 @@
-/*  AUTHOR
- *  Jacob Bogers, jkfbogers@gmail.com
- *  March 20, 2017
- *
- *  ORIGINAL AUTHOR
- *  Mathlib : A C Library of Special Functions
- *  Copyright (C) 1998 	     Ross Ihaka
- *  Copyright (C) 2000--2005 The R Core Team
- *  based in part on AS70 (C) 1974 Royal Statistical Society
- *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, a copy is available at
- *  https://www.R-project.org/Licenses/
- *
- *  SYNOPSIS
- *
- *	#include <Rmath.h>
- *	double qtukey(p, rr, cc, df, lower_tail, log_p);
- *
- *  DESCRIPTION
- *
- *	Computes the quantiles of the maximum of rr studentized
- *	ranges, each based on cc means and with df degrees of freedom
- *	for the standard error, is less than q.
- *
- *	The algorithm is based on that of the reference.
- *
- *  REFERENCE
- *
- *	Copenhaver, Margaret Diponzio & Holland, Burt S.
- *	Multiple comparisons of simple effects in
- *	the two-way analysis of variance with fixed effects.
- *	Journal of Statistical Computation and Simulation,
- *	Vol.30, pp.1-15, 1988.
- */
+'use strict'
+/* This is a conversion from libRmath.so to Typescript/Javascript
+Copyright (C) 2018  Jacob K.F. Bogers  info@mail.jacob-bogers.com
 
-/* qinv() :
- *	this function finds percentage point of the studentized range
- *	which is used as initial estimate for the secant method.
- *	function is adapted from portion of algorithm as 70
- *	from applied statistics (1974) ,vol. 23, no. 1
- *	by odeh, r. e. and evans, j. o.
- *
- *	  p = percentage point
- *	  c = no. of columns or treatments
- *	  v = degrees of freedom
- *	  qinv = returned initial estimate
- *
- *	vmax is cutoff above which degrees of freedom
- *	is treated as infinity.
- */
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
 
 const { sqrt, log } = Math;
 

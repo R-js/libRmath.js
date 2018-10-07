@@ -1,43 +1,20 @@
-/*
- *  AUTHOR
- * 
- *  Jacob Bogers, jkfbogers@gmail.com
- *  Januari 22, 2017
- * 
- *  ORIGINAL AUTHOR
- *    Catherine Loader, catherine@research.bell-labs.com.
- *    October 23, 2000.
- *
- *  Merge in to R:
- *  Copyright (C) 2000, The R Core Team
- *  R has lgammafn, and lgamma is not part of ISO C
- *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- * 
- *  License for JS language implementation
- *  https://www.jacob-bogers/libRmath.js/Licenses/
- * 
- *  License for R statistical package
- *  https://www.r-project.org/Licenses/
- *
- *
- *  DESCRIPTION
- *
- *    Computes the log of the error term in Stirling's formula.
- *      For n > 15, uses the series 1/12n - 1/360n^3 + ...
- *      For n <=15, integers or half-integers, uses stored values.
- *      For other n < 15, uses lgamma directly (don't use this to
- *        write lgamma!)
- *
- */
+'use strict'
+/* This is a conversion from libRmath.so to Typescript/Javascript
+Copyright (C) 2018  Jacob K.F. Bogers  info@mail.jacob-bogers.com
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
 
 import { M_LN_SQRT_2PI } from '../common/_general';
 import { lgammafn } from '../gamma/lgamma_fn';

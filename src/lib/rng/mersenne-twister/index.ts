@@ -1,34 +1,20 @@
-'use strict';
+'use strict'
+/* This is a conversion from libRmath.so to Typescript/Javascript
+Copyright (C) 2018  Jacob K.F. Bogers  info@mail.jacob-bogers.com
 
-/* Port to Javascript from R by Jacob Bogers  2017*/
-/* ===================  Mersenne Twister ========================== */
-/* From http://www.math.keio.ac.jp/~matumoto/emt.html */
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
 
-/* A C-program for MT19937: Real number version([0,1)-interval)
-   (1999/10/28) genrand() generates one pseudorandom real number (double)
-   which is uniformly distributed on [0,1)-interval, for each
-   call. sgenrand(seed) sets initial values to the working area
-   of 624 words. Before genrand(), sgenrand(seed) must be
-   called once. (seed is any 32-bit integer.)
-   Integer generator is obtained by modifying two lines.
-     Coded by Takuji Nishimura, considering the suggestions by
-   Topher Cooper and Marc Rieffel in July-Aug. 1997.
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
 
-   Copyright (C) 1997, 1999 Makoto Matsumoto and Takuji Nishimura.
-   When you use this, send an email to: matumoto@math.keio.ac.jp
-   with an appropriate reference to your work.
-
-   REFERENCE
-   M. Matsumoto and T. Nishimura,
-   "Mersenne Twister: A 623-Dimensionally Equidistributed Uniform
-   Pseudo-Random Number Generator",
-   ACM Transactions on Modeling and Computer Simulation,
-   Vol. 8, No. 1, January 1998, pp 3--30.
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-
-/* helpers */
-/* helpers */
-/* helpers */
 const N = 624;
 const M = 397;
 

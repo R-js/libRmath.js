@@ -1,52 +1,20 @@
-/*  AUTHOR
- *  Jacob Bogers, jkfbogers@gmail.com
- *  March 25, 2017
- * 
- *  ORGINAL AUTHOR
- *  Mathlib : A C Library of Special Functions
- *  Copyright (C) 1998   Ross Ihaka
- *  Copyright (C) 2000-9 The R Core Team
- *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, a copy is available at
- *  https://www.R-project.org/Licenses/
- *
- *  SYNOPSIS
- *
- *    #include <Rmath.h>
- *    double norm_rand(void);
- *
- *  DESCRIPTION
- *
- *    Random variates from the STANDARD normal distribution  N(0,1).
- *
- * Is called from  rnorm(..), but also rt(), rf(), rgamma(), ...
- */
+'use strict'
+/* This is a conversion from libRmath.so to Typescript/Javascript
+Copyright (C) 2018  Jacob K.F. Bogers  info@mail.jacob-bogers.com
 
-/*
- *  REFERENCE
- *
- *    Ahrens, J.H. and Dieter, U.
- *    Extensions of Forsythe's method for random sampling from
- *    the normal distribution.
- *    Math. Comput. 27, 927-937.
- *
- *    The definitions of the constants a[k], d[k], t[k] and
- *    h[k] are according to the abovementioned article
- */
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
 
-/*-----------------------------------------------------------*/
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
 
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
 import { IRNG } from '../';
 import { qnorm } from '../../normal/qnorm';
 import { MersenneTwister } from '../mersenne-twister';

@@ -1,4 +1,4 @@
-/* This is a conversion from BLAS to Typescript/Javascript
+/* This is a conversion from LIB-R-MATH to Typescript/Javascript
 Copyright (C) 2018  Jacob K.F. Bogers  info@mail.jacob-bogers.com
 
 This program is free software: you can redistribute it and/or modify
