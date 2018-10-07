@@ -4,7 +4,7 @@ export { Beta } from './beta';
 export { Binomial } from './binomial';
 export { NegativeBinomial } from './binomial-negative';
 export { Cauchy } from './cauchy';
-export { ChebyshevSeries } from './chebyshev';
+export { chebyshev_eval, chebyshev_init } from './chebyshev';
 export { ChiSquared } from './chi-2';
 export { Exponential } from './exp';
 export { FDist } from './f-distro';
@@ -25,6 +25,7 @@ export { Tukey } from './tukey';
 export { Uniform } from './uniform';
 export { Weibull } from './weibull';
 export { Wilcoxon } from './wilcoxon';
+export { hypot, log1p as log1pR } from './log';
 /*
   Class of Special functions collected here.  
 */

@@ -18,8 +18,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import * as debug from 'debug';
 import { ML_ERR_return_NAN } from '../common/_general';
 
-import { rgamma } from '../gamma/rgamma';
-import { rpois } from '../poisson/rpois';
+import { rgammaOne } from '../gamma/rgamma';
+import { rpoisOne } from '../poisson/rpois';
 import { randomGenHelper } from '../r-func'
 import { IRNGNormal } from '../rng/normal/inormal-rng';
 
@@ -55,9 +55,8 @@ export function rnbinomOne(
   }
   return prob === 1
     ? 0
-    : (rpois(
-      1,
-      rgamma(1, size, (1 - prob) / prob, rng) as number,
+    : (rpoisOne(
+      rgammaOne(size, (1 - prob) / prob, rng),
       rng
     ) as number);
 
@@ -78,9 +77,8 @@ function _rnbinom_mu(size: number, mu: number, rng: IRNGNormal): number {
   }
   return mu === 0
     ? 0
-    : (rpois(
-      1,
-      rgamma(1, size, mu / size, rng) as number,
+    : (rpoisOne(
+      rgammaOne(size, mu / size, rng),
       rng
     ) as number);
 

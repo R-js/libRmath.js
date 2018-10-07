@@ -18,9 +18,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import { ML_ERR_return_NAN } from '../common/_general';
 
 import * as debug from 'debug';
+import { randomGenHelper } from '../r-func'
 import { IRNG } from '../rng/irng';
 import { exp_rand } from './sexp';
-import { randomGenHelper } from '../r-func'
 
 const { isFinite: R_FINITE } = Number;
 const printer = debug('rexp');

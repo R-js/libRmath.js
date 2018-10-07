@@ -16,7 +16,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { chebyshev_eval, chebyshev_init } from './chebyshev';
 
-export const ChebyshevSeries = {
+export {
     chebyshev_eval,
     chebyshev_init
 };

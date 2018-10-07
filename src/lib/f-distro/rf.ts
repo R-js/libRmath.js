@@ -17,8 +17,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import * as debug from 'debug';
 
-import { ML_ERR_return_NAN } from '../common/_general';
 import { rchisqOne } from '../chi-2/rchisq';
+import { ML_ERR_return_NAN } from '../common/_general';
 import { IRNGNormal } from '../rng/normal';
 
 const printer = debug('rf');

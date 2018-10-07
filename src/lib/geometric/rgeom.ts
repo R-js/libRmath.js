@@ -26,7 +26,7 @@ const { isFinite: R_FINITE } = Number;
 const printer = debug('rgeom');
 
 export function rgeom(n, p, rng): number[] {
-   return Array.from({length:n}).map(()=> rgeomOne(p, rng))
+   return Array.from({length:n}).map(() => rgeomOne(p, rng))
 }
 
 export function rgeomOne(

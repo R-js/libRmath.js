@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import * as debug from 'debug';
 import { ML_ERR_return_NAN } from '../common/_general';
-import { rgamma } from '../gamma/rgamma';
+import { rgammaOne } from '../gamma/rgamma';
 import { randomGenHelper } from '../r-func'
 import { IRNGNormal } from '../rng/normal/inormal-rng';
 
@@ -40,5 +40,5 @@ export function rchisqOne(
   if (!R_FINITE(df) || df < 0.0) {
     return ML_ERR_return_NAN(printer);
   }
-  return rgamma(1, df / 2.0, 2.0, rng) as number;
+  return rgammaOne(df / 2.0, 2.0, rng);
 }

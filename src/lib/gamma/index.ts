@@ -146,7 +146,7 @@ export function Gamma(norm: IRNGNormal = new Inversion()) {
 
   const printer_rgamma = debug('rgammaOne');
   
-  function rgamma(n: number|number[],shape: number, rate?: number, scale?: number): number[]{
+  function rgamma(n: number|number[], shape: number, rate?: number, scale?: number): number[]{
     return randomGenHelper(n, rgammaOne, shape, rate, scale);
   }
 

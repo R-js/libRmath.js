@@ -85,7 +85,7 @@ export function FDist(rng: IRNGNormal = new Inversion()) {
 
  
   function rf(n: number|number, n1: number, n2: number, rng: IRNGNormal): number[] {
-    return randomGenHelper(n, rfOne, n1,n2, rng);
+    return randomGenHelper(n, rfOne, n1, n2, rng);
   }
 
   function rfOne(df1: number, df2: number, ncp?: number) {
@@ -99,10 +99,10 @@ export function FDist(rng: IRNGNormal = new Inversion()) {
     }
 
 
-    const numerator = rnchisqOne(df1, ncp, rng)/df1;
-    const denominator = rchisqOne(df2, rng)/ df2;
+    const numerator = rnchisqOne(df1, ncp, rng) / df1;
+    const denominator = rchisqOne(df2, rng) / df2;
 
-    return numerator/denominator;
+    return numerator / denominator;
   }
 
   return {
