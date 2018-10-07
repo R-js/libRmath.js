@@ -20,7 +20,6 @@ import { ML_ERR_return_NAN, R_Q_P01_boundaries } from '../common/_general';
 
 import { R_Log1_Exp } from '../exp/expm1';
 
-import { map } from '../r-func';
 
 const {
   isNaN: ISNAN,
@@ -32,14 +31,14 @@ const { log } = Math;
 
 const printer_qlogis = debug('qlogis');
 
-export function qlogis<T>(
-  pp: T,
+export function qlogis(
+  p: number,
   location: number = 0,
   scale: number = 1,
   lower_tail: boolean = true,
   log_p: boolean = false
-): T {
-  return map(pp)(p => {
+): number {
+
     if (ISNAN(p) || ISNAN(location) || ISNAN(scale))
       return p + location + scale;
 
@@ -60,5 +59,5 @@ export function qlogis<T>(
     } else p = log(lower_tail ? p / (1 - p) : (1 - p) / p);
 
     return location + scale * p;
-  }) as any;
+
 }

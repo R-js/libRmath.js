@@ -26,13 +26,19 @@ const { isNaN: ISNAN, isFinite: R_FINITE } = Number;
 const sequence = seq()();
 const printer_rlogis = debug('rlogis');
 
-export function rlogis(
-  N: number,
+
+export function rlogis( N: number, location: number = 0,
+  scale: number = 1,
+  rng: IRNG): number[] {
+    return Array.from({length:N}).map(() => rlogisOne(location,scale,rng));
+}
+
+export function rlogisOne(
   location: number = 0,
   scale: number = 1,
   rng: IRNG
-): number | number[] {
-  return map(sequence(N))(() => {
+): number {
+ 
     if (ISNAN(location) || !R_FINITE(scale)) {
       return ML_ERR_return_NAN(printer_rlogis);
     }
@@ -42,5 +48,4 @@ export function rlogis(
       let u: number = rng.unif_rand() as number;
       return location + scale * log(u / (1 - u));
     }
-  }) as any;
 }
