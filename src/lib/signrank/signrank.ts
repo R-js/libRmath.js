@@ -32,6 +32,8 @@ import { R_DT_qIv } from '../exp/expm1';
 
 import { IRNG } from '../rng';
 
+import { randomGenHelper } from '../r-func';
+
 const { isFinite: R_FINITE, EPSILON: DBL_EPSILON, isNaN: ISNAN } = Number;
 const {
   LN2: M_LN2,
@@ -69,157 +71,151 @@ export function csignrank(
   return w[k];
 }
 
-export function dsignrank<T>(xx: T, n: number, logX: boolean = false): T {
+export function dsignrank(x: number, n: number, logX: boolean = false): number {
   const rn = round(n);
   const u = rn * (rn + 1) / 2;
   const c = trunc(u / 2);
-  const w = new Array(c + 1).fill(0);
+  const w = Array.from<number>({ length: c + 1 }).fill(0);
 
-  const fx: number[] = (Array.isArray(xx) ? xx : [xx]) as any;
-  const result = fx.map(x => {
-    if (ISNAN(x) || ISNAN(n)) return x + n;
+  if (ISNAN(x) || ISNAN(n)) return x + n;
 
-    if (n <= 0) {
-      return ML_ERR_return_NAN(printer_dsignrank);
-    }
-    if (fabs(x - round(x)) > 1e-7) {
-      return R_D__0(logX);
-    }
-    x = round(x);
-    if (x < 0 || x > n * (n + 1) / 2) {
-      return R_D__0(logX);
-    }
-    let d = R_D_exp(logX, log(csignrank(trunc(x), n, u, c, w)) - n * M_LN2);
-    return d;
-  });
-  return (result.length === 1 ? result[0] : result) as any;
+  if (n <= 0) {
+    return ML_ERR_return_NAN(printer_dsignrank);
+  }
+  if (fabs(x - round(x)) > 1e-7) {
+    return R_D__0(logX);
+  }
+  x = round(x);
+  if (x < 0 || x > n * (n + 1) / 2) {
+    return R_D__0(logX);
+  }
+  let d = R_D_exp(logX, log(csignrank(trunc(x), n, u, c, w)) - n * M_LN2);
+  return d;
+
 }
 
-export function psignrank<T>(
-  xx: T,
+export function psignrank(
+  x: number,
   n: number,
   lowerTail: boolean = true,
   logP: boolean = false
-): T {
+): number {
   const roundN = round(n);
   const u = roundN * (roundN + 1) / 2;
   const c = trunc(u / 2);
-  const w = new Array(c + 1).fill(0);
+  const w = Array.from<number>({ length: c + 1 }).fill(0);
 
-  const fx: number[] = (Array.isArray(xx) ? xx : [xx]) as any;
+  x => round(x + 1e-7)
+  if (ISNAN(x) || ISNAN(n)) return x + n;
+  if (!R_FINITE(n)) return ML_ERR_return_NAN(printer_psignrank);
+  if (n <= 0) return ML_ERR_return_NAN(printer_psignrank);
 
-  const result = fx.map(x => round(x + 1e-7)).map(x => {
-    let lowerT = lowerTail; // temp copy on each iteration
-    if (ISNAN(x) || ISNAN(n)) return x + n;
-    if (!R_FINITE(n)) return ML_ERR_return_NAN(printer_psignrank);
-    if (n <= 0) return ML_ERR_return_NAN(printer_psignrank);
+  if (x < 0.0) {
+    return R_DT_0(lowerTail, logP);
+  }
 
-    if (x < 0.0) {
-      return R_DT_0(lowerTail, logP);
+  if (x >= u) {
+    return R_DT_1(lowerTail, logP); //returns 1 on the edge case or 0 (because log(1)= 0)
+  }
+  let f = exp(-roundN * M_LN2);
+  let p = 0;
+  if (x <= u / 2) {
+    //smaller then mean
+    for (let i = 0; i <= x; i++) {
+      p += csignrank(i, roundN, u, c, w) * f;
     }
+  } else {
+    x = n * (n + 1) / 2 - x;
+    for (let i = 0; i < x; i++) {
+      p += csignrank(i, roundN, u, c, w) * f;
+    }
+    lowerTail = !lowerTail; /* p = 1 - p; */
+  }
+  return R_DT_val(lowerTail, logP, p);
 
-    if (x >= u) {
-      return  R_DT_1(lowerTail, logP); //returns 1 on the edge case or 0 (because log(1)= 0)
-    }
-    let f = exp(-roundN * M_LN2);
-    let p = 0;
-    if (x <= u / 2) {
-      //smaller then mean
-      for (let i = 0; i <= x; i++) {
-        p += csignrank(i, roundN, u, c, w) * f;
-      }
-    } else {
-      x = n * (n + 1) / 2 - x;
-      for (let i = 0; i < x; i++) {
-        p += csignrank(i, roundN, u, c, w) * f;
-      }
-      lowerT = !lowerT; /* p = 1 - p; */
-    }
-    return R_DT_val(lowerT, logP, p);
-  });
-  return (result.length === 1 ? result[0] : result) as any;
 } /* psignrank() */
 
-export function qsignrank<T>(
-  xx: T,
+export function qsignrank(
+  x: number,
   n: number,
   lowerTail: boolean = true,
   logP: boolean = false
-): T {
+): number {
 
   const roundN = round(n);
   const u = roundN * (roundN + 1) / 2;
   const c = trunc(u / 2);
-  const w = new Array(c + 1).fill(0);
-  
-  const fx: number[] = (Array.isArray(xx) ? xx : [xx]) as any;
- 
-  const result = fx.map(x => {
-    if (ISNAN(x) || ISNAN(n)) {
-      return x + n;
-    }
+  const w = Array.from<number>({ length: c + 1 }).fill(0);
 
-    if (!R_FINITE(x) || !R_FINITE(n)) {
-      return ML_ERR_return_NAN(printer_qsignrank);
-    }
-    let rc = R_Q_P01_check(logP, x);
-    if (rc !== undefined) {
-      return rc;
-    }
+  if (ISNAN(x) || ISNAN(n)) {
+    return x + n;
+  }
 
-    if (roundN <= 0) {return ML_ERR_return_NAN(printer_qsignrank); }
+  if (!R_FINITE(x) || !R_FINITE(n)) {
+    return ML_ERR_return_NAN(printer_qsignrank);
+  }
+  let rc = R_Q_P01_check(logP, x);
+  if (rc !== undefined) {
+    return rc;
+  }
 
-    if (x === R_DT_0(lowerTail, logP)) {
-      return 0;
+  if (roundN <= 0) { return ML_ERR_return_NAN(printer_qsignrank); }
+
+  if (x === R_DT_0(lowerTail, logP)) {
+    return 0;
+  }
+  if (x === R_DT_1(lowerTail, logP)) {
+    return u;
+  }
+
+  if (logP || !lowerTail)
+    x = R_DT_qIv(lowerTail, logP, x); // lower_tail, non-log "p" 
+
+  //this.w_init_maybe(n);
+  let f = exp(-n * M_LN2);
+  let p = 0;
+  let q = 0;
+  if (x <= 0.5) {
+    x = x - 10 * DBL_EPSILON;
+    while (true) {
+      p += csignrank(q, roundN, u, c, w) * f;
+      if (p >= x) break;
+      q++;
     }
-    if (x === R_DT_1(lowerTail, logP)) {
-      return u;
-    }
-
-    if (logP || !lowerTail)
-      x = R_DT_qIv(lowerTail, logP, x); // lower_tail, non-log "p" 
-
-    //this.w_init_maybe(n);
-    let f = exp(-n * M_LN2);
-    let p = 0;
-    let q = 0;
-    if (x <= 0.5) {
-      x = x - 10 * DBL_EPSILON;
-      while (true) {
-        p += csignrank(q, roundN, u, c, w) * f;
-        if (p >= x) break;
-        q++;
+  } else {
+    x = 1 - x + 10 * DBL_EPSILON;
+    while (true) {
+      p += csignrank(q, roundN, u, c, w) * f;
+      if (p > x) {
+        q = trunc(u - q);
+        break;
       }
-    } else {
-      x = 1 - x + 10 * DBL_EPSILON;
-      while (true) {
-        p += csignrank(q, roundN, u, c, w) * f;
-        if (p > x) {
-          q = trunc(u - q);
-          break;
-        }
-        q++;
-      }
+      q++;
     }
-    return q;
-  });
-  return (result.length === 1 ? result[0] : result) as any;
+  }
+  return q;
 }
 
-export function rsignrank(nn: number, n: number, rng: IRNG): number | number[] {
-  const result = new Array(nn).fill(0).map(() => {
-    /* NaNs propagated correctly */
-    if (ISNAN(n)) return n;
-    const nRound = round(n);
-    if (nRound < 0) return ML_ERR_return_NAN(printer_rsignrank);
+export function rsignrankOne(n: number, rng: IRNG): number {
 
-    if (nRound === 0) return 0;
-    let r = 0.0;
-    let k = floor(nRound);
-    for (let i = 0; i < k /**/; ) {
-      r += ++i * floor((rng.unif_rand() as number) + 0.5);
-    }
-    return r;
-  });
-  return result.length === 1 ? result[0] : result;
+  /* NaNs propagated correctly */
+  if (ISNAN(n)) return n;
+  const nRound = round(n);
+  if (nRound < 0) return ML_ERR_return_NAN(printer_rsignrank);
+
+  if (nRound === 0) return 0;
+  let r = 0.0;
+  let k = floor(nRound);
+  for (let i = 0; i < k /**/;) {
+    r += ++i * floor((rng.unif_rand() as number) + 0.5);
+  }
+  return r;
 }
+export function rsignrank(
+  N: number,
+  n: number,
+  rng: IRNG
+): number[] {
+  return randomGenHelper(N, rsignrankOne, n, rng);
+}
+

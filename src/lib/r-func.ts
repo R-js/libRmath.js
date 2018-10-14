@@ -335,7 +335,7 @@ export function Welch_Satterthwaite(s: number[], n: number[]): number {
 }
 
 
-export function randomGenHelper(n: number | number[], fn: Function, ...arg: any[]) {
+export function randomGenHelper<T extends Function>(n: number | number[], fn: T, ...arg: any[]) {
 
   let result: number[]
 
