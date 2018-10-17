@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { IRNG } from '../';
-import { map, seq } from '../../r-func';
+import { randomGenHelper } from '../../r-func';
 
 export abstract class IRNGNormal {
   protected rng: IRNG;
@@ -27,9 +27,13 @@ export abstract class IRNGNormal {
     this.internal_norm_rand = this.internal_norm_rand.bind(this);
   }
 
-  public norm_rand(n: number = 1): number|number[]{
+  public norm_randOne() {
+    return this.internal_norm_rand()
+  }
+
+  public norm_rand(n: number): number[]{
     n = !n || n < 0 ? 1 : n;
-    return map(seq()()(n))(() => this.internal_norm_rand());
+    return randomGenHelper(n, this.internal_norm_rand)//; : map(seq()()(n))(() => this.internal_norm_rand());
   } 
 
   protected abstract internal_norm_rand(): number;

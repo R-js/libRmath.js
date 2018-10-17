@@ -176,7 +176,7 @@ export function rpoisOne(mu: number, rng: IRNGNormal): number {
 
   /* Step N. normal sample */
   g =
-    mu + s * (rng.norm_rand() as number); /* norm_rand() ~ N(0,1), standard normal */
+    mu + s * (rng.norm_randOne() as number); /* norm_rand() ~ N(0,1), standard normal */
 
   if (g >= 0) {
     pois = floor(g);

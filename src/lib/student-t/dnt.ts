@@ -20,7 +20,6 @@ import { M_LN_SQRT_PI, ML_ERR_return_NAN, R_D__0 } from '../common/_general';
 
 import { lgammafn } from '../gamma/lgamma_fn';
 import { dnorm4 as dnorm } from '../normal/dnorm';
-import { map } from '../r-func';
 import { dt } from './dt';
 import { pnt } from './pnt';
 
@@ -54,7 +53,7 @@ export function dnt(
   /* Do calculations on log scale to stabilize */
 
   /* Consider two cases: x ~= 0 or not */
-  const u = function () {
+  const u = function() {
     if (fabs(x) > sqrt(df * DBL_EPSILON)) {
       printer_dnt('fabs(x:%d)>sqrt(df*espsilon):%d', fabs(x), sqrt(df * DBL_EPSILON));
       return (
@@ -80,5 +79,4 @@ export function dnt(
   }();
   printer_dnt('u=%d, giveLog=%s', u, giveLog);
   return giveLog ? u : exp(u);
-
 }

@@ -28,25 +28,23 @@ import {
   R_DT_1
 } from '../common/_general';
 import { pnorm5 as pnorm } from '../normal/pnorm';
-import { map } from '../r-func';
 
 const { log1p, sqrt, log, abs: fabs, exp } = Math;
 const { isNaN: ISNAN, isFinite: R_FINITE } = Number;
 
 const printer = debug('pt');
 
-export function pt<T>(
-  xx: T,
+export function pt(
+  x: number,
   n: number,
   lowerTail: boolean = true,
   log_p: boolean = false
-): T {
+): number {
   /* return  P[ T <= x ]	where
      * T ~ t_{n}  (t distrib. with n degrees of freedom).
     
      *	--> ./pnt.c for NON-central
      */
-  return map(xx)(x => {
     let val;
     let nx;
 
@@ -117,5 +115,4 @@ export function pt<T>(
       val /= 2;
       return R_D_Cval(lower_tail, val);
     }
-  }) as any;
 }

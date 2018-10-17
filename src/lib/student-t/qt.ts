@@ -34,7 +34,6 @@ import {
 
 import { R_D_LExp, R_DT_qIv } from '../exp/expm1';
 import { qnorm } from '../normal/qnorm';
-import { map } from '../r-func';
 import { tanpi } from '../trigonometry/cospi';
 import { dt } from './dt';
 import { pt } from './pt';
@@ -64,16 +63,7 @@ const {
 
 const printer_qt = debug('qt');
 
-export function qt<T>(
-  pp: T,
-  ndf: number,
-  lowerTail: boolean,
-  logP: boolean
-): T {
-  return map(pp)(p => _qt(p, ndf, lowerTail, logP)) as any;
-}
-
-function _qt(
+export function qt(
   p: number,
   ndf: number,
   lower_tail: boolean,

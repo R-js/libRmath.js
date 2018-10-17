@@ -32,7 +32,7 @@ import { rt as _rt } from './rt';
 
 
 export function StudentT(rng: IRNGNormal = new Inversion()) {
-  function dt(x: number | number[], df: number, ncp?: number, asLog = false) {
+  function dt(x: number , df: number, ncp?: number, asLog = false) {
     if (ncp === undefined) {
       return _dt(x, df, asLog);
     }
@@ -40,7 +40,7 @@ export function StudentT(rng: IRNGNormal = new Inversion()) {
   }
 
   function pt(
-    q: number | number[],
+    q: number,
     df: number,
     ncp?: number,
     lowerTail: boolean = true,
@@ -54,7 +54,7 @@ export function StudentT(rng: IRNGNormal = new Inversion()) {
   }
 
   function qt(
-    pp: number | number[],
+    pp: number,
     df: number,
     ncp?: number,
     lowerTail: boolean = true,
@@ -76,7 +76,7 @@ export function StudentT(rng: IRNGNormal = new Inversion()) {
       const div = arrayrify((a: number, b: number) => a / b);
       const sqrt = arrayrify(Math.sqrt);
 
-      const norm = flatten(rnorm(n, ncp, 1, rng)); // bleed this first from rng
+      const norm = rnorm(n, ncp, 1, rng); // bleed this first from rng
       const chisq = flatten(
         sqrt(
           div(

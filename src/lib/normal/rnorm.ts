@@ -44,5 +44,5 @@ export function rnormOne(
     if (sigma === 0 || !R_FINITE(mu)) {
       return mu; /* includes mu = +/- Inf with finite sigma */
     }
-    return mu + sigma * (rng.norm_rand() as number);
+    return mu + sigma * (rng.norm_randOne() as number);
 }

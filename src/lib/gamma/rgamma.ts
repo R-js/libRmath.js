@@ -113,7 +113,7 @@ export function rgammaOne(
                x = (s,1/2) -normal deviate. */
 
   /* immediate acceptance (i) */
-  t = rng.norm_rand() as number;
+  t = rng.norm_randOne() as number;
   x = s + 0.5 * t;
   ret_val = x * x;
   if (t >= 0.0) return scale * ret_val;

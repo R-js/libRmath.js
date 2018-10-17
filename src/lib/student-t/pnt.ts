@@ -31,7 +31,6 @@ import {
 } from '../common/_general';
 import { lgammafn } from '../gamma/lgamma_fn';
 import { pnorm5 as pnorm } from '../normal/pnorm';
-import { map } from '../r-func';
 import { pt } from './pt';
 
 const { isFinite: R_FINITE, EPSILON: DBL_EPSILON } = Number;
@@ -40,19 +39,7 @@ const printer_pnt = debug('pnt');
 const DBL_MIN_EXP = -1021;
 const M_LN2 = 0.693147180559945309417;
 
-export function pnt<T>(
-  tt: T,
-  df: number,
-  ncp: number,
-  lowerTail: boolean = true,
-  logP: boolean = false
-): T {
-  return map(tt)(t =>
-    _pnt(t, df, ncp, lowerTail, logP /*, normal*/)
-  ) as any;
-}
-
-function _pnt(
+export function pnt(
   _t: number,
   df: number,
   ncp: number,
