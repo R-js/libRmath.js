@@ -18,14 +18,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import * as debug from 'debug';
 import { ME, ML_ERROR } from '../../common/_general';
 import { multiplexer } from '../../r-func';
-import { boolVector, numVector } from '../../types';
+//import { boolVector, numVector } from '../../types';
 import { K_bessel } from './Kbessel';
 
 const { isNaN: ISNAN } = Number;
 const { floor } = Math;
 const printer = debug('bessel_k');
 
-export function bessel_k(_x: numVector, _alpha: numVector, _expo: boolVector): numVector {
+export function bessel_k(_x: number, _alpha: number, _expo: boolean): number {
   return multiplexer(_x, _alpha, _expo)((x, alpha, expo) => internal_bessel_k(x, alpha, expo));
 }
 

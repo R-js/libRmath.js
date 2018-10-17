@@ -23,8 +23,7 @@ const { isInteger, NEGATIVE_INFINITY: ML_NEGINF, isNaN: ISNAN } = Number;
 import { internal_lbeta } from '../beta/lbeta';
 import { lgammafn } from '../gamma/lgamma_fn';
 import { lgammafn_sign } from '../gamma/lgammafn_sign';
-import { multiplexer } from '../r-func';
-import { numVector } from '../types';
+
 
 // used by "qhyper"
 function lfastchoose(n: number, k: number) {
@@ -39,14 +38,6 @@ function lfastchoose2(n: number, k: number, sChoose?: number[]) {
   return lgammafn(n + 1) - lgammafn(k + 1) - r;
 }
 
-
-export function choose(_n: numVector, _k: numVector): numVector {
-  return multiplexer(_n, _k)((n, k) => internal_choose(n, k));
-}
-
-export function lchoose(_n: numVector, _k: numVector): numVector {
-  return multiplexer(_n, _k)((n, k) => internal_lchoose(n, k));
-}
 
 const printer_lchoose = debug('lchoose');
 
