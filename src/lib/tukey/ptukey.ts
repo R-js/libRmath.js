@@ -30,26 +30,12 @@ import {
 
 import { R_DT_val } from '../common/_general';
 import { lgammafn } from '../gamma/lgamma_fn';
-import { map } from '../r-func';
 
 const { isNaN: ISNAN, isFinite: R_FINITE } = Number;
 const { exp, sqrt, log, LN2: M_LN2 } = Math;
 
 const printer_ptukey = debug('_ptukey');
 
-export function ptukey<T>(
-  qq: T,
-  rr: number,
-  cc: number,
-  df: number,
-  lower_tail: boolean = true,
-  log_p: boolean = false,
- // normal: INormal
-): T {
-  return map(qq)(q =>
-    _ptukey(q, rr, cc, df, lower_tail, log_p)
-  ) as any;
-}
 
 /*
 > ptukey
@@ -66,13 +52,13 @@ double ptukey(
   int lower_tail, // lowertail
 	int log_p //logp
 */
-export function _ptukey(
+export function ptukey(
   q: number,
   rr: number,
   cc: number,
   df: number,
-  lower_tail: boolean,
-  log_p: boolean
+  lower_tail: boolean = true,
+  log_p: boolean = false
 ): number {
   /*  function ptukey() [was qprob() ]:
     

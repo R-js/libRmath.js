@@ -46,7 +46,7 @@ function qinv(p: number, c: number, v: number): number {
   t =
     yi +
     ((((yi * p4 + p3) * yi + p2) * yi + p1) * yi + p0) /
-      ((((yi * q4 + q3) * yi + q2) * yi + q1) * yi + q0);
+    ((((yi * q4 + q3) * yi + q2) * yi + q1) * yi + q0);
   if (v < vmax) t += (t * t * t + t) / v / 4.0;
   q = c1 - c2 * t;
   if (v < vmax) q += -c3 / v + c4 * t / v;
@@ -81,10 +81,8 @@ function qinv(p: number, c: number, v: number): number {
 import * as debug from 'debug';
 
 import { ME, ML_ERR_return_NAN, ML_ERROR, R_Q_P01_boundaries } from '../common/_general';
-
 import { R_DT_qIv } from '../exp/expm1';
-import { map } from '../r-func';
-import { _ptukey } from './ptukey';
+import { ptukey } from './ptukey'
 
 const { isNaN: ISNAN, POSITIVE_INFINITY: ML_POSINF } = Number;
 const { abs: fabs, max: fmax2 } = Math;
@@ -97,27 +95,14 @@ function (p, nmeans, df, nranges = 1, lower.tail = TRUE, log.p = FALSE)
 <environment: namespace:stats>
 
 */
-export function qtukey<T>(
-  pp: T, //p
+
+export function qtukey(
+  p: number, //p
   rr: number, //ranges
   cc: number, //nmeans
   df: number, //df
   lower_tail: boolean = true, //lower.tail
   log_p: boolean = false //log.p
-): T {
-  return map(pp)(p =>
-    _qtukey(p, rr, cc, df, lower_tail, log_p)
-  ) as any;
-}
-
-
-function _qtukey(
-  p: number,
-  rr: number,
-  cc: number,
-  df: number,
-  lower_tail: boolean,
-  log_p: boolean
 ): number {
   const eps = 0.0001;
   const maxiter = 50;
@@ -151,7 +136,7 @@ function _qtukey(
 
   /* Find prob(value < x0) */
 
-  valx0 = _ptukey(x0, rr, cc, df, /*LOWER*/ true, /*LOG_P*/ false) - p;
+  valx0 = ptukey(x0, rr, cc, df, /*LOWER*/ true, /*LOG_P*/ false) - p;
 
   /* Find the second iterate and prob(value < x1). */
   /* If the first iterate has probability value */
@@ -160,7 +145,7 @@ function _qtukey(
 
   if (valx0 > 0.0) x1 = fmax2(0.0, x0 - 1.0);
   else x1 = x0 + 1.0;
-  valx1 = _ptukey(x1, rr, cc, df, /*LOWER*/ true, /*LOG_P*/ false) - p;
+  valx1 = ptukey(x1, rr, cc, df, /*LOWER*/ true, /*LOG_P*/ false) - p;
 
   /* Find new iterate */
 
@@ -178,7 +163,7 @@ function _qtukey(
     /* Find prob(value < new iterate) */
 
     valx1 =
-      _ptukey(ans, rr, cc, df, /*LOWER*/ true, /*LOG_P*/ false) - p;
+      ptukey(ans, rr, cc, df, /*LOWER*/ true, /*LOG_P*/ false) - p;
     x1 = ans;
 
     /* If the difference between two successive */

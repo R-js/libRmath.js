@@ -37,14 +37,14 @@ export function Tukey() {
     int log_p       // logp
   */
 
-  function ptukey<T>(
-    q: T,
+  function ptukey(
+    q: number,
     nmeans: number,
     df: number,
     nranges: number = 1,
     lowerTail: boolean = true,
     logP: boolean = false
-  ): T {
+  ) {
     return _pt(q, nranges, nmeans, df, lowerTail, logP);
   }
   //
@@ -56,14 +56,14 @@ function (p, nmeans, df, nranges = 1, lower.tail = TRUE, log.p = FALSE)
 <bytecode: 0x000000001cde4a80>
 <environment: namespace:stats>
   */
-  function qtukey<T>(
-    q: T,
+  function qtukey(
+    q: number,
     nmeans: number,
     df: number,
     nranges: number = 1,
     lowerTail: boolean = true,
     logP: boolean = false
-  ): T {
+  )  {
     return _qt(q, nranges, nmeans, df, lowerTail, logP);
   }
 
