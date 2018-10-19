@@ -29,7 +29,6 @@ export function Uniform(rng: IRNG = new MersenneTwister(0)) {
     dunif,
     punif,
     qunif,
-    rng, // class of the rng
     runif: (n: number = 1, min: number = 0, max: number = 1) =>
       runif(n, min, max, rng)
   };

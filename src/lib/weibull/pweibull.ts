@@ -21,20 +21,17 @@ import { ML_ERR_return_NAN, R_D_exp, R_DT_0 } from '../common/_general';
 
 import { R_Log1_Exp } from '../exp/expm1';
 
-import { map } from '../r-func';
-
 const { expm1, pow } = Math;
 const { isNaN: ISNAN } = Number;
 const printer = debug('pweibull');
 
-export function pweibull<T>(
-  xx: T,
+export function pweibull(
+  x: number,
   shape: number,
   scale: number = 1,
   lower_tail: boolean = true,
   log_p: boolean = false
-): T {
-  return map(xx)(x => {
+): number {
     if (ISNAN(x) || ISNAN(shape) || ISNAN(scale)) return x + shape + scale;
 
     if (shape <= 0 || scale <= 0) return ML_ERR_return_NAN(printer);
@@ -44,5 +41,4 @@ export function pweibull<T>(
     }
     x = -pow(x / scale, shape);
     return lower_tail ? (log_p ? R_Log1_Exp(x) : -expm1(x)) : R_D_exp(log_p, x);
-  }) as any;
 }

@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import * as debug from 'debug';
 
 import { ML_ERR_return_NAN } from '../common/_general';
-import { possibleScalar, seq } from '../r-func';
+import { randomGenHelper, seq_len } from '../r-func';
 import { IRNG } from '../rng';
 
 const printer_rwilcox = debug('rwilcox');
@@ -27,12 +27,15 @@ const { round: R_forceint, trunc, floor } = Math;
 const { isNaN: ISNAN } = Number;
 
 export function rwilcox(
-  N: number,
+  N: number| number[],
   m: number,
   n: number,
   rng: IRNG
-): number | number[] {
-  const result = new Array(N).fill(0).map(() => {
+): number[] {
+  return randomGenHelper(N, rwilcoxOne, m, n, rng);
+}
+
+export function rwilcoxOne(m: number, n: number, rng: IRNG): number {
     /* NaNs propagated correctly */
     if (ISNAN(m) || ISNAN(n)) return m + n;
 
@@ -44,7 +47,7 @@ export function rwilcox(
 
     let r = 0.0;
     let k = trunc(m + n);
-    let x: number[] = seq()()(0, k - 1);
+    let x: number[] = Array.from(seq_len({ length:k, base: 0}))
     printer_rwilcox(`------v`);
     for (let i = 0; i < n; i++) {
       let j = floor(k * (rng.unif_rand() as number));
@@ -54,6 +57,5 @@ export function rwilcox(
     }
 
     return r - n * (n - 1) / 2;
-  });
-  return possibleScalar(result);
-}
+
+  }

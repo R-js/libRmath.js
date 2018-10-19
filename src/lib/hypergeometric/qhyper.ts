@@ -16,8 +16,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 import * as debug from 'debug';
 import { ML_ERR_return_NAN, R_Q_P01_boundaries } from '../common/_general';
+import { lfastchoose } from '../common/choose';
 import { R_DT_qIv } from '../exp/expm1';
-import { lfastchoose } from './lfastchoose';
 
 const { log, exp, min: fmin2, max: fmax2, round: R_forceint } = Math;
 const { isNaN: ISNAN, isFinite: R_FINITE, EPSILON: DBL_EPSILON } = Number;

@@ -17,8 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import * as debug from 'debug';
-
-import { internal_lbeta } from '../beta/lbeta';
+import { lbeta } from '../beta/lbeta';
 import { pbeta } from '../beta/pbeta';
 import {
   M_LN2,
@@ -90,7 +89,7 @@ export function pt(
       let lval;
       lval =
         -0.5 * n * (2 * log(fabs(x)) - log(n)) -
-        internal_lbeta(0.5 * n, 0.5) -
+        lbeta(0.5 * n, 0.5) -
         log(0.5 * n);
       val = log_p ? lval : exp(lval);
     } else {

@@ -21,28 +21,25 @@ import * as debug from 'debug';
 import { ML_ERR_return_NAN, R_Q_P01_boundaries } from '../common/_general';
 
 import { R_DT_Clog } from '../exp/expm1';
-import { map } from '../r-func';
 
 const { pow } = Math;
 const { isNaN: ISNAN, POSITIVE_INFINITY: ML_POSINF } = Number;
 const printer = debug('qweibull');
 
-export function qweibull<T>(
-  pp: T,
+export function qweibull(
+  p: number,
   shape: number,
   scale: number = 1,
   lowerTail: boolean = true,
   logP: boolean = false
-): T {
-  return map(pp)(p => {
-    if (ISNAN(p) || ISNAN(shape) || ISNAN(scale)) return p + shape + scale;
+): number {
+  if (ISNAN(p) || ISNAN(shape) || ISNAN(scale)) return p + shape + scale;
 
-    if (shape <= 0 || scale <= 0) return ML_ERR_return_NAN(printer);
+  if (shape <= 0 || scale <= 0) return ML_ERR_return_NAN(printer);
 
-    let rc = R_Q_P01_boundaries(lowerTail, logP, p, 0, ML_POSINF);
-    if (rc !== undefined) {
-      return rc;
-    }
-    return scale * pow(-R_DT_Clog(lowerTail, logP, p), 1 / shape);
-  }) as any;
+  let rc = R_Q_P01_boundaries(lowerTail, logP, p, 0, ML_POSINF);
+  if (rc !== undefined) {
+    return rc;
+  }
+  return scale * pow(-R_DT_Clog(lowerTail, logP, p), 1 / shape);
 }

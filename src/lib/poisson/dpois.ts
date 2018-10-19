@@ -27,9 +27,8 @@ import {
   R_D_nonint_check
 } from '../common/_general';
 
-import { bd0 } from '../deviance'; 
-import { lgammafn } from '../gamma/lgamma_fn';
-import { map } from '../r-func';
+import { bd0 } from '../deviance';
+import { lgammafn_sign as lgammafn } from '../gamma/lgammafn_sign';
 import { stirlerr } from '../stirling';
 
 const { round: R_forceint, log, PI } = Math;
@@ -52,31 +51,31 @@ export function dpois_raw(
   if (lambda < x * DBL_MIN)
     return R_D_exp(give_log, -lambda + x * log(lambda) - lgammafn(x + 1));
 
-    return R_D_fexp(give_log, M_2PI * x, -stirlerr(x) - bd0(x, lambda));
+  return R_D_fexp(give_log, M_2PI * x, -stirlerr(x) - bd0(x, lambda));
 }
 
 export function dpois(
-  _x: number | number[],
+  x: number,
   lambda: number,
   give_log: boolean = false
-): number | number[] {
-  
-  return map(_x)(x => {
-    if (ISNAN(x) || ISNAN(lambda)) {
-      return x + lambda;
-    }
+): number {
 
-    if (lambda < 0) {
-      return ML_ERR_return_NAN(printer);
-    }
-    let rc = R_D_nonint_check(give_log, x, printer);
-    if (rc !== undefined) {
-      return rc;
-    }
-    if (x < 0 || !R_FINITE(x)) {
-      return R_D__0(give_log);
-    }
-    x = R_forceint(x);
-    return dpois_raw(x, lambda, give_log);
-  });
+
+  if (ISNAN(x) || ISNAN(lambda)) {
+    return x + lambda;
+  }
+
+  if (lambda < 0) {
+    return ML_ERR_return_NAN(printer);
+  }
+  let rc = R_D_nonint_check(give_log, x, printer);
+  if (rc !== undefined) {
+    return rc;
+  }
+  if (x < 0 || !R_FINITE(x)) {
+    return R_D__0(give_log);
+  }
+  x = R_forceint(x);
+  return dpois_raw(x, lambda, give_log);
+
 }

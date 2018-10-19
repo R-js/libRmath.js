@@ -24,19 +24,17 @@ const { floor, max: fmax2 } = Math;
 import * as debug from 'debug';
 import { NumberW } from '../common/toms708';
 import { pgamma } from '../gamma/pgamma';
-import { map } from '../r-func';
 
 const printer = debug('ppois');
 
-export function ppois<T>(
-  _x: T,
+export function ppois(
+  x: number,
   lambda: number,
   lowerTail: boolean = true,
   logP: boolean = false,
   //normal: INormal //pass it on to "pgamma"->"pgamma_raw"->"ppois_asymp"->(dpnorm??)->("normal.pnorm")  
-): T {
+): number {
 
-  return map(_x)(x => {
     if (ISNAN(x) || ISNAN(lambda)) return x + lambda;
 
     if (lambda < 0) {
@@ -48,7 +46,6 @@ export function ppois<T>(
     x = floor(x + 1e-7);
 
     return pgamma(lambda, x + 1, 1, !lowerTail, logP);
-  }) as any;
 
 }
 

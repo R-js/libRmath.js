@@ -24,7 +24,6 @@ import {
   R_pow_di
 } from '../common/_general';
 import { NumberW } from '../common/toms708';
-import { map, multiplexer } from '../r-func';
 
 const printer = debug('dpsifn');
 
@@ -463,112 +462,108 @@ function dpsifn(
 */
 const print_psigamma = debug('psigamma');
 
-export function psigamma(_x: number | number[], _deriv: number | number[] = 0): number | number[] {
+export function psigamma(x: number, deriv: number): number {
   /* n-th derivative of psi(x);  e.g., psigamma(x,0) === digamma(x) */
   // double
   let ans = [0];
   // ints
   let nz = new NumberW();
   let ierr = new NumberW();
-  return multiplexer(_x, _deriv)((x, deriv) => {
-    let k;
-    let n;
-    nz.val = 0;
-    ierr.val = 0;
-    ans[0] = 0;
 
-    if (ISNAN(x)) return x;
-    deriv = R_forceint(deriv);
-    n = deriv >> 0;
-    if (n > n_max) {
-      print_psigamma('"deriv = %d > %d (= n_max)', n, n_max);
-      return ML_NAN;
-    }
-    dpsifn(x, n, 1, 1, ans, nz, ierr);
-    if (ierr.val !== 0) {
-      return ML_NAN;
-    }
+  let k;
+  let n;
+  nz.val = 0;
+  ierr.val = 0;
+  ans[0] = 0;
 
-    /* Now, ans ===  A := (-1)^(n+1) / gamma(n+1) * psi(n, x) */
-    ans[0] = -ans[0]; /* = (-1)^(0+1) * gamma(0+1) * A */
-    for (k = 1; k <= n; k++) ans[0] *= -k; /* = (-1)^(k+1) * gamma(k+1) * A */
-    return ans[0]; /* = psi(n, x) */
-  });
+  if (ISNAN(x)) return x;
+  deriv = R_forceint(deriv);
+  n = deriv >> 0;
+  if (n > n_max) {
+    print_psigamma('"deriv = %d > %d (= n_max)', n, n_max);
+    return ML_NAN;
+  }
+  dpsifn(x, n, 1, 1, ans, nz, ierr);
+  if (ierr.val !== 0) {
+    return ML_NAN;
+  }
+
+  /* Now, ans ===  A := (-1)^(n+1) / gamma(n+1) * psi(n, x) */
+  ans[0] = -ans[0]; /* = (-1)^(0+1) * gamma(0+1) * A */
+  for (k = 1; k <= n; k++) ans[0] *= -k; /* = (-1)^(k+1) * gamma(k+1) * A */
+  return ans[0]; /* = psi(n, x) */
+
 }
 
 //https://commons.wikimedia.org/wiki/File:Digamma_function_plot.png
 
-export function digamma(_x: number | number): number | number[] {
+export function digamma(x: number): number {
   let ans = [0];
   let nz = new NumberW();
   let ierr = new NumberW();
 
-  return map(_x)(x => {
-    ans[0] = 0;
-    nz.val = 0;
-    ierr.val = 0;
-    if (ISNAN(x)) return x;
-    dpsifn(x, 0, 1, 1, ans, nz, ierr);
-    if (ierr.val !== 0) {
-      return ML_NAN;
-    }
-    return -ans[0];
-  });
+  ans[0] = 0;
+  nz.val = 0;
+  ierr.val = 0;
+  if (ISNAN(x)) return x;
+  dpsifn(x, 0, 1, 1, ans, nz, ierr);
+  if (ierr.val !== 0) {
+    return ML_NAN;
+  }
+  return -ans[0];
 }
 
 //https://commons.wikimedia.org/wiki/Category:Polygamma_function#/media/File:Trigamma_function_plot.png
 
-export function trigamma(_x: number | number[]): number | number[] {
+export function trigamma(x: number): number {
   let ans = [0];
   let nz = new NumberW(0);
   let ierr = new NumberW(0);
 
-  return map(_x)(x => {
-    ans[0] = 0;
-    nz.val = 0;
-    ierr.val = 0;
 
-    if (ISNAN(x)) return x;
-    dpsifn(x, 1, 1, 1, ans, nz, ierr);
-    if (ierr.val !== 0) {
-      return ML_NAN;
-    }
-    return ans[0];
-  });
+  ans[0] = 0;
+  nz.val = 0;
+  ierr.val = 0;
+
+  if (ISNAN(x)) return x;
+  dpsifn(x, 1, 1, 1, ans, nz, ierr);
+  if (ierr.val !== 0) {
+    return ML_NAN;
+  }
+  return ans[0];
+
 }
 //https://commons.wikimedia.org/wiki/Category:Polygamma_function#/media/File:Tetragamma_function_plot.png
-export function tetragamma(_x: number | number[]): number | number[] {
+export function tetragamma(x: number): number {
   let ans = [0];
   let nz = new NumberW();
   let ierr = new NumberW();
-  return map(_x)(x => {
-    ans[0] = 0;
-    nz.val = 0;
-    ierr.val = 0;
 
-    if (ISNAN(x)) return x;
-    dpsifn(x, 2, 1, 1, ans, nz, ierr);
-    if (ierr.val !== 0) {
-      return ML_NAN;
-    }
-    return -2.0 * ans[0];
-  });
+  ans[0] = 0;
+  nz.val = 0;
+  ierr.val = 0;
+
+  if (ISNAN(x)) return x;
+  dpsifn(x, 2, 1, 1, ans, nz, ierr);
+  if (ierr.val !== 0) {
+    return ML_NAN;
+  }
+  return -2.0 * ans[0];
 }
 // replaced by psigamma function
-export function pentagamma(_x: number): number {
+export function pentagamma(x: number): number {
   let ans = [0];
   let nz = new NumberW();
   let ierr = new NumberW();
-  return map(_x)(x => {
-    ans[0] = 0;
-    nz.val = 0;
-    ierr.val = 0;
 
-    if (ISNAN(x)) return x;
-    dpsifn(x, 3, 1, 1, ans, nz, ierr);
-    if (ierr.val !== 0) {
-      return ML_NAN;
-    }
-    return 6.0 * ans[0];
-  });
+  ans[0] = 0;
+  nz.val = 0;
+  ierr.val = 0;
+
+  if (ISNAN(x)) return x;
+  dpsifn(x, 3, 1, 1, ans, nz, ierr);
+  if (ierr.val !== 0) {
+    return ML_NAN;
+  }
+  return 6.0 * ans[0];
 }

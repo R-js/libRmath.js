@@ -17,7 +17,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import * as debug from 'debug';
 import { ML_ERR_return_NAN, R_DT_0, R_DT_1 } from '../common/_general';
 import { NumberW, Toms708 } from '../common/toms708';
-import { map } from '../r-func';
 
 const { isNaN: ISNAN, isFinite: R_FINITE } = Number;
 const { LN2: M_LN2, log } = Math;
@@ -92,30 +91,30 @@ export function pbeta_raw(
 
 const printer_pbeta = debug('pbeta');
 
-export function pbeta<T>(
-  q: T,
+export function pbeta(
+  q: number,
   a: number,
   b: number,
   lowerTail: boolean = true,
   logP: boolean = false
-): T {
-  return map(q)(x => {
+): number {
+  
     printer_pbeta(
       'pbeta(q=%d, a=%d, b=%d, l.t=%s, ln=%s)',
-      x,
+      q,
       a,
       b,
       lowerTail,
       logP
     );
-    if (ISNAN(x) || ISNAN(a) || ISNAN(b)) return NaN;
+    if (ISNAN(q) || ISNAN(a) || ISNAN(b)) return NaN;
 
     if (a < 0 || b < 0) return ML_ERR_return_NAN(printer_pbeta);
     // allowing a==0 and b==0  <==> treat as one- or two-point mass
 
-    if (x <= 0) return R_DT_0(lowerTail, logP);
-    if (x >= 1) return R_DT_1(lowerTail, logP);
+    if (q <= 0) return R_DT_0(lowerTail, logP);
+    if (q >= 1) return R_DT_1(lowerTail, logP);
 
-    return pbeta_raw(x, a, b, lowerTail, logP);
-  }) as any;
+    return pbeta_raw(q, a, b, lowerTail, logP);
+ 
 }

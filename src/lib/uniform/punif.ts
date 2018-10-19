@@ -19,38 +19,39 @@ import * as debug from 'debug';
 const printer = debug('punif');
 
 import { ML_ERR_return_NAN, R_D_val, R_DT_0, R_DT_1 } from '../common/_general';
-import { map } from '../r-func';
 
 const { isNaN: ISNAN, isFinite: R_FINITE } = Number;
 
 export function punif(
-  q: number | number[],
+  q: number ,
   min: number = 0,
   max: number = 1,
   lowerTail: boolean = true,
   logP: boolean = false
-): number | number[] {
-  return map(q)(fx => {
-    if (ISNAN(fx) || ISNAN(min) || ISNAN(max)) {
-      return fx + min + max;
+): number  {
+    if (ISNAN(q) || ISNAN(min) || ISNAN(max)) {
+      return q + min + max;
     }
 
     if (max < min) {
       return ML_ERR_return_NAN(printer);
     }
+
     if (!R_FINITE(min) || !R_FINITE(max)) {
       return ML_ERR_return_NAN(printer);
     }
 
-    if (fx >= max) {
+    if (q >= max) {
       return R_DT_1(lowerTail, logP);
     }
-    if (fx <= min) {
+
+    if (q <= min) {
       return R_DT_0(lowerTail, logP);
     }
+
     if (lowerTail) {
-      return R_D_val(logP, (fx - min) / (max - min));
+      return R_D_val(logP, (q - min) / (max - min));
     }
-    return R_D_val(logP, (max - fx) / (max - min));
-  }) as any; 
+    
+    return R_D_val(logP, (max - q) / (max - min)); 
 }

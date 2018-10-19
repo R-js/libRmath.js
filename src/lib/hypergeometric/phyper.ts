@@ -18,7 +18,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import * as debug from 'debug';
 import { ML_ERR_return_NAN, R_D_Lval, R_DT_0, R_DT_1 } from '../common/_general';
 import { R_DT_log } from '../exp/expm1';
-import { map } from '../r-func';
 import { dhyper } from './dhyper';
 
 const { floor, round: R_forceint, log1p } = Math;
@@ -65,17 +64,16 @@ function pdhyper(
 */
 const printer_phyper = debug('phyper');
 
-export function phyper<T>(
-  xx: T,
+export function phyper(
+  x: number,
   nr: number,
   nb: number,
   nn: number,
   lowerTail: boolean = true,
   logP: boolean = false
-): T {
+): number {
   /* Sample of  n balls from  NR red  and	 NB black ones;	 x are red */
 
-  return map(xx)(x => {
     let d: number;
     let pd: number;
     let lower_tail = lowerTail; //copy it gets changed
@@ -112,6 +110,6 @@ export function phyper<T>(
     return log_p
       ? R_DT_log(lower_tail, log_p, d + pd)
       : R_D_Lval(lower_tail, d * pd);
-  }) as any;
+
 
 }

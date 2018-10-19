@@ -1,7 +1,5 @@
 {
     "author": "Jacob K.F. Bogers",
-    "browser:disabled": "./dist/client/bundle.js",
-    "browser:doc": "https://github.com/defunctzombie/package-browser-field-spec",
     "bugs": {
         "url": "https://github.com/jacobbogers/libRmath.js/issues"
     },
@@ -101,9 +99,7 @@
         "wilcoxon rank sum statistic distribution"
     ],
     "license": "GPL-3.0",
-    "main": "dist/lib/libR.js",
-    "module:disabled": "",
-    "module:doc": "https://github.com/dherman/defense-of-dot-js/blob/master/proposal.md",
+    "main": "dist/lib/libR.min.js",
     "name": "lib-r-math.js",
     "repository": {
         "type": "git",
@@ -116,35 +112,8 @@
         "lint": "tslint -c tslint.json -p .",
         "lint:fix": "npm run lint -- --fix",
         "lint:report": "npm run lint -- -o .lint-report.txt --force && code .lint-report.txt",
-        "post-test": "echo posttest",
-        "postinstall": "echo postinstall",
-        "postrestart": "echo postrestart",
-        "postshrinkwrap": "echo postshrinkwrap",
-        "poststart": "echo poststart",
-        "poststop": "echo poststop",
-        "postuninstall": "echo postuninstall",
-        "postversion": "echo postversion",
-        "pre-test": "echo prestest",
-        "preinstall": "echo install",
-        "prepare": "echo 'prepare'",
-        "prepublish": "echo 'prepublish'",
-        "prepublishOnly": "echo prepublishOnly",
-        "prerestart": "echo prerestart",
-        "preshrinkwrap": "echo preshrinkwrap",
-        "prestart": "echo prestart",
-        "prestop": "echo prestop",
-        "codecov": "codecov",
-        "preuninstall": "echo preuninstall",
-        "preversion": "echo preversion",
-        "publish": "echo publish",
         "report": "opn coverage/lcov-report/index.html",
-        "restart": "echo restart",
-        "shrinkwrap": "echo shrinkwrap",
-        "start": "echo start",
-        "stop": "echo stop",
-        "test": "cross-env-shell NODE_ENV=test TS_NODE_DISABLE_WARNINGS=true nyc mocha",
-        "uninstall": "echo uninstall",
-        "version": "echo version"
+        "test": "cross-env-shell NODE_ENV=test TS_NODE_DISABLE_WARNINGS=true nyc mocha"
     },
     "types": "dist/src/lib/index.d.ts",
     "version": "1.0.83"

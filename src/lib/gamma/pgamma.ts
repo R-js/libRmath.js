@@ -31,7 +31,7 @@ import { R_Log1_Exp } from '../exp/expm1';
 import { dnorm4 as dnorm } from '../normal/dnorm';
 import { pnorm5 as pnorm } from '../normal/pnorm';
 import { dpois_raw } from '../poisson/dpois';
-import { lgammafn } from './lgamma_fn';
+import { lgammafn_sign as lgammafn } from './lgammafn_sign';
 //import { logspace_add } from './logspace-add';
 
 const {

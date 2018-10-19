@@ -20,7 +20,6 @@ const { isFinite } = Number;
 
 const div = arrayrify((a: number, b: number) => a / b);
 const { lgamma } = special;
-const add = arrayrify((a: number, b: number) => a + b);
 const log = arrayrify(Math.log);
 
 export interface IdmultinomOptions {
@@ -76,7 +75,7 @@ export function dmultinom(
   if (errMsg.length) {
     throw new Error(errMsg.join('\n'));
   }
-  const s1 = lgamma(add(x, 1));
+  const s1 = x.map(v => v + 1).map(v => lgamma(v)); //(x.map(v=>v+1));
   const s2 = log(prob);
   const s3 = x.map((v, i) => v * s2[i] - s1[i]);
 

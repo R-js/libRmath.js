@@ -18,26 +18,25 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import * as debug from 'debug';
 import { ML_ERR_return_NAN } from '../common/_general';
+import { randomGenHelper } from '../r-func';
 import { IRNG } from '../rng';
 
 const { isFinite: R_FINITE } = Number;
 const printer = debug('runif');
 
-export function runif(
+export function runif(n: number|number[], min = 0, max = 1, u: IRNG) {
+  return randomGenHelper(n, runifOne, min, max, u)
+}
+
+export function runifOne(
   n: number = 1,
   min: number = 0,
   max: number = 1,
   u: IRNG
-): number | number[] {
-
+): number {
   if (!(R_FINITE(min) && R_FINITE(max) && max > min)) {
     return ML_ERR_return_NAN(printer);
   }
-
-  let result = new Array(n).fill(0).map(() => {
-    const s = u.unif_rand() as number;
-    return (max - min) * s + min;
-  });
-
-  return result.length === 1 ? result[0] : result;
+  const s = u.unif_rand() as number;
+  return (max - min) * s + min;
 }

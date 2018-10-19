@@ -29,7 +29,7 @@ import {
 } from '../common/_general';
 
 import { R_DT_val } from '../common/_general';
-import { lgammafn } from '../gamma/lgamma_fn';
+import { lgammafn_sign as lgammafn } from '../gamma/lgammafn_sign';
 
 const { isNaN: ISNAN, isFinite: R_FINITE } = Number;
 const { exp, sqrt, log, LN2: M_LN2 } = Math;

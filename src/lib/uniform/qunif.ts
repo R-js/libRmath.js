@@ -20,22 +20,21 @@ import { ML_ERR_return_NAN, R_Q_P01_check } from '../common/_general';
 
 import * as debug from 'debug';
 import { R_DT_qIv } from '../exp/expm1';
-import { map } from '../r-func';
 
 const { isNaN: ISNAN, isFinite: R_FINITE } = Number;
 const printer = debug('qunif');
 
 export function qunif(
-  p: number | number[],
+  p: number,
   min: number = 0,
   max: number = 1,
   lowerTail: boolean = true,
   logP: boolean = false
-): number | number[] {
-  return map(p)(fp => {
-    if (ISNAN(fp) || ISNAN(min) || ISNAN(max)) return NaN;
+): number {
+  
+    if (ISNAN(p) || ISNAN(min) || ISNAN(max)) return NaN;
 
-    let rc = R_Q_P01_check(logP, fp);
+    let rc = R_Q_P01_check(logP, p);
     if (rc !== undefined) {
       return rc;
     }
@@ -43,6 +42,5 @@ export function qunif(
     if (max < min) return ML_ERR_return_NAN(printer);
     if (max === min) return min;
 
-    return min + R_DT_qIv(lowerTail, logP, fp) * (max - min);
-  }) as any;
+    return min + R_DT_qIv(lowerTail, logP, p) * (max - min);
 }

@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { M_LN_SQRT_2PI } from '../common/_general';
-import { lgammafn } from '../gamma/lgamma_fn';
+import { lgammafn_sign as lgammafn } from '../gamma/lgammafn_sign';
 
 const { trunc , log } = Math;
 

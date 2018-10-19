@@ -27,7 +27,7 @@ import {
   R_D_nonint_check
 } from '../common/_general';
 import { bd0 } from '../deviance';
-import { map } from '../r-func';
+
 import { stirlerr } from '../stirling';
 
 const { log, log1p, round: R_forceint } = Math;
@@ -78,14 +78,13 @@ export function dbinom_raw(
   return R_D_exp(give_log, lc - 0.5 * lf);
 }
 
-export function dbinom<T>(
-  xx: T,
+export function dbinom(
+  x: number,
   n: number,
   p: number,
   logX: boolean = false
-): T {
-  return map(xx)(x => {
-    /* NaNs propagated correctly */
+): number {
+     /* NaNs propagated correctly */
     if (ISNAN(x) || ISNAN(n) || ISNAN(p)) return x + n + p;
 
     if (p < 0 || p > 1 || R_D_negInonint(n)) return ML_ERR_return_NAN(printer);
@@ -96,5 +95,4 @@ export function dbinom<T>(
     x = R_forceint(x);
 
     return dbinom_raw(x, n, p, 1 - p, logX);
-  }) as any;
 }

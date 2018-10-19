@@ -20,22 +20,18 @@ import * as debug from 'debug';
 
 import { ML_ERR_return_NAN, R_D__0 } from '../common/_general';
 import { internal_choose, internal_lchoose } from '../common/choose';
-import { map } from '../r-func';
 import { cwilcox } from './cwilcox';
 import { WilcoxonCache } from './WilcoxonCache';
-
 const { round: R_forceint, abs: fabs, log } = Math;
 const { isNaN: ISNAN } = Number;
-
 const printer_dwilcox = debug('dwilcox');
 
-
-export function dwilcox<T>(
-  xx: T,
+export function dwilcox(
+  x: number,
   m: number,
   n: number,
   giveLog: boolean = false
-): T {
+): number {
   // outside the potential loop
 
   m = R_forceint(m);
@@ -43,8 +39,6 @@ export function dwilcox<T>(
 
   //const nm = m * n;
  
-  return map(xx)(x => {
-   
     const w = new WilcoxonCache();
     //#ifdef IEEE_754
     /* NaNs propagated correctly */
@@ -76,5 +70,4 @@ export function dwilcox<T>(
     return giveLog
       ? log(cwilcox(x, m, n, w)) - internal_lchoose(m + n, n)
       : cwilcox(x, m, n, w) / internal_choose(m + n, n);
-  }) as any;
 }

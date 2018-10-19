@@ -18,7 +18,7 @@ import * as debug from 'debug';
 
 import { ME, ML_ERR_return_NAN, ML_ERROR, R_P_bounds_01 } from '../common/_general';
 
-import { lgammafn } from '../gamma/lgamma_fn';
+import { lgammafn_sign } from '../gamma/lgammafn_sign';
 
 import { NumberW, Toms708 } from '../common/toms708';
 
@@ -72,14 +72,14 @@ function pnbeta_raw(
 
   x0 = floor(fmax2(c - 7 * sqrt(c), 0));
   a0 = a + x0;
-  lbeta = lgammafn(a0) + lgammafn(b) - lgammafn(a0 + b);
+  lbeta = lgammafn_sign(a0) + lgammafn_sign(b) - lgammafn_sign(a0 + b);
   /* temp = pbeta_raw(x, a0, b, TRUE, FALSE), but using (x, o_x): */
   Toms708.bratio(a0, b, x, o_x, temp, tmp_c, ierr);
 
   gx = exp(
     a0 * log(x) + b * (x < 0.5 ? log1p(-x) : log(o_x)) - lbeta - log(a0)
   );
-  if (a0 > a) q = exp(-c + x0 * log(c) - lgammafn(x0 + 1));
+  if (a0 > a) q = exp(-c + x0 * log(c) - lgammafn_sign(x0 + 1));
   else q = exp(-c);
 
   sumq = 1 - q;
@@ -98,8 +98,8 @@ function pnbeta_raw(
     errbd = (temp.val - gx) * sumq;
   } while (errbd > errmax && j < itrmax + x0);
 
-  if (errbd > errmax)  ML_ERROR(ME.ME_PRECISION, 'pnbeta', printer);
-  if (j >= itrmax + x0)  ML_ERROR(ME.ME_NOCONV, 'pnbeta', printer);
+  if (errbd > errmax) ML_ERROR(ME.ME_PRECISION, 'pnbeta', printer);
+  if (j >= itrmax + x0) ML_ERROR(ME.ME_NOCONV, 'pnbeta', printer);
 
   return ans;
 }
@@ -127,26 +127,21 @@ export function pnbeta2(
   }
 }
 
-export function pnbeta<T>(
-  _x: T,
+export function pnbeta(
+  x: number,
   a: number,
   b: number,
   ncp: number,
   lower_tail: boolean,
   log_p: boolean
-): T {
+): number {
 
-  const fa: number[] = Array.isArray(_x) ? _x : [_x] as any;
+  if (ISNAN(x) || ISNAN(a) || ISNAN(b) || ISNAN(ncp)) return x + a + b + ncp;
 
-  const result = fa.map(x => {
-    if (ISNAN(x) || ISNAN(a) || ISNAN(b) || ISNAN(ncp)) return x + a + b + ncp;
+  let rc = R_P_bounds_01(lower_tail, log_p, x, 0, 1);
+  if (rc !== undefined) {
+    return rc;
+  }
+  return pnbeta2(x, 1 - x, a, b, ncp, lower_tail, log_p);
 
-    let rc = R_P_bounds_01(lower_tail, log_p, x, 0, 1);
-    if (rc !== undefined) {
-      return rc;
-    }
-    return pnbeta2(x, 1 - x, a, b, ncp, lower_tail, log_p);
-  });
-
-  return result.length === 1 ? result[0] : result as any;
 }

@@ -18,27 +18,34 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import * as debug from 'debug';
 
 import { ML_ERR_return_NAN } from '../common/_general';
-import { possibleScalar } from '../r-func';
+import { randomGenHelper } from '../r-func';
 import { IRNG } from '../rng';
 
 const { log, pow } = Math;
 const { isFinite: R_FINITE } = Number;
 const printer = debug('rweibull');
 
-export function rweibull(
-  n: number,
+export  function rweibull(
+  n: number|number[],
   shape: number,
   scale: number = 1,
   rng: IRNG
-): number | number[] {
-  const result = new Array(n).fill(0).map(() => {
-    if (!R_FINITE(shape) || !R_FINITE(scale) || shape <= 0 || scale <= 0) {
-      if (scale === 0) return 0;
-      /* else */
-      return ML_ERR_return_NAN(printer);
-    }
+){
+  return randomGenHelper(n, rweibullOne, shape, scale, rng)
+}
 
-    return scale * pow(-log((rng.unif_rand() as number)), 1.0 / shape);
-  });
-  return possibleScalar(result);
+export function rweibullOne(
+  shape: number,
+  scale: number = 1,
+  rng: IRNG
+): number {
+
+  if (!R_FINITE(shape) || !R_FINITE(scale) || shape <= 0 || scale <= 0) {
+    if (scale === 0) return 0;
+    /* else */
+    return ML_ERR_return_NAN(printer);
+  }
+
+  return scale * pow(-log((rng.unif_rand() as number)), 1.0 / shape);
+
 }

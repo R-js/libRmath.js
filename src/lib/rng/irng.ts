@@ -15,7 +15,6 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { map, seq } from '../r-func';
 import { IRNGType } from './irng-type';
 
 export type MessageType = 'INIT';
@@ -54,7 +53,7 @@ export abstract class IRNG {
   public abstract set seed(_seed: number[]);
   public unif_rand(n: number = 1): number | number[] {
     n = (!n || n < 0) ? 1 : n;
-    return map(seq()()(n))(() => this.internal_unif_rand());
+    return Array.from({length:n}).map(() => this.internal_unif_rand());
   }
 
   protected abstract internal_unif_rand(): number;

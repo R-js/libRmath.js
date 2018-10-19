@@ -17,7 +17,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import * as debug from 'debug';
 import { ML_ERR_return_NAN, R_DT_0 } from '../common/_general';
 import { pnorm5 as pnorm } from '../normal/pnorm';
-import { map } from '../r-func';
 
 const { isNaN: ISNAN } = Number;
 const { log } = Math;
@@ -32,14 +31,14 @@ export function plnorm(
   log_p: boolean = false
 ): number {
 
-  return map(x)(fx => {
-    if (ISNAN(fx) || ISNAN(meanlog) || ISNAN(sdlog))
-      return fx + meanlog + sdlog;
+ 
+    if (ISNAN(x) || ISNAN(meanlog) || ISNAN(sdlog))
+      return x + meanlog + sdlog;
 
     if (sdlog < 0) return ML_ERR_return_NAN(printer);
 
-    if (fx > 0) return pnorm(log(fx), meanlog, sdlog, lower_tail, log_p);
+    if (x > 0) return pnorm(log(x), meanlog, sdlog, lower_tail, log_p);
     return R_DT_0(lower_tail, log_p);
-  }) as any;
+  
 
 }

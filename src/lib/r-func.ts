@@ -23,13 +23,20 @@ const { isArray } = Array;
 import * as debug from 'debug';
 
 const printer_seq = debug('seq');
-const precision9 = numberPrecision(9);
+
+export const precision9 = numberPrecision(9);
 
 export function isOdd(n: number): boolean {
   if (isFinite(n)) {
-    return floor(n / 2) * 2 < n;
+    return n % 2 !== 0;
   }
   throw new Error(`Not a finite Number: ${n}`);
+}
+
+export function* seq_len( { length, base = 1 }: { length: number, base: number } ): IterableIterator<number> {
+  for (let i = 0; i < length; i++){
+    yield base + i;
+  };
 }
 
 export const seq = (adjust = 0) => (adjustMin = adjust) => (
@@ -60,21 +67,15 @@ export const seq = (adjust = 0) => (adjustMin = adjust) => (
   printer_seq('step:%d', step);
 
   const rc: number[] = [];
-
+  let cursor9;
   do {
-    rc.push(cursor);
+    cursor9 = precision9(cursor);
+    rc.push(cursor9);
     cursor += step;
-  } while (precision9(cursor) >= s && precision9(cursor) <= e && step !== 0);
+  } while (cursor9 >= s && cursor9 <= e && step !== 0);
 
-  return precision9(rc) as any;
+  return rc;
 };
-
-export function selector(...rest: (number | number[])[]): { (val: any, index: number): boolean; } {
-  const flat = flatten(rest);
-  return (val: any, idx: number) => {
-    return flat.indexOf(idx) >= 0;
-  };
-}
 
 export function flatten<T>(...rest: (T | T[])[]): T[] {
   let rc: number[] = [];
@@ -104,7 +105,6 @@ export function multiplex(fn: (...rest: (any | any[])[]) => any) {
   };
 }
 
-
 export function asArray(fn: (...rest: (any | any[])[]) => any) {
 
   return function(...rest: (any | any[])[]) {
@@ -113,14 +113,11 @@ export function asArray(fn: (...rest: (any | any[])[]) => any) {
   };
 }
 
-
-function possibleScalar<T>(x: T[]): T | T[] {
+/*function possibleScalar<T>(x: T[]): T | T[] {
   return x.length === 1 ? x[0] : x;
-}
+}*/
 
-export { possibleScalar };
-
-function coerceToArray(o: any): { key: string | number, val: any }[] {
+/*function coerceToArray(o: any): { key: string | number, val: any }[] {
   if (o === null || o === undefined) {
     throw new TypeError('Illegal argument excepton: input needs to NOT be "null" or "undefined".');
   }
@@ -141,7 +138,7 @@ function coerceToArray(o: any): { key: string | number, val: any }[] {
     return names.map(name => ({ key: name, val: o[name] })) as any;
   }
   throw new Error('unreachable code');
-}
+}*/
 
 
 export function multiplexer(...rest: (any | any[])[]) {
@@ -189,7 +186,7 @@ export function multiplexer(...rest: (any | any[])[]) {
       }
       rc.push(fn(...result));
     }
-    return possibleScalar(rc);
+    return rc;
   };
 }
 
@@ -199,8 +196,8 @@ export function multiplexer(...rest: (any | any[])[]) {
  * 
  */
 
-type ArrayElt = { key: string | number, val: any };
-
+//type ArrayElt = { key: string | number, val: any };
+/*
 function iter<T>(wantMap = true) {
   return function(xx: T): { (fn: (x: any, idx?: number | string) => any): any | any[] } {
     const fx: ArrayElt[] = coerceToArray(xx) as any;
@@ -209,9 +206,9 @@ function iter<T>(wantMap = true) {
     };
   }
 }
-
-export const map = iter();
-export const each = iter(false);
+*/
+//export const map = iter();
+//export const each = iter(false);
 
 export function numberPrecision(prec: number = 6) {
   function convert(x: number): number {
@@ -237,8 +234,8 @@ export function sum(x: number[]) {
   return flatten(x).reduce((sum, v) => (sum += v), 0);
 }
 
-export const div = multiplex((a: number, b) => a / b);
-export const mult = multiplex((a: number, b) => a * b);
+//export const div = multiplex((a: number, b) => a / b);
+//export const mult = multiplex((a: number, b) => a * b);
 
 export interface ISummary {
   N: number; // number of samples in "data"
@@ -326,9 +323,7 @@ export function summary(x: number[]): ISummary {
 
 export function Welch_Satterthwaite(s: number[], n: number[]): number {
 
-  const elts = flatten(map(s)((_s, i) => {
-    return _s * _s / n[i as number];
-  }));
+  const elts = s.map((_s, i) => _s * _s / n[i as number])
   const dom = elts.map((e, i) => e * e / (n[i as number] - 1));
 
   return Math.pow(sum(elts), 2) / sum(dom);

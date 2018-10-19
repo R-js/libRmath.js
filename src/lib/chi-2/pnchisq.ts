@@ -29,7 +29,7 @@ import {
 } from '../common/_general';
 
 import { R_Log1_Exp } from '../exp/expm1';
-import { lgammafn } from '../gamma/lgamma_fn';
+import { lgammafn_sign as lgammafn } from '../gamma/lgammafn_sign';
 import { logspace_add } from '../gamma/logspace-add';
 import { pchisq } from './pchisq';
 

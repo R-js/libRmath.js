@@ -20,7 +20,7 @@ import * as debug from 'debug';
 import { ML_ERR_return_NAN, R_Q_P01_boundaries } from '../common/_general';
 
 import { R_DT_qIv } from '../exp/expm1';
-import { map } from '../r-func';
+
 import { pnbeta } from './pnbeta';
 
 const {
@@ -34,18 +34,17 @@ const { min: fmin2 } = Math;
 
 const printer_qnbeta = debug('qnbeta');
 
-export function qnbeta<T>(
-  _p: T,
+export function qnbeta(
+  p: number,
   a: number,
   b: number,
   ncp: number,
   lower_tail: boolean,
   log_p: boolean
-): T {
+): number {
   const accu = 1e-15;
   const Eps = 1e-14; /* must be > accu */
 
-  return map(_p)(p => {
     let ux;
     let lx;
     let nx;
@@ -87,5 +86,4 @@ export function qnbeta<T>(
     } while ((ux - lx) / nx > accu);
 
     return 0.5 * (ux + lx);
-  }) as any;
 }

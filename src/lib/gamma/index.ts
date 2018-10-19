@@ -27,7 +27,7 @@ import { Inversion, IRNGNormal } from '../rng/normal';
 
 //special
 import { gammafn } from './gamma_fn';
-import { lgammafn } from './lgamma_fn';
+import { lgammafn_sign as lgammafn } from './lgammafn_sign';
 import {
   digamma,
   pentagamma,

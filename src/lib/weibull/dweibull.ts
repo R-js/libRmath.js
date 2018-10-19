@@ -19,7 +19,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import * as debug from 'debug';
 
 import { ML_ERR_return_NAN, R_D__0 } from '../common/_general';
-import { map } from '../r-func';
 
 const { pow, log, exp } = Math;
 const {
@@ -29,25 +28,23 @@ const {
 } = Number;
 const printer = debug('dweilbull');
 
-export function dweibull<T>(
-  xx: T,
+export function dweibull(
+  x: number,
   shape: number,
   scale: number = 1,
   give_log: boolean = false
-): T {
-  return map(xx)(x => {
-    if (ISNAN(x) || ISNAN(shape) || ISNAN(scale)) return x + shape + scale;
-    if (shape <= 0 || scale <= 0) return ML_ERR_return_NAN(printer);
+): number {
+  if (ISNAN(x) || ISNAN(shape) || ISNAN(scale)) return x + shape + scale;
+  if (shape <= 0 || scale <= 0) return ML_ERR_return_NAN(printer);
 
-    if (x < 0) return R_D__0(give_log);
-    if (!R_FINITE(x)) return R_D__0(give_log);
-    /* need to handle x == 0 separately */
-    if (x === 0 && shape < 1) return ML_POSINF;
-    let tmp1 = pow(x / scale, shape - 1);
-    let tmp2 = tmp1 * (x / scale);
-    /* These are incorrect if tmp1 == 0 */
-    return give_log
-      ? -tmp2 + log(shape * tmp1 / scale)
-      : shape * tmp1 * exp(-tmp2) / scale;
-  }) as any;
+  if (x < 0) return R_D__0(give_log);
+  if (!R_FINITE(x)) return R_D__0(give_log);
+  /* need to handle x == 0 separately */
+  if (x === 0 && shape < 1) return ML_POSINF;
+  let tmp1 = pow(x / scale, shape - 1);
+  let tmp2 = tmp1 * (x / scale);
+  /* These are incorrect if tmp1 == 0 */
+  return give_log
+    ? -tmp2 + log(shape * tmp1 / scale)
+    : shape * tmp1 * exp(-tmp2) / scale;
 }

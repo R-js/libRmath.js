@@ -17,24 +17,22 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { R_D__0 } from '../common/_general';
-import { map } from '../r-func';
 
 const { isNaN: ISNAN } = Number;
 const { log } = Math;
 
 export function dunif(
-  x: number | number[],
+  x: number,
   min: number = 0,
   max: number = 1,
   logP: boolean = false
-): number | number[] {
-  return map(x)(fx => {
-    if (ISNAN(fx) || ISNAN(min) || ISNAN(max)) {
-      return fx + min + max;
+): number {
+    if (ISNAN(x) || ISNAN(min) || ISNAN(max)) {
+      return x + min + max;
     }
-    if (min <= fx && fx <= max) {
+    if (min <= x && x <= max) {
       return logP ? -log(max - min) : 1 / (max - min);
     }
     return R_D__0(logP); // return logP ? ML_NEGINF : 0.0;
-  }) as any;
+
 }
