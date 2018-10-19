@@ -25,7 +25,7 @@ import {
 } from '../common/_general';
 
 import { dbinom_raw } from '../binomial/dbinom';
-import { lgammafn } from '../gamma/lgamma_fn';
+import { lgammafn_sign } from '../gamma/lgammafn_sign';
 
 const printer = debug('dnbinom');
 const { log, round: R_forceint, log1p } = Math;
@@ -135,7 +135,7 @@ export function dnbinom_mu<T>(
       p = size < mu ? log(size / (1 + size / mu)) : log(mu / (1 + mu / size));
       return R_D_exp(
         give_log,
-        x * p - mu - lgammafn(x + 1) + log1p(x * (x - 1) / (2 * size))
+        x * p - mu - lgammafn_sign(x + 1) + log1p(x * (x - 1) / (2 * size))
       );
     }
 

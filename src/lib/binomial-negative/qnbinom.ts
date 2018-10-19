@@ -99,14 +99,13 @@ function do_search(
 
 const printer_qnbinom = debug('qnbinom');
 
-export function qnbinom<T>(
-  pp: T,
+export function qnbinom(
+  p: number,
   size: number,
   prob: number,
   lower_tail: boolean,
   log_p: boolean
-): T {
-  return map(pp)(p => {
+): number {
     let P;
     let Q;
     let mu;
@@ -177,15 +176,15 @@ export function qnbinom<T>(
       } while (oldincr > 1 && incr > y * 1e-15);
       return y;
     }
-  }) as any;
+ 
 }
 
-export function qnbinom_mu<T>(
-  pp: T,
+export function qnbinom_mu(
+  p: number,
   size: number,
   mu: number,
   lower_tail: boolean,
   log_p: boolean
-): T {
-  return qnbinom(pp, size, /* prob = */ size / (size + mu), lower_tail, log_p);
+): number {
+  return qnbinom(p, size, /* prob = */ size / (size + mu), lower_tail, log_p);
 }

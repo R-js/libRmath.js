@@ -27,7 +27,7 @@ import {
 
 import { dbinom_raw } from '../binomial/dbinom';
 
-import { internal_lbeta } from './lbeta';
+import { lbeta  } from './lbeta';
 
 const { log, log1p } = Math;
 const {
@@ -81,7 +81,7 @@ export function dbeta(x: number, a: number, b: number, asLog: boolean): number {
 
   let lval: number;
   if (a <= 2 || b <= 2)
-    lval = (a - 1) * log(x) + (b - 1) * log1p(-x) - internal_lbeta(a, b);
+    lval = (a - 1) * log(x) + (b - 1) * log1p(-x) - lbeta(a, b);
   else {
     lval = log(a + b - 1) + dbinom_raw(a - 1, a + b - 2, x, 1 - x, true);
   }

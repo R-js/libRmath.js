@@ -59,5 +59,5 @@ export function pbinom(
     if (n <= x) return R_DT_1(lower_tail, log_p);
     printer('calling pbeta:(q=%d,a=%d,b=%d, l.t=%s, log=%s', p, x + 1, n - x, !lower_tail, log_p);
     return pbeta(p, x + 1, n - x, !lower_tail, log_p);
-  }) as any;
+ 
 }

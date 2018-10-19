@@ -35,7 +35,6 @@ import { qnbeta as _qnbeta } from './qnbeta';
 //rbeta
 import { rchisq } from '../chi-2/rchisq';
 import { rnchisq } from '../chi-2/rnchisq';
-import { multiplexer } from '../r-func';
 import { Inversion, IRNGNormal } from '../rng/normal';
 import { rbeta as _rbeta } from './rbeta';
 export const special = {
@@ -59,14 +58,14 @@ export function Beta(rng: IRNGNormal = new Inversion()) {
     }
   }
 
-  function pbeta<T>(
-    q: T,
+  function pbeta(
+    q: number,
     shape1: number,
     shape2: number,
     ncp?: number,
     lowerTail: boolean = true,
     logP: boolean = false
-  ): T {
+  ): number {
     if (ncp === undefined || ncp === 0) {
       return _pbeta(q, shape1, shape2, lowerTail, logP);
     } else {
@@ -74,14 +73,14 @@ export function Beta(rng: IRNGNormal = new Inversion()) {
     }
   }
 
-  function qbeta<T>(
-    p: T,
+  function qbeta(
+    p: number,
     shape1: number,
     shape2: number,
     ncp?: number,
     lowerTail: boolean = true,
     logP: boolean = false
-  ): T {
+  ): number {
     if (ncp === undefined) {
       return _qbeta(p, shape1, shape2, lowerTail, logP);
     } else {
@@ -90,18 +89,18 @@ export function Beta(rng: IRNGNormal = new Inversion()) {
   }
 
   function rbeta(
-    n: number,
+    n: number|number[],
     shape1: number,
     shape2: number,
     ncp = 0 // NOTE: normally the default is undefined, here it is '0'.
-  ): number | number[] {
+  ): number[] {
     if (ncp === 0) {
       return _rbeta(n, shape1, shape2, rng);
     } else {
-      let ax = rnchisq(n, 2 * shape1, ncp, rng);
-      let bx = rchisq(n, 2 * shape2, rng);
-      let result = multiplexer(ax, bx)((a, b) => a / (a + b));
-      return result.length === 1 ? result[0] : result;
+      let ar = rnchisq(n, 2 * shape1, ncp, rng);
+      let br = rchisq(n, 2 * shape2, rng);
+      let result = ar.map((a, i) => ({ a, b: br[i] })).map(({ a, b }) => a / (a + b));
+      return result;
     }
   }
 

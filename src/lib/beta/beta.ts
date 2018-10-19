@@ -19,7 +19,7 @@ import * as debug from 'debug';
 
 import { ME, ML_ERR_return_NAN, ML_ERROR } from '../common/_general';
 import { gammafn } from '../gamma/gamma_fn';
-import { internal_lbeta } from './lbeta';
+import { lbeta } from './lbeta';
 
 //const xmin =  - 170.5674972726612;
 const xmax = 171.61447887182298;
@@ -53,7 +53,7 @@ export function beta(a: number, b: number): number {
     //
     return 1 / gammafn(a + b) * gammafn(a) * gammafn(b);
   } else {
-    let val: number = internal_lbeta(a, b);
+    let val: number = lbeta(a, b);
     // underflow to 0 is not harmful per se;  exp(-999) also gives no warning
     //#ifndef IEEE_754
     if (val < lnsml) {
