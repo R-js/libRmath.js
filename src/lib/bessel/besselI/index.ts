@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import * as debug from 'debug';
 import { ME, ML_ERROR } from '../../common/_general';
 import { sinpi } from '../../trigonometry/sinpi';
-import { internal_bessel_k } from '../besselK';
+import { bessel_k } from '../besselK';
 import { I_bessel } from './IBessel';
 
 const { isNaN: ISNAN } = Number;
@@ -50,7 +50,7 @@ export function bessel_i(x: number, alpha: number, expo: boolean = false): numbe
          * this may not be quite optimal (CPU and accuracy wise) */
         return (bessel_i(x, -alpha, expo) +
             ((alpha === na) ? /* sin(pi * alpha) = 0 */ 0 :
-                internal_bessel_k(x, -alpha, expo) *
+                bessel_k(x, -alpha, expo) *
                 ((ize === 1) ? 2. : 2. * exp(-2. * x)) / M_PI * sinpi(-alpha)));
     }
     nb = 1 + trunc(na); /* nb-1 <= alpha < nb */

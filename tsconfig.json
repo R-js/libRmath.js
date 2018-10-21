@@ -15,7 +15,7 @@
         "experimentalDecorators": true,
         "jsx": "react",
         "lib": [
-            "es7",
+            "es2018",
             "dom",
             "esnext.asynciterable"
         ],

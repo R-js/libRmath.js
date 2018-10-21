@@ -36,7 +36,7 @@ import {
   trigamma
 } from './polygamma';
 
-export const special = {
+export default {
   digamma,
   gamma: gammafn,
   lgamma: lgammafn,

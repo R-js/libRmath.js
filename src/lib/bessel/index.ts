@@ -15,17 +15,17 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { bessel_i } from './besselI';
-import { bessel_j } from './besselJ';
-import { bessel_k } from './besselK';
-import { bessel_y } from './besselY';
+import { bessel_i as besselI } from './besselI';
+import { bessel_j as besselJ } from './besselJ';
+import { bessel_k as besselK } from './besselK';
+import { bessel_y as besselY } from './besselY';
 
 
 
-export const special = Object.freeze({
-    besselJ: bessel_j,
-    besselY: bessel_y,
-    besselK: bessel_k,
-    besselI: bessel_i
-});
+export default {  
+    besselJ,
+    besselY,
+    besselK,
+    besselI,
+};
 

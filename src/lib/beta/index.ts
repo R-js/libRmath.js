@@ -36,8 +36,10 @@ import { qnbeta as _qnbeta } from './qnbeta';
 import { rchisq } from '../chi-2/rchisq';
 import { rnchisq } from '../chi-2/rnchisq';
 import { Inversion, IRNGNormal } from '../rng/normal';
+
 import { rbeta as _rbeta } from './rbeta';
-export const special = {
+
+export default {
   beta,
   lbeta
 };

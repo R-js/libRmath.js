@@ -45,10 +45,10 @@ export { hypot, log1p as log1pR } from './log';
 /*
   Class of Special functions collected here.  
 */
-import { special as besselSpecial } from './bessel';
-import { special as betaSpecial } from './beta';
-import { special as chooseSpecial } from './common';
-import { special as gammaSpecial } from './gamma';
+import besselSpecial  from './bessel';
+import betaSpecial  from './beta';
+import chooseSpecial from './common';
+import gammaSpecial  from './gamma';
 
 export const special = Object.freeze({
   ...gammaSpecial,
@@ -58,37 +58,34 @@ export const special = Object.freeze({
 });
 
 import {
-  any,
-  arrayrify,
-  asArray,
   flatten,
-  flatten as c, //alias
-  isOdd,
+  flatten as c,
+  flatten as combine,
   ISummary,
-  multiplex,
   multiplexer,
   numberPrecision,
-  //selector,
+  precision9,
+  Rcycle,
+  seq_len,
+  strTypes,
   sum,
   summary,
+  system, //alias
   Welch_Satterthwaite
 } from './r-func';
 
-export { ISummary };
+export { ISummary, strTypes, system };
 
-export const R = {
-  any,
-  arrayrify,
-  asArray,
-  //asVector,
-  flatten,
-  isOdd,
-  multiplex,
-  multiplexer,
-  numberPrecision,
-  //selector,
-  sum,
-  summary,
+export const r = {
   Welch_Satterthwaite,
+  summary,
+  sum,
+  numberPrecision,
+  multiplexer,
+  Rcycle,
+  flatten,
+  seq_len,
+  precision9,
+  combine,
   c
 };

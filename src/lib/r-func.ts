@@ -16,25 +16,20 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-const { abs, sign, floor, trunc, max } = Math;
-const { isNaN } = Number;
+const { floor, trunc, max } = Math;
 const { isArray } = Array;
 
-import * as debug from 'debug';
-
-const printer_seq = debug('seq');
-
 export const precision9 = numberPrecision(9);
-
+/*
 export function isOdd(n: number): boolean {
   if (isFinite(n)) {
     return n % 2 !== 0;
   }
   throw new Error(`Not a finite Number: ${n}`);
-}
+}*/
 
-export function* seq_len( { length, base = 1 }: { length: number, base: number } ): IterableIterator<number> {
-  for (let i = 0; i < length; i++){
+export function* seq_len({ length, base = 1 }: { length: number, base: number }): IterableIterator<number> {
+  for (let i = 0; i < length; i++) {
     yield base + i;
   };
 }
@@ -44,6 +39,7 @@ export const seq = (adjust = 0) => (adjustMin = adjust) => (
   end?: number,
   step: number = 1
 ): number[] => {
+  const { abs, sign } = Math; 
   if (end === undefined) {
     if (start <= 0 || start === undefined) {
       return []
@@ -64,7 +60,7 @@ export const seq = (adjust = 0) => (adjustMin = adjust) => (
   // so we use precision to have it make sense
   // sometimes rounding effects try something diff
   step = abs(step) * sign(end - start);
-  printer_seq('step:%d', step);
+  
 
   const rc: number[] = [];
   let cursor9;
@@ -75,106 +71,69 @@ export const seq = (adjust = 0) => (adjustMin = adjust) => (
   } while (cursor9 >= s && cursor9 <= e && step !== 0);
 
   return rc;
-};
+}
 
 export function flatten<T>(...rest: (T | T[])[]): T[] {
-  let rc: number[] = [];
+  let rc: T[] = [];
   for (const itm of rest) {
     if (isArray(itm)) {
-      let rc2: number[] = flatten(...itm) as any;
+      let rc2: T[] = flatten(...itm);
       rc.push(...rc2);
       continue;
     }
-    rc.push(itm as any);
+    rc.push(itm);
   }
   return rc as any;
 }
 
-export function arrayrify<T, R>(fn: (x: T, ...rest: any[]) => R) {
-  return function(x: T | T[], ...rest: any[]): R | R[] {
-    const fp = Array.isArray(x) ? x : [x];
-    const result = fp.map(p => fn(p, ...rest));
-    return result.length === 1 ? result[0] : result;
-  };
-}
-
-export function multiplex(fn: (...rest: (any | any[])[]) => any) {
+export function Rcycle(fn: (...rest: (any | any[])[]) => any) {
 
   return function(...rest: (any | any[])[]) {
     return multiplexer(...rest)(fn);
   };
 }
 
-export function asArray(fn: (...rest: (any | any[])[]) => any) {
+export type strTypes = 'boolean'| 'number'| 'undefined'| 'string' | 'null' | 'symbol' | 'array' | 'function' | 'object';
+export type system = boolean | number | undefined | string | null | symbol|  Array<any>;
 
-  return function(...rest: (any | any[])[]) {
-    const ans = fn(...rest);
-    return Array.isArray(ans) ? ans : [ans];
-  };
+function _typeOf(v: any): strTypes {
+   if (v === null) return 'null';
+   if (v instanceof Array) return 'array';
+   if (v instanceof Function) return 'function';
+   const k = typeof v;
+   return k;
 }
 
-/*function possibleScalar<T>(x: T[]): T | T[] {
-  return x.length === 1 ? x[0] : x;
-}*/
 
-/*function coerceToArray(o: any): { key: string | number, val: any }[] {
-  if (o === null || o === undefined) {
-    throw new TypeError('Illegal argument excepton: input needs to NOT be "null" or "undefined".');
-  }
-  if (typeof o === 'number') {
-    return [{ key: 0, val: o }] as any;
-  }
-  if (isArray(o)) {
-    return o.map((x, idx) => ({ key: idx, val: x }) as any);
-  }
-  if (typeof o === 'string') {
-    return o.split('').map((x, idx) => ({ key: idx, val: x } as any));
-  }
-  if (typeof o === 'object') {
-    const names = Object.getOwnPropertyNames(o);
-    if (names.length === 0) {
-      throw new Error('Input argument is an Object with no properties');
-    }
-    return names.map(name => ({ key: name, val: o[name] })) as any;
-  }
-  throw new Error('unreachable code');
-}*/
+export function multiplexer(...rest: (system| system)[]) {
+  //
+  // Analyze
+  //  
+  const analyzed: _t[] = [];
+  type _t = boolean[]| number[]| undefined[]| string[] | null[] | symbol[]|  Array<any>;
+  
+  function  simplePush<T extends _t>(v: T){ analyzed.push(v) };
 
-
-export function multiplexer(...rest: (any | any[])[]) {
-  //analyze  
-  const analyzed: any[] = [];
-
+  const select = {
+    ['undefined'](v: null){ simplePush([v]); },
+    ['null'](v: null){ simplePush([v]); },
+    ['string'](v: string){  simplePush(v.split(''))},
+    ['boolean'](v: boolean){ simplePush([v]) },
+    ['array'](v: _t){ simplePush(v)},
+    ['object'](v: _t){ throw new Error('Sorry, looping over properties not yet supported'); },
+    ['function'](v: _t){ throw new Error('Sorry function arguments are not yet supported'); }
+  };
+  
+  
   for (let k = 0; k < rest.length; k++) {
     const arg = rest[k];
-    // null is special
-    if (arg === null) {
-      analyzed.push([arg]);
-      continue;
-    }
-    if (['undefined', 'boolean', 'number'].indexOf(typeof arg) >= 0) {
-      analyzed.push([arg]);
-      continue;
-    }
-    if (typeof arg === 'string') {
-      analyzed.push(arg.split(''));
-      continue;
-    }
-    if (Array.isArray(arg)) {
-      analyzed.push(arg);
-      continue;
-    }
-    if (arg instanceof Object) {
-      throw new Error('Sorry, looping over properties not yet supported');
-    }
-    if (arg instanceof Function) {
-      throw new Error('Sorry function arguments are not yet supported');
-    }
+    const to = _typeOf(arg);
+    const selector = select[to];
+    selector(arg);
   }//for
   // find the longest array
   const _max = max(...analyzed.map(a => a.length));
-
-  return function(fn: (...rest: any[]) => any): any | any[] {
+  return function(fn: (...rest: system[]) => any): any[] {
     const rc: any[] = [];
 
     for (let k = 0; k < _max; k++) {
@@ -190,52 +149,32 @@ export function multiplexer(...rest: (any | any[])[]) {
   };
 }
 
-/**
- * 
- *  xx can be an array or a "pojo"-object with properties
- * 
- */
-
-//type ArrayElt = { key: string | number, val: any };
-/*
-function iter<T>(wantMap = true) {
-  return function(xx: T): { (fn: (x: any, idx?: number | string) => any): any | any[] } {
-    const fx: ArrayElt[] = coerceToArray(xx) as any;
-    return function(fn: (x: any, idx?: number | string) => any): any | any[] {
-      return wantMap ? possibleScalar(fx.map(o => fn(o.val, o.key))) : fx.forEach(o => fn(o.val, o.key));
-    };
-  }
-}
-*/
-//export const map = iter();
-//export const each = iter(false);
-
 export function numberPrecision(prec: number = 6) {
-  function convert(x: number): number {
-    if (isNaN(x)) {
-      return NaN;
-    }
-    return Number.parseFloat(x.toPrecision(prec));
+
+  let runner: Function;
+  function convert(x?: number | any): number {
+      // try to loop over the object
+      if (typeof x === 'object' && x !== null) {
+          for (const key in x) {
+              //recursion
+              x[key] = runner(x[key]);
+          }
+          return x;
+      }
+      // this is a number!!
+      if (typeof x === 'number') {
+          return Number.parseFloat(x.toPrecision(prec));
+      }
+      //dont change the object, whatever it is
+      return x;
   }
-
-  return arrayrify(convert);
-}
-
-export function any<T>(x: T[]) {
-  return function(fn: any | ((v: T, i?: number) => boolean)): boolean {
-    if (fn instanceof Function) {
-      return x.find(fn) !== undefined;
-    }
-    return x.find(d => d === fn) !== undefined;
-  };
+  runner = Rcycle(convert);
+  return runner;
 }
 
 export function sum(x: number[]) {
   return flatten(x).reduce((sum, v) => (sum += v), 0);
 }
-
-//export const div = multiplex((a: number, b) => a / b);
-//export const mult = multiplex((a: number, b) => a * b);
 
 export interface ISummary {
   N: number; // number of samples in "data"
@@ -266,7 +205,7 @@ export function summary(x: number[]): ISummary {
   if (x.length === 0) {
     throw new Error(`argument Array is empty`);
   }
-  if (any(x)(v => isNaN(v))) {
+  if (x.includes(NaN)) {
     throw new Error(`argument Array has NaNs`);
   }
 

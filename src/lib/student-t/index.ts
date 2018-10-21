@@ -17,7 +17,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { rchisq } from '../chi-2/rchisq';
 import { rnorm } from '../normal/rnorm';
-import { arrayrify, flatten } from '../r-func';
 import { IRNGNormal } from '../rng/normal/inormal-rng';
 import { Inversion } from '../rng/normal/inversion';
 //
@@ -54,40 +53,29 @@ export function StudentT(rng: IRNGNormal = new Inversion()) {
   }
 
   function qt(
-    pp: number,
+    p: number,
     df: number,
     ncp?: number,
     lowerTail: boolean = true,
     logP: boolean = false
   ) {
     if (ncp === undefined) {
-      return _qt(pp, df, lowerTail, logP);
+      return _qt(p, df, lowerTail, logP);
     }
-    return qnt(pp, df, ncp, lowerTail, logP);
+    return qnt(p, df, ncp, lowerTail, logP);
   }
 
   function rt(n: number, df: number, ncp?: number) {
     if (ncp === undefined) {
       return _rt(n, df, rng);
     } else if (Number.isNaN(ncp)) {
-      return new Array(n).fill(NaN);
+      return Array.from({length:n }).fill(NaN);
     } else {
-      // array devision and sqrt
-      const div = arrayrify((a: number, b: number) => a / b);
-      const sqrt = arrayrify(Math.sqrt);
-
+     
       const norm = rnorm(n, ncp, 1, rng); // bleed this first from rng
-      const chisq = flatten(
-        sqrt(
-          div(
-            rchisq(n, df, rng), 
-            df
-          )
-        )
-      );
-
+      const chisq = rchisq(n, df, rng).map(v => v / df).map(Math.sqrt);
       const result = norm.map((n, i) => n / chisq[i]);
-      return result.length === 1 ? result[0] : result;
+      return result;
     }
   }
 
