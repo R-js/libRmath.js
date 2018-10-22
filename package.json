@@ -89,8 +89,8 @@
         "url": "git+https://github.com/jacobbogers/libRmath.js.git"
     },
     "scripts": {
-        "build": "webpack --progress --color --display-error-details --config config/webpack/config",
-        "build:prod": "webpack --progress --color --display-error-details --config config/webpack/config --env=prod",
+        "build": "webpack --progress --color --display-error-details --config config/webpack/config --mode=development",
+        "build:prod": "webpack --progress --color --display-error-details --config config/webpack/config --mode=production",
         "install": "echo install",
         "lint": "tslint -c tslint.json -p .",
         "lint:fix": "npm run lint -- --fix",

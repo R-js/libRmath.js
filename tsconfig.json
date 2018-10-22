@@ -20,7 +20,7 @@
             "esnext.asynciterable"
         ],
         "module": "commonjs",
-        "target": "es2015",
+        "target": "es5",
         "moduleResolution": "node",
         "outDir": "dist",
         "rootDir": "./",

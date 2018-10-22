@@ -5,9 +5,8 @@ const { lint, tsc } = require('./module/rules')
 const { rm, uglify } = require('./plugins');
 const { extensions, /* plugins*/ } = require('./resolve');
 const { wPackN_Ext } = require('./externals');
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 //
-module.exports = function(env) {
+module.exports = function() {
     const configs = [{
         target: "node",
         entry: {
@@ -37,12 +36,8 @@ module.exports = function(env) {
         plugins: [
             rm({ paths: ['lib'] })
         ],
-        optimization: (()=> env==='prod' && ({
-            minimizer: [ new UglifyJsPlugin() ]
-        }))() || {},
         resolve: {
             extensions,
-            //   plugins
         },
     }];
 
