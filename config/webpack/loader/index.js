@@ -1,5 +1,9 @@
-const { resolve } = require('path');
-const merge = require('lodash.merge');
+const {
+    resolve
+} = require('path');
+const {
+    merge
+} = require('lodash');
 
 const proto = {
     tslint: o => ({
@@ -15,8 +19,8 @@ const proto = {
         }, o)
     }),
     atl: o => ({
-        loader: 'awesome-typescript-loader',
-        options: merge({
+        loader: 'ts-loader',
+        options: {}/*merge({
             configFileName: resolve('tsconfig.json'),
             // Babel configuration
             babelOptions: {
@@ -36,7 +40,7 @@ const proto = {
             useBabel: false,
             // Cache output for quicker compilation
             useCache: true
-        }, o)
+        }, o)*/
     })
 };
 

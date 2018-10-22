@@ -1,8 +1,7 @@
 const { resolve } = require('path');
 const webpack = require('webpack');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
-const defaults = require('lodash.defaults');
-const defaultsDeep = require('lodash.defaultsdeep');
+const { defaults, defaultsDeep } = require('lodash');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 
 const plugins = {
@@ -15,7 +14,7 @@ const plugins = {
         })
     ),
     defines: o => new webpack.DefinePlugin(o),
-    uglify: o => new UglifyJsPlugin(defaultsDeep({
+    uglify: () => new UglifyJsPlugin()/*defaultsDeep({
         cache: true,
         include: /\.min\.js$/,
         extractComments: true,
@@ -23,7 +22,7 @@ const plugins = {
         uglifyOptions: {
             compress: true //for now this is enough
         }
-    }, o))
+    }, o))*/
 
 };
 

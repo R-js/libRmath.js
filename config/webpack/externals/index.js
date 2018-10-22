@@ -1,5 +1,5 @@
 const webpackNodeExternals = require('webpack-node-externals');
-const merge = require('lodash.merge');
+const { merge } = require('lodash');
 // collecton of external module filters
 module.exports = {
     wPackN_Ext: (options) => {
