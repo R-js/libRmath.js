@@ -117,6 +117,7 @@ export function multiplexer(...rest: (system| system)[]) {
   const select = {
     ['undefined'](v: null){ simplePush([v]); },
     ['null'](v: null){ simplePush([v]); },
+    ['number'](v: null){ simplePush([v]); },
     ['string'](v: string){  simplePush(v.split(''))},
     ['boolean'](v: boolean){ simplePush([v]) },
     ['array'](v: _t){ simplePush(v)},

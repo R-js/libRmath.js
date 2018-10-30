@@ -95,7 +95,7 @@
         "lint": "tslint -c tslint.json -p .",
         "lint:fix": "npm run lint -- --fix",
         "lint:report": "npm run lint -- -o .lint-report.txt --force && code .lint-report.txt",
-        "report": "opn coverage/lcov-report/index.html",
+        "report": "opn-cli coverage/lcov-report/index.html",
         "test": "cross-env-shell NODE_ENV=test TS_NODE_DISABLE_WARNINGS=true nyc mocha"
     },
     "types": "dist/src/lib/index.d.ts",
