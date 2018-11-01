@@ -1771,10 +1771,10 @@ const { dbeta, pbeta, qbeta, rbeta } = defaultB;
 
 #### `dbeta`
 
+<img src="./dbeta.svg">
+
 The density function of the [Beta distribution](https://en.wikipedia.org/wiki/Beta_distribution).
 See [R doc](http://stat.ethz.ch/R-manual/R-patched/library/stats/html/Beta.html).
-
-<img src="./svg/dbeta.svg">
 
 _typescript decl_
 
