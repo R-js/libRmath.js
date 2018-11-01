@@ -1451,17 +1451,10 @@ These functions are created with the factory method `Normal` taking as optional 
 Usage:
 
 ```javascript
-const libR = require('lib-r-math.js');
-const {
-    Normal,
-    rng: {
-        SuperDuper,
-        normal: { AhrensDieter }
-    }
-} = libR;
+import 'lib-r-math.js';
 
 //specify explicit PRNG's
-const norm1 = Normal(new AhrensDieter(new SuperDuper(1234)));
+const norm1 = Normal(new rng.AhrensDieter(new rng.SuperDuper(1234)));
 
 //OR just go with defaults: "Inversion" and "Mersenne-Twister".
 const norm2 = Normal(); //
@@ -1472,83 +1465,61 @@ const { rnorm, dnorm, pnorm, qnorm } = norm2;
 
 #### `dnorm`
 
-The density function of the [Normal distribution](https://en.wikipedia.org/wiki/Normal_distribution). See [R doc](http://stat.ethz.ch/r-manual/r-patched/library/stats/html/normal.html)
+The density function of the [Normal distribution][wiki-norm]. See [R doc][r-doc-norm].
 
 _typescript decl_
 
 ```typescript
 declare function dnorm(
-  x: number | number[],
+  x: number,
   mu = 0,
-  sigma = 1,
-  asLog = false
-): number | number[];
+  sd = 1,
+  log = false
+): number;
 ```
 
 * `x`:scalar or array of quantiles
 * `mu`: mean, default `0`.
-* `sigma`: standard deviation, default `1`.
-* `asLog`: give result as ln(..) value
+* `sd`: standard deviation, default `1`.
+* `log`: give result as ln(..) value, default `false`
 
 Usage:
 
-```javascript
-const libR = require('lib-r-math.js');
-const {
-    Normal,
-    R: {
-        numberPrecision,
-        seq: _seq,
-        c
-    }
-} = libR;
+```typescript
+import 'lib-r-math.js'
 
 //helpers
-const seq = _seq()();
-const _9 = numberPrecision(9); //9 digits significance
+const _9 = R.numberPrecision(9) //9 digits significance
+const seq = R.sequenceFactory(0)
 
 const { rnorm, dnorm, pnorm, qnorm } = Normal();
 
-const d1 = _9(dnorm(0));
-//0.39894228
+// make dnorm follow R cycling rules
+const Rdnorm = compose(_9, R.Rcycle, dnorm)
 
-//x=3, µ=4, sd=2
-const d2 = _9(dnorm(3, 4, 2));
-//0.176032663
+const d1 = Rdnorm(0)
+//-> [ 0.39894228 ]
 
-const d3 = _9(dnorm(-10));
-//7.69459863e-23
+const d2 = Rdnorm(3, 4, 2)
+//-> [ 0.176032663 ]
+
+const d3 = Rdnorm(-10)
+//-> 7.69459863e-23
 
 //feed it also some *non-numeric*
-const x = c(-Infinity, Infinity, NaN, seq(-4, 4));
-const d4 = _9(dnorm(x));
-/*[
-  0,
-  0,
-  NaN,
-  0.000133830226,
-  0.00443184841,
-  0.0539909665,
-  0.241970725,
-  0.39894228,
-  0.241970725,
-  0.0539909665,
-  0.00443184841,
-  0.000133830226 ]*/
+const x = c(-Infinity, Infinity, NaN, seq(-4, 4))
+const d4 = Rdnorm(x)
+/* -> [
+  0,           0,          NaN,         0.000133830226, 0.00443184841, 0.0539909665,
+  0.241970725, 0.39894228, 0.241970725, 0.0539909665,   0.00443184841, 0.000133830226
+]*/
 
-const d5 = _9(dnorm(x, 0, 1, true));
-/*[ -Infinity,
-    -Infinity,
-    NaN,
-    -8.91893853,
-    -5.41893853,
-    -2.91893853,
-    -1.41893853,
-    -0.918938533,
-    -1.41893853,
-    -2.91893853,
-    -5.41893853,
-    -8.91893853 ]*/
+const d5 = Rdnorm(x, 0, 1, true)
+/* -> [
+   -Infinity,  -Infinity, NaN, -8.91893853, -5.41893853, -2.91893853, -1.41893853,
+   -0.918938533, -1.41893853, -2.91893853, -5.41893853, -8.91893853
+   ]
+*/
 ```
 
 _Equivalent in R_
@@ -1576,52 +1547,51 @@ dnorm(x, 0,1, TRUE);
 
 #### `pnorm`
 
-The distribution function of the [Normal distribution](https://en.wikipedia.org/wiki/Normal_distribution). See [R doc](http://stat.ethz.ch/r-manual/r-patched/library/stats/html/normal.html)
+The distribution function of the [Normal distribution][wiki-norm]. See [R doc][r-doc-normal].
 
 _typescript decl_
 
 ```typescript
 declare function pnorm(
-  q: number | number[],
+  q: number,
   mu = 0,
-  sigma = 1,
+  sd = 1,
   lowerTail = true,
-  logP = false
-): number | number[];
+  log = false
+): number;
 ```
 
 * `q`:scalar or array of quantiles
 * `mu`: mean (default 0)
-* `sigma`: standard deviation (default 1)
+* `sd`: standard deviation (default 1)
 * `lowerTail`: if `true` (default), probabilities are P[X ≤ x], otherwise, P[X > x].
-* `logP`: give result as log value
+* `log`: give result as log value
 
 Usage:
 
 ```javascript
-const libR = require('lib-r-math.js');
-const {
-    Normal,
-    R: { numberPrecision, multiplex, seq: _seq }
-} = libR;
+import 'lib-r-math.js'
 
-const { rnorm, dnorm, pnorm, qnorm } = Normal();
+const { rnorm, dnorm, pnorm, qnorm } = Normal()
 
 // some helpers
-const seq = _seq()();
-const _9 = numberPrecision(9); //9 digit significance
+const seq = R.sequenceFactory(0)
+const _9 = R.numberPrecision(9) //9 digit significance
+
+// functional composition
+const Rpnorm = compose(_9, R.Rcycle, pnorm)
 
 //data
-const q = seq(-1, 1);
+const q = seq(-1, 1)
 
-const p1 = _9(pnorm(q));
-//[ 0.158655254, 0.5, 0.841344746 ]
+const p1 = Rpnorm(q);
+//-> [ 0.158655254, 0.5, 0.841344746 ]
 
-const p2 = _9(pnorm(q, 0, 1, false));
-//[ 0.841344746, 0.5, 0.158655254 ]
+const p2 = Rpnorm(q, 0, 1, false));
+//-> [ 0.841344746, 0.5, 0.158655254 ]
 
-const p3 = _9(pnorm(q, 0, 1, false, true));
-//[ -0.172753779, -0.693147181, -1.84102165 ]
+const p3 = Rpnorm(q, 0, 1, false, true));
+//-> [ -0.172753779, -0.693147181, -1.84102165 ]
 ```
 
 _Equivalent in R_
@@ -1639,57 +1609,55 @@ pnorm(-1:1, log.p= TRUE);
 
 #### `qnorm`
 
-The quantile function of the [Normal distribution](https://en.wikipedia.org/wiki/Normal_distribution). See [R doc](http://stat.ethz.ch/r-manual/r-patched/library/stats/html/normal.html])
+The quantile function of the [Normal distribution][wiki-norm]. See [R doc][r-doc-norm].
 
 _typescript decl_
 
 ```typescript
 declare function qnorm(
-  p: number | number[],
+  p: number,
   mu = 0,
-  sigma = 1,
+  sd = 1,
   lowerTail = true,
   logP = false
-): number | number[];
+): number;
 ```
 
 * `p`: probabilities (scalar or array).
 * `mu`: normal mean (default 0).
-* `sigma`: standard deviation (default 1).
+* `sd`: standard deviation (default 1).
 * `logP`: probabilities are given as ln(p).
 
 Usage:
 
 ```javascript
-const libR = require('lib-r-math.js');
-const {
-    Normal,
-    R: { multiplex, seq: _seq, numberPrecision }
-} = libR;
+import 'lib-r-math.js';
 
 //some helpers
-const log = multiplex(Math.log);
-const _9 = numberPrecision(9);
-const seq = _seq()();
+const log = R.Rcycle(Math.log)
+const _9 = numberPrecision(9)
+const seq = R.sequenceFactory(0)
 
-const { rnorm, dnorm, pnorm, qnorm } = Normal();
+const { rnorm, dnorm, pnorm, qnorm } = Normal()
+
+const Rqnorm = compose(_9, R.Rcycle, qnorm)
 
 //some data
-const p = seq(0, 1, 0.25);
-//[0, 0.25, 0.5, 0.75, 1]
+const p = seq(0, 1, 0.25)
+//-> [0, 0.25, 0.5, 0.75, 1]
 
-const q1 = _9(qnorm(0));
-//-Infinity
+const q1 = _Rqnorm(0)
+//-> [-Infinity]
 
-const q2 = _9(qnorm(p, 0, 2));
-//[ -Infinity, -1.3489795, 0, 1.3489795, Infinity ]
+const q2 = Rnorm(p, 0, 2)
+//-> [ -Infinity, -1.3489795, 0, 1.3489795, Infinity ]
 
-const q3 = _9(qnorm(p, 0, 2, false));
-//[ Infinity, 1.3489795, 0, -1.3489795, -Infinity ]
+const q3 = Rqnorm(p, 0, 2, false)
+//-> [ Infinity, 1.3489795, 0, -1.3489795, -Infinity ]
 
 //same as q3
-const q4 = _9(qnorm(log(p), 0, 2, false, true));
-//[ Infinity, 1.3489795, 0, -1.3489795, -Infinity ]
+const q4 = Rqnorm(log(p), 0, 2, false, true)
+//-> [ Infinity, 1.3489795, 0, -1.3489795, -Infinity ]
 ```
 
 _Equivalent in R_
@@ -9143,3 +9111,5 @@ Security in case of vulnerabilities.
 [constributer-convenant]: https://www.contributor-covenant.org/
 [code-conduct]: https://www.contributor-covenant.org/version/1/4/code-of-conduct.html
 [librmath.so]: https://svn.r-project.org/R/trunk/src/nmath
+[wiki-norm]: https://en.wikipedia.org/wiki/Normal_distribution
+[r-doc-norm]: http://stat.ethz.ch/r-manual/r-patched/library/stats/html/normal.html

@@ -1,4 +1,3 @@
-'use strict'
 /* This is a conversion from libRmath.so to Typescript/Javascript
 Copyright (C) 2018  Jacob K.F. Bogers  info@mail.jacob-bogers.com
 
@@ -23,8 +22,8 @@ export function* seq_len({ length, base = 1 }: { length: number, base: number })
   };
 }
 
-export const seq = (adjust = -1) => (start: number, end: number, delta = 1) => Array.from(lazySeq(start, end, delta, adjust))
-  
+export const sequenceFactory = (adjust = -1) => (start: number, end: number, delta = 1) => Array.from(lazySeq(start, end, delta, adjust))
+
 
 export function* lazySeq(start: number, end: number, delta = 1, adjust = 0) {
   if (delta === 0) {
@@ -42,12 +41,6 @@ export function* lazySeq(start: number, end: number, delta = 1, adjust = 0) {
   } while ((delta > 0 && start < end) || (delta < 0 && start > end));
 }
 
-export function Rcycle(fn: (...rest: (any | any[])[]) => any) {
-
-  return function(...rest: (any | any[])[]) {
-    return multiplexer(...rest)(fn);
-  };
-}
 
 export type strTypes = 'boolean' | 'number' | 'undefined' | 'string' | 'null' | 'symbol' | 'array' | 'function' | 'object';
 export type system = boolean | number | undefined | string | null | symbol
@@ -60,8 +53,7 @@ function _typeOf(v: any): strTypes {
   return k;
 }
 
-
-export function multiplexer(...rest: any[]) {
+export function* multiplexer(...rest: any[]): IterableIterator<any[]> {
   //
   // Analyze
   //  
@@ -81,7 +73,6 @@ export function multiplexer(...rest: any[]) {
     ['function'](v: _t) { throw new Error('M002, arguments of type "function" are not yet supported'); }
   };
 
-
   for (let k = 0; k < rest.length; k++) {
     const arg = rest[k];
     const to = _typeOf(arg);
@@ -90,51 +81,58 @@ export function multiplexer(...rest: any[]) {
   }//for
   // find the longest array
   const _max = max(...analyzed.map(a => a.length));
-  return function(fn: (...rest: any) => any): any[] {
-    const rc: any[] = [];
+  for (let k = 0; k < _max; k++) {
+    const result: any[] = [];
+    for (let j = 0; j < analyzed.length; j++) {
+      const arr: any[] = analyzed[j];
+      const idx = k % arr.length;
+      result.push(arr[idx]);
+    }
+    yield result;
+  }
+}
 
-    for (let k = 0; k < _max; k++) {
-      const result: any[] = [];
-      for (let j = 0; j < analyzed.length; j++) {
-        const arr: any[] = analyzed[j];
-        const idx = k % arr.length;
-        result.push(arr[idx]);
-      }
-      rc.push(fn(...result));
+export const c = chain(Array.from, flatten)
+
+export function Rcycle(fn: Function) {
+  return function(...args: any[]) {
+    const gen = multiplexer(...args);
+    let rc: any[] = [];
+    for (const arg of gen) {
+      rc[rc.length] = fn(...arg);
     }
     return rc;
-  };
+  }
+}
+
+function isNumber(x: any): x is number {
+  return typeof x === 'number'
 }
 
 export function numberPrecision(prec: number = 6) {
-
-  let runner: Function;
-  function convert(x?: number | any): number {
+  return function convert<T>(x: T): T {
     // try to loop over the object
     if (typeof x === 'object' && x !== null) {
-      for (const key in x) {
+      for (const [prop, value] of Object.entries(x)) {
         //recursion
-        x[key] = runner(x[key]);
+        x[prop] = convert(value);
       }
       return x;
     }
     // this is a number!!
-    if (typeof x === 'number') {
-      return Number.parseFloat(x.toPrecision(prec));
+    if (isNumber(x)) {
+      x = Number.parseFloat(x.toPrecision(prec)) as any;
     }
-    //dont change the object, whatever it is
     return x;
   }
-  runner = Rcycle(convert);
-  return runner;
 }
 
 export function sum(x: number[]) {
   let sum = 0;
-  const gen = flatten(x); 
-  for (let v = gen.next(); !v.done; v = gen.next()){
-     sum += v.value;
-  } 
+  const gen = flatten(x);
+  for (let v = gen.next(); !v.done; v = gen.next()) {
+    sum += v.value;
+  }
   return sum;
 }
 
@@ -309,3 +307,25 @@ export function* flatten<T>(...rest: (T | IterableIterator<T>)[]): IterableItera
     }
   }
 }
+
+export function chain(...fns: Function[]): Function {
+  if (fns.length === 0) {
+    throw new TypeError(`specifiy functions to chain`)
+  }
+  for (let i = 0; i < fns.length; i++) {
+    if (typeof fns[i] !== 'function') {
+      throw new TypeError(`argument ${i + 1} is not a function`)
+    }
+  }
+  return function(...args: any[]) {
+    let lastArgs = args
+    if (args)
+      for (let i = fns.length - 1; i >= 0; i--) {
+        const fn = fns[i]
+        lastArgs = [fn.apply(fn, lastArgs)]
+        //console.log(lastArgs);
+    }
+    return lastArgs[0]
+  }
+}
+

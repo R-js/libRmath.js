@@ -15,7 +15,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { seq } from '../../r-func';
+import { sequenceFactory } from '../../r-func';
 
 const { trunc } = Math;
 
@@ -30,7 +30,7 @@ export function TAOCP1997init(seed: number): Uint32Array {
 
   let ss = seed - seed % 2 + 2;
   const X = new Uint32Array(KKK);
-  const arr = seq(-1);
+  const arr = sequenceFactory(-1);
   for (let j of arr(1, KK)) {
     X[j] = ss;
     ss = ss + ss;

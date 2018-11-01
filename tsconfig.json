@@ -12,6 +12,7 @@
         "removeComments": true,
         "allowUnreachableCode": true,
         "baseUrl": "./",
+        "downlevelIteration": true,
         "experimentalDecorators": true,
         "lib": [
             "es2018",
