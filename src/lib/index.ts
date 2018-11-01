@@ -72,7 +72,7 @@ import {
 
 export { ISummary, strTypes };
 
-export const R = {
+export const utils = {
   //Welch_Satterthwaite,
   //summary,
   //sum,

@@ -1631,32 +1631,36 @@ declare function qnorm(
 Usage:
 
 ```javascript
-import 'lib-r-math.js';
+// node.js
+const libR = require('lib-r-math.js');
+// web browser
+window.libR
 
-//some helpers
-const log = R.Rcycle(Math.log)
-const _9 = numberPrecision(9)
-const seq = R.sequenceFactory(0)
+const { Rcycle, chain, numberPrecision, seq0 } = libR.utils
+
+const log = Rcycle(Math.log)
+const _9 = numberPrecision(9) // limit precision to 9 decimals
+const seq = sequenceFactory(0)
 
 const { rnorm, dnorm, pnorm, qnorm } = Normal()
 
-const Rqnorm = compose(_9, R.Rcycle, qnorm)
+const Qnorm = Rcycle(chain(_9 qnorm))
 
-//some data
+//just like R "seq", some data
 const p = seq(0, 1, 0.25)
 //-> [0, 0.25, 0.5, 0.75, 1]
 
-const q1 = _Rqnorm(0)
+const q1 = Qnorm(0)
 //-> [-Infinity]
 
-const q2 = Rnorm(p, 0, 2)
+const q2 = Qnorm(p, 0, 2)
 //-> [ -Infinity, -1.3489795, 0, 1.3489795, Infinity ]
 
-const q3 = Rqnorm(p, 0, 2, false)
+const q3 = Qnorm(p, 0, 2, false)
 //-> [ Infinity, 1.3489795, 0, -1.3489795, -Infinity ]
 
 //same as q3
-const q4 = Rqnorm(log(p), 0, 2, false, true)
+const q4 = Qnorm(log(p), 0, 2, false, true)
 //-> [ Infinity, 1.3489795, 0, -1.3489795, -Infinity ]
 ```
 
@@ -1680,26 +1684,27 @@ qnorm(log(p), 0, 2, FALSE, TRUE);
 
 #### `rnorm`
 
-Generates random normal deviates. See [R doc](http://stat.ethz.ch/r-manual/r-patched/library/stats/html/normal.html])
+Generates random normal deviates. See [R doc][r-doc-norm].
 
 _typescript decl_
 
 ```typescript
-declare function rnorm(n = 1, mu = 0, sigma = 1): number | number[];
+declare function rnorm(n = 1, mu = 0, sd = 1): number | number[];
 ```
 
 * `n`: number of deviates
 * `mu`: mean of the distribution. Defaults to 0.
-* `sigma`: standard deviation. Defaults to 1.
+* `sd`: standard deviation. Defaults to 1.
 
 Usage:
 
 ```javascript
+//node
 const libR = require('lib-r-math.js');
-const {
-    Normal,
-    R: { numberPrecision }
-} = libR;
+//browser
+window.libR
+
+const { Normal, R: { numberPrecision } } = libR //(or window.libR);
 
 //helper
 const _9 = numberPrecision(9); // 9 digits
@@ -1707,11 +1712,13 @@ const _9 = numberPrecision(9); // 9 digits
 //default Mersenne-Twister/Inversion
 const { rnorm, dnorm, pnorm, qnorm } = Normal();
 
-const r1 = _9(rnorm(5));
-//[ 1.26295428, -0.326233361, 1.32979926, 1.27242932, 0.414641434 ]
+const Rnorm = chain(_9, rnorm)
 
-const r2 = _9(rnorm(5, 2, 3));
-//[ -2.61985013, -0.785701104, 1.11583866, 1.98269848, 9.21396017 ]
+const r1 = Rnorm(5);
+//-> [ 1.26295428, -0.326233361, 1.32979926, 1.27242932, 0.414641434 ]
+
+const r2 = Rnorm(5, 2, 3);
+//-> [ -2.61985013, -0.785701104, 1.11583866, 1.98269848, 9.21396017 ]
 ```
 
 _Equivalent in R_
@@ -1767,7 +1774,7 @@ const { dbeta, pbeta, qbeta, rbeta } = defaultB;
 The density function of the [Beta distribution](https://en.wikipedia.org/wiki/Beta_distribution).
 See [R doc](http://stat.ethz.ch/R-manual/R-patched/library/stats/html/Beta.html).
 
-$$ \frac{\Gamma(a+b)}{Γ(a) Γ(b)} x^{(a-1)}(1-x)^{(b-1)} $$
+<img src="./svg/dbeta.svg">
 
 _typescript decl_
 
