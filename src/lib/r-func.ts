@@ -23,7 +23,10 @@ export function* seq_len({ length, base = 1 }: { length: number, base: number })
   };
 }
 
-export function* seq(start: number, end: number, delta = 1) {
+export const seq = (adjust = -1) => (start: number, end: number, delta = 1) => Array.from(lazySeq(start, end, delta, adjust))
+  
+
+export function* lazySeq(start: number, end: number, delta = 1, adjust = 0) {
   if (delta === 0) {
     throw new TypeError(`argument 'delta' cannot be zero`)
   }
@@ -34,14 +37,14 @@ export function* seq(start: number, end: number, delta = 1) {
     throw new TypeError(`'end' < 'start' so delta must be negative`);
   }
   do {
-    yield start;
+    yield start + adjust;
     start = start + delta;
   } while ((delta > 0 && start < end) || (delta < 0 && start > end));
 }
 
 export function Rcycle(fn: (...rest: (any | any[])[]) => any) {
 
-  return function (...rest: (any | any[])[]) {
+  return function(...rest: (any | any[])[]) {
     return multiplexer(...rest)(fn);
   };
 }
@@ -87,7 +90,7 @@ export function multiplexer(...rest: any[]) {
   }//for
   // find the longest array
   const _max = max(...analyzed.map(a => a.length));
-  return function (fn: (...rest: any) => any): any[] {
+  return function(fn: (...rest: any) => any): any[] {
     const rc: any[] = [];
 
     for (let k = 0; k < _max; k++) {
@@ -126,9 +129,14 @@ export function numberPrecision(prec: number = 6) {
   return runner;
 }
 
-/*export function sum(x: number[]) {
-  return flatten(x).reduce((sum, v) => (sum += v), 0);
-}*/
+export function sum(x: number[]) {
+  let sum = 0;
+  const gen = flatten(x); 
+  for (let v = gen.next(); !v.done; v = gen.next()){
+     sum += v.value;
+  } 
+  return sum;
+}
 
 export interface ISummary {
   N: number; // number of samples in "data"

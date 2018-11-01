@@ -24,86 +24,29 @@ const { MAX_VALUE: DBL_MAX } = Number
 //const F = false;
 const fixture = {
     dnorm: {
-        case0: {
+        'case': {
             input: {
-                x:     [2, 3, -1, 10, NaN, -2, I, -1, 1, 1, I, 4*sqrt(DBL_MAX)],
-                mu:    [_, 1, 1,   1, _,   _,  I, -1, 0, 0, _, _],
-                sigma: [_, 1, 1,   1, _,   I,  _,  0, 0, -1, _, _],
-                asLog: [_, _, T,  _ , _,   _,  _,  0, 0, 0, _, _]
+                x:     [2, 3, -1, 10, NaN, -2, I, -1, 1, 1, I, 4*sqrt(DBL_MAX), 4*threshold],
+                mu:    [_, 1, 1,   1, _,   _,  I, -1, 0, 0, _, _, _],
+                sigma: [_, 1, 1,   1, _,   I,  _,  0, 0, -1, _, _, _],
+                asLog: [_, _, T,  _ , _,   _,  _,  0, 0, 0, _, _, _]
             },
-            expected: [0.05399096651, 0.05399096651, -2.918938533, 1.027977357e-18]
-        },
-        case1: {
-            input: {
-                x:     [4*sqrt(DBL_MAX), 4*threshold],
-                mu:    [_],
-                sigma: [_],
-                asLog: [_]
-            },
-            expected: [0.05399096651, 0.05399096651, -2.918938533, 1.027977357e-18]
-        },
-        
-        /*case1: {
-            desc: 'dnorm: x=3, mu=4, sigma=2',
-            input: {
-                x: [3],
-                mu: 4,
-                sigma: 2,
-                asLog: undefined,
-            },
-            output: [0.17603266338214976]
-        },
-        case2: {
-            desc: 'dnorm: x=-10, and go with defaults',
-            input: {
-                x: [-10],
-                mu: undefined,
-                sigma: undefined,
-                asLog: undefined,
-            },
-            output: [7.69459862670642e-23]
-        },
-        case3: {
-            desc: 'dnorm: x=-10, and go with defaults',
-            input: {
-                x: [-Infinity, Infinity, NaN, -4, -3, -2, 0, 1, 2, 3, 4],
-                mu: undefined,
-                sigma: undefined,
-                asLog: undefined,
-            },
-            output: [
-                0,
+            expected: [
+                0.05399096651318806,
+                0.05399096651318806,
+                -2.9189385332046727,
+                1.0279773571668917e-18,
+                NaN,
                 0,
                 NaN,
-                0.00013383022576488537,
-                0.0044318484119380075,
-                0.05399096651318806,
-                0.3989422804014327,
-                0.24197072451914337,
-                0.05399096651318806,
-                0.0044318484119380075,
-                0.00013383022576488537
+                Infinity,
+                0,
+                NaN,
+                0,
+                0,
+                0
             ]
-        },
-        case4: {
-            desc: 'dnorm: mu:2, sigma:1, asLog:true',
-            input: {
-                x: [-4, -3, -2, -1, 0, 1, 2, 3, 4],
-                mu: 2,
-                sigma: 1,
-                asLog: true,
-            },
-            output:
-                [-18.918938533204674,
-                -13.418938533204672,
-                -8.918938533204672,
-                -5.418938533204673,
-                -2.9189385332046727,
-                -1.4189385332046727,
-                -0.9189385332046728,
-                -1.4189385332046727,
-                -2.9189385332046727]
-        },*/
+        }
     }
 }
 

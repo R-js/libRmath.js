@@ -3,7 +3,7 @@
 //https://en.wikipedia.org/wiki/Normal_distribution
 
 import { Normal } from '../../src/lib/normal';
-import { /*checkPrec6,*/ createComment } from '../test-helpers';
+import { checkPrec6, createComment } from '../test-helpers';
 import { each, /*Rcycle,*/ flatten, multiplexer } from '../../src/lib/r-func';
 import fixture from './fixture';
 
@@ -17,13 +17,15 @@ describe(`Normal distribution test`, () => {
             const _mu = Array.from(flatten(input.mu))
             const _sigma = Array.from(flatten(input.sigma))
             const _asLog = Array.from(flatten(input.asLog))
+            let cnt = 0;
             multiplexer(_x,_mu,_sigma,_asLog, _expected)((x,mu,sigma, aslog, expected)=>{
                const comment = createComment({x,mu,sigma, aslog});
-               it(`${testCaseName}:${comment}`, () => {
+               cnt++;
+               it(`${testCaseName}/${cnt}:${comment}`, () => {
                 //   const { x, mu, sigma, asLog } = input;
                 const result = dnorm(x, mu, sigma, aslog);
-                console.log(result);
-               // checkPrec6(expected, result);
+                //console.log(result);
+                checkPrec6(expected, result);
             });
         });
     })

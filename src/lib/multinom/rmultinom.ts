@@ -46,14 +46,13 @@ export function rmultinomOne(
      *  where rN[j] ~ Bin(n, prob[j]) ,  sum_j rN[j] == n,  sum_j prob[j] == 1,
      */
   const rN: number[] = [];
-  let p = flatten(prob);
+  let p = Array.from(flatten(prob));
   const K = p.length;
   //let pp;
   /* This calculation is sensitive to exact values, so we try to
        ensure that the calculations are as accurate as possible
        so different platforms are more likely to give the same
        result. */
-
   if (p.length === 0) {
     printer_rmultinom('list of probabilities cannot be empty');
     return rN;

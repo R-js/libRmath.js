@@ -30,7 +30,7 @@ export function TAOCP1997init(seed: number): Uint32Array {
 
   let ss = seed - seed % 2 + 2;
   const X = new Uint32Array(KKK);
-  const arr = seq(-1)();
+  const arr = seq(-1);
   for (let j of arr(1, KK)) {
     X[j] = ss;
     ss = ss + ss;

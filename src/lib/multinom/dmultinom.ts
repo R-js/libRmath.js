@@ -34,7 +34,7 @@ export function dmultinom(
   // init
   // first prob and x must have the same length
   o.asLog = !!o.asLog;
-  let x: number[] = flatten(o.x).filter(f => !!f) as any;
+  let x: number[] = Array.from(flatten(o.x)).filter(f => !!f) as any;
   //
   let prob: number[] = flatten(o.prob) as any;
   let badProb = !!prob.find(f => !isFinite(f) || f < 0);

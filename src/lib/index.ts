@@ -64,28 +64,28 @@ import {
   ISummary,
   multiplexer,
   numberPrecision,
-  precision9,
+  //precision9,
   Rcycle,
   seq_len,
   strTypes,
-  sum,
-  summary,
+  //sum,
+  //summary,
   system, //alias
-  Welch_Satterthwaite
+  //Welch_Satterthwaite
 } from './r-func';
 
 export { ISummary, strTypes, system };
 
 export const r = {
-  Welch_Satterthwaite,
-  summary,
-  sum,
+  //Welch_Satterthwaite,
+  //summary,
+  //sum,
   numberPrecision,
   multiplexer,
   Rcycle,
   flatten,
   seq_len,
-  precision9,
+  //precision9,
   combine,
   c
 };
