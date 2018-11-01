@@ -1,4 +1,3 @@
-
 'use strict'
 /* This is a conversion from libRmath.so to Typescript/Javascript
 Copyright (C) 2018  Jacob K.F. Bogers  info@mail.jacob-bogers.com
@@ -16,17 +15,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-const { floor, trunc, max } = Math;
-const { isArray } = Array;
-
-export const precision9 = numberPrecision(9);
-/*
-export function isOdd(n: number): boolean {
-  if (isFinite(n)) {
-    return n % 2 !== 0;
-  }
-  throw new Error(`Not a finite Number: ${n}`);
-}*/
+const { max } = Math;
 
 export function* seq_len({ length, base = 1 }: { length: number, base: number }): IterableIterator<number> {
   for (let i = 0; i < length; i++) {
@@ -34,98 +23,62 @@ export function* seq_len({ length, base = 1 }: { length: number, base: number })
   };
 }
 
-export const seq = (adjust = 0) => (adjustMin = adjust) => (
-  start: number,
-  end?: number,
-  step: number = 1
-): number[] => {
-  const { abs, sign } = Math; 
-  if (end === undefined) {
-    if (start <= 0 || start === undefined) {
-      return []
-    }
-    end = 1;
+export function* seq(start: number, end: number, delta = 1) {
+  if (delta === 0) {
+    throw new TypeError(`argument 'delta' cannot be zero`)
   }
-  let s = start + adjust;
-  let e = end + adjust;
-  let cursor = s;
-
-  if (end < start) {
-    e = start + adjustMin;
-    s = end + adjustMin;
-    cursor = e;
+  if (end > start && delta < 0) {
+    throw new TypeError(`'end' > 'start' so delta must be positive`);
   }
-  // wow: Chrome and FireFox give
-  // 0.4+0.2 = 0.6000000000000001
-  // so we use precision to have it make sense
-  // sometimes rounding effects try something diff
-  step = abs(step) * sign(end - start);
-  
-
-  const rc: number[] = [];
-  let cursor9;
+  if (end < start && delta > 0) {
+    throw new TypeError(`'end' < 'start' so delta must be negative`);
+  }
   do {
-    cursor9 = precision9(cursor);
-    rc.push(cursor9);
-    cursor += step;
-  } while (cursor9 >= s && cursor9 <= e && step !== 0);
-
-  return rc;
-}
-
-export function flatten<T>(...rest: (T | T[])[]): T[] {
-  let rc: T[] = [];
-  for (const itm of rest) {
-    if (isArray(itm)) {
-      let rc2: T[] = flatten(...itm);
-      rc.push(...rc2);
-      continue;
-    }
-    rc.push(itm);
-  }
-  return rc as any;
+    yield start;
+    start = start + delta;
+  } while ((delta > 0 && start < end) || (delta < 0 && start > end));
 }
 
 export function Rcycle(fn: (...rest: (any | any[])[]) => any) {
 
-  return function(...rest: (any | any[])[]) {
+  return function (...rest: (any | any[])[]) {
     return multiplexer(...rest)(fn);
   };
 }
 
-export type strTypes = 'boolean'| 'number'| 'undefined'| 'string' | 'null' | 'symbol' | 'array' | 'function' | 'object';
-export type system = boolean | number | undefined | string | null | symbol|  Array<any>;
+export type strTypes = 'boolean' | 'number' | 'undefined' | 'string' | 'null' | 'symbol' | 'array' | 'function' | 'object';
+export type system = boolean | number | undefined | string | null | symbol
 
 function _typeOf(v: any): strTypes {
-   if (v === null) return 'null';
-   if (v instanceof Array) return 'array';
-   if (v instanceof Function) return 'function';
-   const k = typeof v;
-   return k;
+  if (v === null) return 'null';
+  if (v instanceof Array) return 'array';
+  if (v instanceof Function) return 'function';
+  const k = typeof v;
+  return k;
 }
 
 
-export function multiplexer(...rest: (system| system)[]) {
+export function multiplexer(...rest: any[]) {
   //
   // Analyze
   //  
   const analyzed: _t[] = [];
-  type _t = boolean[]| number[]| undefined[]| string[] | null[] | symbol[]|  Array<any>;
-  
-  function  simplePush<T extends _t>(v: T){ analyzed.push(v) };
+  type _t = boolean[] | number[] | undefined[] | string[] | null[] | symbol[] | Array<any>;
+
+  function simplePush<T extends _t>(v: T) { analyzed.push(v) };
 
   const select = {
-    ['undefined'](v: null){ simplePush([v]); },
-    ['null'](v: null){ simplePush([v]); },
-    ['number'](v: null){ simplePush([v]); },
-    ['string'](v: string){  simplePush(v.split(''))},
-    ['boolean'](v: boolean){ simplePush([v]) },
-    ['array'](v: _t){ simplePush(v)},
-    ['object'](v: _t){ throw new Error('Sorry, looping over properties not yet supported'); },
-    ['function'](v: _t){ throw new Error('Sorry function arguments are not yet supported'); }
+    ['undefined'](v: null) { simplePush([v]); },
+    ['null'](v: null) { simplePush([v]); },
+    ['number'](v: null) { simplePush([v]); },
+    ['string'](v: string) { simplePush(v.split('')) },
+    ['boolean'](v: boolean) { simplePush([v]) },
+    ['array'](v: _t) { simplePush(v) },
+    ['object'](v: _t) { throw new Error('M001, Looping over properties not yet supported'); },
+    ['function'](v: _t) { throw new Error('M002, arguments of type "function" are not yet supported'); }
   };
-  
-  
+
+
   for (let k = 0; k < rest.length; k++) {
     const arg = rest[k];
     const to = _typeOf(arg);
@@ -134,7 +87,7 @@ export function multiplexer(...rest: (system| system)[]) {
   }//for
   // find the longest array
   const _max = max(...analyzed.map(a => a.length));
-  return function(fn: (...rest: system[]) => any): any[] {
+  return function (fn: (...rest: any) => any): any[] {
     const rc: any[] = [];
 
     for (let k = 0; k < _max; k++) {
@@ -154,28 +107,28 @@ export function numberPrecision(prec: number = 6) {
 
   let runner: Function;
   function convert(x?: number | any): number {
-      // try to loop over the object
-      if (typeof x === 'object' && x !== null) {
-          for (const key in x) {
-              //recursion
-              x[key] = runner(x[key]);
-          }
-          return x;
+    // try to loop over the object
+    if (typeof x === 'object' && x !== null) {
+      for (const key in x) {
+        //recursion
+        x[key] = runner(x[key]);
       }
-      // this is a number!!
-      if (typeof x === 'number') {
-          return Number.parseFloat(x.toPrecision(prec));
-      }
-      //dont change the object, whatever it is
       return x;
+    }
+    // this is a number!!
+    if (typeof x === 'number') {
+      return Number.parseFloat(x.toPrecision(prec));
+    }
+    //dont change the object, whatever it is
+    return x;
   }
   runner = Rcycle(convert);
   return runner;
 }
 
-export function sum(x: number[]) {
+/*export function sum(x: number[]) {
   return flatten(x).reduce((sum, v) => (sum += v), 0);
-}
+}*/
 
 export interface ISummary {
   N: number; // number of samples in "data"
@@ -198,7 +151,7 @@ export interface ISummary {
     max: number // maximum value in data
   };
 }
-
+/*
 export function summary(x: number[]): ISummary {
   if (!Array.isArray(x)) {
     throw new Error(`Illigal argument, not an array`);
@@ -223,7 +176,7 @@ export function summary(x: number[]): ISummary {
   const min = o[0];
   const max = o[N - 1];
   //isOdd?
-  const { q1, median, q3 } = (function() {
+  const { q1, median, q3 } = (function () {
     const i = [4, 2, 4 / 3].map(v => (N - 1) / v);
     const q = i.map(index => {
       const f1 = 1 - (index - floor(index));
@@ -268,7 +221,7 @@ export function Welch_Satterthwaite(s: number[], n: number[]): number {
 
   return Math.pow(sum(elts), 2) / sum(dom);
 }
-
+*/
 
 export function randomGenHelper<T extends Function>(n: number | number[], fn: T, ...arg: any[]) {
 
@@ -290,4 +243,61 @@ export function randomGenHelper<T extends Function>(n: number | number[], fn: T,
     result[i] = fn(...arg)
   }
   return result
+}
+
+export type Slicee<T> = {
+  [P in keyof T]: T[P]
+}
+
+export type Sliced<T> = {
+  key: keyof T;
+  value: T[keyof T]
+}
+
+function slicer<T>(x: Slicee<T>): Sliced<T>[] {
+  const keys: (keyof T)[] = Object.keys(x) as any;
+  const map = keys.map(key => ({ key, value: x[key] }));
+  return map;
+}
+
+export function map<T, S>(data: Slicee<T>): { (fn: (value: T[keyof T], idx: keyof T) => S): S[] } {
+  const fx = slicer(data);
+  return function k(fn) {
+    return fx.map(o => fn(o.value, o.key))
+  };
+}
+
+export function each<T>(data: Slicee<T>): { (fn: (value: T[keyof T], idx: keyof T) => void): void } {
+  const fx = slicer(data);
+  return function k(fn) {
+    fx.forEach(o => fn(o.value, o.key));
+  };
+}
+
+export function* flatten<T>(...rest: (T | IterableIterator<T>)[]): IterableIterator<any> {
+
+  for (const itm of rest) {
+    if (itm === null || ['undefined', 'string', 'symbol', 'number', 'boolean'].includes(typeof itm)) {
+      yield itm;
+      continue;
+    }
+    if (itm instanceof Map || itm instanceof Set) {
+      for (const v of <any>itm) {
+        yield* flatten.call(undefined, v);
+      }
+      continue;
+    }
+    if (itm instanceof Array) {
+      for (const v of itm) {
+        yield* flatten.call(undefined, v);
+      }
+      continue;
+    }
+    if (typeof itm[Symbol.iterator] === 'function') {
+      for (const v of <any>itm) {
+        yield* flatten.call(undefined, v);
+      }
+      continue;
+    }
+  }
 }

@@ -1,4 +1,4 @@
-/* This is a conversion from BLAS to Typescript/Javascript
+/* This is a conversion from libRmath.js to Typescript/Javascript
 Copyright (C) 2018  Jacob K.F. Bogers  info@mail.jacob-bogers.com
 
 This program is free software: you can redistribute it and/or modify
@@ -14,19 +14,36 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-export const fixture = {
+import { DBL_MANT_DIG,M_LN2, DBL_MIN_EXP  } from '../../src/lib/common/_general'
+const { sqrt } = Math
+const threshold = sqrt(-2 * M_LN2 * (DBL_MIN_EXP + 1 - DBL_MANT_DIG))
+const _ = undefined
+const T = true;
+const I = Infinity;
+const { MAX_VALUE: DBL_MAX } = Number
+//const F = false;
+const fixture = {
     dnorm: {
         case0: {
-            desc: 'dnorm: x=0, and go with defaults',
             input: {
-                x: [0],
-                mu: undefined,
-                sigma: undefined,
-                asLog: undefined,
+                x:     [2, 3, -1, 10, NaN, -2, I, -1, 1, 1, I, 4*sqrt(DBL_MAX)],
+                mu:    [_, 1, 1,   1, _,   _,  I, -1, 0, 0, _, _],
+                sigma: [_, 1, 1,   1, _,   I,  _,  0, 0, -1, _, _],
+                asLog: [_, _, T,  _ , _,   _,  _,  0, 0, 0, _, _]
             },
-            output: [0.3989422804014327]
+            expected: [0.05399096651, 0.05399096651, -2.918938533, 1.027977357e-18]
         },
         case1: {
+            input: {
+                x:     [4*sqrt(DBL_MAX), 4*threshold],
+                mu:    [_],
+                sigma: [_],
+                asLog: [_]
+            },
+            expected: [0.05399096651, 0.05399096651, -2.918938533, 1.027977357e-18]
+        },
+        
+        /*case1: {
             desc: 'dnorm: x=3, mu=4, sigma=2',
             input: {
                 x: [3],
@@ -86,6 +103,8 @@ export const fixture = {
                 -0.9189385332046728,
                 -1.4189385332046727,
                 -2.9189385332046727]
-        },
+        },*/
     }
 }
+
+export default fixture
