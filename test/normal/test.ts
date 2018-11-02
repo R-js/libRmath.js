@@ -4,7 +4,7 @@
 
 import { Normal } from '../../src/lib/normal';
 import { checkPrec6, createComment } from '../test-helpers';
-import { each, c, Rcycle } from '../../src/lib/r-func';
+import { each, map, c, Rcycle } from '../../src/lib/r-func';
 import fixture from './fixture';
 
 describe(`Normal distribution test`, () => {
@@ -13,44 +13,35 @@ describe(`Normal distribution test`, () => {
     const dnormFixture = fixture.dnorm;
     describe('dnorm', () => {
         each(dnormFixture)((testCase, testCaseName) => {
+            //if ( testCase['skip'] ) { return }
             const { input, expected: _expected } = testCase;
-            const _x = c(input.x)
-            const _mu = c(input.mu)
-            const _sigma = c(input.sigma)
-            const _asLog = c(input.asLog)
             let cnt = 0;
-            Rcycle((x, mu, sigma, aslog, expected) => {
-                cnt++;
-                const comment = createComment({ x, mu, sigma, aslog });
+            Rcycle(({x, mu, sd, l, expected}) => {
+                cnt++
+                const comment = createComment({ x, mu, sd, l });
                 it(`test:${cnt}\t${comment}`, () => {
-                    //   const { x, mu, sigma, asLog } = input;
-                    const result = dnorm(x, mu, sigma, aslog);
-                    //console.log(result);
+                    const result = dnorm(x, mu, sd, l);
                     checkPrec6(expected, result);
                 })
-            })(_x, _mu, _sigma, _asLog, _expected)
+            })(input, _expected)
         });
     })
     const qnormFixture = fixture.qnorm;
     describe('qnorm', () => {
         each(qnormFixture)((testCase, testCaseName) => {
             const { input, expected: _expected } = testCase;
-            const _x = c(input.x)
-            const _mu = c(input.mu)
-            const _sigma = c(input.sigma)
-            const _asLog = c(input.asLog)
             let cnt = 0;
-            Rcycle((x, mu, sigma, aslog, expected) => {
+            Rcycle(({ p, mu, sd, lt, l, expected}) => {
                 cnt++;
-                const comment = createComment({ x, mu, sigma, aslog });
+                const comment = createComment({ p, mu, sd, lt, l });
                 it(`test:${cnt}\t${comment}`, () => {
-                    //   const { x, mu, sigma, asLog } = input;
-                    const result = qnorm(x, mu, sigma, aslog);
+                    const result = qnorm(p, mu, sd, lt, l);
                     result;
+                    expected;
                     //console.log(result);
                     //checkPrec6(expected, result);
                 })
-            })(_x, _mu, _sigma, _asLog, _expected)
+            })(input, _expected)
         });
     })
 })

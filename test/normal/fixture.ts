@@ -14,23 +14,35 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { DBL_MANT_DIG,M_LN2, DBL_MIN_EXP  } from '../../src/lib/common/_general'
+import { DBL_MANT_DIG, M_LN2, DBL_MIN_EXP } from '../../src/lib/common/_general'
 const { sqrt } = Math
 const threshold = sqrt(-2 * M_LN2 * (DBL_MIN_EXP + 1 - DBL_MANT_DIG))
 const _ = undefined
 const T = true;
 const I = Infinity;
 const { MAX_VALUE: DBL_MAX } = Number
-//const F = false;
+const F = false;
 const fixture = {
     dnorm: {
         'case': {
-            input: {
-                x:     [2, 3, -1, 10, NaN, -2, I, -1, 1, 1, I, 4*sqrt(DBL_MAX), 4*threshold],
-                mu:    [_, 1, 1,   1, _,   _,  I, -1, 0, 0, _, _, _],
-                sigma: [_, 1, 1,   1, _,   I,  _,  0, 0, -1, _, _, _],
-                asLog: [_, _, T,  _ , _,   _,  _,  0, 0, 0, _, _, _]
-            },
+            skip: T,
+            input: [
+                { x: 2 },
+                { x: 3, mu: 1, sd: 1 },
+                { x: -1, mu: 1, sd: 1, l: true },
+                { x: 10, mu: 1, sd: 1 },
+                { x: NaN},
+                { x: -2, sd: Infinity },
+                { x: Infinity, mu: Infinity },
+                { x: -1, mu: -1 },
+                { x: 1 },
+                { x: 1, sd: -1 },
+                { x: Infinity },
+                { x: 5.363123171977038e+154 },
+                { x: 155.5607738721713 },
+                { x: 0, mu:0, sd:0 },
+                { x: 1, mu:0, sd:0 }
+            ],
             expected: [
                 0.05399096651318806,
                 0.05399096651318806,
@@ -44,21 +56,26 @@ const fixture = {
                 NaN,
                 0,
                 0,
+                0,
+                Infinity,
                 0
             ]
         }
     },
     qnorm: {
-        'case': {
-            input: {
-                x:     [2, 3, -1, 10, NaN, -2, I, -1, 1, 1, I, 4*sqrt(DBL_MAX), 4*threshold],
-                mu:    [_, 1, 1,   1, _,   _,  I, -1, 0, 0, _, _, _],
-                sigma: [_, 1, 1,   1, _,   I,  _,  0, 0, -1, _, _, _],
-                asLog: [_, _, T,  _ , _,   _,  _,  0, 0, 0, _, _, _]
-            },
+        'defaults': {
+            input: [
+                { p: 0.99 },
+                { p: 0 },
+                { p: NaN, l: F },
+                { p: 0.5, lt: T },
+                { p: 0.5, sd: -1 },
+                { p: 0.5, sd: 0 },
+                { p: 0.99 }
+            ],
             expected: [
                 0.05399096651318806,
-                0.05399096651318806,
+                /*0.05399096651318806,
                 -2.9189385332046727,
                 1.0279773571668917e-18,
                 NaN,
@@ -69,7 +86,7 @@ const fixture = {
                 NaN,
                 0,
                 0,
-                0
+                0*/
             ]
         }
     }
