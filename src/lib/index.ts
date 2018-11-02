@@ -58,34 +58,33 @@ export const special = Object.freeze({
 });
 
 import {
+  c,
+  chain,
   flatten,
-  flatten as c,
-  flatten as combine,
   ISummary,
   multiplexer,
   numberPrecision,
-  precision9,
   Rcycle,
   seq_len,
-  strTypes,
-  sum,
-  summary,
-  system, //alias
-  Welch_Satterthwaite
+  sequenceFactory,
+  strTypes
 } from './r-func';
 
-export { ISummary, strTypes, system };
+export { ISummary, strTypes };
 
-export const r = {
-  Welch_Satterthwaite,
-  summary,
-  sum,
+export const utils = {
+  //Welch_Satterthwaite,
+  //summary,
+  //sum,
   numberPrecision,
   multiplexer,
   Rcycle,
   flatten,
   seq_len,
-  precision9,
-  combine,
+  sequenceFactory,
+  seq1: sequenceFactory(0),
+  seq0: sequenceFactory(),
+  chain,
+  combine:c,
   c
-};
+}; 

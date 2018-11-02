@@ -3,4 +3,4 @@
 --recursive
 --require source-map-support/register
 --sort
-test/**/*.test.ts
+test/**/*test.ts

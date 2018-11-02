@@ -1,4 +1,4 @@
-/* This is a conversion from BLAS to Typescript/Javascript
+/* This is a conversion from libRmath.js to Typescript/Javascript
 Copyright (C) 2018  Jacob K.F. Bogers  info@mail.jacob-bogers.com
 
 This program is free software: you can redistribute it and/or modify
@@ -15,19 +15,22 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { assert, expect } from 'chai';
+import { assert } from 'chai';
+const { isNaN, isFinite } = Number;
 
 export function creatApproximator(prec){
-
     return function approximitly(act: number, exp: number) {
+        if (typeof act !== 'number'){
+            return
+        }
         switch (true) {
             case isNaN(act):
                 assert.isNaN(exp);
                 break;
             case isFinite(act):
-                assert.approximately(act, exp, prec, 'numbers are NOT close');
+                assert.approximately(act, exp, prec, `numbers are NOT close within ${prec}`);
                 break;
-            case !isFinite(act):
+            case !isFinite(act): // Infinite?
                 assert.equal(act, exp);
                 break;
             default:
@@ -36,20 +39,21 @@ export function creatApproximator(prec){
     }
 }
 
-
-export function createComment(obj: any): string {
-
-    const proto = Object.keys(obj).reduce((builder, key) => {
-        const v = obj[key]
-       
+export function createComment(inputObj: any): string {
+    const proto = Object.keys(inputObj).reduce((builder, key) => {
+        const v = inputObj[key]
         if (v === undefined) {
             builder.defaults = true
         }
         else {
-            //console.log(key,v)
-            builder.descs.push(`${key}:${v}`)
+            builder.descs.push(`${key}=${v}`)
         }
         return builder
-    }, { descs: [], defaults: false });
-    return `${proto.descs.join(', ')}${(proto.defaults ? ' and defaults':'')}`
+    }, { descs: [] as string[], defaults: false });
+    return `${proto.descs.join(',')}${(proto.defaults ? ' and defaults':'')}`
 }
+
+export const checkPrec9 = creatApproximator(1E-9);
+export const checkPrec6 = creatApproximator(1E-6);
+export const checkPrec3 = creatApproximator(1E-3);
+

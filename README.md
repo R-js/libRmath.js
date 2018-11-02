@@ -1,7 +1,6 @@
 # libRmath.js
 
-This is a 100% Pure Javascript ( TypeScript ) re-write of Statistical R `nmath` "core" numerical
- library found [here](https://svn.r-project.org/R/trunk/src/nmath/).
+This R statistical [`nmath`][librmath.so] re-created in typescript/javascript.
 This is a manual re-write, ["emscripten"](https://kripken.github.io/emscripten-site) was not used.
 
 
@@ -1452,17 +1451,10 @@ These functions are created with the factory method `Normal` taking as optional 
 Usage:
 
 ```javascript
-const libR = require('lib-r-math.js');
-const {
-    Normal,
-    rng: {
-        SuperDuper,
-        normal: { AhrensDieter }
-    }
-} = libR;
+import 'lib-r-math.js';
 
 //specify explicit PRNG's
-const norm1 = Normal(new AhrensDieter(new SuperDuper(1234)));
+const norm1 = Normal(new rng.AhrensDieter(new rng.SuperDuper(1234)));
 
 //OR just go with defaults: "Inversion" and "Mersenne-Twister".
 const norm2 = Normal(); //
@@ -1473,83 +1465,63 @@ const { rnorm, dnorm, pnorm, qnorm } = norm2;
 
 #### `dnorm`
 
-The density function of the [Normal distribution](https://en.wikipedia.org/wiki/Normal_distribution). See [R doc](http://stat.ethz.ch/r-manual/r-patched/library/stats/html/normal.html)
+The density function of the [Normal distribution][wiki-norm]. See [R doc][r-doc-norm].
 
 _typescript decl_
 
 ```typescript
 declare function dnorm(
-  x: number | number[],
+  x: number,
   mu = 0,
-  sigma = 1,
-  asLog = false
-): number | number[];
+  sd = 1,
+  log = false
+): number;
 ```
 
 * `x`:scalar or array of quantiles
 * `mu`: mean, default `0`.
-* `sigma`: standard deviation, default `1`.
-* `asLog`: give result as ln(..) value
+* `sd`: standard deviation, default `1`.
+* `log`: give result as ln(..) value, default `false`
 
-Usage:
+<details>
+  <summary><b>Example:</b> (click to show)</summary>
 
-```javascript
-const libR = require('lib-r-math.js');
-const {
-    Normal,
-    R: {
-        numberPrecision,
-        seq: _seq,
-        c
-    }
-} = libR;
+```typescript
+//node:
+const libR = import 'lib-r-math.js'
+//browser: after importing with the <script>
+window.libR
 
-//helpers
-const seq = _seq()();
-const _9 = numberPrecision(9); //9 digits significance
+const { c, numberPrecision, seq0, chain, Rcycle } = libR.utils
 
-const { rnorm, dnorm, pnorm, qnorm } = Normal();
+const { rnorm, dnorm, pnorm, qnorm } = libR.Normal();
 
-const d1 = _9(dnorm(0));
-//0.39894228
+// Optional: functional composition, make dnorm follow R cycling rules with precision 9
+const Dnorm = chain(numberPrecision(9), dnorm)
 
-//x=3, µ=4, sd=2
-const d2 = _9(dnorm(3, 4, 2));
-//0.176032663
+const d1 = Dnorm(0)
+//→  [ 0.39894228 ]
 
-const d3 = _9(dnorm(-10));
-//7.69459863e-23
+const d2 = Rdnorm(3, 4, 2)
+//→  [ 0.176032663 ]
+
+const d3 = Dnorm(-10)
+//→  [7.69459863e-23]
 
 //feed it also some *non-numeric*
-const x = c(-Infinity, Infinity, NaN, seq(-4, 4));
-const d4 = _9(dnorm(x));
-/*[
-  0,
-  0,
-  NaN,
-  0.000133830226,
-  0.00443184841,
-  0.0539909665,
-  0.241970725,
-  0.39894228,
-  0.241970725,
-  0.0539909665,
-  0.00443184841,
-  0.000133830226 ]*/
+const x = c(-Infinity, Infinity, NaN, seq0(-4, 4))
+const d4 = Dnorm(x)
+/*→  [
+  0,           0,          NaN,         0.000133830226, 0.00443184841, 0.0539909665,
+  0.241970725, 0.39894228, 0.241970725, 0.0539909665,   0.00443184841, 0.000133830226
+]*/
 
-const d5 = _9(dnorm(x, 0, 1, true));
-/*[ -Infinity,
-    -Infinity,
-    NaN,
-    -8.91893853,
-    -5.41893853,
-    -2.91893853,
-    -1.41893853,
-    -0.918938533,
-    -1.41893853,
-    -2.91893853,
-    -5.41893853,
-    -8.91893853 ]*/
+const d5 = Dnorm(x, 0, 1, true)
+/* →  [
+   -Infinity,  -Infinity, NaN, -8.91893853, -5.41893853, -2.91893853, -1.41893853,
+   -0.918938533, -1.41893853, -2.91893853, -5.41893853, -8.91893853
+   ]
+*/
 ```
 
 _Equivalent in R_
@@ -1574,55 +1546,58 @@ dnorm(x, 0,1, TRUE);
 # [1]       -Inf       -Inf        NaN -8.9189385 -5.4189385 -2.9189385
 # [7] -1.4189385 -0.9189385 -1.4189385 -2.9189385 -5.4189385 -8.9189385
 ```
+</details>
 
 #### `pnorm`
 
-The distribution function of the [Normal distribution](https://en.wikipedia.org/wiki/Normal_distribution). See [R doc](http://stat.ethz.ch/r-manual/r-patched/library/stats/html/normal.html)
+The distribution function of the [Normal distribution][wiki-norm]. See [R doc][r-doc-normal].
 
 _typescript decl_
 
 ```typescript
 declare function pnorm(
-  q: number | number[],
+  q: number,
   mu = 0,
-  sigma = 1,
+  sd = 1,
   lowerTail = true,
-  logP = false
-): number | number[];
+  log = false
+): number;
 ```
 
 * `q`:scalar or array of quantiles
 * `mu`: mean (default 0)
-* `sigma`: standard deviation (default 1)
+* `sd`: standard deviation (default 1)
 * `lowerTail`: if `true` (default), probabilities are P[X ≤ x], otherwise, P[X > x].
-* `logP`: give result as log value
+* `log`: give result as log value
 
-Usage:
+<details>
+  <summary><b>Example:</b> (click to show)</summary>
 
 ```javascript
-const libR = require('lib-r-math.js');
-const {
-    Normal,
-    R: { numberPrecision, multiplex, seq: _seq }
-} = libR;
+//node
+const libR = import 'lib-r-math.js'
+//browser
+window.libR
 
-const { rnorm, dnorm, pnorm, qnorm } = Normal();
+const { c, numberPrecision, seq0, chain, Rcycle } = libR.utils
 
-// some helpers
-const seq = _seq()();
-const _9 = numberPrecision(9); //9 digit significance
+const { rnorm, dnorm, pnorm, qnorm } = libR.Normal()
+
+
+// functional composition,
+const Pnorm = Rcycle(chain( numberPrecision(9), pnorm))
 
 //data
-const q = seq(-1, 1);
+const q = seq0(-1, 1)
 
-const p1 = _9(pnorm(q));
-//[ 0.158655254, 0.5, 0.841344746 ]
+const p1 = Pnorm(q);
+//-> [ 0.158655254, 0.5, 0.841344746 ]
 
-const p2 = _9(pnorm(q, 0, 1, false));
-//[ 0.841344746, 0.5, 0.158655254 ]
+const p2 = Porm(q, 0, 1, false));
+//-> [ 0.841344746, 0.5, 0.158655254 ]
 
-const p3 = _9(pnorm(q, 0, 1, false, true));
-//[ -0.172753779, -0.693147181, -1.84102165 ]
+const p3 = Pnorm(q, 0, 1, false, true));
+//-> [ -0.172753779, -0.693147181, -1.84102165 ]
 ```
 
 _Equivalent in R_
@@ -1637,60 +1612,63 @@ pnorm(-1:1, lower.tail=FALSE);
 pnorm(-1:1, log.p= TRUE);
 #[1] -0.1727538 -0.6931472 -1.8410216
 ```
+</details>
 
 #### `qnorm`
 
-The quantile function of the [Normal distribution](https://en.wikipedia.org/wiki/Normal_distribution). See [R doc](http://stat.ethz.ch/r-manual/r-patched/library/stats/html/normal.html])
+The quantile function of the [Normal distribution][wiki-norm]. See [R doc][r-doc-norm].
 
 _typescript decl_
 
 ```typescript
 declare function qnorm(
-  p: number | number[],
+  p: number,
   mu = 0,
-  sigma = 1,
+  sd = 1,
   lowerTail = true,
   logP = false
-): number | number[];
+): number;
 ```
 
 * `p`: probabilities (scalar or array).
 * `mu`: normal mean (default 0).
-* `sigma`: standard deviation (default 1).
+* `sd`: standard deviation (default 1).
 * `logP`: probabilities are given as ln(p).
 
-Usage:
+<details>
+  <summary><b>Example:</b> (click to show)</summary>
 
 ```javascript
+// node.js
 const libR = require('lib-r-math.js');
-const {
-    Normal,
-    R: { multiplex, seq: _seq, numberPrecision }
-} = libR;
+// web browser
+window.libR
 
-//some helpers
-const log = multiplex(Math.log);
-const _9 = numberPrecision(9);
-const seq = _seq()();
+const { Rcycle, chain, numberPrecision, seq0 } = libR.utils
 
-const { rnorm, dnorm, pnorm, qnorm } = Normal();
+const log = Rcycle(Math.log)
+const _9 = numberPrecision(9) // limit precision to 9 decimals
 
-//some data
-const p = seq(0, 1, 0.25);
-//[0, 0.25, 0.5, 0.75, 1]
+const { rnorm, dnorm, pnorm, qnorm } = libR.Normal()
 
-const q1 = _9(qnorm(0));
-//-Infinity
+const Qnorm = Rcycle(chain(_9 qnorm))
 
-const q2 = _9(qnorm(p, 0, 2));
-//[ -Infinity, -1.3489795, 0, 1.3489795, Infinity ]
+//just like R "seq", some data
+const p = seq(0, 1, 0.25)
+//-> [0, 0.25, 0.5, 0.75, 1]
 
-const q3 = _9(qnorm(p, 0, 2, false));
-//[ Infinity, 1.3489795, 0, -1.3489795, -Infinity ]
+const q1 = Qnorm(0)
+//-> [-Infinity]
+
+const q2 = Qnorm(p, 0, 2)
+//-> [ -Infinity, -1.3489795, 0, 1.3489795, Infinity ]
+
+const q3 = Qnorm(p, 0, 2, false)
+//-> [ Infinity, 1.3489795, 0, -1.3489795, -Infinity ]
 
 //same as q3
-const q4 = _9(qnorm(log(p), 0, 2, false, true));
-//[ Infinity, 1.3489795, 0, -1.3489795, -Infinity ]
+const q4 = Qnorm(log(p), 0, 2, false, true)
+//-> [ Infinity, 1.3489795, 0, -1.3489795, -Infinity ]
 ```
 
 _Equivalent in R_
@@ -1710,29 +1688,32 @@ qnorm(p, 0, 2, FALSE);
 qnorm(log(p), 0, 2, FALSE, TRUE);
 #[1]      Inf  1.34898  0.00000 -1.34898     -Inf
 ```
+</details>
 
 #### `rnorm`
 
-Generates random normal deviates. See [R doc](http://stat.ethz.ch/r-manual/r-patched/library/stats/html/normal.html])
+Generates random normal deviates. See [R doc][r-doc-norm].
 
 _typescript decl_
 
 ```typescript
-declare function rnorm(n = 1, mu = 0, sigma = 1): number | number[];
+declare function rnorm(n = 1, mu = 0, sd = 1): number | number[];
 ```
 
 * `n`: number of deviates
 * `mu`: mean of the distribution. Defaults to 0.
-* `sigma`: standard deviation. Defaults to 1.
+* `sd`: standard deviation. Defaults to 1.
 
-Usage:
+<details>
+  <summary><b>Example:</b> (click to show)</summary>
 
 ```javascript
+//node
 const libR = require('lib-r-math.js');
-const {
-    Normal,
-    R: { numberPrecision }
-} = libR;
+//browser
+window.libR
+
+const { Normal, R: { numberPrecision } } = libR //(or window.libR);
 
 //helper
 const _9 = numberPrecision(9); // 9 digits
@@ -1740,11 +1721,13 @@ const _9 = numberPrecision(9); // 9 digits
 //default Mersenne-Twister/Inversion
 const { rnorm, dnorm, pnorm, qnorm } = Normal();
 
-const r1 = _9(rnorm(5));
-//[ 1.26295428, -0.326233361, 1.32979926, 1.27242932, 0.414641434 ]
+const Rnorm = chain(_9, rnorm)
 
-const r2 = _9(rnorm(5, 2, 3));
-//[ -2.61985013, -0.785701104, 1.11583866, 1.98269848, 9.21396017 ]
+const r1 = Rnorm(5);
+//-> [ 1.26295428, -0.326233361, 1.32979926, 1.27242932, 0.414641434 ]
+
+const r2 = Rnorm(5, 2, 3);
+//-> [ -2.61985013, -0.785701104, 1.11583866, 1.98269848, 9.21396017 ]
 ```
 
 _Equivalent in R_
@@ -1763,6 +1746,7 @@ rnorm(5,2,3)
 #[3]  1.1158387  1.9826985
 #[5]  9.2139602
 ```
+</details>
 
 ## Other Probability Distributions
 
@@ -1797,10 +1781,10 @@ const { dbeta, pbeta, qbeta, rbeta } = defaultB;
 
 #### `dbeta`
 
+<img src="./dbeta.svg">
+
 The density function of the [Beta distribution](https://en.wikipedia.org/wiki/Beta_distribution).
 See [R doc](http://stat.ethz.ch/R-manual/R-patched/library/stats/html/Beta.html).
-
-$$ \frac{\Gamma(a+b)}{Γ(a) Γ(b)} x^{(a-1)}(1-x)^{(b-1)} $$
 
 _typescript decl_
 
@@ -8967,3 +8951,182 @@ lchoose(4000,30);
 lchoose(2000,998);
 #[1] 1382.264
 ```
+
+
+Contributor Covenant Code of Conduct
+Our Pledge
+In the interest of fostering an open and welcoming environment, we as contributors and maintainers pledge to making participation in our project and our community a harassment-free experience for everyone, regardless of age, body size, disability, ethnicity, gender identity and expression, level of experience, education, socio-economic status, nationality, personal appearance, race, religion, or sexual identity and orientation.
+
+Our Standards
+Examples of behavior that contributes to creating a positive environment include:
+
+Using welcoming and inclusive language
+Being respectful of differing viewpoints and experiences
+Gracefully accepting constructive criticism
+Focusing on what is best for the community
+Showing empathy towards other community members
+Examples of unacceptable behavior by participants include:
+
+The use of sexualized language or imagery and unwelcome sexual attention or advances
+Trolling, insulting/derogatory comments, and personal or political attacks
+Public or private harassment
+Publishing others' private information, such as a physical or electronic address, without explicit permission
+Other conduct which could reasonably be considered inappropriate in a professional setting
+Our Responsibilities
+Project maintainers are responsible for clarifying the standards of acceptable behavior and are expected to take appropriate and fair corrective action in response to any instances of unacceptable behavior.
+
+Project maintainers have the right and responsibility to remove, edit, or reject comments, commits, code, wiki edits, issues, and other contributions that are not aligned to this Code of Conduct, or to ban temporarily or permanently any contributor for other behaviors that they deem inappropriate, threatening, offensive, or harmful.
+
+Scope
+This Code of Conduct applies both within project spaces and in public spaces when an individual is representing the project or its community. Examples of representing a project or community include using an official project e-mail address, posting via an official social media account, or acting as an appointed representative at an online or offline event. Representation of a project may be further defined and clarified by project maintainers.
+
+Enforcement
+Instances of abusive, harassing, or otherwise unacceptable behavior may be reported by contacting Ben Lesh (ben@benlesh.com), Tracy Lee (tracy@thisdot.co) or OJ Kwon (kwon.ohjoong@gmail.com). All complaints will be reviewed and investigated and will result in a response that is deemed necessary and appropriate to the circumstances. The project team is obligated to maintain confidentiality with regard to the reporter of an incident. Further details of specific enforcement policies may be posted separately.
+
+Project maintainers who do not follow or enforce the Code of Conduct in good faith may face temporary or permanent repercussions as determined by other members of the project's leadership.
+
+Attribution
+This Code of Conduct is adapted from the Contributor Covenant, version 1.4, available at https://www.contributor-covenant.org/version/1/4/code-of-conduct.html
+
+# Changelog
+All notable changes to this project will be documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [Unreleased]
+### Changed
+- Update and improvement of Polish translation from [@m-aciek](https://github.com/m-aciek).
+
+## [1.0.0] - 2017-06-20
+### Added
+- New visual identity by [@tylerfortune8](https://github.com/tylerfortune8).
+- Version navigation.
+- Links to latest released version in previous versions.
+- "Why keep a changelog?" section.
+- "Who needs a changelog?" section.
+- "How do I make a changelog?" section.
+- "Frequently Asked Questions" section.
+- New "Guiding Principles" sub-section to "How do I make a changelog?".
+- Simplified and Traditional Chinese translations from [@tianshuo](https://github.com/tianshuo).
+- German translation from [@mpbzh](https://github.com/mpbzh) & [@Art4](https://github.com/Art4).
+- Italian translation from [@azkidenz](https://github.com/azkidenz).
+- Swedish translation from [@magol](https://github.com/magol).
+- Turkish translation from [@karalamalar](https://github.com/karalamalar).
+- French translation from [@zapashcanon](https://github.com/zapashcanon).
+- Brazilian Portugese translation from [@Webysther](https://github.com/Webysther).
+- Polish translation from [@amielucha](https://github.com/amielucha).
+- Russian translation from [@aishek](https://github.com/aishek).
+- Czech translation from [@h4vry](https://github.com/h4vry).
+- Slovak translation from [@jkostolansky](https://github.com/jkostolansky).
+- Korean translation from [@pierceh89](https://github.com/pierceh89).
+- Croatian translation from [@porx](https://github.com/porx).
+
+### Changed
+- Start using "changelog" over "change log" since it's the common usage.
+- Start versioning based on the current English version at 0.3.0 to help
+translation authors keep things up-to-date.
+- Rewrite "What makes unicorns cry?" section.
+- Rewrite "Ignoring Deprecations" sub-section to clarify the ideal
+  scenario.
+- Improve "Commit log diffs" sub-section to further argument against
+  them.
+- Merge "Why can’t people just use a git log diff?" with "Commit log
+  diffs"
+- Fix typos in Simplified Chinese and Traditional Chinese translations.
+- Fix typos in Brazilian Portuguese translation.
+- Fix typos in Turkish translation.
+- Fix typos in Czech translation.
+- Fix typos in Swedish translation.
+- Improve phrasing in French translation.
+- Fix phrasing and spelling in German translation.
+
+### Removed
+- Section about "changelog" vs "CHANGELOG".
+
+## [0.3.0] - 2015-12-03
+### Added
+- RU translation from [@aishek](https://github.com/aishek).
+- pt-BR translation from [@tallesl](https://github.com/tallesl).
+- es-ES translation from [@ZeliosAriex](https://github.com/ZeliosAriex).
+
+## [0.2.0] - 2015-10-06
+### Changed
+- Remove exclusionary mentions of "open source" since this project can
+benefit both "open" and "closed" source projects equally.
+
+## [0.1.0] - 2015-10-06
+### Added
+- Answer "Should you ever rewrite a change log?".
+
+### Changed
+- Improve argument against commit logs.
+- Start following [SemVer](https://semver.org) properly.
+
+## [0.0.8] - 2015-02-17
+### Changed
+- Update year to match in every README example.
+- Reluctantly stop making fun of Brits only, since most of the world
+  writes dates in a strange way.
+
+### Fixed
+- Fix typos in recent README changes.
+- Update outdated unreleased diff link.
+
+## [0.0.7] - 2015-02-16
+### Added
+- Link, and make it obvious that date format is ISO 8601.
+
+### Changed
+- Clarified the section on "Is there a standard change log format?".
+
+### Fixed
+- Fix Markdown links to tag comparison URL with footnote-style links.
+
+## [0.0.6] - 2014-12-12
+### Added
+- README section on "yanked" releases.
+
+## [0.0.5] - 2014-08-09
+### Added
+- Markdown links to version tags on release headings.
+- Unreleased section to gather unreleased changes and encourage note
+keeping prior to releases.
+
+## [0.0.4] - 2014-08-09
+### Added
+- Better explanation of the difference between the file ("CHANGELOG")
+and its function "the change log".
+
+### Changed
+- Refer to a "change log" instead of a "CHANGELOG" throughout the site
+to differentiate between the file and the purpose of the file — the
+logging of changes.
+
+### Removed
+- Remove empty sections from CHANGELOG, they occupy too much space and
+create too much noise in the file. People will have to assume that the
+missing sections were intentionally left out because they contained no
+notable changes.
+
+Guiding Principles
+Changelogs are for humans, not machines.
+There should be an entry for every single version.
+The same types of changes should be grouped.
+Versions and sections should be linkable.
+The latest version comes first.
+The release date of each version is displayed.
+Mention whether you follow Semantic Versioning.
+Types of changes
+Added for new features.
+Changed for changes in existing functionality.
+Deprecated for soon-to-be removed features.
+Removed for now removed features.
+Fixed for any bug fixes.
+Security in case of vulnerabilities.
+
+[constributer-convenant]: https://www.contributor-covenant.org/
+[code-conduct]: https://www.contributor-covenant.org/version/1/4/code-of-conduct.html
+[librmath.so]: https://svn.r-project.org/R/trunk/src/nmath
+[wiki-norm]: https://en.wikipedia.org/wiki/Normal_distribution
+[r-doc-norm]: http://stat.ethz.ch/r-manual/r-patched/library/stats/html/normal.html

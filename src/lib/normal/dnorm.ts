@@ -39,11 +39,11 @@ const printer = debug('dnorm4');
 
 export function dnorm4(
   x: number,
-  mu: number = 0,
-  sigma: number = 1,
-  give_log: boolean = false
+  mu = 0,
+  sigma = 1,
+  give_log = false
 ): number {
-  
+     
     if (ISNAN(x) || ISNAN(mu) || ISNAN(sigma)) {
       return x + mu + sigma;
     }
