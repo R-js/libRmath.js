@@ -25,13 +25,13 @@ const F = false;
 const fixture = {
     dnorm: {
         'case': {
-            skip: T,
+            skip: F,
             input: [
                 { x: 2 },
                 { x: 3, mu: 1, sd: 1 },
                 { x: -1, mu: 1, sd: 1, l: true },
                 { x: 10, mu: 1, sd: 1 },
-                { x: NaN},
+                { x: NaN },
                 { x: -2, sd: Infinity },
                 { x: Infinity, mu: Infinity },
                 { x: -1, mu: -1 },
@@ -40,8 +40,8 @@ const fixture = {
                 { x: Infinity },
                 { x: 5.363123171977038e+154 },
                 { x: 155.5607738721713 },
-                { x: 0, mu:0, sd:0 },
-                { x: 1, mu:0, sd:0 }
+                { x: 0, mu: 0, sd: 0 },
+                { x: 1, mu: 0, sd: 0 }
             ],
             expected: [
                 0.05399096651318806,
@@ -63,9 +63,12 @@ const fixture = {
         }
     },
     qnorm: {
-        'defaults': {
+        'defaults & Edges': {
             input: [
-                { p: 0.99 },
+                { p: 0.5, mu: 1 },
+                { p: -1E-6, l: T, lt: F },
+                { p: -1E3, l: T, lt: T },
+                { p: 1E-3 },
                 { p: 0 },
                 { p: NaN, l: F },
                 { p: 0.5, lt: T },
@@ -73,20 +76,17 @@ const fixture = {
                 { p: 0.5, sd: 0 },
                 { p: 0.99 }
             ],
-            expected: [
-                0.05399096651318806,
-                /*0.05399096651318806,
-                -2.9189385332046727,
-                1.0279773571668917e-18,
+            expected: [ // in R set options(digits=19)
+                1,
+                -4.7534244098670255,
+                -44.615747731966628,
+                -3.0902323061678132,
+                -Infinity,
                 NaN,
                 0,
                 NaN,
-                Infinity,
                 0,
-                NaN,
-                0,
-                0,
-                0*/
+                2.3263478740408408
             ]
         }
     }

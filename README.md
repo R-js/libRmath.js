@@ -1483,39 +1483,41 @@ declare function dnorm(
 * `sd`: standard deviation, default `1`.
 * `log`: give result as ln(..) value, default `false`
 
-Usage:
+<details>
+  <summary><b>Example:</b> (click to show)</summary>
 
 ```typescript
-import 'lib-r-math.js'
+//node:
+const libR = import 'lib-r-math.js'
+//browser: after importing with the <script>
+window.libR
 
-//helpers
-const _9 = R.numberPrecision(9) //9 digits significance
-const seq = R.sequenceFactory(0)
+const { c, numberPrecision, seq0, chain, Rcycle } = libR.utils
 
-const { rnorm, dnorm, pnorm, qnorm } = Normal();
+const { rnorm, dnorm, pnorm, qnorm } = libR.Normal();
 
-// make dnorm follow R cycling rules
-const Rdnorm = compose(_9, R.Rcycle, dnorm)
+// Optional: functional composition, make dnorm follow R cycling rules with precision 9
+const Dnorm = chain(numberPrecision(9), dnorm)
 
-const d1 = Rdnorm(0)
-//-> [ 0.39894228 ]
+const d1 = Dnorm(0)
+//→  [ 0.39894228 ]
 
 const d2 = Rdnorm(3, 4, 2)
-//-> [ 0.176032663 ]
+//→  [ 0.176032663 ]
 
-const d3 = Rdnorm(-10)
-//-> 7.69459863e-23
+const d3 = Dnorm(-10)
+//→  [7.69459863e-23]
 
 //feed it also some *non-numeric*
-const x = c(-Infinity, Infinity, NaN, seq(-4, 4))
-const d4 = Rdnorm(x)
-/* -> [
+const x = c(-Infinity, Infinity, NaN, seq0(-4, 4))
+const d4 = Dnorm(x)
+/*→  [
   0,           0,          NaN,         0.000133830226, 0.00443184841, 0.0539909665,
   0.241970725, 0.39894228, 0.241970725, 0.0539909665,   0.00443184841, 0.000133830226
 ]*/
 
-const d5 = Rdnorm(x, 0, 1, true)
-/* -> [
+const d5 = Dnorm(x, 0, 1, true)
+/* →  [
    -Infinity,  -Infinity, NaN, -8.91893853, -5.41893853, -2.91893853, -1.41893853,
    -0.918938533, -1.41893853, -2.91893853, -5.41893853, -8.91893853
    ]
@@ -1544,6 +1546,7 @@ dnorm(x, 0,1, TRUE);
 # [1]       -Inf       -Inf        NaN -8.9189385 -5.4189385 -2.9189385
 # [7] -1.4189385 -0.9189385 -1.4189385 -2.9189385 -5.4189385 -8.9189385
 ```
+</details>
 
 #### `pnorm`
 
@@ -1567,30 +1570,33 @@ declare function pnorm(
 * `lowerTail`: if `true` (default), probabilities are P[X ≤ x], otherwise, P[X > x].
 * `log`: give result as log value
 
-Usage:
+<details>
+  <summary><b>Example:</b> (click to show)</summary>
 
 ```javascript
-import 'lib-r-math.js'
+//node
+const libR = import 'lib-r-math.js'
+//browser
+window.libR
 
-const { rnorm, dnorm, pnorm, qnorm } = Normal()
+const { c, numberPrecision, seq0, chain, Rcycle } = libR.utils
 
-// some helpers
-const seq = R.sequenceFactory(0)
-const _9 = R.numberPrecision(9) //9 digit significance
+const { rnorm, dnorm, pnorm, qnorm } = libR.Normal()
 
-// functional composition
-const Rpnorm = compose(_9, R.Rcycle, pnorm)
+
+// functional composition,
+const Pnorm = Rcycle(chain( numberPrecision(9), pnorm))
 
 //data
-const q = seq(-1, 1)
+const q = seq0(-1, 1)
 
-const p1 = Rpnorm(q);
+const p1 = Pnorm(q);
 //-> [ 0.158655254, 0.5, 0.841344746 ]
 
-const p2 = Rpnorm(q, 0, 1, false));
+const p2 = Porm(q, 0, 1, false));
 //-> [ 0.841344746, 0.5, 0.158655254 ]
 
-const p3 = Rpnorm(q, 0, 1, false, true));
+const p3 = Pnorm(q, 0, 1, false, true));
 //-> [ -0.172753779, -0.693147181, -1.84102165 ]
 ```
 
@@ -1606,6 +1612,7 @@ pnorm(-1:1, lower.tail=FALSE);
 pnorm(-1:1, log.p= TRUE);
 #[1] -0.1727538 -0.6931472 -1.8410216
 ```
+</details>
 
 #### `qnorm`
 
@@ -1628,7 +1635,8 @@ declare function qnorm(
 * `sd`: standard deviation (default 1).
 * `logP`: probabilities are given as ln(p).
 
-Usage:
+<details>
+  <summary><b>Example:</b> (click to show)</summary>
 
 ```javascript
 // node.js
@@ -1640,9 +1648,8 @@ const { Rcycle, chain, numberPrecision, seq0 } = libR.utils
 
 const log = Rcycle(Math.log)
 const _9 = numberPrecision(9) // limit precision to 9 decimals
-const seq = sequenceFactory(0)
 
-const { rnorm, dnorm, pnorm, qnorm } = Normal()
+const { rnorm, dnorm, pnorm, qnorm } = libR.Normal()
 
 const Qnorm = Rcycle(chain(_9 qnorm))
 
@@ -1681,6 +1688,7 @@ qnorm(p, 0, 2, FALSE);
 qnorm(log(p), 0, 2, FALSE, TRUE);
 #[1]      Inf  1.34898  0.00000 -1.34898     -Inf
 ```
+</details>
 
 #### `rnorm`
 
@@ -1696,7 +1704,8 @@ declare function rnorm(n = 1, mu = 0, sd = 1): number | number[];
 * `mu`: mean of the distribution. Defaults to 0.
 * `sd`: standard deviation. Defaults to 1.
 
-Usage:
+<details>
+  <summary><b>Example:</b> (click to show)</summary>
 
 ```javascript
 //node
@@ -1737,6 +1746,7 @@ rnorm(5,2,3)
 #[3]  1.1158387  1.9826985
 #[5]  9.2139602
 ```
+</details>
 
 ## Other Probability Distributions
 
