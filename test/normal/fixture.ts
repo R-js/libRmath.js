@@ -51,8 +51,8 @@ const fixture = {
                 NaN,
                 0,
                 NaN,
-                Infinity,
-                0,
+                0.3989422804014327,
+                0.24197072451914337,
                 NaN,
                 0,
                 0,
@@ -87,6 +87,46 @@ const fixture = {
                 NaN,
                 0,
                 2.3263478740408408
+            ]
+        }
+    },
+    pnorm: {
+       /* pnorm5(
+            q: number,
+            mu: number = 0,
+            sigma: number = 1,
+            lowerTail: boolean = true,
+            logP: boolean = false
+        */
+        'defaults & Edges': {
+            input: [
+                { q: 0.5 },
+                { q: NaN, mu:1, sd:2, lt: T, l: F },
+                { q: Infinity, mu: Infinity, l: T, lt: T },
+                { q: 1E-3, sd: -1 },
+                { q: 0, sd:0 },
+                { q: -1, sd: 0 },
+                /*{ q: 0.5, lt: T },
+                { q: 0.5, sd: -1 },
+                { q: 0.5, sd: 0 },
+                { q: 0.99 }*/
+            ],
+            expected: [ // in R set options(digits=19)
+                0.69146246127401301,
+                NaN,
+                NaN,
+                NaN,
+                1,
+                0
+                /*-4.7534244098670255,
+                -44.615747731966628,
+                -3.0902323061678132,
+                -Infinity,
+                NaN,
+                0,
+                NaN,
+                0,
+                2.3263478740408408*/
             ]
         }
     }

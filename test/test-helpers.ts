@@ -21,7 +21,7 @@ const { isNaN, isFinite } = Number;
 export function creatApproximator(prec){
     return function approximitly(act: number, exp: number) {
         if (typeof act !== 'number'){
-            return
+            throw new TypeError(`act ${act} is not a number`) 
         }
         switch (true) {
             case isNaN(act):
