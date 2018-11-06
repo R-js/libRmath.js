@@ -100,7 +100,7 @@ const fixture = {
          */
         'defaults & Edges': {
             input: [
-                { q: 0.5 },//1
+                /*{ q: 0.5 },//1
                 { q: NaN, mu: 1, sd: 2, lt: T, l: F },
                 { q: Infinity, mu: Infinity, l: T, lt: T },
                 { q: 1E-3, sd: -1 },
@@ -112,12 +112,15 @@ const fixture = {
                 { q: -1, mu: +Infinity, sd: 1 },//10
                 { q: -1, mu: 0, sd: 1, lt: T },//11
                 { q: -1, mu: 0, sd: 1, lt: F },//12
-                /*{ q: 0.5, sd: -1 },
-                { q: 0.5, sd: 0 },
+                { q: Number.EPSILON*0.25 },//13*/
+                { q: Number.EPSILON*0.25 , lt:F},//14
+                /*{ q: Number.EPSILON*0.25, l:T },//15
+                { q: Number.EPSILON*0.25 , lt:F, l:T},
+                /*{ q: 0.5, sd: 0 },
                 { q: 0.99 }*/
             ],
             expected: [ // in R set options(digits=19)
-                0.69146246127401301,//1
+               /* 0.69146246127401301,//1
                 NaN,
                 NaN,
                 NaN,
@@ -128,7 +131,9 @@ const fixture = {
                 1,
                 0,//10
                 0.15865525393145705,//11
-                0.84134474606854293,
+                0.84134474606854293,//12
+                0.5,*/
+                0.5,
                 /*-4.7534244098670255,
                 -44.615747731966628,
                 -3.0902323061678132,
