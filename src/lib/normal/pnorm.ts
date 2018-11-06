@@ -97,7 +97,7 @@ export function pnorm5(
 
   pnorm_both(q, p, cp, !lowerTail, logP);
 
-  return lowerTail ? p.val : 1 - p.val;
+  return lowerTail ? p.val : cp.val;
 }
 
 
