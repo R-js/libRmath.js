@@ -74,7 +74,7 @@ export function pnorm5(
   logP: boolean = false
 ): number {
 
-  
+
   let p = new NumberW(0);
   let cp = new NumberW(0);
 
@@ -97,7 +97,7 @@ export function pnorm5(
 
   pnorm_both(q, p, cp, !lowerTail, logP);
 
-  return lowerTail ? p.val : cp.val;
+  return lowerTail ? p.val : 1 - p.val;
 }
 
 
@@ -171,14 +171,14 @@ function pnorm_both(
 
   let min = DBL_MIN;
 
-  let i = new Int32Array([0]);
   let lower: boolean;
   let upper: boolean;
 
+  /* will never happen
   if (ISNAN(x)) {
     cum.val = ccum.val = x;
     return;
-  }
+  }*/
 
   /* Consider changing these : */
   eps = DBL_EPSILON * 0.5;
@@ -194,9 +194,9 @@ function pnorm_both(
       xsq = x * x;
       xnum = a[4] * xsq;
       xden = xsq;
-      for (i[0] = 0; i[0] < 3; ++i[0]) {
-        xnum = (xnum + a[i[0]]) * xsq;
-        xden = (xden + b[i[0]]) * xsq;
+      for (let i = 0; i < 3; ++i) {
+        xnum = (xnum + a[i]) * xsq;
+        xden = (xden + b[i]) * xsq;
       }
     } else xnum = xden = 0.0;
 
@@ -212,9 +212,9 @@ function pnorm_both(
 
     xnum = c[8] * y;
     xden = y;
-    for (i[0] = 0; i[0] < 7; ++i[0]) {
-      xnum = (xnum + c[i[0]]) * y;
-      xden = (xden + d[i[0]]) * y;
+    for (let i = 0; i < 7; ++i) {
+      xnum = (xnum + c[i]) * y;
+      xden = (xden + d[i]) * y;
     }
     temp = (xnum + c[7]) / (xden + d[7]);
 
@@ -269,9 +269,9 @@ function pnorm_both(
     xsq = 1.0 / (x * x); /* (1./x)*(1./x) might be better */
     xnum = p[5] * xsq;
     xden = xsq;
-    for (i[0] = 0; i[0] < 4; ++i[0]) {
-      xnum = (xnum + p[i[0]]) * xsq;
-      xden = (xden + q[i[0]]) * xsq;
+    for (let i = 0; i < 4; ++i) {
+      xnum = (xnum + p[i]) * xsq;
+      xden = (xden + q[i]) * xsq;
     }
     temp = xsq * (xnum + p[4]) / (xden + q[4]);
     temp = (M_1_SQRT_2PI - temp) / y;
