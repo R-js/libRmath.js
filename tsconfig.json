@@ -7,7 +7,7 @@
         "newLine": "LF",
         "noEmit": false,
         "listEmittedFiles": true,
-        "declarationDir": "./",
+        "declarationDir": "dist/",
         "declaration": true,
         "removeComments": true,
         "allowUnreachableCode": true,
