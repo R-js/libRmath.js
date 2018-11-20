@@ -16,11 +16,11 @@ const { isFinite: R_FINITE } = Number;
 const { abs: fabs } = Math;
 
 import { rbinom } from '../binomial/rbinom';
-import { flatten, possibleScalar, seq, sum } from '../r-func';
+import { flatten, possibleScalar,  sum } from '../r-func';
 import { IRNG } from '../rng/irng';
 
 const printer_rmultinom = debug('rmultinom');
-const sequence = seq()();
+//const sequence = seq()();
 
 export function rmultinom(
   n: number,
