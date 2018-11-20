@@ -28,7 +28,7 @@ export function rmultinom(
   prob: number | number[],
   rng: IRNG
 ): (number[]) | (number[][]) {
-  const result = sequence(n).map(() => _rmultinom(size, prob, rng));
+  const result = Array.from({length:n}).map(() => _rmultinom(size, prob, rng));
   return possibleScalar(result);
 }
 
