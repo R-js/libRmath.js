@@ -81,7 +81,7 @@ export function pnorm_both(
     let xden;
     let xnum;
     let temp;
-    let eps;
+    
     let xsq;
     let y;
   
@@ -97,7 +97,7 @@ export function pnorm_both(
     }*/
   
     /* Consider changing these : */
-    eps = DBL_EPSILON * 0.5;
+    const eps = DBL_EPSILON * 0.5; //1.1102230246251565e-16
   
     /* i_tail in {0,1,2} =^= {lower, upper, both} */
     lower = i_tail !== true;
@@ -114,7 +114,9 @@ export function pnorm_both(
           xnum = (xnum + a[i]) * xsq;
           xden = (xden + b[i]) * xsq;
         }
-      } else xnum = xden = 0.0;
+      } else {
+        xnum = xden = 0.0;
+      }
   
       temp = x * (xnum + a[3]) / (xden + b[3]);
       if (lower) cum.val = 0.5 + temp;
@@ -141,6 +143,13 @@ export function pnorm_both(
                   temp = *cum; if(lower) *cum = *ccum; *ccum = temp; \
               }
           */
+      /*
+     log_p,   x> 0 &&  lower,   x<=0 &&   higher, path 
+      T              T            F               A+B
+      T              F            T               A+B
+      T              F            F               B  
+      F              X            X               C 
+      */    
       do_del(ccum, cum, log_p, y, temp, upper, lower, x);
       //swap_tail;
       if (x > 0) {
@@ -191,6 +200,13 @@ export function pnorm_both(
       }
       temp = xsq * (xnum + p[4]) / (xden + q[4]);
       temp = (M_1_SQRT_2PI - temp) / y;
+       /*
+     log_p,   x> 0 &&  lower,   x<=0 &&   higher(upper), path 
+      T              T            F                       A+B
+      T              F            T                       A+B
+      T              F            F                       B  
+      F              X            X                       C 
+      */ 
       do_del(ccum, cum, log_p, x, temp, upper, lower, x);
       //do_del(x);
       //swap_tail;
