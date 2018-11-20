@@ -14,7 +14,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { DBL_MANT_DIG, M_LN2, DBL_MIN_EXP } from '../../src/lib/common/_general'
+import { map, range } from '../test-helpers'
+import { DBL_MANT_DIG, M_LN2, DBL_MIN_EXP, M_SQRT_32 } from '../../src/lib/common/_general'
 const { sqrt } = Math
 const threshold = sqrt(-2 * M_LN2 * (DBL_MIN_EXP + 1 - DBL_MANT_DIG))
 const _ = undefined
@@ -22,6 +23,10 @@ const T = true;
 const I = Infinity;
 const { MAX_VALUE: DBL_MAX } = Number
 const F = false;
+
+
+
+
 const fixture = {
     dnorm: {
         'case': {
@@ -98,6 +103,16 @@ const fixture = {
              lowerTail: boolean = true,
              logP: boolean = false
          */
+        'linear scan': {
+            input: Array.from(map<number, {q: number, mu: number, sd: number}>( v => ({
+                q: v,
+                mu: 0,
+                sd: 5
+            }))(range(-15, 15))),
+            expected:[
+                2
+            ]
+        },
         'defaults & Edges': {
             input: [
                 { q: 0.5 },//1
@@ -112,12 +127,10 @@ const fixture = {
                 { q: -1, mu: +Infinity, sd: 1 },//10
                 { q: -1, mu: 0, sd: 1, lt: T },//11
                 { q: -1, mu: 0, sd: 1, lt: F },//12
-                { q: Number.EPSILON*0.25 },//13
-                { q: Number.EPSILON*0.25 , lt:F},//14
-                { q: Number.EPSILON*0.25, l:T },//15
-                { q: Number.EPSILON*0.25 , lt:F, l:T},
-                /*{ q: 0.5, sd: 0 },
-                { q: 0.99 }*/
+                { q: Number.EPSILON * 0.25 },//13
+                { q: Number.EPSILON * 0.25, lt: F },//14
+                { q: Number.EPSILON * 0.25, l: T },//15
+                { q: Number.EPSILON * 0.25, lt: F, l: T },
             ],
             expected: [ // in R set options(digits=19)
                 0.69146246127401301,//1
