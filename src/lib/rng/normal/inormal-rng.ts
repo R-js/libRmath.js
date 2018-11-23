@@ -17,6 +17,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { IRNG } from '../';
 import { randomGenHelper } from '../../r-func';
+import { IRNG_CORE } from '../irng';
+
+// make sure sub-class is follow this
+export interface IRNGNormal extends IRNG_CORE {
+  norm_rand(n: number): number[];
+}
 
 export abstract class IRNGNormal {
   protected rng: IRNG;
