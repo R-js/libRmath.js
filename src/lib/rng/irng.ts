@@ -19,6 +19,15 @@ import { IRNGType } from './irng-type';
 
 export type MessageType = 'INIT';
 
+// make sure sub-class is follow this
+export interface IRNG_CORE {
+  unif_rand(n?: number): number[];
+}
+
+export interface IRNG extends IRNG_CORE {
+
+}
+
 export abstract class IRNG {
   protected _name: string;
   protected _kind: IRNGType;
@@ -51,7 +60,7 @@ export abstract class IRNG {
   }
 
   public abstract set seed(_seed: number[]);
-  public unif_rand(n: number = 1): number | number[] {
+  public unif_rand(n: number = 1): number[] {
     n = (!n || n < 0) ? 1 : n;
     return Array.from({length:n}).map(() => this.internal_unif_rand());
   }
