@@ -36,14 +36,14 @@ export function rlogisOne(
   scale: number = 1,
   rng: IRNG
 ): number {
- 
+
     if (ISNAN(location) || !R_FINITE(scale)) {
       return ML_ERR_return_NAN(printer_rlogis);
     }
 
     if (scale === 0 || !R_FINITE(location)) return location;
     else {
-      let u: number = rng.unif_rand() as number;
+      let u: number = rng.internal_unif_rand();
       return location + scale * log(u / (1 - u));
     }
 }

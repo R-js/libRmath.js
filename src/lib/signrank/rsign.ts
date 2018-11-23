@@ -34,7 +34,7 @@ export function rsignrank(nn: number, n: number, rng: IRNG): number | number[] {
     let r = 0.0;
     let k = floor(nRound);
     for (let i = 0; i < k /**/; ) {
-      r += ++i * floor((rng.unif_rand() as number) + 0.5);
+      r += ++i * floor((rng.internal_unif_rand()) + 0.5);
     }
     return r;
   });

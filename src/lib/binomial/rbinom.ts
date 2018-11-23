@@ -31,7 +31,7 @@ export function rbinom(n: number|number[], nin: number, pp: number, rng: IRNG): 
 }
 
 export function rbinomOne(nin: number, pp: number, rng: IRNG): number {
-  
+
  // double
   let c = 0;
   let fm = 0;
@@ -47,7 +47,7 @@ export function rbinomOne(nin: number, pp: number, rng: IRNG): number {
   let xm = 0;
   let xr = 0;
   let psave = -1.0;
-  
+
   //int
   let nsave = -1;
   let m = 0;
@@ -102,7 +102,7 @@ export function rbinomOne(nin: number, pp: number, rng: IRNG): number {
             and r == INT_MAX gave only even values */
     printer_rbinom('Evade overflow:%d > MAX_SAFE_INTEGER', r);
     return qbinom(
-      rng.unif_rand() as number, //between 0 and 1
+      rng.internal_unif_rand(), //between 0 and 1
       r,
       pp,
       /*lower_tail*/ false,
@@ -158,8 +158,8 @@ export function rbinomOne(nin: number, pp: number, rng: IRNG): number {
   /*-------------------------- np = n*p >= 30 : ------------------- */
   let gotoFinis = false;
   while (true && !gotoL_np_small) {
-    u = (rng.unif_rand() as number) * p4;
-    v = (rng.unif_rand() as number);
+    u = (rng.internal_unif_rand()) * p4;
+    v = (rng.internal_unif_rand());
     /* triangular region */
     if (u <= p1) {
       ix = trunc(xm - p1 * v + u);

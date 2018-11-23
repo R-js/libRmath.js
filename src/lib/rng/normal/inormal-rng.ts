@@ -47,4 +47,8 @@ export abstract class IRNGNormal {
   public unif_rand(n: number = 1): number[] {
      return this.rng.unif_rand(n);
   }
+
+  public internal_unif_rand() {
+    return this.rng.internal_unif_rand();
+  }
 }

@@ -50,13 +50,14 @@ function _typeOf(v: any): strTypes {
   if (v instanceof Array) return 'array';
   if (v instanceof Function) return 'function';
   const k = typeof v;
+  // @ts-ignore TS2322: Type '"string" | "number" | "bigint" | "boolean" | "symbol" | "undefined" | "object" | "function"' is not assignable to type 'strTypes'.
   return k;
 }
 
 export function* multiplexer(...rest: any[]): IterableIterator<any[]> {
   //
   // Analyze
-  //  
+  //
   const analyzed: _t[] = [];
   type _t = boolean[] | number[] | undefined[] | string[] | null[] | symbol[] | Array<any>;
 

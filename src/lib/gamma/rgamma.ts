@@ -88,7 +88,7 @@ export function rgammaOne(
     if (a === 0) return 0;
     e = 1.0 + exp_m1 * a;
     while (true) {
-      p = e * (rng.unif_rand() as number);
+      p = e * (rng.internal_unif_rand());
       if (p >= 1.0) {
         x = -log((e - p) / a);
         if (exp_rand(rng.unif_rand as any) >= (1.0 - a) * log(x)) break;
@@ -119,7 +119,7 @@ export function rgammaOne(
   if (t >= 0.0) return scale * ret_val;
 
   /* Step 3: u = 0,1 - uniform sample. squeeze acceptance (s) */
-  u = rng.unif_rand() as number;
+  u = rng.internal_unif_rand();
   if (d * u <= t * t * t) return scale * ret_val;
 
   /* Step 4: recalculations of q0, b, si, c if necessary */
@@ -172,7 +172,7 @@ export function rgammaOne(
          *	u =  0,1 -uniform deviate
          *	t = (b,si)-double exponential (laplace) sample */
     e = exp_rand(rng.unif_rand as any);
-    u = rng.unif_rand() as number;
+    u = rng.internal_unif_rand();
     u = u + u - 1.0;
     if (u < 0.0) t = b - si * e;
     else t = b + si * e;

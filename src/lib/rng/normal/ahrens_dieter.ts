@@ -15,7 +15,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { IRNG } from '../'; 
+import { IRNG } from '../';
 import { MersenneTwister } from '../mersenne-twister';
 import { IRNGNormal } from './inormal-rng';
 
@@ -162,7 +162,7 @@ export class AhrensDieter extends IRNGNormal {
   }
 
   protected internal_norm_rand() {
-    let u1: number = this.rng.unif_rand() as number;
+    let u1: number = this.rng.internal_unif_rand();
     let s = 0.0;
     let w;
     let aa;
@@ -181,7 +181,7 @@ export class AhrensDieter extends IRNGNormal {
       u2 = u1 - i[0];
       aa = a[i[0] - 1];
       while (u2 <= t[i[0] - 1]) {
-        u1 = this.rng.unif_rand() as number;
+        u1 = this.rng.internal_unif_rand();
         w = u1 * (a[i[0]] - aa);
         tt = (w * 0.5 + aa) * w;
         for (;;) {
@@ -190,7 +190,7 @@ export class AhrensDieter extends IRNGNormal {
             y = aa + w;
             return s === 1.0 ? -y : y;
           }
-          u1 = this.rng.unif_rand() as number;
+          u1 = this.rng.internal_unif_rand();
           if (u2 < u1) break;
           tt = u1;
           u2 = this.rng.unif_rand();
@@ -213,13 +213,13 @@ export class AhrensDieter extends IRNGNormal {
         w = u1 * d[i[0] - 1];
         tt = (w * 0.5 + aa) * w;
         for (;;) {
-          u2 = this.rng.unif_rand() as number;
+          u2 = this.rng.internal_unif_rand();
           if (u2 > tt) break jump;
-          u1 = this.rng.unif_rand() as number;
+          u1 = this.rng.internal_unif_rand();
           if (u2 < u1) break;
           tt = u1;
         }
-        u1 = this.rng.unif_rand() as number;
+        u1 = this.rng.internal_unif_rand();
       }
       //jump:; (goto label)
     }
