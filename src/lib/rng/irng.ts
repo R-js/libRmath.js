@@ -36,6 +36,10 @@ export abstract class IRNG {
   }
 
   public abstract set seed(_seed: number[]);
+
+  public unif_rand(): number;
+  public unif_rand(n: 0 | 1): number;
+  public unif_rand(n: number): number | number[];
   public unif_rand(n: number = 1): number | number[] {
     n = (!n || n < 0) ? 1 : n;
     return map(seq()()(n))(() => this.internal_unif_rand());
