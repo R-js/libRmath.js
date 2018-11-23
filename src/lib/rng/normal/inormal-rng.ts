@@ -40,11 +40,11 @@ export abstract class IRNGNormal {
   public norm_rand(n: number): number[]{
     n = !n || n < 0 ? 1 : n;
     return randomGenHelper(n, this.internal_norm_rand)//; : map(seq()()(n))(() => this.internal_norm_rand());
-  } 
+  }
 
   protected abstract internal_norm_rand(): number;
 
-  public unif_rand(n: number = 1): number|number[] {
+  public unif_rand(n: number = 1): number[] {
      return this.rng.unif_rand(n);
   }
 }

@@ -42,7 +42,7 @@ export class WichmannHill extends IRNG {
     this.m_seed = new Uint32Array(buf).fill(0);
   }
 
-  protected internal_unif_rand(): number {
+  internal_unif_rand(): number {
     const s = this.m_seed;
     s[0] = (s[0] * 171) % 30269;
     s[1] = (s[1] * 172) % 30307;
@@ -81,7 +81,7 @@ export class WichmannHill extends IRNG {
   }
 
   public set seed(_seed: number[]) {
-    
+
 
     if (_seed.length > this.m_seed.length || _seed.length === 0) {
       this.init(timeseed());

@@ -25,7 +25,7 @@ export interface IRNG_CORE {
 }
 
 export interface IRNG extends IRNG_CORE {
-
+  internal_unif_rand(): number;
 }
 
 export abstract class IRNG {
@@ -65,7 +65,8 @@ export abstract class IRNG {
     return Array.from({length:n}).map(() => this.internal_unif_rand());
   }
 
-  protected abstract internal_unif_rand(): number;
+  // @ts-ignore
+  abstract internal_unif_rand(): number;
 
   public abstract get seed(): number[];
   // event stuff
