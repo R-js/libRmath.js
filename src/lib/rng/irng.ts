@@ -22,10 +22,11 @@ export type MessageType = 'INIT';
 // make sure sub-class is follow this
 export interface IRNG_CORE {
   unif_rand(n?: number): number[];
+  internal_unif_rand(): number;
 }
 
 export interface IRNG extends IRNG_CORE {
-  internal_unif_rand(): number;
+
 }
 
 export abstract class IRNG {

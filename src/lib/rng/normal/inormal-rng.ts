@@ -31,6 +31,7 @@ export abstract class IRNGNormal {
     this.unif_rand = this.unif_rand.bind(this);
     this.norm_rand = this.norm_rand.bind(this);
     this.internal_norm_rand = this.internal_norm_rand.bind(this);
+    this.internal_unif_rand = this.internal_unif_rand.bind(this);
   }
 
   public norm_randOne() {

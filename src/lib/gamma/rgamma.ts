@@ -91,10 +91,10 @@ export function rgammaOne(
       p = e * (rng.internal_unif_rand());
       if (p >= 1.0) {
         x = -log((e - p) / a);
-        if (exp_rand(rng.unif_rand as any) >= (1.0 - a) * log(x)) break;
+        if (exp_rand(rng.internal_unif_rand) >= (1.0 - a) * log(x)) break;
       } else {
         x = exp(log(p) / a);
-        if (exp_rand(rng.unif_rand as any) >= x) break;
+        if (exp_rand(rng.internal_unif_rand) >= x) break;
       }
     }
     return scale * x;
@@ -171,7 +171,7 @@ export function rgammaOne(
     /* Step 8: e = standard exponential deviate
          *	u =  0,1 -uniform deviate
          *	t = (b,si)-double exponential (laplace) sample */
-    e = exp_rand(rng.unif_rand as any);
+    e = exp_rand(rng.internal_unif_rand);
     u = rng.internal_unif_rand();
     u = u + u - 1.0;
     if (u < 0.0) t = b - si * e;

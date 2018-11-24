@@ -164,11 +164,11 @@ export class AhrensDieter extends IRNGNormal {
   protected internal_norm_rand() {
     let u1: number = this.rng.internal_unif_rand();
     let s = 0.0;
-    let w;
-    let aa;
-    let tt;
-    let u2;
-    let y;
+    let w: number;
+    let aa: number;
+    let tt: number;
+    let u2: number;
+    let y: number;
     if (u1 > 0.5) {
       s = 1.0;
     }
@@ -193,9 +193,9 @@ export class AhrensDieter extends IRNGNormal {
           u1 = this.rng.internal_unif_rand();
           if (u2 < u1) break;
           tt = u1;
-          u2 = this.rng.unif_rand();
+          u2 = this.rng.internal_unif_rand();
         }
-        u2 = this.rng.unif_rand();
+        u2 = this.rng.internal_unif_rand();
       }
       w = (u2 - t[i[0] - 1]) * h[i[0] - 1];
     } else {

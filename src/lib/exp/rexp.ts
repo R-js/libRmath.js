@@ -38,11 +38,11 @@ export function rexpOne(
   scale: number = 1,
   rng: IRNG
 ): number | number[] {
- 
+
     if (!R_FINITE(scale) || scale <= 0.0) {
       if (scale === 0) return 0;
       /* else */
       return ML_ERR_return_NAN(printer);
     }
-    return scale * exp_rand(rng.unif_rand as any); // --> in ./sexp.c
+    return scale * exp_rand(rng.internal_unif_rand); // --> in ./sexp.c
 }

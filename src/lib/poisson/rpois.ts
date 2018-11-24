@@ -225,7 +225,7 @@ export function rpoisOne(mu: number, rng: IRNGNormal): number {
     if (!gotoStepF) {
       /* Step E. Exponential Sample */
 
-      E = exp_rand(rng.unif_rand as any); /* ~ Exp(1) (standard exponential) */
+      E = exp_rand(rng.internal_unif_rand); /* ~ Exp(1) (standard exponential) */
 
       /*  sample t from the laplace 'hat'
                 (if t <= -0.6744 then pk < fk for all mu >= 10.) */
