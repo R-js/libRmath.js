@@ -14,7 +14,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { map, range } from '../test-helpers'
+import { lazyMap, range } from '../../src/lib/r-func'
 import { DBL_MANT_DIG, M_LN2, DBL_MIN_EXP, M_SQRT_32 } from '../../src/lib/common/_general'
 const { sqrt } = Math
 const threshold = sqrt(-2 * M_LN2 * (DBL_MIN_EXP + 1 - DBL_MANT_DIG))
@@ -104,12 +104,12 @@ const fixture = {
              logP: boolean = false
          */
         'linear scan': {
-            input: Array.from(map<number, {q: number, mu: number, sd: number}>( v => ({
+            input: lazyMap<number, { q: number, mu: number, sd: number }>(v => ({
                 q: v,
                 mu: 0,
                 sd: 5
-            }))(range(-15, 15))),
-            expected:[
+            }))(range(-15, 15 )),
+            expected: [
                 2
             ]
         },

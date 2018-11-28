@@ -22,10 +22,12 @@ export function* seq_len({ length, base = 1 }: { length: number, base: number })
   };
 }
 
-export const sequenceFactory = (adjust = -1) => (start: number, end: number, delta = 1) => Array.from(lazySeq(start, end, delta, adjust))
+export const sequenceFactory = (adjust = -1) =>
+  (start: number, end: number, delta = end < start ? -1:1) =>
+    Array.from(lazySeq(start, end, delta, adjust))
 
 
-export function* lazySeq(start: number, end: number, delta = 1, adjust = 0) {
+export function* lazySeq(start: number, end: number, delta = end < start ? -1 : 1, adjust = 0) {
   if (delta === 0) {
     throw new TypeError(`argument 'delta' cannot be zero`)
   }
@@ -95,7 +97,7 @@ export function* multiplexer(...rest: any[]): IterableIterator<any[]> {
 export const c = chain(Array.from, flatten)
 
 export function Rcycle(fn: Function) {
-  return function(...args: any[]) {
+  return function (...args: any[]) {
     const gen = multiplexer(...args);
     let rc: any[] = [];
     for (const arg of gen) {
@@ -317,15 +319,46 @@ export function chain(...fns: Function[]): Function {
       throw new TypeError(`argument ${i + 1} is not a function`)
     }
   }
-  return function(...args: any[]) {
+  return function (...args: any[]) {
     let lastArgs = args
     if (args)
       for (let i = fns.length - 1; i >= 0; i--) {
         const fn = fns[i]
         lastArgs = [fn.apply(fn, lastArgs)]
         //console.log(lastArgs);
-    }
+      }
     return lastArgs[0]
   }
 }
 
+export function range(start: number, stop: number): IterableIterator<number> {
+  let cursor = start;
+  return ({
+    next: function (): IteratorResult<number> {
+      let value: number | undefined = undefined
+      let done = true
+      if (cursor <= stop) {
+        value = cursor
+        done = false
+      }
+      return { value, done } as any
+    },
+    [Symbol.iterator]: function () { return this }
+  })
+}
+
+export function lazyMap<T, S>(fn: (v: T, idx: number) => S) {
+  return function (source: IterableIterator<T>) {
+    let cursor = source;
+    let idx = 0;
+    return ({
+      next: function () {
+        const step = cursor.next()
+        if (step.done) return { value: undefined, done: true }
+        const rc = fn(step.value, idx++)
+        return { value: rc, done: false }
+      },
+      [Symbol.iterator]: function () { return this }
+    })
+  }
+}

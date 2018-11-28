@@ -21,7 +21,7 @@ const { isNaN, isFinite } = Number;
 export function creatApproximator(prec) {
     return function approximitly(act: number, exp: number) {
         if (typeof act !== 'number') {
-            throw new TypeError(`act ${act} is not a number`)
+            throw new TypeError(`actual [${act}] is not a number`)
         }
         switch (true) {
             case isNaN(act):
@@ -57,33 +57,3 @@ export const checkPrec9 = creatApproximator(1E-9);
 export const checkPrec6 = creatApproximator(1E-6);
 export const checkPrec3 = creatApproximator(1E-3);
 
-export function range(start: number, stop: number): IterableIterator<number> {
-    let cursor = start;
-    return ({
-        next: function () {
-            let value = undefined
-            let done = true
-            if (cursor <= stop) {
-                value = cursor
-                done = false
-            }
-            return { value, done }
-        },
-        [Symbol.iterator]: function () { return this }
-    })
-}
-
-export function map<T, S>(fn: (v: T, idx: number) => S, source: IterableIterator<T>):
- IterableIterator<S> {
-    let cursor = source;
-    let idx = 0;
-    return ({
-        next: function () {
-            const step = cursor.next()
-            if (step.done) return { value: undefined, done: true }
-            const rc = fn(step.value, idx++)
-            return { value: rc, done: false }
-        },
-        [Symbol.iterator]: function () { return this }
-    })
-}
