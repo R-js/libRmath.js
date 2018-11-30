@@ -14,7 +14,12 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-const { max } = Math;
+const { max, abs, sign } = Math;
+
+import * as debug from 'debug';
+
+const printer_seq = debug('seq');
+const precision9 = numberPrecision(9);
 
 export function* seq_len({ length, base = 1 }: { length: number, base: number }): IterableIterator<number> {
   for (let i = 0; i < length; i++) {
@@ -22,23 +27,57 @@ export function* seq_len({ length, base = 1 }: { length: number, base: number })
   };
 }
 
-export const sequenceFactory = (adjust = -1) => (start: number, end: number, delta = 1) => Array.from(lazySeq(start, end, delta, adjust))
 
+export const seq = (adjust = 0) => (adjustMin = adjust) => (
+  start: number,
+  end: number = 1,
+  step: number = 1
+): number[] => {
+  let s = start + adjust;
+  let e = end + adjust;
+  let cursor = s;
 
-export function* lazySeq(start: number, end: number, delta = 1, adjust = 0) {
-  if (delta === 0) {
+  if (end < start) {
+    e = start + adjustMin;
+    s = end + adjustMin;
+    cursor = e;
+  }
+  // wow: Chrome and FireFox give
+  // 0.4+0.2 = 0.6000000000000001
+  // so we use precision to have it make sense
+  // sometimes rounding effects try something diff
+  step = abs(step) * sign(end - start);
+  printer_seq('step:%d', step);
+
+  const rc: number[] = [];
+
+  do {
+    rc.push(cursor);
+    cursor += step;
+  } while (precision9(cursor) >= s && precision9(cursor) <= e && step !== 0);
+
+  return precision9(rc) as any;
+};
+
+export const sequenceFactory = (adjust = 0, adjustMin = adjust) => (start: number, end: number, delta = 1) => Array.from(lazySeq(start, end, delta, adjust, adjustMin))
+
+const printer_lazy_seq = debug('lazySeq');
+export function* lazySeq(start: number, end = 1, step = 1, adjust = -1, adjustMin = adjust) {
+  printer_lazy_seq(arguments);
+  if (step === 0) {
     throw new TypeError(`argument 'delta' cannot be zero`)
   }
-  if (end > start && delta < 0) {
+  if (end > start && step < 0) {
     throw new TypeError(`'end' > 'start' so delta must be positive`);
   }
-  if (end < start && delta > 0) {
+  if (end < start && step > 0) {
     throw new TypeError(`'end' < 'start' so delta must be negative`);
   }
+  const adj = step > 0 ? adjust : adjustMin;
   do {
-    yield start + adjust;
-    start = start + delta;
-  } while ((delta > 0 && start < end) || (delta < 0 && start > end));
+    yield start + adj;
+    start = start + step;
+  } while ((step > 0 && start <= end) || (step < 0 && start >= end));
 }
 
 
@@ -95,7 +134,7 @@ export function* multiplexer(...rest: any[]): IterableIterator<any[]> {
 export const c = chain(Array.from, flatten)
 
 export function Rcycle(fn: Function) {
-  return function(...args: any[]) {
+  return function (...args: any[]) {
     const gen = multiplexer(...args);
     let rc: any[] = [];
     for (const arg of gen) {
@@ -317,14 +356,14 @@ export function chain(...fns: Function[]): Function {
       throw new TypeError(`argument ${i + 1} is not a function`)
     }
   }
-  return function(...args: any[]) {
+  return function (...args: any[]) {
     let lastArgs = args
     if (args)
       for (let i = fns.length - 1; i >= 0; i--) {
         const fn = fns[i]
         lastArgs = [fn.apply(fn, lastArgs)]
         //console.log(lastArgs);
-    }
+      }
     return lastArgs[0]
   }
 }

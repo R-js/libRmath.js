@@ -737,7 +737,7 @@ usage example:
 const libR = require('lib-r-math.js');
 const {
     rng: { KnuthTAOCP, timeseed },
-    R: { seq, numberPrecision }
+    R: { numberPrecision }
 } = libR;
 
 //usefull helpers
@@ -749,7 +749,7 @@ kn97.init(timeseed()); // re-initialize with random seed based on timestamp
 kn97.init(0); // re-initialize with seed = 0.
 
 kn97.seed;
-// 101 unsigned integer array, only shown the first few values
+// 101 unsigned integer array, only shown the first few values are shown
 /*[ 673666444,
   380305043,
   1062889978,
@@ -763,7 +763,8 @@ precision(rkn97);
 //[ 0.627400767, 0.354186672, 0.989893431, 0.862408143, 0.662299205 ]
 ```
 
-_in R console_:
+<details>
+  <summary><b>same example in R</b> (click to show)</summary>
 
 ```R
 > RNGkind("Knuth-TAOCP")
@@ -771,6 +772,8 @@ _in R console_:
 > runif(5)
 [1] 0.6274008 0.3541867 0.9898934 0.8624081 0.6622992
 ```
+
+</details>
 
 #### "Knuth TAOCP 2002"
 
@@ -819,7 +822,8 @@ precision(kt02);
 //[ 0.195819038, 0.753866884, 0.472411247, 0.193160437, 0.19501841 ]
 ```
 
-_in R console_:
+<details>
+  <summary><b>same example in R</b> (click to show)</summary>
 
 ```R
 > RNGkind("Knuth-TAOCP-2002")
@@ -828,6 +832,8 @@ _in R console_:
 [1] 0.1958190 0.7538669 0.4724112 0.1931604
 [5] 0.1950184
 ```
+
+</details>
 
 #### "L'Ecuyer-CMRG":
 
@@ -907,7 +913,7 @@ All normal random generator adhere to the same principles:
 3. A function `unif_random`: the underlying _uniform_ PRNG.
 4. The default argument for the constructor for _normal_ PRNG is : `Mersenne-Twister`.
 5. The class instance property `rng` contains the wrapped _uniform_ PRNG instance. 
-5. All PRNG producing normal variates are packaged under the JS library name space `rng.normal`.
+6. All PRNG producing normal variates are packaged under the JS library name space `rng.normal`.
 
 #### "Ahrens Dieter"
 
