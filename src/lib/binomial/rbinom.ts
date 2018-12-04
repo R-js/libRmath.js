@@ -31,7 +31,7 @@ export function rbinom(n: number|number[], nin: number, pp: number, rng: IRNG): 
 }
 
 export function rbinomOne(nin: number, pp: number, rng: IRNG): number {
-  
+
  // double
   let c = 0;
   let fm = 0;
@@ -47,34 +47,34 @@ export function rbinomOne(nin: number, pp: number, rng: IRNG): number {
   let xm = 0;
   let xr = 0;
   let psave = -1.0;
-  
+
   //int
   let nsave = -1;
   let m = 0;
 
 //double
-  let f;
-  let f1;
-  let f2;
-  let u;
+  let f: number;
+  let f1: number;
+  let f2: number;
+  let u: number;
   let v: number;
-  let w;
-  let w2;
-  let x;
-  let x1;
-  let x2;
-  let z;
-  let z2;
-  let p;
-  let q;
-  let np;
-  let g;
-  let r;
-  let al;
-  let alv;
-  let amaxp;
-  let ffm;
-  let ynorm;
+  let w: number;
+  let w2: number;
+  let x: number;
+  let x1: number;
+  let x2: number;
+  let z: number;
+  let z2: number;
+  let p: number;
+  let q: number;
+  let np: number;
+  let g: number;
+  let r: number;
+  let al: number;
+  let alv: number;
+  let amaxp: number;
+  let ffm: number;
+  let ynorm: number;
 
   //int
   let i;
@@ -102,7 +102,7 @@ export function rbinomOne(nin: number, pp: number, rng: IRNG): number {
             and r == INT_MAX gave only even values */
     printer_rbinom('Evade overflow:%d > MAX_SAFE_INTEGER', r);
     return qbinom(
-      rng.unif_rand() as number, //between 0 and 1
+      rng.internal_unif_rand(), //between 0 and 1
       r,
       pp,
       /*lower_tail*/ false,
@@ -158,8 +158,8 @@ export function rbinomOne(nin: number, pp: number, rng: IRNG): number {
   /*-------------------------- np = n*p >= 30 : ------------------- */
   let gotoFinis = false;
   while (true && !gotoL_np_small) {
-    u = (rng.unif_rand() as number) * p4;
-    v = (rng.unif_rand() as number);
+    u = (rng.internal_unif_rand()) * p4;
+    v = (rng.internal_unif_rand());
     /* triangular region */
     if (u <= p1) {
       ix = trunc(xm - p1 * v + u);
@@ -253,7 +253,7 @@ export function rbinomOne(nin: number, pp: number, rng: IRNG): number {
     while (true) {
       ix = 0;
       f = qn;
-      u = rng.unif_rand();
+      u = rng.internal_unif_rand();
       while (true) {
         if (u < f) {
           //goto finis;

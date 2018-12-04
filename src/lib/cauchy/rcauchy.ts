@@ -42,6 +42,6 @@ export function rcauchyOne(
     return ML_ERR_return_NAN(printer);
   }
   if (scale === 0 || !R_FINITE(location)) return location;
-  else return location + scale * Math.tan(M_PI * (rng.unif_rand() as number));
+  else return location + scale * Math.tan(M_PI * (rng.internal_unif_rand()));
 
 }

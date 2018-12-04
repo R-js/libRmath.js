@@ -3,6 +3,8 @@
 This R statistical [`nmath`][librmath.so] re-created in typescript/javascript.
 This is a manual re-write, ["emscripten"](https://kripken.github.io/emscripten-site) was not used.
 
+[![NPM](https://img.shields.io/npm/v/lib-r-math.js.svg)](https://www.npmjs.com/package/lib-r-math.js)
+[![Build Status](https://travis-ci.org/R-js/libRmath.js.svg?branch=master)](https://travis-ci.org/R-js/libRmath.js)
 
 #### Summary
 
@@ -912,8 +914,9 @@ All normal random generator adhere to the same principles:
 2. A function `norm_random`: get a random value, same as `rnorm(1)` in R.
 3. A function `unif_random`: the underlying _uniform_ PRNG.
 4. The default argument for the constructor for _normal_ PRNG is : `Mersenne-Twister`.
-5. The class instance property `rng` contains the wrapped _uniform_ PRNG instance. 
-6. All PRNG producing normal variates are packaged under the JS library name space `rng.normal`.
+
+5. The class instance property `rng` contains the wrapped _uniform_ PRNG instance.
+5. All PRNG producing normal variates are packaged under the JS library name space `rng.normal`.
 
 #### "Ahrens Dieter"
 
@@ -1433,7 +1436,7 @@ const r2 = _9(runif(5, -1, 1, true));
 //[ 0.122007235, 0.86544455, 0.0295475019, -0.184492403, 0.645749715 ]
 ```
 
-_Equivalent in R_ 
+_Equivalent in R_
 
 ```R
 RNGkind("L'Ecuyer-CMRG");
@@ -7220,7 +7223,7 @@ rt(5, 26, -16);
 
 `ptukey, qtukey`
 
-The Tukey studentized range (1 - α confidence interval) for post hoc analysis when (for example `1 way anova`). 
+The Tukey studentized range (1 - α confidence interval) for post hoc analysis when (for example `1 way anova`).
 Compare individual means to find rejection of $u_{j} \neq u_{i}$. See [R doc](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/Tukey.html) and [wiki](https://en.wikipedia.org/wiki/Studentized_range).
 
 For `1 way anova` having `k` groups containing $n_{i}$ samples and $T_{i}$ group means:
@@ -7256,7 +7259,7 @@ declare function ptukey(
 
 * `q`: number of random deviates to generate.
 * `nmeans`: sample size for range (same for each group).
-* `df`: degrees of freedom of S². 
+* `df`: degrees of freedom of S².
 * `nranges`: number of groups whose maximum range is considered.
 * `lowerTail`: if TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
 * `logP`: if TRUE, probabilities p are given as log(p).
@@ -7307,7 +7310,7 @@ declare function qtukey(
 
 * `q`: probabilities.
 * `nmeans`: sample size for range (same for each group).
-* `df`: degrees of freedom of S². 
+* `df`: degrees of freedom of S².
 * `nranges`: number of groups whose maximum range is considered.
 * `lowerTail`: if TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
 * `logP`: if TRUE, probabilities p are given as log(p).
@@ -8600,7 +8603,7 @@ trigamma(x);
 
 #### `tetragamma`
 
-The 3rd derivative of  `ln Γ(x)`. This function is deprecated in `R`. 
+The 3rd derivative of  `ln Γ(x)`. This function is deprecated in `R`.
 `tetragamma(x)` is an alias for `psigamma(x,2)`.
 
 $$ ψ(x)³ = \frac{d²}{dx²}  (ln Γ(x) )$$
@@ -8844,7 +8847,7 @@ The functions `choose` and `lchoose` return [binomial coefficients](https://en.w
 
 #### `choose`
 
-Returns the binomial coefficient of `n over k` ${n}\choose{k}$. 
+Returns the binomial coefficient of `n over k` ${n}\choose{k}$.
 
 _typescript decl_
 
@@ -9027,4 +9030,4 @@ Security in case of vulnerabilities.
 
 
 [wiki-norm]: https://en.wikipedia.org/wiki/Normal_distribution
-[r-manual-norm]: http://stat.ethz.ch/r-manual/r-patched/library/stats/html/normal.html
+[r-doc-norm]: http://stat.ethz.ch/r-manual/r-patched/library/stats/html/normal.html

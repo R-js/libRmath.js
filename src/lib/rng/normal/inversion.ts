@@ -30,8 +30,8 @@ export class Inversion extends IRNGNormal {
 
   protected internal_norm_rand(): number {
     /* unif_rand() alone is not of high enough precision */
-    let u1 = this.rng.unif_rand() as number;
-    let t =  this.rng.unif_rand() as number;
+    let u1 = this.rng.internal_unif_rand();
+    let t =  this.rng.internal_unif_rand();
     u1 = new Int32Array([BIG * u1])[0] + t;
     const result = qnorm(u1 / BIG, 0.0, 1.0, !!1, !!0);
     return isArray(result) ? result[0] : result;

@@ -15,7 +15,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 import special  from '../gamma';
-import { flatten, sum } from '../r-func';
+import { array_flatten, flatten, sum } from '../r-func';
 const { isFinite } = Number;
 
 const { lgamma } = special;
@@ -34,15 +34,15 @@ export function dmultinom(
   // init
   // first prob and x must have the same length
   o.asLog = !!o.asLog;
-  let x: number[] = Array.from(flatten(o.x)).filter(f => !!f) as any;
+  let x: number[] = array_flatten(o.x).filter(f => !!f);
   //
-  let prob: number[] = flatten(o.prob) as any;
+  let prob: number[] = array_flatten(o.prob);
   let badProb = !!prob.find(f => !isFinite(f) || f < 0);
   let s = sum(prob);
   if (badProb || s === 0) {
     throw new Error('probabilities must be finite, non-negative and not all 0');
   }
-  prob = prob.map(v => v / s); 
+  prob = prob.map(v => v / s);
   x = x.map(Math.round);
   if (x.find(v => v < 0)) {
     throw new Error('probabilities must be finite, non-negative and not all 0');

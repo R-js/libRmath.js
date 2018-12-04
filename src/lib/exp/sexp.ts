@@ -15,7 +15,11 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-export function exp_rand(unif_rand: () => number): number {
+
+
+import { IRNG_CORE } from '../rng/irng';
+
+export function exp_rand(unif_rand: IRNG_CORE["internal_unif_rand"]): number {
 
   const q: number[] = [
     0.6931471805599453,
@@ -37,7 +41,7 @@ export function exp_rand(unif_rand: () => number): number {
   ];
 
   let a = 0.;
-  let u = unif_rand();    // precaution if u = 0 is ever returned 
+  let u = unif_rand();    // precaution if u = 0 is ever returned
   while (u <= 0. || u >= 1.) u = unif_rand();
   while (true) {
     u += u;

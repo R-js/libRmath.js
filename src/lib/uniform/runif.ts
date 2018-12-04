@@ -37,6 +37,6 @@ export function runifOne(
   if (!(R_FINITE(min) && R_FINITE(max) && max > min)) {
     return ML_ERR_return_NAN(printer);
   }
-  const s = u.unif_rand() as number;
+  const s = u.internal_unif_rand();
   return (max - min) * s + min;
 }

@@ -89,13 +89,14 @@ function _typeOf(v: any): strTypes {
   if (v instanceof Array) return 'array';
   if (v instanceof Function) return 'function';
   const k = typeof v;
+  // @ts-ignore TS2322: Type '"string" | "number" | "bigint" | "boolean" | "symbol" | "undefined" | "object" | "function"' is not assignable to type 'strTypes'.
   return k;
 }
 
 export function* multiplexer(...rest: any[]): IterableIterator<any[]> {
   //
   // Analyze
-  //  
+  //
   const analyzed: _t[] = [];
   type _t = boolean[] | number[] | undefined[] | string[] | null[] | symbol[] | Array<any>;
 
@@ -319,10 +320,15 @@ export function each<T>(data: Slicee<T>): { (fn: (value: T[keyof T], idx: keyof 
   };
 }
 
-export function* flatten<T>(...rest: (T | IterableIterator<T>)[]): IterableIterator<any> {
+export function array_flatten<T = unknown>(...rest: (T | IterableIterator<T> | T[])[]) {
+  return Array.from(flatten(...rest));
+}
+
+export function* flatten<T = unknown>(...rest: (T | IterableIterator<T> | T[])[]): IterableIterator<T> {
 
   for (const itm of rest) {
     if (itm === null || ['undefined', 'string', 'symbol', 'number', 'boolean'].includes(typeof itm)) {
+      // @ts-ignore
       yield itm;
       continue;
     }
@@ -347,7 +353,9 @@ export function* flatten<T>(...rest: (T | IterableIterator<T>)[]): IterableItera
   }
 }
 
-export function chain(...fns: Function[]): Function {
+export function chain<F0 extends (...argv) => any, F extends (...argv) => any>(fn0: F0, ...fns: F[]) {
+  // @ts-ignore
+  fns.push(fn0);
   if (fns.length === 0) {
     throw new TypeError(`specifiy functions to chain`)
   }
@@ -356,15 +364,17 @@ export function chain(...fns: Function[]): Function {
       throw new TypeError(`argument ${i + 1} is not a function`)
     }
   }
-  return function (...args: any[]) {
-    let lastArgs = args
+
+  return function(...args: Parameters<F>): ReturnType<F0> {
+    let lastArgs: unknown[] = args;
     if (args)
       for (let i = fns.length - 1; i >= 0; i--) {
         const fn = fns[i]
         lastArgs = [fn.apply(fn, lastArgs)]
         //console.log(lastArgs);
-      }
-    return lastArgs[0]
+    }
+    return lastArgs[0] as ReturnType<F0>
+
   }
 }
 

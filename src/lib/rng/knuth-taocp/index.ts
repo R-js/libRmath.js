@@ -2,7 +2,7 @@
 /*
  *  Javascript conversion by Jacob Bogers Nov 2017
  *  jkfbogers@gmail.com
- * 
+ *
    The following code was taken from earlier versions of
    http://www-cs-faculty.stanford.edu/~knuth/programs/rng.c-old
    http://www-cs-faculty.stanford.edu/~knuth/programs/rng.c
@@ -104,7 +104,7 @@ export class KnuthTAOCP extends IRNG {
   }
 
   public set seed(_seed: number[]) {
-  
+
 
     if (_seed.length > this.m_seed.length || _seed.length === 0) {
       this.init(timeseed());
@@ -113,7 +113,7 @@ export class KnuthTAOCP extends IRNG {
     this.m_seed.set(_seed);
   }
 
-  protected internal_unif_rand(): number {
+  internal_unif_rand(): number {
      return fixup(this.KT_next() * KT);
   }
 
