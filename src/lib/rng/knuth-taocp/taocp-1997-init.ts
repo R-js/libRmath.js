@@ -42,14 +42,14 @@ export function TAOCP1997init(seed: number): Uint32Array {
 
   while (T > 0) {
     //console.log('TopT', T);
-    for (let j of arr(KK, 2)) {
+    for (let j of arr(KK, 2, -1)) {
       X[j + j] = X[j];
     }
     for (let j of arr(KKK, KKL + 1, -2)) {
       X[KKK - j] = X[j] - X[j] % 2;
     }
 
-    for (let j of arr(KKK, KK + 1)) {
+    for (let j of arr(KKK, KK + 1, -1)) {
       //console.log({ j2: j - KKL, j, x:X[j]});
       if (X[j] % 2 === 1) {
         X[j - KKL] = (X[j - KKL] - X[j]) & MMF;
@@ -58,7 +58,7 @@ export function TAOCP1997init(seed: number): Uint32Array {
     }
 
     if (ss & 1) {
-      for (let j of arr(KK, 1)) {
+      for (let j of arr(KK, 1, -1)) {
         X[j + 1] = X[j];
       }
       //console.log({xb:X[0], Xk:X[KK]} );

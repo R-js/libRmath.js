@@ -739,7 +739,7 @@ usage example:
 const libR = require('lib-r-math.js');
 const {
     rng: { KnuthTAOCP, timeseed },
-    R: { seq, numberPrecision }
+    R: { numberPrecision }
 } = libR;
 
 //usefull helpers
@@ -751,7 +751,7 @@ kn97.init(timeseed()); // re-initialize with random seed based on timestamp
 kn97.init(0); // re-initialize with seed = 0.
 
 kn97.seed;
-// 101 unsigned integer array, only shown the first few values
+// 101 unsigned integer array, only shown the first few values are shown
 /*[ 673666444,
   380305043,
   1062889978,
@@ -765,7 +765,8 @@ precision(rkn97);
 //[ 0.627400767, 0.354186672, 0.989893431, 0.862408143, 0.662299205 ]
 ```
 
-_in R console_:
+<details>
+  <summary><b>same example in R</b> (click to show)</summary>
 
 ```R
 > RNGkind("Knuth-TAOCP")
@@ -773,6 +774,8 @@ _in R console_:
 > runif(5)
 [1] 0.6274008 0.3541867 0.9898934 0.8624081 0.6622992
 ```
+
+</details>
 
 #### "Knuth TAOCP 2002"
 
@@ -821,7 +824,8 @@ precision(kt02);
 //[ 0.195819038, 0.753866884, 0.472411247, 0.193160437, 0.19501841 ]
 ```
 
-_in R console_:
+<details>
+  <summary><b>same example in R</b> (click to show)</summary>
 
 ```R
 > RNGkind("Knuth-TAOCP-2002")
@@ -830,6 +834,8 @@ _in R console_:
 [1] 0.1958190 0.7538669 0.4724112 0.1931604
 [5] 0.1950184
 ```
+
+</details>
 
 #### "L'Ecuyer-CMRG":
 
@@ -908,6 +914,7 @@ All normal random generator adhere to the same principles:
 2. A function `norm_random`: get a random value, same as `rnorm(1)` in R.
 3. A function `unif_random`: the underlying _uniform_ PRNG.
 4. The default argument for the constructor for _normal_ PRNG is : `Mersenne-Twister`.
+
 5. The class instance property `rng` contains the wrapped _uniform_ PRNG instance.
 5. All PRNG producing normal variates are packaged under the JS library name space `rng.normal`.
 
@@ -1467,7 +1474,7 @@ const { rnorm, dnorm, pnorm, qnorm } = norm2;
 
 #### `dnorm`
 
-The density function of the [Normal distribution][wiki-norm]. See [R doc][r-doc-norm].
+The density function of the [Normal distribution][wiki-norm]. See [R manual][r-manual-norm].
 
 _typescript decl_
 
@@ -8998,118 +9005,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Changed
-- Update and improvement of Polish translation from [@m-aciek](https://github.com/m-aciek).
-
-## [1.0.0] - 2017-06-20
-### Added
-- New visual identity by [@tylerfortune8](https://github.com/tylerfortune8).
-- Version navigation.
-- Links to latest released version in previous versions.
-- "Why keep a changelog?" section.
-- "Who needs a changelog?" section.
-- "How do I make a changelog?" section.
-- "Frequently Asked Questions" section.
-- New "Guiding Principles" sub-section to "How do I make a changelog?".
-- Simplified and Traditional Chinese translations from [@tianshuo](https://github.com/tianshuo).
-- German translation from [@mpbzh](https://github.com/mpbzh) & [@Art4](https://github.com/Art4).
-- Italian translation from [@azkidenz](https://github.com/azkidenz).
-- Swedish translation from [@magol](https://github.com/magol).
-- Turkish translation from [@karalamalar](https://github.com/karalamalar).
-- French translation from [@zapashcanon](https://github.com/zapashcanon).
-- Brazilian Portugese translation from [@Webysther](https://github.com/Webysther).
-- Polish translation from [@amielucha](https://github.com/amielucha).
-- Russian translation from [@aishek](https://github.com/aishek).
-- Czech translation from [@h4vry](https://github.com/h4vry).
-- Slovak translation from [@jkostolansky](https://github.com/jkostolansky).
-- Korean translation from [@pierceh89](https://github.com/pierceh89).
-- Croatian translation from [@porx](https://github.com/porx).
-
 ### Changed
-- Start using "changelog" over "change log" since it's the common usage.
-- Start versioning based on the current English version at 0.3.0 to help
-translation authors keep things up-to-date.
-- Rewrite "What makes unicorns cry?" section.
-- Rewrite "Ignoring Deprecations" sub-section to clarify the ideal
-  scenario.
-- Improve "Commit log diffs" sub-section to further argument against
-  them.
-- Merge "Why can’t people just use a git log diff?" with "Commit log
-  diffs"
-- Fix typos in Simplified Chinese and Traditional Chinese translations.
-- Fix typos in Brazilian Portuguese translation.
-- Fix typos in Turkish translation.
-- Fix typos in Czech translation.
-- Fix typos in Swedish translation.
-- Improve phrasing in French translation.
-- Fix phrasing and spelling in German translation.
-
 ### Removed
-- Section about "changelog" vs "CHANGELOG".
-
-## [0.3.0] - 2015-12-03
-### Added
-- RU translation from [@aishek](https://github.com/aishek).
-- pt-BR translation from [@tallesl](https://github.com/tallesl).
-- es-ES translation from [@ZeliosAriex](https://github.com/ZeliosAriex).
-
-## [0.2.0] - 2015-10-06
-### Changed
-- Remove exclusionary mentions of "open source" since this project can
-benefit both "open" and "closed" source projects equally.
-
-## [0.1.0] - 2015-10-06
-### Added
-- Answer "Should you ever rewrite a change log?".
-
-### Changed
-- Improve argument against commit logs.
-- Start following [SemVer](https://semver.org) properly.
-
-## [0.0.8] - 2015-02-17
-### Changed
-- Update year to match in every README example.
-- Reluctantly stop making fun of Brits only, since most of the world
-  writes dates in a strange way.
-
-### Fixed
-- Fix typos in recent README changes.
-- Update outdated unreleased diff link.
-
-## [0.0.7] - 2015-02-16
-### Added
-- Link, and make it obvious that date format is ISO 8601.
-
-### Changed
-- Clarified the section on "Is there a standard change log format?".
-
-### Fixed
-- Fix Markdown links to tag comparison URL with footnote-style links.
-
-## [0.0.6] - 2014-12-12
-### Added
-- README section on "yanked" releases.
-
-## [0.0.5] - 2014-08-09
-### Added
-- Markdown links to version tags on release headings.
-- Unreleased section to gather unreleased changes and encourage note
-keeping prior to releases.
-
-## [0.0.4] - 2014-08-09
-### Added
-- Better explanation of the difference between the file ("CHANGELOG")
-and its function "the change log".
-
-### Changed
-- Refer to a "change log" instead of a "CHANGELOG" throughout the site
-to differentiate between the file and the purpose of the file — the
-logging of changes.
-
-### Removed
-- Remove empty sections from CHANGELOG, they occupy too much space and
-create too much noise in the file. People will have to assume that the
-missing sections were intentionally left out because they contained no
-notable changes.
 
 Guiding Principles
 Changelogs are for humans, not machines.
@@ -9130,5 +9027,7 @@ Security in case of vulnerabilities.
 [constributer-convenant]: https://www.contributor-covenant.org/
 [code-conduct]: https://www.contributor-covenant.org/version/1/4/code-of-conduct.html
 [librmath.so]: https://svn.r-project.org/R/trunk/src/nmath
+
+
 [wiki-norm]: https://en.wikipedia.org/wiki/Normal_distribution
 [r-doc-norm]: http://stat.ethz.ch/r-manual/r-patched/library/stats/html/normal.html
