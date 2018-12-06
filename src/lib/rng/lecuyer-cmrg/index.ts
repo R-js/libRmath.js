@@ -63,10 +63,10 @@ export class LecuyerCMRG extends IRNG {
     super.init(se);
   }
 
-  protected internal_unif_rand(): number {
-        
+  internal_unif_rand(): number {
+
     const II = this.m_seed;
-   
+
     //const pp2 = pow.bind(pow, 2);
     //const break32 = pp2(32);
 
@@ -101,7 +101,7 @@ export class LecuyerCMRG extends IRNG {
   }
 
   public set seed(_seed: number[]) {
-   
+
 
     if (_seed.length > this.m_seed.length || _seed.length === 0) {
       this.init(timeseed());

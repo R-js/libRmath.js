@@ -43,7 +43,7 @@ export { Weibull } from './weibull';
 export { Wilcoxon } from './wilcoxon';
 export { hypot, log1p as log1pR } from './log';
 /*
-  Class of Special functions collected here.  
+  Class of Special functions collected here.
 */
 import besselSpecial  from './bessel';
 import betaSpecial  from './beta';
@@ -61,6 +61,7 @@ import {
   c,
   chain,
   flatten,
+  array_flatten,
   ISummary,
   multiplexer,
   numberPrecision,
@@ -80,6 +81,7 @@ export const utils = {
   multiplexer,
   Rcycle,
   flatten,
+  array_flatten,
   seq_len,
   sequenceFactory,
   seq1: sequenceFactory(0),
@@ -87,4 +89,4 @@ export const utils = {
   chain,
   combine:c,
   c
-}; 
+};
