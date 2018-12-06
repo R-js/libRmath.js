@@ -11,7 +11,7 @@ import { numberPrecision } from '../../../src/lib/r-func';
 const _10 = numberPrecision(10)
 
 describe('rng knuth-taocp-2002', function n() {
-    const knuth2002 = new KnuthTAOCP2002(0);
+    const knuth2002 = new KnuthTAOCP2002();
     it('knuth taocp-2002 for seed=0, n=100', () => {
         knuth2002.init(0);
         const result = knuth2002.unif_rand(100);
