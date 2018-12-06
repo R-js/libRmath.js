@@ -1,4 +1,3 @@
-'use strict';
 'use strict'
 /* This is a conversion from libRmath.so to Typescript/Javascript
 Copyright (C) 2018  Jacob K.F. Bogers  info@mail.jacob-bogers.com
