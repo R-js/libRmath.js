@@ -3,4 +3,4 @@
 --recursive
 --require source-map-support/register
 --sort
-test/rng/knuth-taocp/test.ts
+test/r-func/test.ts

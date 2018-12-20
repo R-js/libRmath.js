@@ -128,7 +128,7 @@ function* multiplexer(...rest: any[]): IterableIterator<any[]> {
 
 
 function Rcycle(fn: Function) {
-  return function (...args: any[]) {
+  return function(...args: any[]) {
     const gen = multiplexer(...args);
     let rc: any[] = [];
     for (const arg of gen) {
@@ -315,7 +315,7 @@ function each<T>(data: Slicee<T>): { (fn: (value: T[keyof T], idx: keyof T) => v
   };
 }
 
-function* flatten<T>(...rest: (T | IterableIterator<T>)[]): IterableIterator<any> {
+function* flatten<T>(this: any, ...rest: (T | T[] | IterableIterator<T>)[]): IterableIterator<any> {
 
   for (const itm of rest) {
     if (itm === null || ['undefined', 'string', 'symbol', 'number', 'boolean'].includes(typeof itm)) {
@@ -324,19 +324,22 @@ function* flatten<T>(...rest: (T | IterableIterator<T>)[]): IterableIterator<any
     }
     if (itm instanceof Map || itm instanceof Set) {
       for (const v of <any>itm) {
-        yield* flatten.call(undefined, v);
+        console.log('v', v)
+        yield* flatten.call(this, v);
       }
       continue;
     }
     if (itm instanceof Array) {
       for (const v of itm) {
-        yield* flatten.call(undefined, v);
+        yield* flatten.call(this, v);
       }
       continue;
     }
-    if (typeof itm[Symbol.iterator] === 'function') {
-      for (const v of <any>itm) {
-        yield* flatten.call(undefined, v);
+    const isIterator = typeof itm[Symbol.iterator] === 'function';
+    if (isIterator) {
+      //throw new Error('positivly evaluated');
+      for (const v of itm) {
+        yield* flatten.call(this, v);
       }
       continue;
     }
@@ -347,7 +350,7 @@ const compose = chain(true);
 const pipe = chain(false);
 
 function chain(backwardReduce: boolean) {
-  return function (...fns: Function[]): Function {
+  return function(...fns: Function[]): Function {
     //checks
     if (fns.length === 0) {
       throw new TypeError(`specify functions!`)
@@ -357,7 +360,7 @@ function chain(backwardReduce: boolean) {
         throw new TypeError(`argument ${i + 1} is not a function`)
       }
     }
-    return function (...args: any[]) {
+    return function(...args: any[]) {
       let lastArgs = args
       const [start, stop, incr] = backwardReduce ?
         [fns.length - 1, -1, -1] :
@@ -380,7 +383,7 @@ function chain(backwardReduce: boolean) {
 function range(start: number, stop: number, step = 1): IterableIterator<number> {
   let cursor = start;
   return ({
-    next: function (): IteratorResult<number> {
+    next: function(): IteratorResult<number> {
       let value: number | undefined = undefined
       let done = true
       if (cursor <= stop) {
@@ -390,22 +393,22 @@ function range(start: number, stop: number, step = 1): IterableIterator<number> 
       }
       return { value, done } as any
     },
-    [Symbol.iterator]: function () { return this }
+    [Symbol.iterator]: function() { return this }
   })
 }
 
 function lazyMap<T, S>(fn: (v: T, idx: number) => S) {
-  return function (source: IterableIterator<T>) {
+  return function(source: IterableIterator<T>) {
     let cursor = source;
     let idx = 0;
     return ({
-      next: function () {
+      next: function() {
         const step = cursor.next()
         if (step.done) return { value: undefined, done: true }
         const rc = fn(step.value, idx++)
         return { value: rc, done: false }
       },
-      [Symbol.iterator]: function () { return this }
+      [Symbol.iterator]: function() { return this }
     })
   }
 }

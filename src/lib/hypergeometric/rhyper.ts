@@ -146,7 +146,7 @@ function rhyperOne(
       return rbinomOne(kkin, nn1in / (nn1in + nn2in), rng);
     }
     // Slow, but safe: return  F^{-1}(U)  where F(.) = phyper(.) and  U ~ U[0,1]
-    return qhyper(rng.unif_rand() as number, nn1in, nn2in, kkin, false, false);
+    return qhyper(rng.unif_rand(), nn1in, nn2in, kkin, false, false);
   }
   nn1 = nn1in;
   nn2 = nn2in;

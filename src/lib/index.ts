@@ -60,9 +60,9 @@ export const special = Object.freeze({
 import {
   c,
   compose,
-  pipe,
   flatten,
   multiplexer,
+  pipe,
   Rcycle,
   seq_len,
   sequenceFactory,
