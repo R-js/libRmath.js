@@ -16,18 +16,44 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 const { max } = Math;
 
-export function* seq_len({ length, base = 1 }: { length: number, base: number }): IterableIterator<number> {
+export {
+  Rcycle,
+  c,
+  chain,
+  each,
+  flatten,
+  forcePrecision,
+  isNumber,
+  lazyMap,
+  lazySeq,
+  map,
+  multiplexer,
+  randomGenHelper,
+  range,
+  seq_len,
+  sequenceFactory,
+  sum,
+  typeOf
+}
+
+
+export {
+  strTypes,
+  system
+}
+
+function* seq_len({ length, base = 1 }: { length: number, base: number }): IterableIterator<number> {
   for (let i = 0; i < length; i++) {
     yield base + i;
   };
 }
 
-export const sequenceFactory = (adjust = -1) =>
-  (start: number, end: number, delta = end < start ? -1:1) =>
+const sequenceFactory = (adjust = -1) =>
+  (start: number, end: number, delta = end < start ? -1 : 1) =>
     Array.from(lazySeq(start, end, delta, adjust))
 
 
-export function* lazySeq(start: number, end: number, delta = end < start ? -1 : 1, adjust = 0) {
+function* lazySeq(start: number, end: number, delta = end < start ? -1 : 1, adjust = 0) {
   if (delta === 0) {
     throw new TypeError(`argument 'delta' cannot be zero`)
   }
@@ -44,10 +70,10 @@ export function* lazySeq(start: number, end: number, delta = end < start ? -1 : 
 }
 
 
-export type strTypes = 'boolean' | 'number' | 'undefined' | 'string' | 'null' | 'symbol' | 'array' | 'function' | 'object';
-export type system = boolean | number | undefined | string | null | symbol
+type strTypes = 'bigint' | 'boolean' | 'number' | 'undefined' | 'string' | 'null' | 'symbol' | 'array' | 'function' | 'object';
+type system = boolean | number | undefined | string | null | symbol;
 
-function _typeOf(v: any): strTypes {
+function typeOf(v: any): strTypes {
   if (v === null) return 'null';
   if (v instanceof Array) return 'array';
   if (v instanceof Function) return 'function';
@@ -55,29 +81,28 @@ function _typeOf(v: any): strTypes {
   return k;
 }
 
-export function* multiplexer(...rest: any[]): IterableIterator<any[]> {
+function* multiplexer(...rest: any[]): IterableIterator<any[]> {
   //
   // Analyze
   //  
   const analyzed: _t[] = [];
   type _t = boolean[] | number[] | undefined[] | string[] | null[] | symbol[] | Array<any>;
 
-  function simplePush<T extends _t>(v: T) { analyzed.push(v) };
 
   const select = {
-    ['undefined'](v: null) { simplePush([v]); },
-    ['null'](v: null) { simplePush([v]); },
-    ['number'](v: null) { simplePush([v]); },
-    ['string'](v: string) { simplePush(v.split('')) },
-    ['boolean'](v: boolean) { simplePush([v]) },
-    ['array'](v: _t) { simplePush(v) },
+    ['undefined'](v: null) { analyzed.push([v]) },
+    ['null'](v: null) { analyzed.push([v]) },
+    ['number'](v: null) { analyzed.push([v]) },
+    ['string'](v: string) { analyzed.push(v.split('')) },
+    ['boolean'](v: boolean) { analyzed.push([v]) },
+    ['array'](v: _t) { analyzed.push(v) },
     ['object'](v: _t) { throw new Error('M001, Looping over properties not yet supported'); },
     ['function'](v: _t) { throw new Error('M002, arguments of type "function" are not yet supported'); }
   };
 
   for (let k = 0; k < rest.length; k++) {
     const arg = rest[k];
-    const to = _typeOf(arg);
+    const to = typeOf(arg);
     const selector = select[to];
     selector(arg);
   }//for
@@ -94,9 +119,9 @@ export function* multiplexer(...rest: any[]): IterableIterator<any[]> {
   }
 }
 
-export const c = chain(Array.from, flatten)
+const c = chain(Array.from, flatten)
 
-export function Rcycle(fn: Function) {
+function Rcycle(fn: Function) {
   return function (...args: any[]) {
     const gen = multiplexer(...args);
     let rc: any[] = [];
@@ -107,11 +132,12 @@ export function Rcycle(fn: Function) {
   }
 }
 
+
 function isNumber(x: any): x is number {
   return typeof x === 'number'
 }
 
-export function numberPrecision(prec: number = 6) {
+function forcePrecision(prec: number = 6) {
   return function convert<T>(x: T): T {
     // try to loop over the object
     if (typeof x === 'object' && x !== null) {
@@ -129,7 +155,7 @@ export function numberPrecision(prec: number = 6) {
   }
 }
 
-export function sum(x: number[]) {
+function sum(x: number[]) {
   let sum = 0;
   const gen = flatten(x);
   for (let v = gen.next(); !v.done; v = gen.next()) {
@@ -137,7 +163,8 @@ export function sum(x: number[]) {
   }
   return sum;
 }
-
+/*
+for r::stat,not for this
 export interface ISummary {
   N: number; // number of samples in "data"
   mu: number; // mean of "data"
@@ -231,7 +258,7 @@ export function Welch_Satterthwaite(s: number[], n: number[]): number {
 }
 */
 
-export function randomGenHelper<T extends Function>(n: number | number[], fn: T, ...arg: any[]) {
+function randomGenHelper<T extends Function>(n: number | number[], fn: T, ...arg: any[]) {
 
   let result: number[]
 
@@ -268,21 +295,21 @@ function slicer<T>(x: Slicee<T>): Sliced<T>[] {
   return map;
 }
 
-export function map<T, S>(data: Slicee<T>): { (fn: (value: T[keyof T], idx: keyof T) => S): S[] } {
+function map<T, S>(data: Slicee<T>): { (fn: (value: T[keyof T], idx: keyof T) => S): S[] } {
   const fx = slicer(data);
   return function k(fn) {
     return fx.map(o => fn(o.value, o.key))
   };
 }
 
-export function each<T>(data: Slicee<T>): { (fn: (value: T[keyof T], idx: keyof T) => void): void } {
+function each<T>(data: Slicee<T>): { (fn: (value: T[keyof T], idx: keyof T) => void): void } {
   const fx = slicer(data);
   return function k(fn) {
     fx.forEach(o => fn(o.value, o.key));
   };
 }
 
-export function* flatten<T>(...rest: (T | IterableIterator<T>)[]): IterableIterator<any> {
+function* flatten<T>(...rest: (T | IterableIterator<T>)[]): IterableIterator<any> {
 
   for (const itm of rest) {
     if (itm === null || ['undefined', 'string', 'symbol', 'number', 'boolean'].includes(typeof itm)) {
@@ -310,7 +337,7 @@ export function* flatten<T>(...rest: (T | IterableIterator<T>)[]): IterableItera
   }
 }
 
-export function chain(...fns: Function[]): Function {
+function chain(...fns: Function[]): Function {
   if (fns.length === 0) {
     throw new TypeError(`specifiy functions to chain`)
   }
@@ -331,7 +358,7 @@ export function chain(...fns: Function[]): Function {
   }
 }
 
-export function range(start: number, stop: number): IterableIterator<number> {
+function range(start: number, stop: number, step = 1): IterableIterator<number> {
   let cursor = start;
   return ({
     next: function (): IteratorResult<number> {
@@ -339,6 +366,7 @@ export function range(start: number, stop: number): IterableIterator<number> {
       let done = true
       if (cursor <= stop) {
         value = cursor
+        cursor += step;
         done = false
       }
       return { value, done } as any
@@ -347,7 +375,7 @@ export function range(start: number, stop: number): IterableIterator<number> {
   })
 }
 
-export function lazyMap<T, S>(fn: (v: T, idx: number) => S) {
+function lazyMap<T, S>(fn: (v: T, idx: number) => S) {
   return function (source: IterableIterator<T>) {
     let cursor = source;
     let idx = 0;
