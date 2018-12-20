@@ -19,7 +19,8 @@ const { max } = Math;
 export {
   Rcycle,
   c,
-  chain,
+  compose,
+  pipe,
   each,
   flatten,
   forcePrecision,
@@ -81,6 +82,8 @@ function typeOf(v: any): strTypes {
   return k;
 }
 
+
+
 function* multiplexer(...rest: any[]): IterableIterator<any[]> {
   //
   // Analyze
@@ -88,14 +91,17 @@ function* multiplexer(...rest: any[]): IterableIterator<any[]> {
   const analyzed: _t[] = [];
   type _t = boolean[] | number[] | undefined[] | string[] | null[] | symbol[] | Array<any>;
 
+  function push2AsArr(v) { analyzed.push([v]) }
+
+  function push2AsSc(v) { analyzed.push(v) }
 
   const select = {
-    ['undefined'](v: null) { analyzed.push([v]) },
-    ['null'](v: null) { analyzed.push([v]) },
-    ['number'](v: null) { analyzed.push([v]) },
+    ['undefined']: push2AsArr,
+    ['null']: push2AsArr,
+    ['number']: push2AsArr,
     ['string'](v: string) { analyzed.push(v.split('')) },
-    ['boolean'](v: boolean) { analyzed.push([v]) },
-    ['array'](v: _t) { analyzed.push(v) },
+    ['boolean']: push2AsArr,
+    ['array']: push2AsSc,
     ['object'](v: _t) { throw new Error('M001, Looping over properties not yet supported'); },
     ['function'](v: _t) { throw new Error('M002, arguments of type "function" are not yet supported'); }
   };
@@ -119,7 +125,7 @@ function* multiplexer(...rest: any[]): IterableIterator<any[]> {
   }
 }
 
-const c = chain(Array.from, flatten)
+
 
 function Rcycle(fn: Function) {
   return function (...args: any[]) {
@@ -337,24 +343,37 @@ function* flatten<T>(...rest: (T | IterableIterator<T>)[]): IterableIterator<any
   }
 }
 
-function chain(...fns: Function[]): Function {
-  if (fns.length === 0) {
-    throw new TypeError(`specifiy functions to chain`)
-  }
-  for (let i = 0; i < fns.length; i++) {
-    if (typeof fns[i] !== 'function') {
-      throw new TypeError(`argument ${i + 1} is not a function`)
+const compose = chain(true);
+const pipe = chain(false);
+
+function chain(backwardReduce: boolean) {
+  return function (...fns: Function[]): Function {
+    //checks
+    if (fns.length === 0) {
+      throw new TypeError(`specify functions!`)
     }
-  }
-  return function (...args: any[]) {
-    let lastArgs = args
-    if (args)
-      for (let i = fns.length - 1; i >= 0; i--) {
-        const fn = fns[i]
-        lastArgs = [fn.apply(fn, lastArgs)]
-        //console.log(lastArgs);
+    for (let i = 0; i < fns.length; i++) {
+      if (typeof fns[i] !== 'function') {
+        throw new TypeError(`argument ${i + 1} is not a function`)
       }
-    return lastArgs[0]
+    }
+    return function (...args: any[]) {
+      let lastArgs = args
+      const [start, stop, incr] = backwardReduce ?
+        [fns.length - 1, -1, -1] :
+        [0, fns.length, 1]
+
+      for (let i = start; i !== stop; i += incr) {
+        const fn = fns[i]
+        lastArgs = fn.apply(fn, lastArgs)
+        if (!Array.isArray(lastArgs)) {
+          lastArgs = [lastArgs]
+        }
+        //console.log(lastArgs);
+
+      }
+      return lastArgs
+    }
   }
 }
 
@@ -390,3 +409,6 @@ function lazyMap<T, S>(fn: (v: T, idx: number) => S) {
     })
   }
 }
+
+// note, "flatten" is an fp lazy
+const c = pipe(flatten, Array.from)

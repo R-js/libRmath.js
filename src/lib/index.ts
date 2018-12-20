@@ -59,24 +59,19 @@ export const special = Object.freeze({
 
 import {
   c,
-  chain,
+  compose,
+  pipe,
   flatten,
-  ISummary,
   multiplexer,
-  numberPrecision,
   Rcycle,
   seq_len,
   sequenceFactory,
   strTypes
 } from './r-func';
 
-export { ISummary, strTypes };
+export { strTypes };
 
 export const utils = {
-  //Welch_Satterthwaite,
-  //summary,
-  //sum,
-  numberPrecision,
   multiplexer,
   Rcycle,
   flatten,
@@ -84,7 +79,8 @@ export const utils = {
   sequenceFactory,
   seq1: sequenceFactory(0),
   seq0: sequenceFactory(),
-  chain,
+  compose,
+  pipe,
   combine:c,
   c
 }; 
