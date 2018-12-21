@@ -137,8 +137,8 @@ describe(`Tools&Die`, () => {
             }
             while (i < 100)
             expect(i).to.be.lessThan(100);
-            console.log(ans);
-            expect(ans).to.deep.equal([ 1, 2, 1, 'k1', 1, 1, 'k2', 1, 2, 3, 4, 78, 9, 'k1', 'k2', 90 ]);
+            //console.log(ans);
+            expect(ans).to.deep.equal([1, 2, 1, 'k1', 1, 1, 'k2', 1, 2, 3, 4, 78, 9, 'k1', 'k2', 90]);
         });
         // we have to do this because nyc has a bug
         it(`test: flatten sequence with embeddable Set`, () => {
@@ -156,8 +156,8 @@ describe(`Tools&Die`, () => {
             }
             while (i < 100)
             expect(i).to.be.lessThan(100);
-            console.log(ans);
-            expect(ans).to.deep.equal(['k1','k2']);
+            //console.log(ans);
+            expect(ans).to.deep.equal(['k1', 'k2']);
         });
     })
 })

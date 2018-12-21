@@ -39,25 +39,25 @@ export class KindermanRamage extends IRNGNormal {
   }
 
   protected internal_norm_rand() {
-    let u1;
-    let u2;
-    let u3;
-    let tt;
+    let u1: number;
+    let u2: number;
+    let u3: number;
+    let tt: number;
     const g = (x: number) => C1 * exp(-x * x / 2.0) - C2 * (A - x);
     // corrected version from Josef Leydold
 
-    u1 = this.rng.unif_rand();
+    u1 = this.rng.internal_unif_rand();
 
     if (u1 < 0.884070402298758) {
-      u2 = this.rng.unif_rand();
+      u2 = this.rng.internal_unif_rand();
       return A * (1.13113163544418 * u1 + u2 - 1);
     }
 
     if (u1 >= 0.973310954173898) {
       /* tail: */
       for (;;) {
-        u2 = this.rng.unif_rand();
-        u3 = this.rng.unif_rand();
+        u2 = this.rng.internal_unif_rand();
+        u3 = this.rng.internal_unif_rand();
         tt = A * A - 2 * log(u3);
         if (u2 * u2 < A * A / tt)
           return u1 < 0.986655477086949 ? sqrt(tt) : -sqrt(tt);
@@ -67,8 +67,8 @@ export class KindermanRamage extends IRNGNormal {
     if (u1 >= 0.958720824790463) {
       /* region3: */
       for (;;) {
-        u2 = this.rng.unif_rand();
-        u3 = this.rng.unif_rand();
+        u2 = this.rng.internal_unif_rand();
+        u3 = this.rng.internal_unif_rand();
         tt = A - 0.63083480192196 * fmin2(u2, u3);
         if (fmax2(u2, u3) <= 0.755591531667601) return u2 < u3 ? tt : -tt;
         if (0.034240503750111 * fabs(u2 - u3) <= g(tt))
@@ -79,8 +79,8 @@ export class KindermanRamage extends IRNGNormal {
     if (u1 >= 0.911312780288703) {
       /* region2: */
       for (;;) {
-        u2 = this.rng.unif_rand();
-        u3 = this.rng.unif_rand();
+        u2 = this.rng.internal_unif_rand();
+        u3 = this.rng.internal_unif_rand();
         tt = 0.479727404222441 + 1.10547366102207 * fmin2(u2, u3);
         if (fmax2(u2, u3) <= 0.87283497667179) return u2 < u3 ? tt : -tt;
         if (0.049264496373128 * fabs(u2 - u3) <= g(tt))
@@ -90,8 +90,8 @@ export class KindermanRamage extends IRNGNormal {
 
     /* ELSE	 region1: */
     for (;;) {
-      u2 = this.rng.unif_rand();
-      u3 = this.rng.unif_rand();
+      u2 = this.rng.internal_unif_rand();
+      u3 = this.rng.internal_unif_rand();
       tt = 0.479727404222441 - 0.59550713801594 * fmin2(u2, u3);
       if (tt < 0) continue;
       if (fmax2(u2, u3) <= 0.805577924423817) return u2 < u3 ? tt : -tt;

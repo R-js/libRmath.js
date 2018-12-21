@@ -14,7 +14,11 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-const { max } = Math;
+const { max, abs, sign } = Math;
+
+import * as debug from 'debug';
+
+const printer_seq = debug('seq');
 
 export {
   Rcycle,
@@ -49,25 +53,27 @@ function* seq_len({ length, base = 1 }: { length: number, base: number }): Itera
   };
 }
 
-const sequenceFactory = (adjust = -1) =>
-  (start: number, end: number, delta = end < start ? -1 : 1) =>
-    Array.from(lazySeq(start, end, delta, adjust))
 
+const sequenceFactory = 
+(adjust = 0, adjustMin = adjust) => 
+(start: number, end: number, step = 1) => 
+Array.from(lazySeq(start, end, step, adjust, adjustMin))
 
-function* lazySeq(start: number, end: number, delta = end < start ? -1 : 1, adjust = 0) {
-  if (delta === 0) {
-    throw new TypeError(`argument 'delta' cannot be zero`)
+function* lazySeq(start: number, end: number, step, adjust, adjustMin) {
+  if (step === 0) {
+    throw new TypeError(`argument 'step' cannot be zero`)
   }
-  if (end > start && delta < 0) {
+  if (end > start && step < 0) {
     throw new TypeError(`'end' > 'start' so delta must be positive`);
   }
-  if (end < start && delta > 0) {
+  if (end < start && step > 0) {
     throw new TypeError(`'end' < 'start' so delta must be negative`);
   }
+  const adj = step > 0 ? adjust : adjustMin;
   do {
-    yield start + adjust;
-    start = start + delta;
-  } while ((delta > 0 && start < end) || (delta < 0 && start > end));
+    yield start + adj;
+    start = start + step;
+  } while ((step > 0 && start <= end) || (step < 0 && start >= end));
 }
 
 
@@ -79,6 +85,7 @@ function typeOf(v: any): strTypes {
   if (v instanceof Array) return 'array';
   if (v instanceof Function) return 'function';
   const k = typeof v;
+  // @ts-ignore TS2322: Type '"string" | "number" | "bigint" | "boolean" | "symbol" | "undefined" | "object" | "function"' is not assignable to type 'strTypes'.
   return k;
 }
 
@@ -87,7 +94,7 @@ function typeOf(v: any): strTypes {
 function* multiplexer(...rest: any[]): IterableIterator<any[]> {
   //
   // Analyze
-  //  
+  //
   const analyzed: _t[] = [];
   type _t = boolean[] | number[] | undefined[] | string[] | null[] | symbol[] | Array<any>;
 
@@ -319,12 +326,13 @@ function* flatten<T>(this: any, ...rest: (T | T[] | IterableIterator<T>)[]): Ite
 
   for (const itm of rest) {
     if (itm === null || ['undefined', 'string', 'symbol', 'number', 'boolean'].includes(typeof itm)) {
+      // @ts-ignore
       yield itm;
       continue;
     }
     if (itm instanceof Map || itm instanceof Set) {
       for (const v of <any>itm) {
-        console.log('v', v)
+        //console.log('v', v)
         yield* flatten.call(this, v);
       }
       continue;
@@ -335,7 +343,7 @@ function* flatten<T>(this: any, ...rest: (T | T[] | IterableIterator<T>)[]): Ite
       }
       continue;
     }
-    const isIterator = typeof itm[Symbol.iterator] === 'function';
+    const isIterator = (typeof itm[Symbol.iterator]) === 'function';
     if (isIterator) {
       //throw new Error('positivly evaluated');
       for (const v of itm) {

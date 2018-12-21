@@ -1,4 +1,3 @@
-'use strict';
 'use strict'
 /* This is a conversion from libRmath.so to Typescript/Javascript
 Copyright (C) 2018  Jacob K.F. Bogers  info@mail.jacob-bogers.com
@@ -16,7 +15,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-    
+
 
 
 
@@ -174,7 +173,7 @@ export class KnuthTAOCP2002 extends IRNG {
     this.ran_x = this.m_seed;
   }
 
-  protected internal_unif_rand(): number {
+  internal_unif_rand(): number {
     const KT = 9.31322574615479e-10;
     return fixup(this.KT_next() * KT);
   }

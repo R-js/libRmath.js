@@ -44,7 +44,7 @@ export function afc(i: number): number {
     8.52516136106541430016553103634712
     /* 10.60460290274525022841722740072165, approx. value below =
            10.6046028788027; rel.error = 2.26 10^{-9}
-    
+
           FIXME: Use constants and if(n > ..) decisions from ./stirlerr.c
           -----  will be even *faster* for n > 500 (or so)
         */
@@ -146,7 +146,7 @@ function rhyperOne(
       return rbinomOne(kkin, nn1in / (nn1in + nn2in), rng);
     }
     // Slow, but safe: return  F^{-1}(U)  where F(.) = phyper(.) and  U ~ U[0,1]
-    return qhyper(rng.unif_rand(), nn1in, nn2in, kkin, false, false);
+    return qhyper(rng.internal_unif_rand(), nn1in, nn2in, kkin, false, false);
   }
   nn1 = nn1in;
   nn2 = nn2in;
@@ -232,7 +232,7 @@ function rhyperOne(
     while (true) {
       p = w;
       ix = minjx;
-      u = (rng.unif_rand() as number) * scale;
+      u = (rng.internal_unif_rand()) * scale;
 
       printer_rhyper('  _new_ u = %d', u);
 
@@ -297,8 +297,8 @@ function rhyperOne(
     //L30:
     //let goto_L30 = false;
     while (true) {
-      let u: number = (rng.unif_rand() as number) * p3;
-      let v: number = rng.unif_rand() as number;
+      let u: number = (rng.internal_unif_rand()) * p3;
+      let v: number = rng.internal_unif_rand();
       n_uv++;
       if (n_uv >= 10000) {
         printer_rhyper(

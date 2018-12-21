@@ -43,7 +43,7 @@ export { Weibull } from './weibull';
 export { Wilcoxon } from './wilcoxon';
 export { hypot, log1p as log1pR } from './log';
 /*
-  Class of Special functions collected here.  
+  Class of Special functions collected here.
 */
 import besselSpecial  from './bessel';
 import betaSpecial  from './beta';
@@ -83,4 +83,4 @@ export const utils = {
   pipe,
   combine:c,
   c
-}; 
+};

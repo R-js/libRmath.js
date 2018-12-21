@@ -47,9 +47,9 @@ export class BoxMuller extends IRNGNormal {
       this.BM_norm_keep = 0.0;
       return s;
     } else {
-      theta = 2 * M_PI * (this.rng.unif_rand_single() );
+      theta = 2 * M_PI * (this.rng.internal_unif_rand());
       let R =
-        sqrt(-2 * log(this.rng.unif_rand_single())) +
+        sqrt(-2 * log(this.rng.internal_unif_rand())) +
         10 * DBL_MIN; /* ensure non-zero */
       this.BM_norm_keep = R * sin(theta);
       return R * cos(theta);

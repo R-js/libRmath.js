@@ -59,7 +59,7 @@ export class MarsagliaMultiCarry extends IRNG {
     this.m_seed = new Int32Array( new ArrayBuffer(SEED_LEN * 4)).fill(0);
   }
 
-  protected internal_unif_rand(): number {
+  internal_unif_rand(): number {
     const s = this.m_seed;
     s[0] = 36969 * (s[0] & 65535) + (s[0] >>> 16);
     s[1] = 18000 * (s[1] & 65535) + (s[1] >>> 16);
@@ -75,7 +75,7 @@ export class MarsagliaMultiCarry extends IRNG {
   }
 
   public set seed(_seed: number[]) {
-  
+
 
     if (_seed.length > this.m_seed.length || _seed.length === 0) {
       this.init(timeseed());

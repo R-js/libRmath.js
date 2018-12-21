@@ -1,5 +1,6 @@
 {
     "compilerOptions": {
+        
         "strictPropertyInitialization": false, 
         "noImplicitAny": false,
         "noLib": false,

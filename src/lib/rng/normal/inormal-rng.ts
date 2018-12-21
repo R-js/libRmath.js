@@ -17,10 +17,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { IRNG } from '../';
 import { randomGenHelper } from '../../r-func';
-import { IRNG_CORE } from '../irng';
+import { IRNGCore } from '../irng';
 
 // make sure sub-class is follow this
-export interface IRNGNormal extends IRNG_CORE {
+export interface IRNGNormal extends IRNGCore {
   norm_rand(n: number): number[];
 }
 
@@ -31,6 +31,7 @@ export abstract class IRNGNormal {
     this.unif_rand = this.unif_rand.bind(this);
     this.norm_rand = this.norm_rand.bind(this);
     this.internal_norm_rand = this.internal_norm_rand.bind(this);
+    this.internal_unif_rand = this.internal_unif_rand.bind(this);
   }
 
   public norm_randOne() {
@@ -40,11 +41,15 @@ export abstract class IRNGNormal {
   public norm_rand(n: number): number[]{
     n = !n || n < 0 ? 1 : n;
     return randomGenHelper(n, this.internal_norm_rand)//; : map(seq()()(n))(() => this.internal_norm_rand());
-  } 
+  }
 
   protected abstract internal_norm_rand(): number;
 
-  public unif_rand(n: number = 1): number|number[] {
+  public unif_rand(n: number = 1): number[] {
      return this.rng.unif_rand(n);
+  }
+
+  public internal_unif_rand() {
+    return this.rng.internal_unif_rand();
   }
 }
