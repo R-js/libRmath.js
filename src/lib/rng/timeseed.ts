@@ -24,7 +24,6 @@ const { now } = Date;
 export function timeseed() {
   printer('using timeseed')
   let n = now();
-  //delay 0.5 sec
   if (typeof window !== 'undefined'){ //browser
     if (window.crypto && window.crypto.getRandomValues){
       const sampler = new Uint32Array(1);
