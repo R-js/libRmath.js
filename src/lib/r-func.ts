@@ -47,7 +47,7 @@ export {
   system
 }
 
-function* seq_len({ length, base = 1 }: { length: number, base: number }): IterableIterator<number> {
+function* seq_len({ length, base = 1}: { length: number, base?: number } = { length:1, base:0 }): IterableIterator<number> {
   for (let i = 0; i < length; i++) {
     yield base + i;
   };
@@ -56,10 +56,10 @@ function* seq_len({ length, base = 1 }: { length: number, base: number }): Itera
 
 const sequenceFactory = 
 (adjust = 0, adjustMin = adjust) => 
-(start: number, end: number, step = 1) => 
+(start: number, end: number, step = 1): number[] => 
 Array.from(lazySeq(start, end, step, adjust, adjustMin))
 
-function* lazySeq(start: number, end: number, step, adjust, adjustMin) {
+function* lazySeq(start: number, end: number, step: number, adjust, adjustMin) {
   if (step === 0) {
     throw new TypeError(`argument 'step' cannot be zero`)
   }
