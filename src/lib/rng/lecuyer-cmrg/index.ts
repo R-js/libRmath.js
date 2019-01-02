@@ -44,11 +44,11 @@ export class LecuyerCMRG extends IRNG {
     this.m_seed = new Int32Array(SEED_LEN).fill(0);
   }
 
-  public init(se: number =  timeseed()) {
+  public init(_seed: number =  timeseed()) {
     /* Initial scrambling */
     const s = new Int32Array([0]);
 
-    s[0] = se;
+    s[0] = _seed;
     for (let j = 0; j < 50; j++) {
       s[0] = 69069 * s[0] + 1;
     }
@@ -60,7 +60,7 @@ export class LecuyerCMRG extends IRNG {
 
       this.m_seed[j] = s[0];
     }
-    super.init(se);
+    super.init(_seed);
   }
 
   internal_unif_rand(): number {

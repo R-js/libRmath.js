@@ -159,7 +159,7 @@ describe(`Tools&Die`, () => {
             expect(i).to.be.lessThan(100);
             //console.log(ans);
             expect(ans).to.deep.equal(['k1', 'k2']);
-        });
+        })
     })
     describe('generator function "seq_len"', () => {
         it(`seq_len({length:5}) with default for "base" prop`, () => {
@@ -301,7 +301,38 @@ describe(`Tools&Die`, () => {
             const shouldThrow = () => randomGenHelper(trig, testFn)
             expect(shouldThrow).to.throw(`n argument is not a number or a number array`)
         })
+        it('map({hello:"world", num:2})(concat)', () => {
+            const ans = map({ hello: "world", num: 2 })((key, value) => `${key}-${value}`);
+            expect(ans).to.deep.equal(['world-hello', '2-num'])
+        })
     })
-
+    describe('range', () => {
+        it(`lazy range(start=1, stop=4, step=2)`, function () {
+            const collect: number[] = []
+            for (let i of range(1, 4, 2)) {
+                collect.push(i)
+            }
+            expect(collect).to.deep.equal([1, 3])
+        })
+        it(`lazy range(start=1, stop=4)`, function () {
+            const collect: number[] = []
+            for (let i of range(1, 4)) {
+                collect.push(i)
+            }
+            expect(collect).to.deep.equal([1, 2, 3, 4])
+        })
+    })
+    describe('lazyMap', () => {
+        it(`lazyMap(fn,obj)=>arr`, function () {
+            const collect: any[] = [];
+            const s = new Set(['hello','world','first','last']);
+            const it = lazyMap((v,k)=>`${k}=${v}`)(s.keys());
+            for (let i of it) {
+                collect.push(i)
+            }
+            console.log(collect);
+        })
+        
+    })
 })
 

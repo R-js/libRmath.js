@@ -405,7 +405,9 @@ function range(start: number, stop: number, step = 1): IterableIterator<number> 
   })
 }
 
-function lazyMap<T, S>(fn: (v: T, idx: number) => S) {
+//function map<T, S>(data: Slicee<T>): { (fn: (value: T[keyof T], idx: keyof T) => S): S[] } {
+
+function lazyMap<T, S>(fn: (value: T, idx: number) => S)  {
   return function(source: IterableIterator<T>) {
     let cursor = source;
     let idx = 0;
@@ -413,7 +415,7 @@ function lazyMap<T, S>(fn: (v: T, idx: number) => S) {
       next: function() {
         const step = cursor.next()
         if (step.done) return { value: undefined, done: true }
-        const rc = fn(step.value, idx++)
+        const rc = fn(step .value, idx++)
         return { value: rc, done: false }
       },
       [Symbol.iterator]: function() { return this }
