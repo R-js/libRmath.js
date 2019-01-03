@@ -37,7 +37,7 @@ export function rgeomOne(
     if (!R_FINITE(p) || p <= 0 || p > 1) return ML_ERR_return_NAN(printer);
 
     return rpoisOne(
-      exp_rand(rng.internal_unif_rand) * ((1 - p) / p),
+      exp_rand(rng.rng.internal_unif_rand) * ((1 - p) / p),
       rng
     ) as number;
 

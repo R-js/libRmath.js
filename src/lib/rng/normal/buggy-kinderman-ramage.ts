@@ -26,7 +26,7 @@ export class BuggyKindermanRamage extends IRNGNormal {
     super(_rng);
   }
 
-  protected internal_norm_rand() {
+  public internal_norm_rand() {
     /* see Reference above */
     /* note: this has problems, but is retained for
          * reproducibility of older codes, with the same

@@ -37,11 +37,11 @@ export function rtOne(df: number, rng: IRNGNormal): number {
     return ML_ERR_return_NAN(printer);
   }
 
-  if (!R_FINITE(df)) return rng.norm_randOne();
+  if (!R_FINITE(df)) return rng.internal_norm_rand();
 
   /* Some compilers (including MW6) evaluated this from right to left
         return norm_rand() / sqrt(rchisq(df) / df); */
 
-  let num = rng.norm_randOne() as number;
+  let num = rng.internal_norm_rand();
   return num / sqrt(rchisqOne(df, rng) / df);
 }

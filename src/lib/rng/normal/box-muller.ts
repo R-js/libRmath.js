@@ -37,7 +37,7 @@ export class BoxMuller extends IRNGNormal {
     _rng.register('INIT', this.reset.bind(this));
   }
 
-  protected internal_norm_rand() {
+  public internal_norm_rand() {
     let s = 0.0;
     let theta = 0;
 

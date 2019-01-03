@@ -28,7 +28,7 @@ export class Inversion extends IRNGNormal {
     super(_rng);
   }
 
-  protected internal_norm_rand(): number {
+  public internal_norm_rand(): number {
     /* unif_rand() alone is not of high enough precision */
     let u1 = this.rng.internal_unif_rand();
     let t =  this.rng.internal_unif_rand();

@@ -161,7 +161,7 @@ export class AhrensDieter extends IRNGNormal {
     super(_rng);
   }
 
-  protected internal_norm_rand() {
+  public internal_norm_rand() {
     let u1: number = this.rng.internal_unif_rand();
     let s = 0.0;
     let w: number;

@@ -284,6 +284,9 @@ function randomGenHelper<T extends Function>(n: number | number[], fn: T, ...arg
   else if (n instanceof Array) {
     result = n
   }
+  else if (n < 0) {
+     throw new TypeError(`n argument is negative`)
+  }
   else {
     throw new TypeError(`n argument is not a number or a number array`)
   }

@@ -3,5 +3,6 @@
 --recursive
 --require source-map-support/register
 --sort
-test/rng/**/test.ts
+test/rng/**/*test.ts
 test/r-func/**/test.ts
+

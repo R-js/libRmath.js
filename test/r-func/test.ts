@@ -325,14 +325,15 @@ describe(`Tools&Die`, () => {
     describe('lazyMap', () => {
         it(`lazyMap(fn,obj)=>arr`, function () {
             const collect: any[] = [];
-            const s = new Set(['hello','world','first','last']);
-            const it = lazyMap((v,k)=>`${k}=${v}`)(s.keys());
+            const s = new Set(['hello', 'world', 'first', 'last']);
+            const it = lazyMap((v, k) => `${k}=${v}`)(s.keys());
             for (let i of it) {
                 collect.push(i)
             }
-            console.log(collect);
+            expect(collect).to.deep.equal(['0=hello', '1=world', '2=first', '3=last'])
+
         })
-        
+
     })
 })
 
