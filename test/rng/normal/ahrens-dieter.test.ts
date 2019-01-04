@@ -84,27 +84,27 @@ const fixtureR = {
 
 
 
-const _10 = forcePrecision(15)
+const _fp = forcePrecision(15)
 
 describe('rng ahrens-dieter', function n() {
 
-  it('rng superduper, seed=1234, skip=100, sample=50', () => {
+  it('underlying superduper, seed=1234, skip=100, sample=50', () => {
     ad.rng.init(1234)
     ad.norm_rand(100)
     const sample = ad.norm_rand(50)
     const state = ad.rng.seed
-    expect(_10(sample)).to.deep.equal(_10(fixtureR.case0.sample))
-    expect(_10(state)).to.deep.equal(_10(fixtureR.case0.state))
+    expect(_fp(sample)).to.deep.equal(_fp(fixtureR.case0.sample))
+    expect(_fp(state)).to.deep.equal(_fp(fixtureR.case0.state))
   })
 
-  it('internal functions of IRNGNormal', () => {
+  it('underlying superduper, internal functions of IRNGNormal', () => {
     ad.rng.init(12)
     const sample = ad.internal_norm_rand()
     const usample = ad.rng.internal_unif_rand()
     const usample2 = ad.rng.unif_rand(4)
-    expect(_10([sample, usample, ...usample2])).to.deep.equal(fixtureR.case2.sampleSize)
+    expect(_fp([sample, usample, ...usample2])).to.deep.equal(fixtureR.case2.sampleSize)
   })
-  it('IRNGNormal.norm_rand(-1)', () => {
+  it('underlying superduper, IRNGNormal.norm_rand(-1)', () => {
     const usample = ad.norm_rand(0)
     expect(usample).to.deep.equal([])
   })
