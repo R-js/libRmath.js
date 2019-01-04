@@ -22,7 +22,7 @@ import { IRNGNormal } from './inormal-rng';
 
 const BIG = 134217728; /* 2^27 */
 
-const { isArray } = Array;
+
 export class Inversion extends IRNGNormal {
   constructor(_rng: IRNG  = new MersenneTwister(0) ) {
     super(_rng);
@@ -34,6 +34,6 @@ export class Inversion extends IRNGNormal {
     let t =  this.rng.internal_unif_rand();
     u1 = new Int32Array([BIG * u1])[0] + t;
     const result = qnorm(u1 / BIG, 0.0, 1.0, !!1, !!0);
-    return isArray(result) ? result[0] : result;
+    return result;
   }
 }

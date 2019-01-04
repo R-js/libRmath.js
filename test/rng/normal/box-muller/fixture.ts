@@ -1,14 +1,5 @@
-import { expect } from 'chai';
-import { BoxMuller } from '../../../src/lib/rng/normal/box-muller'
-import { MersenneTwister } from '../../../src/lib/rng/mersenne-twister'
-import { forcePrecision } from '../../../src/lib/r-func'
-import { IRNG } from '../../../src/lib/rng';
-import { flatten } from '../../../src/lib/r-func'
 
-const mt = new MersenneTwister(0);
-const bm = new BoxMuller(mt);
-
-const fixtureFromR = {
+export const fixtureFromR = {
     case0: {
         sample: [
             1.04204707296906,
@@ -689,23 +680,12 @@ const fixtureFromR = {
             -1192659579,
             467264024
         ]
+    },
+    case1: {
+        sample: [
+            1.29738758062858239, -0.98437852689982230,
+            -0.73279886674660621, 0.75977419783265332,
+            1.49998875679776655
+        ]
     }
 }
-
-const _fp = forcePrecision(15)
-
-describe('rng box-muller', function () {
-    it('rng mersenne-twister, seed=1234, skip=100, sample=50', () => {
-        mt.init(1234)
-        bm.norm_rand(100)
-        const sample = bm.norm_rand(50)
-        const state = bm.rng.seed
-        expect(_fp(sample)).to.deep.equal(_fp(fixtureFromR.case0.sample))
-        expect(_fp(state)).to.deep.equal(_fp(fixtureFromR.case0.state))
-        
-        //expect(_fp(sample)).to.deep.equal(_fp(fixtureR.case0.sample))
-        //expect(_fp(state)).to.deep.equal(_fp(fixtureR.case0.state))
-    })
-
-
-})

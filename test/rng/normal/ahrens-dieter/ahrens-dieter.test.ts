@@ -1,13 +1,8 @@
 import { expect } from 'chai';
-import { AhrensDieter } from '../../../src/lib/rng/normal/ahrens_dieter'
-import { SuperDuper } from '../../../src/lib/rng/super-duper'
-import { forcePrecision } from '../../../src/lib/r-func'
-import { IRNG } from '../../../src/lib/rng';
-import { flatten } from '../../../src/lib/r-func'
+import { AhrensDieter } from '../../../../src/lib/rng/normal/ahrens_dieter'
+import { SuperDuper } from '../../../../src/lib/rng/super-duper'
+import { forcePrecision } from '../../../../src/lib/r-func'
 
-// Possible to arbitraty uniform PRNG source (example: SuperDuper)
-const ad = new AhrensDieter(new SuperDuper());
-// At any time reset normal PRNG seed, with the reference to uniform PRNG
 
 const fixtureR = {
   case0: {
@@ -89,6 +84,7 @@ const _fp = forcePrecision(15)
 describe('rng ahrens-dieter', function n() {
 
   it('underlying superduper, seed=1234, skip=100, sample=50', () => {
+    const ad = new AhrensDieter(new SuperDuper());
     ad.rng.init(1234)
     ad.norm_rand(100)
     const sample = ad.norm_rand(50)
@@ -98,6 +94,7 @@ describe('rng ahrens-dieter', function n() {
   })
 
   it('underlying superduper, internal functions of IRNGNormal', () => {
+    const ad = new AhrensDieter(new SuperDuper());
     ad.rng.init(12)
     const sample = ad.internal_norm_rand()
     const usample = ad.rng.internal_unif_rand()
@@ -105,7 +102,9 @@ describe('rng ahrens-dieter', function n() {
     expect(_fp([sample, usample, ...usample2])).to.deep.equal(fixtureR.case2.sampleSize)
   })
   it('underlying superduper, IRNGNormal.norm_rand(-1)', () => {
+    const ad = new AhrensDieter();
     const usample = ad.norm_rand(0)
     expect(usample).to.deep.equal([])
   })
+  
 })

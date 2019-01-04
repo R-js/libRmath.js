@@ -22,24 +22,27 @@ import { IRNGType } from '../irng-type';
 import { timeseed } from '../timeseed';
 
 const SEED_LEN = 2;
-const buf = new ArrayBuffer(SEED_LEN * 4);
+
 
 export class SuperDuper extends IRNG {
 
-  private m_seed: Int32Array;
-
+  private _seed: Int32Array;
+  private _buf: ArrayBuffer;
+  
   constructor(_seed: number = timeseed()) {
     super(_seed);
+    
   }
 
   public _setup() {
     this._kind = IRNGType.SUPER_DUPER;
     this._name = 'Super-Duper';
-    this.m_seed = new Int32Array(buf).fill(0);
+    this._buf = new ArrayBuffer(SEED_LEN * 4);
+    this._seed = new Int32Array(this._buf).fill(0);
   }
 
   internal_unif_rand(): number {
-    const s = this.m_seed;
+    const s = this._seed;
     /* This is Reeds et al (1984) implementation;
                * modified using __unsigned__	seeds instead of signed ones
                */
@@ -55,7 +58,7 @@ export class SuperDuper extends IRNG {
   }
 
   private fixupSeeds(): void {
-    const s = this.m_seed;
+    const s = this._seed;
     if (s[0] === 0) s[0] = 1;
     /* I2 = Congruential: must be ODD */
     s[1] |= 1;
@@ -68,9 +71,9 @@ export class SuperDuper extends IRNG {
     for (let j = 0; j < 50; j++) {
       s[0] = 69069 * s[0] + 1;
     }
-    for (let j = 0; j < this.m_seed.length; j++) {
+    for (let j = 0; j < this._seed.length; j++) {
       s[0] = 69069 * s[0] + 1;
-      this.m_seed[j] = s[0];
+      this._seed[j] = s[0];
     }
     this.fixupSeeds();
     super.init(_seed);
@@ -78,15 +81,15 @@ export class SuperDuper extends IRNG {
 
   public set seed(_seed: number[]) {
 
-    if (_seed.length > this.m_seed.length || _seed.length === 0) {
+    if (_seed.length > this._seed.length || _seed.length === 0) {
       this.init(timeseed());
       return;
     }
-    this.m_seed.set(_seed);
+    this._seed.set(_seed);
   }
 
   public get seed() {
-    return Array.from(this.m_seed);
+    return Array.from(this._seed);
   }
 
 }
