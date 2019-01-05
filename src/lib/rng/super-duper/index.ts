@@ -20,14 +20,14 @@ import { fixup, i2_32m1 } from '../fixup';
 import { IRNG } from '../irng';
 import { IRNGType } from '../irng-type';
 import { timeseed } from '../timeseed';
+import { seedCheck } from '../seedcheck'
 
-const SEED_LEN = 2;
-
+export const SEED_LEN = 2;
 
 export class SuperDuper extends IRNG {
 
   private _seed: Int32Array;
-  private _buf: ArrayBuffer;
+  
   
   constructor(_seed: number = timeseed()) {
     super(_seed);
@@ -37,8 +37,7 @@ export class SuperDuper extends IRNG {
   public _setup() {
     this._kind = IRNGType.SUPER_DUPER;
     this._name = 'Super-Duper';
-    this._buf = new ArrayBuffer(SEED_LEN * 4);
-    this._seed = new Int32Array(this._buf).fill(0);
+    this._seed = new Int32Array(SEED_LEN).fill(0);
   }
 
   internal_unif_rand(): number {
@@ -80,11 +79,7 @@ export class SuperDuper extends IRNG {
   }
 
   public set seed(_seed: number[]) {
-
-    if (_seed.length > this._seed.length || _seed.length === 0) {
-      this.init(timeseed());
-      return;
-    }
+    seedCheck(this._kind,_seed, SEED_LEN)
     this._seed.set(_seed);
   }
 

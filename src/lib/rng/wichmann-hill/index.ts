@@ -23,8 +23,9 @@ import { fixup } from '../fixup';
 import { IRNG } from '../irng';
 import { IRNGType } from '../irng-type';
 import { timeseed } from '../timeseed';
+import { seedCheck } from '../seedcheck'
 
-const SEED_LEN = 3;
+export const SEED_LEN = 3;
 
 export class WichmannHill extends IRNG {
 
@@ -38,8 +39,7 @@ export class WichmannHill extends IRNG {
   public _setup() {
     this._kind = IRNGType.WICHMANN_HILL;
     this._name = 'Wichmann-Hill';
-    const buf = new ArrayBuffer(SEED_LEN * 4);
-    this.m_seed = new Uint32Array(buf).fill(0);
+    this.m_seed = new Uint32Array(SEED_LEN).fill(0);
   }
 
   internal_unif_rand(): number {
@@ -81,12 +81,7 @@ export class WichmannHill extends IRNG {
   }
 
   public set seed(_seed: number[]) {
-
-
-    if (_seed.length > this.m_seed.length || _seed.length === 0) {
-      this.init(timeseed());
-      return;
-    }
+    seedCheck(this._kind,_seed, SEED_LEN)
     this.m_seed.set(_seed);
   }
 

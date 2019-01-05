@@ -23,9 +23,10 @@ import { fixup } from '../fixup';
 import { IRNG } from '../irng';
 import { IRNGType } from '../irng-type';
 import { timeseed } from '../timeseed';
+import { seedCheck } from '../seedcheck'
 
 const QUALITY = 1009; /* recommended quality level for high-res use */
-const SEED_LEN = 101;
+export const SEED_LEN = 101;
 const LL = 37; /* the short lag */
 const KK = 100; /* the long lag */
 const TT = 70; /* guaranteed separation between streams */
@@ -168,8 +169,7 @@ export class KnuthTAOCP2002 extends IRNG {
     this._name = 'Knuth-TAOCP-2002';
     this.qualityBuffer = new ArrayBuffer(QUALITY * 4);
     this.ran_arr_buf = new Uint32Array(this.qualityBuffer);
-    const buf = new ArrayBuffer(SEED_LEN * 4);
-    this.m_seed = new Uint32Array(buf).fill(0);
+    this.m_seed = new Uint32Array(SEED_LEN).fill(0);
     this.ran_x = this.m_seed;
   }
 
@@ -190,11 +190,7 @@ export class KnuthTAOCP2002 extends IRNG {
     super.init(_seed);
   }
   public set seed(_seed: number[]) {
-
-    if (_seed.length > this.m_seed.length || _seed.length === 0) {
-      this.init(timeseed());
-      return;
-    }
+    seedCheck(this._kind,_seed, SEED_LEN)
     this.m_seed.set(_seed);
   }
 

@@ -26,7 +26,7 @@ export abstract class IRNG {
   protected _name: string;
   protected _kind: IRNGType;
 
-  private notify: Set<{ event: MessageType, handler: () => void }>;
+  private notify: Set<{ event: MessageType, handler: (...args:any[]) => void }>;
 
   constructor(_seed: number) {
     this.notify = new Set();
@@ -49,8 +49,8 @@ export abstract class IRNG {
 
   public abstract _setup(): void;
 
-  public init(_seed: number): void {
-    this.emit('INIT');
+  public init(seed: number): void {
+    this.emit('INIT', seed);
   }
 
   public abstract set seed(_seed: number[]);
@@ -67,14 +67,14 @@ export abstract class IRNG {
 
   public abstract get seed(): number[];
   // event stuff
-  public register(event: MessageType, handler: () => void) {
+  public register(event: MessageType, handler: (...args:any[]) => void) {
     this.notify.add({ event, handler });
   }
 
-  public emit(event: MessageType) {
+  public emit(event: MessageType, ...args:any[]) {
     this.notify.forEach(r => {
       if (r.event === event) {
-        r.handler();
+        r.handler.apply(r.handler, args);
       }
     });
   }

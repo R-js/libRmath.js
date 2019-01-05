@@ -24,14 +24,11 @@ describe('rng lecuyer-cmrg', function () {
         expect(next).to.equal(next2)
         expect(_fp(next)).to.equal(_fp(0.033360347370373147))
     })
-    it('setting an invalid state size create new seed state',()=>{
+    it('setting an invalid seed,throws an error',()=>{
         const lcmrg = new LecuyerCMRG();
         lcmrg.init()
-        const size = lcmrg.seed.length
-        lcmrg.seed = [] // nonsense state
-        expect(size).to.equal(lcmrg.seed.length)
+        const fnThrow = () => lcmrg.seed = [1]
+        expect(fnThrow).to.throw()
     })
     // intercept timeseed in this
-
-
 })

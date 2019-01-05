@@ -22,6 +22,7 @@ import { IRNG } from '../irng';
 import { IRNGType } from '../irng-type';
 import { timeseed } from '../timeseed';
 import { TAOCP1997init } from './taocp-1997-init';
+import { seedCheck } from '../seedcheck'
 /* helpers */
 /* helpers */
 /* helpers */
@@ -38,7 +39,7 @@ const mod_diff = (x: number, y: number) => (x - y) & (MM - 1);
 const SEED_LEN = 101;
 
 export class KnuthTAOCP extends IRNG {
-  private buf: ArrayBuffer;
+  //private buf: ArrayBuffer;
 
   private m_seed: Int32Array;
 
@@ -89,35 +90,30 @@ export class KnuthTAOCP extends IRNG {
     for (; i < KK; i++, j++) ran_x[i] = mod_diff(aa[j - KK], ran_x[i - LL]);
   }
 
-  public constructor(_seed = timeseed()) {
-    super(_seed);
+  public constructor(seed: number = timeseed()) {
+    super(seed);
   }
 
   public _setup() {
-    this.buf = new ArrayBuffer(SEED_LEN * 4);
     this._kind = IRNGType.KNUTH_TAOCP;
     this._name = 'Knuth-TAOCP';
-    this.m_seed = new Int32Array(this.buf).fill(0);
+    this.m_seed = new Int32Array(SEED_LEN).fill(0);
   }
 
-  public init(_seed: number  =  timeseed()) {
+  public init(seed: number  =  timeseed()) {
     /* Initial scrambling */
     const s = new Uint32Array([0]);
-    s[0] = _seed;
+    s[0] = seed;
     for (let j = 0; j < 50; j++) {
       s[0] = 69069 * s[0] + 1;
     }
     this.RNG_Init_R_KT(s[0]);
-    super.init(_seed);
+    super.init(seed);
   }
 
   public set seed(_seed: number[]) {
 
-
-    if (_seed.length > this.m_seed.length || _seed.length === 0) {
-      this.init(timeseed());
-      return;
-    }
+    seedCheck(this._kind,_seed, SEED_LEN)
     this.m_seed.set(_seed);
   }
 
