@@ -7,13 +7,13 @@ const _fp = forcePrecision(15)
 
 describe('rng super-duper', function () {
     //
-    it.skip('for seed=0, compare 50 samples', () => {
+    it('for seed=0, compare 50 samples', () => {
         const sd = new SuperDuper(0);
         const sample = sd.unif_rand(50);
         expect(_fp(sample)).to.deep.equal(_fp(fixture.case0.sample))
     })
     //
-    it.skip('for seed=default, set state and compare 10 samples', () => {
+    it('for seed=default, set state and compare 10 samples', () => {
         const sd = new SuperDuper()
         sd.init()
         sd.seed = fixture.case1.state
