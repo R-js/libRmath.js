@@ -80,7 +80,8 @@ export class SuperDuper extends IRNG {
 
   public set seed(_seed: number[]) {
     seedCheck(this._kind,_seed, SEED_LEN)
-    this._seed.set(_seed);
+    this._seed.set(_seed)
+    this.fixupSeeds()
   }
 
   public get seed() {

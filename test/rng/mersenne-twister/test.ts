@@ -13,7 +13,7 @@ describe('rng mersenne-twister', function () {
         expect(_fp(sample)).to.deep.equal(_fp(fixture.case0.sample))
     })
 
-    it('for seed=0, compare 1300 samples', () => {
+    it('for default seed, set state to and compare 4 samples', () => {
         const mt = new MersenneTwister()
         mt.init()
         mt.seed = fixture.case1.alterededState;
