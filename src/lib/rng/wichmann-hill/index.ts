@@ -82,7 +82,8 @@ export class WichmannHill extends IRNG {
 
   public set seed(_seed: number[]) {
     seedCheck(this._kind,_seed, SEED_LEN)
-    this.m_seed.set(_seed);
+    this.m_seed.set(_seed)
+    this.fixupSeeds()
   }
 
   public get seed() {
