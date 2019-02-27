@@ -1,6 +1,6 @@
 import { IRNG } from '../';
+import { map } from '../../r-func';
 import { segFnCache } from '../irng';
-import { map, seq } from '../../r-func';
 
 export abstract class IRNGNormal {
   protected rng: IRNG;

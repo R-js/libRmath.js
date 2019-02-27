@@ -29,7 +29,7 @@ module.exports = function(env) {
         ],
         module: {
             rules: [
-                lint(),
+               // lint(),
                 tsc({ declaration: true })
             ]
         },

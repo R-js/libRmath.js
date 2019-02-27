@@ -274,7 +274,7 @@ export function summary(x: number[]): ISummary {
   const mu = sum(x) / N;
   let relX2 = 0;
   for (let i = 0; i < x.length; i++) {
-			relX2 +=  (x[i] - mu)*( x[i] - mu);
+			relX2 +=  (x[i] - mu) * ( x[i] - mu);
   }
   const sampleVariance = relX2 / (N - 1);
 	const populationVariance = sampleVariance * (N - 1) / N;
