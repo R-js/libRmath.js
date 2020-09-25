@@ -1643,7 +1643,7 @@ export class Toms708 {
       // C
       // C  PROCEDURE FOR A0 <= 1 OR B0 <= 1
       // C
-      if (x <= 0.5) {
+      if (x > 0.5) {
         ind = 1;
         a0 = b;
         b0 = a;
