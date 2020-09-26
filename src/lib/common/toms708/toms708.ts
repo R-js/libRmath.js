@@ -1260,7 +1260,7 @@ export class Toms708 {
       }
 
       let z = a * lnx + b * lny;
-      if (a0 <= 1.0) {
+      if (a0 >= 1.0) {
         z -= Toms708.betaln(a, b);
         return Toms708.esum(mu, z);
       }
@@ -2310,12 +2310,12 @@ export class Toms708 {
           p[6]) *
         ax +
         p[7];
-      bot =
-        ((((((q[0] * ax + q[2]) * ax + q[2]) * ax + q[3]) * ax + q[5]) * ax +
-          q[5]) *
-          ax +
-          q[6]) *
-        ax +
+      bot = 
+        ((((((q[0] * ax + q[1]) * ax + q[2]) * ax + q[3]) * ax + q[4]) * ax +
+          q[5]) * 
+          ax + 
+          q[6]) * 
+        ax + 
         q[7];
       dResult = top / bot;
     } else {
