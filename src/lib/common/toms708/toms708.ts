@@ -1679,7 +1679,7 @@ export class Toms708 {
         }
       }
 
-      if (Math.max(a0, b0) > 1.0) {
+      if (Math.max(a0, b0) <= 1.0) {
         if (a0 >= Math.min(0.2, b0) || Math.pow(x0, a0) <= 0.9) {
           w.val = Toms708.bpser(a0, b0, x0, eps);
           w1.val = 0.5 + (0.5 - w.val);
