@@ -1,9 +1,12 @@
 {
     "author": "Jacob K.F. Bogers",
-    "browser:disabled": "./dist/client/bundle.js",
-    "browser:doc": "https://github.com/defunctzombie/package-browser-field-spec",
+    "contributors":[{
+        "name":"Richard D. Morey",
+        "email": "richarddmorey@gmail.com"
+    }],
+    "browser": "./dist/lib/libR.min.js",
     "bugs": {
-        "url": "https://github.com/jacobbogers/libRmath.js/issues"
+        "url": "https://github.com/R-js/libRmath.js/issues"
     },
     "dependencies": {
         "debug": "^3.1.0"
@@ -144,8 +147,10 @@
         "stop": "echo stop",
         "test": "cross-env-shell NODE_ENV=test TS_NODE_DISABLE_WARNINGS=true nyc mocha",
         "uninstall": "echo uninstall",
-        "version": "echo version"
+        "version": "echo version",
+        "version:tsc":"tsc --version",
+        "version:tslint":"tslint --version"
     },
     "types": "dist/src/lib/index.d.ts",
-    "version": "1.0.86"
+    "version": "1.0.88"
 }

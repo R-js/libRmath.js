@@ -2,9 +2,9 @@ const { abs, sign, floor, trunc, max } = Math;
 const { isNaN } = Number;
 const { isArray } = Array;
 
-import * as debug from "debug";
+import * as debug from 'debug';
 
-const printer_seq = debug("seq");
+const printer_seq = debug('seq');
 const precision9 = numberPrecision(9);
 
 export function isOdd(n: number): boolean {
@@ -39,7 +39,7 @@ export const seq = (adjust = 0) => (adjustMin = adjust) => (
   // so we use precision to have it make sense
   // sometimes rounding effects try something diff
   step = abs(step) * sign(end - start);
-  printer_seq("step:%d", step);
+  printer_seq('step:%d', step);
 
   const rc: number[] = [];
 
@@ -106,23 +106,23 @@ function coerceToArray(o: any): { key: string | number; val: any }[] {
       'Illegal argument excepton: input needs to NOT be "null" or "undefined".'
     );
   }
-  if (typeof o === "number") {
+  if (typeof o === 'number') {
     return [{ key: 0, val: o }] as any;
   }
   if (isArray(o)) {
     return o.map((x, idx) => ({ key: idx, val: x } as any));
   }
-  if (typeof o === "string") {
-    return o.split("").map((x, idx) => ({ key: idx, val: x } as any));
+  if (typeof o === 'string') {
+    return o.split('').map((x, idx) => ({ key: idx, val: x } as any));
   }
-  if (typeof o === "object") {
+  if (typeof o === 'object') {
     const names = Object.getOwnPropertyNames(o);
     if (names.length === 0) {
-      throw new Error("Input argument is an Object with no properties");
+      throw new Error('Input argument is an Object with no properties');
     }
     return names.map(name => ({ key: name, val: o[name] })) as any;
   }
-  throw new Error("unreachable code");
+  throw new Error('unreachable code');
 }
 
 export function multiplexer(...rest: (any | any[])[]) {
@@ -136,12 +136,12 @@ export function multiplexer(...rest: (any | any[])[]) {
       analyzed.push([arg]);
       continue;
     }
-    if (["undefined", "boolean", "number"].indexOf(typeof arg) >= 0) {
+    if (['undefined', 'boolean', 'number'].indexOf(typeof arg) >= 0) {
       analyzed.push([arg]);
       continue;
     }
-    if (typeof arg === "string") {
-      analyzed.push(arg.split(""));
+    if (typeof arg === 'string') {
+      analyzed.push(arg.split(''));
       continue;
     }
     if (Array.isArray(arg)) {
@@ -149,10 +149,10 @@ export function multiplexer(...rest: (any | any[])[]) {
       continue;
     }
     if (arg instanceof Object) {
-      throw new Error("Sorry, looping over properties not yet supported");
+      throw new Error('Sorry, looping over properties not yet supported');
     }
     if (arg instanceof Function) {
-      throw new Error("Sorry function arguments are not yet supported");
+      throw new Error('Sorry function arguments are not yet supported');
     }
   } //for
   // find the longest array
@@ -225,7 +225,7 @@ export function sum(x: any[]): number {
       rc += sum(x[i]);
       continue;
     }
-    if (typeof x[i] === "string") {
+    if (typeof x[i] === 'string') {
       const trial = Number.parseFloat(x[i]);
       if (Number.isFinite(trial)) {
         rc += trial;
@@ -233,7 +233,7 @@ export function sum(x: any[]): number {
       }
       throw Error(`${x[i]} is not a number or can be coerced to a number`);
     }
-    if (typeof x[i] === "number" && Number.isFinite(x[i])) {
+    if (typeof x[i] === 'number' && Number.isFinite(x[i])) {
       rc += x[i];
       continue;
     }
@@ -260,9 +260,9 @@ export interface ISummary {
   relX2; // = ( x-E(x) )^2
   stats: {
     min: number; // minimal value from "data"
-    "1st Qu.": number; // 1st quantile from "data"
+    '1st Qu.': number; // 1st quantile from "data"
     median: number; // median value from "data
-    "3rd Qu.": number; // 3rd quantile from "data"
+    '3rd Qu.': number; // 3rd quantile from "data"
     max: number; // maximum value in data
   };
 }
@@ -318,13 +318,13 @@ export function summary(x: number[]): ISummary {
       sd: sampleSD
     },
     // only show first 50 of relX and relX2
-    relX: "depricated",
-    relX2: "depricated",
+    relX: 'depricated',
+    relX2: 'depricated',
     stats: {
       min,
-      "1st Qu.": q1,
+      '1st Qu.': q1,
       median,
-      "3rd Qu.": q3,
+      '3rd Qu.': q3,
       max
     }
   };
