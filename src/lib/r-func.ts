@@ -1,20 +1,6 @@
-/* This is a conversion from libRmath.so to Typescript/Javascript
-Copyright (C) 2018  Jacob K.F. Bogers  info@mail.jacob-bogers.com
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
-const { max, abs, sign } = Math;
+const { abs, sign, floor, trunc, max } = Math;
+const { isNaN } = Number;
+const { isArray } = Array;
 
 import * as debug from 'debug';
 
@@ -41,10 +27,63 @@ export {
   typeOf
 }
 
+export const seq = (adjust = 0) => (adjustMin = adjust) => (
+  start: number,
+  end?: number,
+  step: number = 1
+): number[] => {
+  if (end === undefined) {
+    if (start <= 0 || start === undefined) {
+      return [];
+    }
+    end = 1;
+  }
+  let s = start + adjust;
+  let e = end + adjust;
+  let cursor = s;
 
-export {
-  strTypes,
-  system
+  if (end < start) {
+    e = start + adjustMin;
+    s = end + adjustMin;
+    cursor = e;
+  }
+  // wow: Chrome and FireFox give
+  // 0.4+0.2 = 0.6000000000000001
+  // so we use precision to have it make sense
+  // sometimes rounding effects try something diff
+  step = abs(step) * sign(end - start);
+  printer_seq('step:%d', step);
+
+  const rc: number[] = [];
+
+  do {
+    rc.push(cursor);
+    cursor += step;
+  } while (precision9(cursor) >= s && precision9(cursor) <= e && step !== 0);
+
+  return precision9(rc) as any;
+};
+
+export function selector(
+  ...rest: (number | number[])[]
+): { (val: any, index: number): boolean } {
+  const flat = flatten(rest);
+  return (val: any, idx: number) => {
+    return flat.indexOf(idx) >= 0;
+  };
+}
+
+export function flatten<T>(...rest: (T | T[])[]): T[] {
+  let rc: number[] = [];
+  for (const itm of rest) {
+    if (isArray(itm)) {
+      let rc2: number[] = flatten(...itm) as any;
+      rc.push(...rc2);
+      continue;
+    }
+    rc.push(itm as any);
+  }
+  return rc as any;
 }
 
 function* seq_len({ length, base = 1}: { length: number, base?: number } = { length:1, base:0 }): IterableIterator<number> {
@@ -53,43 +92,22 @@ function* seq_len({ length, base = 1}: { length: number, base?: number } = { len
   };
 }
 
-
-const sequenceFactory = 
-(adjust = 0, adjustMin = adjust) => 
-(start: number, end: number, step = 1): number[] => 
-Array.from(lazySeq(start, end, step, adjust, adjustMin))
-
-function* lazySeq(start: number, end: number, step: number, adjust, adjustMin) {
-  if (step === 0) {
-    throw new TypeError(`argument 'step' cannot be zero`)
-  }
-  if (end > start && step < 0) {
-    throw new TypeError(`'end' > 'start' so delta must be positive`);
-  }
-  if (end < start && step > 0) {
-    throw new TypeError(`'end' < 'start' so delta must be negative`);
-  }
-  const adj = step > 0 ? adjust : adjustMin;
-  do {
-    yield start + adj;
-    start = start + step;
-  } while ((step > 0 && start <= end) || (step < 0 && start >= end));
+export function multiplex(fn: (...rest: (any | any[])[]) => any) {
+  return function(...rest: (any | any[])[]) {
+    return multiplexer(...rest)(fn);
+  };
 }
 
-
-type strTypes = 'bigint' | 'boolean' | 'number' | 'undefined' | 'string' | 'null' | 'symbol' | 'array' | 'function' | 'object';
-type system = boolean | number | undefined | string | null | symbol;
-
-function typeOf(v: any): strTypes {
-  if (v === null) return 'null';
-  if (v instanceof Array) return 'array';
-  if (v instanceof Function) return 'function';
-  const k = typeof v;
-  // @ts-ignore TS2322: Type '"string" | "number" | "bigint" | "boolean" | "symbol" | "undefined" | "object" | "function"' is not assignable to type 'strTypes'.
-  return k;
+export function asArray(fn: (...rest: (any | any[])[]) => any) {
+  return function(...rest: (any | any[])[]) {
+    const ans = fn(...rest);
+    return Array.isArray(ans) ? ans : [ans];
+  };
 }
 
-
+function possibleScalar<T>(x: T[]): T | T[] {
+  return x.length === 1 ? x[0] : x;
+}
 
 function* multiplexer(...rest: any[]): IterableIterator<any[]> {
   //
@@ -98,27 +116,61 @@ function* multiplexer(...rest: any[]): IterableIterator<any[]> {
   const analyzed: _t[] = [];
   type _t = boolean[] | number[] | undefined[] | string[] | null[] | symbol[] | Array<any>;
 
-  function push2AsArr(v) { analyzed.push([v]) }
+function coerceToArray(o: any): { key: string | number; val: any }[] {
+  if (o === null || o === undefined) {
+    throw new TypeError(
+      'Illegal argument excepton: input needs to NOT be "null" or "undefined".'
+    );
+  }
+  if (typeof o === 'number') {
+    return [{ key: 0, val: o }] as any;
+  }
+  if (isArray(o)) {
+    return o.map((x, idx) => ({ key: idx, val: x } as any));
+  }
+  if (typeof o === 'string') {
+    return o.split('').map((x, idx) => ({ key: idx, val: x } as any));
+  }
+  if (typeof o === 'object') {
+    const names = Object.getOwnPropertyNames(o);
+    if (names.length === 0) {
+      throw new Error('Input argument is an Object with no properties');
+    }
+    return names.map(name => ({ key: name, val: o[name] })) as any;
+  }
+  throw new Error('unreachable code');
+}
 
-  function push2AsSc(v) { analyzed.push(v) }
-
-  const select = {
-    ['undefined']: push2AsArr,
-    ['null']: push2AsArr,
-    ['number']: push2AsArr,
-    ['string'](v: string) { analyzed.push(v.split('')) },
-    ['boolean']: push2AsArr,
-    ['array']: push2AsSc,
-    ['object'](v: _t) { throw new Error('M001, Looping over properties not yet supported'); },
-    ['function'](v: _t) { throw new Error('M002, arguments of type "function" are not yet supported'); }
-  };
+export function multiplexer(...rest: (any | any[])[]) {
+  //analyze
+  const analyzed: any[] = [];
 
   for (let k = 0; k < rest.length; k++) {
     const arg = rest[k];
-    const to = typeOf(arg);
-    const selector = select[to];
-    selector(arg);
-  }//for
+    // null is special
+    if (arg === null) {
+      analyzed.push([arg]);
+      continue;
+    }
+    if (['undefined', 'boolean', 'number'].indexOf(typeof arg) >= 0) {
+      analyzed.push([arg]);
+      continue;
+    }
+    if (typeof arg === 'string') {
+      analyzed.push(arg.split(''));
+      continue;
+    }
+    if (Array.isArray(arg)) {
+      analyzed.push(arg);
+      continue;
+    }
+    if (arg instanceof Object) {
+      throw new Error('Sorry, looping over properties not yet supported');
+    }
+    if (arg instanceof Function) {
+      throw new Error('Sorry function arguments are not yet supported');
+    }
+  } //for
   // find the longest array
   const _max = max(...analyzed.map(a => a.length));
   for (let k = 0; k < _max; k++) {
@@ -132,17 +184,25 @@ function* multiplexer(...rest: any[]): IterableIterator<any[]> {
   }
 }
 
+/**
+ *
+ *  xx can be an array or a "pojo"-object with properties
+ *
+ */
 
+type ArrayElt = { key: string | number; val: any };
 
-function Rcycle(fn: Function) {
-  return function(...args: any[]) {
-    const gen = multiplexer(...args);
-    let rc: any[] = [];
-    for (const arg of gen) {
-      rc[rc.length] = fn(...arg);
-    }
-    return rc;
-  }
+function iter<T>(wantMap = true) {
+  return function(
+    xx: T
+  ): { (fn: (x: any, idx?: number | string) => any): any | any[] } {
+    const fx: ArrayElt[] = coerceToArray(xx) as any;
+    return function(fn: (x: any, idx?: number | string) => any): any | any[] {
+      return wantMap
+        ? possibleScalar(fx.map(o => fn(o.val, o.key)))
+        : fx.forEach(o => fn(o.val, o.key));
+    };
+  };
 }
 
 
@@ -168,13 +228,28 @@ function forcePrecision(prec: number = 6) {
   }
 }
 
-function sum(x: number[]) {
-  let sum = 0;
-  const gen = flatten(x);
-  for (let v = gen.next(); !v.done; v = gen.next()) {
-    sum += v.value;
+export function sum(x: any[]): number {
+  let rc = 0;
+  for (let i = 0; i < x.length; i++) {
+    if (isArray(x[i])) {
+      rc += sum(x[i]);
+      continue;
+    }
+    if (typeof x[i] === 'string') {
+      const trial = Number.parseFloat(x[i]);
+      if (Number.isFinite(trial)) {
+        rc += trial;
+        continue;
+      }
+      throw Error(`${x[i]} is not a number or can be coerced to a number`);
+    }
+    if (typeof x[i] === 'number' && Number.isFinite(x[i])) {
+      rc += x[i];
+      continue;
+    }
+    throw new Error(`${x[i]} is not a number`);
   }
-  return sum;
+  return rc;
 }
 /*
 for r::stat,not for this
@@ -182,21 +257,21 @@ export interface ISummary {
   N: number; // number of samples in "data"
   mu: number; // mean of "data"
   population: {
-    variance: number, // population variance (data is seen as finite population)
-    sd: number // square root of the population variance
+    variance: number; // population variance (data is seen as finite population)
+    sd: number; // square root of the population variance
   };
   sample: {
-    variance: number, // sample variance (data is seen as a small sample from an very large population)
-    sd: number // square root of "sample variance"
+    variance: number; // sample variance (data is seen as a small sample from an very large population)
+    sd: number; // square root of "sample variance"
   };
   relX; // = x-E(x)
   relX2; // = ( x-E(x) )^2
   stats: {
-    min: number, // minimal value from "data"
-    '1st Qu.': number, // 1st quantile from "data"
-    median: number, // median value from "data
-    '3rd Qu.': number, // 3rd quantile from "data"
-    max: number // maximum value in data
+    min: number; // minimal value from "data"
+    '1st Qu.': number; // 1st quantile from "data"
+    median: number; // median value from "data
+    '3rd Qu.': number; // 3rd quantile from "data"
+    max: number; // maximum value in data
   };
 }
 /*
@@ -207,16 +282,18 @@ export function summary(x: number[]): ISummary {
   if (x.length === 0) {
     throw new Error(`argument Array is empty`);
   }
-  if (x.includes(NaN)) {
+  if (x.findIndex(v => isNaN(v)) >= 0) {
     throw new Error(`argument Array has NaNs`);
   }
 
   const N = x.length;
   const mu = sum(x) / N;
-  const relX = x.map(v => v - mu);
-  const relX2 = relX.map(v => v * v);
-  const sampleVariance = sum(relX2) / (N - 1);
-  const populationVariance = sampleVariance * (N - 1) / N;
+  let relX2 = 0;
+  for (let i = 0; i < x.length; i++) {
+    relX2 += (x[i] - mu) * (x[i] - mu);
+  }
+  const sampleVariance = relX2 / (N - 1);
+  const populationVariance = (sampleVariance * (N - 1)) / N;
   const sampleSD = Math.sqrt(sampleVariance);
   const populationSD = Math.sqrt(populationVariance);
   // quantiles
@@ -248,8 +325,9 @@ export function summary(x: number[]): ISummary {
       variance: sampleVariance,
       sd: sampleSD
     },
-    relX,
-    relX2,
+    // only show first 50 of relX and relX2
+    relX: 'depricated',
+    relX2: 'depricated',
     stats: {
       min,
       '1st Qu.': q1,
@@ -263,9 +341,12 @@ export function summary(x: number[]): ISummary {
 // https://en.wikipedia.org/wiki/Welch%E2%80%93Satterthwaite_equation
 
 export function Welch_Satterthwaite(s: number[], n: number[]): number {
-
-  const elts = s.map((_s, i) => _s * _s / n[i as number])
-  const dom = elts.map((e, i) => e * e / (n[i as number] - 1));
+  const elts = flatten(
+    map(s)((_s, i) => {
+      return (_s * _s) / n[i as number];
+    })
+  );
+  const dom = elts.map((e, i) => (e * e) / (n[i as number] - 1));
 
   return Math.pow(sum(elts), 2) / sum(dom);
 }

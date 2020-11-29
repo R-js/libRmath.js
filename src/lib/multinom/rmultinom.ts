@@ -20,20 +20,21 @@ import * as debug from 'debug';
 const { isFinite: R_FINITE } = Number;
 const { abs: fabs } = Math;
 
-import { rbinomOne } from '../binomial/rbinom';
-import { flatten, randomGenHelper, sum } from '../r-func';
+import { rbinom } from '../binomial/rbinom';
+import { flatten, possibleScalar,  sum } from '../r-func';
 import { IRNG } from '../rng/irng';
 
 const printer_rmultinom = debug('rmultinom');
-
+//const sequence = seq()();
 
 export function rmultinom(
   n: number,
   size: number,
   prob: number | number[],
   rng: IRNG
-): number[] {
-  return randomGenHelper(n, rmultinomOne, size, prob, rng)
+): (number[]) | (number[][]) {
+  const result = Array.from({length:n}).map(() => _rmultinom(size, prob, rng));
+  return possibleScalar(result);
 }
 
 //workhorse

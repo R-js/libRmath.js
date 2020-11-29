@@ -19,8 +19,8 @@ import { IRNGType } from './irng-type';
 
 export type MessageType = 'INIT';
 
-// make sure sub-class is follow this
-
+// cache it, make without create seq() every time
+export const segFnCache = seq();
 
 export abstract class IRNG {
   protected _name: string;
@@ -55,12 +55,12 @@ export abstract class IRNG {
 
   public abstract set seed(_seed: number[]);
 
-  /**
-   * helper function, wrapper around internal_unif_rand
-   * @param n 
-   */
-  public unif_rand(n: number = 1): number[] {
-    return Array.from({length:n}).map(() => this.internal_unif_rand());
+  public unif_rand(): number;
+  public unif_rand(n: 0 | 1): number;
+  public unif_rand(n: number): number | number[];
+  public unif_rand(n: number = 1): number | number[] {
+    n = (!n || n < 0) ? 1 : n;
+    return map(segFnCache()(n))(() => this.internal_unif_rand());
   }
 
   public abstract internal_unif_rand(): number;

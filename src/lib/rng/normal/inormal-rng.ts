@@ -16,6 +16,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { IRNG } from '../';
+import { map } from '../../r-func';
+import { segFnCache } from '../irng';
 
 export abstract class IRNGNormal {
   public rng: IRNG;
@@ -25,10 +27,20 @@ export abstract class IRNGNormal {
     this.internal_norm_rand = this.internal_norm_rand.bind(this);
   }
 
-  public norm_rand(n: number): number[]{
-    return Array.from({length:n}).map(this.internal_norm_rand);
+  public norm_rand(): number;
+  public norm_rand(n: 0 | 1): number;
+  public norm_rand(n: number): number | number[];
+  public norm_rand(n: number = 1): number|number[]{
+    n = !n || n < 0 ? 1 : n;
+    return map(segFnCache()(n))(() => this.internal_norm_rand());
   }
 
   public abstract internal_norm_rand(): number;
 
+  public unif_rand(): number;
+  public unif_rand(n: 0 | 1): number;
+  public unif_rand(n: number): number | number[];
+  public unif_rand(n: number = 1): number|number[] {
+     return this.rng.unif_rand(n);
+  }
 }
