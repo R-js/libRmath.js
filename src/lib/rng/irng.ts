@@ -17,11 +17,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { IRNGType } from './irng-type';
 
-export type MessageType = 'INIT';
-
-// cache it, make without create seq() every time
-export const segFnCache = seq();
-
 export abstract class IRNG {
   protected _name: string;
   protected _kind: IRNGType;
@@ -41,7 +36,7 @@ export abstract class IRNG {
 
   protected abstract _setup(): void;
   protected unif_rand(n = 1): Float32Array {
-    
+
   }
   
 
