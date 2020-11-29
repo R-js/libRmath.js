@@ -1,5 +1,4 @@
-const { abs, sign, floor, trunc, max } = Math;
-const { isNaN } = Number;
+const { abs, sign, max } = Math;
 const { isArray } = Array;
 
 import * as debug from 'debug';
@@ -406,6 +405,10 @@ function each<T>(data: Slicee<T>): { (fn: (value: T[keyof T], idx: keyof T) => v
   };
 }
 
+function isIterator<T>(x:any): x is IterableIterator<T> {
+  return x && typeof x[Symbol.iterator] === 'function';
+}
+
 function* flatten<T>(this: any, ...rest: (T | T[] | IterableIterator<T>)[]): IterableIterator<any> {
 
   for (const itm of rest) {
@@ -427,8 +430,9 @@ function* flatten<T>(this: any, ...rest: (T | T[] | IterableIterator<T>)[]): Ite
       }
       continue;
     }
-    const isIterator = (typeof itm[Symbol.iterator]) === 'function';
-    if (isIterator) {
+    
+  
+    if (isIterator<T>(itm)){
       //throw new Error('positivly evaluated');
       for (const v of itm) {
         yield* flatten.call(this, v);
@@ -494,7 +498,7 @@ function range(start: number, stop: number, step = 1): IterableIterator<number> 
 function lazyMap<T, S>(fn: (value: T, idx: number) => S)  {
   return function(source: IterableIterator<T>) {
     let cursor = source;
-    let idx = 0;
+      let idx = 0;
     return ({
       next: function() {
         const step = cursor.next()
@@ -508,4 +512,5 @@ function lazyMap<T, S>(fn: (value: T, idx: number) => S)  {
 }
 
 // note, "flatten" is an fp lazy
-const c = pipe(flatten, Array.from)
+//const c = pipe(flatten, Array.from);
+

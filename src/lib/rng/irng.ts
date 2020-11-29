@@ -26,15 +26,7 @@ export abstract class IRNG {
   protected _name: string;
   protected _kind: IRNGType;
 
-  private notify: Set<{ event: MessageType, handler: (...args:any[]) => void }>;
-
   constructor(_seed: number) {
-    this.notify = new Set();
-    this.emit = this.emit.bind(this);
-    this.register = this.register.bind(this);
-    this.unif_rand = this.unif_rand.bind(this);
-    this.internal_unif_rand = this.internal_unif_rand.bind(this);
-    this.init = this.init.bind(this);
     this._setup();
     this.init(_seed);
   }
@@ -47,35 +39,14 @@ export abstract class IRNG {
     return this._kind;
   }
 
-  public abstract _setup(): void;
-
-  public init(seed: number): void {
-    this.emit('INIT', seed);
+  protected abstract _setup(): void;
+  protected unif_rand(n = 1): Float32Array {
+    
   }
+  
 
-  public abstract set seed(_seed: number[]);
-
-  public unif_rand(): number;
-  public unif_rand(n: 0 | 1): number;
-  public unif_rand(n: number): number | number[];
-  public unif_rand(n: number = 1): number | number[] {
-    n = (!n || n < 0) ? 1 : n;
-    return map(segFnCache()(n))(() => this.internal_unif_rand());
-  }
-
-  public abstract internal_unif_rand(): number;
+  protected abstract internal_unif_rand(): number;
 
   public abstract get seed(): number[];
-  // event stuff
-  public register(event: MessageType, handler: (...args:any[]) => void) {
-    this.notify.add({ event, handler });
-  }
-
-  public emit(event: MessageType, ...args:any[]) {
-    this.notify.forEach(r => {
-      if (r.event === event) {
-        r.handler.apply(r.handler, args);
-      }
-    });
-  }
+  public abstract set seed(_seed: number[]);
 }

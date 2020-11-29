@@ -1,5 +1,11 @@
 # Logs
 logs
+logs
+es6/
+browser/
+commonjs/
+*.tsbuildinfo
+*.log
 dist/
 r-source-trunk/
 *.log

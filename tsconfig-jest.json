@@ -1,0 +1,16 @@
+{
+    "extends": "./tsconfig.json",
+    "compilerOptions": {
+        "noImplicitAny": false,
+        "esModuleInterop": false,
+        "module": "CommonJS",
+        "outDir": "commonjs",
+        "target": "ES2019",
+       
+        "paths": { 
+            "blasjs": [
+                "src/lib"
+            ]
+        }
+    }
+}
