@@ -1,42 +1,37 @@
-const { abs, sign, max } = Math;
-const { isArray } = Array;
+/* This is a conversion from libRmath.so to Typescript/Javascript
+Copyright (C) 2018  Jacob K.F. Bogers  info@mail.jacob-bogers.com
 
-import * as debug from 'debug';
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
 
-const printer_seq = debug('seq');
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
 
-export {
-  Rcycle,
-  c,
-  compose,
-  pipe,
-  each,
-  flatten,
-  forcePrecision,
-  isNumber,
-  lazyMap,
-  lazySeq,
-  map,
-  multiplexer,
-  randomGenHelper,
-  range,
-  seq_len,
-  sequenceFactory,
-  sum,
-  typeOf
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+const { max, abs, sign } = Math;
+
+
+
+const precision9 = numberPrecision(9);
+
+export function* seq_len({ length, base = 1 }: { length: number, base: number }): IterableIterator<number> {
+  for (let i = 0; i < length; i++) {
+    yield base + i;
+  };
 }
+
 
 export const seq = (adjust = 0) => (adjustMin = adjust) => (
   start: number,
-  end?: number,
+  end: number = 1,
   step: number = 1
 ): number[] => {
-  if (end === undefined) {
-    if (start <= 0 || start === undefined) {
-      return [];
-    }
-    end = 1;
-  }
   let s = start + adjust;
   let e = end + adjust;
   let cursor = s;
@@ -51,7 +46,7 @@ export const seq = (adjust = 0) => (adjustMin = adjust) => (
   // so we use precision to have it make sense
   // sometimes rounding effects try something diff
   step = abs(step) * sign(end - start);
-  printer_seq('step:%d', step);
+
 
   const rc: number[] = [];
 
@@ -63,113 +58,67 @@ export const seq = (adjust = 0) => (adjustMin = adjust) => (
   return precision9(rc) as any;
 };
 
-export function selector(
-  ...rest: (number | number[])[]
-): { (val: any, index: number): boolean } {
-  const flat = flatten(rest);
-  return (val: any, idx: number) => {
-    return flat.indexOf(idx) >= 0;
-  };
-}
+export const sequenceFactory = (adjust = 0, adjustMin = adjust) => (start: number, end: number, delta = 1) => Array.from(lazySeq(start, end, delta, adjust, adjustMin))
 
-export function flatten<T>(...rest: (T | T[])[]): T[] {
-  let rc: number[] = [];
-  for (const itm of rest) {
-    if (isArray(itm)) {
-      let rc2: number[] = flatten(...itm) as any;
-      rc.push(...rc2);
-      continue;
-    }
-    rc.push(itm as any);
+
+export function* lazySeq(start: number, end = 1, step = 1, adjust = -1, adjustMin = adjust) {
+
+  if (step === 0) {
+    throw new TypeError(`argument 'delta' cannot be zero`)
   }
-  return rc as any;
+  if (end > start && step < 0) {
+    throw new TypeError(`'end' > 'start' so delta must be positive`);
+  }
+  if (end < start && step > 0) {
+    throw new TypeError(`'end' < 'start' so delta must be negative`);
+  }
+  const adj = step > 0 ? adjust : adjustMin;
+  do {
+    yield start + adj;
+    start = start + step;
+  } while ((step > 0 && start <= end) || (step < 0 && start >= end));
 }
 
-function* seq_len({ length, base = 1}: { length: number, base?: number } = { length:1, base:0 }): IterableIterator<number> {
-  for (let i = 0; i < length; i++) {
-    yield base + i;
-  };
+
+export type strTypes = 'boolean' | 'number' | 'undefined' | 'string' | 'null' | 'symbol' | 'array' | 'function' | 'object';
+export type system = boolean | number | undefined | string | null | symbol
+
+function _typeOf(v: any): strTypes {
+  if (v === null) return 'null';
+  if (v instanceof Array) return 'array';
+  if (v instanceof Function) return 'function';
+  const k = typeof v;
+  // @ts-ignore TS2322: Type '"string" | "number" | "bigint" | "boolean" | "symbol" | "undefined" | "object" | "function"' is not assignable to type 'strTypes'.
+  return k;
 }
 
-export function multiplex(fn: (...rest: (any | any[])[]) => any) {
-  return function(...rest: (any | any[])[]) {
-    return multiplexer(...rest)(fn);
-  };
-}
-
-export function asArray(fn: (...rest: (any | any[])[]) => any) {
-  return function(...rest: (any | any[])[]) {
-    const ans = fn(...rest);
-    return Array.isArray(ans) ? ans : [ans];
-  };
-}
-
-function possibleScalar<T>(x: T[]): T | T[] {
-  return x.length === 1 ? x[0] : x;
-}
-
-function* multiplexer(...rest: any[]): IterableIterator<any[]> {
+export function* multiplexer(...rest: any[]): IterableIterator<any[]> {
   //
   // Analyze
   //
   const analyzed: _t[] = [];
-  type _t = boolean[] | number[] | undefined[] | string[] | null[] | symbol[] | Array<any>;
+  type _t = boolean[] | number[] | undefined[] | string[] | null[] | symbol[] | any[];
 
-function coerceToArray(o: any): { key: string | number; val: any }[] {
-  if (o === null || o === undefined) {
-    throw new TypeError(
-      'Illegal argument excepton: input needs to NOT be "null" or "undefined".'
-    );
-  }
-  if (typeof o === 'number') {
-    return [{ key: 0, val: o }] as any;
-  }
-  if (isArray(o)) {
-    return o.map((x, idx) => ({ key: idx, val: x } as any));
-  }
-  if (typeof o === 'string') {
-    return o.split('').map((x, idx) => ({ key: idx, val: x } as any));
-  }
-  if (typeof o === 'object') {
-    const names = Object.getOwnPropertyNames(o);
-    if (names.length === 0) {
-      throw new Error('Input argument is an Object with no properties');
-    }
-    return names.map(name => ({ key: name, val: o[name] })) as any;
-  }
-  throw new Error('unreachable code');
-}
+  function simplePush<T extends _t>(v: T) { analyzed.push(v) };
 
-export function multiplexer(...rest: (any | any[])[]) {
-  //analyze
-  const analyzed: any[] = [];
+  const select = {
+    ['undefined'](v: null) { simplePush([v]); },
+    ['null'](v: null) { simplePush([v]); },
+    ['number'](v: null) { simplePush([v]); },
+    ['string'](v: string) { simplePush(v.split('')) },
+    ['boolean'](v: boolean) { simplePush([v]) },
+    ['array'](v: _t) { simplePush(v) },
+    ['object'](v: _t) { throw new Error('M001, Looping over properties not yet supported'); },
+    ['function'](v: _t) { throw new Error('M002, arguments of type "function" are not yet supported'); }
+  };
 
   for (let k = 0; k < rest.length; k++) {
+    //TODO: new in typescript you can pick types of function argument, use that
     const arg = rest[k];
-    // null is special
-    if (arg === null) {
-      analyzed.push([arg]);
-      continue;
-    }
-    if (['undefined', 'boolean', 'number'].indexOf(typeof arg) >= 0) {
-      analyzed.push([arg]);
-      continue;
-    }
-    if (typeof arg === 'string') {
-      analyzed.push(arg.split(''));
-      continue;
-    }
-    if (Array.isArray(arg)) {
-      analyzed.push(arg);
-      continue;
-    }
-    if (arg instanceof Object) {
-      throw new Error('Sorry, looping over properties not yet supported');
-    }
-    if (arg instanceof Function) {
-      throw new Error('Sorry function arguments are not yet supported');
-    }
-  } //for
+    const to: keyof typeof select = _typeOf(arg) as any;
+    const selector = select[to];
+    selector(arg as never);
+  }//for
   // find the longest array
   const _max = max(...analyzed.map(a => a.length));
   for (let k = 0; k < _max; k++) {
@@ -183,36 +132,33 @@ export function multiplexer(...rest: (any | any[])[]) {
   }
 }
 
-/**
- *
- *  xx can be an array or a "pojo"-object with properties
- *
- */
+export const c = chain(Array.from, flatten)
 
-type ArrayElt = { key: string | number; val: any };
-
-function iter<T>(wantMap = true) {
-  return function(
-    xx: T
-  ): { (fn: (x: any, idx?: number | string) => any): any | any[] } {
-    const fx: ArrayElt[] = coerceToArray(xx) as any;
-    return function(fn: (x: any, idx?: number | string) => any): any | any[] {
-      return wantMap
-        ? possibleScalar(fx.map(o => fn(o.val, o.key)))
-        : fx.forEach(o => fn(o.val, o.key));
-    };
-  };
+export function Rcycle(fn: Function) {
+  return function (...args: any[]) {
+    const gen = multiplexer(...args);
+    let rc: any[] = [];
+    for (const arg of gen) {
+      rc[rc.length] = fn(...arg);
+    }
+    return rc;
+  }
 }
-
 
 function isNumber(x: any): x is number {
   return typeof x === 'number'
 }
 
-function forcePrecision(prec: number = 6) {
-  return function convert<T>(x: T): T {
+// typeguards
+
+function isObject(o:any): o is Object {
+  return o && typeof o === 'object' && !Array.isArray(o); 
+}
+
+export function numberPrecision(prec: number = 6) {
+  return function convert(x: any): typeof x {
     // try to loop over the object
-    if (typeof x === 'object' && x !== null) {
+    if (isObject(x)) {
       for (const [prop, value] of Object.entries(x)) {
         //recursion
         x[prop] = convert(value);
@@ -227,50 +173,34 @@ function forcePrecision(prec: number = 6) {
   }
 }
 
-export function sum(x: any[]): number {
-  let rc = 0;
-  for (let i = 0; i < x.length; i++) {
-    if (isArray(x[i])) {
-      rc += sum(x[i]);
-      continue;
-    }
-    if (typeof x[i] === 'string') {
-      const trial = Number.parseFloat(x[i]);
-      if (Number.isFinite(trial)) {
-        rc += trial;
-        continue;
-      }
-      throw Error(`${x[i]} is not a number or can be coerced to a number`);
-    }
-    if (typeof x[i] === 'number' && Number.isFinite(x[i])) {
-      rc += x[i];
-      continue;
-    }
-    throw new Error(`${x[i]} is not a number`);
+export function sum(x: number[]) {
+  let sum = 0;
+  const gen = flatten(x);
+  for (let v = gen.next(); !v.done; v = gen.next()) {
+    sum += v.value;
   }
-  return rc;
+  return sum;
 }
-/*
-for r::stat,not for this
+
 export interface ISummary {
   N: number; // number of samples in "data"
   mu: number; // mean of "data"
   population: {
-    variance: number; // population variance (data is seen as finite population)
-    sd: number; // square root of the population variance
+    variance: number, // population variance (data is seen as finite population)
+    sd: number // square root of the population variance
   };
   sample: {
-    variance: number; // sample variance (data is seen as a small sample from an very large population)
-    sd: number; // square root of "sample variance"
+    variance: number, // sample variance (data is seen as a small sample from an very large population)
+    sd: number // square root of "sample variance"
   };
   relX; // = x-E(x)
   relX2; // = ( x-E(x) )^2
   stats: {
-    min: number; // minimal value from "data"
-    '1st Qu.': number; // 1st quantile from "data"
-    median: number; // median value from "data
-    '3rd Qu.': number; // 3rd quantile from "data"
-    max: number; // maximum value in data
+    min: number, // minimal value from "data"
+    '1st Qu.': number, // 1st quantile from "data"
+    median: number, // median value from "data
+    '3rd Qu.': number, // 3rd quantile from "data"
+    max: number // maximum value in data
   };
 }
 /*
@@ -281,18 +211,16 @@ export function summary(x: number[]): ISummary {
   if (x.length === 0) {
     throw new Error(`argument Array is empty`);
   }
-  if (x.findIndex(v => isNaN(v)) >= 0) {
+  if (x.includes(NaN)) {
     throw new Error(`argument Array has NaNs`);
   }
 
   const N = x.length;
   const mu = sum(x) / N;
-  let relX2 = 0;
-  for (let i = 0; i < x.length; i++) {
-    relX2 += (x[i] - mu) * (x[i] - mu);
-  }
-  const sampleVariance = relX2 / (N - 1);
-  const populationVariance = (sampleVariance * (N - 1)) / N;
+  const relX = x.map(v => v - mu);
+  const relX2 = relX.map(v => v * v);
+  const sampleVariance = sum(relX2) / (N - 1);
+  const populationVariance = sampleVariance * (N - 1) / N;
   const sampleSD = Math.sqrt(sampleVariance);
   const populationSD = Math.sqrt(populationVariance);
   // quantiles
@@ -324,9 +252,8 @@ export function summary(x: number[]): ISummary {
       variance: sampleVariance,
       sd: sampleSD
     },
-    // only show first 50 of relX and relX2
-    relX: 'depricated',
-    relX2: 'depricated',
+    relX,
+    relX2,
     stats: {
       min,
       '1st Qu.': q1,
@@ -340,18 +267,15 @@ export function summary(x: number[]): ISummary {
 // https://en.wikipedia.org/wiki/Welch%E2%80%93Satterthwaite_equation
 
 export function Welch_Satterthwaite(s: number[], n: number[]): number {
-  const elts = flatten(
-    map(s)((_s, i) => {
-      return (_s * _s) / n[i as number];
-    })
-  );
-  const dom = elts.map((e, i) => (e * e) / (n[i as number] - 1));
+
+  const elts = s.map((_s, i) => _s * _s / n[i as number])
+  const dom = elts.map((e, i) => e * e / (n[i as number] - 1));
 
   return Math.pow(sum(elts), 2) / sum(dom);
 }
 */
 
-function randomGenHelper<T extends Function>(n: number | number[], fn: T, ...arg: any[]) {
+export function randomGenHelper<T extends Function>(n: number | number[], fn: T, ...arg: any[]) {
 
   let result: number[]
 
@@ -363,9 +287,6 @@ function randomGenHelper<T extends Function>(n: number | number[], fn: T, ...arg
   }
   else if (n instanceof Array) {
     result = n
-  }
-  else if (n < 0) {
-     throw new TypeError(`n argument is negative`)
   }
   else {
     throw new TypeError(`n argument is not a number or a number array`)
@@ -391,25 +312,25 @@ function slicer<T>(x: Slicee<T>): Sliced<T>[] {
   return map;
 }
 
-function map<T, S>(data: Slicee<T>): { (fn: (value: T[keyof T], idx: keyof T) => S): S[] } {
+export function map<T, S>(data: Slicee<T>): { (fn: (value: T[keyof T], idx: keyof T) => S): S[] } {
   const fx = slicer(data);
   return function k(fn) {
     return fx.map(o => fn(o.value, o.key))
   };
 }
 
-function each<T>(data: Slicee<T>): { (fn: (value: T[keyof T], idx: keyof T) => void): void } {
+export function each<T>(data: Slicee<T>): { (fn: (value: T[keyof T], idx: keyof T) => void): void } {
   const fx = slicer(data);
   return function k(fn) {
     fx.forEach(o => fn(o.value, o.key));
   };
 }
 
-function isIterator<T>(x:any): x is IterableIterator<T> {
-  return x && typeof x[Symbol.iterator] === 'function';
+export function array_flatten<T = unknown>(...rest: (T | IterableIterator<T> | T[])[]) {
+  return Array.from(flatten(...rest));
 }
 
-function* flatten<T>(this: any, ...rest: (T | T[] | IterableIterator<T>)[]): IterableIterator<any> {
+export function* flatten<T = unknown>(...rest: (T | IterableIterator<T> | T[])[]): IterableIterator<T> {
 
   for (const itm of rest) {
     if (itm === null || ['undefined', 'string', 'symbol', 'number', 'boolean'].includes(typeof itm)) {
@@ -419,98 +340,47 @@ function* flatten<T>(this: any, ...rest: (T | T[] | IterableIterator<T>)[]): Ite
     }
     if (itm instanceof Map || itm instanceof Set) {
       for (const v of <any>itm) {
-        //console.log('v', v)
-        yield* flatten.call(this, v);
+        yield* flatten.call(undefined, v);
       }
       continue;
     }
     if (itm instanceof Array) {
       for (const v of itm) {
-        yield* flatten.call(this, v);
+        yield* flatten.call(undefined, v);
       }
       continue;
     }
-    
-  
-    if (isIterator<T>(itm)){
-      //throw new Error('positivly evaluated');
-      for (const v of itm) {
-        yield* flatten.call(this, v);
+    if (typeof itm[Symbol.iterator] === 'function') {
+      for (const v of <any>itm) {
+        yield* flatten.call(undefined, v);
       }
       continue;
     }
   }
 }
 
-const compose = chain(true);
-const pipe = chain(false);
-
-function chain(backwardReduce: boolean) {
-  return function(...fns: Function[]): Function {
-    //checks
-    if (fns.length === 0) {
-      throw new TypeError(`specify functions!`)
+export function chain<F0 extends (...argv) => any, F extends (...argv) => any>(fn0: F0, ...fns: F[]) {
+  // @ts-ignore
+  fns.push(fn0);
+  if (fns.length === 0) {
+    throw new TypeError(`specifiy functions to chain`)
+  }
+  for (let i = 0; i < fns.length; i++) {
+    if (typeof fns[i] !== 'function') {
+      throw new TypeError(`argument ${i + 1} is not a function`)
     }
-    for (let i = 0; i < fns.length; i++) {
-      if (typeof fns[i] !== 'function') {
-        throw new TypeError(`argument ${i + 1} is not a function`)
-      }
-    }
-    return function(...args: any[]) {
-      let lastArgs = args
-      const [start, stop, incr] = backwardReduce ?
-        [fns.length - 1, -1, -1] :
-        [0, fns.length, 1]
+  }
 
-      for (let i = start; i !== stop; i += incr) {
+  return function (...args: Parameters<F>): ReturnType<F0> {
+    let lastArgs: unknown[] = args;
+    if (args)
+      for (let i = fns.length - 1; i >= 0; i--) {
         const fn = fns[i]
-        lastArgs = fn.apply(fn, lastArgs)
-        if (!Array.isArray(lastArgs)) {
-          lastArgs = [lastArgs]
-        }
+        lastArgs = [fn.apply(fn, lastArgs)]
         //console.log(lastArgs);
-
       }
-      return lastArgs
-    }
+    return lastArgs[0] as ReturnType<F0>
+
   }
 }
-
-function range(start: number, stop: number, step = 1): IterableIterator<number> {
-  let cursor = start;
-  return ({
-    next: function(): IteratorResult<number> {
-      let value: number | undefined = undefined
-      let done = true
-      if (cursor <= stop) {
-        value = cursor
-        cursor += step;
-        done = false
-      }
-      return { value, done } as any
-    },
-    [Symbol.iterator]: function() { return this }
-  })
-}
-
-//function map<T, S>(data: Slicee<T>): { (fn: (value: T[keyof T], idx: keyof T) => S): S[] } {
-
-function lazyMap<T, S>(fn: (value: T, idx: number) => S)  {
-  return function(source: IterableIterator<T>) {
-    let cursor = source;
-      let idx = 0;
-    return ({
-      next: function() {
-        const step = cursor.next()
-        if (step.done) return { value: undefined, done: true }
-        const rc = fn(step .value, idx++)
-        return { value: rc, done: false }
-      },
-      [Symbol.iterator]: function() { return this }
-    })
-  }
-}
-
-// note, "flatten" is an fp lazy
-//const c = pipe(flatten, Array.from);
 

@@ -33,9 +33,10 @@
         //
         // this is not the transpilation target
         "lib": [
-            "ES2019"
+           // "es2019",
+            "esnext"
         ],
-        "module": "ES2020",
+        "module": "es2020",
         "noEmit": false,
         "outDir": "es6", // babel will take it from here and move to /bin
         //"outFile" , non modules files get concatenated to this file
@@ -43,7 +44,7 @@
         "removeComments": false, // babel should handle it
         "rootDir": "./src",
         "sourceMap": true, // not sure if this should be turned on if you use babel
-        "target": "ES2019", // no down transpiling , that is for babel
+        "target": "esnext", // no down transpiling , that is for babel
         //"tsBuildInfoFile": 'build', we dont use composite projects
         /* STRICT CHECKS
         https://www.typescriptlang.org/tsconfig#Strict_Type_Checking_Options_6173 */
@@ -124,7 +125,7 @@
         "noImplicitReturns": false, // allow for it
         // DOESNT EXIST? "noUncheckedIndexedAccess": true,
         "noUnusedLocals": true,
-        "noUnusedParameters": true,
+        "noUnusedParameters": false,
         /* EXPERIMENTAL */
         /* EXPERIMENTAL */
         /* EXPERIMENTAL */

@@ -3,7 +3,7 @@
     "compilerOptions": {
         "module": "CommonJS",
         "outDir": "commonjs",
-        "target": "ES2019" 
-
+        "target": "ES2019",
+        "declerationDir": "commonjs/types"
     }
 }
