@@ -193,8 +193,8 @@ export interface ISummary {
     variance: number, // sample variance (data is seen as a small sample from an very large population)
     sd: number // square root of "sample variance"
   };
-  relX; // = x-E(x)
-  relX2; // = ( x-E(x) )^2
+  relX: number[]; // = x-E(x)
+  relX2: number[]; // = ( x-E(x) )^2
   stats: {
     min: number, // minimal value from "data"
     '1st Qu.': number, // 1st quantile from "data"
@@ -203,7 +203,7 @@ export interface ISummary {
     max: number // maximum value in data
   };
 }
-/*
+
 export function summary(x: number[]): ISummary {
   if (!Array.isArray(x)) {
     throw new Error(`Illigal argument, not an array`);
@@ -231,9 +231,9 @@ export function summary(x: number[]): ISummary {
   const { q1, median, q3 } = (function () {
     const i = [4, 2, 4 / 3].map(v => (N - 1) / v);
     const q = i.map(index => {
-      const f1 = 1 - (index - floor(index));
+      const f1 = 1 - (index - Math.floor(index));
       const f2 = 1 - f1;
-      return o[trunc(index)] * f1 + o[trunc(index) + 1] * f2;
+      return o[Math.trunc(index)] * f1 + o[Math.trunc(index) + 1] * f2;
     });
     return {
       q1: q[0],
@@ -273,7 +273,7 @@ export function Welch_Satterthwaite(s: number[], n: number[]): number {
 
   return Math.pow(sum(elts), 2) / sum(dom);
 }
-*/
+
 
 export function randomGenHelper<T extends Function>(n: number | number[], fn: T, ...arg: any[]) {
 
@@ -330,7 +330,11 @@ export function array_flatten<T = unknown>(...rest: (T | IterableIterator<T> | T
   return Array.from(flatten(...rest));
 }
 
-export function* flatten<T = unknown>(...rest: (T | IterableIterator<T> | T[])[]): IterableIterator<T> {
+function isIterator<T>(it: any): it is IterableIterator<T>{
+  return it && it[Symbol.iterator] === 'function';
+}
+
+export function* flatten<T>(...rest: (T | IterableIterator<T> | T[])[]): IterableIterator<T> {
 
   for (const itm of rest) {
     if (itm === null || ['undefined', 'string', 'symbol', 'number', 'boolean'].includes(typeof itm)) {
@@ -340,26 +344,27 @@ export function* flatten<T = unknown>(...rest: (T | IterableIterator<T> | T[])[]
     }
     if (itm instanceof Map || itm instanceof Set) {
       for (const v of <any>itm) {
-        yield* flatten.call(undefined, v);
+        yield* flatten(v);
       }
       continue;
     }
     if (itm instanceof Array) {
       for (const v of itm) {
-        yield* flatten.call(undefined, v);
+        yield* flatten(v);
       }
       continue;
     }
-    if (typeof itm[Symbol.iterator] === 'function') {
+    
+    if (isIterator(itm)) {
       for (const v of <any>itm) {
-        yield* flatten.call(undefined, v);
+        yield* flatten(v);
       }
       continue;
     }
   }
 }
 
-export function chain<F0 extends (...argv) => any, F extends (...argv) => any>(fn0: F0, ...fns: F[]) {
+export function chain<F0 extends (...argv:any[]) => any, F extends (...argv:any[]) => any>(fn0: F0, ...fns: F[]) {
   // @ts-ignore
   fns.push(fn0);
   if (fns.length === 0) {
@@ -383,4 +388,3 @@ export function chain<F0 extends (...argv) => any, F extends (...argv) => any>(f
 
   }
 }
-

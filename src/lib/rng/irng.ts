@@ -21,9 +21,9 @@ export abstract class IRNG {
   protected _name: string;
   protected _kind: IRNGType;
 
-  constructor(_seed: number) {
-    this._setup();
-    this.init(_seed);
+  constructor(_seed: number, name: string, kind: IRNGType) {
+    this._name = name;
+    this._kind = kind;
   }
 
   public get name() {
@@ -34,14 +34,21 @@ export abstract class IRNG {
     return this._kind;
   }
 
-  protected abstract _setup(): void;
-  protected unif_rand(n = 1): Float32Array {
-
+  public abstract init(seed: number): void;
+  
+  public unif_rand(n: number): Float32Array {
+    n = (!n || n < 0) ? 1 : n;
+    const rc = new Float32Array(n);
+    for (let i = 0; i< n; n++){
+      rc[i] = this.internal_unif_rand();
+    }
+    return rc;
   }
   
+  
+  public abstract get seed(): number[];
+  public abstract set seed(_seed: number[]);
 
   protected abstract internal_unif_rand(): number;
 
-  public abstract get seed(): number[];
-  public abstract set seed(_seed: number[]);
 }

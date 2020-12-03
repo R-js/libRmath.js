@@ -17,7 +17,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 import * as debug from 'debug'
 const printer = debug('timeseed');
-const { trunc, ceil, min, log2, pow } = Math;
 const { now } = Date;
 
 

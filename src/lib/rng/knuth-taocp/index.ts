@@ -91,13 +91,8 @@ export class KnuthTAOCP extends IRNG {
   }
 
   public constructor(seed: number = timeseed()) {
-    super(seed);
-  }
-
-  public _setup() {
-    this._kind = IRNGType.KNUTH_TAOCP;
-    this._name = 'Knuth-TAOCP';
-    this.m_seed = new Int32Array(SEED_LEN).fill(0);
+    super(seed, 'Knuth-TAOCP', IRNGType.KNUTH_TAOCP);
+    this.m_seed = new Int32Array(SEED_LEN);
   }
 
   public init(seed: number  =  timeseed()) {
@@ -108,7 +103,6 @@ export class KnuthTAOCP extends IRNG {
       s[0] = 69069 * s[0] + 1;
     }
     this.RNG_Init_R_KT(s[0]);
-    super.init(seed);
   }
 
   public set seed(_seed: number[]) {
