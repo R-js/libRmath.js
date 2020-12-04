@@ -15,15 +15,22 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { IRNGType } from './irng-type';
+import { IRNGTypeEnum } from './irng-type';
+
+export enum MessageType {
+  INIT='@@INIT@@'
+}
 
 export abstract class IRNG {
   protected _name: string;
-  protected _kind: IRNGType;
+  protected _kind: IRNGTypeEnum;
 
-  constructor(_seed: number, name: string, kind: IRNGType) {
+  private notify: Set<{ event: MessageType, handler: (...args:any[]) => void }>;
+
+  constructor(name: string, kind: IRNGTypeEnum) {
     this._name = name;
     this._kind = kind;
+    this.notify = new Set<{ event: MessageType, handler: (...args:any[]) => void }>();
   }
 
   public get name() {
@@ -33,21 +40,38 @@ export abstract class IRNG {
   public get kind() {
     return this._kind;
   }
-
-  public abstract init(seed: number): void;
   
-  public unif_rand(n: number): Float32Array {
+  public randoms(n: number): Float32Array {
     n = (!n || n < 0) ? 1 : n;
     const rc = new Float32Array(n);
-    for (let i = 0; i< n; n++){
+    for (let i = 0; i< n; i++){
       rc[i] = this.internal_unif_rand();
     }
     return rc;
   }
-  
-  
-  public abstract get seed(): number[];
-  public abstract set seed(_seed: number[]);
+
+  public random(){
+    return this.internal_unif_rand();
+  }
+
+  public abstract get seed(): Uint32Array;
+  public abstract set seed(_seed: Uint32Array);
+
+  public init(seed: number): void {
+    this.emit(MessageType.INIT, seed);
+  }
+
+  public register(event: MessageType, handler: (...args:any[]) => void) {
+    this.notify.add({ event, handler });
+  }
+
+  public emit(event: MessageType, ...args:any[]) {
+    this.notify.forEach(r => {
+      if (r.event === event) {
+        r.handler(...args);
+      }
+    });
+  }
 
   protected abstract internal_unif_rand(): number;
 

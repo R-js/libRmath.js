@@ -4,6 +4,6 @@
         "module": "CommonJS",
         "outDir": "commonjs",
         "target": "ES2019",
-        "declerationDir": "commonjs/types"
+        "declarationDir": "commonjs/types"
     }
 }

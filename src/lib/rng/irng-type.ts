@@ -15,7 +15,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-export enum IRNGType {
+export enum IRNGTypeEnum {
     WICHMANN_HILL = 'WICHMANN_HILL',
     MARSAGLIA_MULTICARRY = 'MARSAGLIA_MULTICARRY',
     SUPER_DUPER ='SUPER_DUPER',

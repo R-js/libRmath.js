@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import { fixup } from '../fixup';
 import { IRNG } from '../irng';
 import { IRNGType } from '../irng-type';
-import { timeseed } from '../timeseed';
+import { seed } from '../timeseed';
 import { seedCheck } from '../seedcheck'
 
 const QUALITY = 1009; /* recommended quality level for high-res use */
@@ -160,16 +160,11 @@ export class KnuthTAOCP2002 extends IRNG {
     return this.ran_x[this.KT_pos++];
   }
 
-  constructor(_seed: number = timeseed()) {
-    super(_seed);
-  }
-
-  public _setup() {
-    this._kind = IRNGType.KNUTH_TAOCP2002;
-    this._name = 'Knuth-TAOCP-2002';
+  constructor(_seed = seed()) {
+    super(_seed, 'Knuth-TAOCP-2002', IRNGType.KNUTH_TAOCP2002);
     this.qualityBuffer = new ArrayBuffer(QUALITY * 4);
     this.ran_arr_buf = new Uint32Array(this.qualityBuffer);
-    this.m_seed = new Uint32Array(SEED_LEN).fill(0);
+    this.m_seed = new Uint32Array(SEED_LEN);
     this.ran_x = this.m_seed;
   }
 
@@ -178,7 +173,7 @@ export class KnuthTAOCP2002 extends IRNG {
     return fixup(this.KT_next() * KT);
   }
 
-  public init(_seed: number =  timeseed()) {
+  public init(_seed: number = seed()) {
     /* Initial scrambling */
     const s = new Uint32Array([0]);
     s[0] = _seed;
@@ -187,8 +182,8 @@ export class KnuthTAOCP2002 extends IRNG {
     }
 
     this.RNG_Init_KT2(s[0]);
-    super.init(_seed);
   }
+  
   public set seed(_seed: number[]) {
     seedCheck(this._kind,_seed, SEED_LEN)
     this.m_seed.set(_seed);

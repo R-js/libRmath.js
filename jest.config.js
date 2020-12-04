@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 module.exports = {
-    collectCoverage: true,
+    collectCoverage: false,
     collectCoverageFrom: ['src/**/*'],
     coveragePathIgnorePatterns: ['node_modules', 'test', 'doc.ts'],
     coverageDirectory: 'coverage',
@@ -11,7 +11,7 @@ module.exports = {
     verbose: true,
     cacheDirectory: '.jest-cache',
     testPathIgnorePatterns: ['es6', 'commonjs'],
-    testMatch: ['**/__tests__/**/*.[t]s?(x)', '**/?(*.)+(spec|test).[t]s?(x)'],
+    testMatch: ['**/__tests__/**/*1.[t]s?(x)', '**/?(*.)+(spec|test).[t]s?(x)'],
     globals: {
         'ts-jest': {
             compiler: 'typescript',

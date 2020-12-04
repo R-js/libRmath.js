@@ -92,7 +92,7 @@
     },
     "scripts": {
         "prebuild": "rm -rf *tsbuildInfo && tsc && tsc -p tsconfig-commonjs.json",
-        "build": "node build.rollup.js",
+        "build": "REM # node build.rollup.js",
         "prepublush": "npm run build",
         "lint": "eslint 'src/**/*.ts'",
         "lint:fix": "eslint 'src/**/*.ts' --fix",

@@ -15,25 +15,25 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-import * as debug from 'debug'
-const printer = debug('timeseed');
-const { now } = Date;
+
+// have rollup replace this with globalThis.crypto
+
+/* polyfill for randomBytes
+const randomBytes = (n: number) => ({
+   readUInt32BE(offset = 0){
+     if ((n - offset) < 4){
+       throw new RangeError('[ERR_BUFFER_OUT_OF_BOUNDS]: Attempt to write outside buffer bounds')
+     }
+     const sampler = new Uint8Array(n);
+     globalThis.crypto.getRandomValues(sampler);
+     const dv = new DataView(sampler);
+     return dv.getUint32(offset, false);  
+   }
+})
+*/
+import { randomBytes } from 'crypto';
 
 
-export function timeseed() {
-  printer('using timeseed')
-  let n = now();
-  if (typeof window !== 'undefined'){ //browser
-    if (window.crypto && window.crypto.getRandomValues){
-      const sampler = new Uint32Array(1);
-      window.crypto.getRandomValues(sampler)
-      n = sampler[1];
-    }
-  }
-  else { //node
-    const crypto = require('crypto');
-    n = crypto.randomBytes(4).readUInt32BE()
-  }
- 
-  return n;
+export function seed() {
+  return randomBytes(4).readUInt32BE(0)
 }

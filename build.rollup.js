@@ -5,7 +5,7 @@ const { nodeResolve } = require('@rollup/plugin-node-resolve');
 // see below for details on the options
 const inputOptions = {
     input: {
-        blas: 'es6/lib/index.js',
+        'lib-r-math': 'es6/lib/index.js',
     },
     plugins: [nodeResolve()],
 };
@@ -15,7 +15,7 @@ const outputOptions = {
     dir: 'browser',
     entryFileNames: '[name].min.js',
     sourcemap: true,
-    name: 'blas',
+    name: 'R',
     plugins: [terser()],
 };
 

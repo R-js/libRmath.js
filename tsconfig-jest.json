@@ -8,7 +8,7 @@
         "target": "ES2019",
        
         "paths": { 
-            "blasjs": [
+            "lib-r-math": [
                 "src/lib"
             ]
         }
