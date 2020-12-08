@@ -21,7 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import { fixup } from '../fixup';
 import { IRNG } from '../irng';
-import { IRNGType } from '../irng-type';
+import { IRNGTypeEnum } from '../irng-type';
 import { seed } from '../timeseed';
 import { seedCheck } from '../seedcheck'
 
@@ -161,11 +161,12 @@ export class KnuthTAOCP2002 extends IRNG {
   }
 
   constructor(_seed = seed()) {
-    super(_seed, 'Knuth-TAOCP-2002', IRNGType.KNUTH_TAOCP2002);
+    super('Knuth-TAOCP-2002', IRNGTypeEnum.KNUTH_TAOCP2002);
     this.qualityBuffer = new ArrayBuffer(QUALITY * 4);
     this.ran_arr_buf = new Uint32Array(this.qualityBuffer);
     this.m_seed = new Uint32Array(SEED_LEN);
     this.ran_x = this.m_seed;
+    this.init(_seed);
   }
 
   internal_unif_rand(): number {
@@ -184,12 +185,12 @@ export class KnuthTAOCP2002 extends IRNG {
     this.RNG_Init_KT2(s[0]);
   }
   
-  public set seed(_seed: number[]) {
+  public set seed(_seed: Uint32Array) {
     seedCheck(this._kind,_seed, SEED_LEN)
     this.m_seed.set(_seed);
   }
 
-  public get seed() {
-    return Array.from(this.m_seed);
+  public get seed(): Uint32Array{
+    return this.m_seed;
   }
 }

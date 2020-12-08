@@ -10,13 +10,13 @@ describe('rng knuth-taocp', function n() {
         const result = knuth1997.randoms(10)
         expect(result).toEqual(new Float32Array(fixture.case0.sample))
     })
-    it.skip('get internal state after 500 samples, seed=1234', () => {
+    it('get internal state after 500 samples, seed=1234', () => {
         const knuth1997 = new KnuthTAOCP();
         knuth1997.init(1234);
         knuth1997.randoms(500);
         const state = knuth1997.seed;
         //console.log(state)
-        expect(state).toEqual(new Float32Array(fixture.case1.state));
+        expect(state).toEqual(new Uint32Array(fixture.case1.state));
     })
 it('set seed from external state, after get sample 10 numbers', () => {
         const knuth1997 = new KnuthTAOCP();

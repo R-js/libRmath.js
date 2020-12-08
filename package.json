@@ -96,7 +96,7 @@
         "prepublush": "npm run build",
         "lint": "eslint 'src/**/*.ts'",
         "lint:fix": "eslint 'src/**/*.ts' --fix",
-        "xxtest": "jest rng/knuth-taocp/test.ts",
+        "xxtest": "jest  rng/knuth-taocp2002/test.ts",
         "prepublishOnly": "npm run test",
         "test": "echo hello world"
     },
