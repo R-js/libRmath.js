@@ -15,9 +15,35 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { assert } from 'chai';
+import { numberPrecision } from "../src/lib/r-func";
+
 const { isNaN, isFinite } = Number;
 
+function createFP32BitFieldComparor() {
+    // determin endianess
+    let dv = new DataView(new Float32Array(Infinity));
+    let bigEndian = dv.getUint8(0) === 0x7f && dv.getUint8(1) === 0x80 && dv.getUint8(2) === 0 && dv.getUint8(3);
+    // prepare
+    const v1 = new Float32Array(1);
+    const v2 = new Float32Array(2);
+    const dv1 = new DataView(v1);
+    const dv2 = new DataView(v2);
+
+    return function check(a: number, b: number) {
+        dv1.setFloat32(0, a, !bigEndian);
+        dv2.setFloat32(0, b, !bigEndian);
+        // sign
+        let signIndex = bigEndian ? 0 : 3;
+        const sign1 = dv1.getUint8(signIndex);
+        const sign2 = dv2.getUint8(signIndex);
+        console.log(sign1.toString(2));
+        console.log(sign2.toString(2));
+
+        
+
+    }
+}
+/*
 export function creatApproximator(prec) {
     return function approximitly(act: number, exp: number) {
         if (typeof act !== 'number') {
@@ -38,7 +64,7 @@ export function creatApproximator(prec) {
         }
     }
 }
-
+*/
 export function createComment(inputObj: any): string {
     const proto = Object.keys(inputObj).reduce((builder, key) => {
         const v = inputObj[key]
@@ -53,7 +79,4 @@ export function createComment(inputObj: any): string {
     return `${proto.descs.join(',')}${(proto.defaults ? ' and defaults' : '')}`
 }
 
-export const checkPrec9 = creatApproximator(1E-9);
-export const checkPrec6 = creatApproximator(1E-6);
-export const checkPrec3 = creatApproximator(1E-3);
 

@@ -34,7 +34,8 @@
         // this is not the transpilation target
         "lib": [
            // "es2019",
-            "esnext"
+            "esnext",
+            "es2020.string"
         ],
         "module": "es2020",
         "noEmit": false,
