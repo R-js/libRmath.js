@@ -33,9 +33,9 @@
         //
         // this is not the transpilation target
         "lib": [
-           // "es2019",
-            "esnext",
-            "es2020.string"
+           "es2017",
+           "es2020",
+           "es2017.string"
         ],
         "module": "es2020",
         "noEmit": false,
@@ -45,7 +45,7 @@
         "removeComments": false, // babel should handle it
         "rootDir": "./src",
         "sourceMap": true, // not sure if this should be turned on if you use babel
-        "target": "esnext", // no down transpiling , that is for babel
+        "target": "ES2020", // no down transpiling , that is for babel
         //"tsBuildInfoFile": 'build', we dont use composite projects
         /* STRICT CHECKS
         https://www.typescriptlang.org/tsconfig#Strict_Type_Checking_Options_6173 */
@@ -75,7 +75,7 @@
         //
         "allowSyntheticDefaultImports": false,
         "allowUmdGlobalAccess": false,
-        "baseUrl": "./", // because src needs to be accessible by test
+        "baseUrl": "./src", // because src needs to be accessible by test
         "esModuleInterop": false, // let babble handle this issue
         // this is how modules are resolved at build time
         // we dont use dynamic module loading or the ES6 module spec
