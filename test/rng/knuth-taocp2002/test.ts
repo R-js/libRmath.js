@@ -1,10 +1,6 @@
 import { KnuthTAOCP2002 } from '../../../src/lib/rng/knuth-taocp-2002';
 import { fixtureSeed0, seedStateAfter500FetchedInit1234, seedStateAfter20FetchesInit654321 } from './fixture';
 
-//import { forcePrecision } from '../../../src/lib/r-func';
-
-//const _10 = forcePrecision(10)
-
 function createFP32BitFieldComparor() {
     // determin endianess
     //let dv = new DataView(new Float32Array([Infinity]).buffer);
