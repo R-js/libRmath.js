@@ -1,7 +1,8 @@
 {
     // file inclusion
     "include": [
-        "src/lib/rng/knuth-taocp"
+        "src/lib/rng/knuth-taocp",
+        "test",
     ],
     "exclude": [],
     "typeAcquisition": {
@@ -42,6 +43,11 @@
         "outDir": "es6", // babel will take it from here and move to /bin
         //"outFile" , non modules files get concatenated to this file
         //"plugins":[...] for vscode editor, already included in package.json "contributes" field
+        "plugins": [
+                    {
+                      "name": "typescript-eslint-language-service"
+                    }
+        ],
         "removeComments": false, // babel should handle it
         "rootDir": "./src",
         "sourceMap": true, // not sure if this should be turned on if you use babel
@@ -124,7 +130,7 @@
         /* LINTER CHECKS */
         // https://www.typescriptlang.org/tsconfig#Source_Map_Options_6175
         "noImplicitReturns": false, // allow for it
-        // DOESNT EXIST? "noUncheckedIndexedAccess": true,
+        "noUncheckedIndexedAccess": true,
         "noUnusedLocals": true,
         "noUnusedParameters": false,
         /* EXPERIMENTAL */
