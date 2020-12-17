@@ -3,6 +3,19 @@ import { fixture as getRFixture } from './fixture';
 
 const fixture = getRFixture();
 
+function exampleYield(cb) {
+    // do some stuff
+    setTimeout(() => cb(null, 1, 2, 3, 'there was an error'), 2000);
+}
+
+beforeAll(function* () {
+    let value;
+    value = yield exampleYield;
+    const r = Promise.resolve({ hello: 'world' });
+    value = yield r; // You may only yield a function, promise, generator, array, or object,
+    console.log(value);
+});
+
 describe('rng knuth-taocp', function n() {
     it('sample for seed=0, n=10', () => {
         const knuth1997 = new KnuthTAOCP(0);

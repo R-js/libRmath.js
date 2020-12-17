@@ -71,6 +71,10 @@ export class KnuthTAOCP2002 extends IRNG {
   ) {
     let i: number;
     let j: number;
+    if (!aa.length){
+      return
+    }
+    
     for (j = 0; j < KK; j++) {
       aa[j] = this.ran_x[j];
     }
