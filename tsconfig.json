@@ -1,62 +1,60 @@
 {
-    // file inclusion
-    "include": [
-        "src/lib/rng/knuth-taocp",
-        "test",
-    ],
-    "exclude": [],
-    "typeAcquisition": {
-        "enable": true
-    },
-    "compilerOptions": {
-        // project options
-        "allowJs": true,
-        "checkJs": true,
-        /* composite works with:
+  "include": [
+    "src/lib/rng/knuth-taocp-2002",
+    "src/lib/rng/knuth-taocp",
+  ],
+  "typeAcquisition": {
+    "enable": true
+  },
+  "compilerOptions": {
+    // project options
+    "allowJs": true,
+    "checkJs": true,
+    /* composite works with:
             - rootDir set it explicitly
             - all files must be in the "include" or "files" property
             - set declaration to "true"
             ! cannot be specified with "noEmit"
         */
-        "composite": false,
-        "declaration": true, // generate decleration files, make sure they go into a declarationDir
-        "declarationMap": true, // make map files for .d.ts files
-        "downlevelIteration": false, // let babble handle it
-        // import helpers
-        // https://www.typescriptlang.org/tsconfig#importHelpers
-        "importHelpers": false, // babble domain
-        "incremental": true,
-        // warn for potential cross-module transpile problems
-        // example: ambient const enum member generate errors
-        // https://www.typescriptlang.org/tsconfig#isolatedModules
-        "isolatedModules": true,
-        // "jsx": --> "undefined",
-        //
-        // this is not the transpilation target
-        "lib": [
-           "es2017",
-           "es2020",
-           "es2017.string"
-        ],
-        "module": "es2020",
-        "noEmit": false,
-        "outDir": "es6", // babel will take it from here and move to /bin
-        //"outFile" , non modules files get concatenated to this file
-        //"plugins":[...] for vscode editor, already included in package.json "contributes" field
-        "plugins": [
-                    {
-                      "name": "typescript-eslint-language-service"
-                    }
-        ],
-        "removeComments": false, // babel should handle it
-        "rootDir": "./src",
-        "sourceMap": true, // not sure if this should be turned on if you use babel
-        "target": "ES2020", // no down transpiling , that is for babel
-        //"tsBuildInfoFile": 'build', we dont use composite projects
-        /* STRICT CHECKS
+    "composite": false,
+    "declaration": true, // generate decleration files, make sure they go into a declarationDir
+    "declarationMap": true, // make map files for .d.ts files
+    "downlevelIteration": false, // let babble handle it
+    // import helpers
+    // https://www.typescriptlang.org/tsconfig#importHelpers
+    "importHelpers": false, // babble domain
+    "incremental": true,
+    // warn for potential cross-module transpile problems
+    // example: ambient const enum member generate errors
+    // https://www.typescriptlang.org/tsconfig#isolatedModules
+    "isolatedModules": true,
+    // "jsx": --> "undefined",
+    //
+    // this is not the transpilation target
+    "lib": [
+      "es2017",
+      "es2020",
+      "es2017.string"
+    ],
+    "module": "es2020",
+    "noEmit": false,
+    "outDir": "es6", // babel will take it from here and move to /bin
+    //"outFile" , non modules files get concatenated to this file
+    //"plugins":[...] for vscode editor, already included in package.json "contributes" field
+    "plugins": [
+      {
+        "name": "typescript-eslint-language-service"
+      }
+    ],
+    "removeComments": false, // babel should handle it
+    "rootDir": "./src",
+    "sourceMap": true, // not sure if this should be turned on if you use babel
+    "target": "ES2020", // no down transpiling , that is for babel
+    //"tsBuildInfoFile": 'build', we dont use composite projects
+    /* STRICT CHECKS
         https://www.typescriptlang.org/tsconfig#Strict_Type_Checking_Options_6173 */
-        // strictness
-        /*
+    // strictness
+    /*
         "strict": true sets all below to true aswell
           alwaysStrict, 
           strictNullChecks, 
@@ -66,126 +64,126 @@
           noImplicitAny, 
           noImplicitThis
         */
-        "strict": true,
-        "alwaysStrict": true,
-        "noImplicitAny": true,
-        "noImplicitThis": true,
-        "strictBindCallApply": true,
-        "strictFunctionTypes": true,
-        "strictNullChecks": true,
-        "strictPropertyInitialization": true,
-        /* MODULE RESOLUTION */
-        /* MODULE RESOLUTION */
-        /* MODULE RESOLUTION */
-        //https://www.typescriptlang.org/tsconfig#Module_Resolution_Options_6174
-        //
-        "allowSyntheticDefaultImports": false,
-        "allowUmdGlobalAccess": false,
-        "baseUrl": "./src", // because src needs to be accessible by test
-        "esModuleInterop": false, // let babble handle this issue
-        // this is how modules are resolved at build time
-        // we dont use dynamic module loading or the ES6 module spec
-        "moduleResolution": "node",
-        "paths": { //  we can use this for the test to pick up the module
-        }, // maybe use later, if you decide to use this, specify baseurl
-        // source maps
-        "preserveSymlinks": true, // keep it around just in case
-        /** 
+    "strict": true,
+    "alwaysStrict": true,
+    "noImplicitAny": true,
+    "noImplicitThis": true,
+    "strictBindCallApply": true,
+    "strictFunctionTypes": true,
+    "strictNullChecks": true,
+    "strictPropertyInitialization": true,
+    /* MODULE RESOLUTION */
+    /* MODULE RESOLUTION */
+    /* MODULE RESOLUTION */
+    //https://www.typescriptlang.org/tsconfig#Module_Resolution_Options_6174
+    //
+    "allowSyntheticDefaultImports": false,
+    "allowUmdGlobalAccess": false,
+    "baseUrl": "./src", // because src needs to be accessible by test
+    "esModuleInterop": false, // let babble handle this issue
+    // this is how modules are resolved at build time
+    // we dont use dynamic module loading or the ES6 module spec
+    "moduleResolution": "node",
+    "paths": { //  we can use this for the test to pick up the module
+    }, // maybe use later, if you decide to use this, specify baseurl
+    // source maps
+    "preserveSymlinks": true, // keep it around just in case
+    /** 
            dont use it yet, does NOT affect typescript transpilation
            "rootDirs":[] dont use it yet, does NOT affect typescript transpilation
            can be used to trigger resolution of non js assets css etc
            like import { appClass } from "./main.css"  
            main.css in src/css/main.css can by found by rootDirs:[ "src/css" ]
         **/
-        // rootDirs:[something]
-        /*
+    // rootDirs:[something]
+    /*
            Where to find typefiles, normally "./node_modules/@types"
            all types are relative to tsconfig.json
           
         */
-        // "typeRoots":['./vender/types','./node_modules/@types']
-        /*
+    // "typeRoots":['./vender/types','./node_modules/@types']
+    /*
             only these packages will be included in global scope
             (sliced out of what is allowed by typeRoots),
             note this is only global types (without import statement)
             types included by "import" statements will not be affected by this setting
         */
-        // types:["node","jest","express"]
-        /* SOURCE MAPS */
-        /* SOURCE MAPS */
-        /* SOURCE MAPS */
-        // https://www.typescriptlang.org/tsconfig#Source_Map_Options_6175
-        "inlineSourceMap": false,
-        "inlineSources": false,
-        /* url that is included in the source map verbatim! 
+    // types:["node","jest","express"]
+    /* SOURCE MAPS */
+    /* SOURCE MAPS */
+    /* SOURCE MAPS */
+    // https://www.typescriptlang.org/tsconfig#Source_Map_Options_6175
+    "inlineSourceMap": false,
+    "inlineSources": false,
+    /* url that is included in the source map verbatim! 
            location of the sourcemap
         */
-        // "mapRoot": "http://someurl/debug/sourcemaps" use it? will be handled by babble?
-        /* "sourceRoot" will be the url needed to find the original ts files
+    // "mapRoot": "http://someurl/debug/sourcemaps" use it? will be handled by babble?
+    /* "sourceRoot" will be the url needed to find the original ts files
           this allows for debugging through original ts files
         */
-        // "sourceRoot: "http://someurl/debug/sources" use it? will be handled by babble?
-        /* LINTER CHECKS */
-        /* LINTER CHECKS */
-        /* LINTER CHECKS */
-        // https://www.typescriptlang.org/tsconfig#Source_Map_Options_6175
-        "noImplicitReturns": false, // allow for it
-        "noUncheckedIndexedAccess": true,
-        "noUnusedLocals": true,
-        "noUnusedParameters": false,
-        /* EXPERIMENTAL */
-        /* EXPERIMENTAL */
-        /* EXPERIMENTAL */
-        "emitDecoratorMetadata": false, // babble for sure should handle it
-        "experimentalDecorators": true,
-        /* ADVANCED */
-        /* ADVANCED */
-        /* ADVANCED */
-        "allowUnreachableCode": false,
-        "allowUnusedLabels": false,
-        "assumeChangesOnlyAffectDirectDependencies": false, // be on the safe side, you might not see all compiler errors otherwise
-        // "bundledPackageName": "blasjs", // ts-node problem i think, the bundled package name if you want to export types like "blasjs/typedArrayReal",
-        "noFallthroughCasesInSwitch": false, // fall through is ok
-        "declarationDir": "./es6/types", // emit types here
-        //"disableReferencedProjectLoad": true, handy for "projects" based setup
-        "disableSizeLimit": true,
-        "disableSolutionSearching": false, // i want my IDE to find decl's
-        // from ts 3.7 the source of truth is the ts files themselves, 
-        "disableSourceOfProjectReferenceRedirect": false,
-        "emitBOM": false, //omg no
-        "emitDeclarationOnly": false, // should this be true if i am using babble?
-        "extendedDiagnostics": true, //always
-        "forceConsistentCasingInFileNames": true, // fuck windows, enforce casing!
-        // "generateCpuProfile": true, not sure to use this, or how
-        "importsNotUsedAsValues": "remove", // remove import type when transpiling
-        // "jsxFactory": "preact.h" not used
-        // "jsxFragmentFactory": "Fragment" // not used
-        // "jsxImportSource": "react" // not used
-        /* 
+    // "sourceRoot: "http://someurl/debug/sources" use it? will be handled by babble?
+    /* LINTER CHECKS */
+    /* LINTER CHECKS */
+    /* LINTER CHECKS */
+    // https://www.typescriptlang.org/tsconfig#Source_Map_Options_6175
+    "noImplicitReturns": false, // allow for it
+    // forget it "noUncheckedIndexedAccess": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": false,
+    /* EXPERIMENTAL */
+    /* EXPERIMENTAL */
+    /* EXPERIMENTAL */
+    "emitDecoratorMetadata": false, // babble for sure should handle it
+    "experimentalDecorators": true,
+    /* ADVANCED */
+    /* ADVANCED */
+    /* ADVANCED */
+    "allowUnreachableCode": false,
+    "allowUnusedLabels": false,
+    "assumeChangesOnlyAffectDirectDependencies": false, // be on the safe side, you might not see all compiler errors otherwise
+    // "bundledPackageName": "blasjs", // ts-node problem i think, the bundled package name if you want to export types like "blasjs/typedArrayReal",
+    "noFallthroughCasesInSwitch": false, // fall through is ok
+    "declarationDir": "./es6/types", // emit types here
+    //"disableReferencedProjectLoad": true, handy for "projects" based setup
+    "disableSizeLimit": true,
+    "disableSolutionSearching": false, // i want my IDE to find decl's
+    // from ts 3.7 the source of truth is the ts files themselves, 
+    "disableSourceOfProjectReferenceRedirect": false,
+    "emitBOM": false, //omg no
+    "emitDeclarationOnly": false, // should this be true if i am using babble?
+    "extendedDiagnostics": true, //always
+    "forceConsistentCasingInFileNames": true, // fuck windows, enforce casing!
+    // "generateCpuProfile": true, not sure to use this, or how
+    "importsNotUsedAsValues": "remove", // remove import type when transpiling
+    // "jsxFactory": "preact.h" not used
+    // "jsxFragmentFactory": "Fragment" // not used
+    // "jsxImportSource": "react" // not used
+    /* 
         print names of generated files to the terminal
         make sure the include/exclude settings are ok 
         */
-        "listEmittedFiles": true, //change back to true print names of generated files to the terminal
-        // also list files from node_modules ec (according to documentation,never checked it)
-        "listFiles": true, //change back to true
-        // list files 
-        "maxNodeModuleJsDepth": 0, // no limitation on search dept, ..ever
-        "newLine": "LF", // unix
-        "noEmitHelpers": true, // dont emit helpers, babble should handle it
-        "noErrorTruncation": false, // the doc dont show the diff between true or false 
-        "noImplicitUseStrict": false, // let ts emit "use strict" prologue at top of emitted files
-        "noLib": false, // dont ignore "lib" setting, false= enable automatic inclusion of library (d.ts?) files
-        "noResolve": false, // add resolved files (import, <reference) to the program
-        "noStrictGenericChecks": false, // do not disable this check
-        "preserveConstEnums": false, // do not preserve the enum at runtime
-        //"reactNamespace": "React", not used here
-        "resolveJsonModule": true, // infer type of json data when imported
-        "skipDefaultLibCheck": false, // always type check default libs
-        "skipLibCheck": true, // only type check the stuff you import from other libs
-        "stripInternal": true, // exports marked @internal (in their jsdoc) will not have their type exported
-        "suppressExcessPropertyErrors": false, // do not suppress
-        "suppressImplicitAnyIndexErrors": false, // absolutely not suppress
-        "traceResolution": false, // only use if you want to debug/trace why a file was (not) included (module resolution)
-        "useDefineForClassFields": true // switch to using class definition of TC39 not what typescript implementation
-    }
+    "listEmittedFiles": true, //change back to true print names of generated files to the terminal
+    // also list files from node_modules ec (according to documentation,never checked it)
+    "listFiles": true, //change back to true
+    // list files 
+    "maxNodeModuleJsDepth": 0, // no limitation on search dept, ..ever
+    "newLine": "LF", // unix
+    "noEmitHelpers": true, // dont emit helpers, babble should handle it
+    "noErrorTruncation": false, // the doc dont show the diff between true or false 
+    "noImplicitUseStrict": false, // let ts emit "use strict" prologue at top of emitted files
+    "noLib": false, // dont ignore "lib" setting, false= enable automatic inclusion of library (d.ts?) files
+    "noResolve": false, // add resolved files (import, <reference) to the program
+    "noStrictGenericChecks": false, // do not disable this check
+    "preserveConstEnums": false, // do not preserve the enum at runtime
+    //"reactNamespace": "React", not used here
+    "resolveJsonModule": true, // infer type of json data when imported
+    "skipDefaultLibCheck": false, // always type check default libs
+    "skipLibCheck": true, // only type check the stuff you import from other libs
+    "stripInternal": true, // exports marked @internal (in their jsdoc) will not have their type exported
+    "suppressExcessPropertyErrors": false, // do not suppress
+    "suppressImplicitAnyIndexErrors": false, // absolutely not suppress
+    "traceResolution": false, // only use if you want to debug/trace why a file was (not) included (module resolution)
+    "useDefineForClassFields": true // switch to using class definition of TC39 not what typescript implementation
+  }
 }
