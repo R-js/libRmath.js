@@ -19,14 +19,27 @@ beforeAll(function* () {
 expect.extend({
     toBeLowerThen(received, ceiling) {
         const pass = received < ceiling;
+        const options = {
+            comment: '< inequality check',
+            isNot: this.isNot,
+            promise: this.promise,
+        };
+        const message = pass ?
+        () => this.utils.matcherHint('toBeLowerThen', undefined, undefined, options) +
+          '\n\n' +
+          `Expected: should be bigger then ${this.utils.printExpected(ceiling)}\n` +
+          `Received: ${this.utils.printReceived(received)}`
+        :
+        () => `expected ${received} to be lower then ${ceiling}`;
+
         if (pass) {
             return {
-                message: () => `expected ${received} not to be lower then ${ceiling}`,
+                message,
                 pass,
             };
         } else {
             return {
-                message: () => `expected ${received} to be lower then ${ceiling}`,
+                message,
                 pass,
             };
         }
@@ -39,7 +52,8 @@ expect.extend({
 describe('rng knuth-taocp', function n() {
     
     it.only('some test', () => {
-        return expect(Promise.resolve(1)).resolves.toBeLowerThen(-3);
+        expect.hasAssertions();
+        expect('hello world').toEqual(expect.stringContaining('o w'));
     });
 
     it('sample for seed=0, n=10', () => {

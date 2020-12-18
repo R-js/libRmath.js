@@ -104,7 +104,92 @@ fn (gets the rows of table as arguments to the function)
 
 # expect.extend(matchers)
 
-# 
+We are going to skip this, although did some cool things up till now
+
+# expect.anything()
+Use with:
+ - toEqual
+ - toBeCalledWith
+
+# expect.any(constructor)
+Use with:
+ - toEqual
+ - toBeCalledWith `expect(mock).toBeCalledWith(expect.any(Number));`
+
+# expect.arrayContaining(array)
+Use with:
+ - toEqual: `expect(['Alice', 'Bob', 'Eve']).(not.)toEqual(expect.arrayContaining(['Alice']))`
+ - objectContaining : ?
+ - toMatchObject: ?
+
+# expect.assertions(number)
+
+Make sure the number of assertions is called 
+```javascript
+expect.assertions(2);
+function a(){
+  expect(....)
+}
+function b(){
+  expect(...)
+}
+a()
+b()
+```
+
+# expect.hasAssertions()
+```javascript
+expect.hasAssertions()
+return // will fail, no assertion was called
+```
+
+# expect.not.arrayContaining(array)
+Inverse of `expect.arrayContaining`
+
+# expect.not.objectContaining(object)
+inverse of `expect.objectContaining`
+
+
+# expect.not.stringContaining(string)
+inverse of `expect.stringContaining(string)`
+
+# expect.not.stringMatching(string | regexp)
+inverse of `expect.not.stringMatching(string | regexp)`
+
+# expect.objectContaining(object)
+- toEqual
+
+# expect.stringContaining(string)
+- toEqual
+  
+# expect.stringMatching(string | regexp)  
+- toEqual
+- toBeCalledWith
+- arrayContaining
+- objectContaining 
+- toMatchObject
+
+```javascript
+  const expected = [
+    expect.stringMatching(/^Alic/),
+    expect.stringMatching(/^[BR]ob/),
+  ];
+  expect(['Roberto', 'Evelina']).not.toEqual(
+      expect.arrayContaining(expected),
+  );
+```  
+
+I am [here](https://jestjs.io/docs/en/expect#expectaddsnapshotserializerserializer)
+
+
+
+
+
+
+
+
+
+
 
 
 
