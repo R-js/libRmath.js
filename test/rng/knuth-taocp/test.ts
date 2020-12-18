@@ -34,11 +34,14 @@ expect.extend({
 });
 
 
-it.only('some test', () => {
-    expect(1).toBeLowerThen(4);
-});
+
 
 describe('rng knuth-taocp', function n() {
+    
+    it.only('some test', () => {
+        return expect(Promise.resolve(1)).resolves.toBeLowerThen(-3);
+    });
+
     it('sample for seed=0, n=10', () => {
         const knuth1997 = new KnuthTAOCP(0);
         const result = knuth1997.randoms(10);
