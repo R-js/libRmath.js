@@ -4,7 +4,7 @@
         "src/lib/rng/knuth-taocp"
      ],
     "compilerOptions": {
-
+        "noEmit": false,
         "module": "CommonJS",
         "outDir": "commonjs",
         "target": "ES2019",

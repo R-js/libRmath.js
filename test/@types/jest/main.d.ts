@@ -1,6 +1,6 @@
-  declare namespace jest {
-    interface Matchers<R> {
-        toBeLowerThen(a: number): R;
-    }
-  }
 
+    declare namespace jest {
+      interface Matchers<R> {
+        toBeLowerThen(a: number): R;
+      }
+    }

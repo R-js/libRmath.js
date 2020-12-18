@@ -3,7 +3,7 @@ import { fixture as getRFixture } from './fixture';
 
 const fixture = getRFixture();
 
-function exampleYield(cb) {
+function exampleYield(cb: Function) {
     // do some stuff
     setTimeout(() => cb(null, 1, 2, 3, 'there was an error'), 2000);
 }
@@ -15,8 +15,6 @@ beforeAll(function* () {
     value = yield r; // You may only yield a function, promise, generator, array, or object,
     console.log(value);
 });
-
-
 
 expect.extend({
     toBeLowerThen(received, ceiling) {
@@ -34,6 +32,7 @@ expect.extend({
         }
     },
 });
+
 
 it.only('some test', () => {
     expect(1).toBeLowerThen(4);

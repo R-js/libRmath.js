@@ -1,8 +1,8 @@
 {
-  /*"include": [
-    "src/lib/rng/knuth-taocp-2002",
-    "src/lib/rng/knuth-taocp",
-  ],*/
+  "include": [
+    "src/**/*.ts",
+    "test/**/*.ts",
+  ],
   "typeAcquisition": {
     "enable": true
   },
@@ -37,8 +37,8 @@
       "es2017.string"
     ],
     "module": "es2020",
-    "noEmit": false,
-    "outDir": "es6", // babel will take it from here and move to /bin
+    "noEmit": true,
+    //"outDir": "es6", // babel will take it from here and move to /bin
     //"outFile" , non modules files get concatenated to this file
     //"plugins":[...] for vscode editor, already included in package.json "contributes" field
     "plugins": [
@@ -47,7 +47,7 @@
       }
     ],
     "removeComments": false, // babel should handle it
-    "rootDir": "./src",
+    "rootDir": "./",
     "sourceMap": true, // not sure if this should be turned on if you use babel
     "target": "ES2020", // no down transpiling , that is for babel
     //"tsBuildInfoFile": 'build', we dont use composite projects
@@ -144,7 +144,7 @@
     "assumeChangesOnlyAffectDirectDependencies": false, // be on the safe side, you might not see all compiler errors otherwise
     // "bundledPackageName": "blasjs", // ts-node problem i think, the bundled package name if you want to export types like "blasjs/typedArrayReal",
     "noFallthroughCasesInSwitch": false, // fall through is ok
-    "declarationDir": "./es6/types", // emit types here
+    // "declarationDir": "./es6/types", // emit types here
     //"disableReferencedProjectLoad": true, handy for "projects" based setup
     "disableSizeLimit": true,
     "disableSolutionSearching": false, // i want my IDE to find decl's

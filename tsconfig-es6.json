@@ -5,6 +5,7 @@
         "src/lib/rng/knuth-taocp",
     ],
     "compilerOptions": {
+        "noEmit": false,
         "module": "es2020",
         "outDir": "es6",
         "target": "ES2020",
