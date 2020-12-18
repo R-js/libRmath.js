@@ -16,6 +16,29 @@ beforeAll(function* () {
     console.log(value);
 });
 
+
+
+expect.extend({
+    toBeLowerThen(received, ceiling) {
+        const pass = received < ceiling;
+        if (pass) {
+            return {
+                message: () => `expected ${received} not to be lower then ${ceiling}`,
+                pass,
+            };
+        } else {
+            return {
+                message: () => `expected ${received} to be lower then ${ceiling}`,
+                pass,
+            };
+        }
+    },
+});
+
+it.only('some test', () => {
+    expect(1).toBeLowerThen(4);
+});
+
 describe('rng knuth-taocp', function n() {
     it('sample for seed=0, n=10', () => {
         const knuth1997 = new KnuthTAOCP(0);

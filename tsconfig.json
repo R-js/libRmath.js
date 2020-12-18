@@ -1,8 +1,8 @@
 {
-  "include": [
+  /*"include": [
     "src/lib/rng/knuth-taocp-2002",
     "src/lib/rng/knuth-taocp",
-  ],
+  ],*/
   "typeAcquisition": {
     "enable": true
   },
@@ -101,14 +101,14 @@
            all types are relative to tsconfig.json
           
         */
-    // "typeRoots":['./vender/types','./node_modules/@types']
+    "typeRoots":["./node_modules/@types/","./test/@types/"],
     /*
             only these packages will be included in global scope
             (sliced out of what is allowed by typeRoots),
             note this is only global types (without import statement)
             types included by "import" statements will not be affected by this setting
         */
-    // types:["node","jest","express"]
+    // "types" :["node","jest","express"]
     /* SOURCE MAPS */
     /* SOURCE MAPS */
     /* SOURCE MAPS */
