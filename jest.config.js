@@ -10,8 +10,9 @@ module.exports = {
     testEnvironment: 'node',
     verbose: true,
     cacheDirectory: '.jest-cache',
-    testPathIgnorePatterns: ['es6', 'commonjs'],
-    testMatch: ['**/__tests__/**/*.[t]s?(x)', '**/?(*.)+(spec|test).[t]s?(x)'],
+    testPathIgnorePatterns: ['/es6/', '/commonjs/'],
+    //testMatch: ['**/__tests__/**/*.[t]s?(x)', '**/?(*.)+(spec|test).[t]s?(x)'],
+    testRegex :'/__test__/test.ts$',
     globals: {
         'ts-jest': {
             compiler: 'typescript',

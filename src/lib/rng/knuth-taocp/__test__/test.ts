@@ -1,4 +1,4 @@
-import { KnuthTAOCP } from '../../../src/lib/rng/knuth-taocp';
+import { KnuthTAOCP } from '../';
 import { fixture as getRFixture } from './fixture';
 
 const fixture = getRFixture();
@@ -76,7 +76,7 @@ describe('rng knuth-taocp', function n() {
         const sample = knuth1997.randoms(10);
         expect(sample).toEqual(new Float32Array(fixture.case2.sample));
     });
-    it('wrong seed setting is selfcorrecting', () => {
+    it('wrong seed setting is self correcting', () => {
         const knuth1997 = new KnuthTAOCP();
         knuth1997.init();
         const fnThrow1 = () => (knuth1997.seed = new Uint32Array([1, 2, 3]));
