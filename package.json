@@ -92,11 +92,11 @@
     },
     "scripts": {
         "prebuild": "cross-env rm -rf *.tsbuildinfo es6 commonjs",
-        "build": "tsc -p tsconfig-es6.json && tsc -p tsconfig-commonjs.json",
+        "build": "tsc -p tsconfig-es6.json",
         "prepublush": "npm run build",
         "lint": "eslint 'src/**/*.ts'",
         "lint:fix": "eslint 'src/**/*.ts' --fix",
-        "xxtest": "jest  \"rng/knuth-taocp*/test.ts\"",
+        "xxtest": "jest",
         "prepublishOnly": "npm run test",
         "test": "echo hello world"
     },
