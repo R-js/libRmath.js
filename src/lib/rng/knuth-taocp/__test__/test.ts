@@ -3,8 +3,38 @@ import { fixture as getRFixture } from './fixture';
 
 const fixture = getRFixture();
 
+declare global {
+namespace jest {
+      interface Matchers<R> {
+        toBeWithinRange(a: number, b: number): R;
+        matchFloatingPointBinary(received: any, expected: any): R;
+    }
+  }
+}
+
 expect.extend({
-    matchFloatingPointBinary(received: number| number[], expected: number| number[], mantissa: number) {
+        toBeWithinRange(received, floor, ceiling) {
+      const pass = received >= floor && received <= ceiling;
+      if (pass) {
+        return {
+          message: () =>
+            `expected ${received} not to be within range ${floor} - ${ceiling}`,
+          pass: true,
+        };
+      } else {
+        return {
+          message: () =>
+            `expected ${received} to be within range ${floor} - ${ceiling}`,
+          pass: false,
+        };
+      }
+    },
+  });
+
+
+expect.extend({
+    matchFloatingPointBinary(received, expected) {
+       // let received: number[]  = []
         
         let pass = 0;
         if (Array.isArray(received) && Array.isArray(expected) && expected.length == received.length){
@@ -32,13 +62,14 @@ expect.extend({
           `Received: [type] is not of equal type/length as expected`;
           return {
                 message,
-                pass,
+                pass: false,
           };
         }
-        if (pass === 1){
-            return checkNumberArrays(received, expected);
+        return {
+            pass: true,
+            message:()=>''
         }
-        else
+    }
         /* 
             Now we do the real checks.
             }
@@ -54,19 +85,18 @@ expect.extend({
                 `Received: ${this.utils.printReceived(received)}`
                 :
                 () => `expected ${received} to be lower then ${ceiling}`;
-            */
+          */
        
-    },
+    
 });
 
 
-
-
 describe('rng knuth-taocp', function n() {
-    
+
     it.only('some test', () => {
         expect.hasAssertions();
-        expect('hello world').toEqual(expect.stringContaining('o w'));
+        expect(100).toBeWithinRange(90, 110);
+    
     });
 
     it('sample for seed=0, n=10', () => {
