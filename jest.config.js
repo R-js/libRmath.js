@@ -23,4 +23,7 @@ module.exports = {
             },
         },
     },
+    moduleNameMapper: {
+        '^\\$jest-extension$': '<rootDir>/packages/jest-extension.ts',
+    },
 };
