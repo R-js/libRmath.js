@@ -92,7 +92,7 @@
     },
     "scripts": {
         "prebuild": "cross-env rm -rf *.tsbuildinfo es6 commonjs",
-        "build": "tsc -p tsconfig-es6.json",
+        "build": "tsc -p tsconfig-es6.json && tsc -p tsconfig-commonjs.json",
         "prepublush": "npm run build",
         "lint": "eslint \"src/**/*.ts\"",
         "lint:fix": "eslint 'src/**/*.ts' --fix",
