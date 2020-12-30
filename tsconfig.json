@@ -85,6 +85,9 @@
     // we dont use dynamic module loading or the ES6 module spec
     "moduleResolution": "node",
     "paths": { //  we can use this for the test to pick up the module
+      "$*": [ 
+        "../packages/*"
+      ]
     }, // maybe use later, if you decide to use this, specify baseurl
     // source maps
     "preserveSymlinks": true, // keep it around just in case
@@ -95,13 +98,15 @@
            like import { appClass } from "./main.css"  
            main.css in src/css/main.css can by found by rootDirs:[ "src/css" ]
         **/
-    // rootDirs:[something]
+    /*"rootDirs":[
+      "src/lib", "packages"
+    ],*/
     /*
            Where to find typefiles, normally "./node_modules/@types"
            all types are relative to tsconfig.json
           
         */
-    "typeRoots":["./node_modules/@types/","test/@types"],
+    "typeRoots":["./node_modules/@types/"],
     /*
             only these packages will be included in global scope
             (sliced out of what is allowed by typeRoots),

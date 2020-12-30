@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 module.exports = {
+    automock: false,
     collectCoverage: false,
     collectCoverageFrom: ['src/**/*'],
     coveragePathIgnorePatterns: ['node_modules', 'test', 'doc.ts'],
