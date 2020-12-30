@@ -1,7 +1,10 @@
 {
   "include": [
-    "src/**/*.ts",
-    "test/**/*.ts",
+    "src/**/*.ts"
+    //"test/**/*.ts",
+  ],
+  "exclude": [
+    "test"
   ],
   "typeAcquisition": {
     "enable": true
@@ -47,7 +50,7 @@
       }
     ],
     "removeComments": false, // babel should handle it
-    "rootDir": "./",
+    "rootDir": "./src",
     "sourceMap": true, // not sure if this should be turned on if you use babel
     "target": "ES2020", // no down transpiling , that is for babel
     //"tsBuildInfoFile": 'build', we dont use composite projects
