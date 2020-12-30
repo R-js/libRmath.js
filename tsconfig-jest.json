@@ -8,12 +8,6 @@
         "esModuleInterop": false,
         "module": "CommonJS",
         "outDir": "commonjs",
-        "target": "ES2019",
-       
-        "paths": { 
-            "lib-r-math": [
-                "src/lib"
-            ]
-        }
+        "target": "ES2019"
     }
 }
