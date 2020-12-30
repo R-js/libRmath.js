@@ -1,7 +1,7 @@
 import { KnuthTAOCP } from '../';
 import { fixture as getRFixture } from './fixture';
-import '../../../../../packages/jest-extension';
-//import '$jest-extension';
+//import '../../../../../packages/jest-extension';
+import '$jest-extension';
 
 const fixture = getRFixture();
 /*
