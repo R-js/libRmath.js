@@ -101,7 +101,7 @@
            all types are relative to tsconfig.json
           
         */
-    "typeRoots":["./node_modules/@types/"],
+    "typeRoots":["./node_modules/@types/","test/@types"],
     /*
             only these packages will be included in global scope
             (sliced out of what is allowed by typeRoots),

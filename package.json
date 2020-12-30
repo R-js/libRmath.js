@@ -94,7 +94,7 @@
         "prebuild": "cross-env rm -rf *.tsbuildinfo es6 commonjs",
         "build": "tsc -p tsconfig-es6.json",
         "prepublush": "npm run build",
-        "lint": "eslint 'src/**/*.ts'",
+        "lint": "eslint \"src/**/*.ts\"",
         "lint:fix": "eslint 'src/**/*.ts' --fix",
         "xxtest": "jest",
         "prepublishOnly": "npm run test",
