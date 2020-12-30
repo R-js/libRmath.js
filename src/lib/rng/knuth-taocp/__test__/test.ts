@@ -3,74 +3,51 @@ import { fixture as getRFixture } from './fixture';
 
 const fixture = getRFixture();
 
-declare global {
-namespace jest {
-      interface Matchers<R> {
-        toBeWithinRange(a: number, b: number): R;
-        matchFloatingPointBinary(received: any, expected: any): R;
-    }
-  }
-}
-
-expect.extend({
-        toBeWithinRange(received, floor, ceiling) {
-      const pass = received >= floor && received <= ceiling;
-      if (pass) {
-        return {
-          message: () =>
-            `expected ${received} not to be within range ${floor} - ${ceiling}`,
-          pass: true,
-        };
-      } else {
-        return {
-          message: () =>
-            `expected ${received} to be within range ${floor} - ${ceiling}`,
-          pass: false,
-        };
-      }
-    },
-  });
-
-
 expect.extend({
     matchFloatingPointBinary(received, expected) {
-       // let received: number[]  = []
-        
+        // let received: number[]  = []
+
         let pass = 0;
-        if (Array.isArray(received) && Array.isArray(expected) && expected.length == received.length){
+        if (Array.isArray(received) && Array.isArray(expected) && expected.length == received.length) {
             pass = 1;
-        }
-        else if (typeof received === 'number' && typeof expected === 'number'){
-                pass = 2;
-        }
-        else if (received instanceof Float32Array && expected instanceof Float32Array && received.length === expected.length){
+        } else if (typeof received === 'number' && typeof expected === 'number') {
+            pass = 2;
+        } else if (
+            received instanceof Float32Array &&
+            expected instanceof Float32Array &&
+            received.length === expected.length
+        ) {
             pass = 3;
-        }
-        else if (received instanceof Float64Array && expected instanceof Float64Array && received.length === expected.length){
+        } else if (
+            received instanceof Float64Array &&
+            expected instanceof Float64Array &&
+            received.length === expected.length
+        ) {
             pass = 4;
         }
 
-        if (pass === 0){
+        if (pass === 0) {
             const options = {
                 comment: 'data types not comparable',
                 isNot: this.isNot,
                 promise: this.promise,
             };
-            const message  = () => this.utils.matcherHint('matchFloatingPointBinary', undefined, undefined, options) +
-          '\n\n' +
-          `Expected: [type] is not of equal type/length as received\n` +
-          `Received: [type] is not of equal type/length as expected`;
-          return {
+            const message = () =>
+                this.utils.matcherHint('matchFloatingPointBinary', undefined, undefined, options) +
+                '\n\n' +
+                `Expected: [type] is not of equal type/length as received\n` +
+                `Received: [type] is not of equal type/length as expected`;
+            return {
                 message,
-                pass: false,
-          };
+                pass: this.isNot ? true : false,
+            };
         }
         return {
             pass: true,
-            message:()=>''
-        }
-    }
-        /* 
+            message: () => '',
+        };
+    },
+    /* 
             Now we do the real checks.
             }
             const options = {
@@ -86,17 +63,12 @@ expect.extend({
                 :
                 () => `expected ${received} to be lower then ${ceiling}`;
           */
-       
-    
 });
 
-
 describe('rng knuth-taocp', function n() {
-
     it.only('some test', () => {
         expect.hasAssertions();
-        expect(100).toBeWithinRange(90, 110);
-    
+        expect(undefined).not.matchFloatingPointBinary(90);
     });
 
     it('sample for seed=0, n=10', () => {

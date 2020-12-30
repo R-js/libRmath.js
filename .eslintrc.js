@@ -13,8 +13,9 @@ module.exports = {
         '@typescript-eslint/no-explicit-any': 0,
         '@typescript-eslint/explicit-module-boundary-types': 0,
         '@typescript-eslint/no-namespace': 0, // off
+        '@typescript-eslint/no-var-requires': 0, // off
         // Place to specify ESLint rules. Can be used to overwrite rules specified from the extended configs
         // e.g. "@typescript-eslint/explicit-function-return-type": "off",
     },
-    ignorePatterns: ['build', 'dist', 'lib'],
+    ignorePatterns: ['commonjs', 'es6', 'browser'],
 };
