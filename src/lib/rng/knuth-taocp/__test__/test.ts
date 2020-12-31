@@ -16,7 +16,7 @@ describe('rng knuth-taocp', function n() {
     it.only('some test', () => {
         expect.hasAssertions();
         const e = expect(undefined);
-        e.matchFloatingPointBinary(90);
+        e.toEqualFloatingPointBinary(90);
     });
 
     it('sample for seed=0, n=10', () => {
