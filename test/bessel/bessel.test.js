@@ -1,7 +1,10 @@
 //https://stat.ethz.ch/R-manual/R-devel/library/base/html/Bessel.html
 //https://en.wikipedia.org/wiki/Bessel_function
 process.env.DEBUG = 'bessel_j, bessel_y, bessel_i, bessel_k, K_bessel';
-const libR = require('../dist/lib/libR.js');
+const {
+    bessl
+}
+libR = require('../dist/lib/libR.js');
 
 //strip mining
 const {

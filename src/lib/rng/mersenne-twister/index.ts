@@ -36,8 +36,9 @@ import { fixup } from '../fixup';
 import { IRNG } from '../irng';
 import { IRNGType } from '../irng-type';
 import { timeseed } from '../timeseed';
+import { seedCheck } from '../seedcheck'
 
-const SEED_LEN = 625;
+export const SEED_LEN = 625;
 
 export class MersenneTwister extends IRNG {
 
@@ -50,9 +51,9 @@ export class MersenneTwister extends IRNG {
 
     for (let i = 0; i < N; i++) {
       this.mt[i] = seed & 0xffff0000;
-      seed = 69069 * seed + 1;
+      seed = (69069 * seed + 1) << 0;
       this.mt[i] |= (seed & 0xffff0000) >>> 16;
-      seed = 69069 * seed + 1;
+      seed = (69069 * seed + 1) << 0;
     }
     this.mti = N;
   }
@@ -102,19 +103,19 @@ export class MersenneTwister extends IRNG {
 
   private fixupSeeds(): void {
     const s = this.m_seed;
-    s[0] = 624;
     /* No action unless user has corrupted .Random.seed */
     if (s[0] <= 0) s[0] = 624;
     /* check for all zeroes */
     // note mt is equal to s.slice(1)
+    // all are zeros?
     if (this.mt.find(v => !!v) === undefined) {
       this.init(timeseed());
     }
     return;
   }
 
-  constructor(_seed: number = timeseed()) {
-    super(_seed);
+  constructor(seed: number = timeseed()) {
+    super(seed);
   }
 
   public _setup() {
@@ -126,10 +127,10 @@ export class MersenneTwister extends IRNG {
     this.mti = N + 1;
   }
 
-  public init(_seed: number =  timeseed()) {
+  public init(seed: number =  timeseed()) {
     /* Initial scrambling */
     const s = new Uint32Array([0]);
-    s[0] = _seed;
+    s[0] = seed;
     for (let j = 0; j < 50; j++) {
       s[0] = 69069 * s[0] + 1;
     }
@@ -137,8 +138,9 @@ export class MersenneTwister extends IRNG {
       s[0] = 69069 * s[0] + 1;
       this.m_seed[j] = s[0];
     }
+    this.m_seed[0] = 624;
     this.fixupSeeds();
-    super.init(_seed);
+    super.init(seed);
   }
 
   public internal_unif_rand(): number {
@@ -149,12 +151,9 @@ export class MersenneTwister extends IRNG {
   }
 
   public set seed(_seed: number[]) {
-
-    if (_seed.length > this.m_seed.length || _seed.length === 0) {
-      this.init(timeseed());
-      return;
-    }
+    seedCheck(this._kind,_seed, SEED_LEN)
     this.m_seed.set(_seed);
+    this.fixupSeeds()
   }
 
   public get seed() {

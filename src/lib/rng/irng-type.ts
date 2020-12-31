@@ -15,13 +15,13 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-export enum IRNGType {
-    WICHMANN_HILL = 0,
-    MARSAGLIA_MULTICARRY,
-    SUPER_DUPER,
-    MERSENNE_TWISTER,
-    KNUTH_TAOCP,
-    KNUTH_TAOCP2002,
-    LECUYER_CMRG
+export enum IRNGTypeEnum {
+    WICHMANN_HILL = 'WICHMANN_HILL',
+    MARSAGLIA_MULTICARRY = 'MARSAGLIA_MULTICARRY',
+    SUPER_DUPER ='SUPER_DUPER',
+    MERSENNE_TWISTER = 'MERSENNE_TWISTER',
+    KNUTH_TAOCP = 'KNUTH_TAOCP',
+    KNUTH_TAOCP2002 = 'KNUTH_TAOCP2002',
+    LECUYER_CMRG = 'KNUTH_TAOCP2002'
 }
 

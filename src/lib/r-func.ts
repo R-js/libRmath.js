@@ -16,9 +16,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 const { max, abs, sign } = Math;
 
-import * as debug from 'debug';
 
-const printer_seq = debug('seq');
+
 const precision9 = numberPrecision(9);
 
 export function* seq_len({ length, base = 1 }: { length: number, base: number }): IterableIterator<number> {
@@ -47,7 +46,7 @@ export const seq = (adjust = 0) => (adjustMin = adjust) => (
   // so we use precision to have it make sense
   // sometimes rounding effects try something diff
   step = abs(step) * sign(end - start);
-  printer_seq('step:%d', step);
+
 
   const rc: number[] = [];
 
@@ -61,9 +60,9 @@ export const seq = (adjust = 0) => (adjustMin = adjust) => (
 
 export const sequenceFactory = (adjust = 0, adjustMin = adjust) => (start: number, end: number, delta = 1) => Array.from(lazySeq(start, end, delta, adjust, adjustMin))
 
-const printer_lazy_seq = debug('lazySeq');
+
 export function* lazySeq(start: number, end = 1, step = 1, adjust = -1, adjustMin = adjust) {
-  printer_lazy_seq(arguments);
+
   if (step === 0) {
     throw new TypeError(`argument 'delta' cannot be zero`)
   }
@@ -98,7 +97,7 @@ export function* multiplexer(...rest: any[]): IterableIterator<any[]> {
   // Analyze
   //
   const analyzed: _t[] = [];
-  type _t = boolean[] | number[] | undefined[] | string[] | null[] | symbol[] | Array<any>;
+  type _t = boolean[] | number[] | undefined[] | string[] | null[] | symbol[] | any[];
 
   function simplePush<T extends _t>(v: T) { analyzed.push(v) };
 
@@ -114,10 +113,11 @@ export function* multiplexer(...rest: any[]): IterableIterator<any[]> {
   };
 
   for (let k = 0; k < rest.length; k++) {
+    //TODO: new in typescript you can pick types of function argument, use that
     const arg = rest[k];
-    const to = _typeOf(arg);
+    const to: keyof typeof select = _typeOf(arg) as any;
     const selector = select[to];
-    selector(arg);
+    selector(arg as never);
   }//for
   // find the longest array
   const _max = max(...analyzed.map(a => a.length));
@@ -149,10 +149,16 @@ function isNumber(x: any): x is number {
   return typeof x === 'number'
 }
 
+// typeguards
+
+function isObject(o:any): o is Object {
+  return o && typeof o === 'object' && !Array.isArray(o); 
+}
+
 export function numberPrecision(prec: number = 6) {
-  return function convert<T>(x: T): T {
+  return function convert(x: any): typeof x {
     // try to loop over the object
-    if (typeof x === 'object' && x !== null) {
+    if (isObject(x)) {
       for (const [prop, value] of Object.entries(x)) {
         //recursion
         x[prop] = convert(value);
@@ -187,8 +193,8 @@ export interface ISummary {
     variance: number, // sample variance (data is seen as a small sample from an very large population)
     sd: number // square root of "sample variance"
   };
-  relX; // = x-E(x)
-  relX2; // = ( x-E(x) )^2
+  relX: number[]; // = x-E(x)
+  relX2: number[]; // = ( x-E(x) )^2
   stats: {
     min: number, // minimal value from "data"
     '1st Qu.': number, // 1st quantile from "data"
@@ -197,7 +203,7 @@ export interface ISummary {
     max: number // maximum value in data
   };
 }
-/*
+
 export function summary(x: number[]): ISummary {
   if (!Array.isArray(x)) {
     throw new Error(`Illigal argument, not an array`);
@@ -225,9 +231,9 @@ export function summary(x: number[]): ISummary {
   const { q1, median, q3 } = (function () {
     const i = [4, 2, 4 / 3].map(v => (N - 1) / v);
     const q = i.map(index => {
-      const f1 = 1 - (index - floor(index));
+      const f1 = 1 - (index - Math.floor(index));
       const f2 = 1 - f1;
-      return o[trunc(index)] * f1 + o[trunc(index) + 1] * f2;
+      return o[Math.trunc(index)] * f1 + o[Math.trunc(index) + 1] * f2;
     });
     return {
       q1: q[0],
@@ -267,7 +273,7 @@ export function Welch_Satterthwaite(s: number[], n: number[]): number {
 
   return Math.pow(sum(elts), 2) / sum(dom);
 }
-*/
+
 
 export function randomGenHelper<T extends Function>(n: number | number[], fn: T, ...arg: any[]) {
 
@@ -324,7 +330,11 @@ export function array_flatten<T = unknown>(...rest: (T | IterableIterator<T> | T
   return Array.from(flatten(...rest));
 }
 
-export function* flatten<T = unknown>(...rest: (T | IterableIterator<T> | T[])[]): IterableIterator<T> {
+function isIterator<T>(it: any): it is IterableIterator<T>{
+  return it && it[Symbol.iterator] === 'function';
+}
+
+export function* flatten<T>(...rest: (T | IterableIterator<T> | T[])[]): IterableIterator<T> {
 
   for (const itm of rest) {
     if (itm === null || ['undefined', 'string', 'symbol', 'number', 'boolean'].includes(typeof itm)) {
@@ -334,26 +344,27 @@ export function* flatten<T = unknown>(...rest: (T | IterableIterator<T> | T[])[]
     }
     if (itm instanceof Map || itm instanceof Set) {
       for (const v of <any>itm) {
-        yield* flatten.call(undefined, v);
+        yield* flatten(v);
       }
       continue;
     }
     if (itm instanceof Array) {
       for (const v of itm) {
-        yield* flatten.call(undefined, v);
+        yield* flatten(v);
       }
       continue;
     }
-    if (typeof itm[Symbol.iterator] === 'function') {
+    
+    if (isIterator(itm)) {
       for (const v of <any>itm) {
-        yield* flatten.call(undefined, v);
+        yield* flatten(v);
       }
       continue;
     }
   }
 }
 
-export function chain<F0 extends (...argv) => any, F extends (...argv) => any>(fn0: F0, ...fns: F[]) {
+export function chain<F0 extends (...argv:any[]) => any, F extends (...argv:any[]) => any>(fn0: F0, ...fns: F[]) {
   // @ts-ignore
   fns.push(fn0);
   if (fns.length === 0) {
@@ -365,16 +376,15 @@ export function chain<F0 extends (...argv) => any, F extends (...argv) => any>(f
     }
   }
 
-  return function(...args: Parameters<F>): ReturnType<F0> {
+  return function (...args: Parameters<F>): ReturnType<F0> {
     let lastArgs: unknown[] = args;
     if (args)
       for (let i = fns.length - 1; i >= 0; i--) {
         const fn = fns[i]
         lastArgs = [fn.apply(fn, lastArgs)]
         //console.log(lastArgs);
-    }
+      }
     return lastArgs[0] as ReturnType<F0>
 
   }
 }
-

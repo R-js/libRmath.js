@@ -1,5 +1,11 @@
 # Logs
 logs
+logs
+es6/
+browser/
+commonjs/
+*.tsbuildinfo
+*.log
 dist/
 r-source-trunk/
 *.log
@@ -13,6 +19,8 @@ npm-debug.log*
 !/.nycrc
 !/.travis.yml
 !/.codecov.yml
+!.eslintrc.js
+!.prettierrc.js
 
 *.pdf
 *.PNG

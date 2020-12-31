@@ -15,35 +15,22 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { IRNGType } from './irng-type';
+import { IRNGTypeEnum } from './irng-type';
 
-export type MessageType = 'INIT';
-
-// make sure sub-class is follow this
-export interface IRNG_CORE {
-  unif_rand(n?: number): number[];
-  internal_unif_rand(): number;
-}
-
-export interface IRNG extends IRNG_CORE {
-
+export enum MessageType {
+  INIT='@@INIT@@'
 }
 
 export abstract class IRNG {
   protected _name: string;
-  protected _kind: IRNGType;
+  protected _kind: IRNGTypeEnum;
 
-  private notify: Set<{ event: MessageType, handler: () => void }>;
+  private notify: Set<{ event: MessageType, handler: (...args:any[]) => void }>;
 
-  constructor(_seed: number) {
-    this.notify = new Set();
-    this.emit = this.emit.bind(this);
-    this.register = this.register.bind(this);
-    this.unif_rand = this.unif_rand.bind(this);
-    this.internal_unif_rand = this.internal_unif_rand.bind(this);
-    this.init = this.init.bind(this);
-    this._setup();
-    this.init(_seed);
+  constructor(name: string, kind: IRNGTypeEnum) {
+    this._name = name;
+    this._kind = kind;
+    this.notify = new Set<{ event: MessageType, handler: (...args:any[]) => void }>();
   }
 
   public get name() {
@@ -53,33 +40,39 @@ export abstract class IRNG {
   public get kind() {
     return this._kind;
   }
-
-  public abstract _setup(): void;
-
-  public init(_seed: number): void {
-    this.emit('INIT');
-  }
-
-  public abstract set seed(_seed: number[]);
-  public unif_rand(n: number = 1): number[] {
+  
+  public randoms(n: number): Float32Array {
     n = (!n || n < 0) ? 1 : n;
-    return Array.from({length:n}).map(() => this.internal_unif_rand());
+    const rc = new Float32Array(n);
+    for (let i = 0; i< n; i++){
+      rc[i] = this.internal_unif_rand();
+    }
+    return rc;
   }
 
-  // @ts-ignore
-  abstract internal_unif_rand(): number;
+  public random(){
+    return this.internal_unif_rand();
+  }
 
-  public abstract get seed(): number[];
-  // event stuff
-  public register(event: MessageType, handler: () => void) {
+  public abstract get seed(): Uint32Array;
+  public abstract set seed(_seed: Uint32Array);
+
+  public init(seed: number): void {
+    this.emit(MessageType.INIT, seed);
+  }
+
+  public register(event: MessageType, handler: (...args:any[]) => void) {
     this.notify.add({ event, handler });
   }
 
-  public emit(event: MessageType) {
+  public emit(event: MessageType, ...args:any[]) {
     this.notify.forEach(r => {
       if (r.event === event) {
-        r.handler();
+        r.handler(...args);
       }
     });
   }
+
+  protected abstract internal_unif_rand(): number;
+
 }

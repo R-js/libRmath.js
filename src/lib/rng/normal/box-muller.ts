@@ -16,6 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { IRNG } from '../';
+import { MessageType } from '../irng';
 import { MersenneTwister } from '../mersenne-twister';
 import { IRNGNormal } from './inormal-rng';
 
@@ -34,10 +35,10 @@ export class BoxMuller extends IRNGNormal {
   constructor(_rng: IRNG = new MersenneTwister(0) ) {
     super(_rng);
     this.BM_norm_keep = 0;
-    _rng.register('INIT', this.reset.bind(this));
+    _rng.register(MessageType.INIT, this.reset.bind(this));
   }
 
-  protected internal_norm_rand() {
+  public internal_norm_rand() {
     let s = 0.0;
     let theta = 0;
 
@@ -47,9 +48,9 @@ export class BoxMuller extends IRNGNormal {
       this.BM_norm_keep = 0.0;
       return s;
     } else {
-      theta = 2 * M_PI * (this.rng.internal_unif_rand());
+      theta = 2 * M_PI * (this.rng.random());
       let R =
-        sqrt(-2 * log(this.rng.internal_unif_rand())) +
+        sqrt(-2 * log(this.rng.random())) +
         10 * DBL_MIN; /* ensure non-zero */
       this.BM_norm_keep = R * sin(theta);
       return R * cos(theta);

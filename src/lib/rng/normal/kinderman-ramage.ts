@@ -38,7 +38,7 @@ export class KindermanRamage extends IRNGNormal {
     super(_rng);
   }
 
-  protected internal_norm_rand() {
+  public internal_norm_rand() {
     let u1: number;
     let u2: number;
     let u3: number;

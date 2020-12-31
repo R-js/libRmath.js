@@ -17,9 +17,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
 
-import { IRNG_CORE } from '../rng/irng';
+import { IRNG } from '../rng/irng';
 
-export function exp_rand(unif_rand: IRNG_CORE["internal_unif_rand"]): number {
+export function exp_rand(unif_rand: () => number): number {
 
   const q: number[] = [
     0.6931471805599453,

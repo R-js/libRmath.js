@@ -20,9 +20,10 @@ import { fixup, i2_32m1 } from '../fixup';
 import { IRNG } from '../irng';
 import { IRNGType } from '../irng-type';
 import { timeseed } from '../timeseed';
+import { seedCheck } from '../seedcheck'
 
-const SEED_LEN = 2;
-//const buf = new ArrayBuffer(SEED_LEN * 4);
+export const SEED_LEN = 2;
+
 
 export class MarsagliaMultiCarry extends IRNG {
 
@@ -56,7 +57,7 @@ export class MarsagliaMultiCarry extends IRNG {
   public _setup() {
     this._kind = IRNGType.MARSAGLIA_MULTICARRY;
     this._name = 'Marsaglia-MultiCarry';
-    this.m_seed = new Int32Array( new ArrayBuffer(SEED_LEN * 4)).fill(0);
+    this.m_seed = new Int32Array( SEED_LEN ).fill(0);
   }
 
   internal_unif_rand(): number {
@@ -75,13 +76,9 @@ export class MarsagliaMultiCarry extends IRNG {
   }
 
   public set seed(_seed: number[]) {
-
-
-    if (_seed.length > this.m_seed.length || _seed.length === 0) {
-      this.init(timeseed());
-      return;
-    }
+    seedCheck(this._kind,_seed, SEED_LEN)
     this.m_seed.set(_seed);
+    this.fixupSeeds()
   }
 
   public get seed() {

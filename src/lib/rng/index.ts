@@ -30,7 +30,7 @@ import {
 } from './normal';
 import { IRNGNormal } from './normal/inormal-rng';
 import { SuperDuper } from './super-duper';
-import { timeseed } from './timeseed';
+import { seed } from './timeseed';
 import { WichmannHill } from './wichmann-hill';
 
 export const rng = {
@@ -47,7 +47,7 @@ export const rng = {
     KindermanRamage
   },
   SuperDuper,
-  timeseed,
+  seed,
   WichmannHill,
 };
 

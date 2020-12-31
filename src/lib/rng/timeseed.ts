@@ -15,28 +15,25 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-const { trunc, ceil, min, log2, pow } = Math;
-const { now } = Date;
 
-export function timeseed() {
-  const n = now();
-  //delay 0.5 sec
-  do {
-    now(); // consume cpu, do something silly
-  } while (now() - n < 500);
+// have rollup replace this with globalThis.crypto
 
-  // how many bits?
-  const nBits = min(32, ceil(log2(n)));
-  const lowBits = trunc(nBits / 2);
-  const hi = trunc(n / pow(2, lowBits));
-  const lo = n - hi * pow(2, lowBits);
-  //
-  // create 32 bit array
-  const buf = new ArrayBuffer(4);
-  const reverser = new Uint8Array(buf);
-  const uint32 = new Uint32Array(buf);
-  uint32[0] = lo ^ hi; // little endian, highest order bytes has lowest indexes so
-  // reverse order of bytes, milliseconds changes the fastest in a time
-  reverser.reverse();
-  return uint32[0];
+/* polyfill for randomBytes
+const randomBytes = (n) => ({
+   readUInt32BE(offset = 0){
+     if ((n - offset) < 4){
+       throw new RangeError('[ERR_BUFFER_OUT_OF_BOUNDS]: Attempt to write outside buffer bounds')
+     }
+     const sampler = new Uint8Array(n);
+     globalThis.crypto.getRandomValues(sampler);
+     const dv = new DataView(sampler.buffer);
+     return dv.getUint32(offset, false);  
+   }
+})
+*/
+import { randomBytes } from 'crypto';
+
+
+export function seed() {
+  return randomBytes(4).readUInt32BE(0)
 }

@@ -12,5 +12,10 @@
       "Cliches": "Disable",
       "Missing Word": "Disable",
       "Make I uppercase": "Warning"
-    }
+    },
+    "ignoreWordsList": [
+      "decl",
+      "BLAS",
+      "BLASjs"
+    ]
   }

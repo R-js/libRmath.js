@@ -15,7 +15,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 import special  from '../gamma';
-import { array_flatten, flatten, sum } from '../r-func';
+import { flatten, sum } from '../r-func';
 const { isFinite } = Number;
 
 const { lgamma } = special;
@@ -34,9 +34,9 @@ export function dmultinom(
   // init
   // first prob and x must have the same length
   o.asLog = !!o.asLog;
-  let x: number[] = array_flatten(o.x).filter(f => !!f);
+  let x: number[] = Array.from(flatten(o.x)).filter(f => !!f);
   //
-  let prob: number[] = array_flatten(o.prob);
+  let prob: number[] = Array.from(flatten(o.prob));
   let badProb = !!prob.find(f => !isFinite(f) || f < 0);
   let s = sum(prob);
   if (badProb || s === 0) {

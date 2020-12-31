@@ -21,11 +21,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import { fixup } from '../fixup';
 import { IRNG } from '../irng';
-import { IRNGType } from '../irng-type';
-import { timeseed } from '../timeseed';
+import { IRNGTypeEnum } from '../irng-type';
+import { seed } from '../timeseed';
+import { seedCheck } from '../seedcheck'
 
 const QUALITY = 1009; /* recommended quality level for high-res use */
-const SEED_LEN = 101;
+export const SEED_LEN = 101;
 const LL = 37; /* the short lag */
 const KK = 100; /* the long lag */
 const TT = 70; /* guaranteed separation between streams */
@@ -70,6 +71,10 @@ export class KnuthTAOCP2002 extends IRNG {
   ) {
     let i: number;
     let j: number;
+    if (!aa.length){
+      return
+    }
+    
     for (j = 0; j < KK; j++) {
       aa[j] = this.ran_x[j];
     }
@@ -159,18 +164,13 @@ export class KnuthTAOCP2002 extends IRNG {
     return this.ran_x[this.KT_pos++];
   }
 
-  constructor(_seed: number = timeseed()) {
-    super(_seed);
-  }
-
-  public _setup() {
-    this._kind = IRNGType.KNUTH_TAOCP2002;
-    this._name = 'Knuth-TAOCP-2002';
+  constructor(_seed = seed()) {
+    super('Knuth-TAOCP-2002', IRNGTypeEnum.KNUTH_TAOCP2002);
     this.qualityBuffer = new ArrayBuffer(QUALITY * 4);
     this.ran_arr_buf = new Uint32Array(this.qualityBuffer);
-    const buf = new ArrayBuffer(SEED_LEN * 4);
-    this.m_seed = new Uint32Array(buf).fill(0);
+    this.m_seed = new Uint32Array(SEED_LEN);
     this.ran_x = this.m_seed;
+    this.init(_seed);
   }
 
   internal_unif_rand(): number {
@@ -178,7 +178,7 @@ export class KnuthTAOCP2002 extends IRNG {
     return fixup(this.KT_next() * KT);
   }
 
-  public init(_seed: number =  timeseed()) {
+  public init(_seed: number = seed()) {
     /* Initial scrambling */
     const s = new Uint32Array([0]);
     s[0] = _seed;
@@ -187,18 +187,14 @@ export class KnuthTAOCP2002 extends IRNG {
     }
 
     this.RNG_Init_KT2(s[0]);
-    super.init(_seed);
   }
-  public set seed(_seed: number[]) {
-
-    if (_seed.length > this.m_seed.length || _seed.length === 0) {
-      this.init(timeseed());
-      return;
-    }
+  
+  public set seed(_seed: Uint32Array) {
+    seedCheck(this._kind,_seed, SEED_LEN)
     this.m_seed.set(_seed);
   }
 
-  public get seed() {
-    return Array.from(this.m_seed);
+  public get seed(): Uint32Array{
+    return this.m_seed;
   }
 }

@@ -16,12 +16,13 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-
 import { IRNG } from '../irng';
 import { IRNGType } from '../irng-type';
 import { timeseed } from '../timeseed';
+import { seedCheck } from '../seedcheck'
 
-const SEED_LEN = 6;
+export const SEED_LEN = 6;
+
 const a12 = 1403580; //least 64 bits
 const a13n = 810728;
 const m2 = 4294944443;
@@ -44,11 +45,11 @@ export class LecuyerCMRG extends IRNG {
     this.m_seed = new Int32Array(SEED_LEN).fill(0);
   }
 
-  public init(se: number =  timeseed()) {
+  public init(_seed: number =  timeseed()) {
     /* Initial scrambling */
     const s = new Int32Array([0]);
 
-    s[0] = se;
+    s[0] = _seed;
     for (let j = 0; j < 50; j++) {
       s[0] = 69069 * s[0] + 1;
     }
@@ -60,7 +61,7 @@ export class LecuyerCMRG extends IRNG {
 
       this.m_seed[j] = s[0];
     }
-    super.init(se);
+    super.init(_seed);
   }
 
   internal_unif_rand(): number {
@@ -101,12 +102,7 @@ export class LecuyerCMRG extends IRNG {
   }
 
   public set seed(_seed: number[]) {
-
-
-    if (_seed.length > this.m_seed.length || _seed.length === 0) {
-      this.init(timeseed());
-      return;
-    }
+    seedCheck(this._kind,_seed, SEED_LEN)
     this.m_seed.set(_seed);
   }
 

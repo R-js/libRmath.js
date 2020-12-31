@@ -1,41 +1,44 @@
 {
-    "author": "Jacob K.F. Bogers",
+    "description": "Javascript Pure Implementation of Statistical R \"core\" numerical libRmath",
+    "author": "Jacob K.F. Bogers <info@mail.jacob-bogers.com>",
+    "contributors": [
+        {
+            "name": "Richard D. Morey",
+            "email": "richarddmorey@gmail.com"
+        }
+    ],
+    "main": "commonjs/lib/index.js",
+    "browser": "browser/blasjs.min.js",
+    "types": "es6/types/lib/index.d.ts",
     "bugs": {
-        "url": "https://github.com/jacobbogers/libRmath.js/issues"
+        "url": "https://github.com/R-js/libRmath.js/issues"
     },
-    "dependencies": {
-        "debug": "^3.1.0"
+    "contributes": {
+        "typescriptServerPlugins": [
+            {
+                "name": "typescript-eslint-language-service"
+            }
+        ]
     },
-    "description": "Javascript Pure Implementation of Statistical R \"core\" numerical libRmath.so",
     "devDependencies": {
-        "@types/chai": "^4.1.6",
-        "@types/debug": "0.0.31",
-        "@types/lodash": "^4.14.117",
-        "@types/mocha": "^5.2.5",
-        "@types/node": "^10.12.0",
-        "chai": "^4.2.0",
-        "codecov": "^3.1.0",
-        "cross-env": "^5.2.0",
-        "istanbul": "^0.4.5",
-        "jshint": "^2.9.6",
-        "lodash": "^4.17.11",
-        "mocha": "^5.2.0",
-        "mocha-lcov-reporter": "^1.3.0",
-        "nyc": "^13.1.0",
-        "opn": "^5.4.0",
-        "shx": "^0.3.2",
-        "source-map-support": "^0.5.9",
-        "ts-loader": "^5.2.2",
-        "ts-node": "^7.0.1",
-        "tslint": "^5.11.0",
-        "tslint-loader": "^3.5.4",
-        "typescript": "^3.1.3",
-        "uglifyjs-webpack-plugin": "^2.0.1",
-        "webpack": "^4.22.0",
-        "webpack-cli": "^3.1.2",
-        "webpack-node-externals": "^1.7.2"
+        "@rollup/plugin-commonjs": "^16.0.0",
+        "@rollup/plugin-node-resolve": "^10.0.0",
+        "@types/node": "^6.0.96",
+        "@typescript-eslint/eslint-plugin": "^4.8.1",
+        "@typescript-eslint/parser": "^4.8.1",
+        "cross-env": "^7.0.3",
+        "eslint": "^7.14.0",
+        "eslint-config-prettier": "^6.15.0",
+        "eslint-plugin-prettier": "^3.1.4",
+        "jest": "26.6.3",
+        "prettier": "^2.2.0",
+        "rollup": "^2.33.1",
+        "rollup-plugin-terser": "^7.0.2",
+        "ts-jest": "26.4.4",
+        "typescript": "^4.1.2",
+        "typescript-eslint-language-service": "^4.1.1"
     },
-    "homepage": "https://github.com/jacobbogers/libRmath.js#readme",
+    "homepage": "https://github.com/R-js/libRmath.js#readme",
     "keywords": [
         "statistics",
         "r statistics",
@@ -82,22 +85,20 @@
         "wilcoxon rank sum statistic distribution"
     ],
     "license": "GPL-3.0",
-    "main": "dist/lib/libR.min.js",
     "name": "lib-r-math.js",
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/jacobbogers/libRmath.js.git"
+        "url": "git+https://github.com/R-js/libRmath.js.git"
     },
     "scripts": {
-        "build": "webpack --progress --color --display-error-details --config config/webpack/config --mode=development",
-        "build:prod": "webpack --progress --color --display-error-details --config config/webpack/config --mode=production",
-        "install": "echo install",
-        "lint": "tslint -c tslint.json -p .",
-        "lint:fix": "npm run lint -- --fix",
-        "lint:report": "npm run lint -- -o .lint-report.txt --force && code .lint-report.txt",
-        "report": "opn-cli coverage/lcov-report/index.html",
-        "test": "cross-env-shell NODE_ENV=test TS_NODE_DISABLE_WARNINGS=true nyc mocha"
+        "prebuild": "cross-env rm -rf *.tsbuildinfo es6 commonjs",
+        "build": "tsc -p tsconfig-es6.json && tsc -p tsconfig-commonjs.json",
+        "prepublush": "npm run build",
+        "lint": "eslint \"src/**/*.ts\"",
+        "lint:fix": "eslint 'src/**/*.ts' --fix",
+        "xxtest": "jest",
+        "prepublishOnly": "npm run test",
+        "test": "echo hello world"
     },
-    "types": "dist/src/lib/index.d.ts",
-    "version": "1.0.83"
+    "version": "1.0.89-alpha"
 }

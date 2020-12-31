@@ -22,11 +22,11 @@ import { IRNGNormal } from './inormal-rng';
 const { log, sqrt, min: fmin2, max: fmax2, abs: fabs, exp } = Math;
 
 export class BuggyKindermanRamage extends IRNGNormal {
-  constructor(_rng: IRNG  = new MersenneTwister(0) ) {
-    super(_rng);
+  constructor(rng: IRNG  = new MersenneTwister(0) ) {
+    super(rng);
   }
 
-  protected internal_norm_rand() {
+  public internal_norm_rand() {
     /* see Reference above */
     /* note: this has problems, but is retained for
          * reproducibility of older codes, with the same

@@ -1,0 +1,17 @@
+{
+    "extends": "./tsconfig.json",
+    "include": [
+        //"src/lib/rng/knuth-taocp-2002",
+        "src/lib/rng/knuth-taocp/**/*.ts",
+    ],
+    "exclude":[
+        "**/__test__"
+    ],
+    "compilerOptions": {
+        "noEmit": false,
+        "module": "CommonJS",
+        "outDir": "commonjs",
+        "target": "ES2019",
+        "declarationDir": "commonjs/types"
+    }
+}
