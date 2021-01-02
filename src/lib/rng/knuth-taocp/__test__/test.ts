@@ -15,8 +15,8 @@ function getTypeString(o: any) {
 describe('rng knuth-taocp', function n() {
     it.only('some test', () => {
         expect.hasAssertions();
-        const e = expect(undefined);
-        e.toEqualFloatingPointBinary(90);
+        const e = expect([]);
+        e.not.toEqualFloatingPointBinary([2], 10, true, true);
     });
 
     it('sample for seed=0, n=10', () => {
