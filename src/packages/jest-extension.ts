@@ -29,7 +29,7 @@ function typeOf(o: any): ObjectTypes {
     if (o === null) return 'null';
     if (o === undefined) return 'undefined';
     if (o instanceof Float32Array) return 'Float32Array';
-    if (o instanceof Float64Array) return 'Float32Array';
+    if (o instanceof Float64Array) return 'Float64Array';
     if (Array.isArray(o)) {
         if (o.length === 0) return 'arr_0';
         let i = 0;
@@ -157,6 +157,13 @@ function compareFP(a: NumArray, b: NumArray, bpe: 4 | 8, mantissa: number) {
 // 1.8 x 10**308 max of float64
 // 1.7 x 10**38  max of float32
 
+function toScalar(o: NumArray, alt: string) {
+    if (o.length === 1) {
+        return o[0];
+    }
+    return alt;
+}
+
 expect.extend({
     toEqualFloatingPointBinary(received, expected, mantissa = 23, cycle = true, hf = false) {
         const options = {
@@ -255,95 +262,48 @@ expect.extend({
                     errMsg,
             };
         }
-        // state: number x number | number[1]
-        if (metaR === 'number') {
-            const rec: number = received;
-            if (metaE === 'number' || expected.length === 1) {
-                const exp: number = metaE === 'number' ? expected : expected[0];
-                let errMsg = '';
-                const bpe = hf ? 8 : 4;
-                let mantissa2: number = mantissa || (hf ? 52 : 23);
-                mantissa2 = Math.min(mantissa2, hf ? 52 : 23);
-                if (mantissa2 !== mantissa) {
-                    errMsg += `Mantissa forced to ${mantissa2} bits`;
-                }
-                try {
-                    const min = compareFP([rec], [exp], bpe, mantissa2);
-                    errMsg += `Received: [${rec}] is equal to Expected: [${exp}] within ${min} bits (larger then specified ${mantissa2} bits)`;
-                    return {
-                        pass: true,
-                        message: () =>
-                            this.utils.matcherHint('toEqualFloatingPointBinary', typeR, typeE, options) +
-                            '\n\n' +
-                            errMsg,
-                    };
-                } catch (err) {
-                    const rc = err[0];
-                    errMsg += `Received: [${rec}] is NOT equal to Expected: [${exp}] within ${mantissa2} bits (nr equal mantissa bits is ${rc})`;
-                    return {
-                        pass: false,
-                        message: () =>
-                            this.utils.matcherHint('toEqualFloatingPointBinary', typeR, typeE, options) +
-                            '\n\n' +
-                            errMsg,
-                    };
-                }
-            }
-            //sub-state: number x number[] (more then 1)
-            const exp = expected;
-            let errMsg = '';
-            const bpe = hf ? 8 : 4;
-            let mantissa2: number = mantissa || (hf ? 52 : 23);
-            mantissa2 = Math.min(mantissa2, hf ? 52 : 23);
-            if (mantissa2 !== mantissa) {
-                errMsg += `Mantissa forced to ${mantissa2} bits`;
-            }
-            try {
-                const min = compareFP([rec], exp, bpe, mantissa2);
-                errMsg += `Received is equal to Expected within: [Infimum is ${min} bits], this is larger then specified ${mantissa2} bits`;
-                return {
-                    pass: true,
-                    message: () =>
-                        this.utils.matcherHint('toEqualFloatingPointBinary', typeR, typeE, options) + '\n\n' + errMsg,
-                };
-            } catch (err) {
-                const [rc, aIdx, bIdx, recv, expv] = Array.from(err) as number[];
-                errMsg += `Received: [${recv}, at index ${aIdx}] is NOT equal to Expected: [${expv} at index ${bIdx}] within ${mantissa2} bits (nr equal mantissa bits is ${rc})`;
-                return {
-                    pass: false,
-                    message: () =>
-                        this.utils.matcherHint('toEqualFloatingPointBinary', typeR, typeE, options) + '\n\n' + errMsg,
-                };
-            }
+        const bpeR = received.BYTES_PER_ELEMENT || (hf ? 8 : 4);
+        const bpeE = expected.BYTES_PER_ELEMENT || (hf ? 8 : 4);
+        const bpe: 4 | 8 = Math.min(bpeE, bpeR) as 4 | 8;
+        let mantissa2: number = mantissa || (hf ? 52 : 23);
+        mantissa2 = Math.min(mantissa2, hf ? 52 : 23);
+        if (mantissa2 !== mantissa) {
+            errMsg += `Mantissa forced to ${mantissa2} bits`;
         }
-        // state: number[] x number
-
-        return {
-            pass: !this.isNot ? true : false,
-            message: () => '',
-        };
-    },
-    /* 
-     matcherHint
-     matcherErrorMessage 
-     replaceMatchedToAsymmetricMatcher
-     shouldPrintDiff
-
-
-
-            Now we do the real checks.
-            }
-            const options = {
-                comment: '< inequality check',
-                isNot: this.isNot,
-                promise: this.promise,
+        // if received = number promote to number[]
+        const rec = received.length ? received : [received];
+        // if expected = number promote to number[]
+        const exp = expected.length ? expected : [expected];
+        try {
+            const min = compareFP(rec, exp, bpe, mantissa2);
+            errMsg += `Received: [${toScalar(rec, typeR)}] should not be equal to Expected: [${toScalar(
+                exp,
+                typeE,
+            )}] within ${min} bits ${min > mantissa2 ? `(larger then specified ${mantissa2} bits)` : ''}`;
+            return {
+                pass: true,
+                message: () =>
+                    this.utils.matcherHint('toEqualFloatingPointBinary', typeR, typeE, options) + '\n\n' + errMsg,
             };
-            const message =
-                () => this.utils.matcherHint('toBeLowerThen', undefined, undefined, options) +
-                '\n\n' +
-                `Expected: should be bigger then ${this.utils.printExpected(ceiling)}\n` +
-                `Received: ${this.utils.printReceived(received)}`
-                :
-                () => `expected ${received} to be lower then ${ceiling}`;
-          */
+        } catch (err) {
+            const [rc, aIdx, bIdx, recv, expv] = err as number[];
+            if (rec.length > 1) {
+                errMsg += `Received:[${recv} at index ${aIdx}]`;
+            } else {
+                errMsg += `Received: [${toScalar(rec, typeR)}]`;
+            }
+            errMsg += ' is NOT equal to ';
+            if (exp.length > 1) {
+                errMsg += `Expected: [${expv} at index ${bIdx}]`;
+            } else {
+                errMsg += `Expected: [${toScalar(exp, typeE)}]`;
+            }
+            errMsg += ` within ${mantissa2} bits (nr equal mantissa bits is ${rc})`;
+            return {
+                pass: false,
+                message: () =>
+                    this.utils.matcherHint('toEqualFloatingPointBinary', typeR, typeE, options) + '\n\n' + errMsg,
+            };
+        }
+    },
 });

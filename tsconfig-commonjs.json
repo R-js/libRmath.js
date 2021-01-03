@@ -1,7 +1,7 @@
 {
     "extends": "./tsconfig.json",
     "include": [
-        //"src/lib/rng/knuth-taocp-2002",
+        "src/lib/rng/knuth-taocp-2002",
         "src/lib/rng/knuth-taocp/**/*.ts",
     ],
     "exclude":[

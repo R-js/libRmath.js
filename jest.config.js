@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 module.exports = {
     automock: false,
-    collectCoverage: false,
-    collectCoverageFrom: ['src/**/*'],
+    collectCoverage: true,
+    collectCoverageFrom: ['src/lib/rng/**/*'],
     coveragePathIgnorePatterns: ['node_modules', 'test', 'doc.ts'],
     coverageDirectory: 'coverage',
     coverageProvider: 'v8',
