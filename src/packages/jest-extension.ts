@@ -1,24 +1,21 @@
 export {};
 
-console.log('hello');
-
 declare global {
     namespace jest {
         interface Matchers<R> {
-            toEqualFloatingPointBinary(expected: any): R;
+            toEqualFloatingPointBinary(expected: any, mantissa?: number, cylce?: boolean, hf?: boolean): R;
         }
     }
 }
 
-type TypeOfResult =
+type NumberTypes = 'Float32Array' | 'Float64Array' | 'number' | 'number[]';
+
+type ObjectTypes =
+    | NumberTypes
     | 'null'
     | 'undefined'
-    | 'arr_32fp'
-    | 'arr_64fp'
     | 'arr_0'
-    | 'number'
-    | 'arr_number'
-    | 'arr_any'
+    | 'any[]'
     | 'string'
     | 'symbol'
     | 'function'
@@ -26,11 +23,13 @@ type TypeOfResult =
     | 'boolean'
     | 'object';
 
-function typeOf(o: any): TypeOfResult {
+type NumberExtended = NumberTypes | 'other';
+
+function typeOf(o: any): ObjectTypes {
     if (o === null) return 'null';
     if (o === undefined) return 'undefined';
-    if (o instanceof Float32Array) return 'arr_32fp';
-    if (o instanceof Float64Array) return 'arr_64fp';
+    if (o instanceof Float32Array) return 'Float32Array';
+    if (o instanceof Float64Array) return 'Float64Array';
     if (Array.isArray(o)) {
         if (o.length === 0) return 'arr_0';
         let i = 0;
@@ -40,175 +39,271 @@ function typeOf(o: any): TypeOfResult {
             }
         }
         if (i === o.length) {
-            return 'arr_number';
+            return 'number[]';
         }
-        return 'arr_any';
+        return 'any[]';
     }
     return typeof o;
 }
 
-function strategy(a: any, b: any): TypeOfResult;
-
-// v = (arr_32fp, arr_64fp, number, arr_any, arr_0, null, undefined, arr_number, other)
-
-// D = arr_32fp x arr_32fp, need to check length
-// F = arr_32fp x arr_64fp, unequal floating point bit sizes
-// G = arr_32fp x number, expected data is not an array
-// H = arr_32fp x arr_any, expected data cannot is not an array of type number
-// I = arr_32fp x arr_0, expected is an array of length 0
-// J = arr_32fp x null, expected is  not an array of type number or a Float32Array
-// K = arr_32fp x undefined, expected is of wrong data type [undefined]
-// L = arr_32fp x arr_number, upgrade expected to an arr_32fp, and check for length
-// M = arr_32fp x other, upgrade expected
-
-// N = arr_64fp x arr_32fp, unequal floating point bit sizes
-// O = arr_64fp x arr_64fp, need to check length
-// P = arr_64fp x number, expected data is not an array
-// Q = arr_64fp x arr_any, expected data cannot is not an array of type number
-// R = arr_64fp x arr_0, expected is an array of length 0
-// S = arr_64fp x null, expected [type] is not an array of type number or a Float64Array
-// T = arr_64fp x undefined, expected is of wrong data type [undefined]
-// U = arr_64fp x arr_number, upgrade expected to arr_64fp, check for length
-
-// V = number x arr_32fp, expected is an array not a scalar like received
-// W = number x arr_64fp, expected is an array not a scalar like received
-// X = number x number, compare using mantissa and type in options
-// Y = number x arr_any, expected data cannot is not a scalar of type number
-// Z = 
-const decisionMatrix = [
-   /*arr_32fp*/, 'DFGHI'
-]
-
-function strategy(a: any, b: any) {
-    const ta = typeOf(a);
-    const tb = typeOf(b);
-    if (ta === 'arr_32fp' && tb === 'arr_32fp') {
-        if (a.length === b.length) return 'arr_32fp';
-        throw [`unequal length, received has length:${a.length}, expected has length:${b.length}`, ta, tb];
+function meta(o: ObjectTypes): NumberExtended {
+    if (['Float32Array', 'Float64Array', 'number', 'number[]', 'arr_0'].includes(o)) {
+        return o as NumberExtended;
     }
-    if (ta === 'arr_64fp' && tb === 'arr_64fp') {
-        if (a.length === b.length) return 'arr_64fp';
-        throw [`unequal length, received has length:${a.length}, expected has length:${b.length}`, ta, tb];
-    }
-    if (ta === 'number' && tb === 'number') {
-        return 'number';
-    }
-    if (ta === 'arr_number' && tb === 'arr_number') {
-        if (a.length === b.length) {
-            return 'arr_number';
-        }
-        throw [`unequal length, received has length:${a.length}, expected has length:${b.length}`, ta, tb];
-    }
-    // incompatible
-    if (!['number', 'string', 'arr_32fp', 'arr_64fp', 'arr_number'].includes(ta)) {
-        throw ['receive is not of a type', ta, tb];
-    }
-    if (!['number', 'string', 'arr_32fp', 'arr_64fp', 'arr_number'].includes(tb)) {
-        throw ['expected is not of a type', ta, tb];
-    }
-    if ('arr_32fp', , 'arr_number'].includes(ta)) {
-        if (tb === 'arr_64fp') {
-            throw ['received and expected datatype unequal floating point types', ta, tb];
-        }
-        if (tb === 'arr_64fp') {
-            throw ['received and expected datatype unequal floating point types', ta, tb];
-        }
-    }
-    if (['arr_32fp', 'arr_64fp', 'arr_number'].includes(ta)) {
-    }
-    throw [`unusable types for floating point check`, ta, tb];
+    return 'other';
 }
 
-function humanizeType(ty: TypeOfResult): string {
-    let humanTxt: string = ty;
-    if (ty === 'arr_number') {
-        humanTxt = 'array of numbers';
-    } else if (ty === 'arr_32fp') {
-        humanTxt = 'Float32Array';
-    } else if (ty === 'arr_64fp') {
-        humanTxt = 'Float64Array';
-    } else if (ty == 'number') {
-        humanTxt = 'number';
-    } else if (ty == 'arr_0') {
-        humanTxt = 'array of length zero';
-    } else if (ty == 'arr_any') {
-        humanTxt = 'array of non number elements';
+function isNAN(dv1: DataView, bpe: number) {
+    if ((dv1.getUint8(0) & 0x7f) === 0x7f) {
+        for (let i = 1; i < bpe; i++) {
+            if (dv1.getUint8(i) !== 0) {
+                return false;
+            }
+        }
+        return true;
     }
-    return humanTxt;
+    return false;
+}
+
+function isZeroOrNegativeZero(dv1: DataView, bpe: number) {
+    if ((dv1.getUint8(0) & 0x7f) === 0) {
+        for (let i = 1; i < bpe; i++) {
+            if (dv1.getUint8(0) !== 0) {
+                return false;
+            }
+        }
+        return true;
+    }
+    return false;
+}
+
+// returns number of equal bits in the exponent (-1 if all are equal)
+function equalbits(dv1: DataView, dv2: DataView, bpe: 4 | 8): number {
+    // check if NaN/-NaN
+    if (isNAN(dv1, bpe) && isNAN(dv2, bpe)) {
+        return bpe * 8 - (bpe === 4 ? 9 : 12);
+    }
+    // account for -0 bit pattern
+    if (isZeroOrNegativeZero(dv1, bpe) && isZeroOrNegativeZero(dv2, bpe)) {
+        return bpe * 8 - (bpe === 4 ? 9 : 12);
+    }
+    for (let i = 0; i < bpe; i++) {
+        const b1 = dv1.getUint8(i);
+        const b2 = dv2.getUint8(i);
+        if (b1 === b2) {
+            continue;
+        }
+        const fl = b1 ^ b2;
+        for (let j = 7; j >= 0; j--) {
+            if ((fl & (1 << j)) !== 0) {
+                return Math.max(0, 7 - j + 8 * i - (bpe === 4 ? 9 : 12));
+            }
+        }
+        return Math.max(0, 8 + 8 * (i + 1) - (bpe === 4 ? 9 : 12));
+    }
+    return bpe * 8 - (bpe === 4 ? 9 : 12);
+}
+
+/**
+ *
+ * @param a {number} - received
+ * @param b {number} - expected
+ */
+type NumArray = Float32Array | Float64Array | number[];
+
+interface DataView2 extends DataView {
+    setFloat(offset: number, data: number): void;
+}
+
+function decorateDataView(dv: DataView, bpe: 4 | 8): DataView2 {
+    (dv as DataView2).setFloat = function (offset: number, data: number) {
+        if (bpe === 4) {
+            this.setFloat32(offset, data);
+            return;
+        }
+        this.setFloat64(offset, data);
+    };
+    return dv as DataView2;
+}
+
+function createFloatArray(bpe: number) {
+    if (bpe === 4) {
+        return new Float32Array(1);
+    }
+    return new Float64Array(1);
+}
+
+function compareFP(a: NumArray, b: NumArray, bpe: 4 | 8, mantissa: number) {
+    const afp = createFloatArray(bpe);
+    const bfp = createFloatArray(bpe);
+    const adv = decorateDataView(new DataView(afp.buffer), bpe);
+    const bdv = decorateDataView(new DataView(bfp.buffer), bpe);
+    const maxL = Math.max(a.length, b.length);
+    let minMantissa = 0;
+    for (let i = 0; i < maxL; i++) {
+        const aIdx = i % a.length;
+        const bIdx = i % b.length;
+        adv.setFloat(0, a[aIdx]);
+        bdv.setFloat(0, b[bIdx]);
+        const rc = equalbits(adv, bdv, bpe);
+        if (rc < mantissa) {
+            throw [rc, aIdx, bIdx, a[aIdx], b[bIdx]];
+        }
+        minMantissa = Math.min(rc, minMantissa || rc);
+    }
+    return minMantissa;
+}
+
+// 1.8 x 10**308 max of float64
+// 1.7 x 10**38  max of float32
+
+function toScalar(o: NumArray, alt: string) {
+    if (o.length === 1) {
+        return o[0];
+    }
+    return alt;
 }
 
 expect.extend({
-    toEqualFloatingPointBinary(received, expected) {
+    toEqualFloatingPointBinary(received, expected, mantissa = 23, cycle = true, hf = false) {
         const options = {
-            comment: 'data types not comparable',
             isNot: this.isNot,
             promise: this.promise,
+            comment: '',
         };
+        const typeR = typeOf(received);
+        const typeE = typeOf(expected);
+        const metaR = meta(typeR);
+        const metaE = meta(typeE);
+        //
+        let errMsg = '';
+        if (metaR === 'other') {
+            errMsg += `Received data type (${typeR}) is not of type: (number[], number, Float32Array, Float64Array) \n`;
+        }
+        //
+        if (metaE === 'other') {
+            errMsg += `Expected data type (${typeE}) is not of type: (number[], number, Float32Array, Float64Array) \n`;
+        }
+        // check1
+        if (errMsg) {
+            options.comment = 'unusable data type(s)';
+            return {
+                message: () =>
+                    this.utils.matcherHint('toEqualFloatingPointBinary', typeR, typeE, options) + '\n\n' + errMsg,
+                pass: this.isNot ? true : false,
+            };
+        }
+        // check 2
+        // number with array but array is empty
+        if (metaR === 'number' && metaE !== 'number' && expected.length === 0) {
+            options.comment = 'expected is empty data array';
+            errMsg = 'Expected is am empty array';
+            return {
+                message: () =>
+                    this.utils.matcherHint('toEqualFloatingPointBinary', typeR, typeE, options) + '\n\n' + errMsg,
+                pass: this.isNot ? true : false,
+            };
+        }
+        // check 3
+        // number with array, array is more then 1 element and cycle is turned off
+        if (metaR === 'number' && metaE !== 'number' && expected.length > 1 && cycle === false) {
+            options.comment = 'comparing scalar with array needs cycle = true option';
+            errMsg = 'Comparing received (scalar) with an array of length > 1';
+            return {
+                message: () =>
+                    this.utils.matcherHint('toEqualFloatingPointBinary', typeR, typeE, options) + '\n\n' + errMsg,
+                pass: this.isNot ? true : false,
+            };
+        }
+        // check 4 , mirror of check 2
+        // number with array, array is more then 1 element and cycle is turned off
+        if (metaE === 'number' && metaR !== 'number' && received.length === 0) {
+            options.comment = 'received is empty data array';
+            errMsg = 'Received is am empty array';
+            return {
+                message: () =>
+                    this.utils.matcherHint('toEqualFloatingPointBinary', typeR, typeE, options) + '\n\n' + errMsg,
+                pass: this.isNot ? true : false,
+            };
+        }
+        // check 5 , mirror of check 3
+        // number with array but array is empty
+        if (metaE === 'number' && metaR !== 'number' && received.length > 1 && cycle === false) {
+            options.comment = 'comparing scalar with array needs cycle = true option';
+            errMsg = 'Comparing received (array length > 1) with a Received (scalar)';
+            return {
+                message: () =>
+                    this.utils.matcherHint('toEqualFloatingPointBinary', typeR, typeE, options) + '\n\n' + errMsg,
+                pass: this.isNot ? true : false,
+            };
+        }
+        // check 6 , 2 empty arrays are always equal
+        if (metaE !== 'number' && metaR !== 'number' && received.length === 0 && expected.length === 0) {
+            errMsg = 'Received and expected are equal (both empty arrays)';
+            return {
+                pass: true,
+                message: () =>
+                    this.utils.matcherHint('toEqualFloatingPointBinary', '[]', '[]', options) + '\n\n' + errMsg,
+            };
+        }
+        // check 7: if one of the arrays is empty thats an error
+        if (received.length === 0 || expected.length === 0) {
+            errMsg = received.length === 0 ? 'Received is an empty array' : 'Expected is an empty array';
+            return {
+                pass: this.isNot ? true : false,
+                message: () =>
+                    this.utils.matcherHint(
+                        'toEqualFloatingPointBinary',
+                        received.length === 0 ? '[]' : typeR,
+                        expected.length === 0 ? '[]' : typeE,
+                        options,
+                    ) +
+                    '\n\n' +
+                    errMsg,
+            };
+        }
+        const bpeR = received.BYTES_PER_ELEMENT || (hf ? 8 : 4);
+        const bpeE = expected.BYTES_PER_ELEMENT || (hf ? 8 : 4);
+        const bpe: 4 | 8 = Math.min(bpeE, bpeR) as 4 | 8;
+        let mantissa2: number = mantissa || (hf ? 52 : 23);
+        mantissa2 = Math.min(mantissa2, hf ? 52 : 23);
+        if (mantissa2 !== mantissa) {
+            errMsg += `Mantissa forced to ${mantissa2} bits`;
+        }
+        // if received = number promote to number[]
+        const rec = received.length ? received : [received];
+        // if expected = number promote to number[]
+        const exp = expected.length ? expected : [expected];
         try {
-            const rc: TypeOfResult = strategy(received, expected);
+            const min = compareFP(rec, exp, bpe, mantissa2);
+            errMsg += `Received: [${toScalar(rec, typeR)}] should not be equal to Expected: [${toScalar(
+                exp,
+                typeE,
+            )}] within ${min} bits ${min > mantissa2 ? `(larger then specified ${mantissa2} bits)` : ''}`;
+            return {
+                pass: true,
+                message: () =>
+                    this.utils.matcherHint('toEqualFloatingPointBinary', typeR, typeE, options) + '\n\n' + errMsg,
+            };
         } catch (err) {
-            const [errTxt, ta, tb] = err;
-            const humanA = humanizeType(ta);
-            const humanB = humanizeType(tb);
-            const message = () =>
-                this.utils.matcherHint('toEqualFloatingPointBinary', undefined, undefined, options) +
-                '\n\n' +
-                `Expected: type [${humanB}] is not usable equal type/length as received\n` +
-                `Received: type [${humanA}] is not of equal type/length as expected`;
-            return {
-                message,
-                pass: this.isNot ? true : false,
-            };
-        }
-        let pass = 0;
-        if (Array.isArray(received) && Array.isArray(expected) && expected.length == received.length) {
-            pass = 1;
-        } else if (typeof received === 'number' && typeof expected === 'number') {
-            pass = 2;
-        } else if (
-            received instanceof Float32Array &&
-            expected instanceof Float32Array &&
-            received.length === expected.length
-        ) {
-            pass = 3;
-        } else if (
-            received instanceof Float64Array &&
-            expected instanceof Float64Array &&
-            received.length === expected.length
-        ) {
-            pass = 4;
-        }
-
-        if (pass === 0) {
-            const message = () =>
-                this.utils.matcherHint('matchFloatingPointBinary', undefined, undefined, options) +
-                '\n\n' +
-                `Expected: [type] is not of equal type/length as received\n` +
-                `Received: [type] is not of equal type/length as expected`;
-            return {
-                message,
-                pass: this.isNot ? true : false,
-            };
-        }
-        return {
-            pass: true,
-            message: () => '',
-        };
-    },
-    /* 
-            Now we do the real checks.
+            const [rc, aIdx, bIdx, recv, expv] = err as number[];
+            if (rec.length > 1) {
+                errMsg += `Received:[${recv} at index ${aIdx}]`;
+            } else {
+                errMsg += `Received: [${toScalar(rec, typeR)}]`;
             }
-            const options = {
-                comment: '< inequality check',
-                isNot: this.isNot,
-                promise: this.promise,
+            errMsg += ' is NOT equal to ';
+            if (exp.length > 1) {
+                errMsg += `Expected: [${expv} at index ${bIdx}]`;
+            } else {
+                errMsg += `Expected: [${toScalar(exp, typeE)}]`;
+            }
+            errMsg += ` within ${mantissa2} bits (nr equal mantissa bits is ${rc})`;
+            return {
+                pass: false,
+                message: () =>
+                    this.utils.matcherHint('toEqualFloatingPointBinary', typeR, typeE, options) + '\n\n' + errMsg,
             };
-            const message =
-                () => this.utils.matcherHint('toBeLowerThen', undefined, undefined, options) +
-                '\n\n' +
-                `Expected: should be bigger then ${this.utils.printExpected(ceiling)}\n` +
-                `Received: ${this.utils.printReceived(received)}`
-                :
-                () => `expected ${received} to be lower then ${ceiling}`;
-          */
+        }
+    },
 });

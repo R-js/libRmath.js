@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 /* This is a conversion from libRmath.so to Typescript/Javascript
 Copyright (C) 2018  Jacob K.F. Bogers  info@mail.jacob-bogers.com
 
@@ -33,7 +33,6 @@ const randomBytes = (n) => ({
 */
 import { randomBytes } from 'crypto';
 
-
 export function seed() {
-  return randomBytes(4).readUInt32BE(0)
+    return randomBytes(4).readUInt32BE(0);
 }

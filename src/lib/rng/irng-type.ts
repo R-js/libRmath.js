@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 /* This is a conversion from libRmath.so to Typescript/Javascript
 Copyright (C) 2018  Jacob K.F. Bogers  info@mail.jacob-bogers.com
 
@@ -18,10 +18,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 export enum IRNGTypeEnum {
     WICHMANN_HILL = 'WICHMANN_HILL',
     MARSAGLIA_MULTICARRY = 'MARSAGLIA_MULTICARRY',
-    SUPER_DUPER ='SUPER_DUPER',
+    SUPER_DUPER = 'SUPER_DUPER',
     MERSENNE_TWISTER = 'MERSENNE_TWISTER',
     KNUTH_TAOCP = 'KNUTH_TAOCP',
     KNUTH_TAOCP2002 = 'KNUTH_TAOCP2002',
-    LECUYER_CMRG = 'KNUTH_TAOCP2002'
+    LECUYER_CMRG = 'LECUYER_CMRG',
 }
-
