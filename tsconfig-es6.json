@@ -5,6 +5,7 @@
         "src/lib/rng/knuth-taocp/",
         "src/lib/rng/lecuyer-cmrg/",
         "src/lib/rng/marsaglia-multicarry/",
+        "src/lib/rng/mersenne-twister/",
     ],
     "exclude":[
         "**/__test__"
