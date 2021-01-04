@@ -43,57 +43,6 @@ function is_odd(x: number): boolean {
 }
 
 export class KnuthTAOCP2002 extends IRNG {
-  //
-  //
-  private qualityBuffer: ArrayBuffer;
-  private ran_arr_buf: Uint32Array;
-  //
-  //
-
-  private m_seed: Uint32Array;
-  private ran_x: Uint32Array;
-
-  private get KT_pos() {
-    return this.m_seed[100];
-  }
-
-  private set KT_pos(v: number) {
-    this.m_seed[100] = v;
-  }
-
-  private ran_array(
-    aa: Uint32Array,
-    n: number /* put n new random numbers in aa */
-  ) {
-    let i: number;
-    let j: number;
-    if (!aa.length){
-      return
-    }
-    
-    for (j = 0; j < KK; j++) {
-      aa[j] = this.ran_x[j];
-    }
-    for (; j < n; j++) {
-      aa[j] = mod_diff(aa[j - KK], aa[j - LL]);
-    }
-    for (i = 0; i < LL; i++, j++) {
-      this.ran_x[i] = mod_diff(aa[j - KK], aa[j - LL]);
-    }
-    for (; i < KK; i++, j++) {
-      this.ran_x[i] = mod_diff(aa[j - KK], this.ran_x[i - LL]);
-    }
-  }
-
-  private ran_arr_cycle() {
-    this.ran_array(this.ran_arr_buf, QUALITY);
-    this.ran_arr_buf[KK] = -1;
-  }
-
-  private ran_start(_seed: number) {
-    //
-    let t: number;
-    let j: number;
     //
     //
     private qualityBuffer: ArrayBuffer;
@@ -217,7 +166,8 @@ export class KnuthTAOCP2002 extends IRNG {
         this.init(_seed);
     }
 
-    internal_unif_rand(): number {
+    // called by super.random()
+    protected internal_unif_rand(): number {
         const KT = 9.31322574615479e-10;
         return fixup(this.KT_next() * KT);
     }

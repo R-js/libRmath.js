@@ -54,8 +54,8 @@ export abstract class IRNG {
         return this.internal_unif_rand();
     }
 
-    public abstract get seed(): Uint32Array;
-    public abstract set seed(_seed: Uint32Array);
+    public abstract get seed(): Uint32Array | Int32Array;
+    public abstract set seed(_seed: Uint32Array | Int32Array);
 
     public init(seed: number): void {
         this.emit(MessageType.INIT, seed);
