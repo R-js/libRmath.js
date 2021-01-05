@@ -2,12 +2,42 @@ const rollup = require('rollup');
 const { terser } = require('rollup-plugin-terser');
 const { nodeResolve } = require('@rollup/plugin-node-resolve');
 
+function cryptoTranslate() {
+    const cryptoStub = `export function randomBytes(n) {
+        return {
+            readUInt32BE(offset = 0) {
+                if (n - offset < 4) {
+                    throw new RangeError('[ERR_BUFFER_OUT_OF_BOUNDS]: Attempt to write outside buffer bounds');
+                }
+                const sampler = new Uint8Array(n);
+                globalThis.crypto.getRandomValues(sampler);
+                const dv = new DataView(sampler.buffer);
+                return dv.getUint32(offset, false);
+            },
+        };
+    }`;
+    return {
+        name: 'nodejs crypto stubbing for browser',
+        async resolveId(source) {
+            if (source === 'crypto') {
+                return source;
+            }
+            return null;
+        },
+        async load(id) {
+            if (id === 'crypto') {
+                return cryptoStub;
+            }
+            return null;
+        },
+    };
+}
 // see below for details on the options
 const inputOptions = {
     input: {
-        'lib-r-math': 'es6/lib/index.js',
+        'lib-r-math': 'es6/lib/rng/index.js',
     },
-    plugins: [nodeResolve()],
+    plugins: [cryptoTranslate(), nodeResolve()],
 };
 
 const outputOptions = {

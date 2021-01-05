@@ -1,7 +1,7 @@
 import { MersenneTwister } from '../';
-import { samples100fromSeed1234, seedStateAfterSeed1234, sample10fromSeed0 } from './fixture';
+import { samples100fromSeed1234, seedStateAfterSeed1234 } from './fixture';
 import '$jest-extension';
-sample10fromSeed0;
+
 describe('rng mersenne-twister', function () {
     it('compare 100 samples seed=0', () => {
         const mt = new MersenneTwister();
@@ -16,7 +16,7 @@ describe('rng mersenne-twister', function () {
     });
     it('restore seed should generate same sequence of randoms', () => {
         const mt = new MersenneTwister(7895);
-        const seed0 = mt.seed.slice(); // copy
+        const seed0 = mt.seed; // copy
         const var1 = mt.random();
         // bleed 100 randoms
         mt.randoms(100);
@@ -24,8 +24,13 @@ describe('rng mersenne-twister', function () {
         const var2 = mt.random();
         expect(var1).toBe(var2);
     });
-    it('check state vars',()=>{
+    it('check state vars', () => {
         const mt = new MersenneTwister(7895);
-        console.log(mt.name);
-    }
+        expect(mt.name).toBe('Mersenne-Twister');
+        expect(mt.kind).toBe('MERSENNE_TWISTER');
+        expect(() => (mt.seed = new Int32Array(6))).toThrow(
+            'the seed is not an array of proper size for rng MERSENNE_TWISTER',
+        );
+        expect(() => (mt.seed = new Int32Array(625))).not.toThrow();
+    });
 });

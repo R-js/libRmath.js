@@ -189,6 +189,6 @@ export class KnuthTAOCP2002 extends IRNG {
     }
 
     public get seed(): Uint32Array {
-        return this.m_seed;
+        return this.m_seed.slice();
     }
 }

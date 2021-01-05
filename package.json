@@ -91,8 +91,9 @@
         "url": "git+https://github.com/R-js/libRmath.js.git"
     },
     "scripts": {
-        "prebuild": "cross-env rm -rf *.tsbuildinfo es6 commonjs",
+        "prebuild": "cross-env rm -rf *.tsbuildinfo es6 commonjs browser",
         "build": "tsc -p tsconfig-es6.json && tsc -p tsconfig-commonjs.json",
+        "postbuild": "node build.rollup.js",
         "prepublush": "npm run build",
         "lint": "eslint \"src/**/*.ts\"",
         "lint:fix": "eslint 'src/**/*.ts' --fix",
