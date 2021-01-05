@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 /* This is a conversion from libRmath.so to Typescript/Javascript
 Copyright (C) 2018  Jacob K.F. Bogers  info@mail.jacob-bogers.com
 
@@ -26,34 +26,32 @@ const DBL_MIN = 2.22507e-308;
 const M_PI = 3.14159265358979323846264338327950288;
 
 export class BoxMuller extends IRNGNormal {
-  private BM_norm_keep: number;
+    private BM_norm_keep: number;
 
-  private reset() {
-    this.BM_norm_keep = 0;
-  }
-
-  constructor(_rng: IRNG = new MersenneTwister(0) ) {
-    super(_rng);
-    this.BM_norm_keep = 0;
-    _rng.register(MessageType.INIT, this.reset.bind(this));
-  }
-
-  public internal_norm_rand() {
-    let s = 0.0;
-    let theta = 0;
-
-    if (this.BM_norm_keep !== 0.0) {
-      /* An exact test is intentional */
-      s = this.BM_norm_keep;
-      this.BM_norm_keep = 0.0;
-      return s;
-    } else {
-      theta = 2 * M_PI * (this.rng.random());
-      let R =
-        sqrt(-2 * log(this.rng.random())) +
-        10 * DBL_MIN; /* ensure non-zero */
-      this.BM_norm_keep = R * sin(theta);
-      return R * cos(theta);
+    private reset() {
+        this.BM_norm_keep = 0;
     }
-  }
+
+    constructor(_rng: IRNG = new MersenneTwister(0)) {
+        super(_rng);
+        this.BM_norm_keep = 0;
+        _rng.register(MessageType.INIT, this.reset.bind(this));
+    }
+
+    public internal_norm_rand() {
+        let s = 0.0;
+        let theta = 0;
+
+        if (this.BM_norm_keep !== 0.0) {
+            /* An exact test is intentional */
+            s = this.BM_norm_keep;
+            this.BM_norm_keep = 0.0;
+            return s;
+        } else {
+            theta = 2 * M_PI * this.rng.random();
+            const R = sqrt(-2 * log(this.rng.random())) + 10 * DBL_MIN; /* ensure non-zero */
+            this.BM_norm_keep = R * sin(theta);
+            return R * cos(theta);
+        }
+    }
 }
