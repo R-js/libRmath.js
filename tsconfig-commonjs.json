@@ -1,13 +1,11 @@
 {
     "extends": "./tsconfig.json",
     "include": [
-        "src/lib/rng/knuth-taocp-2002/",
-        "src/lib/rng/knuth-taocp/",
-        "src/lib/rng/lecuyer-cmrg/",
-        "src/lib/rng/marsaglia-multicarry/",
+        "src/lib/rng/**/*.ts"
     ],
     "exclude":[
-        "**/__test__"
+        "**/__test__",
+        "src/lib/rng/normal/**/*.ts"
     ],
     "compilerOptions": {
         "noEmit": false,
