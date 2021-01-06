@@ -21,7 +21,7 @@ import { ML_ERR_return_NAN } from '../common/_general';
 import { rgammaOne } from '../gamma/rgamma';
 import { rpoisOne } from '../poisson/rpois';
 import { randomGenHelper } from '../r-func'
-import { IRNGNormal } from '../rng/normal/inormal-rng';
+import { IRNGNormal } from '../rng/normal/normal-rng';
 
 const { isFinite: R_FINITE } = Number;
 

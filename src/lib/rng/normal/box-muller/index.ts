@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { IRNGNormalTypeEnum } from '../in01-type';
-import { MessageType, IRNG } from '../../irng';
+import { IRNG } from '../../irng';
 import { MersenneTwister } from '../../mersenne-twister';
 import { IRNGNormal } from '../normal-rng';
 
@@ -34,8 +34,7 @@ export class BoxMuller extends IRNGNormal {
 
     constructor(_rng: IRNG = new MersenneTwister(0)) {
         super(_rng, 'Box-Muller', IRNGNormalTypeEnum.BOX_MULLER);
-        this.BM_norm_keep = 0;
-        _rng.register(MessageType.INIT, this.reset.bind(this));
+        this.BM_norm_keep = 0; // not needed but tsc will give problems
     }
 
     public internal_norm_rand() {

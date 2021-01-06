@@ -15,9 +15,9 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { IRNG } from '../';
-import { MersenneTwister } from '../mersenne-twister';
-import { IRNGNormal } from './inormal-rng';
+import { IRNG } from '../..';
+import { MersenneTwister } from '../../mersenne-twister';
+import { IRNGNormal } from '../normal-rng';
 
 const { log, sqrt, min: fmin2, max: fmax2, abs: fabs, exp } = Math;
 

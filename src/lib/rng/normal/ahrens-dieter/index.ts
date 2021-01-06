@@ -15,10 +15,10 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { IRNG } from '../irng';
-import { MersenneTwister } from '../mersenne-twister';
-import { IRNGNormal } from './normal-rng';
-import { IN01Type } from './in01-type';
+import { IRNG } from '../../irng';
+import { MersenneTwister } from '../../mersenne-twister';
+import { IRNGNormal } from '../normal-rng';
+import { IRNGNormalTypeEnum } from '../in01-type';
 
 const a = [
     0.0,
@@ -159,7 +159,7 @@ const h = [
 
 export class AhrensDieter extends IRNGNormal {
     constructor(_rng: IRNG = new MersenneTwister(0)) {
-        super(_rng, 'AhrensDieter', IN01Type.AHRENS_DIETER);
+        super(_rng, 'AhrensDieter', IRNGNormalTypeEnum.AHRENS_DIETER);
     }
 
     protected reset() {
