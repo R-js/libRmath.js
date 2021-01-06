@@ -17,32 +17,23 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import { ML_ERR_return_NAN } from '../common/_general';
 
-import * as debug from 'debug';
-import { randomGenHelper } from '../r-func'
+import { debug } from 'debug';
+import { randomGenHelper } from '../r-func';
 import { IRNG } from '../rng/irng';
 import { exp_rand } from './sexp';
 
 const { isFinite: R_FINITE } = Number;
 const printer = debug('rexp');
 
-
-export function rexp(
-  n: number | number[],
-  scale: number,
-  rng: IRNG
-): number[] {
-  return randomGenHelper(n, rexpOne, scale, rng);
+export function rexp(n: number | number[], scale: number, rng: IRNG): number[] {
+    return randomGenHelper(n, rexpOne, scale, rng);
 }
 
-export function rexpOne(
-  scale: number = 1,
-  rng: IRNG
-): number | number[] {
-
+export function rexpOne(scale = 1, rng: IRNG): number | number[] {
     if (!R_FINITE(scale) || scale <= 0.0) {
-      if (scale === 0) return 0;
-      /* else */
-      return ML_ERR_return_NAN(printer);
+        if (scale === 0) return 0;
+        /* else */
+        return ML_ERR_return_NAN(printer);
     }
     return scale * exp_rand(rng.internal_unif_rand); // --> in ./sexp.c
 }

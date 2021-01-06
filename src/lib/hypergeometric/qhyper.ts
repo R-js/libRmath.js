@@ -14,7 +14,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-import * as debug from 'debug';
+import { debug } from 'debug';
 import { ML_ERR_return_NAN, R_Q_P01_boundaries } from '../common/_general';
 import { lfastchoose } from '../common/choose';
 import { R_DT_qIv } from '../exp/expm1';
@@ -24,15 +24,7 @@ const { isNaN: ISNAN, isFinite: R_FINITE, EPSILON: DBL_EPSILON } = Number;
 
 const printer_qhyper = debug('qhyper');
 
-export function qhyper(
-  p: number,
-  nr: number,
-  nb: number,
-  n: number,
-  lowerTail: boolean = true,
-  logP: boolean = false
-): number {
-
+export function qhyper(p: number, nr: number, nb: number, n: number, lowerTail = true, logP = false): number {
     /* This is basically the same code as  ./phyper.c  *used* to be --> FIXME! */
     let N;
     let xstart;
@@ -45,15 +37,13 @@ export function qhyper(
 
     if (ISNAN(p) || ISNAN(nr) || ISNAN(nb) || ISNAN(n)) return NaN;
 
-    if (/*!R_FINITE(p) ||*/ !R_FINITE(nr) || !R_FINITE(nb) || !R_FINITE(n))
-      return ML_ERR_return_NAN(printer_qhyper);
+    if (/*!R_FINITE(p) ||*/ !R_FINITE(nr) || !R_FINITE(nb) || !R_FINITE(n)) return ML_ERR_return_NAN(printer_qhyper);
 
     let NR = R_forceint(nr);
     let NB = R_forceint(nb);
     N = NR + NB;
     n = R_forceint(n);
-    if (NR < 0 || NB < 0 || n < 0 || n > N)
-      return ML_ERR_return_NAN(printer_qhyper);
+    if (NR < 0 || NB < 0 || n < 0 || n > N) return ML_ERR_return_NAN(printer_qhyper);
 
     /* Goal:  Find  xr (= #{red balls in sample}) such that
      *   phyper(xr,  NR,NB, n) >= p > phyper(xr - 1,  NR,NB, n)
@@ -62,9 +52,9 @@ export function qhyper(
     xstart = fmax2(0, n - NB);
     xend = fmin2(n, NR);
 
-    let rc = R_Q_P01_boundaries(lowerTail, logP, p, xstart, xend);
+    const rc = R_Q_P01_boundaries(lowerTail, logP, p, xstart, xend);
     if (rc !== undefined) {
-      return rc;
+        return rc;
     }
     xr = xstart;
     xb = n - xr; /* always ( = #{black balls in sample} ) */
@@ -78,19 +68,19 @@ export function qhyper(
     NB -= xb;
 
     if (!lowerTail || logP) {
-      p = R_DT_qIv(lowerTail, logP, p);
+        p = R_DT_qIv(lowerTail, logP, p);
     }
     p *= 1 - 1000 * DBL_EPSILON; /* was 64, but failed on FreeBSD sometimes */
     sum = small_N ? term : exp(term);
 
     while (sum < p && xr < xend) {
-      xr++;
-      NB++;
-      if (small_N) term *= NR / xr * (xb / NB);
-      else term += log(NR / xr * (xb / NB));
-      sum += small_N ? term : exp(term);
-      xb--;
-      NR--;
+        xr++;
+        NB++;
+        if (small_N) term *= (NR / xr) * (xb / NB);
+        else term += log((NR / xr) * (xb / NB));
+        sum += small_N ? term : exp(term);
+        xb--;
+        NR--;
     }
-    return xr
+    return xr;
 }

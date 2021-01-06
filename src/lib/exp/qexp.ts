@@ -14,7 +14,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-import * as debug from 'debug';
+import { debug } from 'debug';
 import { ML_ERR_return_NAN, R_DT_0, R_Q_P01_check } from '../common/_general';
 
 import { R_DT_Clog } from './expm1';
@@ -23,14 +23,13 @@ const { isNaN: ISNAN } = Number;
 const printer = debug('qexp');
 
 export function qexp(p: number, scale: number, lower_tail: boolean, log_p: boolean): number {
-  
     if (ISNAN(p) || ISNAN(scale)) return p + scale;
 
     if (scale < 0) return ML_ERR_return_NAN(printer);
 
-    let rc = R_Q_P01_check(log_p, p);
+    const rc = R_Q_P01_check(log_p, p);
     if (rc !== undefined) {
-      return rc;
+        return rc;
     }
     if (p === R_DT_0(lower_tail, log_p)) return 0;
 

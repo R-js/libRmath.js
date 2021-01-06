@@ -15,9 +15,17 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import * as debug from 'debug';
+import { debug  } from 'debug';
 import { Rf_gamma_cody } from '../../gamma/gamma_cody';
-import { enmten_BESS, ensig_BESS, enten_BESS, exparg_BESS, nsig_BESS, rtnsig_BESS, xlrg_BESS_IJ } from '../bessel-constants';
+import {
+    enmten_BESS,
+    ensig_BESS,
+    enten_BESS,
+    exparg_BESS,
+    nsig_BESS,
+    rtnsig_BESS,
+    xlrg_BESS_IJ,
+} from '../bessel-constants';
 import { IBesselRC } from '../IBesselRC';
 
 const { sqrt, pow, min, max: fmax, exp, trunc } = Math;
@@ -25,12 +33,7 @@ const { POSITIVE_INFINITY: ML_POSINF } = Number;
 
 const printer = debug('I_bessel');
 
-export function I_bessel(
-    x: number,
-    alpha: number,
-    nb: number,
-    ize: number
-): IBesselRC {
+export function I_bessel(x: number, alpha: number, nb: number, ize: number): IBesselRC {
     /* -------------------------------------------------------------------
  
      This routine calculates Bessel functions I_(N+ALPHA) (X)
@@ -159,7 +162,7 @@ export function I_bessel(
 
     //int
     let ncalc = nb;
-    let bi2 = new Array<number>(nb).fill(0);
+    const bi2 = new Array<number>(nb).fill(0);
     /*Parameter adjustments */
     //--bi;
     nu = alpha;
@@ -168,9 +171,7 @@ export function I_bessel(
     /*-------------------------------------------------------------------
       Check for X, NB, OR IZE out of range.
       ------------------------------------------------------------------- */
-    if (nb > 0 && x >= 0. && (0. <= nu && nu < 1.) &&
-        (1 <= ize && ize <= 2)) {
-
+    if (nb > 0 && x >= 0 && 0 <= nu && nu < 1 && 1 <= ize && ize <= 2) {
         ncalc = nb;
         if (ize === 1 && x > exparg_BESS) {
             //for (k = 1; k <= nb; k++)
@@ -180,17 +181,18 @@ export function I_bessel(
         if (ize === 2 && x > xlrg_BESS_IJ) {
             //for (k = 1; k <= nb; k++)
             //	bi2[k-1] = 0.; /* The limit exp(-x) * I_nu(x) --> 0 : */
-            return { x: 0., nb, ncalc };
+            return { x: 0, nb, ncalc };
         }
         intx = trunc(x); /* fine, since x <= xlrg_BESS_IJ <<< LONG_MAX */
-        if (x >= rtnsig_BESS) { /* "non-small" x ( >= 1e-4 ) */
+        if (x >= rtnsig_BESS) {
+            /* "non-small" x ( >= 1e-4 ) */
             /* -------------------------------------------------------------------
                Initialize the forward sweep, the P-sequence of Olver
                ------------------------------------------------------------------- */
             nbmx = nb - intx;
             n = intx + 1;
-            en = (n + n) + twonu;
-            plast = 1.;
+            en = n + n + twonu;
+            plast = 1;
             p = en / x;
             /* ------------------------------------------------
                Calculate general significance test
@@ -198,11 +200,10 @@ export function I_bessel(
             test = ensig_BESS + ensig_BESS;
             if (intx * 2 > nsig_BESS * 5) {
                 test = sqrt(test * p);
-            }
-            else {
+            } else {
                 test /= pow(const__, intx);
             }
-            let gotoL120: boolean = false;
+            let gotoL120 = false;
             if (nbmx >= 3) {
                 /* --------------------------------------------------
                    Calculate P-sequence until N = NB-1
@@ -213,10 +214,10 @@ export function I_bessel(
                 nend = nb - 1;
                 for (k = nstart; k <= nend; ++k) {
                     n = k;
-                    en += 2.;
+                    en += 2;
                     pold = plast;
                     plast = p;
-                    p = en * plast / x + pold;
+                    p = (en * plast) / x + pold;
                     if (p > tover) {
                         /* ------------------------------------------------
                            To avoid overflow, divide P-sequence by TOVER.
@@ -230,28 +231,28 @@ export function I_bessel(
                         nstart = n + 1;
                         do {
                             ++n;
-                            en += 2.;
+                            en += 2;
                             pold = plast;
                             plast = p;
-                            p = en * plast / x + pold;
-                        } while (p <= 1.);
+                            p = (en * plast) / x + pold;
+                        } while (p <= 1);
 
                         bb = en / x;
                         /* ------------------------------------------------
                            Calculate backward test, and find NCALC,
                            the highest N such that the test is passed.
                            ------------------------------------------------ */
-                        test = pold * plast / ensig_BESS;
-                        test *= .5 - .5 / (bb * bb);
+                        test = (pold * plast) / ensig_BESS;
+                        test *= 0.5 - 0.5 / (bb * bb);
                         p = plast * tover;
                         --n;
-                        en -= 2.;
+                        en -= 2;
                         nend = min(nb, n);
                         for (l = nstart; l <= nend; ++l) {
                             ncalc = l - 1;
                             pold = psavel;
                             psavel = psave;
-                            psave = en * psavel / x + pold;
+                            psave = (en * psavel) / x + pold;
                             if (psave * psavel > test) {
                                 break;
                             }
@@ -259,27 +260,27 @@ export function I_bessel(
                         }
                         gotoL120 = true;
                         break;
-                    }//if
-                }//for
+                    } //if
+                } //for
                 if (gotoL120 === false) {
                     n = nend;
-                    en = (n + n) + twonu;
+                    en = n + n + twonu;
                     /*---------------------------------------------------
                       Calculate special significance test for NBMX > 2.
                       --------------------------------------------------- */
                     test = fmax(test, sqrt(plast * ensig_BESS) * sqrt(p + p));
                 }
-            }//if
+            } //if
             /* --------------------------------------------------------
                Calculate P-sequence until significance test passed.
                -------------------------------------------------------- */
             if (gotoL120 === false) {
                 do {
                     ++n;
-                    en += 2.;
+                    en += 2;
                     pold = plast;
                     plast = p;
-                    p = en * plast / x + pold;
+                    p = (en * plast) / x + pold;
                 } while (p < test);
             }
 
@@ -288,13 +289,13 @@ export function I_bessel(
              Initialize the backward recursion and the normalization sum.
              ------------------------------------------------------------------- */
             ++n;
-            en += 2.;
-            bb = 0.;
-            aa = 1. / p;
-            em = n - 1.;
+            en += 2;
+            bb = 0;
+            aa = 1 / p;
+            em = n - 1;
             empal = em + nu;
-            emp2al = em - 1. + twonu;
-            sum = aa * empal * emp2al / em;
+            emp2al = em - 1 + twonu;
+            sum = (aa * empal * emp2al) / em;
             nend = n - nb;
             let gotoL230 = false;
             //let gotoL220 = false; //for doc purpose, because L220 follows the for loop immediatly
@@ -307,10 +308,9 @@ export function I_bessel(
                     bi2[n - 1] = aa;
                     nend = -nend;
                     for (l = 1; l <= nend; ++l) {
-                        bi2[n + l - 1] = 0.;
+                        bi2[n + l - 1] = 0;
                     }
-                }
-                else {
+                } else {
                     if (nend > 0) {
                         /* -----------------------------------------------------
                            Recur backward via difference equation,
@@ -319,7 +319,7 @@ export function I_bessel(
 
                         for (l = 1; l <= nend; ++l) {
                             --n;
-                            en -= 2.;
+                            en -= 2;
                             cc = bb;
                             bb = aa;
                             /* for x ~= 1500,  sum would overflow to 'inf' here,
@@ -327,22 +327,22 @@ export function I_bessel(
                              * RE-normalize (aa, sum) here -- no need to undo */
                             if (nend > 100 && aa > 1e200) {
                                 /* multiply by  2^-900 = 1.18e-271 */
-                                let pow05_to_900 = pow(2, -900);
+                                const pow05_to_900 = pow(2, -900);
                                 cc = cc * pow05_to_900;
                                 bb = bb * pow05_to_900;
                                 sum = sum * pow05_to_900;
                             }
-                            aa = en * bb / x + cc;
-                            em -= 1.;
-                            emp2al -= 1.;
+                            aa = (en * bb) / x + cc;
+                            em -= 1;
+                            emp2al -= 1;
                             if (n === 1) {
                                 break;
                             }
                             if (n === 2) {
-                                emp2al = 1.;
+                                emp2al = 1;
                             }
-                            empal -= 1.;
-                            sum = (sum + aa * empal) * emp2al / em;
+                            empal -= 1;
+                            sum = ((sum + aa * empal) * emp2al) / em;
                         }
                     }
                     /* ---------------------------------------------------
@@ -358,21 +358,19 @@ export function I_bessel(
                        Calculate and Store BI[NB-1]
                        ------------------------------------------------- */
                     --n;
-                    en -= 2.;
-                    bi2[n - 1] = en * aa / x + bb;
+                    en -= 2;
+                    bi2[n - 1] = (en * aa) / x + bb;
                     if (n === 1) {
                         //gotoL220 = true;
                         break; //for loop used to skip over rest of code and simualte "goto"
                     }
-                    em -= 1.;
-                    if (n === 2)
-                        emp2al = 1.;
-                    else
-                        emp2al -= 1.;
+                    em -= 1;
+                    if (n === 2) emp2al = 1;
+                    else emp2al -= 1;
 
-                    empal -= 1.;
-                    sum = (sum + bi2[n - 1] * empal) * emp2al / em;
-                }// if else
+                    empal -= 1;
+                    sum = ((sum + bi2[n - 1] * empal) * emp2al) / em;
+                } // if else
                 nend = n - 2;
                 if (nend > 0) {
                     /* --------------------------------------------
@@ -381,22 +379,20 @@ export function I_bessel(
                        ------------------------------------------ */
                     for (l = 1; l <= nend; ++l) {
                         --n;
-                        en -= 2.;
-                        bi2[n - 1] = en * bi2[n] / x + bi2[n + 1];
-                        em -= 1.;
-                        if (n === 2)
-                            emp2al = 1.;
-                        else
-                            emp2al -= 1.;
-                        empal -= 1.;
-                        sum = (sum + bi2[n - 1] * empal) * emp2al / em;
-                    }//for
-                }//if
+                        en -= 2;
+                        bi2[n - 1] = (en * bi2[n]) / x + bi2[n + 1];
+                        em -= 1;
+                        if (n === 2) emp2al = 1;
+                        else emp2al -= 1;
+                        empal -= 1;
+                        sum = ((sum + bi2[n - 1] * empal) * emp2al) / em;
+                    } //for
+                } //if
                 /* ----------------------------------------------
                    Calculate BI[1]
                    -------------------------------------------- */
-                bi2[0] = 2. * empal * bi2[1] / x + bi2[2];
-            }//for loop for "goto" simulation
+                bi2[0] = (2 * empal * bi2[1]) / x + bi2[2];
+            } //for loop for "goto" simulation
 
             //L220:
             if (gotoL230 === false) {
@@ -407,74 +403,59 @@ export function I_bessel(
             /* ---------------------------------------------------------
                Normalize.  Divide all BI[N] by sum.
                --------------------------------------------------------- */
-            if (nu !== 0.)
-                sum *= (Rf_gamma_cody(1. + nu) * pow(x * .5, -nu));
-            if (ize === 1)
-                sum *= exp(-(x));
+            if (nu !== 0) sum *= Rf_gamma_cody(1 + nu) * pow(x * 0.5, -nu);
+            if (ize === 1) sum *= exp(-x);
             aa = enmten_BESS;
-            if (sum > 1.)
-                aa *= sum;
+            if (sum > 1) aa *= sum;
             for (n = 1; n <= nb; ++n) {
-                if (bi2[n - 1] < aa)
-                    bi2[n - 1] = 0.;
-                else
-                    bi2[n - 1] /= sum;
+                if (bi2[n - 1] < aa) bi2[n - 1] = 0;
+                else bi2[n - 1] /= sum;
             }
             const rc = { x: bi2[nb - 1], nb, ncalc };
             printer('normalize, devide all  Bi[N] by sum, result:%o', rc);
             return rc;
-        }
-        else { /* small x  < 1e-4 */
+        } else {
+            /* small x  < 1e-4 */
             /* -----------------------------------------------------------
                Two-term ascending series for small X.
                -----------------------------------------------------------*/
-            aa = 1.;
-            empal = 1. + nu;
+            aa = 1;
+            empal = 1 + nu;
 
             /* No need to check for underflow */
-            halfx = .5 * x;
+            halfx = 0.5 * x;
 
-            if (nu !== 0.)
-                aa = pow(halfx, nu) / Rf_gamma_cody(empal);
-            if (ize === 2)
-                aa *= exp(-(x));
+            if (nu !== 0) aa = pow(halfx, nu) / Rf_gamma_cody(empal);
+            if (ize === 2) aa *= exp(-x);
             bb = halfx * halfx;
-            bi2[0] = aa + aa * bb / empal;
-            if (x !== 0. && bi2[0] === 0.)
-                ncalc = 0;
+            bi2[0] = aa + (aa * bb) / empal;
+            if (x !== 0 && bi2[0] === 0) ncalc = 0;
             if (nb > 1) {
-                if (x === 0.) {
-                    for (n = 2; n <= nb; ++n)
-                        bi2[n - 1] = 0.;
-                }
-                else {
+                if (x === 0) {
+                    for (n = 2; n <= nb; ++n) bi2[n - 1] = 0;
+                } else {
                     /* -------------------------------------------------
                        Calculate higher-order functions.
                        ------------------------------------------------- */
                     cc = halfx;
                     tover = (enmten_BESS + enmten_BESS) / x;
-                    if (bb !== 0.)
-                        tover = enmten_BESS / bb;
+                    if (bb !== 0) tover = enmten_BESS / bb;
                     for (n = 2; n <= nb; ++n) {
                         aa /= empal;
-                        empal += 1.;
+                        empal += 1;
                         aa *= cc;
-                        if (aa <= tover * empal)
-                            bi2[n - 1] = aa = 0.;
-                        else
-                            bi2[n - 1] = aa + aa * bb / empal;
-                        if (bi2[n - 1] === 0. && ncalc > n)
-                            ncalc = n - 1;
+                        if (aa <= tover * empal) bi2[n - 1] = aa = 0;
+                        else bi2[n - 1] = aa + (aa * bb) / empal;
+                        if (bi2[n - 1] === 0 && ncalc > n) ncalc = n - 1;
                     }
                 }
             }
         }
-    }
-    else { /* argument out of range */
+    } else {
+        /* argument out of range */
         ncalc = min(nb, 0) - 1;
     }
     const rc = { x: bi2[nb - 1], nb, ncalc };
     printer('drop off, result:%o', rc);
     return rc;
 }
-

@@ -14,7 +14,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-import * as debug from 'debug';
+import { debug } from 'debug';
 import { ML_ERR_return_NAN, R_Q_P01_boundaries } from '../common/_general';
 
 import { R_DT_Clog } from '../exp/expm1';
@@ -23,29 +23,19 @@ const { ceil, max: fmax2, log1p } = Math;
 const { POSITIVE_INFINITY: ML_POSINF, isNaN: ISNAN } = Number;
 const printer = debug('qgeom');
 
-export function qgeom(
-  p: number,
-  prob: number,
-  lower_tail: boolean = true,
-  log_p: boolean = false
-): number {
-
+export function qgeom(p: number, prob: number, lower_tail = true, log_p = false): number {
     if (prob <= 0 || prob > 1) {
-      return ML_ERR_return_NAN(printer);
+        return ML_ERR_return_NAN(printer);
     }
 
-    let rc = R_Q_P01_boundaries(lower_tail, log_p, p, 0, ML_POSINF);
+    const rc = R_Q_P01_boundaries(lower_tail, log_p, p, 0, ML_POSINF);
     if (rc !== undefined) {
-      return rc;
+        return rc;
     }
 
     if (ISNAN(p) || ISNAN(prob)) return p + prob;
 
     if (prob === 1) return 0;
     /* add a fuzz to ensure left continuity, but value must be >= 0 */
-    return fmax2(
-      0,
-      ceil(R_DT_Clog(lower_tail, log_p, p) / log1p(-prob) - 1 - 1e-12)
-    );
-
+    return fmax2(0, ceil(R_DT_Clog(lower_tail, log_p, p) / log1p(-prob) - 1 - 1e-12));
 }

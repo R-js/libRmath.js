@@ -15,15 +15,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import * as debug from 'debug';
+import { debug } from 'debug';
 
-import {
-  ML_ERR_return_NAN,
-  R_D__0,
-  R_D__1,
-  R_D_negInonint,
-  R_D_nonint_check
-} from '../common/_general';
+import { ML_ERR_return_NAN, R_D__0, R_D__1, R_D_negInonint, R_D_nonint_check } from '../common/_general';
 
 import { dbinom_raw } from '../binomial/dbinom';
 
@@ -31,14 +25,7 @@ const printer = debug('dhyper');
 const { round: R_forceint } = Math;
 const { isNaN: ISNAN } = Number;
 
-export function dhyper(
-  x: number,
-  r: number,
-  b: number,
-  n: number,
-  give_log: boolean = false
-): number {
-  
+export function dhyper(x: number, r: number, b: number, n: number, give_log = false): number {
     let p: number;
     let q: number;
     let p1: number;
@@ -47,17 +34,11 @@ export function dhyper(
 
     if (ISNAN(x) || ISNAN(r) || ISNAN(b) || ISNAN(n)) return x + r + b + n;
 
-    if (
-      R_D_negInonint(r) ||
-      R_D_negInonint(b) ||
-      R_D_negInonint(n) ||
-      n > r + b
-    )
-      return ML_ERR_return_NAN(printer);
+    if (R_D_negInonint(r) || R_D_negInonint(b) || R_D_negInonint(n) || n > r + b) return ML_ERR_return_NAN(printer);
     if (x < 0) return R_D__0(give_log);
-    let rc = R_D_nonint_check(give_log, x, printer); // incl warning
+    const rc = R_D_nonint_check(give_log, x, printer); // incl warning
     if (rc !== undefined) {
-      return rc;
+        return rc;
     }
     x = R_forceint(x);
     r = R_forceint(r);
@@ -74,7 +55,5 @@ export function dhyper(
     p2 = dbinom_raw(n - x, b, p, q, give_log);
     p3 = dbinom_raw(n, r + b, p, q, give_log);
 
-    return give_log ? p1 + p2 - p3 : p1 * p2 / p3;
- 
-
+    return give_log ? p1 + p2 - p3 : (p1 * p2) / p3;
 }

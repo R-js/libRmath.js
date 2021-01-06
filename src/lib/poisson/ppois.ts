@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 /* This is a conversion from libRmath.so to Typescript/Javascript
 Copyright (C) 2018  Jacob K.F. Bogers  info@mail.jacob-bogers.com
 
@@ -21,24 +21,23 @@ import { ML_ERR_return_NAN, R_DT_0, R_DT_1 } from '../common/_general';
 const { isNaN: ISNAN, isFinite: R_FINITE } = Number;
 const { floor, max: fmax2 } = Math;
 
-import * as debug from 'debug';
+import { debug } from 'debug';
 import { NumberW } from '../common/toms708';
 import { pgamma } from '../gamma/pgamma';
 
 const printer = debug('ppois');
 
 export function ppois(
-  x: number,
-  lambda: number,
-  lowerTail: boolean = true,
-  logP: boolean = false,
-  //normal: INormal //pass it on to "pgamma"->"pgamma_raw"->"ppois_asymp"->(dpnorm??)->("normal.pnorm")  
+    x: number,
+    lambda: number,
+    lowerTail = true,
+    logP = false,
+    //normal: INormal //pass it on to "pgamma"->"pgamma_raw"->"ppois_asymp"->(dpnorm??)->("normal.pnorm")
 ): number {
-
     if (ISNAN(x) || ISNAN(lambda)) return x + lambda;
 
     if (lambda < 0) {
-      return ML_ERR_return_NAN(printer);
+        return ML_ERR_return_NAN(printer);
     }
     if (x < 0) return R_DT_0(lowerTail, logP);
     if (lambda === 0) return R_DT_1(lowerTail, logP);
@@ -46,42 +45,38 @@ export function ppois(
     x = floor(x + 1e-7);
 
     return pgamma(lambda, x + 1, 1, !lowerTail, logP);
-
 }
 
 export function do_search(
-  y: number,
-  z: NumberW,
-  p: number,
-  lambda: number,
-  incr: number,
- // normal: INormal
+    y: number,
+    z: NumberW,
+    p: number,
+    lambda: number,
+    incr: number,
+    // normal: INormal
 ): number {
-  if (z.val >= p) {
-    /* search to the left */
-    while (true) {
-      if (
-        y === 0 ||
-        (z.val = ppois(
-          y - incr,
-          lambda,
-          /*l._t.*/ true,
-          /*log_p*/ false,
-         // normal
-        )) < p
-      )
-        return y;
-      y = fmax2(0, y - incr);
-    }
-  } else {
-    /* search to the right */
+    if (z.val >= p) {
+        /* search to the left */
+        while (true) {
+            if (
+                y === 0 ||
+                (z.val = ppois(
+                    y - incr,
+                    lambda,
+                    /*l._t.*/ true,
+                    /*log_p*/ false,
+                    // normal
+                )) < p
+            )
+                return y;
+            y = fmax2(0, y - incr);
+        }
+    } else {
+        /* search to the right */
 
-    while (true) {
-      y = y + incr;
-      if (
-        (z.val = ppois(y, lambda, /*l._t.*/ true, /*log_p*/ false/*, normal*/)) >= p
-      )
-        return y;
+        while (true) {
+            y = y + incr;
+            if ((z.val = ppois(y, lambda, /*l._t.*/ true, /*log_p*/ false /*, normal*/)) >= p) return y;
+        }
     }
-  }
 }

@@ -14,7 +14,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-import * as debug from 'debug';
+import { debug } from 'debug';
 import { isOdd } from '../common/_general';
 
 const { abs: fabs, log, exp, round } = Math;
@@ -24,96 +24,92 @@ import { lbeta as internal_lbeta } from '../beta/lbeta';
 import { lgammafn_sign as lgammafn } from '../gamma/lgammafn_sign';
 import { lgammafn_sign } from '../gamma/lgammafn_sign';
 
-
 // used by "qhyper"
 export function lfastchoose(n: number, k: number) {
-  return -log(n + 1) - internal_lbeta(n - k + 1, k + 1);
+    return -log(n + 1) - internal_lbeta(n - k + 1, k + 1);
 }
 /* mathematically the same:
    less stable typically, but useful if n-k+1 < 0 : */
 
 export function lfastchoose2(n: number, k: number, sChoose?: number[]) {
-  let r: number;
-  r = lgammafn_sign(n - k + 1, sChoose);
-  return lgammafn(n + 1) - lgammafn(k + 1) - r;
+    let r: number;
+    r = lgammafn_sign(n - k + 1, sChoose);
+    return lgammafn(n + 1) - lgammafn(k + 1) - r;
 }
-
 
 const printer_lchoose = debug('lchoose');
 
 export function internal_lchoose(n: number, k: number): number {
-  let k0 = k;
-  k = Math.round(k);
-  /* NaNs propagated correctly */
-  if (ISNAN(n) || ISNAN(k)) return n + k;
-  if (fabs(k - k0) > 1e-7)
-    printer_lchoose('"k" (%d) must be integer, rounded to %d', k0, k);
-  if (k < 2) {
-    if (k < 0) return ML_NEGINF;
-    if (k === 0) return 0;
-    /* else: k == 1 */
-    return log(fabs(n));
-  }
-  /* else: k >= 2 */
-  if (n < 0) {
-    return internal_lchoose(-n + k - 1, k);
-  } else if (isInteger(n)) {
-    n = round(n);
-    if (n < k) return ML_NEGINF;
-    /* k <= n :*/
-    if (n - k < 2) return internal_lchoose(n, n - k); /* <- Symmetry */
-    /* else: n >= k+2 */
+    const k0 = k;
+    k = Math.round(k);
+    /* NaNs propagated correctly */
+    if (ISNAN(n) || ISNAN(k)) return n + k;
+    if (fabs(k - k0) > 1e-7) printer_lchoose('"k" (%d) must be integer, rounded to %d', k0, k);
+    if (k < 2) {
+        if (k < 0) return ML_NEGINF;
+        if (k === 0) return 0;
+        /* else: k == 1 */
+        return log(fabs(n));
+    }
+    /* else: k >= 2 */
+    if (n < 0) {
+        return internal_lchoose(-n + k - 1, k);
+    } else if (isInteger(n)) {
+        n = round(n);
+        if (n < k) return ML_NEGINF;
+        /* k <= n :*/
+        if (n - k < 2) return internal_lchoose(n, n - k); /* <- Symmetry */
+        /* else: n >= k+2 */
+        return lfastchoose(n, k);
+    }
+    /* else non-integer n >= 0 : */
+    if (n < k - 1) {
+        return lfastchoose2(n, k);
+    }
     return lfastchoose(n, k);
-  }
-  /* else non-integer n >= 0 : */
-  if (n < k - 1) {
-    return lfastchoose2(n, k);
-  }
-  return lfastchoose(n, k);
 }
 
 const k_small_max = 30;
 
 /* 30 is somewhat arbitrary: it is on the *safe* side:
  * both speed and precision are clearly improved for k < 30.
-*/
+ */
 const printer_choose = debug('choose');
 
 export function internal_choose(n: number, k: number): number {
-  let r: number;
-  let k0 = k;
-  k = round(k);
-  /* NaNs propagated correctly */
-  if (ISNAN(n) || ISNAN(k)) return n + k;
-  if (fabs(k - k0) > 1e-7)
-    printer_choose('k (%d) must be integer, rounded to %d', k0, k);
-  if (k < k_small_max) {
-    let j: number;
-    if (n - k < k && n >= 0 && isInteger(n)) k = n - k; /* <- Symmetry */
-    if (k < 0) return 0;
-    if (k === 0) return 1;
-    /* else: k >= 1 */
-    r = n;
-    for (j = 2; j <= k; j++) r *= (n - j + 1) / j;
-    return isInteger(n) ? round(r) : r;
-    /* might have got rounding errors */
-  }
-  /* else: k >= k_small_max */
-  if (n < 0) {
-    r = internal_choose(-n + k - 1, k);
-    if (isOdd(k)) r = -r;
-    return r;
-  } else if (isInteger(n)) {
-    n = round(n);
-    if (n < k) return 0;
-    if (n - k < k_small_max) return internal_choose(n, n - k); /* <- Symmetry */
-    return round(exp(lfastchoose(n, k)));
-  }
-  /* else non-integer n >= 0 : */
-  if (n < k - 1) {
-    let schoose: number[] = [0];
-    r = lfastchoose2(n, k, /* -> */ schoose);
-    return schoose[0] * exp(r);
-  }
-  return exp(lfastchoose(n, k));
+    let r: number;
+    const k0 = k;
+    k = round(k);
+    /* NaNs propagated correctly */
+    if (ISNAN(n) || ISNAN(k)) return n + k;
+    if (fabs(k - k0) > 1e-7) printer_choose('k (%d) must be integer, rounded to %d', k0, k);
+    if (k < k_small_max) {
+        let j: number;
+        if (n - k < k && n >= 0 && isInteger(n)) k = n - k; /* <- Symmetry */
+        if (k < 0) return 0;
+        if (k === 0) return 1;
+        /* else: k >= 1 */
+        r = n;
+        for (j = 2; j <= k; j++) r *= (n - j + 1) / j;
+        return isInteger(n) ? round(r) : r;
+        /* might have got rounding errors */
+    }
+    /* else: k >= k_small_max */
+    if (n < 0) {
+        r = internal_choose(-n + k - 1, k);
+        if (isOdd(k)) r = -r;
+        return r;
+    } else if (isInteger(n)) {
+        n = round(n);
+        if (n < k) return 0;
+        if (n - k < k_small_max) return internal_choose(n, n - k); /* <- Symmetry */
+        return round(exp(lfastchoose(n, k)));
+    }
+    /* else non-integer n >= 0 : */
+    if (n < k - 1) {
+        const schoose: number[] = [0];
+        r = lfastchoose2(n, k, /* -> */ schoose);
+        return schoose[0] * exp(r);
+    }
+    return exp(lfastchoose(n, k));
 }

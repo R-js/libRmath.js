@@ -14,39 +14,27 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-import * as debug from 'debug';
+import { debug } from 'debug';
 
 import { pbeta } from '../beta/pbeta';
-import {
-  ML_ERR_return_NAN,
-  R_DT_0,
-  R_DT_1,
-  R_nonint
-} from '../common/_general';
+import { ML_ERR_return_NAN, R_DT_0, R_DT_1, R_nonint } from '../common/_general';
 
 const printer = debug('pbinom');
 const { floor, round: R_forceint } = Math;
 const { isNaN: ISNAN, isFinite: R_FINITE } = Number;
 
-export function pbinom(
-  x: number,
-  n: number,
-  p: number,
-  lowerTail: boolean = true,
-  logP: boolean = false
-): number {
-  
+export function pbinom(x: number, n: number, p: number, lowerTail = true, logP = false): number {
     if (ISNAN(x) || ISNAN(n) || ISNAN(p)) return NaN;
     if (!R_FINITE(n) || !R_FINITE(p)) {
-      return ML_ERR_return_NAN(printer);
+        return ML_ERR_return_NAN(printer);
     }
 
-    let lower_tail = lowerTail;
-    let log_p = logP;
+    const lower_tail = lowerTail;
+    const log_p = logP;
 
     if (R_nonint(n)) {
-      printer('non-integer n = %d', n);
-      return ML_ERR_return_NAN(printer);
+        printer('non-integer n = %d', n);
+        return ML_ERR_return_NAN(printer);
     }
     n = R_forceint(n);
     /* 
@@ -59,5 +47,4 @@ export function pbinom(
     if (n <= x) return R_DT_1(lower_tail, log_p);
     printer('calling pbeta:(q=%d,a=%d,b=%d, l.t=%s, log=%s', p, x + 1, n - x, !lower_tail, log_p);
     return pbeta(p, x + 1, n - x, !lower_tail, log_p);
- 
 }

@@ -15,7 +15,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import * as debug from 'debug';
+import { debug } from 'debug';
 import { ME, ML_ERROR } from '../../common/_general';
 import { sinpi } from '../../trigonometry/sinpi';
 import { bessel_k } from '../besselK';
@@ -26,15 +26,13 @@ const { exp, trunc, floor, PI: M_PI } = Math;
 
 const printer = debug('bessel_i');
 
-
 /* .Internal(besselI(*)) : */
-export function bessel_i(x: number, alpha: number, expo: boolean = false): number {
-
+export function bessel_i(x: number, alpha: number, expo = false): number {
     //int
     let nb;
     let ize;
 
-    //double 
+    //double
     let na;
 
     /* NaNs propagated correctly */
@@ -48,27 +46,24 @@ export function bessel_i(x: number, alpha: number, expo: boolean = false): numbe
     if (alpha < 0) {
         /* Using Abramowitz & Stegun  9.6.2 & 9.6.6
          * this may not be quite optimal (CPU and accuracy wise) */
-        return (bessel_i(x, -alpha, expo) +
-            ((alpha === na) ? /* sin(pi * alpha) = 0 */ 0 :
-                bessel_k(x, -alpha, expo) *
-                ((ize === 1) ? 2. : 2. * exp(-2. * x)) / M_PI * sinpi(-alpha)));
+        return (
+            bessel_i(x, -alpha, expo) +
+            (alpha === na
+                ? /* sin(pi * alpha) = 0 */ 0
+                : ((bessel_k(x, -alpha, expo) * (ize === 1 ? 2 : 2 * exp(-2 * x))) / M_PI) * sinpi(-alpha))
+        );
     }
     nb = 1 + trunc(na); /* nb-1 <= alpha < nb */
-    alpha -= (nb - 1);
-
-
+    alpha -= nb - 1;
 
     const rc = I_bessel(x, alpha, nb, ize);
-    if (rc.ncalc !== rc.nb) {/* error input */
+    if (rc.ncalc !== rc.nb) {
+        /* error input */
         if (rc.ncalc < 0)
-            printer('bessel_i(%d): ncalc (=%d) != nb (=%d); alpha=%d. Arg. out of range?',
-                x, rc.ncalc, rc.nb, alpha);
-        else
-            printer('bessel_i(%d,nu=%d): precision lost in result\n',
-                rc.x, alpha + rc.nb - 1);
+            printer('bessel_i(%d): ncalc (=%d) != nb (=%d); alpha=%d. Arg. out of range?', x, rc.ncalc, rc.nb, alpha);
+        else printer('bessel_i(%d,nu=%d): precision lost in result\n', rc.x, alpha + rc.nb - 1);
     }
     x = rc.x; // bi[nb - 1];
 
     return x;
 }
-
