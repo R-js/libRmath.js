@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-export enum IN01Type {
+export enum IRNGNormalTypeEnum {
     BUGGY_KINDERMAN_RAMAGE,
     AHRENS_DIETER,
     BOX_MULLER,

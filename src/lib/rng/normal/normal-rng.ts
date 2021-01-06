@@ -16,14 +16,14 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { IRNG, MessageType } from '../irng';
-import { IN01Type } from './in01-type';
+import { IRNGNormalTypeEnum } from './in01-type';
 
 export abstract class IRNGNormal {
     protected _rng: IRNG;
     protected _name: string;
-    protected _kind: IN01Type;
+    protected _kind: IRNGNormalTypeEnum;
 
-    constructor(_rng: IRNG, name: string, kind: IN01Type) {
+    constructor(_rng: IRNG, name: string, kind: IRNGNormalTypeEnum) {
         this._rng = _rng;
         this._name = name;
         this._kind = kind;
@@ -52,6 +52,10 @@ export abstract class IRNGNormal {
 
     public get kind() {
         return this._kind;
+    }
+
+    public get uniform_rng() {
+        return this._rng;
     }
 
     // implementation specific

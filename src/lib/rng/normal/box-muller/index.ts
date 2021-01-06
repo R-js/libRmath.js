@@ -15,10 +15,10 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { IRNG } from '../';
-import { MessageType } from '../irng';
-import { MersenneTwister } from '../mersenne-twister';
-import { IRNGNormal } from './inormal-rng';
+import { IRNGNormalTypeEnum } from '../in01-type';
+import { MessageType, IRNG } from '../../irng';
+import { MersenneTwister } from '../../mersenne-twister';
+import { IRNGNormal } from '../normal-rng';
 
 const { log, sqrt, cos, sin } = Math;
 
@@ -28,12 +28,12 @@ const M_PI = 3.14159265358979323846264338327950288;
 export class BoxMuller extends IRNGNormal {
     private BM_norm_keep: number;
 
-    private reset() {
+    protected reset() {
         this.BM_norm_keep = 0;
     }
 
     constructor(_rng: IRNG = new MersenneTwister(0)) {
-        super(_rng);
+        super(_rng, 'Box-Muller', IRNGNormalTypeEnum.BOX_MULLER);
         this.BM_norm_keep = 0;
         _rng.register(MessageType.INIT, this.reset.bind(this));
     }
@@ -48,8 +48,8 @@ export class BoxMuller extends IRNGNormal {
             this.BM_norm_keep = 0.0;
             return s;
         } else {
-            theta = 2 * M_PI * this.rng.random();
-            const R = sqrt(-2 * log(this.rng.random())) + 10 * DBL_MIN; /* ensure non-zero */
+            theta = 2 * M_PI * this._rng.random();
+            const R = sqrt(-2 * log(this._rng.random())) + 10 * DBL_MIN; /* ensure non-zero */
             this.BM_norm_keep = R * sin(theta);
             return R * cos(theta);
         }
