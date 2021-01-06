@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 /* This is a conversion from libRmath.so to Typescript/Javascript
 Copyright (C) 2018  Jacob K.F. Bogers  info@mail.jacob-bogers.com
 
@@ -16,14 +16,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import * as debug from 'debug';
+import { debug } from 'debug';
 
-import {
-  ML_ERR_return_NAN,
-  R_DT_0,
-  R_DT_1,
-  R_Q_P01_check
-} from '../common/_general';
+import { ML_ERR_return_NAN, R_DT_0, R_DT_1, R_Q_P01_check } from '../common/_general';
 import { R_DT_qIv } from '../exp/expm1';
 import { cwilcox } from './cwilcox';
 import { WilcoxonCache } from './WilcoxonCache';
@@ -35,50 +30,42 @@ const { isNaN: ISNAN, isFinite: R_FINITE, EPSILON: DBL_EPSILON } = Number;
 
 const printer_qwilcox = debug('qwilcox');
 
-export function qwilcox(
-  x: number,
-  m: number,
-  n: number,
-  lowerTail: boolean = true,
-  logP: boolean = false
-): number {
-  m = R_forceint(m);
-  n = R_forceint(n);
-  const w = new WilcoxonCache();
+export function qwilcox(x: number, m: number, n: number, lowerTail = true, logP = false): number {
+    m = R_forceint(m);
+    n = R_forceint(n);
+    const w = new WilcoxonCache();
 
-  if (ISNAN(x) || ISNAN(m) || ISNAN(n)) return x + m + n;
-  if (!R_FINITE(x) || !R_FINITE(m) || !R_FINITE(n))
-    return ML_ERR_return_NAN(printer_qwilcox);
-  R_Q_P01_check(logP, x);
+    if (ISNAN(x) || ISNAN(m) || ISNAN(n)) return x + m + n;
+    if (!R_FINITE(x) || !R_FINITE(m) || !R_FINITE(n)) return ML_ERR_return_NAN(printer_qwilcox);
+    R_Q_P01_check(logP, x);
 
-  if (m <= 0 || n <= 0) return ML_ERR_return_NAN(printer_qwilcox);
+    if (m <= 0 || n <= 0) return ML_ERR_return_NAN(printer_qwilcox);
 
-  if (x === R_DT_0(lowerTail, logP)) return 0;
-  if (x === R_DT_1(lowerTail, logP)) return m * n;
+    if (x === R_DT_0(lowerTail, logP)) return 0;
+    if (x === R_DT_1(lowerTail, logP)) return m * n;
 
-  if (logP || !lowerTail)
-    x = R_DT_qIv(lowerTail, logP, x); /* lower_tail,non-log "p" */
+    if (logP || !lowerTail) x = R_DT_qIv(lowerTail, logP, x); /* lower_tail,non-log "p" */
 
-  let c = internal_choose(m + n, n);
-  let p = 0;
-  let q = 0;
-  if (x <= 0.5) {
-    x = x - 10 * DBL_EPSILON;
-    while (true) {
-      p += cwilcox(q, m, n, w) / c;
-      if (p >= x) break;
-      q++;
+    const c = internal_choose(m + n, n);
+    let p = 0;
+    let q = 0;
+    if (x <= 0.5) {
+        x = x - 10 * DBL_EPSILON;
+        while (true) {
+            p += cwilcox(q, m, n, w) / c;
+            if (p >= x) break;
+            q++;
+        }
+    } else {
+        x = 1 - x + 10 * DBL_EPSILON;
+        while (true) {
+            p += cwilcox(q, m, n, w) / c;
+            if (p > x) {
+                q = trunc(m * n - q);
+                break;
+            }
+            q++;
+        }
     }
-  } else {
-    x = 1 - x + 10 * DBL_EPSILON;
-    while (true) {
-      p += cwilcox(q, m, n, w) / c;
-      if (p > x) {
-        q = trunc(m * n - q);
-        break;
-      }
-      q++;
-    }
-  }
-  return q;
+    return q;
 }

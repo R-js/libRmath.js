@@ -17,27 +17,24 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import { ML_ERR_return_NAN, R_D__0 } from '../common/_general';
 
-import * as debug from 'debug';
-
+import { debug } from 'debug';
 
 const { log, exp } = Math;
 const { isNaN: ISNAN } = Number;
 const printer = debug('dexp');
 
-
-
-export function dexp(x: number, scale: number, give_log: boolean = false): number {
-  /* NaNs propagated correctly */
+export function dexp(x: number, scale: number, give_log = false): number {
+    /* NaNs propagated correctly */
     if (ISNAN(x) || ISNAN(scale)) {
-      return NaN;
+        return NaN;
     }
 
     if (scale <= 0.0) {
-      return ML_ERR_return_NAN(printer);
+        return ML_ERR_return_NAN(printer);
     }
 
     if (x < 0) {
-      return R_D__0(give_log);
+        return R_D__0(give_log);
     }
     return give_log ? -x / scale - log(scale) : exp(-x / scale) / scale;
 }

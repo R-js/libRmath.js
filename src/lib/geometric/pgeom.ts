@@ -14,7 +14,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-import * as debug from 'debug';
+import { debug } from 'debug';
 
 import { ML_ERR_return_NAN, R_DT_0, R_DT_1 } from '../common/_general';
 
@@ -24,17 +24,11 @@ const { expm1, log1p, log, exp, floor } = Math;
 const { isNaN: ISNAN, isFinite: R_FINITE } = Number;
 const printer = debug('pgeom');
 
-export function pgeom(
-  x: number,
-  p: number,
-  lowerTail: boolean = true,
-  logP: boolean = false
-): number {
-
+export function pgeom(x: number, p: number, lowerTail = true, logP = false): number {
     if (ISNAN(x) || ISNAN(p)) return x + p;
 
     if (p <= 0 || p > 1) {
-      return ML_ERR_return_NAN(printer);
+        return ML_ERR_return_NAN(printer);
     }
 
     if (x < 0) return R_DT_0(lowerTail, logP);
@@ -42,12 +36,11 @@ export function pgeom(
     x = floor(x + 1e-7);
 
     if (p === 1) {
-      /* we cannot assume IEEE */
-      x = lowerTail ? 1 : 0;
-      return logP ? log(x) : x;
+        /* we cannot assume IEEE */
+        x = lowerTail ? 1 : 0;
+        return logP ? log(x) : x;
     }
     x = log1p(-p) * (x + 1);
     if (logP) return R_DT_Clog(lowerTail, logP, x);
     else return lowerTail ? -expm1(x) : exp(x);
-
 }

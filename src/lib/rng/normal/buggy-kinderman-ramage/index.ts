@@ -15,15 +15,20 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { IRNG } from '../..';
+import { IRNG } from '../../irng';
 import { MersenneTwister } from '../../mersenne-twister';
 import { IRNGNormal } from '../normal-rng';
+import { IRNGNormalTypeEnum } from '../in01-type';
 
 const { log, sqrt, min: fmin2, max: fmax2, abs: fabs, exp } = Math;
 
 export class BuggyKindermanRamage extends IRNGNormal {
-    constructor(rng: IRNG = new MersenneTwister(0)) {
-        super(rng);
+    protected reset() {
+        /* there is no state other from the _rng*/
+    }
+
+    constructor(_rng: IRNG = new MersenneTwister(0)) {
+        super(_rng, 'Buggy-Kinderman-Ramage', IRNGNormalTypeEnum.BUGGY_KINDERMAN_RAMAGE);
     }
 
     public internal_norm_rand() {
@@ -38,20 +43,20 @@ export class BuggyKindermanRamage extends IRNGNormal {
 
         const g = (x: number) => C1 * exp((-x * x) / 2.0) - C2 * (A - x);
 
-        const u1 = this.rng.internal_unif_rand();
+        const u1 = this._rng.random();
         let u2: number;
         let u3: number;
         let tt: number;
         if (u1 < 0.884070402298758) {
-            const u2 = this.rng.internal_unif_rand();
+            const u2 = this._rng.random();
             return A * (1.1311316354418 * u1 + u2 - 1);
         }
 
         if (u1 >= 0.973310954173898) {
             /* tail: */
             for (;;) {
-                u2 = this.rng.internal_unif_rand();
-                u3 = this.rng.internal_unif_rand();
+                u2 = this._rng.random();
+                u3 = this._rng.random();
                 tt = A * A - 2 * log(u3);
                 if (u2 * u2 < (A * A) / tt) return u1 < 0.986655477086949 ? sqrt(tt) : -sqrt(tt);
             }
@@ -60,8 +65,8 @@ export class BuggyKindermanRamage extends IRNGNormal {
         if (u1 >= 0.958720824790463) {
             /* region3: */
             for (;;) {
-                u2 = this.rng.internal_unif_rand();
-                u3 = this.rng.internal_unif_rand();
+                u2 = this._rng.random();
+                u3 = this._rng.random();
                 tt = A - 0.63083480192196 * fmin2(u2, u3);
                 if (fmax2(u2, u3) <= 0.755591531667601) return u2 < u3 ? tt : -tt;
                 if (0.034240503750111 * fabs(u2 - u3) <= g(tt)) return u2 < u3 ? tt : -tt;
@@ -71,8 +76,8 @@ export class BuggyKindermanRamage extends IRNGNormal {
         if (u1 >= 0.911312780288703) {
             /* region2: */
             for (;;) {
-                u2 = this.rng.internal_unif_rand();
-                u3 = this.rng.internal_unif_rand();
+                u2 = this._rng.random();
+                u3 = this._rng.random();
                 tt = 0.479727404222441 + 1.10547366102207 * fmin2(u2, u3);
                 if (fmax2(u2, u3) <= 0.87283497667179) return u2 < u3 ? tt : -tt;
                 if (0.049264496373128 * fabs(u2 - u3) <= g(tt)) return u2 < u3 ? tt : -tt;
@@ -81,8 +86,8 @@ export class BuggyKindermanRamage extends IRNGNormal {
 
         /* ELSE	 region1: */
         for (;;) {
-            u2 = this.rng.internal_unif_rand();
-            u3 = this.rng.internal_unif_rand();
+            u2 = this._rng.random();
+            u3 = this._rng.random();
             tt = 0.479727404222441 - 0.59550713801594 * fmin2(u2, u3);
             if (fmax2(u2, u3) <= 0.805577924423817) return u2 < u3 ? tt : -tt;
         }

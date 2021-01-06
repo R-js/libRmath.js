@@ -14,19 +14,16 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-import * as debug from 'debug';
+import { debug } from 'debug';
 
-import {
-    ME,
-    ML_ERROR
-} from '../common/_general';
+import { ME, ML_ERROR } from '../common/_general';
 
 const { max: fmax2, log, abs: fabs } = Math;
 const { NaN: ML_NAN } = Number;
 
 const printer = debug('gammalims');
 
-export function gammalims(input: { xmin: number, xmax: number }, IEEE_754?: boolean): void {
+export function gammalims(input: { xmin: number; xmax: number }, IEEE_754?: boolean): void {
     /* 
         FIXME: Even better: If IEEE, #define these in nmath.h
           and don't call gammalims() at all
@@ -49,10 +46,10 @@ export function gammalims(input: { xmin: number, xmax: number }, IEEE_754?: bool
     for (i = 1; i <= 10; ++i) {
         xold = input.xmin;
         xln = log(input.xmin);
-        input.xmin -= input.xmin * ((input.xmin + .5) * xln - input.xmin - .2258 + alnsml) /
-            (input.xmin * xln + .5);
-        if (fabs(input.xmin - xold) < .005) {
-            input.xmin = -(input.xmin) + .01;
+        input.xmin -=
+            (input.xmin * ((input.xmin + 0.5) * xln - input.xmin - 0.2258 + alnsml)) / (input.xmin * xln + 0.5);
+        if (fabs(input.xmin - xold) < 0.005) {
+            input.xmin = -input.xmin + 0.01;
             find_xmax = true;
             break;
             // goto find_xmax;
@@ -73,10 +70,10 @@ export function gammalims(input: { xmin: number, xmax: number }, IEEE_754?: bool
     for (i = 1; i <= 10; ++i) {
         xold = input.xmax;
         xln = log(input.xmax);
-        input.xmax -= input.xmax * ((input.xmax - .5) * xln - input.xmax + .9189 - alnbig) /
-            (input.xmax * xln - .5);
-        if (fabs(input.xmax - xold) < .005) {
-            input.xmax += -.01;
+        input.xmax -=
+            (input.xmax * ((input.xmax - 0.5) * xln - input.xmax + 0.9189 - alnbig)) / (input.xmax * xln - 0.5);
+        if (fabs(input.xmax - xold) < 0.005) {
+            input.xmax += -0.01;
             //goto done;
             done = true;
             break;
@@ -90,7 +87,5 @@ export function gammalims(input: { xmin: number, xmax: number }, IEEE_754?: bool
     }
     //goto label
     //done:
-    input.xmin = fmax2(input.xmin, -(input.xmax) + 1);
+    input.xmin = fmax2(input.xmin, -input.xmax + 1);
 }
-
-

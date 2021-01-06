@@ -15,53 +15,41 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import * as debug from 'debug';
+import { debug  } from 'debug';
 import {
-  DBL_MANT_DIG,
-  DBL_MIN_EXP,
-  ldexp,
-  M_1_SQRT_2PI,
-  M_LN2,
-  M_LN_SQRT_2PI,
-  ML_ERR_return_NAN,
-  R_D__0
+    DBL_MANT_DIG,
+    DBL_MIN_EXP,
+    ldexp,
+    M_1_SQRT_2PI,
+    M_LN2,
+    M_LN_SQRT_2PI,
+    ML_ERR_return_NAN,
+    R_D__0,
 } from '../common/_general';
 
-const {
-  isNaN: ISNAN,
-  isFinite: R_FINITE,
-  MAX_VALUE: DBL_MAX,
-  POSITIVE_INFINITY: ML_POSINF,
-  NaN: ML_NAN
-} = Number;
+const { isNaN: ISNAN, isFinite: R_FINITE, MAX_VALUE: DBL_MAX, POSITIVE_INFINITY: ML_POSINF, NaN: ML_NAN } = Number;
 const { sqrt, exp, abs: fabs, round: R_forceint, log } = Math;
 const printer = debug('dnorm4');
 
-export function dnorm4(
-  x: number,
-  mu = 0,
-  sigma = 1,
-  give_log = false
-): number {
-     
+export function dnorm4(x: number, mu = 0, sigma = 1, give_log = false): number {
     if (ISNAN(x) || ISNAN(mu) || ISNAN(sigma)) {
-      return x + mu + sigma;
+        return x + mu + sigma;
     }
 
     if (!R_FINITE(sigma)) {
-      return R_D__0(give_log);
+        return R_D__0(give_log);
     }
 
     if (!R_FINITE(x) && mu === x) {
-      return ML_NAN; /* x-mu is NaN */
+        return ML_NAN; /* x-mu is NaN */
     }
 
     if (sigma <= 0) {
-      if (sigma < 0) {
-        return ML_ERR_return_NAN(printer);
-      }
-      /* sigma == 0 */
-      return x === mu ? ML_POSINF : R_D__0(give_log);
+        if (sigma < 0) {
+            return ML_ERR_return_NAN(printer);
+        }
+        /* sigma == 0 */
+        return x === mu ? ML_POSINF : R_D__0(give_log);
     }
     x = (x - mu) / sigma;
 
@@ -70,10 +58,10 @@ export function dnorm4(
     x = fabs(x);
     if (x >= 2 * sqrt(DBL_MAX)) return R_D__0(give_log);
     if (give_log) {
-      return -(M_LN_SQRT_2PI + 0.5 * x * x + log(sigma));
+        return -(M_LN_SQRT_2PI + 0.5 * x * x + log(sigma));
     }
 
-    if (x < 5) return M_1_SQRT_2PI * exp(-0.5 * x * x) / sigma;
+    if (x < 5) return (M_1_SQRT_2PI * exp(-0.5 * x * x)) / sigma;
 
     /* ELSE:
 
@@ -93,7 +81,7 @@ export function dnorm4(
      * [on one x86_64 platform, effective boundary a bit lower: 38.56804]
      */
     if (x > sqrt(-2 * M_LN2 * (DBL_MIN_EXP + 1 - DBL_MANT_DIG))) {
-      return 0;
+        return 0;
     }
 
     /* Now, to get full accurary, split x into two parts,
@@ -104,10 +92,7 @@ export function dnorm4(
 
      * If we do not have IEEE this is still an improvement over the naive formula.
      */
-    let x1 = ldexp(R_forceint(ldexp(x, 16)), -16); //  R_forceint(x * 65536) / 65536 =
-    let x2 = x - x1;
-    return (
-      M_1_SQRT_2PI / sigma * (exp(-0.5 * x1 * x1) * exp((-0.5 * x2 - x1) * x2))
-    );
-  
+    const x1 = ldexp(R_forceint(ldexp(x, 16)), -16); //  R_forceint(x * 65536) / 65536 =
+    const x2 = x - x1;
+    return (M_1_SQRT_2PI / sigma) * (exp(-0.5 * x1 * x1) * exp((-0.5 * x2 - x1) * x2));
 }

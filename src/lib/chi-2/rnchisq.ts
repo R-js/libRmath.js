@@ -15,41 +15,31 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import * as debug from 'debug';
+import { debug } from 'debug';
 import { ML_ERR_return_NAN } from '../common/_general';
 import { rgammaOne } from '../gamma/rgamma';
 import { rpoisOne } from '../poisson/rpois';
-import { randomGenHelper } from '../r-func'
+import { randomGenHelper } from '../r-func';
 import { IRNGNormal } from '../rng/normal/normal-rng';
 import { rchisqOne } from './rchisq';
 
 const printer = debug('rnchisq');
 const { isFinite: R_FINITE } = Number;
 
-export function rnchisq(
-  n: number| number[],
-  df: number,
-  lambda: number,
-  rng: IRNGNormal
-): number[] {
-  return randomGenHelper(n, rnchisqOne, df, lambda, rng);
+export function rnchisq(n: number | number[], df: number, lambda: number, rng: IRNGNormal): number[] {
+    return randomGenHelper(n, rnchisqOne, df, lambda, rng);
 }
 
-export function rnchisqOne(
-  df: number,
-  lambda: number,
-  rng: IRNGNormal
-): number {
-
-  if (!R_FINITE(df) || !R_FINITE(lambda) || df < 0 || lambda < 0) {
-    return ML_ERR_return_NAN(printer);
-  }
-  if (lambda === 0) {
-    return df === 0 ? 0 : (rgammaOne(df / 2, 2, rng) as number);
-  } else {
-    let r = rpoisOne(lambda / 2, rng)
-    if (r > 0) r = rchisqOne(2 * r, rng)
-    if (df > 0) r +=  rgammaOne(df / 2, 2, rng)
-    return r;
-  }
+export function rnchisqOne(df: number, lambda: number, rng: IRNGNormal): number {
+    if (!R_FINITE(df) || !R_FINITE(lambda) || df < 0 || lambda < 0) {
+        return ML_ERR_return_NAN(printer);
+    }
+    if (lambda === 0) {
+        return df === 0 ? 0 : (rgammaOne(df / 2, 2, rng) as number);
+    } else {
+        let r = rpoisOne(lambda / 2, rng);
+        if (r > 0) r = rchisqOne(2 * r, rng);
+        if (df > 0) r += rgammaOne(df / 2, 2, rng);
+        return r;
+    }
 }

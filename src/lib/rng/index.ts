@@ -24,3 +24,8 @@ export { MersenneTwister } from './mersenne-twister';
 export { SuperDuper } from './super-duper';
 export { seed as timeseed } from './timeseed';
 export { WichmannHill } from './wichmann-hill';
+// normal
+export { AhrensDieter } from './normal/ahrens-dieter';
+export { Inversion } from './normal/inversion';
+export { BoxMuller } from './normal/box-muller';
+export { BuggyKindermanRamage } from './normal/buggy-kinderman-ramage';

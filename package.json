@@ -23,6 +23,7 @@
     "devDependencies": {
         "@rollup/plugin-commonjs": "^16.0.0",
         "@rollup/plugin-node-resolve": "^10.0.0",
+        "@types/debug": "^4.1.5",
         "@types/node": "^6.0.96",
         "@typescript-eslint/eslint-plugin": "^4.8.1",
         "@typescript-eslint/parser": "^4.8.1",
@@ -101,5 +102,8 @@
         "prepublishOnly": "npm run test",
         "test": "echo hello world"
     },
-    "version": "1.0.89-alpha"
+    "version": "1.0.89-alpha",
+    "dependencies": {
+        "debug": "^4.3.1"
+    }
 }

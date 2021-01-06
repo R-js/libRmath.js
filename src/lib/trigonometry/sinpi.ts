@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 /* This is a conversion from libRmath.so to Typescript/Javascript
 Copyright (C) 2018  Jacob K.F. Bogers  info@mail.jacob-bogers.com
 
@@ -15,7 +15,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-import * as debug from 'debug';
+import { debug } from 'debug';
 
 import { fmod, ME, ML_ERROR } from '../common/_general';
 
@@ -26,18 +26,18 @@ const { NaN: ML_NAN, isNaN: ISNAN, isFinite: R_FINITE } = Number;
 // sin(pi * x)  -- exact when x = k/2  for all integer k
 const printer_sinpi = debug('sinpi');
 export function sinpi(x: number): number {
-  if (ISNAN(x)) return x;
-  if (!R_FINITE(x)) {
-    ML_ERROR(ME.ME_DOMAIN, 'sinpi not finite', printer_sinpi);
-    return ML_NAN;
-  }
-  x = fmod(x, 2); // sin(pi(x + 2k)) == sin(pi x)  for all integer k
-  // map (-2,2) --> (-1,1] :
-  if (x <= -1) x += 2;
-  else if (x > 1) x -= 2;
-  if (x === 0 || x === 1) return 0;
-  if (x === 0.5) return 1;
-  if (x === -0.5) return -1;
-  // otherwise
-  return Math.sin(M_PI * x);
+    if (ISNAN(x)) return x;
+    if (!R_FINITE(x)) {
+        ML_ERROR(ME.ME_DOMAIN, 'sinpi not finite', printer_sinpi);
+        return ML_NAN;
+    }
+    x = fmod(x, 2); // sin(pi(x + 2k)) == sin(pi x)  for all integer k
+    // map (-2,2) --> (-1,1] :
+    if (x <= -1) x += 2;
+    else if (x > 1) x -= 2;
+    if (x === 0 || x === 1) return 0;
+    if (x === 0.5) return 1;
+    if (x === -0.5) return -1;
+    // otherwise
+    return Math.sin(M_PI * x);
 }

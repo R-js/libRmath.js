@@ -15,7 +15,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import * as debug from 'debug';
+import { debug } from 'debug';
 import { ML_ERR_return_NAN } from '../common/_general';
 import { randomGenHelper } from '../r-func';
 import { IRNG } from '../rng';
@@ -24,24 +24,14 @@ const { isNaN: ISNAN, isFinite: R_FINITE } = Number;
 const { PI: M_PI } = Math;
 const printer = debug('rcauchy');
 
-export function rcauchy(n: number,
-  location = 0,
-  scale = 1,
-  rng: IRNG): number[] {
-  return randomGenHelper(n, rcauchyOne, location, scale, rng);
+export function rcauchy(n: number, location = 0, scale = 1, rng: IRNG): number[] {
+    return randomGenHelper(n, rcauchyOne, location, scale, rng);
 }
 
-export function rcauchyOne(
-
-  location = 0,
-  scale = 1,
-  rng: IRNG
-): number {
-
-  if (ISNAN(location) || !R_FINITE(scale) || scale < 0) {
-    return ML_ERR_return_NAN(printer);
-  }
-  if (scale === 0 || !R_FINITE(location)) return location;
-  else return location + scale * Math.tan(M_PI * (rng.internal_unif_rand()));
-
+export function rcauchyOne(location = 0, scale = 1, rng: IRNG): number {
+    if (ISNAN(location) || !R_FINITE(scale) || scale < 0) {
+        return ML_ERR_return_NAN(printer);
+    }
+    if (scale === 0 || !R_FINITE(location)) return location;
+    else return location + scale * Math.tan(M_PI * rng.internal_unif_rand());
 }

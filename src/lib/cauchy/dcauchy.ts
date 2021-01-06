@@ -14,33 +14,24 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-import * as debug from 'debug';
+import { debug } from 'debug';
 import { ML_ERR_return_NAN } from '../common/_general';
 
 const { isNaN: ISNAN } = Number;
 const { PI: M_PI, log } = Math;
 const printer = debug('dcauchy');
 
-export function dcauchy(
-  x: number,
-  location = 0,
-  scale = 1,
-  giveLog = false
-): number {
-  
+export function dcauchy(x: number, location = 0, scale = 1, giveLog = false): number {
     let y: number;
     /* NaNs propagated correctly */
     if (ISNAN(x) || ISNAN(location) || ISNAN(scale)) {
-      return x + location + scale;
+        return x + location + scale;
     }
 
     if (scale <= 0) {
-      return ML_ERR_return_NAN(printer);
+        return ML_ERR_return_NAN(printer);
     }
 
     y = (x - location) / scale;
-    return giveLog
-      ? -log(M_PI * scale * (1 + y * y))
-      : 1 / (M_PI * scale * (1 + y * y));
- 
+    return giveLog ? -log(M_PI * scale * (1 + y * y)) : 1 / (M_PI * scale * (1 + y * y));
 }

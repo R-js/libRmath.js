@@ -14,7 +14,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-import * as debug from 'debug';
+import { debug } from 'debug';
 
 import { ML_ERR_return_NAN } from '../common/_general';
 import { exp_rand } from '../exp/sexp';
@@ -26,19 +26,11 @@ const { isFinite: R_FINITE } = Number;
 const printer = debug('rgeom');
 
 export function rgeom(n, p, rng): number[] {
-   return Array.from({length:n}).map(() => rgeomOne(p, rng))
+    return Array.from({ length: n }).map(() => rgeomOne(p, rng));
 }
 
-export function rgeomOne(
-  p: number,
-  rng: IRNGNormal
-): number {
-
+export function rgeomOne(p: number, rng: IRNGNormal): number {
     if (!R_FINITE(p) || p <= 0 || p > 1) return ML_ERR_return_NAN(printer);
 
-    return rpoisOne(
-      exp_rand(rng.rng.internal_unif_rand) * ((1 - p) / p),
-      rng
-    ) as number;
-
+    return rpoisOne(exp_rand(rng.rng.internal_unif_rand) * ((1 - p) / p), rng) as number;
 }

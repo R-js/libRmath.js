@@ -15,7 +15,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import * as debug from 'debug';
+import { debug } from 'debug';
 
 import { ML_ERR_return_NAN } from '../common/_general';
 import { IRNG } from '../rng';
@@ -24,26 +24,18 @@ const { log } = Math;
 const { isNaN: ISNAN, isFinite: R_FINITE } = Number;
 const printer_rlogis = debug('rlogis');
 
-
-export function rlogis( N: number, location: number = 0,
-  scale: number = 1,
-  rng: IRNG): number[] {
-    return Array.from({length:N}).map(() => rlogisOne(location, scale, rng));
+export function rlogis(N: number, location = 0, scale = 1, rng: IRNG): number[] {
+    return Array.from({ length: N }).map(() => rlogisOne(location, scale, rng));
 }
 
-export function rlogisOne(
-  location: number = 0,
-  scale: number = 1,
-  rng: IRNG
-): number {
-
+export function rlogisOne(location = 0, scale = 1, rng: IRNG): number {
     if (ISNAN(location) || !R_FINITE(scale)) {
-      return ML_ERR_return_NAN(printer_rlogis);
+        return ML_ERR_return_NAN(printer_rlogis);
     }
 
     if (scale === 0 || !R_FINITE(location)) return location;
     else {
-      let u: number = rng.internal_unif_rand();
-      return location + scale * log(u / (1 - u));
+        const u: number = rng.internal_unif_rand();
+        return location + scale * log(u / (1 - u));
     }
 }

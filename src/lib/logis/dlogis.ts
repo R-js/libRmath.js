@@ -14,7 +14,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-import * as debug from 'debug';
+import { debug } from 'debug';
 import { ML_ERR_return_NAN } from '../common/_general';
 
 const { log, exp, abs: fabs } = Math;
@@ -22,18 +22,13 @@ const { isNaN: ISNAN } = Number;
 
 const printer_dlogis = debug('dlogis');
 
-export function dlogis(
-  x: number,
-  location: number = 0,
-  scale: number = 1,
-  give_log: boolean = false
-): number {
+export function dlogis(x: number, location = 0, scale = 1, give_log = false): number {
     let e: number;
     let f: number;
 
     if (ISNAN(x) || ISNAN(location) || ISNAN(scale)) return NaN;
     if (scale <= 0.0) {
-      return ML_ERR_return_NAN(printer_dlogis);
+        return ML_ERR_return_NAN(printer_dlogis);
     }
 
     x = fabs((x - location) / scale);

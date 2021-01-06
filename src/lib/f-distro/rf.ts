@@ -15,7 +15,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import * as debug from 'debug';
+import { debug } from 'debug';
 
 import { rchisqOne } from '../chi-2/rchisq';
 import { ML_ERR_return_NAN } from '../common/_general';
@@ -24,21 +24,14 @@ import { IRNGNormal } from '../rng/normal';
 const printer = debug('rf');
 const { isNaN: ISNAN, isFinite: R_FINITE } = Number;
 
-
-export function rfOne(
-  n1: number,
-  n2: number,
-  rng: IRNGNormal
-): number {
-
+export function rfOne(n1: number, n2: number, rng: IRNGNormal): number {
     let v1;
     let v2;
     if (ISNAN(n1) || ISNAN(n2) || n1 <= 0 || n2 <= 0) {
-      return ML_ERR_return_NAN(printer);
+        return ML_ERR_return_NAN(printer);
     }
 
     v1 = R_FINITE(n1) ? rchisqOne(n1, rng) / n1 : 1;
     v2 = R_FINITE(n2) ? rchisqOne(n2, rng) / n2 : 1;
     return v1 / v2;
-  
 }

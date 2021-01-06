@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 /* This is a conversion from libRmath.so to Typescript/Javascript
 Copyright (C) 2018  Jacob K.F. Bogers  info@mail.jacob-bogers.com
 
@@ -15,7 +15,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-import * as debug from 'debug';
+import { debug } from 'debug';
 import { ML_ERR_return_NAN } from '../common/_general';
 import { IRNG } from '../rng/irng';
 
@@ -24,18 +24,18 @@ const { floor, round } = Math;
 const printer_rsignrank = debug('rsignrank');
 
 export function rsignrank(nn: number, n: number, rng: IRNG): number | number[] {
-  return Array.from({ length: nn}).map(() => {
-    /* NaNs propagated correctly */
-    if (ISNAN(n)) return n;
-    const nRound = round(n);
-    if (nRound < 0) return ML_ERR_return_NAN(printer_rsignrank);
+    return Array.from({ length: nn }).map(() => {
+        /* NaNs propagated correctly */
+        if (ISNAN(n)) return n;
+        const nRound = round(n);
+        if (nRound < 0) return ML_ERR_return_NAN(printer_rsignrank);
 
-    if (nRound === 0) return 0;
-    let r = 0.0;
-    let k = floor(nRound);
-    for (let i = 0; i < k /**/; ) {
-      r += ++i * floor((rng.internal_unif_rand()) + 0.5);
-    }
-    return r;
-  });
+        if (nRound === 0) return 0;
+        let r = 0.0;
+        const k = floor(nRound);
+        for (let i = 0; i < k /**/; ) {
+            r += ++i * floor(rng.internal_unif_rand() + 0.5);
+        }
+        return r;
+    });
 }

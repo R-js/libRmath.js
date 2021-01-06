@@ -14,7 +14,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-import * as debug from 'debug';
+import { debug } from 'debug';
 import { dbinom_raw } from '../binomial/dbinom';
 import { ML_ERR_return_NAN, R_D__0, R_D_nonint_check } from '../common/_general';
 
@@ -23,22 +23,21 @@ const { round: R_forceint, log } = Math;
 
 const printer = debug('dgeom');
 
-export function dgeom(x: number, p: number, giveLog: boolean = false): number {
-  
+export function dgeom(x: number, p: number, giveLog = false): number {
     let prob: number;
 
     if (ISNAN(x) || ISNAN(p)) return x + p;
 
     if (p <= 0 || p > 1) {
-      return ML_ERR_return_NAN(printer);
+        return ML_ERR_return_NAN(printer);
     }
 
-    let rc = R_D_nonint_check(giveLog, x, printer);
+    const rc = R_D_nonint_check(giveLog, x, printer);
     if (rc !== undefined) {
-      return rc;
+        return rc;
     }
     if (x < 0 || !R_FINITE(x) || p === 0) {
-      return R_D__0(giveLog);
+        return R_D__0(giveLog);
     }
     x = R_forceint(x);
 

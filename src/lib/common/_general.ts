@@ -15,7 +15,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import * as debug from 'debug';
+import { debug } from 'debug';
 
 const debug_R_Q_P01_boundaries = debug('R_Q_P01_boundaries');
 const debug_R_Q_P01_check = debug('R_Q_P01_check');
@@ -53,7 +53,7 @@ export const sin = Math.sin;
 export const cos = Math.cos;
 export const tan = Math.tan;
 */ export const M_1_PI =
-  1.0 / Math.PI;
+    1.0 / Math.PI;
 /*export const R_FINITE = (x: number) => Number.isFinite(x);
 export const NaN = Number.NaN;
 export const FLT_MIN = 2.22507e-308; //10^24  larger then Number.MIN_VALUE
@@ -66,7 +66,7 @@ export const ML_POSINF = Number.POSITIVE_INFINITY;
 export const ML_NEGINF = Number.NEGATIVE_INFINITY;
 export const M_PI = 3.14159265358979323846264338327950288;
 */ export const M_PI_2 =
-  Math.PI / 2;
+    Math.PI / 2;
 export const M_LN_SQRT_PI = 0.57236494292470008; // log(sqrt(pi))
 export const M_LN_SQRT_2PI = 0.918938533204672741780329736406; // log(sqrt(2*pi))
 export const M_LN_SQRT_PId2 = 0.225791352644727432363097614947; // log(sqrt(pi/2))
@@ -85,29 +85,29 @@ export const DBL_MIN_EXP = Math.log2(Number.MIN_VALUE);
 //  4 * Math.ceil(Math.log(Number.MAX_SAFE_INTEGER) / Math.log(2) / 4 / CHAR_BIT);
 
 export const R_D__1 = (logP: boolean) => {
-  return logP ? 0 : 1.0;
+    return logP ? 0 : 1.0;
 };
 
 export const R_D__0 = (logP: boolean): number => {
-  return logP ? Number.NEGATIVE_INFINITY : 0.0;
+    return logP ? Number.NEGATIVE_INFINITY : 0.0;
 };
 
 export const R_DT_0 = (lower_tail: boolean, log_p: boolean): number => {
-  return lower_tail ? R_D__0(log_p) : R_D__1(log_p);
+    return lower_tail ? R_D__0(log_p) : R_D__1(log_p);
 };
 export const R_DT_1 = (lower_tail: boolean, log_p: boolean): number => {
-  return lower_tail ? R_D__1(log_p) : R_D__0(log_p);
+    return lower_tail ? R_D__1(log_p) : R_D__0(log_p);
 };
 export const R_D_val = (log_p: boolean, x: number) => {
-  return log_p ? Math.log(x) : x;
+    return log_p ? Math.log(x) : x;
 };
 
 export function R_D_Clog(log_p: boolean, p: number): number {
-  return log_p ? Math.log1p(-p) : 0.5 - p + 0.5; /* [log](1-p) */
+    return log_p ? Math.log1p(-p) : 0.5 - p + 0.5; /* [log](1-p) */
 }
 
 export function R_DT_val(lower_tail: boolean, log_p: boolean, x: number) {
-  return lower_tail ? R_D_val(log_p, x) : R_D_Clog(log_p, x);
+    return lower_tail ? R_D_val(log_p, x) : R_D_Clog(log_p, x);
 }
 
 /*
@@ -119,60 +119,56 @@ export function rround(x: number) {
 }
 */
 export function imin2(x: number, y: number): number {
-  return Math.trunc(Math.min(x, y));
+    return Math.trunc(Math.min(x, y));
 }
 
 /* Use 0.5 - p + 0.5 to perhaps gain 1 bit of accuracy */
 export function R_D_Lval(lowerTail: boolean, p: number): number {
-  return lowerTail ? p : 1 - p; /*  p  */
+    return lowerTail ? p : 1 - p; /*  p  */
 }
 
 export function R_D_Cval(lowerTail: boolean, p: number): number {
-  return lowerTail ? 1 - p : p; /*  1 - p */
+    return lowerTail ? 1 - p : p; /*  1 - p */
 }
 
-export function R_P_bounds_Inf_01(
-  lowerTail: boolean,
-  log_p: boolean,
-  x: number
-): number | undefined {
-  if (!Number.isFinite(x)) {
-    if (x > 0) {
-      return R_DT_1(lowerTail, log_p);
+export function R_P_bounds_Inf_01(lowerTail: boolean, log_p: boolean, x: number): number | undefined {
+    if (!Number.isFinite(x)) {
+        if (x > 0) {
+            return R_DT_1(lowerTail, log_p);
+        }
+        return R_DT_0(lowerTail, log_p);
     }
-    return R_DT_0(lowerTail, log_p);
-  }
-  return undefined;
+    return undefined;
 }
 
 export function R_D_half(log_p: boolean) {
-  return log_p ? -M_LN2 : 0.5; // 1/2 (lower- or upper tail)
+    return log_p ? -M_LN2 : 0.5; // 1/2 (lower- or upper tail)
 }
 
 export function R_P_bounds_01(
-  lower_tail: boolean,
-  log_p: boolean,
-  x: number,
-  x_min: number,
-  x_max: number
+    lower_tail: boolean,
+    log_p: boolean,
+    x: number,
+    x_min: number,
+    x_max: number,
 ): number | undefined {
-  if (x <= x_min) return R_DT_0(lower_tail, log_p);
-  if (x >= x_max) return R_DT_1(lower_tail, log_p);
-  return undefined;
+    if (x <= x_min) return R_DT_0(lower_tail, log_p);
+    if (x >= x_max) return R_DT_1(lower_tail, log_p);
+    return undefined;
 }
 
 export const R_D_exp = (log_p: boolean, x: number): number => {
-  return log_p ? x : Math.exp(x);
-  /* exp(x) */
+    return log_p ? x : Math.exp(x);
+    /* exp(x) */
 };
 
 export enum ME {
-  ME_NONE = 0, // no error
-  ME_DOMAIN = 1, // argument out of domain
-  ME_RANGE = 2, //  value out of range
-  ME_NOCONV = 4, //process did not converge
-  ME_PRECISION = 8, //does not have "full" precision
-  ME_UNDERFLOW = 16 // and underflow occured (important for IEEE)
+    ME_NONE = 0, // no error
+    ME_DOMAIN = 1, // argument out of domain
+    ME_RANGE = 2, //  value out of range
+    ME_NOCONV = 4, //process did not converge
+    ME_PRECISION = 8, //does not have "full" precision
+    ME_UNDERFLOW = 16, // and underflow occured (important for IEEE)
 }
 /*
 export const min0 = (x: number, y: number): number => {
@@ -183,68 +179,64 @@ export const max0 = (x: number, y: number): number => {
 };
 */
 export const mapErr = new Map([
-  [ME.ME_NONE, 'No error'],
-  [ME.ME_DOMAIN, "argument out of domain in '%s'"],
-  [ME.ME_RANGE, "argument out of domain in '%s'"],
-  [ME.ME_NOCONV, "convergence failed in '%s'"],
-  [ME.ME_PRECISION, "full precision may not have been achieved in '%s'"],
-  [ME.ME_UNDERFLOW, "underflow occurred in '%s'"]
+    [ME.ME_NONE, 'No error'],
+    [ME.ME_DOMAIN, "argument out of domain in '%s'"],
+    [ME.ME_RANGE, "argument out of domain in '%s'"],
+    [ME.ME_NOCONV, "convergence failed in '%s'"],
+    [ME.ME_PRECISION, "full precision may not have been achieved in '%s'"],
+    [ME.ME_UNDERFLOW, "underflow occurred in '%s'"],
 ]);
 
 export const ML_ERROR = (x: ME, s: any, printer: debug.IDebugger) => {
-  const str = mapErr.get(x);
-  if (str) {
-    printer(str, s);
-  }
+    const str = mapErr.get(x);
+    if (str) {
+        printer(str, s);
+    }
 };
 
 export function ML_ERR_return_NAN(printer: debug.IDebugger) {
-  ML_ERROR(ME.ME_DOMAIN, '', printer);
-  return Number.NaN;
+    ML_ERROR(ME.ME_DOMAIN, '', printer);
+    return Number.NaN;
 }
 
-export function R_D_nonint_check(
-  log: boolean,
-  x: number,
-  printer: debug.IDebugger
-) {
-  if (R_nonint(x)) {
-    printer('non-integer x = %d', x);
-    return R_D__0(log);
-  }
-  return undefined;
+export function R_D_nonint_check(log: boolean, x: number, printer: debug.IDebugger) {
+    if (R_nonint(x)) {
+        printer('non-integer x = %d', x);
+        return R_D__0(log);
+    }
+    return undefined;
 }
 
 export function fmod(x: number, y: number): number {
-  // 4.2 % 0.1 gives 0.099999999
-  // this is wong so...
-  return x - Math.trunc(x / y) * y;
+    // 4.2 % 0.1 gives 0.099999999
+    // this is wong so...
+    return x - Math.trunc(x / y) * y;
 }
 
 export function imax2(x: number, y: number): number {
-  return Math.trunc(Math.max(x, y));
+    return Math.trunc(Math.max(x, y));
 }
 
 export function isOdd(k: number) {
-  return Math.floor(k) % 2 === 1;
+    return Math.floor(k) % 2 === 1;
 }
 
 export function epsilonNear(x: number, target: number): number {
-  if (Number.isNaN(x)) return x;
-  if (!isFinite(x)) return x;
-  if (Number.isNaN(target)) return x;
-  if (!isFinite(target)) return x;
+    if (Number.isNaN(x)) return x;
+    if (!isFinite(x)) return x;
+    if (Number.isNaN(target)) return x;
+    if (!isFinite(target)) return x;
 
-  let diff = x - target;
-  if (diff > Number.EPSILON || diff < -Number.EPSILON) {
-    return x;
-  }
-  return target;
+    const diff = x - target;
+    if (diff > Number.EPSILON || diff < -Number.EPSILON) {
+        return x;
+    }
+    return target;
 }
 
 export function isEpsilonNear(x: number, target: number): boolean {
-  if (isFinite(x) && isFinite(target)) return epsilonNear(x, target) === target;
-  return false;
+    if (isFinite(x) && isFinite(target)) return epsilonNear(x, target) === target;
+    return false;
 }
 
 /*
@@ -274,15 +266,15 @@ export function Rf_d1mach(i: number): number {
 }
 */
 export function R_D_negInonint(x: number) {
-  return x < 0.0 || R_nonint(x);
+    return x < 0.0 || R_nonint(x);
 }
 
 export function R_nonint(x: number) {
-  return !Number.isInteger(x); //Math.abs(x - Math.round(x)) > 1e-7 * Math.max(1, Math.abs(x));
+    return !Number.isInteger(x); //Math.abs(x - Math.round(x)) > 1e-7 * Math.max(1, Math.abs(x));
 }
 
 export function R_D_fexp(give_log: boolean, f: number, x: number): number {
-  return give_log ? -0.5 * Math.log(f) + x : Math.exp(x) / Math.sqrt(f);
+    return give_log ? -0.5 * Math.log(f) + x : Math.exp(x) / Math.sqrt(f);
 }
 
 /** bessel section */
@@ -312,22 +304,22 @@ export const sqxmin_BESS_K = 1.49e-154;
 export const M_eps_sinc = 2.149e-8;
 
 export function R_pow_di(x: number, n: number) {
-  let pow: number = 1.0;
+    let pow = 1.0;
 
-  if (Number.isNaN(x)) return x;
-  if (n !== 0) {
-    if (!Number.isFinite(x)) return R_pow(x, n);
-    if (n < 0) {
-      n = -n;
-      x = 1 / x;
+    if (Number.isNaN(x)) return x;
+    if (n !== 0) {
+        if (!Number.isFinite(x)) return R_pow(x, n);
+        if (n < 0) {
+            n = -n;
+            x = 1 / x;
+        }
+        while (true) {
+            if (n & 1) pow *= x;
+            if ((n >>= 1)) x *= x;
+            else break;
+        }
     }
-    while (true) {
-      if (n & 1) pow *= x;
-      if ((n >>= 1)) x *= x;
-      else break;
-    }
-  }
-  return pow;
+    return pow;
 }
 
 //export const NA_REAL = ML_NAN;
@@ -335,44 +327,44 @@ export function R_pow_di(x: number, n: number) {
 //export const R_NegInf = ML_NEGINF;
 
 export function R_pow(x: number, y: number): number {
-  /* = x ^ y */
+    /* = x ^ y */
 
-  /* squaring is the most common of the specially handled cases so
+    /* squaring is the most common of the specially handled cases so
        check for it first. */
-  if (y === 2.0) return x * x;
-  if (x === 1 || y === 0) return 1;
-  if (x === 0) {
-    if (y > 0) return 0;
-    else if (y < 0) return Number.POSITIVE_INFINITY;
-    else return y; /* NA or NaN, we assert */
-  }
-  if (Number.isFinite(x) && Number.isFinite(y)) {
-    /* There was a special case for y == 0.5 here, but
+    if (y === 2.0) return x * x;
+    if (x === 1 || y === 0) return 1;
+    if (x === 0) {
+        if (y > 0) return 0;
+        else if (y < 0) return Number.POSITIVE_INFINITY;
+        else return y; /* NA or NaN, we assert */
+    }
+    if (Number.isFinite(x) && Number.isFinite(y)) {
+        /* There was a special case for y == 0.5 here, but
            gcc 4.3.0 -g -O2 mis-compiled it.  Showed up with
            100^0.5 as 3.162278, example(pbirthday) failed. */
-    return Math.pow(x, y);
-  }
-  if (Number.isNaN(x) || Number.isNaN(y)) return x + y;
-  if (!Number.isFinite(x)) {
-    if (x > 0)
-      /* Inf ^ y */
-      return y < 0 ? 0 : Number.POSITIVE_INFINITY;
-    else {
-      /* (-Inf) ^ y */
-      if (Number.isFinite(y) && y === Math.floor(y))
-        /* (-Inf) ^ n */
-        return y < 0 ? 0 : myfmod(y, 2) ? x : -x;
+        return Math.pow(x, y);
     }
-  }
-  if (!Number.isFinite(y)) {
-    if (x >= 0) {
-      if (y > 0)
-        /* y == +Inf */
-        return x >= 1 ? Number.POSITIVE_INFINITY : 0; /* y == -Inf */
-      else return x < 1 ? Number.POSITIVE_INFINITY : 0;
+    if (Number.isNaN(x) || Number.isNaN(y)) return x + y;
+    if (!Number.isFinite(x)) {
+        if (x > 0)
+            /* Inf ^ y */
+            return y < 0 ? 0 : Number.POSITIVE_INFINITY;
+        else {
+            /* (-Inf) ^ y */
+            if (Number.isFinite(y) && y === Math.floor(y))
+                /* (-Inf) ^ n */
+                return y < 0 ? 0 : myfmod(y, 2) ? x : -x;
+        }
     }
-  }
-  return NaN; // all other cases: (-Inf)^{+-Inf, non-int}; (neg)^{+-Inf}
+    if (!Number.isFinite(y)) {
+        if (x >= 0) {
+            if (y > 0)
+                /* y == +Inf */
+                return x >= 1 ? Number.POSITIVE_INFINITY : 0;
+            /* y == -Inf */ else return x < 1 ? Number.POSITIVE_INFINITY : 0;
+        }
+    }
+    return NaN; // all other cases: (-Inf)^{+-Inf, non-int}; (neg)^{+-Inf}
 }
 
 export const R_finite = (x: number) => !Number.isFinite(x);
@@ -382,52 +374,52 @@ export const R_finite = (x: number) => !Number.isFinite(x);
 export const R_isnancpp = (x: number) => Number.isNaN(x);
 
 export function myfmod(x1: number, x2: number) {
-  let q = x1 / x2;
-  return x1 - Math.floor(q) * x2;
+    const q = x1 / x2;
+    return x1 - Math.floor(q) * x2;
 }
 
 export function R_powV(x: number, y: number): number /* = x ^ y */ {
-  if (x === 1 || y === 0) return 1;
-  if (x === 0) {
-    if (y > 0) return 0;
-    /* y < 0 */ return Number.POSITIVE_INFINITY;
-  }
-  if (Number.isFinite(x) && Number.isFinite(y)) return Math.pow(x, y);
-  if (Number.isNaN(x) || Number.isNaN(y)) {
-    return x + y;
-  }
-  if (!Number.isFinite(x)) {
-    if (x > 0)
-      /* Inf ^ y */
-      return y < 0 ? 0 : Number.POSITIVE_INFINITY;
-    else {
-      /* (-Inf) ^ y */
-      if (Number.isFinite(y) && y === Math.floor(y))
-        /* (-Inf) ^ n */
-        return y < 0 ? 0 : myfmod(y, 2) ? x : -x;
+    if (x === 1 || y === 0) return 1;
+    if (x === 0) {
+        if (y > 0) return 0;
+        /* y < 0 */ return Number.POSITIVE_INFINITY;
     }
-  }
-  if (!Number.isFinite(y)) {
-    if (x >= 0) {
-      if (y > 0)
-        /* y == +Inf */
-        return x >= 1 ? Number.POSITIVE_INFINITY : 0; /* y == -Inf */
-      else return x < 1 ? Number.POSITIVE_INFINITY : 0;
+    if (Number.isFinite(x) && Number.isFinite(y)) return Math.pow(x, y);
+    if (Number.isNaN(x) || Number.isNaN(y)) {
+        return x + y;
     }
-  }
-  return NaN; /* all other cases: (-Inf)^{+-Inf,
+    if (!Number.isFinite(x)) {
+        if (x > 0)
+            /* Inf ^ y */
+            return y < 0 ? 0 : Number.POSITIVE_INFINITY;
+        else {
+            /* (-Inf) ^ y */
+            if (Number.isFinite(y) && y === Math.floor(y))
+                /* (-Inf) ^ n */
+                return y < 0 ? 0 : myfmod(y, 2) ? x : -x;
+        }
+    }
+    if (!Number.isFinite(y)) {
+        if (x >= 0) {
+            if (y > 0)
+                /* y == +Inf */
+                return x >= 1 ? Number.POSITIVE_INFINITY : 0;
+            /* y == -Inf */ else return x < 1 ? Number.POSITIVE_INFINITY : 0;
+        }
+    }
+    return NaN; /* all other cases: (-Inf)^{+-Inf,
                    non-int}; (neg)^{+-Inf} */
 }
 
 //  return x * Math.pow(2,y)
 export function ldexp(x: number, y: number): number {
-  if (Number.isNaN(x) || Number.isNaN(y)) {
-    return x + y;
-  }
-  if (!Number.isFinite(x) || !Number.isFinite(y)) {
-    return Number.POSITIVE_INFINITY;
-  }
-  return x * Math.pow(2, y);
+    if (Number.isNaN(x) || Number.isNaN(y)) {
+        return x + y;
+    }
+    if (!Number.isFinite(x) || !Number.isFinite(y)) {
+        return Number.POSITIVE_INFINITY;
+    }
+    return x * Math.pow(2, y);
 }
 
 /*
@@ -484,43 +476,43 @@ export function iF77_NAME(i: number) {
 */
 
 export function R_D_log(log_p: boolean, p: number) {
-  return log_p ? p : Math.log(p); /* log(p) */
+    return log_p ? p : Math.log(p); /* log(p) */
 }
 
 export function R_Q_P01_boundaries(
-  lower_tail: boolean,
-  log_p: boolean,
-  p: number,
-  _LEFT_: number,
-  _RIGHT_: number
+    lower_tail: boolean,
+    log_p: boolean,
+    p: number,
+    _LEFT_: number,
+    _RIGHT_: number,
 ): number | undefined {
-  if (log_p) {
-    if (p > 0) {
-      return ML_ERR_return_NAN(debug_R_Q_P01_boundaries);
+    if (log_p) {
+        if (p > 0) {
+            return ML_ERR_return_NAN(debug_R_Q_P01_boundaries);
+        }
+        if (p === 0)
+            /* upper bound*/
+            return lower_tail ? _RIGHT_ : _LEFT_;
+        if (p === Number.NEGATIVE_INFINITY) return lower_tail ? _LEFT_ : _RIGHT_;
+    } else {
+        /* !log_p */
+        if (p < 0 || p > 1) {
+            return ML_ERR_return_NAN(debug_R_Q_P01_boundaries);
+        }
+        if (p === 0) return lower_tail ? _LEFT_ : _RIGHT_;
+        if (p === 1) return lower_tail ? _RIGHT_ : _LEFT_;
     }
-    if (p === 0)
-      /* upper bound*/
-      return lower_tail ? _RIGHT_ : _LEFT_;
-    if (p === Number.NEGATIVE_INFINITY) return lower_tail ? _LEFT_ : _RIGHT_;
-  } else {
-    /* !log_p */
-    if (p < 0 || p > 1) {
-      return ML_ERR_return_NAN(debug_R_Q_P01_boundaries);
-    }
-    if (p === 0) return lower_tail ? _LEFT_ : _RIGHT_;
-    if (p === 1) return lower_tail ? _RIGHT_ : _LEFT_;
-  }
-  return undefined;
+    return undefined;
 }
 
 export function R_Q_P01_check(logP: boolean, p: number): number | undefined {
-  if ((logP && p > 0) || (!logP && (p < 0 || p > 1))) {
-    return ML_ERR_return_NAN(debug_R_Q_P01_check);
-  }
-  return undefined;
+    if ((logP && p > 0) || (!logP && (p < 0 || p > 1))) {
+        return ML_ERR_return_NAN(debug_R_Q_P01_check);
+    }
+    return undefined;
 }
 
 //#define R_D_qIv(p)	(log_p	? exp(p) : (p))		/*  p  in qF(p,..) */
 export function R_D_qIv(logP: boolean, p: number) {
-  return logP ? Math.exp(p) : p;
+    return logP ? Math.exp(p) : p;
 }
