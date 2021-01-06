@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 /* This is a conversion from libRmath.so to Typescript/Javascript
 Copyright (C) 2018  Jacob K.F. Bogers  info@mail.jacob-bogers.com
 
@@ -15,9 +15,11 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-export { BuggyKindermanRamage } from './buggy-kinderman-ramage';
-export { BoxMuller } from './box-muller';
-export { AhrensDieter} from './ahrens_dieter';
-export { Inversion } from './inversion';
-export { KindermanRamage }  from './kinderman-ramage';
-export { IRNGNormal } from './inormal-rng';
+
+export enum IRNGNormalTypeEnum {
+    BUGGY_KINDERMAN_RAMAGE,
+    AHRENS_DIETER,
+    BOX_MULLER,
+    INVERSION,
+    KINDERMAN_RAMAGE,
+}

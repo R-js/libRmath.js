@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import * as debug from 'debug';
 import { ML_ERR_return_NAN } from '../common/_general';
 import { exp_rand } from '../exp/sexp';
-import { IRNGNormal } from '../rng/normal/inormal-rng';
+import { IRNGNormal } from '../rng/normal/normal-rng';
 
 const { expm1, abs: fabs, sqrt, log, exp } = Math;
 const { isFinite: R_FINITE } = Number;
