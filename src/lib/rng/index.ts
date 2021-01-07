@@ -31,7 +31,7 @@ export { BoxMuller } from './normal/box-muller';
 export { BuggyKindermanRamage } from './normal/buggy-kinderman-ramage';
 export { KindermanRamage } from './normal/kinderman-ramage';
 // stubs
-export { IRNG } from './irng';
+export { IRNG, MessageType } from './irng';
 export { IRNGNormal } from './normal/normal-rng';
-export type { IRNGTypeEnum } from './irng-type';
-export type { IRNGNormalTypeEnum } from './normal/in01-type';
+export { IRNGTypeEnum } from './irng-type';
+export { IRNGNormalTypeEnum } from './normal/in01-type';

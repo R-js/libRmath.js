@@ -1,4 +1,4 @@
-import { WichmannHill } from '../';
+import { WichmannHill } from '../../';
 import { samples25fromSeed1234, stateAfterSeed1234, samplesAfterCorrectedSeed } from './fixture';
 import '$jest-extension';
 

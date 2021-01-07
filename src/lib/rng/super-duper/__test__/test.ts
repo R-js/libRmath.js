@@ -1,4 +1,4 @@
-import { SuperDuper } from '../';
+import { SuperDuper } from '../../';
 import { samples25fromSeed1234, stateAfterSeed4568, samplesAfterCorrectedSeed } from './fixture';
 import '$jest-extension';
 

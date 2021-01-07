@@ -1,4 +1,4 @@
-import { BoxMuller } from '../';
+import { BoxMuller } from '../../../';
 import { IRNGNormalTypeEnum } from '../../in01-type';
 import {
     rnormAfterSeed123,

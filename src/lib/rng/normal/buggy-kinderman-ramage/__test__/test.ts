@@ -1,4 +1,4 @@
-import { BuggyKindermanRamage } from '../';
+import { BuggyKindermanRamage } from '../../../';
 import { IRNGNormalTypeEnum } from '../../in01-type';
 import { testData } from './fixture';
 import '$jest-extension';

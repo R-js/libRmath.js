@@ -1,5 +1,5 @@
-import { KindermanRamage } from '../';
-import { IRNGNormalTypeEnum } from '../../in01-type';
+import { KindermanRamage } from '../../../';
+import { IRNGNormalTypeEnum } from '../../../';
 import { testData } from './fixture';
 import '$jest-extension';
 

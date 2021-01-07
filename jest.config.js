@@ -2,7 +2,7 @@
 module.exports = {
     automock: false,
     collectCoverage: true,
-    collectCoverageFrom: ['src/lib/rng/**/*'],
+    collectCoverageFrom: ['src/lib/rng/**/*.ts'],
     coveragePathIgnorePatterns: ['node_modules', 'test', 'doc.ts'],
     coverageDirectory: 'coverage',
     coverageProvider: 'v8',

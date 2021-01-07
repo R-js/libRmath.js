@@ -1,4 +1,4 @@
-import { Inversion } from '../';
+import { Inversion } from '../../../';
 import { IRNGNormalTypeEnum } from '../../in01-type';
 import { testData } from './fixture';
 import '$jest-extension';
