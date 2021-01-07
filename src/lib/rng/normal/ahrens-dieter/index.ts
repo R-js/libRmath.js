@@ -15,7 +15,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { IRNG } from '../../irng';
+import { IRNG, MessageType } from '../../irng';
 import { MersenneTwister } from '../../mersenne-twister';
 import { IRNGNormal } from '../normal-rng';
 import { IRNGNormalTypeEnum } from '../in01-type';
@@ -160,10 +160,7 @@ const h = [
 export class AhrensDieter extends IRNGNormal {
     constructor(_rng: IRNG = new MersenneTwister(0)) {
         super(_rng, 'Ahrens-Dieter', IRNGNormalTypeEnum.AHRENS_DIETER);
-    }
-
-    protected reset() {
-        /* there is no state other from the _rng*/
+        this._rng.unregister(MessageType.INIT, this.reset);
     }
 
     // shaper
