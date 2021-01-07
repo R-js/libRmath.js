@@ -24,13 +24,15 @@ export enum MessageType {
 export abstract class IRNG {
     protected _name: string;
     protected _kind: IRNGTypeEnum;
+    private notify: Map<MessageType, ((...args: any[]) => void)[]>;
 
-    private notify: Set<{ event: MessageType; handler: (...args: any[]) => void }>;
+    protected abstract internal_unif_rand(): number;
 
     constructor(name: string, kind: IRNGTypeEnum) {
         this._name = name;
         this._kind = kind;
-        this.notify = new Set<{ event: MessageType; handler: (...args: any[]) => void }>();
+        this.notify = new Map();
+        this.emit = this.emit.bind(this);
     }
 
     public get name() {
@@ -50,6 +52,37 @@ export abstract class IRNG {
         return rc;
     }
 
+    public emit(event: MessageType, ...args: any[]) {
+        const handlers = this.notify.get(event);
+        if (handlers !== undefined) {
+            handlers.forEach((h) => h(...args));
+        }
+    }
+
+    public register(event: MessageType, handler: (...args: any[]) => void) {
+        const handlers = this.notify.get(event) || [];
+        this.notify.set(event, handlers);
+        handlers.push(handler);
+    }
+
+    public unregister(event: MessageType, handler?: (...args: any[]) => void) {
+        if (!handler) {
+            this.notify.delete(event);
+            return;
+        }
+        const handlers = this.notify.get(event);
+        if (!handlers) {
+            return;
+        }
+        const idx = handlers.indexOf(handler);
+        if (idx >= 0) {
+            handlers.splice(idx, 1);
+            if (handlers.length === 0) {
+                this.notify.delete(event);
+            }
+        }
+    }
+
     public random() {
         return this.internal_unif_rand();
     }
@@ -60,18 +93,4 @@ export abstract class IRNG {
     public init(seed: number): void {
         this.emit(MessageType.INIT, seed);
     }
-
-    public register(event: MessageType, handler: (...args: any[]) => void) {
-        this.notify.add({ event, handler });
-    }
-
-    public emit(event: MessageType, ...args: any[]) {
-        this.notify.forEach((r) => {
-            if (r.event === event) {
-                r.handler(...args);
-            }
-        });
-    }
-
-    protected abstract internal_unif_rand(): number;
 }

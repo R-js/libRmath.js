@@ -15,7 +15,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { IRNG } from '../../irng';
+import { IRNG, MessageType } from '../../irng';
 // dependency how to handle this in bundle
 import { qnorm } from '../../../normal/qnorm';
 import { MersenneTwister } from '../../mersenne-twister';
@@ -25,12 +25,9 @@ import { IRNGNormalTypeEnum } from '../in01-type';
 const BIG = 134217728; /* 2^27 */
 
 export class Inversion extends IRNGNormal {
-    protected reset() {
-        /* dud */
-    }
-
     constructor(_rng: IRNG = new MersenneTwister(0)) {
         super(_rng, 'Inversion', IRNGNormalTypeEnum.INVERSION);
+        this._rng.unregister(MessageType.INIT, this.reset);
     }
 
     public internal_norm_rand(): number {

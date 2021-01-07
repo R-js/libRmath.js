@@ -1,9 +1,10 @@
-import { BuggyKindermanRamage } from '../';
+import { BuggyKindermanRamage } from '../../../';
 import { IRNGNormalTypeEnum } from '../../in01-type';
 import { testData } from './fixture';
 import '$jest-extension';
 
 const { rnorm10, runif1, rnorm4, runif1_2, rnorm2, rnorm2AfterResetSeedTo0 } = testData;
+import flushSample from './_1000flushSample';
 
 describe('rng buggy kinderman-ramage', function () {
     it('compare 10 samples seed=1234', () => {
@@ -47,9 +48,11 @@ describe('rng buggy kinderman-ramage', function () {
         const result = bkm.randoms(2);
         expect(result).toEqualFloatingPointBinary(rnorm2AfterResetSeedTo0, 22, false, false);
     });
-    it('identity', () => {
+    it('identity and flush-test', () => {
         const bkm = new BuggyKindermanRamage();
         expect(bkm.name).toBe('Buggy-Kinderman-Ramage');
         expect(bkm.kind).toBe(IRNGNormalTypeEnum.BUGGY_KINDERMAN_RAMAGE);
+        bkm.uniform_rng.init(1234);
+        expect(bkm.randoms(1e3)).toEqualFloatingPointBinary(flushSample, 22, false, false);
     });
 });

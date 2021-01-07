@@ -1,17 +1,10 @@
-import { KnuthTAOCP } from '../';
+import { KnuthTAOCP } from '../../';
 import { fixture as getRFixture } from './fixture';
 //import '../../../../../packages/jest-extension';
 import '$jest-extension';
 
 const fixture = getRFixture();
-/*
-function getTypeString(o: any) {
-    const ts = typeof o;
-    if (o === undefined) return 'undefined';
-    if (o === null) return null;
-    if (['string', 'number', 'symbol', 'function'].includes(ts)) return ts;
-}
-*/
+
 describe('rng knuth-taocp', function n() {
     it('sample for seed=0, n=10', () => {
         const knuth1997 = new KnuthTAOCP(0);

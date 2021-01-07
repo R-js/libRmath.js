@@ -1,5 +1,6 @@
 const rollup = require('rollup');
-const builtin = require('module').builtinModules.slice(); // not a real array?
+// builtinModules is frozen!!! (Object.freeze)
+const builtin = require('module').builtinModules.slice();
 const { terser } = require('rollup-plugin-terser');
 const { nodeResolve } = require('@rollup/plugin-node-resolve');
 
@@ -57,7 +58,7 @@ const outputOptions = {
     entryFileNames: '[name].min.js',
     sourcemap: true,
     name: 'R',
-    //plugins: [terser()],
+    plugins: [terser()],
 };
 
 async function build() {

@@ -23,6 +23,10 @@ export abstract class IRNGNormal {
     protected _name: string;
     protected _kind: IRNGNormalTypeEnum;
 
+    protected reset() {
+        /* dud */
+    }
+
     constructor(_rng: IRNG, name: string, kind: IRNGNormalTypeEnum) {
         this._rng = _rng;
         this._name = name;
@@ -30,7 +34,8 @@ export abstract class IRNGNormal {
         this.random = this.random.bind(this);
         this.randoms = this.randoms.bind(this);
         this.internal_norm_rand = this.internal_norm_rand.bind(this);
-        this._rng.register(MessageType.INIT, this.reset.bind(this));
+        this.reset = this.reset.bind(this);
+        this._rng.register(MessageType.INIT, this.reset);
     }
 
     public randoms(n: number): Float32Array {
@@ -60,7 +65,4 @@ export abstract class IRNGNormal {
 
     // implementation specific
     protected abstract internal_norm_rand(): number;
-
-    //reset
-    protected abstract reset(_seed: number): void;
 }

@@ -1,4 +1,4 @@
-import { MersenneTwister } from '../';
+import { MersenneTwister } from '../../';
 import { samples100fromSeed1234, seedStateAfterSeed1234 } from './fixture';
 import '$jest-extension';
 

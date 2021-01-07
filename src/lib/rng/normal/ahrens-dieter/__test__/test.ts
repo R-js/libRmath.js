@@ -1,4 +1,4 @@
-import { AhrensDieter } from '../';
+import { AhrensDieter } from '../../../';
 import { IRNGNormalTypeEnum } from '../../in01-type';
 import _1000Samples from './fixture-1000';
 import {

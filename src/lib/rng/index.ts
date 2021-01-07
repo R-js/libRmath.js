@@ -29,3 +29,9 @@ export { AhrensDieter } from './normal/ahrens-dieter';
 export { Inversion } from './normal/inversion';
 export { BoxMuller } from './normal/box-muller';
 export { BuggyKindermanRamage } from './normal/buggy-kinderman-ramage';
+export { KindermanRamage } from './normal/kinderman-ramage';
+// stubs
+export { IRNG, MessageType } from './irng';
+export { IRNGNormal } from './normal/normal-rng';
+export { IRNGTypeEnum } from './irng-type';
+export { IRNGNormalTypeEnum } from './normal/in01-type';
