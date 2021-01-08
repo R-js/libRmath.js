@@ -88,12 +88,18 @@
     // we dont use dynamic module loading or the ES6 module spec
     "moduleResolution": "node",
     "paths": { //  we can use this for the test to pick up the module
-      "$*": [ 
+      "$*": [ // this needs to be really its own module
         "packages/*"
       ],
-      "@pck/*":[
-        "packages/*"
-      ]
+      "@common/*":[
+        "packages/common/*"
+      ],
+      "@rng/*":[
+        "lib/rng/*"
+      ],
+      "@special/*":[
+        "lib/special-functions/*"
+      ],
     }, // maybe use later, if you decide to use this, specify baseurl
     // source maps
     "preserveSymlinks": true, // keep it around just in case
