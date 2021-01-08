@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import { debug } from 'debug';
 import { ME, ML_ERROR } from '@common/logger';
-import { sinpi } from '../../trigonometry/sinpi';
+import { sinpi } from '@trig/sinpi';
 import { bessel_k } from '../besselK';
 import { I_bessel } from './IBessel';
 
@@ -28,21 +28,14 @@ const printer = debug('bessel_i');
 
 /* .Internal(besselI(*)) : */
 export function bessel_i(x: number, alpha: number, expo = false): number {
-    //int
-    let nb;
-    let ize;
-
-    //double
-    let na;
-
     /* NaNs propagated correctly */
     if (ISNAN(x) || ISNAN(alpha)) return x + alpha;
     if (x < 0) {
         ML_ERROR(ME.ME_RANGE, 'bessel_i', printer);
         return NaN;
     }
-    ize = expo ? 2 : 1;
-    na = floor(alpha);
+    const ize = expo ? 2 : 1;
+    const na = floor(alpha);
     if (alpha < 0) {
         /* Using Abramowitz & Stegun  9.6.2 & 9.6.6
          * this may not be quite optimal (CPU and accuracy wise) */
@@ -53,7 +46,7 @@ export function bessel_i(x: number, alpha: number, expo = false): number {
                 : ((bessel_k(x, -alpha, expo) * (ize === 1 ? 2 : 2 * exp(-2 * x))) / M_PI) * sinpi(-alpha))
         );
     }
-    nb = 1 + trunc(na); /* nb-1 <= alpha < nb */
+    const nb = 1 + trunc(na); /* nb-1 <= alpha < nb */
     alpha -= nb - 1;
 
     const rc = I_bessel(x, alpha, nb, ize);

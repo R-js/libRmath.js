@@ -100,6 +100,9 @@
       "@special/*":[
         "lib/special-functions/*"
       ],
+      "@trig/*":[
+        "lib/trigonometry/*"
+      ]
     }, // maybe use later, if you decide to use this, specify baseurl
     // source maps
     "preserveSymlinks": true, // keep it around just in case
