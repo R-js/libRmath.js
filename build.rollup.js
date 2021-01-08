@@ -71,9 +71,9 @@ const outputOptions = {
     sourcemap: true,
     name: 'R',
     globals(id) {
-        console.log('>>globals', id);
-        if (id.endsWith('\\logger')) return '$logger';
+        if (id.endsWith('\\logger')) return 'R.logger';
     },
+    extend: true,
 };
 
 async function build() {
