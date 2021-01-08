@@ -16,7 +16,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { debug } from 'debug';
-import { ME, ML_ERROR } from '$logger';
+import { ME, ML_ERROR } from '@common/logger';
 import { sinpi } from '../../trigonometry/sinpi';
 import { bessel_k } from '../besselK';
 import { I_bessel } from './IBessel';
