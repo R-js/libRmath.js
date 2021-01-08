@@ -14,11 +14,9 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { internal_choose, internal_lchoose, lfastchoose, lfastchoose2 } from './choose';
 
-export default {
-    choose: internal_choose,
-    lchoose: internal_lchoose,
-    lfastchoose,
-    lfastchoose2,
-};
+export interface IBesselRC {
+    x: number;
+    nb: number;
+    ncalc: number;
+}

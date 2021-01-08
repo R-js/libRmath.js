@@ -207,10 +207,8 @@ export function R_D_nonint_check(log: boolean, x: number, printer: debug.IDebugg
     return undefined;
 }
 
-export function fmod(x: number, y: number): number {
-    // 4.2 % 0.1 gives 0.099999999
-    // this is wong so...
-    return x - Math.trunc(x / y) * y;
+export function fmod(x: number, y: number) {
+    return x % y;
 }
 
 export function imax2(x: number, y: number): number {

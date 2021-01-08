@@ -14,11 +14,15 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { internal_choose, internal_lchoose, lfastchoose, lfastchoose2 } from './choose';
+
+import { bessel_i as besselI } from './besselI';
+import { bessel_j as besselJ } from './besselJ';
+import { bessel_k as besselK } from './besselK';
+import { bessel_y as besselY } from './besselY';
 
 export default {
-    choose: internal_choose,
-    lchoose: internal_lchoose,
-    lfastchoose,
-    lfastchoose2,
+    besselJ,
+    besselY,
+    besselK,
+    besselI,
 };

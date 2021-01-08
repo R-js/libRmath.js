@@ -89,7 +89,10 @@
     "moduleResolution": "node",
     "paths": { //  we can use this for the test to pick up the module
       "$*": [ 
-        "../packages/*"
+        "packages/*"
+      ],
+      "@pck/*":[
+        "packages/*"
       ]
     }, // maybe use later, if you decide to use this, specify baseurl
     // source maps

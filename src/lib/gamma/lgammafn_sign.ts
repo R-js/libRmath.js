@@ -110,6 +110,5 @@ export function lgammafn_sign(x: number, sgn?: number[]): number {
 
         ML_ERROR(ME.ME_PRECISION, 'lgamma', printer_sign);
     }
-
     return ans;
 }
