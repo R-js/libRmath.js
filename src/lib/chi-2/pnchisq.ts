@@ -29,8 +29,8 @@ import {
 } from '../common/_general';
 
 import { R_Log1_Exp } from '../exp/expm1';
-import { lgammafn_sign as lgammafn } from '../gamma/lgammafn_sign';
-import { logspace_add } from '../gamma/logspace-add';
+import { lgammafn_sign as lgammafn } from '../gammaxxxxx/lgammafn_sign';
+import { logspace_add } from '../gammaxxxxx/logspace-add';
 import { pchisq } from './pchisq';
 
 const { sqrt, abs: fabs, exp, log, min: fmin2, max: fmax2, LN2: M_LN2, LN10: M_LN10 } = Math;

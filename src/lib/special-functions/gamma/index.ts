@@ -1,5 +1,4 @@
-'use strict'
-/* This is a conversion from libRmath.so to Typescript/Javascript
+/* This is a conversion from LIB-R-MATH to Typescript/Javascript
 Copyright (C) 2018  Jacob K.F. Bogers  info@mail.jacob-bogers.com
 
 This program is free software: you can redistribute it and/or modify
@@ -15,8 +14,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-export { cospi } from './cospi';
-export { sinpi } from './sinpi';
-export { tanpi, atanpi } from './tanpi';
 
-
+export { gammafn as gamma } from './gamma_fn';
+export { lgammafn_sign as lgamma } from './lgammafn_sign';
+export { digamma, pentagamma, psigamma, tetragamma, trigamma } from './polygamma';

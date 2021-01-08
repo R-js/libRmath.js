@@ -13,10 +13,17 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+DESCRIPTION
+ *
+ *    This function calculates the minimum and maximum legal bounds
+ *    for x in gammafn(x).  These are not the only bounds, but they
+ *    are the only non-trivial ones to calculate.
+ * 
 */
 import { debug } from 'debug';
 
-import { ME, ML_ERROR } from '../common/_general';
+import { ME, ML_ERROR } from '@common/logger';
 
 const { max: fmax2, log, abs: fabs } = Math;
 const { NaN: ML_NAN } = Number;

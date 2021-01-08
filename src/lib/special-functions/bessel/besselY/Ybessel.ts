@@ -16,8 +16,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { debug } from 'debug';
-import { cospi } from '../../trigonometry/cospi';
-import { sinpi } from '../../trigonometry/sinpi';
+import { cospi } from '@trig/cospi';
+import { sinpi } from '@trig/sinpi';
 import { M_eps_sinc, thresh_BESS_Y, xlrg_BESS_Y } from '../bessel-constants';
 import { IBesselRC } from '../IBesselRC';
 
@@ -191,7 +191,6 @@ export function Y_bessel(x: number, alpha: number, nb: number): IBesselRC {
     let aye;
     let dmu;
     let x2;
-    let xna;
     let en1 = (ya = ya1 = 0); /* -Wall */
 
     const ex = x;
@@ -214,7 +213,7 @@ export function Y_bessel(x: number, alpha: number, nb: number): IBesselRC {
         /*was ML_POSINF */ else if (ex < DBL_MIN) by[0] = ML_NEGINF;
         return { x: by[0], nb, ncalc };
     }
-    xna = trunc(nu + 0.5);
+    const xna = trunc(nu + 0.5);
     na = trunc(xna);
     if (na === 1) {
         /* <==>  .5 <= *alpha < 1	 <==>  -5. <= nu < 0 */

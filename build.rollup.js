@@ -4,6 +4,8 @@ const builtin = require('module').builtinModules.slice();
 const { terser } = require('rollup-plugin-terser');
 const { nodeResolve } = require('@rollup/plugin-node-resolve');
 
+builtin.splice(builtin.indexOf('crypto'), 1);
+
 function shims() {
     const cryptoStub = `export function randomBytes(n) {
         return {
@@ -23,7 +25,7 @@ function shims() {
       export default debug;
     `;
     return {
-        name: 'nodejs crypto stubbing for browser',
+        name: 'stubbing for browser',
         async resolveId(source) {
             if (source === 'crypto') {
                 return source;
@@ -47,7 +49,17 @@ function shims() {
 // see below for details on the options
 const inputOptions = {
     input: {
-        'lib-r-math': 'es6/lib/rng/index.js',
+        // 'lib-r-math': 'es6/lib/rng/index.js',
+        gamma: 'es6/lib/special-functions/gamma',
+    },
+    external: (id) => {
+        if (id.endsWith('/logger')) {
+            return true;
+        }
+        if (builtin.includes(id)) {
+            return true;
+        }
+        return false;
     },
     plugins: [shims(), nodeResolve()],
 };
@@ -58,13 +70,16 @@ const outputOptions = {
     entryFileNames: '[name].min.js',
     sourcemap: true,
     name: 'R',
-    plugins: [terser()],
+    globals(id) {
+        console.log('>>globals', id);
+        if (id.endsWith('\\logger')) return '$logger';
+    },
 };
 
 async function build() {
     // exclude nodejs buildins except the ones we are going to shim
-    builtin.splice(builtin.indexOf('crypto'), 1);
-    inputOptions.external = builtin;
+
+    //inputOptions.external = builtin;
     const bundle = await rollup.rollup(inputOptions);
     const { output } = await bundle.generate(outputOptions);
 

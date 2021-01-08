@@ -47,7 +47,8 @@
     "plugins": [
       {
         "name": "typescript-eslint-language-service"
-      }
+      },
+      { "transform": "typescript-transform-paths" }
     ],
     "removeComments": false, // babel should handle it
     "rootDir": "./src",
@@ -88,19 +89,28 @@
     // we dont use dynamic module loading or the ES6 module spec
     "moduleResolution": "node",
     "paths": { //  we can use this for the test to pick up the module
+      "$constants": [
+        "lib/common/_general"
+      ],
+      "$toms708": [
+        "lib/common/toms708"
+      ],
+      "$chebyshev": [
+        "lib/chebyshev"
+      ],
       "$*": [ // this needs to be really its own module
         "packages/*"
       ],
-      "@common/*":[
+      "@common/*": [
         "packages/common/*"
       ],
-      "@rng/*":[
+      "@rng/*": [
         "lib/rng/*"
       ],
-      "@special/*":[
+      "@special/*": [
         "lib/special-functions/*"
       ],
-      "@trig/*":[
+      "@trig/*": [
         "lib/trigonometry/*"
       ]
     }, // maybe use later, if you decide to use this, specify baseurl
@@ -121,7 +131,9 @@
            all types are relative to tsconfig.json
           
         */
-    "typeRoots":["./node_modules/@types/"],
+    "typeRoots": [
+      "./node_modules/@types/"
+    ],
     /*
             only these packages will be included in global scope
             (sliced out of what is allowed by typeRoots),

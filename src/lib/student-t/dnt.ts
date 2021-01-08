@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import { debug } from 'debug';
 import { M_LN_SQRT_PI, ML_ERR_return_NAN, R_D__0 } from '../common/_general';
 
-import { lgammafn_sign as lgammafn } from '../gamma/lgammafn_sign';
+import { lgammafn_sign as lgammafn } from '../gammaxxxxx/lgammafn_sign';
 import { dnorm4 as dnorm } from '../normal/dnorm';
 import { dt } from './dt';
 import { pnt } from './pnt';

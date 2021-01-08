@@ -16,10 +16,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { debug } from 'debug';
-import { ME, ML_ERROR } from '../../common/_general';
+import { ME, ML_ERROR } from '@common/logger';
 
-import { cospi } from '../../trigonometry/cospi';
-import { sinpi } from '../../trigonometry/sinpi';
+import { cospi } from '@trig/cospi';
+import { sinpi } from '@trig/sinpi';
 import { bessel_y } from '../besselY';
 import { J_bessel } from './Jbessel';
 
@@ -29,18 +29,14 @@ const { floor, trunc } = Math;
 const printer = debug('bessel_j');
 
 export function bessel_j(x: number, alpha: number): number {
-    //int
-    let nb;
-    //double
-    let na; // , *bj;
-
     /* NaNs propagated correctly */
     if (ISNAN(x) || ISNAN(alpha)) return x + alpha;
     if (x < 0) {
         ML_ERROR(ME.ME_RANGE, 'bessel_j', printer);
         return NaN;
     }
-    na = floor(alpha);
+    // double
+    const na = floor(alpha);
     if (alpha < 0) {
         /* Using Abramowitz & Stegun  9.1.2
          * this may not be quite optimal (CPU and accuracy wise) */
@@ -52,8 +48,8 @@ export function bessel_j(x: number, alpha: number): number {
         printer('besselJ(x, nu): nu=%d too large for bessel_j() algorithm', alpha);
         return NaN;
     }
-
-    nb = 1 + trunc(na); /* nb-1 <= alpha < nb */
+    //int
+    const nb = 1 + trunc(na); /* nb-1 <= alpha < nb */
     alpha -= nb - 1; // ==> alpha' in [0, 1)
     const rc = J_bessel(x, alpha, nb);
 

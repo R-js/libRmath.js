@@ -15,8 +15,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { dgamma } from '../gamma/dgamma';
+import { dgamma } from '../gammaxxxxx/dgamma';
 
-export function dchisq(x: number, df: number, log: boolean = false) {
-  return dgamma(x, df / 2, 2, log);
+export function dchisq(x: number, df: number, log = false) {
+    return dgamma(x, df / 2, 2, log);
 }

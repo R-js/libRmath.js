@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import { debug } from 'debug';
 import { ML_ERR_return_NAN } from '../common/_general';
-import { rgammaOne } from '../gamma/rgamma';
+import { rgammaOne } from '../gammaxxxxx/rgamma';
 import { randomGenHelper } from '../r-func';
 import { IRNGNormal } from '../rng/normal/normal-rng';
 

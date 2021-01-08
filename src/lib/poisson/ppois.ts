@@ -23,7 +23,7 @@ const { floor, max: fmax2 } = Math;
 
 import { debug } from 'debug';
 import { NumberW } from '../common/toms708';
-import { pgamma } from '../gamma/pgamma';
+import { pgamma } from '../gammaxxxxx/pgamma';
 
 const printer = debug('ppois');
 

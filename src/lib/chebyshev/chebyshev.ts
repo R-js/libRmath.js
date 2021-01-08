@@ -16,7 +16,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { debug } from 'debug';
 
-import { ML_ERR_return_NAN } from '../common/_general';
+import { ML_ERR_return_NAN } from '@common/logger';
 
 const { abs: fabs } = Math;
 
@@ -45,7 +45,6 @@ export function chebyshev_eval(x: number, a: number[], n: number): number {
     let b0: number;
     let b1: number;
     let b2: number;
-    let twox: number;
     let i: number;
 
     if (n < 1 || n > 1000) {
@@ -56,7 +55,7 @@ export function chebyshev_eval(x: number, a: number[], n: number): number {
         return ML_ERR_return_NAN(printer);
     }
 
-    twox = x * 2;
+    const twox = x * 2;
     b2 = b1 = 0;
     b0 = 0;
     for (i = 1; i <= n; i++) {

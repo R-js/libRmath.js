@@ -21,7 +21,7 @@ import { debug } from 'debug';
 import { ML_ERR_return_NAN, R_D__0, R_D__1, R_D_exp, R_D_fexp, R_D_nonint_check } from '../common/_general';
 
 import { bd0 } from '../deviance';
-import { lgammafn_sign as lgammafn } from '../gamma/lgammafn_sign';
+import { lgammafn_sign as lgammafn } from '../gammaxxxxx/lgammafn_sign';
 import { stirlerr } from '../stirling';
 
 const { round: R_forceint, log, PI } = Math;

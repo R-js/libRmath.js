@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 /* This is a conversion from libRmath.so to Typescript/Javascript
 Copyright (C) 2018  Jacob K.F. Bogers  info@mail.jacob-bogers.com
 
@@ -24,7 +24,7 @@ export { chebyshev_eval, chebyshev_init } from './chebyshev';
 export { ChiSquared } from './chi-2';
 export { Exponential } from './exp';
 export { FDist } from './f-distro';
-export { Gamma } from './gamma';
+export { Gamma } from './gammaxxxxx';
 export { Geometric } from './geometric';
 export { HyperGeometric } from './hypergeometric';
 export { Logistic } from './logis';
@@ -45,42 +45,32 @@ export { hypot, log1p as log1pR } from './log';
 /*
   Class of Special functions collected here.
 */
-import besselSpecial  from './bessel';
-import betaSpecial  from './beta';
+import besselSpecial from './bessel';
+import betaSpecial from './beta';
 import chooseSpecial from './common';
-import gammaSpecial  from './gamma';
+import gammaSpecial from './gammaxxxxx';
 
 export const special = Object.freeze({
-  ...gammaSpecial,
-  ...betaSpecial,
-  ...chooseSpecial,
-  ...besselSpecial
+    ...gammaSpecial,
+    ...betaSpecial,
+    ...chooseSpecial,
+    ...besselSpecial,
 });
 
-import {
-  c,
-  compose,
-  flatten,
-  multiplexer,
-  pipe,
-  Rcycle,
-  seq_len,
-  sequenceFactory,
-  strTypes
-} from './r-func';
+import { c, compose, flatten, multiplexer, pipe, Rcycle, seq_len, sequenceFactory, strTypes } from './r-func';
 
 export { strTypes };
 
 export const utils = {
-  multiplexer,
-  Rcycle,
-  flatten,
-  seq_len,
-  sequenceFactory,
-  seq1: sequenceFactory(0),
-  seq0: sequenceFactory(),
-  compose,
-  pipe,
-  combine:c,
-  c
+    multiplexer,
+    Rcycle,
+    flatten,
+    seq_len,
+    sequenceFactory,
+    seq1: sequenceFactory(0),
+    seq0: sequenceFactory(),
+    compose,
+    pipe,
+    combine: c,
+    c,
 };

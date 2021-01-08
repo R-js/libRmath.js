@@ -1926,8 +1926,6 @@ export class Toms708 {
         // C  OBTAIN THE SCALING FACTOR EXP(-MU) AND EXP(MU)*(X**A*Y**B/BETA(A,B))/
         // C
 
-        let dResult;
-
         let mu = 0;
         let d = 1.0;
         let t = 0;
@@ -1953,7 +1951,7 @@ export class Toms708 {
             }
         }
 
-        dResult = Toms708.brcmp1(mu, a, b, x, y) / a;
+        const dResult = Toms708.brcmp1(mu, a, b, x, y) / a;
 
         if (n === 1 || dResult === 0.0) {
             return dResult;

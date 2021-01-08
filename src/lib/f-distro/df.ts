@@ -19,7 +19,7 @@ import { debug } from 'debug';
 import { ML_ERR_return_NAN, R_D__0, R_D__1 } from '../common/_general';
 
 import { dbinom_raw } from '../binomial/dbinom';
-import { dgamma } from '../gamma/dgamma';
+import { dgamma } from '../gammaxxxxx/dgamma';
 
 const { log } = Math;
 const { isNaN: ISNAN, isFinite: R_FINITE, POSITIVE_INFINITY: ML_POSINF } = Number;

@@ -18,9 +18,9 @@ import { debug } from 'debug';
 
 import { M_LN_SQRT_2PI, ML_ERR_return_NAN } from '../common/_general';
 
-import { gammafn } from '../gamma/gamma_fn';
-import { lgammacor } from '../gamma/lgammacor';
-import { lgammafn_sign } from '../gamma/lgammafn_sign';
+import { gammafn } from '../gammaxxxxx/gamma_fn';
+import { lgammacor } from '../gammaxxxxx/lgammacor';
+import { lgammafn_sign } from '../gammaxxxxx/lgammafn_sign';
 
 const { log, log1p } = Math;
 

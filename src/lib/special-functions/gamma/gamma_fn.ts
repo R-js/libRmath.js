@@ -15,10 +15,10 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { chebyshev_eval } from '../chebyshev/chebyshev';
-import { ME, ML_ERROR } from '../common/_general';
-import { stirlerr } from '../stirling';
-import { sinpi } from '../trigonometry';
+import { chebyshev_eval } from '$chebyshev';
+import { ME, ML_ERROR } from '@common/logger';
+import stirlerr from '../../stirling';
+import sinpi from '@trig/sinpi';
 import { lgammacor } from './lgammacor';
 
 import { debug } from 'debug';

@@ -1,3 +1,8 @@
+import { debug } from 'debug';
+
+const debug_R_Q_P01_boundaries = debug('R_Q_P01_boundaries');
+const debug_R_Q_P01_check = debug('R_Q_P01_check');
+
 export enum ME {
     ME_NONE = 0, // no error
     ME_DOMAIN = 1, // argument out of domain
@@ -33,4 +38,37 @@ export const ML_ERROR = (x: ME, s: any, printer: (...args: any[]) => void) => {
 export function ML_ERR_return_NAN(printer: debug.IDebugger) {
     ML_ERROR(ME.ME_DOMAIN, '', printer);
     return Number.NaN;
+}
+
+export function R_Q_P01_boundaries(
+    lower_tail: boolean,
+    log_p: boolean,
+    p: number,
+    _LEFT_: number,
+    _RIGHT_: number,
+): number | undefined {
+    if (log_p) {
+        if (p > 0) {
+            return ML_ERR_return_NAN(debug_R_Q_P01_boundaries);
+        }
+        if (p === 0)
+            /* upper bound*/
+            return lower_tail ? _RIGHT_ : _LEFT_;
+        if (p === Number.NEGATIVE_INFINITY) return lower_tail ? _LEFT_ : _RIGHT_;
+    } else {
+        /* !log_p */
+        if (p < 0 || p > 1) {
+            return ML_ERR_return_NAN(debug_R_Q_P01_boundaries);
+        }
+        if (p === 0) return lower_tail ? _LEFT_ : _RIGHT_;
+        if (p === 1) return lower_tail ? _RIGHT_ : _LEFT_;
+    }
+    return undefined;
+}
+
+export function R_Q_P01_check(logP: boolean, p: number): number | undefined {
+    if ((logP && p > 0) || (!logP && (p < 0 || p > 1))) {
+        return ML_ERR_return_NAN(debug_R_Q_P01_check);
+    }
+    return undefined;
 }

@@ -18,7 +18,7 @@ import { debug } from 'debug';
 
 import { ME, ML_ERR_return_NAN, ML_ERROR, R_P_bounds_01 } from '../common/_general';
 
-import { lgammafn_sign } from '../gamma/lgammafn_sign';
+import { lgammafn_sign } from '../gammaxxxxx/lgammafn_sign';
 
 import { NumberW, Toms708 } from '../common/toms708';
 

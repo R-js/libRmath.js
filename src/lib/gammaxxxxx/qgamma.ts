@@ -20,9 +20,9 @@ import { M_LN2, ML_ERR_return_NAN, R_D__0, R_Q_P01_boundaries, R_Q_P01_check } f
 
 import { R_DT_Clog, R_DT_log, R_DT_qIv } from '../exp/expm1';
 
-import { dgamma } from '../gamma/dgamma';
-import { lgammafn_sign as lgammafn } from '../gamma/lgammafn_sign';
-import { pgamma } from '../gamma/pgamma';
+import { dgamma } from './dgamma';
+import { lgammafn_sign as lgammafn } from './lgammafn_sign';
+import { pgamma } from './pgamma';
 
 import { pgamma_raw } from './pgamma';
 

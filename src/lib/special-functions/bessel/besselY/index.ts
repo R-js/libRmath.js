@@ -16,9 +16,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { debug } from 'debug';
-import { ME, ML_ERROR } from '../../common/_general';
-import { cospi } from '../../trigonometry/cospi';
-import { sinpi } from '../../trigonometry/sinpi';
+import { ME, ML_ERROR } from '@common/logger';
+import { cospi } from '@trig/cospi';
+import { sinpi } from '@trig/sinpi';
 import { bessel_j } from '../besselJ';
 import { Y_bessel } from './Ybessel';
 

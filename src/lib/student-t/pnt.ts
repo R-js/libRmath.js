@@ -29,7 +29,7 @@ import {
     R_DT_1,
     R_DT_val,
 } from '../common/_general';
-import { lgammafn_sign as lgammafn } from '../gamma/lgammafn_sign';
+import { lgammafn_sign as lgammafn } from '../gammaxxxxx/lgammafn_sign';
 import { pnorm5 as pnorm } from '../normal/pnorm';
 import { pt } from './pt';
 

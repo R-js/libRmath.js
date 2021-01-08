@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import { debug } from 'debug';
 
 import { ME, ML_ERR_return_NAN, ML_ERROR } from '../common/_general';
-import { gammafn } from '../gamma/gamma_fn';
+import { gammafn } from '../gammaxxxxx/gamma_fn';
 import { lbeta } from './lbeta';
 
 //const xmin =  - 170.5674972726612;

@@ -15,10 +15,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {
-    pgamma
-} from '../gamma/pgamma';
+import { pgamma } from '../gammaxxxxx/pgamma';
 
-export function pchisq(x: number, df: number, lowerTail: boolean= true, logP: boolean= false) {
-    return pgamma(x, df / 2., 2., lowerTail, logP);
+export function pchisq(x: number, df: number, lowerTail = true, logP = false) {
+    return pgamma(x, df / 2, 2, lowerTail, logP);
 }

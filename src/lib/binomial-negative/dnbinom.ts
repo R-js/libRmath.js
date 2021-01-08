@@ -19,7 +19,7 @@ import { debug } from 'debug';
 import { ML_ERR_return_NAN, R_D__0, R_D__1, R_D_exp, R_D_nonint_check } from '../common/_general';
 
 import { dbinom_raw } from '../binomial/dbinom';
-import { lgammafn_sign } from '../gamma/lgammafn_sign';
+import { lgammafn_sign } from '../gammaxxxxx/lgammafn_sign';
 
 const printer = debug('dnbinom');
 const { log, round: R_forceint, log1p } = Math;
