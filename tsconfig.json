@@ -108,7 +108,7 @@
         "lib/rng/*"
       ],
       "@special/*": [
-        "lib/special-functions/*"
+        "lib/special/*"
       ],
       "@trig/*": [
         "lib/trigonometry/*"

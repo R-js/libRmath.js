@@ -19,36 +19,36 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 export { Beta } from './beta';
 export { Binomial } from './binomial';
 export { NegativeBinomial } from './binomial-negative';
-export { Cauchy } from './cauchy';
+export { Cauchy } from './distributions/cauchy';
 export { chebyshev_eval, chebyshev_init } from './chebyshev';
-export { ChiSquared } from './chi-2';
+export { ChiSquared } from './distributions/chi-2';
 export { Exponential } from './exp';
-export { FDist } from './f-distro';
-export { Gamma } from './gammaxxxxx';
-export { Geometric } from './geometric';
-export { HyperGeometric } from './hypergeometric';
-export { Logistic } from './logis';
-export { LogNormal } from './lognormal';
-export { Multinomial, IdmultinomOptions } from './multinom';
+export { FDist } from './distributions/f-distro';
+export { Gamma } from './distributions/gamma';
+export { Geometric } from './distributions/geometric';
+export { HyperGeometric } from './distributions/hypergeometric';
+export { Logistic } from './distributions/logis';
+export { LogNormal } from './distributions/lognormal';
+export { Multinomial, IdmultinomOptions } from './distributions/multinom';
 export { Normal } from './normal';
 export { Poisson } from './poisson';
 export { rng, IRNG, IRNGNormal } from './rng';
-export { SignRank } from './signrank';
+export { SignRank } from './distributions/signrank';
 //  stirling, no need to export, it is a util
-export { StudentT } from './student-t';
+export { StudentT } from './distributions/student-t';
 //  trigonometry, no need to export, it is a util
-export { Tukey } from './tukey';
-export { Uniform } from './uniform';
-export { Weibull } from './weibull';
-export { Wilcoxon } from './wilcoxon';
-export { hypot, log1p as log1pR } from './log';
+export { Tukey } from './distributions/tukey';
+export { Uniform } from './distributions/uniform';
+export { Weibull } from './distributions/weibull';
+export { Wilcoxon } from './distributions/wilcoxon';
+export { hypot, log1p as log1pR } from './alt/log';
 /*
   Class of Special functions collected here.
 */
 import besselSpecial from './bessel';
 import betaSpecial from './beta';
 import chooseSpecial from './common';
-import gammaSpecial from './gammaxxxxx';
+import gammaSpecial from './distributions/gamma';
 
 export const special = Object.freeze({
     ...gammaSpecial,

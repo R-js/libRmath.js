@@ -16,7 +16,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 const { max, abs, sign } = Math;
 
-const precision9 = numberPrecision(9);
+const precision9 = (9);
 
 export function* seq_len({ length, base = 1 }: { length: number; base: number }): IterableIterator<number> {
     for (let i = 0; i < length; i++) {
@@ -172,7 +172,7 @@ function isObject(o: any): o is Object {
     return o && typeof o === 'object' && !Array.isArray(o);
 }
 
-export function numberPrecision(prec = 6) {
+export function (prec = 6) {
     return function convert(x: any): typeof x {
         // try to loop over the object
         if (isObject(x)) {

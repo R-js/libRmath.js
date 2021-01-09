@@ -21,8 +21,8 @@ const { abs: fabs, log, exp, round } = Math;
 const { isInteger, NEGATIVE_INFINITY: ML_NEGINF, isNaN: ISNAN } = Number;
 
 import { lbeta as internal_lbeta } from '../beta/lbeta';
-import { lgammafn_sign as lgammafn } from '../gammaxxxxx/lgammafn_sign';
-import { lgammafn_sign } from '../gammaxxxxx/lgammafn_sign';
+import { lgammafn_sign as lgammafn } from '../distributions/gamma/lgammafn_sign';
+import { lgammafn_sign } from '../distributions/gamma/lgammafn_sign';
 
 // used by "qhyper"
 export function lfastchoose(n: number, k: number) {

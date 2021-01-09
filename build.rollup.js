@@ -3,6 +3,7 @@ const rollup = require('rollup');
 const builtin = require('module').builtinModules.slice();
 const { terser } = require('rollup-plugin-terser');
 const { nodeResolve } = require('@rollup/plugin-node-resolve');
+const { resolve, dirname } = require('path');
 
 builtin.splice(builtin.indexOf('crypto'), 1);
 
@@ -26,7 +27,10 @@ function shims() {
     `;
     return {
         name: 'stubbing for browser',
-        async resolveId(source) {
+        async resolveId(source, importer) {
+            if (!importer) {
+                return null; // skip entry files
+            }
             if (source === 'crypto') {
                 return source;
             }
@@ -50,12 +54,15 @@ function shims() {
 const inputOptions = {
     input: {
         // 'lib-r-math': 'es6/lib/rng/index.js',
-        gamma: 'es6/lib/special-functions/gamma',
+        gamma: 'es6/lib/special/bessel',
     },
-    external: (id) => {
-        if (id.endsWith('/logger')) {
-            return true;
-        }
+    external: (id, parentId, isResolved) => {
+        /* if (/logger/.test(id)) {
+            if (!isResolved) {
+                return resolve('es6/packages/common/logger') === resolve(dirname(parentId), id);
+            }
+            return resolve('es6/packages/common/logger.js') === id;
+        }*/
         if (builtin.includes(id)) {
             return true;
         }
@@ -65,13 +72,14 @@ const inputOptions = {
 };
 
 const outputOptions = {
-    format: 'iife',
+    format: 'es',
     dir: 'browser',
-    entryFileNames: '[name].min.js',
+    //entryFileNames: '[name].min.js',
     sourcemap: true,
     name: 'R',
-    globals(id) {
-        if (id.endsWith('\\logger')) return 'R.logger';
+    preserveModules: true,
+    globals: {
+        [resolve('./es6/packages/common/logger')]: 'R.logger',
     },
     extend: true,
 };
