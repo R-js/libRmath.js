@@ -17,7 +17,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { debug } from 'debug';
 
-import { fmod, ME, ML_ERROR } from '../common/_general';
+import { fmod } from '../common/_general';
+
+import { ME, ML_ERROR } from '@common/logger';
+
 const { NaN: ML_NAN, isNaN: ISNAN, isFinite: R_FINITE } = Number;
 
 const { PI: M_PI } = Math;

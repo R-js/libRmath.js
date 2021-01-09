@@ -17,7 +17,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { debug } from 'debug';
 
-import { fmod, ME, ML_ERROR } from '../common/_general';
+import { fmod } from '../common/_general';
+
+import { ME, ML_ERROR } from '@common/logger';
 
 const { PI: M_PI } = Math;
 
@@ -41,3 +43,5 @@ export function sinpi(x: number): number {
     // otherwise
     return Math.sin(M_PI * x);
 }
+
+export default sinpi;

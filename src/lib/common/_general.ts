@@ -15,74 +15,36 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { debug } from 'debug';
-
-const debug_R_Q_P01_boundaries = debug('R_Q_P01_boundaries');
-const debug_R_Q_P01_check = debug('R_Q_P01_check');
-
 export const M_SQRT2 = 1.41421356237309504880168872421; /* sqrt(2) */
 export const frac = (x: number) => x - Math.trunc(x);
-//export const DBL_MAX_10_EXP = Math.log10(Number.MAX_VALUE);
-//export const MAX_DIGITS = DBL_MAX_10_EXP;
-//export const INT_MAX = Number.MAX_SAFE_INTEGER;
-//export const INT_MIN = Number.MIN_SAFE_INTEGER;
 export const M_SQRT_32 = 5.656854249492380195206754896838; /* sqrt(32) */
+
+//gamma
 export const DBL_MANT_DIG = 18;
-//export const FLT_MANT_DIG = DBL_MANT_DIG;
+
 export const M_LN2 = 0.693147180559945309417232121458; /* ln(2) */
 export const M_1_SQRT_2PI = 0.398942280401432677939946059934;
-//export const nearbyint = rround;
-//export const R_forceint = nearbyint;
-//export const R_rint = nearbyint;
 export const M_2PI = 6.283185307179586476925286766559;
-export const M_LN_2PI = 1.837877066409345483560659472811; /* 
-   6.0E-17, we used the comments in the nmath lib to find epsilon that fullfills x == x-epsilon
-   this does not cover the internal accurace of build in functions in Math.cos, Math.sin etc
-*/
-/*export const sqrt = Math.sqrt;
-export const asin = Math.asin;
-export const acos = Math.acos;
-export const atan = Math.atan;
-export const atan2 = Math.atan2;
-*/ /*export const DBL_EPSILON = Number.EPSILON;
-export const sinh = Math.sinh;
-export const DBL_MAX = Number.MAX_VALUE;
-export const exp = Math.exp;
-export const isInteger = Number.isInteger;
-export const sin = Math.sin;
-export const cos = Math.cos;
-export const tan = Math.tan;
-*/ export const M_1_PI =
-    1.0 / Math.PI;
-/*export const R_FINITE = (x: number) => Number.isFinite(x);
-export const NaN = Number.NaN;
-export const FLT_MIN = 2.22507e-308; //10^24  larger then Number.MIN_VALUE
-export const DBL_MIN = FLT_MIN;
-export const log = Math.log;
-export const ISNAN = Number.isNaN;
-export const ML_NAN = NaN;
-export const round = Math.round;
-export const ML_POSINF = Number.POSITIVE_INFINITY;
-export const ML_NEGINF = Number.NEGATIVE_INFINITY;
-export const M_PI = 3.14159265358979323846264338327950288;
-*/ export const M_PI_2 =
-    Math.PI / 2;
+export const M_LN_2PI = 1.837877066409345483560659472811;
+export const M_1_PI = 1.0 / Math.PI;
+export const M_PI_2 = Math.PI / 2;
 export const M_LN_SQRT_PI = 0.57236494292470008; // log(sqrt(pi))
+
+// gamma
 export const M_LN_SQRT_2PI = 0.918938533204672741780329736406; // log(sqrt(2*pi))
+
+//gamma
 export const M_LN_SQRT_PId2 = 0.225791352644727432363097614947; // log(sqrt(pi/2))
-//export const M_LN10 = 2.30258509299404568402; /* log_e 10 */
-//export const ML_VALID = (x: number) => !ISNAN(x);
-//export const floor = Math.floor;
 export const M_SQRT_2dPI = 0.797884560802865355879892119869; // sqrt(2/pi)
+
+//gamma
 export const M_LOG10_2 = 0.301029995663981195213738894724; //Math.log10(2);
-//export const FLT_RADIX = 2;
-//export const CHAR_BIT = 8;
+
+// gamma
 export const DBL_MAX_EXP = Math.log2(Number.MAX_VALUE);
+
+// gamma
 export const DBL_MIN_EXP = Math.log2(Number.MIN_VALUE);
-//export const FLT_MAX_EXP = DBL_MAX_EXP;
-//export const FLT_MIN_EXP = DBL_MIN_EXP;
-//export const sizeofInt =
-//  4 * Math.ceil(Math.log(Number.MAX_SAFE_INTEGER) / Math.log(2) / 4 / CHAR_BIT);
 
 export const R_D__1 = (logP: boolean) => {
     return logP ? 0 : 1.0;
@@ -110,14 +72,7 @@ export function R_DT_val(lower_tail: boolean, log_p: boolean, x: number) {
     return lower_tail ? R_D_val(log_p, x) : R_D_Clog(log_p, x);
 }
 
-/*
-export function rround(x: number) {
-  if (x < 0) {
-    return trunc(x - 0.5);
-  }
-  return trunc(x + 0.5);
-}
-*/
+//gamma
 export function imin2(x: number, y: number): number {
     return Math.trunc(Math.min(x, y));
 }
@@ -162,43 +117,6 @@ export const R_D_exp = (log_p: boolean, x: number): number => {
     /* exp(x) */
 };
 
-export enum ME {
-    ME_NONE = 0, // no error
-    ME_DOMAIN = 1, // argument out of domain
-    ME_RANGE = 2, //  value out of range
-    ME_NOCONV = 4, //process did not converge
-    ME_PRECISION = 8, //does not have "full" precision
-    ME_UNDERFLOW = 16, // and underflow occured (important for IEEE)
-}
-/*
-export const min0 = (x: number, y: number): number => {
-  return x <= y ? x : y;
-};
-export const max0 = (x: number, y: number): number => {
-  return x <= y ? y : x;
-};
-*/
-export const mapErr = new Map([
-    [ME.ME_NONE, 'No error'],
-    [ME.ME_DOMAIN, "argument out of domain in '%s'"],
-    [ME.ME_RANGE, "argument out of domain in '%s'"],
-    [ME.ME_NOCONV, "convergence failed in '%s'"],
-    [ME.ME_PRECISION, "full precision may not have been achieved in '%s'"],
-    [ME.ME_UNDERFLOW, "underflow occurred in '%s'"],
-]);
-
-export const ML_ERROR = (x: ME, s: any, printer: debug.IDebugger) => {
-    const str = mapErr.get(x);
-    if (str) {
-        printer(str, s);
-    }
-};
-
-export function ML_ERR_return_NAN(printer: debug.IDebugger) {
-    ML_ERROR(ME.ME_DOMAIN, '', printer);
-    return Number.NaN;
-}
-
 export function R_D_nonint_check(log: boolean, x: number, printer: debug.IDebugger) {
     if (R_nonint(x)) {
         printer('non-integer x = %d', x);
@@ -207,10 +125,10 @@ export function R_D_nonint_check(log: boolean, x: number, printer: debug.IDebugg
     return undefined;
 }
 
-export function fmod(x: number, y: number): number {
-    // 4.2 % 0.1 gives 0.099999999
-    // this is wong so...
-    return x - Math.trunc(x / y) * y;
+//gamma
+//bessel
+export function fmod(x: number, y: number) {
+    return x % y;
 }
 
 export function imax2(x: number, y: number): number {
@@ -239,32 +157,6 @@ export function isEpsilonNear(x: number, target: number): boolean {
     return false;
 }
 
-/*
-export function Rf_d1mach(i: number): number {
-  switch (i) {
-    case 1:
-      return Number.MIN_VALUE;
-    case 2:
-      return Number.MAX_VALUE;
-
-    case 3:
-      // = FLT_RADIX  ^ - DBL_MANT_DIG
-      //  for IEEE:  = 2^-53 = 1.110223e-16 = .5*DBL_EPSILON 
-      return 0.5 * Number.EPSILON;
-
-    case 4:
-      // = FLT_RADIX  ^ (1- DBL_MANT_DIG) =
-      //     for IEEE:  = 2^-52 = DBL_EPSILON 
-      return Number.EPSILON;
-
-    case 5:
-      return M_LOG10_2;
-
-    default:
-      return 0.0;
-  }
-}
-*/
 export function R_D_negInonint(x: number) {
     return x < 0.0 || R_nonint(x);
 }
@@ -303,6 +195,7 @@ export const sqxmin_BESS_K = 1.49e-154;
 */
 export const M_eps_sinc = 2.149e-8;
 
+// gamma
 export function R_pow_di(x: number, n: number) {
     let pow = 1.0;
 
@@ -322,10 +215,7 @@ export function R_pow_di(x: number, n: number) {
     return pow;
 }
 
-//export const NA_REAL = ML_NAN;
-//export const R_PosInf = ML_POSINF;
-//export const R_NegInf = ML_NEGINF;
-
+// gamma
 export function R_pow(x: number, y: number): number {
     /* = x ^ y */
 
@@ -373,6 +263,7 @@ export const R_finite = (x: number) => !Number.isFinite(x);
    doesn't get C++ headers and so is safe. */
 export const R_isnancpp = (x: number) => Number.isNaN(x);
 
+// gamma
 export function myfmod(x1: number, x2: number) {
     const q = x1 / x2;
     return x1 - Math.floor(q) * x2;
@@ -422,94 +313,8 @@ export function ldexp(x: number, y: number): number {
     return x * Math.pow(2, y);
 }
 
-/*
-export function Rf_i1mach(i: number): number {
-  switch (i) {
-    case 1:
-      return 5;
-    case 2:
-      return 6;
-    case 3:
-      return 0;
-    case 4:
-      return 0;
-
-    case 5:
-      return CHAR_BIT * sizeofInt;
-    case 6:
-      return sizeofInt;
-
-    case 7:
-      return 2;
-    case 8:
-      return CHAR_BIT * sizeofInt - 1;
-    case 9:
-      return INT_MAX;
-
-    case 10:
-      return FLT_RADIX;
-
-    case 11:
-      return FLT_MANT_DIG;
-    case 12:
-      return FLT_MIN_EXP;
-    case 13:
-      return FLT_MAX_EXP;
-
-    case 14:
-      return DBL_MANT_DIG;
-    case 15:
-      return DBL_MIN_EXP;
-    case 16:
-      return DBL_MAX_EXP;
-
-    default:
-      return 0;
-  }
-}
-*/
-
-/*
-export function iF77_NAME(i: number) {
-  return Rf_i1mach(i);
-}
-*/
-
 export function R_D_log(log_p: boolean, p: number) {
     return log_p ? p : Math.log(p); /* log(p) */
-}
-
-export function R_Q_P01_boundaries(
-    lower_tail: boolean,
-    log_p: boolean,
-    p: number,
-    _LEFT_: number,
-    _RIGHT_: number,
-): number | undefined {
-    if (log_p) {
-        if (p > 0) {
-            return ML_ERR_return_NAN(debug_R_Q_P01_boundaries);
-        }
-        if (p === 0)
-            /* upper bound*/
-            return lower_tail ? _RIGHT_ : _LEFT_;
-        if (p === Number.NEGATIVE_INFINITY) return lower_tail ? _LEFT_ : _RIGHT_;
-    } else {
-        /* !log_p */
-        if (p < 0 || p > 1) {
-            return ML_ERR_return_NAN(debug_R_Q_P01_boundaries);
-        }
-        if (p === 0) return lower_tail ? _LEFT_ : _RIGHT_;
-        if (p === 1) return lower_tail ? _RIGHT_ : _LEFT_;
-    }
-    return undefined;
-}
-
-export function R_Q_P01_check(logP: boolean, p: number): number | undefined {
-    if ((logP && p > 0) || (!logP && (p < 0 || p > 1))) {
-        return ML_ERR_return_NAN(debug_R_Q_P01_check);
-    }
-    return undefined;
 }
 
 //#define R_D_qIv(p)	(log_p	? exp(p) : (p))		/*  p  in qF(p,..) */

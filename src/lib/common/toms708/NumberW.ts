@@ -15,19 +15,17 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 export class NumberW {
-  private _val: number;
-  constructor(v: number = 0) {
-    this._val = v;
-  }
-  get val() {
-    return this._val;
-  }
-  set val(a: number) {
-    if (Number.isNaN(a)) {
-      throw new Error(`trying to set NaN, old value:${this._val}`);
+    private _val: number;
+    constructor(v = 0) {
+        this._val = v;
     }
-    this._val = a;
-
-  }
+    get val() {
+        return this._val;
+    }
+    set val(a: number) {
+        if (Number.isNaN(a)) {
+            throw new Error(`trying to set NaN, old value:${this._val}`);
+        }
+        this._val = a;
+    }
 }
-

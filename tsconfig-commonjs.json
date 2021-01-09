@@ -1,11 +1,12 @@
 {
     "extends": "./tsconfig.json",
     "include": [
-        "src/lib/rng/**/*.ts"
+        "src/lib/rng/**/*.ts",
+        "src/lib/special/**/*.ts"
     ],
     "exclude":[
         "**/__test__",
-        "src/lib/rng/normal/**/*.ts"
+        "bessel"
     ],
     "compilerOptions": {
         "noEmit": false,

@@ -1,17 +1,18 @@
 {
     "extends": "./tsconfig.json",
     "include": [
-        "src/lib/rng",
+        "src/lib/rng/**/*.ts",
+        "src/lib/special/**/*.ts"
     ],
     "exclude":[
         "**/__test__",
-        "src/lib/rng/normal"
     ],
     "compilerOptions": {
         "noEmit": false,
         "module": "es2020",
         "outDir": "es6",
         "target": "ES2020",
-        "declarationDir": "es6/types"
+        "declarationDir": "es6/types",
+        "removeComments": true, // babel should handle it
     }
 }

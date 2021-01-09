@@ -3,6 +3,9 @@ const rollup = require('rollup');
 const builtin = require('module').builtinModules.slice();
 const { terser } = require('rollup-plugin-terser');
 const { nodeResolve } = require('@rollup/plugin-node-resolve');
+const { resolve, dirname } = require('path');
+
+builtin.splice(builtin.indexOf('crypto'), 1);
 
 function shims() {
     const cryptoStub = `export function randomBytes(n) {
@@ -23,8 +26,11 @@ function shims() {
       export default debug;
     `;
     return {
-        name: 'nodejs crypto stubbing for browser',
-        async resolveId(source) {
+        name: 'stubbing for browser',
+        async resolveId(source, importer) {
+            if (!importer) {
+                return null; // skip entry files
+            }
             if (source === 'crypto') {
                 return source;
             }
@@ -47,24 +53,41 @@ function shims() {
 // see below for details on the options
 const inputOptions = {
     input: {
-        'lib-r-math': 'es6/lib/rng/index.js',
+        // 'lib-r-math': 'es6/lib/rng/index.js',
+        gamma: 'es6/lib/special/bessel',
+    },
+    external: (id, parentId, isResolved) => {
+        /* if (/logger/.test(id)) {
+            if (!isResolved) {
+                return resolve('es6/packages/common/logger') === resolve(dirname(parentId), id);
+            }
+            return resolve('es6/packages/common/logger.js') === id;
+        }*/
+        if (builtin.includes(id)) {
+            return true;
+        }
+        return false;
     },
     plugins: [shims(), nodeResolve()],
 };
 
 const outputOptions = {
-    format: 'iife',
+    format: 'es',
     dir: 'browser',
-    entryFileNames: '[name].min.js',
+    //entryFileNames: '[name].min.js',
     sourcemap: true,
     name: 'R',
-    plugins: [terser()],
+    preserveModules: true,
+    globals: {
+        [resolve('./es6/packages/common/logger')]: 'R.logger',
+    },
+    extend: true,
 };
 
 async function build() {
     // exclude nodejs buildins except the ones we are going to shim
-    builtin.splice(builtin.indexOf('crypto'), 1);
-    inputOptions.external = builtin;
+
+    //inputOptions.external = builtin;
     const bundle = await rollup.rollup(inputOptions);
     const { output } = await bundle.generate(outputOptions);
 
