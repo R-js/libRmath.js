@@ -26,7 +26,7 @@ const {
     isFinite: R_FINITE,
 } = Number;
 import { chebyshev_eval } from '../../chebyshev/index';
-import { ME, ML_ERR_return_NAN, ML_ERROR } from '../../common/_general';
+import { ME, ML_ERR_return_NAN, ML_ERROR } from '@common/logger';
 
 //import { chebyshev_eval } from '../exp/expm1'chebyshev';
 

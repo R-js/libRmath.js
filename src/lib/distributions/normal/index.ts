@@ -21,16 +21,16 @@ import { qnorm } from './qnorm';
 import { rnorm as _rnorm } from './rnorm';
 
 import { IRNGNormal, rng as _rng } from '../rng';
-const { normal: { Inversion } } = _rng;
-
+const {
+    normal: { Inversion },
+} = _rng;
 
 export function Normal(prng: IRNGNormal = new Inversion()) {
-
-  return {
-    rnorm: (n = 1, mu = 0, sigma = 1) => _rnorm(n, mu, sigma, prng),
-    dnorm,
-    pnorm,
-    qnorm,
-    rng: prng,
-  };
+    return {
+        rnorm: (n = 1, mu = 0, sigma = 1) => _rnorm(n, mu, sigma, prng),
+        dnorm,
+        pnorm,
+        qnorm,
+        rng: prng,
+    };
 }

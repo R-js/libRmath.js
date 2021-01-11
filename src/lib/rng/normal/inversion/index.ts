@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { IRNG, MessageType } from '../../irng';
 // dependency how to handle this in bundle
-import { qnorm } from '../../../normal/qnorm';
+import { qnorm } from '@distributions/normal/qnorm';
 import { MersenneTwister } from '../../mersenne-twister';
 import { IRNGNormal } from '../normal-rng';
 import { IRNGNormalTypeEnum } from '../in01-type';
