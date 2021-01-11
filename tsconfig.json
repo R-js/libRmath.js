@@ -112,6 +112,9 @@
       ],
       "@trig/*": [
         "lib/trigonometry/*"
+      ],
+      "@distributions/*" :[
+        "lib/distributions/*"
       ]
     }, // maybe use later, if you decide to use this, specify baseurl
     // source maps
