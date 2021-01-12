@@ -20,6 +20,8 @@ import { ME, ML_ERROR } from '@common/logger';
 import stirlerr from '../../stirling';
 import sinpi from '@trig/sinpi';
 import { lgammacor } from './lgammacor';
+import type { NumArray } from '$constants';
+import { isArray, isEmptyArray, emptyFloat32Array, emptyFloat64Array } from '$constants';
 
 import { debug } from 'debug';
 
@@ -76,19 +78,39 @@ const gamcs: number[] = [
     -0.5793070335782135784625493333333e-31,
 ];
 
-const { isArray } = Array;
-
-export function gammafn<T>(x: T): T {
-    const fx: number[] = isArray(x) ? x : ([x] as any);
-
-    const result = fx.map((fx) => {
-        return _gammafn(fx);
-    });
-
-    return result.length === 1 ? result[0] : (result as any);
+export function gammafn<T extends NumArray>(x: T): Float64Array | Float32Array {
+    if (typeof x === 'number') {
+        return new Float64Array([_gammafn(x)]);
+    }
+    if (isEmptyArray(x)) {
+        return emptyFloat64Array;
+    }
+    if (isArray(x)) {
+        if (x instanceof Float64Array) {
+            const rc = new Float64Array(x.length);
+            for (let i = 0; i < x.length; i++) {
+                rc[i] = _gammafn(x[i]);
+            }
+            return rc;
+        }
+        if (x instanceof Float32Array) {
+            const rc = new Float32Array(x.length);
+            for (let i = 0; i < x.length; i++) {
+                rc[i] = _gammafn(x[i]);
+            }
+            return rc;
+        }
+        // array with numbers
+        const rc = new Float64Array(x.length);
+        for (let i = 0; i < x.length; i++) {
+            rc[i] = _gammafn(x[i]);
+        }
+        return rc;
+    }
+    throw new TypeError(`gammafn: argument not of number, number[], Float64Array, Float32Array`);
 }
 
-function _gammafn(x: number): number {
+export function _gammafn(x: number): number {
     let i: number;
     let n: number;
     let y: number;

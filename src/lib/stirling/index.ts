@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { M_LN_SQRT_2PI } from '$constants';
-import { lgamma } from 'lib/special/gamma';
+import { lgamma } from '@special/gamma';
 
 const { trunc, log } = Math;
 

@@ -2,7 +2,7 @@
 module.exports = {
     automock: false,
     collectCoverage: true,
-    collectCoverageFrom: ['src/lib/rng/**/*.ts'],
+    collectCoverageFrom: ['src/lib/rng/**/*.ts', 'src/lib/special/gamma/**/*.ts'],
     coveragePathIgnorePatterns: ['node_modules', 'test', 'doc.ts'],
     coverageDirectory: 'coverage',
     coverageProvider: 'v8',
@@ -28,5 +28,9 @@ module.exports = {
         '^@distributions/(.*)$': '<rootDir>/src/lib/distributions/$1',
         '^@common/(.*)$': '<rootDir>/src/packages/common/$1',
         '^\\$constants$': '<rootDir>/src/lib/common/_general.ts',
+        '^\\$chebyshev$': '<rootDir>/src/lib/chebyshev',
+        '^@special/(.*)$': '<rootDir>/src/lib/special/$1',
+        '^@trig/(.*)$': '<rootDir>/src/lib/trigonometry/$1',
+        '^\\$toms708': '<rootDir>/src/lib/common/toms708',
     },
 };
