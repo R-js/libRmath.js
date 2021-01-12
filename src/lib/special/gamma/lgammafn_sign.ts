@@ -25,7 +25,7 @@ import {
 import { ME, ML_ERR_return_NAN, ML_ERROR } from '@common/logger';
 
 import sinpi from '@trig/sinpi';
-import { gammafn } from './gamma_fn';
+import { _gammafn as gammafn } from './gamma_fn';
 import { lgammacor } from './lgammacor';
 
 const { isNaN: ISNAN, POSITIVE_INFINITY: ML_POSINF } = Number;

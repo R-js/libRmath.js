@@ -21,7 +21,7 @@ import stirlerr from '../../stirling';
 import sinpi from '@trig/sinpi';
 import { lgammacor } from './lgammacor';
 import type { NumArray } from '$constants';
-import { isArray, isEmptyArray, emptyFloat32Array, emptyFloat64Array } from '$constants';
+import { isArray, isEmptyArray, emptyFloat64Array } from '$constants';
 
 import { debug } from 'debug';
 
