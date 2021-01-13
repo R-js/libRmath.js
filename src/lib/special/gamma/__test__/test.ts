@@ -70,4 +70,10 @@ describe('gamma', function () {
     it('-1.0000000000000002 should become 4503599627370495.5', () => {
         expect(gamma([-1.0000000000000002])).toEqualFloatingPointBinary(4503599627370495.5);
     });
+    it('overflow x > 171.61447887182298', () => {
+        expect(gamma([171.71447887182298])).toEqualFloatingPointBinary(Infinity);
+    });
+    it('underflow x < -170.5674972726612', () => {
+        expect(gamma([-170.6674972726612])).toEqualFloatingPointBinary(0);
+    });
 });

@@ -27,7 +27,7 @@ import { debug } from 'debug';
 
 const printer = debug('gammafn');
 
-const { isNaN: ISNAN, NaN: ML_NAN, POSITIVE_INFINITY: ML_POSINF, NEGATIVE_INFINITY: ML_NEGINF } = Number;
+const { isNaN: ISNAN, NaN: ML_NAN, POSITIVE_INFINITY: ML_POSINF } = Number;
 
 const { PI: M_PI, abs: fabs, round, trunc, exp, log } = Math;
 
@@ -166,38 +166,7 @@ export function _gammafn(x: number): number {
         value = chebyshev_eval(y * 2 - 1, gamcs, ngam) + 0.9375;
         if (n === 0) return value; // x = 1.dddd = 1+y
 
-        if (n < 0) {
-            // compute gamma(x) for -10 <= x < 1
-            // exact 0 or "-n" checked already above
-            // The answer is less than half precision
-            // because x too near a negative integer.
-
-            /** original C snippet
-             *  if (x < -0.5 && fabs(x - (int)(x - 0.5) / x) < dxrel) {
-		            ML_ERROR(ME_PRECISION, "gammafn");
-	            }
-             */
-            // this can never occur, maybe this was old code
-            // UPSTREAM: this was r
-            /*if (x < -0.5 && fabs(x - trunc(x - 0.5) / x) < dxrel) {
-                ML_ERROR(ME.ME_PRECISION, 'gammafn', printer);
-            }*/
-            // The argument is so close to 0 that the result would overflow.
-
-            if (y < xsml) {
-                ML_ERROR(ME.ME_RANGE, 'gammafn', printer);
-                /* UPSTREAM if (x > 0) return ML_POSINF;
-                return ML_NEGINF;*/
-                return ML_POSINF;
-            }
-
-            n = -n;
-
-            for (i = 0; i < n; i++) {
-                value /= x + i;
-            }
-            return value;
-        } else {
+        if (n >= 0) {
             // gamma(x) for 2 <= x <= 10
 
             for (i = 1; i <= n; i++) {
@@ -205,6 +174,38 @@ export function _gammafn(x: number): number {
             }
             return value;
         }
+        // n < 0
+
+        // compute gamma(x) for -10 <= x < 1
+        // exact 0 or "-n" checked already above
+        // The answer is less than half precision
+        // because x too near a negative integer.
+
+        /** original C snippet
+             *  if (x < -0.5 && fabs(x - (int)(x - 0.5) / x) < dxrel) {
+		            ML_ERROR(ME_PRECISION, "gammafn");
+	            }
+             */
+        // this can never occur, maybe this was old code
+        // UPSTREAM: this was r
+        /*if (x < -0.5 && fabs(x - trunc(x - 0.5) / x) < dxrel) {
+                ML_ERROR(ME.ME_PRECISION, 'gammafn', printer);
+            }*/
+        // The argument is so close to 0 that the result would overflow.
+
+        if (y < xsml) {
+            ML_ERROR(ME.ME_RANGE, 'gammafn', printer);
+            /* UPSTREAM if (x > 0) return ML_POSINF;
+                return ML_NEGINF;*/
+            return ML_POSINF;
+        }
+
+        n = -n;
+
+        for (i = 0; i < n; i++) {
+            value /= x + i;
+        }
+        return value;
     } else {
         // gamma(x) for	 y = |x| > 10.
 
