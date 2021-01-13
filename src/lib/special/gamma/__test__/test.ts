@@ -55,4 +55,19 @@ describe('gamma', function () {
             gamma('hello' as any);
         }).toThrow('gammafn: argument not of number, number[], Float64Array, Float32Array');
     });
+    it('1E-308 should become Infinity', () => {
+        expect(gamma([1e-308])).toEqualFloatingPointBinary(Infinity);
+    });
+    it('-1E-308 should become -1.000000000000000011e+308', () => {
+        expect(gamma([-1e-308])).toEqualFloatingPointBinary(-1e308);
+    });
+    it('5e-309  should become -Infinity', () => {
+        expect(gamma([-5e-309])).toEqualFloatingPointBinary(-Infinity);
+    });
+    it('-1+1E-16  should become -9007199254740992', () => {
+        expect(gamma([-1 + 1e-16])).toEqualFloatingPointBinary(-9007199254740992);
+    });
+    it('-1.0000000000000002 should become 4503599627370495.5', () => {
+        expect(gamma([-1.0000000000000002])).toEqualFloatingPointBinary(4503599627370495.5);
+    });
 });

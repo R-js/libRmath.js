@@ -171,14 +171,24 @@ export function _gammafn(x: number): number {
             // exact 0 or "-n" checked already above
             // The answer is less than half precision
             // because x too near a negative integer.
-            if (x < -0.5 && fabs(x - trunc(x - 0.5) / x) < dxrel) {
+
+            /** original C snippet
+             *  if (x < -0.5 && fabs(x - (int)(x - 0.5) / x) < dxrel) {
+		            ML_ERROR(ME_PRECISION, "gammafn");
+	            }
+             */
+            // this can never occur, maybe this was old code
+            // UPSTREAM: this was r
+            /*if (x < -0.5 && fabs(x - trunc(x - 0.5) / x) < dxrel) {
                 ML_ERROR(ME.ME_PRECISION, 'gammafn', printer);
-            }
+            }*/
             // The argument is so close to 0 that the result would overflow.
+
             if (y < xsml) {
                 ML_ERROR(ME.ME_RANGE, 'gammafn', printer);
-                if (x > 0) return ML_POSINF;
-                else return ML_NEGINF;
+                /* UPSTREAM if (x > 0) return ML_POSINF;
+                return ML_NEGINF;*/
+                return ML_POSINF;
             }
 
             n = -n;
