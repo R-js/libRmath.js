@@ -244,11 +244,12 @@ export function _gammafn(x: number): number {
         }
 
         sinpiy = sinpi(y);
-        if (sinpiy === 0) {
+        // UPSTREAM: already checked, never done
+        /*if (sinpiy === 0) {
             // Negative integer arg - overflow
             ML_ERROR(ME.ME_RANGE, 'gammafn', printer);
             return ML_POSINF;
-        }
+        }*/
         return -M_PI / (y * sinpiy * value);
     }
 }
