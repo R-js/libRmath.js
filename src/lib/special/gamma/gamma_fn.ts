@@ -188,8 +188,11 @@ export function _gammafn(x: number): number {
         // this can never occur, maybe this was old code
         // UPSTREAM: this was r
         /*if (x < -0.5 && fabs(x - trunc(x - 0.5) / x) < dxrel) {
-                ML_ERROR(ME.ME_PRECISION, 'gammafn', printer);
-            }*/
+            ML_ERROR(ME.ME_PRECISION, 'gammafn', printer);
+        }*/
+        if (x < -0.5 && fabs((x - trunc(x - 0.5)) / x) < dxrel) {
+            ML_ERROR(ME.ME_PRECISION, 'gammafn', printer);
+        }
         // The argument is so close to 0 that the result would overflow.
 
         if (y < xsml) {
