@@ -19,7 +19,6 @@ import { chebyshev_eval } from '$chebyshev';
 import { ME, ML_ERROR } from '@common/logger';
 import stirlerr from '../../stirling';
 import sinpi from '@trig/sinpi';
-import { lgammacor } from './lgammacor';
 import type { NumArray } from '$constants';
 import { isArray, isEmptyArray, emptyFloat64Array } from '$constants';
 
@@ -227,7 +226,10 @@ export function _gammafn(x: number): number {
             for (i = 2; i < y; i++) value *= i;
         } else {
             // normal case
-            value = exp((y - 0.5) * log(y) - y + M_LN_SQRT_2PI + (2 * y === trunc(2) * y ? stirlerr(y) : lgammacor(y)));
+            // UPSTREAM: original C =>   ((2*y == (int)2*y) ? stirlerr(y) : lgammacor(y)));
+            //    aka this part ((2*y == (int)2*y)
+            //     aka this part (int)2*y,, is exactly int(2)*y and not!!  (int)(2*y), this is tested in c
+            value = exp((y - 0.5) * log(y) - y + M_LN_SQRT_2PI + stirlerr(y));
         }
         if (x > 0) return value;
 
