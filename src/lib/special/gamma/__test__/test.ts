@@ -4,7 +4,7 @@ import { gamma } from '../';
 import '$jest-extension';
 
 describe('gamma', function () {
-    it('gamma, range [0] ', () => {
+    it('gamma, range "0" to "0.5703"', () => {
         /* load data from fixture */
         const lines = fs
             .readFileSync(resolve(__dirname, 'fixture-generation', 'fixture.R'), 'utf8')
@@ -20,5 +20,39 @@ describe('gamma', function () {
         });
         const actual = gamma(x);
         expect(actual).toEqualFloatingPointBinary(y);
+    });
+    it('value -1,-2  should return NaN', () => {
+        const neg1 = gamma([-1]);
+        const neg2 = gamma([-2]);
+        expect(neg1).toEqualFloatingPointBinary(NaN);
+        expect(neg2).toEqualFloatingPointBinary(NaN);
+    });
+    it('negative fraction -1.2 and -0.2, 1.2', () => {
+        const neg1 = gamma([-1.2]);
+        const neg2 = gamma([-0.2]);
+        const neg3 = gamma([1.2]);
+        expect(neg1).toEqualFloatingPointBinary(4.8509571405220981433);
+        expect(neg2).toEqualFloatingPointBinary(-5.8211485686265156403);
+        expect(neg3).toEqualFloatingPointBinary(0.9181687423997606512);
+    });
+    it('force number argument', () => {
+        const neg1 = gamma(-1.2 as any);
+        expect(neg1).toEqualFloatingPointBinary(4.8509571405220981433);
+    });
+    it('force empty array', () => {
+        const neg1 = gamma([]);
+        const neg2 = gamma(new Float32Array(0));
+        expect(neg1).toEqualFloatingPointBinary([]);
+        expect(neg2).toEqualFloatingPointBinary([]);
+    });
+    it('process float32Array', () => {
+        const neg1 = gamma(new Float32Array([-4.1, -5.1]));
+        expect(neg1 instanceof Float32Array).toBe(true);
+        expect(neg1).toEqualFloatingPointBinary([-0.363973113892433530747, 0.071367277233810505477], 18);
+    });
+    it('invalid argument should throw', () => {
+        expect(() => {
+            gamma('hello' as any);
+        }).toThrow('gammafn: argument not of number, number[], Float64Array, Float32Array');
     });
 });
