@@ -15,9 +15,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {
-    R_pow_di
-} from '../common/_general';
+import { R_pow_di } from '../_general';
 
 const { floor, abs: fabs, log10, round, round: R_rint } = Math;
 const { isFinite: R_FINITE, isNaN: ISNAN } = Number;
@@ -38,10 +36,8 @@ const MAX_DIGITS = 22;
        --MM--
      */
 
-
 export function fprec(x: number, digits: number): number {
-
-    let l10: number;
+    //let l10: number;
     let pow10: number;
     let sgn: number;
     let p10: number;
@@ -55,8 +51,7 @@ export function fprec(x: number, digits: number): number {
     /* Max.expon. of 10 (=308.2547) */
     const max10e = Math.log10(Number.MAX_VALUE);
 
-    if (ISNAN(x) || ISNAN(digits))
-        return x + digits;
+    if (ISNAN(x) || ISNAN(digits)) return x + digits;
     if (!R_FINITE(x)) return x;
     if (!R_FINITE(digits)) {
         if (digits > 0.0) return x;
@@ -66,38 +61,42 @@ export function fprec(x: number, digits: number): number {
     dig = round(digits);
     if (dig > MAX_DIGITS) {
         return x;
-    } else if (dig < 1)
-        dig = 1;
+    } else if (dig < 1) dig = 1;
 
     sgn = 1.0;
     if (x < 0.0) {
         sgn = -sgn;
         x = -x;
     }
-    l10 = log10(x);
-    e10 = (dig - 1 - floor(l10));
+    const l10 = log10(x);
+    e10 = dig - 1 - floor(l10);
     if (fabs(l10) < max10e - 2) {
         p10 = 1.0;
-        if (e10 > max10e) { /* numbers less than 10^(dig-1) * 1e-308 */
-            p10 = R_pow_di(10., e10 - max10e);
+        if (e10 > max10e) {
+            /* numbers less than 10^(dig-1) * 1e-308 */
+            p10 = R_pow_di(10, e10 - max10e);
             e10 = max10e;
         }
-        if (e10 > 0) { /* Try always to have pow >= 1
+        if (e10 > 0) {
+            /* Try always to have pow >= 1
              and so exactly representable */
-            pow10 = R_pow_di(10., e10);
-            return (sgn * (R_rint((x * pow10) * p10) / pow10) / p10);
+            pow10 = R_pow_di(10, e10);
+            return (sgn * (R_rint(x * pow10 * p10) / pow10)) / p10;
         } else {
-            pow10 = R_pow_di(10., -e10);
-            return (sgn * (R_rint((x / pow10)) * pow10));
+            pow10 = R_pow_di(10, -e10);
+            return sgn * (R_rint(x / pow10) * pow10);
         }
-    } else { /* -- LARGE or small -- */
-        do_round = max10e - l10 >= R_pow_di(10., -dig);
-        e2 = dig + ((e10 > 0) ? 1 : -1) * MAX_DIGITS;
-        p10 = R_pow_di(10., e2); x *= p10;
-        P10 = R_pow_di(10., e10 - e2); x *= P10;
+    } else {
+        /* -- LARGE or small -- */
+        do_round = max10e - l10 >= R_pow_di(10, -dig);
+        e2 = dig + (e10 > 0 ? 1 : -1) * MAX_DIGITS;
+        p10 = R_pow_di(10, e2);
+        x *= p10;
+        P10 = R_pow_di(10, e10 - e2);
+        x *= P10;
         /*-- p10 * P10 = 10 ^ e10 */
         if (do_round) x += 0.5;
         x = floor(x) / p10;
-        return (sgn * x / P10);
+        return (sgn * x) / P10;
     }
 }

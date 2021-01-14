@@ -17,8 +17,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import { debug } from 'debug';
 //
 import { rbinomOne } from '../binomial/rbinom';
-import { imax2, imin2, M_LN_SQRT_2PI, ML_ERR_return_NAN } from '../../common/_general';
-import { IRNG } from '../../rng/irng';
+import { ML_ERR_return_NAN } from '@common/logger';
+import { imax2, imin2, M_LN_SQRT_2PI } from '$constants';
+import { IRNG } from '@rng/irng';
 import { qhyper } from './qhyper';
 //
 const { log, round: R_forceint, exp, sqrt } = Math;
@@ -122,7 +123,7 @@ function rhyperOne(nn1in: number, nn2in: number, kkin: number, rng: IRNG): numbe
             return rbinomOne(kkin, nn1in / (nn1in + nn2in), rng);
         }
         // Slow, but safe: return  F^{-1}(U)  where F(.) = phyper(.) and  U ~ U[0,1]
-        return qhyper(rng.internal_unif_rand(), nn1in, nn2in, kkin, false, false);
+        return qhyper(rng.random(), nn1in, nn2in, kkin, false, false);
     }
     nn1 = nn1in;
     nn2 = nn2in;
@@ -208,7 +209,7 @@ function rhyperOne(nn1in: number, nn2in: number, kkin: number, rng: IRNG): numbe
         while (true) {
             p = w;
             ix = minjx;
-            u = rng.internal_unif_rand() * scale;
+            u = rng.random() * scale;
 
             printer_rhyper('  _new_ u = %d', u);
 
@@ -267,8 +268,8 @@ function rhyperOne(nn1in: number, nn2in: number, kkin: number, rng: IRNG): numbe
         //L30:
         //let goto_L30 = false;
         while (true) {
-            const u: number = rng.internal_unif_rand() * p3;
-            let v: number = rng.internal_unif_rand();
+            const u: number = rng.random() * p3;
+            let v: number = rng.random();
             n_uv++;
             if (n_uv >= 10000) {
                 printer_rhyper('rhyper() branch III: giving up after %d rejections', n_uv);
@@ -324,53 +325,53 @@ function rhyperOne(nn1in: number, nn2in: number, kkin: number, rng: IRNG): numbe
                 const deltal = 0.0078;
                 const deltau = 0.0034;
 
-                let e;
-                let g;
-                let r;
-                let t;
-                let y;
+                //let e;
+                //let g;
+                //let r;
+                //let t;
+                //let y;
                 let de;
                 let dg;
                 let dr;
                 let ds;
                 let dt;
-                let gl;
-                let gu;
-                let nk;
-                let nm;
-                let ub;
-                let xk;
-                let xm;
-                let xn;
-                let y1;
-                let ym;
-                let yn;
-                let yk;
-                let alv;
+                //let gl;
+                //let gu;
+                //let nk;
+                //let nm;
+                //let ub;
+                //let xk;
+                //let xm;
+                //let xn;
+                //let y1;
+                //let ym;
+                //let yn;
+                //let yk;
+                //let alv;
 
                 printer_rhyper(" ... accept/reject 'large' case v=%d", v);
 
                 /* squeeze using upper and lower bounds */
-                y = ix;
-                y1 = y + 1.0;
-                ym = y - m;
-                yn = n1 - y + 1.0;
-                yk = k - y + 1.0;
-                nk = n2 - k + y1;
-                r = -ym / y1;
-                s = ym / yn;
-                t = ym / yk;
-                e = -ym / nk;
-                g = (yn * yk) / (y1 * nk) - 1.0;
+                const y = ix;
+                const y1 = y + 1.0;
+                const ym = y - m;
+                const yn = n1 - y + 1.0;
+                const yk = k - y + 1.0;
+                const nk = n2 - k + y1;
+                const r = -ym / y1;
+                const s = ym / yn;
+                const t = ym / yk;
+                const e = -ym / nk;
+                const g = (yn * yk) / (y1 * nk) - 1.0;
                 dg = 1.0;
                 if (g < 0.0) dg = 1.0 + g;
-                gu = g * (1.0 + g * (-0.5 + g / 3.0));
-                gl = gu - (0.25 * (g * g * g * g)) / dg;
-                xm = m + 0.5;
-                xn = n1 - m + 0.5;
-                xk = k - m + 0.5;
-                nm = n2 - k + xm;
-                ub =
+                const gu = g * (1.0 + g * (-0.5 + g / 3.0));
+                const gl = gu - (0.25 * (g * g * g * g)) / dg;
+                const xm = m + 0.5;
+                const xn = n1 - m + 0.5;
+                const xk = k - m + 0.5;
+                const nm = n2 - k + xm;
+                const ub =
                     y * gu -
                     m * gl +
                     deltau +
@@ -379,7 +380,7 @@ function rhyperOne(nn1in: number, nn2in: number, kkin: number, rng: IRNG): numbe
                     xk * t * (1 + t * (-0.5 + t / 3.0)) +
                     nm * e * (1 + e * (-0.5 + e / 3.0));
                 /* test against upper bound */
-                alv = log(v);
+                const alv = log(v);
                 if (alv > ub) {
                     reject = true;
                 } else {

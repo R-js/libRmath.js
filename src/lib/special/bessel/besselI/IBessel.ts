@@ -16,7 +16,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { debug } from 'debug';
-import { Rf_gamma_cody } from 'lib/special/gamma/gamma_cody';
+import { Rf_gamma_cody } from '@special/bessel/gamma_cody';
 import {
     enmten_BESS,
     ensig_BESS,

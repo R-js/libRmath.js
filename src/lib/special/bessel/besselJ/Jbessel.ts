@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import { debug } from 'debug';
 import { ME, ML_ERROR } from '@common/logger';
-import { Rf_gamma_cody } from 'lib/special/gamma/gamma_cody';
+import { Rf_gamma_cody } from '@special/bessel/gamma_cody';
 import { enmten_BESS, ensig_BESS, enten_BESS, xlrg_BESS_IJ } from '../bessel-constants';
 import { IBesselRC } from '../IBesselRC';
 

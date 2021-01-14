@@ -21,8 +21,8 @@ import { ML_ERR_return_NAN } from '@common/logger';
 import { M_LN_SQRT_2PI } from '$constants';
 
 import { gamma as gammafn } from '@special/gamma';
-import { lgammafn_sign } from '@special/gamma/lgammafn_sign';
-import { lgammacor } from '@special/gamma/lgammacor';
+import { lgammafn_sign } from '@distributions/lgammafn_sign';
+import { lgammacor } from '@distributions/lgammacor';
 
 const { log, log1p } = Math;
 
