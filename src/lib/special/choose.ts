@@ -21,7 +21,7 @@ const { abs: fabs, log, exp, round } = Math;
 const { isInteger, NEGATIVE_INFINITY: ML_NEGINF, isNaN: ISNAN } = Number;
 
 import { lbeta as internal_lbeta } from '@special/beta/lbeta';
-import { lgammafn_sign } from '@distributions/lgammafn_sign';
+import { lgammafn_sign } from '@special/gamma/lgammafn_sign';
 
 // used by "qhyper"
 function lfastchoose(n: number, k: number) {

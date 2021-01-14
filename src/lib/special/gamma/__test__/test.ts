@@ -104,3 +104,9 @@ describe('gamma', function () {
         //gamma([55]);
     });
 });
+
+describe('lgamma', () => {
+    it('range "0" to "0.5703"', () => {
+        /* something */
+    });
+});

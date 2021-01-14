@@ -17,3 +17,5 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 export { gammafn as gamma, _gammafn as gamma_internal } from './gamma_fn';
 export { digamma, pentagamma, psigamma, tetragamma, trigamma } from './polygamma';
+export { lgammafn_sign as lgamma } from './lgammafn_sign';
+export type { NumArray } from '$constants';
