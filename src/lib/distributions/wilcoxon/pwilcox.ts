@@ -17,9 +17,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { debug } from 'debug';
-
-import { ML_ERR_return_NAN, R_DT_0, R_DT_1, R_DT_val } from '../../common/_general';
-import { internal_choose } from '../../common/choose';
+import { ML_ERR_return_NAN } from '@common/logger';
+import { R_DT_0, R_DT_1, R_DT_val } from '$constants';
+import { choose } from '@special/choose';
 
 import { WilcoxonCache } from './WilcoxonCache';
 
@@ -48,7 +48,7 @@ export function pwilcox(q: number, m: number, n: number, lowerTail = true, logP 
     //let mm = m;
     // let nn = n;
     //w_init_maybe(mm, nn);
-    const c = internal_choose(m + n, n);
+    const c = choose(m + n, n);
     let p = 0;
     /* Use summation of probs over the shorter range */
     if (q <= (m * n) / 2) {

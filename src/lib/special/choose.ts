@@ -20,26 +20,24 @@ import { isOdd } from '../common/_general';
 const { abs: fabs, log, exp, round } = Math;
 const { isInteger, NEGATIVE_INFINITY: ML_NEGINF, isNaN: ISNAN } = Number;
 
-import { lbeta as internal_lbeta } from '../beta/lbeta';
-import { lgammafn_sign as lgammafn } from '../distributions/gamma/lgammafn_sign';
-import { lgammafn_sign } from '../distributions/gamma/lgammafn_sign';
+import { lbeta as internal_lbeta } from '@special/beta/lbeta';
+import { lgammafn_sign } from '@special/gamma/lgammafn_sign';
 
 // used by "qhyper"
-export function lfastchoose(n: number, k: number) {
+function lfastchoose(n: number, k: number) {
     return -log(n + 1) - internal_lbeta(n - k + 1, k + 1);
 }
 /* mathematically the same:
    less stable typically, but useful if n-k+1 < 0 : */
 
-export function lfastchoose2(n: number, k: number, sChoose?: number[]) {
-    let r: number;
-    r = lgammafn_sign(n - k + 1, sChoose);
-    return lgammafn(n + 1) - lgammafn(k + 1) - r;
+function lfastchoose2(n: number, k: number, sChoose?: number[]) {
+    const r = lgammafn_sign(n - k + 1, sChoose);
+    return lgammafn_sign(n + 1) - lgammafn_sign(k + 1) - r;
 }
 
 const printer_lchoose = debug('lchoose');
 
-export function internal_lchoose(n: number, k: number): number {
+function internal_lchoose(n: number, k: number): number {
     const k0 = k;
     k = Math.round(k);
     /* NaNs propagated correctly */
@@ -76,7 +74,7 @@ const k_small_max = 30;
  */
 const printer_choose = debug('choose');
 
-export function internal_choose(n: number, k: number): number {
+function internal_choose(n: number, k: number): number {
     let r: number;
     const k0 = k;
     k = round(k);
@@ -113,3 +111,7 @@ export function internal_choose(n: number, k: number): number {
     }
     return exp(lfastchoose(n, k));
 }
+
+export { internal_choose as choose };
+export { internal_lchoose as lchoose };
+export { lfastchoose2 as lfastchoose };

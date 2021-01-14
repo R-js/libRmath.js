@@ -18,12 +18,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import { debug } from 'debug';
 
-import { ML_ERR_return_NAN, R_DT_0, R_DT_1, R_Q_P01_check } from '../../common/_general';
-import { R_DT_qIv } from '../../exp/expm1';
+import { ML_ERR_return_NAN, R_Q_P01_check } from '@common/logger';
+import { R_DT_0, R_DT_1 } from '$constants';
+
+import { R_DT_qIv } from '@distributions/exp/expm1';
 import { cwilcox } from './cwilcox';
 import { WilcoxonCache } from './WilcoxonCache';
 
-import { internal_choose } from '../../common/choose';
+import { choose } from '@special/choose';
 
 const { round: R_forceint, trunc } = Math;
 const { isNaN: ISNAN, isFinite: R_FINITE, EPSILON: DBL_EPSILON } = Number;
@@ -46,7 +48,7 @@ export function qwilcox(x: number, m: number, n: number, lowerTail = true, logP 
 
     if (logP || !lowerTail) x = R_DT_qIv(lowerTail, logP, x); /* lower_tail,non-log "p" */
 
-    const c = internal_choose(m + n, n);
+    const c = choose(m + n, n);
     let p = 0;
     let q = 0;
     if (x <= 0.5) {

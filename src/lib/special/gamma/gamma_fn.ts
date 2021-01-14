@@ -19,13 +19,14 @@ import { chebyshev_eval } from '$chebyshev';
 import { ME, ML_ERROR } from '@common/logger';
 import stirlerr from '../../stirling';
 import sinpi from '@trig/sinpi';
-import { lgammacor } from './lgammacor';
+import type { NumArray } from '$constants';
+import { isArray, isEmptyArray, emptyFloat64Array } from '$constants';
 
 import { debug } from 'debug';
 
 const printer = debug('gammafn');
 
-const { isNaN: ISNAN, NaN: ML_NAN, POSITIVE_INFINITY: ML_POSINF, NEGATIVE_INFINITY: ML_NEGINF } = Number;
+const { isNaN: ISNAN, NaN: ML_NAN, POSITIVE_INFINITY: ML_POSINF } = Number;
 
 const { PI: M_PI, abs: fabs, round, trunc, exp, log } = Math;
 
@@ -76,19 +77,39 @@ const gamcs: number[] = [
     -0.5793070335782135784625493333333e-31,
 ];
 
-const { isArray } = Array;
-
-export function gammafn<T>(x: T): T {
-    const fx: number[] = isArray(x) ? x : ([x] as any);
-
-    const result = fx.map((fx) => {
-        return _gammafn(fx);
-    });
-
-    return result.length === 1 ? result[0] : (result as any);
+export function gammafn<T extends NumArray>(x: T): Float64Array | Float32Array {
+    if (typeof x === 'number') {
+        return new Float64Array([_gammafn(x)]);
+    }
+    if (isEmptyArray(x)) {
+        return emptyFloat64Array;
+    }
+    if (isArray(x)) {
+        if (x instanceof Float64Array) {
+            const rc = new Float64Array(x.length);
+            for (let i = 0; i < x.length; i++) {
+                rc[i] = _gammafn(x[i]);
+            }
+            return rc;
+        }
+        if (x instanceof Float32Array) {
+            const rc = new Float32Array(x.length);
+            for (let i = 0; i < x.length; i++) {
+                rc[i] = _gammafn(x[i]);
+            }
+            return rc;
+        }
+        // array with numbers
+        const rc = new Float64Array(x.length);
+        for (let i = 0; i < x.length; i++) {
+            rc[i] = _gammafn(x[i]);
+        }
+        return rc;
+    }
+    throw new TypeError(`gammafn: argument not of number, number[], Float64Array, Float32Array`);
 }
 
-function _gammafn(x: number): number {
+export function _gammafn(x: number): number {
     let i: number;
     let n: number;
     let y: number;
@@ -144,28 +165,7 @@ function _gammafn(x: number): number {
         value = chebyshev_eval(y * 2 - 1, gamcs, ngam) + 0.9375;
         if (n === 0) return value; // x = 1.dddd = 1+y
 
-        if (n < 0) {
-            // compute gamma(x) for -10 <= x < 1
-            // exact 0 or "-n" checked already above
-            // The answer is less than half precision
-            // because x too near a negative integer.
-            if (x < -0.5 && fabs(x - trunc(x - 0.5) / x) < dxrel) {
-                ML_ERROR(ME.ME_PRECISION, 'gammafn', printer);
-            }
-            // The argument is so close to 0 that the result would overflow.
-            if (y < xsml) {
-                ML_ERROR(ME.ME_RANGE, 'gammafn', printer);
-                if (x > 0) return ML_POSINF;
-                else return ML_NEGINF;
-            }
-
-            n = -n;
-
-            for (i = 0; i < n; i++) {
-                value /= x + i;
-            }
-            return value;
-        } else {
+        if (n >= 0) {
             // gamma(x) for 2 <= x <= 10
 
             for (i = 1; i <= n; i++) {
@@ -173,6 +173,41 @@ function _gammafn(x: number): number {
             }
             return value;
         }
+        // n < 0
+
+        // compute gamma(x) for -10 <= x < 1
+        // exact 0 or "-n" checked already above
+        // The answer is less than half precision
+        // because x too near a negative integer.
+
+        /** original C snippet
+             *  if (x < -0.5 && fabs(x - (int)(x - 0.5) / x) < dxrel) {
+		            ML_ERROR(ME_PRECISION, "gammafn");
+	            }
+             */
+        // this can never occur, maybe this was old code
+        // UPSTREAM: this was r
+        /*if (x < -0.5 && fabs(x - trunc(x - 0.5) / x) < dxrel) {
+            ML_ERROR(ME.ME_PRECISION, 'gammafn', printer);
+        }*/
+        if (x < -0.5 && fabs((x - trunc(x - 0.5)) / x) < dxrel) {
+            ML_ERROR(ME.ME_PRECISION, 'gammafn', printer);
+        }
+        // The argument is so close to 0 that the result would overflow.
+
+        if (y < xsml) {
+            ML_ERROR(ME.ME_RANGE, 'gammafn', printer);
+            /* UPSTREAM if (x > 0) return ML_POSINF;
+                return ML_NEGINF;*/
+            return ML_POSINF;
+        }
+
+        n = -n;
+
+        for (i = 0; i < n; i++) {
+            value /= x + i;
+        }
+        return value;
     } else {
         // gamma(x) for	 y = |x| > 10.
 
@@ -194,7 +229,10 @@ function _gammafn(x: number): number {
             for (i = 2; i < y; i++) value *= i;
         } else {
             // normal case
-            value = exp((y - 0.5) * log(y) - y + M_LN_SQRT_2PI + (2 * y === trunc(2) * y ? stirlerr(y) : lgammacor(y)));
+            // UPSTREAM: original C =>   ((2*y == (int)2*y) ? stirlerr(y) : lgammacor(y)));
+            //    aka this part ((2*y == (int)2*y)
+            //     aka this part (int)2*y,, is exactly int(2)*y and not!!  (int)(2*y), this is tested in c
+            value = exp((y - 0.5) * log(y) - y + M_LN_SQRT_2PI + stirlerr(y));
         }
         if (x > 0) return value;
 
@@ -206,11 +244,12 @@ function _gammafn(x: number): number {
         }
 
         sinpiy = sinpi(y);
-        if (sinpiy === 0) {
+        // UPSTREAM: already checked, never done
+        /*if (sinpiy === 0) {
             // Negative integer arg - overflow
             ML_ERROR(ME.ME_RANGE, 'gammafn', printer);
             return ML_POSINF;
-        }
+        }*/
         return -M_PI / (y * sinpiy * value);
     }
 }

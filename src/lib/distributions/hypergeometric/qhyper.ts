@@ -15,9 +15,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { debug } from 'debug';
-import { ML_ERR_return_NAN, R_Q_P01_boundaries } from '../../common/_general';
-import { lfastchoose } from '../../common/choose';
-import { R_DT_qIv } from '../../exp/expm1';
+import { ML_ERR_return_NAN, R_Q_P01_boundaries } from '@common/logger';
+import { lfastchoose } from '@special/choose';
+import { R_DT_qIv } from '@distributions/exp/expm1';
 
 const { log, exp, min: fmin2, max: fmax2, round: R_forceint } = Math;
 const { isNaN: ISNAN, isFinite: R_FINITE, EPSILON: DBL_EPSILON } = Number;
@@ -26,14 +26,14 @@ const printer_qhyper = debug('qhyper');
 
 export function qhyper(p: number, nr: number, nb: number, n: number, lowerTail = true, logP = false): number {
     /* This is basically the same code as  ./phyper.c  *used* to be --> FIXME! */
-    let N;
-    let xstart;
-    let xend;
+    //let N;
+    //let xstart;
+    //let xend;
     let xr;
     let xb;
     let sum;
     let term;
-    let small_N;
+    //let small_N;
 
     if (ISNAN(p) || ISNAN(nr) || ISNAN(nb) || ISNAN(n)) return NaN;
 
@@ -41,7 +41,7 @@ export function qhyper(p: number, nr: number, nb: number, n: number, lowerTail =
 
     let NR = R_forceint(nr);
     let NB = R_forceint(nb);
-    N = NR + NB;
+    const N = NR + NB;
     n = R_forceint(n);
     if (NR < 0 || NB < 0 || n < 0 || n > N) return ML_ERR_return_NAN(printer_qhyper);
 
@@ -49,8 +49,8 @@ export function qhyper(p: number, nr: number, nb: number, n: number, lowerTail =
      *   phyper(xr,  NR,NB, n) >= p > phyper(xr - 1,  NR,NB, n)
      */
 
-    xstart = fmax2(0, n - NB);
-    xend = fmin2(n, NR);
+    const xstart = fmax2(0, n - NB);
+    const xend = fmin2(n, NR);
 
     const rc = R_Q_P01_boundaries(lowerTail, logP, p, xstart, xend);
     if (rc !== undefined) {
@@ -59,7 +59,7 @@ export function qhyper(p: number, nr: number, nb: number, n: number, lowerTail =
     xr = xstart;
     xb = n - xr; /* always ( = #{black balls in sample} ) */
 
-    small_N = N < 1000; /* won't have underflow in product below */
+    const small_N = N < 1000; /* won't have underflow in product below */
     /* if N is small,  term := product.ratio( bin.coef );
        otherwise work with its logarithm to protect against underflow */
     term = lfastchoose(NR, xr) + lfastchoose(NB, xb) - lfastchoose(N, n);

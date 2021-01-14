@@ -15,6 +15,18 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+export const emptyFloat32Array = new Float32Array(0);
+export const emptyFloat64Array = new Float64Array(0);
+
+export type NumArray = number[] | Float32Array | Float64Array;
+export function isArray(x: NumArray) {
+    return Array.isArray(x) || x instanceof Float32Array || x instanceof Float64Array;
+}
+
+export function isEmptyArray(x: NumArray) {
+    return isArray(x) && x.length === 0;
+}
+
 export const M_SQRT2 = 1.41421356237309504880168872421; /* sqrt(2) */
 export const frac = (x: number) => x - Math.trunc(x);
 export const M_SQRT_32 = 5.656854249492380195206754896838; /* sqrt(32) */

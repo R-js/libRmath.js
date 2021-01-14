@@ -151,6 +151,7 @@ double gammafn(double x)
 
 	    /* The answer is less than half precision */
 	    /* because x too near a negative integer. */
+		// typo? if (fabs((x - (int)(x - 0.5))/x) < dxrel){
 	    if (x < -0.5 && fabs(x - (int)(x - 0.5) / x) < dxrel) {
 		ML_ERROR(ME_PRECISION, "gammafn");
 	    }

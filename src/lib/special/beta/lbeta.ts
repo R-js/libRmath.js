@@ -20,7 +20,7 @@ import { ML_ERR_return_NAN } from '@common/logger';
 
 import { M_LN_SQRT_2PI } from '$constants';
 
-import { gamma as gammafn } from '@special/gamma';
+import { gamma_internal } from '@special/gamma';
 import { lgammafn_sign } from '@special/gamma/lgammafn_sign';
 import { lgammacor } from '@special/gamma/lgammacor';
 
@@ -66,6 +66,6 @@ export function lbeta(a: number, b: number): number {
 
         // removed  if (p < 1e-306) return lgamma(p) + (lgamma(q) - lgamma(p+q));
         //else
-        return log(gammafn(p) * (gammafn(q) / gammafn(p + q)));
+        return log(gamma_internal(p) * (gamma_internal(q) / gamma_internal(p + q)));
     }
 }
