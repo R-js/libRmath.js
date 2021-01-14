@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { M_LN_SQRT_2PI } from '$constants';
-import { lgamma } from '@special/gamma';
+import { lgamma_internal } from '@special/gamma';
 
 const { trunc, log } = Math;
 
@@ -75,7 +75,7 @@ export default function stirlerr(n: number): number {
     if (n <= 15.0) {
         nn = n + n;
         if (nn === trunc(nn)) return sferr_halves[trunc(nn)];
-        return lgamma(n + 1) - (n + 0.5) * log(n) + n - M_LN_SQRT_2PI;
+        return lgamma_internal(n + 1) - (n + 0.5) * log(n) + n - M_LN_SQRT_2PI;
     }
 
     nn = n * n;

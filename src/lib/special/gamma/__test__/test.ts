@@ -171,7 +171,7 @@ describe('lgamma', () => {
     it('NaN should return NaN', () => {
         expect(lgamma([NaN])).toEqualFloatingPointBinary(NaN);
     });
-    it('x < 10', () => {
+    it('x < -10', () => {
         expect(lgamma([-11.5, -20.5, -30.5, -40.5])).toEqualFloatingPointBinary([
             -17.589617626087044044,
             -42.707195974825765461,
