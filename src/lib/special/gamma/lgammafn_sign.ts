@@ -24,11 +24,11 @@ import {
     M_LN_SQRT_PId2,
 } from '$constants';
 
-import { ME, ML_ERR_return_NAN, ML_ERROR } from '@common/logger';
+import { ME, ML_ERROR } from '@common/logger';
 
 import sinpi from '@trig/sinpi';
-import { _gammafn } from './gamma_fn';
 import { lgammacor } from './lgammacor';
+import { gamma_internal } from './';
 import type { NumArray } from '$constants';
 
 const { isNaN: ISNAN, POSITIVE_INFINITY: ML_POSINF } = Number;
@@ -41,7 +41,7 @@ const dxrel = 1.490116119384765625e-8;
 
 export function lgammafn<T extends NumArray>(x: T): Float64Array | Float32Array {
     if (typeof x === 'number') {
-        return new Float64Array([_gammafn(x)]);
+        return new Float64Array([lgammafn_sign(x)]);
     }
     if (isEmptyArray(x)) {
         return emptyFloat64Array;
@@ -50,28 +50,28 @@ export function lgammafn<T extends NumArray>(x: T): Float64Array | Float32Array 
         if (x instanceof Float64Array) {
             const rc = new Float64Array(x.length);
             for (let i = 0; i < x.length; i++) {
-                rc[i] = _gammafn(x[i]);
+                rc[i] = lgammafn_sign(x[i]);
             }
             return rc;
         }
         if (x instanceof Float32Array) {
             const rc = new Float32Array(x.length);
             for (let i = 0; i < x.length; i++) {
-                rc[i] = _gammafn(x[i]);
+                rc[i] = lgammafn_sign(x[i]);
             }
             return rc;
         }
         // array with numbers
         const rc = new Float64Array(x.length);
         for (let i = 0; i < x.length; i++) {
-            rc[i] = _gammafn(x[i]);
+            rc[i] = lgammafn_sign(x[i]);
         }
         return rc;
     }
-    throw new TypeError(`gammafn: argument not of number, number[], Float64Array, Float32Array`);
+    throw new TypeError(`lgammafn: argument not of number, number[], Float64Array, Float32Array`);
 }
 
-export function lgammafn_sign(x: number, sgn?: number[]): number {
+export function lgammafn_sign(x: number, sgn?: Int8Array): number {
     //let ans: number;
     //let y: number;
     //let sinpiy: number;
@@ -110,7 +110,7 @@ export function lgammafn_sign(x: number, sgn?: number[]): number {
     const y = fabs(x);
 
     if (y < 1e-306) return -log(y); // denormalized range, R change
-    if (y <= 10) return log(fabs(_gammafn(x) as number));
+    if (y <= 10) return log(fabs(gamma_internal(x) as number));
 
     //  ELSE  y = |x| > 10 ----------------------
 
@@ -129,12 +129,13 @@ export function lgammafn_sign(x: number, sgn?: number[]): number {
     // else: x < -10; y = -x
     const sinpiy = fabs(sinpi(y));
 
+    /* UPSTREAM remove this needless check
     if (sinpiy === 0) {
         // Negative integer argument ===
         //Now UNNECESSARY: caught above
         printer_sign(' ** should NEVER happen! *** [lgamma.c: Neg.int, y=%d]', y);
         return ML_ERR_return_NAN(printer_sign);
-    }
+    }*/
 
     const ans = M_LN_SQRT_PId2 + (x - 0.5) * log(y) - x - log(sinpiy) - lgammacor(y);
 
