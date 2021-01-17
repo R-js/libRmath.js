@@ -13,7 +13,7 @@ module.exports = {
     cacheDirectory: '.jest-cache',
     testPathIgnorePatterns: ['/es6/', '/commonjs/'],
     //testMatch: ['**/__tests__/**/*.[t]s?(x)', '**/?(*.)+(spec|test).[t]s?(x)'],
-    testRegex: '/__test__/test.ts$',
+    testRegex: '/__test__/(.*?\\.)?test.ts$',
     globals: {
         'ts-jest': {
             compiler: 'typescript',
