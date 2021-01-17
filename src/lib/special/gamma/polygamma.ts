@@ -16,7 +16,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { debug } from 'debug';
 import { DBL_MANT_DIG, DBL_MAX_EXP, DBL_MIN_EXP, imin2, M_LOG10_2, R_pow_di } from '$constants';
-import { NumberW } from '$toms708';
+import type { NumArray } from '$constants';
+import { isArray, isEmptyArray, emptyFloat64Array } from '$constants';
 
 const printer = debug('dpsifn');
 
@@ -27,7 +28,15 @@ const n_max = 100;
 const { pow, abs: fabs, max: fmax2, min: fmin2, exp, log, sin, cos, PI: M_PI, round, round: R_forceint } = Math;
 
 /* From R, currently only used for kode = 1, m = 1 : */
-function dpsifn(x: number, n: number, kode: number, m: number, ans: number[], nz: NumberW, ierr: NumberW): void {
+function dpsifn(
+    x: number,
+    n: number,
+    kode: number,
+    m: number,
+    ans: Float64Array,
+    nz: Uint8Array,
+    ierr: Uint8Array,
+): void {
     const bvalues = [
         /* Bernoulli Numbers */
         1.0,
@@ -97,10 +106,10 @@ function dpsifn(x: number, n: number, kode: number, m: number, ans: number[], nz
 
     const trmr = new Array(n_max + 1).fill(0);
 
-    ierr.val = 0;
+    ierr[0] = 0;
 
     if (n < 0 || kode < 1 || kode > 2 || m < 1) {
-        ierr.val = 1;
+        ierr[0] = 1;
         return;
     }
 
@@ -123,7 +132,7 @@ function dpsifn(x: number, n: number, kode: number, m: number, ans: number[], nz
         if (m > 1 || n > 3) {
             /* doesn't happen for digamma() .. pentagamma() */
             /* not yet implemented */
-            ierr.val = 4;
+            ierr[0] = 4;
             return;
         }
         x *= M_PI; /* pi * x */
@@ -153,7 +162,7 @@ function dpsifn(x: number, n: number, kode: number, m: number, ans: number[], nz
     } /* x <= 0 */
 
     /* else :  x > 0 */
-    nz.val = 0;
+    nz[0] = 0;
     xln = log(x);
     if (kode === 1 && m === 1) {
         /* the R case  ---  for very large x: */
@@ -188,8 +197,8 @@ function dpsifn(x: number, n: number, kode: number, m: number, ans: number[], nz
 
         if (fabs(t) > elim) {
             if (t <= 0.0) {
-                nz.val = 0;
-                ierr.val = 2;
+                nz[0] = 0;
+                ierr[0] = 2;
                 return;
             }
         } else {
@@ -246,7 +255,7 @@ function dpsifn(x: number, n: number, kode: number, m: number, ans: number[], nz
                 break;
             } // if
         } // if else
-        nz.val++; /* underflow */
+        nz[0]++; /* underflow */
         mm--;
         ans[mm] = 0;
         if (mm === 0) {
@@ -319,8 +328,8 @@ function dpsifn(x: number, n: number, kode: number, m: number, ans: number[], nz
             nx = xinc >> 0;
             np = nn + 1;
             if (nx > n_max) {
-                nz.val = 0;
-                ierr.val = 3;
+                nz[0] = 0;
+                ierr[0] = 3;
                 return;
             } else {
                 if (nn === 0) {
@@ -423,16 +432,14 @@ const print_psigamma = debug('psigamma');
 
 export function psigamma(x: number, deriv: number): number {
     /* n-th derivative of psi(x);  e.g., psigamma(x,0) === digamma(x) */
-    // double
-    const ans = [0];
-    // ints
-    const nz = new NumberW();
-    const ierr = new NumberW();
+    const ans = new Float64Array(1);
+    const nz = new Uint8Array();
+    const ierr = new Uint8Array(1);
 
     let k;
     //let n;
-    nz.val = 0;
-    ierr.val = 0;
+    nz[0] = 0;
+    ierr[0] = 0;
     ans[0] = 0;
 
     if (ISNAN(x)) return x;
@@ -443,7 +450,7 @@ export function psigamma(x: number, deriv: number): number {
         return ML_NAN;
     }
     dpsifn(x, n, 1, 1, ans, nz, ierr);
-    if (ierr.val !== 0) {
+    if (ierr[0] !== 0) {
         return ML_NAN;
     }
 
@@ -453,73 +460,82 @@ export function psigamma(x: number, deriv: number): number {
     return ans[0]; /* = psi(n, x) */
 }
 
-//https://commons.wikimedia.org/wiki/File:Digamma_function_plot.png
-
-export function digamma(x: number): number {
-    const ans = [0];
-    const nz = new NumberW();
-    const ierr = new NumberW();
-
-    ans[0] = 0;
-    nz.val = 0;
-    ierr.val = 0;
-    if (ISNAN(x)) return x;
-    dpsifn(x, 0, 1, 1, ans, nz, ierr);
-    if (ierr.val !== 0) {
-        return ML_NAN;
+function _render(
+    x: NumArray,
+    calculate: (x: number, ans: Float64Array, nz: Uint8Array, ierr: Uint8Array) => void,
+    factor: number,
+) {
+    if (typeof x === 'number') {
+        x = new Float64Array([x]);
     }
-    return -ans[0];
+    if (isEmptyArray(x)) {
+        return emptyFloat64Array;
+    }
+    if (!isArray(x)) {
+        throw new TypeError(`gammafn: argument not of number, number[], Float64Array, Float32Array`);
+    }
+    const rc =
+        x instanceof Float64Array
+            ? new Float64Array(x.length)
+            : x instanceof Float32Array
+            ? new Float32Array(x.length)
+            : new Float64Array(x);
+
+    const ans = new Float64Array(1);
+    const nz = new Uint8Array();
+    const ierr = new Uint8Array(1);
+
+    for (let i = 0; i < x.length; i++) {
+        ans[0] = 0;
+        nz[0] = 0;
+        ierr[0] = 0;
+        if (ISNAN(x[i])) {
+            rc[i] = x[i];
+            continue;
+        }
+        calculate(x[i], ans, nz, ierr);
+        if (ierr[0] !== 0) {
+            rc[i] = NaN;
+            continue;
+        }
+        rc[i] = factor * ans[0];
+    }
+    return rc;
+}
+
+// https://ru.wikipedia.org/wiki/%D0%A4%D0%B0%D0%B9%D0%BB:Pentagamma_function_plot.png
+export function pentagamma(x: NumArray): Float32Array | Float64Array {
+    return _render(
+        x,
+        (x0: number, ans: Float64Array, nz: Uint8Array, ierr: Uint8Array) => dpsifn(x0, 3, 1, 1, ans, nz, ierr),
+        6.0,
+    );
+}
+
+//https://commons.wikimedia.org/wiki/Category:Polygamma_function#/media/File:Tetragamma_function_plot.png
+export function tetragamma(x: NumArray): Float32Array | Float64Array {
+    return _render(
+        x,
+        (x0: number, ans: Float64Array, nz: Uint8Array, ierr: Uint8Array) => dpsifn(x0, 2, 1, 1, ans, nz, ierr),
+        -2.0,
+    );
 }
 
 //https://commons.wikimedia.org/wiki/Category:Polygamma_function#/media/File:Trigamma_function_plot.png
 
-export function trigamma(x: number): number {
-    const ans = [0];
-    const nz = new NumberW(0);
-    const ierr = new NumberW(0);
-
-    ans[0] = 0;
-    nz.val = 0;
-    ierr.val = 0;
-
-    if (ISNAN(x)) return x;
-    dpsifn(x, 1, 1, 1, ans, nz, ierr);
-    if (ierr.val !== 0) {
-        return ML_NAN;
-    }
-    return ans[0];
+export function trigamma(x: NumArray): Float32Array | Float64Array {
+    return _render(
+        x,
+        (x0: number, ans: Float64Array, nz: Uint8Array, ierr: Uint8Array) => dpsifn(x0, 1, 1, 1, ans, nz, ierr),
+        1,
+    );
 }
-//https://commons.wikimedia.org/wiki/Category:Polygamma_function#/media/File:Tetragamma_function_plot.png
-export function tetragamma(x: number): number {
-    const ans = [0];
-    const nz = new NumberW();
-    const ierr = new NumberW();
 
-    ans[0] = 0;
-    nz.val = 0;
-    ierr.val = 0;
-
-    if (ISNAN(x)) return x;
-    dpsifn(x, 2, 1, 1, ans, nz, ierr);
-    if (ierr.val !== 0) {
-        return ML_NAN;
-    }
-    return -2.0 * ans[0];
-}
-// replaced by psigamma function
-export function pentagamma(x: number): number {
-    const ans = [0];
-    const nz = new NumberW();
-    const ierr = new NumberW();
-
-    ans[0] = 0;
-    nz.val = 0;
-    ierr.val = 0;
-
-    if (ISNAN(x)) return x;
-    dpsifn(x, 3, 1, 1, ans, nz, ierr);
-    if (ierr.val !== 0) {
-        return ML_NAN;
-    }
-    return 6.0 * ans[0];
+//https://commons.wikimedia.org/wiki/File:Digamma_function_plot.png
+export function digamma(x: NumArray): Float32Array | Float64Array {
+    return _render(
+        x,
+        (x0: number, ans: Float64Array, nz: Uint8Array, ierr: Uint8Array) => dpsifn(x0, 0, 1, 1, ans, nz, ierr),
+        -1,
+    );
 }

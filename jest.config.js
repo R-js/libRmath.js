@@ -2,10 +2,7 @@
 module.exports = {
     automock: false,
     collectCoverage: true,
-    collectCoverageFrom: [
-        //'src/lib/rng/**/*.ts',
-        'src/lib/special/gamma/**/*.ts',
-    ],
+    collectCoverageFrom: ['src/lib/rng/**/*.ts', 'src/lib/special/gamma/**/*.ts'],
     coveragePathIgnorePatterns: ['node_modules', 'test', 'doc.ts'],
     coverageDirectory: 'coverage',
     coverageProvider: 'v8',
@@ -16,7 +13,7 @@ module.exports = {
     cacheDirectory: '.jest-cache',
     testPathIgnorePatterns: ['/es6/', '/commonjs/'],
     //testMatch: ['**/__tests__/**/*.[t]s?(x)', '**/?(*.)+(spec|test).[t]s?(x)'],
-    testRegex: '/gamma/__test__/test.ts$',
+    testRegex: '/__test__/(.*?\\.)?test.ts$',
     globals: {
         'ts-jest': {
             compiler: 'typescript',

@@ -1,6 +1,6 @@
 import * as fs from 'fs';
 import { resolve } from 'path';
-import { gamma } from '../';
+import { gamma } from '..';
 import '$jest-extension';
 
 describe('gamma', function () {
@@ -104,11 +104,5 @@ describe('gamma', function () {
             1.1082563917023920068e-59,
         ]);
         //gamma([55]);
-    });
-});
-
-describe('lgamma', () => {
-    it('range "0" to "0.5703"', () => {
-        /* something */
     });
 });

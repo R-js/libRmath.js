@@ -21,7 +21,6 @@
         ]
     },
     "devDependencies": {
-        "@mangos/filepath": "0.0.4",
         "@rollup/plugin-commonjs": "^16.0.0",
         "@rollup/plugin-node-resolve": "^10.0.0",
         "@types/debug": "^4.1.5",
@@ -97,7 +96,7 @@
     "scripts": {
         "prebuild": "cross-env rm -rf *.tsbuildinfo es6 commonjs browser",
         "build": "ttsc -p tsconfig-es6.json && ttsc -p tsconfig-commonjs.json",
-        "postbuild": "node build.rollup.js",
+        "postbuild": "node rollup.build.js",
         "prepublush": "npm run build",
         "lint": "eslint \"src/**/*.ts\"",
         "lint:fix": "eslint 'src/**/*.ts' --fix",
