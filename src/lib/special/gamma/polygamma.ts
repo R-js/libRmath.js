@@ -430,40 +430,10 @@ function dpsifn(
 */
 const print_psigamma = debug('psigamma');
 
-export function psigamma(x: number, deriv: number): number {
-    /* n-th derivative of psi(x);  e.g., psigamma(x,0) === digamma(x) */
-    const ans = new Float64Array(1);
-    const nz = new Uint8Array();
-    const ierr = new Uint8Array(1);
-
-    let k;
-    //let n;
-    nz[0] = 0;
-    ierr[0] = 0;
-    ans[0] = 0;
-
-    if (ISNAN(x)) return x;
-    deriv = R_forceint(deriv);
-    const n = deriv >> 0;
-    if (n > n_max) {
-        print_psigamma('"deriv = %d > %d (= n_max)', n, n_max);
-        return ML_NAN;
-    }
-    dpsifn(x, n, 1, 1, ans, nz, ierr);
-    if (ierr[0] !== 0) {
-        return ML_NAN;
-    }
-
-    /* Now, ans ===  A := (-1)^(n+1) / gamma(n+1) * psi(n, x) */
-    ans[0] = -ans[0]; /* = (-1)^(0+1) * gamma(0+1) * A */
-    for (k = 1; k <= n; k++) ans[0] *= -k; /* = (-1)^(k+1) * gamma(k+1) * A */
-    return ans[0]; /* = psi(n, x) */
-}
-
 function _render(
     x: NumArray,
     calculate: (x: number, ans: Float64Array, nz: Uint8Array, ierr: Uint8Array) => void,
-    factor: number,
+    final: (_ans: number) => number,
 ) {
     if (typeof x === 'number') {
         x = new Float64Array([x]);
@@ -472,7 +442,7 @@ function _render(
         return emptyFloat64Array;
     }
     if (!isArray(x)) {
-        throw new TypeError(`gammafn: argument not of number, number[], Float64Array, Float32Array`);
+        throw new TypeError(`argument not of number, number[], Float64Array, Float32Array`);
     }
     const rc =
         x instanceof Float64Array
@@ -498,9 +468,32 @@ function _render(
             rc[i] = NaN;
             continue;
         }
-        rc[i] = factor * ans[0];
+        rc[i] = final(ans[0]);
     }
     return rc;
+}
+
+export function psigamma(x: NumArray, deriv: number): Float32Array | Float64Array {
+    deriv = R_forceint(deriv);
+    const n = deriv >> 0;
+    if (n > n_max) {
+        print_psigamma('"deriv = %d > %d (= n_max)', n, n_max);
+    }
+    return _render(
+        x,
+        (x0: number, ans: Float64Array, nz: Uint8Array, ierr: Uint8Array) => {
+            if (n > n_max) {
+                ans[0] = ML_NAN;
+                return;
+            }
+            dpsifn(x0, n, 1, 1, ans, nz, ierr);
+        },
+        (v) => {
+            v = -v; // = (-1)^(0+1) * gamma(0+1) * A
+            for (let k = 1; k <= n; k++) v *= -k; // = (-1)^(k+1) * gamma(k+1) * A
+            return v;
+        },
+    );
 }
 
 // https://ru.wikipedia.org/wiki/%D0%A4%D0%B0%D0%B9%D0%BB:Pentagamma_function_plot.png
@@ -508,7 +501,7 @@ export function pentagamma(x: NumArray): Float32Array | Float64Array {
     return _render(
         x,
         (x0: number, ans: Float64Array, nz: Uint8Array, ierr: Uint8Array) => dpsifn(x0, 3, 1, 1, ans, nz, ierr),
-        6.0,
+        (v) => v * 6.0,
     );
 }
 
@@ -517,7 +510,7 @@ export function tetragamma(x: NumArray): Float32Array | Float64Array {
     return _render(
         x,
         (x0: number, ans: Float64Array, nz: Uint8Array, ierr: Uint8Array) => dpsifn(x0, 2, 1, 1, ans, nz, ierr),
-        -2.0,
+        (v) => v * -2.0,
     );
 }
 
@@ -527,7 +520,7 @@ export function trigamma(x: NumArray): Float32Array | Float64Array {
     return _render(
         x,
         (x0: number, ans: Float64Array, nz: Uint8Array, ierr: Uint8Array) => dpsifn(x0, 1, 1, 1, ans, nz, ierr),
-        1,
+        (v) => v,
     );
 }
 
@@ -536,6 +529,6 @@ export function digamma(x: NumArray): Float32Array | Float64Array {
     return _render(
         x,
         (x0: number, ans: Float64Array, nz: Uint8Array, ierr: Uint8Array) => dpsifn(x0, 0, 1, 1, ans, nz, ierr),
-        -1,
+        (v) => v * -1,
     );
 }
