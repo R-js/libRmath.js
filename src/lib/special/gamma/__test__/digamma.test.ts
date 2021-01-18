@@ -3,31 +3,46 @@ import { resolve } from 'path';
 import { digamma } from '..';
 import '$jest-extension';
 
-describe('digamma', function () {
-    it.only('ranges [0.05, 9.95] and [-1.00 , 0] and [-11.00, -10.00]', () => {
-        /* load data from fixture */
-        const lines = fs
-            .readFileSync(resolve(__dirname, 'fixture-generation', 'digamma.R'), 'utf8')
-            .split(/\n/)
-            .filter((s) => s && s[0] !== '#');
-        const x = new Float64Array(lines.length);
-        const y = new Float64Array(lines.length);
-        // create xy array of Float64Array
-        lines.forEach((v, i) => {
-            const [, _x, _y] = v.split(/\s+/).map(parseFloat);
-            x[i] = _x;
-            y[i] = _y;
+function load(fixture: string) {
+    const lines = fs
+        .readFileSync(resolve(__dirname, 'fixture-generation', fixture), 'utf8')
+        .split(/\n/)
+        .filter((s) => s && s[0] !== '#');
+    const x = new Float64Array(lines.length);
+    const y = new Float64Array(lines.length);
+    // create xy array of Float64Array
+    lines.forEach((v, i) => {
+        const [, _x, _y] = v.split(/\s+/).map((v) => {
+            if (v === 'Inf') {
+                return Infinity;
+            }
+            if (v === '-Inf') {
+                return -Infinity;
+            }
+            return parseFloat(v);
         });
+        x[i] = _x;
+        y[i] = _y;
+    });
+    return [x, y];
+}
+
+describe('digamma', function () {
+    it('ranges [0.05, 9.95] and [-1.00 , 0] and [-11.00, -10.00]', () => {
+        /* load data from fixture */
+        const [x, y] = load('digamma.R');
         const actual = digamma(x);
         expect(actual).toEqualFloatingPointBinary(y);
     });
-    /* it('value -1,-2  should return NaN', () => {
-        const neg1 = gamma([-1]);
-        const neg2 = gamma([-2]);
-        expect(neg1).toEqualFloatingPointBinary(NaN);
-        expect(neg2).toEqualFloatingPointBinary(NaN);
+    it('value 0,-1,-2  single values', () => {
+        const g1 = digamma(-0 as any);
+        const g2 = digamma(-1 as any);
+        const g3 = digamma(-100.2 as any);
+        expect(g1).toEqualFloatingPointBinary(NaN);
+        expect(g2).toEqualFloatingPointBinary(NaN);
+        expect(g3).toEqualFloatingPointBinary(8.9361812384800352049);
     });
-    it('negative fraction -1.2 and -0.2, 1.2', () => {
+    /*it('negative fraction -1.2 and -0.2, 1.2', () => {
         const neg1 = gamma([-1.2]);
         const neg2 = gamma([-0.2]);
         const neg3 = gamma([1.2]);
