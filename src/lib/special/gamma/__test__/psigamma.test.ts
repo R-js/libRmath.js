@@ -1,6 +1,6 @@
 import * as fs from 'fs';
 import { resolve } from 'path';
-import { tetragamma } from '..';
+import { psigamma } from '..';
 import '$jest-extension';
 
 function load(fixture: string) {
@@ -27,42 +27,40 @@ function load(fixture: string) {
     return [x, y];
 }
 
-describe('tetragamma', function () {
-    it('ranges [0.009, 4]', () => {
+describe.skip('psigamma', function () {
+    it('ranges [-1,-2] [0,10] [-30,_20]', () => {
         /* load data from fixture */
-        const [x, y] = load('tetragamma.R');
-        const actual = tetragamma(x);
+        const [x, y] = load('psigamma.R');
+        const actual = psigamma(x, 0);
         expect(actual).toEqualFloatingPointBinary(y);
     });
-    it('[0, -1,-2,-3,-10] return NaNs', () => {
-        const actual = tetragamma([0, -1, -2, -3, -10]);
-        expect(actual).toEqualFloatingPointBinary(NaN);
+    it('[0, -1,-2,-3,-10] return Infinity', () => {
+        const actual = psigamma([0, -1, -2, -3, -10], 0);
+        expect(actual).toEqualFloatingPointBinary(Infinity);
     });
     it('close to negative integers return large positive numbersa', () => {
-        const actual = tetragamma([-1.000001, -2.000001, -30.00001]);
-        expect(actual).toEqualFloatingPointBinary([2000000001106159104, 1999999998795606016, 2000000000725793]);
+        const actual = psigamma([-1.000001, -2.000001, -30.00001], 0);
+        expect(actual).toEqualFloatingPointBinary([
+            6000000004424636552970240,
+            5999999995182424203984896,
+            600000000290317139968,
+        ]);
     });
-    it('single numerical values -1.5, 100', () => {
-        const ac1 = tetragamma(-1.5 as any);
-        const ac2 = tetragamma(100 as any);
-        expect(ac1).toEqualFloatingPointBinary(-0.23620405164171604);
-        expect(ac2).toEqualFloatingPointBinary(-0.00010100499983335);
+    it('single numerical values', () => {
+        const ac1 = psigamma(0 as any, 0);
+        expect(ac1).toEqualFloatingPointBinary(Infinity);
     });
     it('empty array should return empty array', () => {
-        const neg1 = tetragamma([]);
+        const neg1 = psigamma([], 0);
         expect(neg1.length).toBe(0);
     });
     it('non array should throw', () => {
-        const toThrow = () => tetragamma({} as number[]);
+        const toThrow = () => psigamma({} as number[], 0);
         expect(toThrow).toThrow('argument not of number, number[], Float64Array, Float32Array');
     });
     it('FP32 arguments should return FP23 results', () => {
-        const actual = tetragamma(new Float32Array([-1.5, 100]));
+        const actual = psigamma(new Float32Array([3.30000000000000026645]), 0);
         expect(actual instanceof Float32Array).toBe(true);
-        expect(actual).toEqualFloatingPointBinary([-0.23620405164171604, -0.00010100499983335], 18);
-    });
-    it('NaNs should return NaNs', () => {
-        const actual = tetragamma(NaN as any);
-        expect(actual).toEqualFloatingPointBinary(NaN);
+        expect(actual).toEqualFloatingPointBinary(0.085849667336884885604, 20);
     });
 });
