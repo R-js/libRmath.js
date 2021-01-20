@@ -134,7 +134,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *    Routines called: Rf_d1mach, Rf_i1mach.
  */
 
-*/
 import { debug } from 'debug';
 import { DBL_MANT_DIG, DBL_MAX_EXP, DBL_MIN_EXP, imin2, M_LOG10_2, R_pow_di } from '$constants';
 import type { NumArray } from '$constants';
