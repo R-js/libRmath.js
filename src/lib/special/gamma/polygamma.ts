@@ -13,7 +13,127 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+
+ *  SYNOPSIS
+ *
+ *    #include <Rmath.h>
+ *    void dpsifn(double x, int n, int kode, int m,
+ *		  double *ans, int *nz, int *ierr)
+ *    double digamma(double x);
+ *    double trigamma(double x)
+ *    double tetragamma(double x)
+ *    double pentagamma(double x)
+ *
+ *  DESCRIPTION
+ *
+ *    Compute the derivatives of the psi function
+ *    and polygamma functions.
+ *
+ *    The following definitions are used in dpsifn:
+ *
+ *    Definition 1
+ *
+ *	 psi(x) = d/dx (ln(gamma(x)),  the first derivative of
+ *				       the log gamma function.
+ *
+ *    Definition 2
+ *		     k	 k
+ *	 psi(k,x) = d /dx (psi(x)),    the k-th derivative
+ *				       of psi(x).
+ *
+ *
+ *    "dpsifn" computes a sequence of scaled derivatives of
+ *    the psi function; i.e. for fixed x and m it computes
+ *    the m-member sequence
+ *
+ *		  (-1)^(k+1) / gamma(k+1) * psi(k,x)
+ *		     for k = n,...,n+m-1
+ *
+ *    where psi(k,x) is as defined above.   For kode=1, dpsifn
+ *    returns the scaled derivatives as described.  kode=2 is
+ *    operative only when k=0 and in that case dpsifn returns
+ *    -psi(x) + ln(x).	That is, the logarithmic behavior for
+ *    large x is removed when kode=2 and k=0.  When sums or
+ *    differences of psi functions are computed the logarithmic
+ *    terms can be combined analytically and computed separately
+ *    to help retain significant digits.
+ *
+ *    Note that dpsifn(x, 0, 1, 1, ans) results in ans = -psi(x).
+ *
+ *  INPUT
+ *
+ *	x     - argument, x > 0.
+ *
+ *	n     - first member of the sequence, 0 <= n <= 100
+ *		n == 0 gives ans(1) = -psi(x)	    for kode=1
+ *				      -psi(x)+ln(x) for kode=2
+ *
+ *	kode  - selection parameter
+ *		kode == 1 returns scaled derivatives of the
+ *		psi function.
+ *		kode == 2 returns scaled derivatives of the
+ *		psi function except when n=0. In this case,
+ *		ans(1) = -psi(x) + ln(x) is returned.
+ *
+ *	m     - number of members of the sequence, m >= 1
+ *
+ *  OUTPUT
+ *
+ *	ans   - a vector of length at least m whose first m
+ *		components contain the sequence of derivatives
+ *		scaled according to kode.
+ *
+ *	nz    - underflow flag
+ *		nz == 0, a normal return
+ *		nz != 0, underflow, last nz components of ans are
+ *			 set to zero, ans(m-k+1)=0.0, k=1,...,nz
+ *
+ *	ierr  - error flag
+ *		ierr=0, a normal return, computation completed
+ *		ierr=1, input error,	 no computation
+ *		ierr=2, overflow,	 x too small or n+m-1 too
+ *			large or both
+ *		ierr=3, error,		 n too large. dimensioned
+ *			array trmr(nmax) is not large enough for n
+ *
+ *    The nominal computational accuracy is the maximum of unit
+ *    roundoff (d1mach(4)) and 1e-18 since critical constants
+ *    are given to only 18 digits.
+ *
+ *    The basic method of evaluation is the asymptotic expansion
+ *    for large x >= xmin followed by backward recursion on a two
+ *    term recursion relation
+ *
+ *	     w(x+1) + x^(-n-1) = w(x).
+ *
+ *    this is supplemented by a series
+ *
+ *	     sum( (x+k)^(-n-1) , k=0,1,2,... )
+ *
+ *    which converges rapidly for large n. both xmin and the
+ *    number of terms of the series are calculated from the unit
+ *    roundoff of the machine environment.
+ *
+ *  AUTHOR
+ *
+ *    Amos, D. E.	(Fortran)
+ *    Ross Ihaka	(C Translation)
+ *    Martin Maechler   (x < 0, and psigamma())
+ *
+ *  REFERENCES
+ *
+ *    Handbook of Mathematical Functions,
+ *    National Bureau of Standards Applied Mathematics Series 55,
+ *    Edited by M. Abramowitz and I. A. Stegun, equations 6.3.5,
+ *    6.3.18, 6.4.6, 6.4.9 and 6.4.10, pp.258-260, 1964.
+ *
+ *    D. E. Amos, (1983). "A Portable Fortran Subroutine for
+ *    Derivatives of the Psi Function", Algorithm 610,
+ *    TOMS 9(4), pp. 494-502.
+ *
+ *    Routines called: Rf_d1mach, Rf_i1mach.
+ */
+
 import { debug } from 'debug';
 import { DBL_MANT_DIG, DBL_MAX_EXP, DBL_MIN_EXP, imin2, M_LOG10_2, R_pow_di } from '$constants';
 import type { NumArray } from '$constants';
@@ -27,6 +147,10 @@ const n_max = 100;
 
 const { pow, abs: fabs, max: fmax2, min: fmin2, exp, log, sin, cos, PI: M_PI, round, round: R_forceint } = Math;
 
+const trm = new Float64Array(23);
+const trmr = new Float64Array(n_max + 1);
+
+const lrg = 1 / (2 * DBL_EPSILON);
 /* From R, currently only used for kode = 1, m = 1 : */
 function dpsifn(
     x: number,
@@ -102,9 +226,9 @@ function dpsifn(
     let xq;
     let yint;
     // array
-    const trm = new Array(23).fill(0);
 
-    const trmr = new Array(n_max + 1).fill(0);
+    trm.fill(0);
+    trmr.fill(0);
 
     ierr[0] = 0;
 
@@ -166,7 +290,6 @@ function dpsifn(
     xln = log(x);
     if (kode === 1 && m === 1) {
         /* the R case  ---  for very large x: */
-        const lrg = 1 / (2 * DBL_EPSILON);
         if (n === 0 && x * xln > lrg) {
             ans[0] = -xln;
             return;

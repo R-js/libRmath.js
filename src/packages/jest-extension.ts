@@ -53,16 +53,35 @@ function meta(o: ObjectTypes): NumberExtended {
     return 'other';
 }
 
-function isNAN(dv1: DataView, bpe: number) {
+function isNAN(dv1: DataView, bpe: 4 | 8) {
+    let rc = false; // not a NaN
     if ((dv1.getUint8(0) & 0x7f) === 0x7f) {
-        for (let i = 1; i < bpe; i++) {
-            if (dv1.getUint8(i) !== 0) {
-                return false;
+        if (bpe === 4) {
+            const r = dv1.getUint8(1);
+            if (r & 0x80) {
+                const mantissa = (r & 0x7f) + dv1.getUint8(2) + dv1.getUint8(3);
+                if (mantissa) {
+                    rc = true;
+                }
+            }
+        } else {
+            const r = dv1.getUint8(1);
+            if (r & 0xf0) {
+                const mantissa =
+                    (r & 0x0f) +
+                    dv1.getUint8(2) +
+                    dv1.getUint8(3) +
+                    dv1.getUint8(4) +
+                    dv1.getUint8(5) +
+                    dv1.getUint8(6) +
+                    dv1.getUint8(7);
+                if (mantissa) {
+                    rc = true;
+                }
             }
         }
-        return true;
     }
-    return false;
+    return rc;
 }
 
 function isZeroOrNegativeZero(dv1: DataView, bpe: number) {
