@@ -8,8 +8,14 @@
         }
     ],
     "main": "commonjs/lib/index.js",
-    "browser": "browser/blasjs.min.js",
+    "browser": "browser/lib-r-math.min.js",
+    "module":"es6/lib/index.js",
     "types": "es6/types/lib/index.d.ts",
+    "files":[
+        "commonjs",
+        "es6",
+        "browser"
+    ],
     "bugs": {
         "url": "https://github.com/R-js/libRmath.js/issues"
     },
