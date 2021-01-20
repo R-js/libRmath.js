@@ -27,14 +27,23 @@ function load(fixture: string) {
     return [x, y];
 }
 
-describe.skip('psigamma', function () {
-    it('ranges [-1,-2] [0,10] [-30,_20]', () => {
+describe('psigamma', function () {
+    it('deriv > 100 always returns NaN', () => {
+        const actual = psigamma(1 as any, 1001);
+        expect(actual).toEqualFloatingPointBinary(NaN);
+    });
+    it('ranges (1,2,3)', () => {
         /* load data from fixture */
         const [x, y] = load('psigamma.R');
-        const actual = psigamma(x, 0);
+        const actual = psigamma(x, 6);
         expect(actual).toEqualFloatingPointBinary(y);
     });
-    it('[0, -1,-2,-3,-10] return Infinity', () => {
+    it('deriv=-1 should return NaN', () => {
+        /* load data from fixture */
+        const actual = psigamma(65 as any, -1);
+        expect(actual).toEqualFloatingPointBinary(NaN, undefined, false, true);
+    });
+    /* it('[0, -1,-2,-3,-10] return Infinity', () => {
         const actual = psigamma([0, -1, -2, -3, -10], 0);
         expect(actual).toEqualFloatingPointBinary(Infinity);
     });
@@ -62,5 +71,5 @@ describe.skip('psigamma', function () {
         const actual = psigamma(new Float32Array([3.30000000000000026645]), 0);
         expect(actual instanceof Float32Array).toBe(true);
         expect(actual).toEqualFloatingPointBinary(0.085849667336884885604, 20);
-    });
+    });*/
 });
