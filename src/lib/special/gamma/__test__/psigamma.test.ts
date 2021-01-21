@@ -43,6 +43,22 @@ describe('psigamma', function () {
         const actual = psigamma(65 as any, -1);
         expect(actual).toEqualFloatingPointBinary(NaN, undefined, false, true);
     });
+    it('-1.5 deriv=3 makes 194.5943', () => {
+        const actual = psigamma(-1.5 as any, 3);
+        expect(actual).toEqualFloatingPointBinary(194.5943, 20);
+    });
+    it('-1.5 deriv=4 makes NaN', () => {
+        const actual = psigamma(-1.5 as any, 4);
+        expect(actual).toEqualFloatingPointBinary(NaN);
+    });
+    it('n=0 and x*ln(x) > 0.5/Number.EPSILON should use shortcut', () => {
+        const actual = psigamma(1e24 as any, 0);
+        expect(actual).toEqualFloatingPointBinary(55.262042231857094521);
+    });
+    it('n=3 and x > n*0.5/Number.EPSILON should use shortcut', () => {
+        const actual = psigamma(6855399441055744 as any, 3);
+        expect(actual).toEqualFloatingPointBinary(6.2077140202995528676e-48);
+    });
     /* it('[0, -1,-2,-3,-10] return Infinity', () => {
         const actual = psigamma([0, -1, -2, -3, -10], 0);
         expect(actual).toEqualFloatingPointBinary(Infinity);
