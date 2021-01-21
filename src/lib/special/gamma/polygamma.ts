@@ -149,6 +149,9 @@ const { pow, abs: fabs, max: fmax2, min: fmin2, exp, log, sin, cos, PI: M_PI, ro
 
 const trm = new Float64Array(23);
 const trmr = new Float64Array(n_max + 1);
+const r1m5 = M_LOG10_2;
+const r1m4 = Number.EPSILON * 0.5;
+const wdtol = fmax2(r1m4, 0.5e-18); /* 1.11e-16 */
 
 const lrg = 1 / (2 * DBL_EPSILON);
 /* From R, currently only used for kode = 1, m = 1 : */
@@ -300,10 +303,6 @@ function dpsifn(
     }
     mm = m;
     nx = imin2(-DBL_MIN_EXP, DBL_MAX_EXP); /* = 1021 */
-    const r1m5 = M_LOG10_2;
-    const r1m4 = Number.EPSILON * 0.5;
-    const wdtol = fmax2(r1m4, 0.5e-18); /* 1.11e-16 */
-
     /* elim = approximate exponential over and underflow limit */
     const elim = 2.302 * (nx * r1m5 - 3.0); /* = 700.6174... */
 
