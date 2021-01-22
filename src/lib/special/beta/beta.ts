@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import { debug } from 'debug';
 
 import { ME, ML_ERR_return_NAN, ML_ERROR } from '@common/logger';
-import { gamma as gammafn } from '@special/gamma';
+import { gamma_internal } from '@special/gamma';
 import { lbeta } from './lbeta';
 
 //const xmin =  - 170.5674972726612;
@@ -45,7 +45,7 @@ export function beta(a: number, b: number): number {
         //   gammafn(x) can still overflow for x ~ 1e-308,
         //   but the result would too.
         //
-        return (1 / gammafn(a + b)) * gammafn(a) * gammafn(b);
+        return (1 / gamma_internal(a + b)) * gamma_internal(a) * gamma_internal(b);
     } else {
         const val: number = lbeta(a, b);
         // underflow to 0 is not harmful per se;  exp(-999) also gives no warning
