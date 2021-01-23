@@ -24,13 +24,16 @@ import { gamma_internal } from '@special/gamma';
 import { lgammafn_sign } from '@special/gamma/lgammafn_sign';
 import { lgammacor } from '@special/gamma/lgammacor';
 
+import type { NumArray } from '$constants';
+import { validateBetaArgs } from './helpers';
+
 const { log, log1p } = Math;
 
 const { isNaN: ISNAN, isFinite: R_FINITE, POSITIVE_INFINITY: ML_POSINF, NEGATIVE_INFINITY: ML_NEGINF } = Number;
 
 const printer = debug('lbeta');
 
-export function lbeta(a: number, b: number): number {
+export function lbeta_scalar(a: number, b: number): number {
     let corr: number;
     let p: number;
     let q: number;
@@ -68,4 +71,16 @@ export function lbeta(a: number, b: number): number {
         //else
         return log(gamma_internal(p) * (gamma_internal(q) / gamma_internal(p + q)));
     }
+}
+
+export function lbeta(a: NumArray, b?: NumArray) {
+    // check "a" (must always be there)
+    const { rc, onlyA } = validateBetaArgs('beta(a,b)', a, b);
+    if (rc.length === 0) {
+        return rc;
+    }
+    for (let i = 0, j = 0; i < a.length; i += onlyA ? 2 : 1, j += 1) {
+        rc[j] = lbeta_scalar(a[i], onlyA ? a[i + 1] : (b as NumArray)[i]);
+    }
+    return rc;
 }

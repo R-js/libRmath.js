@@ -15,12 +15,29 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+//gama
+//beta
 export const emptyFloat32Array = new Float32Array(0);
+//gama
+//beta
 export const emptyFloat64Array = new Float64Array(0);
 
 export type NumArray = number[] | Float32Array | Float64Array;
-export function isArray(x: NumArray) {
+//gamma
+//beta
+export function isArray(x: any) {
     return Array.isArray(x) || x instanceof Float32Array || x instanceof Float64Array;
+}
+//beta
+export function matchFloatType(n: number, ...a: NumArray[]): Float32Array | Float64Array {
+    let fp32 = true;
+    for (let i = 0; i < a.length; i++) {
+        if (!(a[i] instanceof Float32Array)) {
+            fp32 = false;
+            break;
+        }
+    }
+    return fp32 ? new Float32Array(n) : new Float64Array(n);
 }
 
 export function isEmptyArray(x: NumArray) {
