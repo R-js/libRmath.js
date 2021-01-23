@@ -18,10 +18,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import { debug } from 'debug';
 
 import { ME, ML_ERR_return_NAN, ML_ERROR } from '@common/logger';
-import { gamma as gammafn } from '@special/gamma';
-import { lbeta } from './lbeta';
+import { gamma_internal } from '@special/gamma';
+import { lbeta_scalar } from './lbeta';
+import type { NumArray } from '$constants';
+import { validateBetaArgs } from './helpers';
 
-//const xmin =  - 170.5674972726612;
+// not used const xmin = -170.5674972726612;
 const xmax = 171.61447887182298;
 const lnsml = -708.39641853226412;
 
@@ -29,7 +31,7 @@ const { isNaN: ISNAN, isFinite: R_FINITE, POSITIVE_INFINITY: ML_POSINF } = Numbe
 
 const printer_beta = debug('beta');
 
-export function beta(a: number, b: number): number {
+export function beta_scalar(a: number, b: number): number {
     if (ISNAN(a) || ISNAN(b)) return a + b;
 
     if (a < 0 || b < 0) return ML_ERR_return_NAN(printer_beta);
@@ -45,9 +47,9 @@ export function beta(a: number, b: number): number {
         //   gammafn(x) can still overflow for x ~ 1e-308,
         //   but the result would too.
         //
-        return (1 / gammafn(a + b)) * gammafn(a) * gammafn(b);
+        return (1 / gamma_internal(a + b)) * gamma_internal(a) * gamma_internal(b);
     } else {
-        const val: number = lbeta(a, b);
+        const val: number = lbeta_scalar(a, b);
         // underflow to 0 is not harmful per se;  exp(-999) also gives no warning
         //#ifndef IEEE_754
         if (val < lnsml) {
@@ -58,4 +60,15 @@ export function beta(a: number, b: number): number {
         //#endif
         return Math.exp(val);
     }
+}
+
+export function beta(a: NumArray, b?: NumArray) {
+    const { rc, onlyA } = validateBetaArgs('lbeta(a,b)', a, b);
+    if (rc.length === 0) {
+        return rc;
+    }
+    for (let i = 0, j = 0; i < a.length; i += onlyA ? 2 : 1, j += 1) {
+        rc[j] = beta_scalar(a[i], onlyA ? a[i + 1] : (b as NumArray)[i]);
+    }
+    return rc;
 }
