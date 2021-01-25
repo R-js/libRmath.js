@@ -13,9 +13,9 @@ describe('psigamma', function () {
         const actual = psigamma(1 as any, 1001);
         expect(actual).toEqualFloatingPointBinary(NaN);
     });
-    it('ranges (1,2,3)', () => {
+    it('ranges (1,2,3)', async () => {
         /* load data from fixture */
-        const [x, y] = loadData(resolve(__dirname, 'fixture-generation', 'psigamma.R'), /\s+/, 1, 2);
+        const [x, y] = await loadData(resolve(__dirname, 'fixture-generation', 'psigamma.R'), /\s+/, 1, 2);
         const actual = psigamma(x, 6);
         expect(actual).toEqualFloatingPointBinary(y);
     });
@@ -48,9 +48,9 @@ describe('psigamma', function () {
         const actual = psigamma((Number.EPSILON * 0.25) as any, 3);
         expect(actual).toEqualFloatingPointBinary(6.3187375001134312019e65);
     });
-    it('flush test', () => {
+    it('flush test', async () => {
         /* load data from fixture */
-        const [y, x, n] = loadData(resolve(__dirname, 'fixture-generation', 'psigamma.flush.R'), /\s+/, 1, 2, 3);
+        const [y, x, n] = await loadData(resolve(__dirname, 'fixture-generation', 'psigamma.flush.R'), /\s+/, 1, 2, 3);
         const actual = new Float64Array(y.length);
         for (let i = 0; i < x.length; i++) {
             actual[i] = psigamma(x[i] as any, n[i] as number)[0];

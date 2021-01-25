@@ -8,9 +8,9 @@ import { loadData } from '$test-helpers/load';
 import { pentagamma } from '..';
 
 describe('pentagamma', function () {
-    it('ranges [-1,-2] [0,10] [-30,_20]', () => {
+    it('ranges [-1,-2] [0,10] [-30,_20]', async () => {
         /* load data from fixture */
-        const [x, y] = loadData(resolve(__dirname, 'fixture-generation', 'pentagamma.R'), /\s+/, 1, 2);
+        const [x, y] = await loadData(resolve(__dirname, 'fixture-generation', 'pentagamma.R'), /\s+/, 1, 2);
         const actual = pentagamma(x);
         expect(actual).toEqualFloatingPointBinary(y);
     });

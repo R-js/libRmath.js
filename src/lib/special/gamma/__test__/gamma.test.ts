@@ -9,9 +9,9 @@ import { loadData } from '$test-helpers/load';
 import { gamma } from '..';
 
 describe('gamma', function () {
-    it('gamma, range "0" to "0.5703"', () => {
+    it('gamma, range "0" to "0.5703"', async () => {
         /* load data from fixture */
-        const [x, y] = loadData(resolve(__dirname, 'fixture-generation', 'fixture.R'), /,/, 0, 1);
+        const [x, y] = await loadData(resolve(__dirname, 'fixture-generation', 'fixture.R'), /,/, 0, 1);
         const actual = gamma(x);
         expect(actual).toEqualFloatingPointBinary(y);
     });

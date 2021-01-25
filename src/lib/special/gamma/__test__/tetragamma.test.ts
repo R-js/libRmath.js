@@ -9,9 +9,9 @@ import { loadData } from '$test-helpers/load';
 import { tetragamma } from '..';
 
 describe('tetragamma', function () {
-    it('ranges [0.009, 4]', () => {
+    it('ranges [0.009, 4]', async () => {
         /* load data from fixture */
-        const [x, y] = loadData(resolve(__dirname, 'fixture-generation', 'tetragamma.R'), /\s+/, 1, 2);
+        const [x, y] = await loadData(resolve(__dirname, 'fixture-generation', 'tetragamma.R'), /\s+/, 1, 2);
         const actual = tetragamma(x);
         expect(actual).toEqualFloatingPointBinary(y);
     });

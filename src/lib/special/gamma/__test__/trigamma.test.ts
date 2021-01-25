@@ -9,9 +9,9 @@ import { loadData } from '$test-helpers/load';
 import { trigamma } from '..';
 
 describe('trigamma', function () {
-    it('ranges [0.0005, 0.9005] [1,50]', () => {
+    it('ranges [0.0005, 0.9005] [1,50]', async () => {
         /* load data from fixture */
-        const [x, y] = loadData(resolve(__dirname, 'fixture-generation', 'trigamma.R'), /\s+/, 1, 2);
+        const [x, y] = await loadData(resolve(__dirname, 'fixture-generation', 'trigamma.R'), /\s+/, 1, 2);
         const actual = trigamma(x);
         expect(actual).toEqualFloatingPointBinary(y);
     });
@@ -19,8 +19,8 @@ describe('trigamma', function () {
         const actual = trigamma([-4, -3, -2, -1, 0]);
         expect(actual).toEqualFloatingPointBinary(Infinity);
     });
-    it('ranges [-4,-3], [-2,-1] [-1,0]', () => {
-        const [x, y] = loadData(resolve(__dirname, 'fixture-generation', 'trigamma-negative.R'), /\s+/, 1, 2);
+    it('ranges [-4,-3], [-2,-1] [-1,0]', async () => {
+        const [x, y] = await loadData(resolve(__dirname, 'fixture-generation', 'trigamma-negative.R'), /\s+/, 1, 2);
         const actual = trigamma(x);
         expect(actual).toEqualFloatingPointBinary(y);
     });
