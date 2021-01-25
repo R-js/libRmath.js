@@ -9,9 +9,9 @@ import { loadData } from '$test-helpers/load';
 import { digamma } from '..';
 
 describe('digamma', function () {
-    it('ranges [0.05, 9.95] and [-1.00 , 0] and [-11.00, -10.00]', () => {
+    it('ranges [0.05, 9.95] and [-1.00 , 0] and [-11.00, -10.00]', async () => {
         /* load data from fixture */
-        const [x, y] = loadData(resolve(__dirname, 'fixture-generation', 'digamma.R'), /\s+/, 1, 2);
+        const [x, y] = await loadData(resolve(__dirname, 'fixture-generation', 'digamma.R'), /\s+/, 1, 2);
         const actual = digamma(x);
         expect(actual).toEqualFloatingPointBinary(y);
     });

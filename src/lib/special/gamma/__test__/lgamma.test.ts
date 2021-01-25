@@ -9,8 +9,8 @@ import { loadData } from '$test-helpers/load';
 import { lgamma, lgamma_internal } from '..';
 
 describe('lgamma', () => {
-    it('ranges [0.09, 3.99] and [-0.09,-3.99]', () => {
-        const [x, y] = loadData(resolve(__dirname, 'fixture-generation', 'lgamma-fixture.R'), /\s+/, 1, 2);
+    it('ranges [0.09, 3.99] and [-0.09,-3.99]', async () => {
+        const [x, y] = await loadData(resolve(__dirname, 'fixture-generation', 'lgamma-fixture.R'), /\s+/, 1, 2);
         const received = lgamma(x);
         expect(received).toEqualFloatingPointBinary(y);
     });
