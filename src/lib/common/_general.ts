@@ -29,9 +29,10 @@ export function isArray(x: any) {
     return Array.isArray(x) || x instanceof Float32Array || x instanceof Float64Array;
 }
 //beta
-export function matchFloatType(n: number, ...a: NumArray[]): Float32Array | Float64Array {
+export function matchFloatType(n: number, ...a: (NumArray | undefined)[]): Float32Array | Float64Array {
     let fp32 = true;
     for (let i = 0; i < a.length; i++) {
+        if (a[i] === undefined) continue; // skip undefined
         if (!(a[i] instanceof Float32Array)) {
             fp32 = false;
             break;

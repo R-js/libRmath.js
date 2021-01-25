@@ -1,22 +1,16 @@
-import * as fs from 'fs';
+//node
 import { resolve } from 'path';
-import { lgamma, lgamma_internal } from '..';
+
+//helpers
 import '$jest-extension';
+import { loadData } from '$test-helpers/load';
+
+//app
+import { lgamma, lgamma_internal } from '..';
 
 describe('lgamma', () => {
     it('ranges [0.09, 3.99] and [-0.09,-3.99]', () => {
-        const lines = fs
-            .readFileSync(resolve(__dirname, 'fixture-generation', 'lgamma-fixture.R'), 'utf8')
-            .split(/\n/)
-            .filter((s) => s && s[0] !== '#');
-
-        const x = new Float64Array(lines.length);
-        const y = new Float64Array(lines.length);
-        lines.forEach((line, i) => {
-            const [, _x, _y] = line.split(/\s+/).map(parseFloat);
-            x[i] = _x;
-            y[i] = _y;
-        });
+        const [x, y] = loadData(resolve(__dirname, 'fixture-generation', 'lgamma-fixture.R'), /\s+/, 1, 2);
         const received = lgamma(x);
         expect(received).toEqualFloatingPointBinary(y);
     });

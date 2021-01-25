@@ -32,5 +32,6 @@ module.exports = {
         '^@special/(.*)$': '<rootDir>/src/lib/special/$1',
         '^@trig/(.*)$': '<rootDir>/src/lib/trigonometry/$1',
         '^\\$toms708': '<rootDir>/src/lib/common/toms708',
+        '^\\$test-helpers/(.*)$': '<rootDir>/src/packages/test-helpers/$1',
     },
 };

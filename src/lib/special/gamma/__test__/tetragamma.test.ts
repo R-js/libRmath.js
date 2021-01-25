@@ -1,36 +1,17 @@
-import * as fs from 'fs';
+// node
 import { resolve } from 'path';
-import { tetragamma } from '..';
-import '$jest-extension';
 
-function load(fixture: string) {
-    const lines = fs
-        .readFileSync(resolve(__dirname, 'fixture-generation', fixture), 'utf8')
-        .split(/\n/)
-        .filter((s) => s && s[0] !== '#');
-    const x = new Float64Array(lines.length);
-    const y = new Float64Array(lines.length);
-    // create xy array of Float64Array
-    lines.forEach((v, i) => {
-        const [, _x, _y] = v.split(/\s+/).map((v) => {
-            if (v === 'Inf') {
-                return Infinity;
-            }
-            if (v === '-Inf') {
-                return -Infinity;
-            }
-            return parseFloat(v);
-        });
-        x[i] = _x;
-        y[i] = _y;
-    });
-    return [x, y];
-}
+//helpers
+import '$jest-extension';
+import { loadData } from '$test-helpers/load';
+
+//app
+import { tetragamma } from '..';
 
 describe('tetragamma', function () {
     it('ranges [0.009, 4]', () => {
         /* load data from fixture */
-        const [x, y] = load('tetragamma.R');
+        const [x, y] = loadData(resolve(__dirname, 'fixture-generation', 'tetragamma.R'), /\s+/, 1, 2);
         const actual = tetragamma(x);
         expect(actual).toEqualFloatingPointBinary(y);
     });
