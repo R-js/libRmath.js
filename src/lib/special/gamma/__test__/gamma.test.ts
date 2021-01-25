@@ -1,23 +1,17 @@
-import * as fs from 'fs';
+// node
 import { resolve } from 'path';
-import { gamma } from '..';
+
+//helpers
 import '$jest-extension';
+import { loadData } from '$test-helpers/load';
+
+//app
+import { gamma } from '..';
 
 describe('gamma', function () {
     it('gamma, range "0" to "0.5703"', () => {
         /* load data from fixture */
-        const lines = fs
-            .readFileSync(resolve(__dirname, 'fixture-generation', 'fixture.R'), 'utf8')
-            .split(/\n/)
-            .filter((s) => s && s[0] !== '#');
-        const x = new Float64Array(lines.length);
-        const y = new Float64Array(lines.length);
-        // create xy array of Float64Array
-        lines.forEach((v, i) => {
-            const [_x, _y] = v.split(',').map(parseFloat);
-            x[i] = _x;
-            y[i] = _y;
-        });
+        const [x, y] = loadData(resolve(__dirname, 'fixture-generation', 'fixture.R'), /,/, 0, 1);
         const actual = gamma(x);
         expect(actual).toEqualFloatingPointBinary(y);
     });

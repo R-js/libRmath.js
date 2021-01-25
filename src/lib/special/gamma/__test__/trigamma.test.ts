@@ -1,36 +1,17 @@
-import * as fs from 'fs';
+// node
 import { resolve } from 'path';
-import { trigamma } from '..';
-import '$jest-extension';
 
-function load(fixture: string) {
-    const lines = fs
-        .readFileSync(resolve(__dirname, 'fixture-generation', fixture), 'utf8')
-        .split(/\n/)
-        .filter((s) => s && s[0] !== '#');
-    const x = new Float64Array(lines.length);
-    const y = new Float64Array(lines.length);
-    // create xy array of Float64Array
-    lines.forEach((v, i) => {
-        const [, _x, _y] = v.split(/\s+/).map((v) => {
-            if (v === 'Inf') {
-                return Infinity;
-            }
-            if (v === '-Inf') {
-                return -Infinity;
-            }
-            return parseFloat(v);
-        });
-        x[i] = _x;
-        y[i] = _y;
-    });
-    return [x, y];
-}
+//helpers
+import '$jest-extension';
+import { loadData } from '$test-helpers/load';
+
+//app
+import { trigamma } from '..';
 
 describe('trigamma', function () {
     it('ranges [0.0005, 0.9005] [1,50]', () => {
         /* load data from fixture */
-        const [x, y] = load('trigamma.R');
+        const [x, y] = loadData(resolve(__dirname, 'fixture-generation', 'trigamma.R'), /\s+/, 1, 2);
         const actual = trigamma(x);
         expect(actual).toEqualFloatingPointBinary(y);
     });
@@ -39,7 +20,7 @@ describe('trigamma', function () {
         expect(actual).toEqualFloatingPointBinary(Infinity);
     });
     it('ranges [-4,-3], [-2,-1] [-1,0]', () => {
-        const [x, y] = load('trigamma-negative.R');
+        const [x, y] = loadData(resolve(__dirname, 'fixture-generation', 'trigamma-negative.R'), /\s+/, 1, 2);
         const actual = trigamma(x);
         expect(actual).toEqualFloatingPointBinary(y);
     });

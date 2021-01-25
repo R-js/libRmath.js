@@ -1,36 +1,17 @@
-import * as fs from 'fs';
+// node
 import { resolve } from 'path';
-import { digamma } from '..';
-import '$jest-extension';
 
-function load(fixture: string) {
-    const lines = fs
-        .readFileSync(resolve(__dirname, 'fixture-generation', fixture), 'utf8')
-        .split(/\n/)
-        .filter((s) => s && s[0] !== '#');
-    const x = new Float64Array(lines.length);
-    const y = new Float64Array(lines.length);
-    // create xy array of Float64Array
-    lines.forEach((v, i) => {
-        const [, _x, _y] = v.split(/\s+/).map((v) => {
-            if (v === 'Inf') {
-                return Infinity;
-            }
-            if (v === '-Inf') {
-                return -Infinity;
-            }
-            return parseFloat(v);
-        });
-        x[i] = _x;
-        y[i] = _y;
-    });
-    return [x, y];
-}
+//helper
+import '$jest-extension';
+import { loadData } from '$test-helpers/load';
+
+//app
+import { digamma } from '..';
 
 describe('digamma', function () {
     it('ranges [0.05, 9.95] and [-1.00 , 0] and [-11.00, -10.00]', () => {
         /* load data from fixture */
-        const [x, y] = load('digamma.R');
+        const [x, y] = loadData(resolve(__dirname, 'fixture-generation', 'digamma.R'), /\s+/, 1, 2);
         const actual = digamma(x);
         expect(actual).toEqualFloatingPointBinary(y);
     });
