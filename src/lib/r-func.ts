@@ -14,9 +14,9 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-const { max, abs, sign } = Math;
+const { max } = Math;
 
-const precision9 = (9);
+
 
 export function* seq_len({ length, base = 1 }: { length: number; base: number }): IterableIterator<number> {
     for (let i = 0; i < length; i++) {
@@ -24,31 +24,6 @@ export function* seq_len({ length, base = 1 }: { length: number; base: number })
     }
 }
 
-export const seq = (adjust = 0) => (adjustMin = adjust) => (start: number, end = 1, step = 1): number[] => {
-    let s = start + adjust;
-    let e = end + adjust;
-    let cursor = s;
-
-    if (end < start) {
-        e = start + adjustMin;
-        s = end + adjustMin;
-        cursor = e;
-    }
-    // wow: Chrome and FireFox give
-    // 0.4+0.2 = 0.6000000000000001
-    // so we use precision to have it make sense
-    // sometimes rounding effects try something diff
-    step = abs(step) * sign(end - start);
-
-    const rc: number[] = [];
-
-    do {
-        rc.push(cursor);
-        cursor += step;
-    } while (precision9(cursor) >= s && precision9(cursor) <= e && step !== 0);
-
-    return precision9(rc) as any;
-};
 
 export const sequenceFactory = (adjust = 0, adjustMin = adjust) => (start: number, end: number, delta = 1) =>
     Array.from(lazySeq(start, end, delta, adjust, adjustMin));
@@ -233,7 +208,7 @@ export function summary(x: number[]): ISummary {
     }
 
     const N = x.length;
-    const mu = sum(x) / N;
+    const mu = sum(x) / N; // population mean
     const relX = x.map((v) => v - mu);
     const relX2 = relX.map((v) => v * v);
     const sampleVariance = sum(relX2) / (N - 1);
