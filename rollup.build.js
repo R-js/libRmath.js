@@ -2,7 +2,7 @@ const rollup = require('rollup');
 // builtinModules is frozen!!! (Object.freeze)
 const builtin = require('module').builtinModules.slice();
 const { terser } = require('rollup-plugin-terser');
-const { nodeResolve } = require('@rollup/plugin-node-resolve');
+//const { nodeResolve } = require('@rollup/plugin-node-resolve');
 const { resolve, dirname } = require('path');
 
 builtin.splice(builtin.indexOf('crypto'), 1);
@@ -28,6 +28,7 @@ function shims() {
     return {
         name: 'stubbing for browser',
         async resolveId(source, importer) {
+            console.log(`${importer} <- ${source}`);
             if (!importer) {
                 return null; // skip entry files
             }
@@ -53,8 +54,7 @@ function shims() {
 // see below for details on the options
 const inputOptions = {
     input: {
-        // 'lib-r-math': 'es6/lib/rng/index.js',
-        gamma: 'es6/lib/special/bessel',
+        'lib-r-math': 'es6/lib/rng/index.js',
     },
     external: (id, parentId, isResolved) => {
         /* if (/logger/.test(id)) {
@@ -68,13 +68,12 @@ const inputOptions = {
         }
         return false;
     },
-    plugins: [shims(), nodeResolve()],
+    plugins: [shims()],
 };
 
 const outputOptions = {
     format: 'es',
     dir: 'browser',
-    //entryFileNames: '[name].min.js',
     sourcemap: true,
     name: 'R',
     preserveModules: true,
@@ -90,7 +89,8 @@ async function build() {
     //inputOptions.external = builtin;
     const bundle = await rollup.rollup(inputOptions);
     const { output } = await bundle.generate(outputOptions);
-
+    console.log('OutputGenerated');
+    let taocp1997init;
     for (const chunkOrAsset of output) {
         if (chunkOrAsset.type === 'asset') {
             // For assets, this contains
@@ -101,6 +101,11 @@ async function build() {
             // }
             //console.log('Asset', chunkOrAsset.fileName);
         } else {
+            const { name, type, fileName, modules, code } = chunkOrAsset;
+            if (name === 'taocp-1997-init') {
+                console.log(code)
+            }
+            console.log(`${name}, ${type}, ${fileName}, ${JSON.stringify(modules)}`);
             // For chunks, this contains
             // {
             //   code: string,                  // the generated JS code

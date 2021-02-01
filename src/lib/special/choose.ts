@@ -20,17 +20,17 @@ import { isOdd } from '../common/_general';
 const { abs: fabs, log, exp, round } = Math;
 const { isInteger, NEGATIVE_INFINITY: ML_NEGINF, isNaN: ISNAN } = Number;
 
-import { lbeta as internal_lbeta } from '@special/beta/lbeta';
+import { lbeta_scalar } from '@special/beta/lbeta';
 import { lgammafn_sign } from '@special/gamma/lgammafn_sign';
 
 // used by "qhyper"
 function lfastchoose(n: number, k: number) {
-    return -log(n + 1) - internal_lbeta(n - k + 1, k + 1);
+    return -log(n + 1) - lbeta_scalar(n - k + 1, k + 1);
 }
 /* mathematically the same:
    less stable typically, but useful if n-k+1 < 0 : */
 
-function lfastchoose2(n: number, k: number, sChoose?: number[]) {
+function lfastchoose2(n: number, k: number, sChoose?: Int8Array) {
     const r = lgammafn_sign(n - k + 1, sChoose);
     return lgammafn_sign(n + 1) - lgammafn_sign(k + 1) - r;
 }
@@ -105,7 +105,7 @@ function internal_choose(n: number, k: number): number {
     }
     /* else non-integer n >= 0 : */
     if (n < k - 1) {
-        const schoose: number[] = [0];
+        const schoose = new Int8Array(1);
         r = lfastchoose2(n, k, /* -> */ schoose);
         return schoose[0] * exp(r);
     }
