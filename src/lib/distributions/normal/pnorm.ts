@@ -41,15 +41,15 @@ import { NumberW } from '../common/toms708';
 
 export function pnorm5(
   q: number,
-  mu: number = 0,
-  sigma: number = 1,
-  lowerTail: boolean = true,
-  logP: boolean = false
+  mu = 0,
+  sigma = 1,
+  lowerTail = true,
+  logP = false
 ): number {
 
 
-  let p = new NumberW(0);
-  let cp = new NumberW(0);
+  const p = new NumberW(0);
+  const cp = new NumberW(0);
 
   /* Note: The structure of these checks has been carefully thought through.
    * For example, if x == mu and sigma == 0, we get the correct answer 1.

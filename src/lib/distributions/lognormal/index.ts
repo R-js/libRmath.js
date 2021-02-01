@@ -27,7 +27,7 @@ export function LogNormal(rng: IRNGNormal = new Inversion()) {
     dlnorm,
     plnorm,
     qlnorm,
-    rlnorm: (n: number, meanlog: number = 0, sdlog: number = 1): number | number[] =>
+    rlnorm: (n: number, meanlog = 0, sdlog = 1): number | number[] =>
       rlnorm(n, meanlog, sdlog, rng)
   };
 }

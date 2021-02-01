@@ -32,6 +32,6 @@ export function validateBetaArgs(tag: string, a: NumArray, b?: NumArray) {
             );
         }
     }
-    const rc = onlyA ? matchFloatType(onlyA ? a.length / 2 : a.length, a) : matchFloatType(a.length, a, b as NumArray);
+    const rc = onlyA ? matchFloatType(a.length / 2, a) : matchFloatType(a.length, a, b);
     return { rc, onlyA };
 }
