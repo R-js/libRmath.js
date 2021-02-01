@@ -41,9 +41,9 @@ export function Tukey() {
     q: number,
     nmeans: number,
     df: number,
-    nranges: number = 1,
-    lowerTail: boolean = true,
-    logP: boolean = false
+    nranges = 1,
+    lowerTail = true,
+    logP = false
   ) {
     return _pt(q, nranges, nmeans, df, lowerTail, logP);
   }
@@ -60,9 +60,9 @@ function (p, nmeans, df, nranges = 1, lower.tail = TRUE, log.p = FALSE)
     q: number,
     nmeans: number,
     df: number,
-    nranges: number = 1,
-    lowerTail: boolean = true,
-    logP: boolean = false
+    nranges = 1,
+    lowerTail = true,
+    logP = false
   )  {
     return _qt(q, nranges, nmeans, df, lowerTail, logP);
   }

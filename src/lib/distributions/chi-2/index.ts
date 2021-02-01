@@ -35,8 +35,8 @@ export function ChiSquared(rng: IRNGNormal = new Inversion()) {
     p: number,
     df: number,
     ncp?: number,
-    lowerTail: boolean = true,
-    logP: boolean = false
+    lowerTail = true,
+    logP = false
   ) {
     return ncp === undefined
       ? _qchisq(p, df, lowerTail, logP)
@@ -47,8 +47,8 @@ export function ChiSquared(rng: IRNGNormal = new Inversion()) {
     p: number,
     df: number,
     ncp?: number,
-    lowerTail: boolean = true,
-    logP: boolean = false
+    lowerTail = true,
+    logP = false
   ) {
     return ncp === undefined
       ? _pchisq(p, df, lowerTail, logP)
@@ -59,7 +59,7 @@ export function ChiSquared(rng: IRNGNormal = new Inversion()) {
     x: number,
     df: number,
     ncp?: number,
-    log: boolean = false
+    log = false
   ) {
     return ncp === undefined ? _dchisq(x, df, log) : _dnchisq(x, df, ncp, log);
   }

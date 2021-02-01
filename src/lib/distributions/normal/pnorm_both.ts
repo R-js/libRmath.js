@@ -85,7 +85,7 @@ export function pnorm_both(
     let xsq;
     let y;
   
-    let min = DBL_MIN;
+    const min = DBL_MIN;
   
     let lower: boolean;
     let upper: boolean;

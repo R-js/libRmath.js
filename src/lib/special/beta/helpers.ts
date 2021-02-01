@@ -22,9 +22,16 @@ export function validateBetaArgs(tag: string, a: NumArray, b?: NumArray) {
     }
     if (b && b.length != a.length) {
         throw new TypeError(
-            `beta(a,b): arguments "a" and "b" must be of equal vector length (#a=${a.length}, b=#${b.length}) of number[], Float32Array, Float64Array`,
+            `${tag}: arguments "a" and "b" must be of equal vector length (#a=${a.length}, b=#${b.length}) of number[], Float32Array, Float64Array`,
         );
     }
-    const rc = onlyA ? matchFloatType(a.length, a) : matchFloatType(a.length, a, b as NumArray);
+    if (onlyA) {
+        if (a.length % 2 !== 0) {
+            throw new Error(
+                `${tag}: ("b"=onevent elements of a), error cannot interleave data from a because array length of a(${a.length}) is not multiple of 2`,
+            );
+        }
+    }
+    const rc = onlyA ? matchFloatType(a.length / 2, a) : matchFloatType(a.length, a, b);
     return { rc, onlyA };
 }

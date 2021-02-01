@@ -63,19 +63,15 @@ export function lbeta_scalar(a: number, b: number): number {
     } else {
         // p and q are small: p <= q < 10.
         // R change for very small args
-
-        //NOTE FROM JACOB, funny how only p is tested and not q?? doesnt make sense
-        //  since the beta function is "symetric" for p and q aka beta(p,q) = beta (q,p)
-
-        // removed  if (p < 1e-306) return lgamma(p) + (lgamma(q) - lgamma(p+q));
-        //else
-        return log(gamma_internal(p) * (gamma_internal(q) / gamma_internal(p + q)));
+        // removed 
+        if (p < 1e-306) return lgammafn_sign(p) + (lgammafn_sign(q) - lgammafn_sign(p+q))
+        else return log(gamma_internal(p) * (gamma_internal(q) / gamma_internal(p + q)));
     }
 }
 
-export function lbeta(a: NumArray, b?: NumArray) {
+export function lbeta(a: NumArray, b?: NumArray): Float64Array|Float32Array {
     // check "a" (must always be there)
-    const { rc, onlyA } = validateBetaArgs('beta(a,b)', a, b);
+    const { rc, onlyA } = validateBetaArgs('lbeta(a,b)', a, b);
     if (rc.length === 0) {
         return rc;
     }

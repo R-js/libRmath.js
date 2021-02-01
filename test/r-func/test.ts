@@ -297,7 +297,7 @@ describe(`Tools&Die`, () => {
                 const id = ++stack * 2;
                 return `${id}`
             };
-            let trig: number = undefined as any;
+            const trig: number = undefined as any;
             const shouldThrow = () => randomGenHelper(trig, testFn)
             expect(shouldThrow).to.throw(`n argument is not a number or a number array`)
         })
@@ -309,14 +309,14 @@ describe(`Tools&Die`, () => {
     describe('range', () => {
         it(`lazy range(start=1, stop=4, step=2)`, function () {
             const collect: number[] = []
-            for (let i of range(1, 4, 2)) {
+            for (const i of range(1, 4, 2)) {
                 collect.push(i)
             }
             expect(collect).to.deep.equal([1, 3])
         })
         it(`lazy range(start=1, stop=4)`, function () {
             const collect: number[] = []
-            for (let i of range(1, 4)) {
+            for (const i of range(1, 4)) {
                 collect.push(i)
             }
             expect(collect).to.deep.equal([1, 2, 3, 4])
@@ -327,7 +327,7 @@ describe(`Tools&Die`, () => {
             const collect: any[] = [];
             const s = new Set(['hello', 'world', 'first', 'last']);
             const it = lazyMap((v, k) => `${k}=${v}`)(s.keys());
-            for (let i of it) {
+            for (const i of it) {
                 collect.push(i)
             }
             expect(collect).to.deep.equal(['0=hello', '1=world', '2=first', '3=last'])

@@ -111,7 +111,7 @@ function check32Bit(a: number,b: number, dv1: DataView, dv2: DataView){
     return [undefined, i, man1, man2];
 }
 
-export function createFloatBitFieldComparator(use64BIT: boolean = false) {
+export function createFloatBitFieldComparator(use64BIT = false) {
     // prepare
     const v1 = use64BIT ? new Float64Array(1) : new Float32Array(1);
     const v2 = use64BIT ? new Float64Array(2) : new Float32Array(2);

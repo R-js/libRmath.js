@@ -14,8 +14,8 @@ export function do_del(
     lower: boolean,
     x: number
   ): void {
-    let xsq = trunc(X * SIXTEN) / SIXTEN;
-    let del = (X - xsq) * (X + xsq);
+    const xsq = trunc(X * SIXTEN) / SIXTEN;
+    const del = (X - xsq) * (X + xsq);
     if (log_p) {
       //B
       cum.val = -xsq * xsq * 0.5 + -del * 0.5 + log(temp);

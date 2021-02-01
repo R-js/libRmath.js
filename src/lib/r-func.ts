@@ -14,41 +14,88 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-const { max, abs, sign } = Math;
+const { max } = Math;
 
-const precision9 = (9);
+function isIterator<T>(it: any): it is IterableIterator<T> {
+    return it && it[Symbol.iterator] === 'function';
+}
+
+export function* flatten<T>(...rest: T[]): IterableIterator<T> {
+    for (const itm of rest) {
+        if (itm === null || ['undefined', 'string', 'symbol', 'number', 'boolean'].includes(typeof itm)) {
+            yield itm;
+            continue;
+        }
+        if (itm instanceof Map || itm instanceof Set) {
+            for (const v of <any>itm) {
+                yield* flatten(v);
+            }
+            continue;
+        }
+        if (itm instanceof Array) {
+            for (const v of itm) {
+                yield* flatten(v);
+            }
+            continue;
+        }
+
+        if (isIterator(itm)) {
+            for (const v of <any>itm) {
+                yield* flatten(v);
+            }
+            continue;
+        }
+    }
+}
+
+export function numberPrecision(prec = 6) {
+    return function convert(x: any): typeof x {
+        // try to loop over the object
+        if (isObject(x)) {
+            for (const [prop, value] of Object.entries(x)) {
+                //recursion
+                x[prop] = convert(value);
+            }
+            return x;
+        }
+        // this is a number!!
+        if (isNumber(x)) {
+            x = Number.parseFloat(x.toPrecision(prec)) as any;
+        }
+        return x;
+    };
+}
+
+export function chain<F extends (...argv: any[]) => unknown>(fn0: F, ...fns: F[]) {
+    fns.push(fn0);
+    if (fns.length === 0) {
+        throw new TypeError(`specifiy functions to chain`);
+    }
+    for (let i = 0; i < fns.length; i++) {
+        if (typeof fns[i] !== 'function') {
+            throw new TypeError(`argument ${i + 1} is not a function`);
+        }
+    }
+
+    return function (...args: Parameters<F>): ReturnType<F> {
+        let lastArgs: unknown[] = args;
+        if (args)
+            for (let i = fns.length - 1; i >= 0; i--) {
+                const fn = fns[i];
+                lastArgs = [fn.apply(fn, lastArgs)];
+                //console.log(lastArgs);
+            }
+        return lastArgs[0] as ReturnType<F>;
+    };
+}
+
+export const precision9 = numberPrecision(9);
 
 export function* seq_len({ length, base = 1 }: { length: number; base: number }): IterableIterator<number> {
     for (let i = 0; i < length; i++) {
         yield base + i;
     }
 }
-
-export const seq = (adjust = 0) => (adjustMin = adjust) => (start: number, end = 1, step = 1): number[] => {
-    let s = start + adjust;
-    let e = end + adjust;
-    let cursor = s;
-
-    if (end < start) {
-        e = start + adjustMin;
-        s = end + adjustMin;
-        cursor = e;
-    }
-    // wow: Chrome and FireFox give
-    // 0.4+0.2 = 0.6000000000000001
-    // so we use precision to have it make sense
-    // sometimes rounding effects try something diff
-    step = abs(step) * sign(end - start);
-
-    const rc: number[] = [];
-
-    do {
-        rc.push(cursor);
-        cursor += step;
-    } while (precision9(cursor) >= s && precision9(cursor) <= e && step !== 0);
-
-    return precision9(rc) as any;
-};
 
 export const sequenceFactory = (adjust = 0, adjustMin = adjust) => (start: number, end: number, delta = 1) =>
     Array.from(lazySeq(start, end, delta, adjust, adjustMin));
@@ -80,15 +127,24 @@ export type strTypes =
     | 'array'
     | 'function'
     | 'object';
+
 export type system = boolean | number | undefined | string | null | symbol;
 
 function _typeOf(v: any): strTypes {
     if (v === null) return 'null';
     if (v instanceof Array) return 'array';
     if (v instanceof Function) return 'function';
-    const k = typeof v;
-    // @ts-ignore TS2322: Type '"string" | "number" | "bigint" | "boolean" | "symbol" | "undefined" | "object" | "function"' is not assignable to type 'strTypes'.
-    return k;
+    const tv = typeof v;
+    switch (tv) {
+        case 'boolean':
+        case 'number':
+        case 'undefined':
+        case 'string':
+        case 'symbol':
+        case 'object':
+            return tv;
+    }
+    throw new TypeError(`unknown type ${tv}`);
 }
 
 export function* multiplexer(...rest: any[]): IterableIterator<any[]> {
@@ -149,9 +205,9 @@ export function* multiplexer(...rest: any[]): IterableIterator<any[]> {
     }
 }
 
-export const c = chain(Array.from, flatten);
+export const c = chain(Array.from, flatten as any);
 
-export function Rcycle(fn: Function) {
+export function Rcycle(fn: (...args: any[]) => unknown) {
     return function (...args: any[]) {
         const gen = multiplexer(...args);
         const rc: any[] = [];
@@ -166,35 +222,16 @@ function isNumber(x: any): x is number {
     return typeof x === 'number';
 }
 
-// typeguards
-
+// eslint-disable-next-line @typescript-eslint/ban-types
 function isObject(o: any): o is Object {
     return o && typeof o === 'object' && !Array.isArray(o);
-}
-
-export function (prec = 6) {
-    return function convert(x: any): typeof x {
-        // try to loop over the object
-        if (isObject(x)) {
-            for (const [prop, value] of Object.entries(x)) {
-                //recursion
-                x[prop] = convert(value);
-            }
-            return x;
-        }
-        // this is a number!!
-        if (isNumber(x)) {
-            x = Number.parseFloat(x.toPrecision(prec)) as any;
-        }
-        return x;
-    };
 }
 
 export function sum(x: number[]) {
     let sum = 0;
     const gen = flatten(x);
     for (let v = gen.next(); !v.done; v = gen.next()) {
-        sum += v.value;
+        sum += v.value as any;
     }
     return sum;
 }
@@ -233,7 +270,7 @@ export function summary(x: number[]): ISummary {
     }
 
     const N = x.length;
-    const mu = sum(x) / N;
+    const mu = sum(x) / N; // population mean
     const relX = x.map((v) => v - mu);
     const relX2 = relX.map((v) => v * v);
     const sampleVariance = sum(relX2) / (N - 1);
@@ -290,6 +327,7 @@ export function Welch_Satterthwaite(s: number[], n: number[]): number {
     return Math.pow(sum(elts), 2) / sum(dom);
 }
 
+// eslint-disable-next-line @typescript-eslint/ban-types
 export function randomGenHelper<T extends Function>(n: number | number[], fn: T, ...arg: any[]) {
     let result: number[];
 
@@ -339,61 +377,4 @@ export function each<T>(data: Slicee<T>): { (fn: (value: T[keyof T], idx: keyof 
 
 export function array_flatten<T = unknown>(...rest: (T | IterableIterator<T> | T[])[]) {
     return Array.from(flatten(...rest));
-}
-
-function isIterator<T>(it: any): it is IterableIterator<T> {
-    return it && it[Symbol.iterator] === 'function';
-}
-
-export function* flatten<T>(...rest: (T | IterableIterator<T> | T[])[]): IterableIterator<T> {
-    for (const itm of rest) {
-        if (itm === null || ['undefined', 'string', 'symbol', 'number', 'boolean'].includes(typeof itm)) {
-            // @ts-ignore
-            yield itm;
-            continue;
-        }
-        if (itm instanceof Map || itm instanceof Set) {
-            for (const v of <any>itm) {
-                yield* flatten(v);
-            }
-            continue;
-        }
-        if (itm instanceof Array) {
-            for (const v of itm) {
-                yield* flatten(v);
-            }
-            continue;
-        }
-
-        if (isIterator(itm)) {
-            for (const v of <any>itm) {
-                yield* flatten(v);
-            }
-            continue;
-        }
-    }
-}
-
-export function chain<F0 extends (...argv: any[]) => any, F extends (...argv: any[]) => any>(fn0: F0, ...fns: F[]) {
-    // @ts-ignore
-    fns.push(fn0);
-    if (fns.length === 0) {
-        throw new TypeError(`specifiy functions to chain`);
-    }
-    for (let i = 0; i < fns.length; i++) {
-        if (typeof fns[i] !== 'function') {
-            throw new TypeError(`argument ${i + 1} is not a function`);
-        }
-    }
-
-    return function (...args: Parameters<F>): ReturnType<F0> {
-        let lastArgs: unknown[] = args;
-        if (args)
-            for (let i = fns.length - 1; i >= 0; i--) {
-                const fn = fns[i];
-                lastArgs = [fn.apply(fn, lastArgs)];
-                //console.log(lastArgs);
-            }
-        return lastArgs[0] as ReturnType<F0>;
-    };
 }
