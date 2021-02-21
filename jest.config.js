@@ -2,7 +2,7 @@
 module.exports = {
     automock: false,
     collectCoverage: true,
-    collectCoverageFrom: ['src/lib/rng/**/*.ts', 'src/lib/special/gamma/**/*.ts', 'src/lib/special/beta/**/*.ts'],
+    collectCoverageFrom: ['src/lib/rng/**/*.ts', 'src/lib/special/gamma/**/*.ts', 'src/lib/special/beta/**/*.ts', 'src/lib/special/bessel/**/*.ts'],
     coveragePathIgnorePatterns: ['node_modules', 'test', 'doc.ts'],
     coverageDirectory: 'coverage',
     coverageProvider: 'v8',

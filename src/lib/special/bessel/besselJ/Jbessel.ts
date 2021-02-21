@@ -184,7 +184,7 @@ export function J_bessel(x: number, alpha: number, nb: number): IBesselRC {
     let xm;
     let psavel;
     let gnu;
-    let xin;
+  
     let sum;
     //END DOUBLE
 
@@ -265,7 +265,7 @@ export function J_bessel(x: number, alpha: number, nb: number): IBesselRC {
            Asymptotic series for X > 25 (and not too large nb)
            ------------------------------------------------------------ */
         xc = sqrt(pi2 / x);
-        xin = 1 / (64 * x * x);
+        const xin = 1 / (64 * x * x);
         if (x >= 130) i_m = 4;
         else if (x >= 35) i_m = 8;
         else i_m = 11;
