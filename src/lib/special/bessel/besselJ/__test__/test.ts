@@ -9,7 +9,7 @@ import { loadData } from '$test-helpers/load';
 import besselJn from '../';
 
 
-describe('bessel order 0', function () {
+describe('bessel function of the first kind and order 0', function () {
     it('ranges x ∊ [0, 10]', async () => {
         /* load data from fixture */
         const [x, y] = await loadData(resolve(__dirname, 'fixture-generation', 'bessel-j-0.R'), /\s+/, 1, 2);
