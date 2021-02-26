@@ -81,7 +81,7 @@
         "lint:fix": "eslint src/**/*.ts --fix",
         "xxtest": "jest",
         "prepublishOnly": "npm run test",
-        "test": "echo hello world"
+        "test": "echo type \"npm run xxtest\""
     },
     "contributes": {
         "typescriptServerPlugins": [

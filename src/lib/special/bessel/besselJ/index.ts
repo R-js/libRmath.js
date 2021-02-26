@@ -27,6 +27,7 @@ import { bessel_y_scalar } from '../besselY';
 import { J_bessel } from './Jbessel';
 import type { NumArray } from '$constants';
 
+
 const { isNaN: ISNAN } = Number;
 const { floor, trunc } = Math;
 
@@ -70,6 +71,10 @@ const printer = debug('bessel_j');
 }
 
 export default function besselJn(x: NumArray, nu: number): Float32Array | Float64Array  {
+    // in case no ts is used
+    if (typeof nu !== 'number'){
+        throw new TypeError(`argument "nu" is missing/not a number, Execution halted`);
+    }
     if (typeof x === 'number') {
         x = new Float64Array([x]);
     }
