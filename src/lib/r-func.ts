@@ -328,13 +328,42 @@ export function Welch_Satterthwaite(s: number[], n: number[]): number {
 }
 
 // eslint-disable-next-line @typescript-eslint/ban-types
+
+
+export function besselJn(x: NumArray, fn: number): Float32Array | Float64Array  {
+    // in case no ts is used
+    if (typeof nu !== 'number'){
+        throw new TypeError(`argument "nu" is missing/not a number, Execution halted`);
+    }
+    if (typeof x === 'number') {
+        x = new Float64otenoteArray([x]);
+    }
+    if (isEmptyArray(x)) {
+        return emptyFloat64Array;
+    }
+    if (!isArray(x)) {
+        throw new TypeError(`argument not of number, number[], Float64Array, Float32Array`);
+    }
+    const rc =
+        x instanceof Float64Array
+            ? new Float64Array(x.length)
+            : x instanceof Float32Array
+            ? new Float32Array(x.length)
+            : new Float64Array(x);
+
+    for (let i = 0; i < x.length; i++) {
+        rc[i]= bessel_j_scalar(x[i], nu);
+    }
+    return rc;
+}
+
 export function randomGenHelper<T extends Function>(n: number | number[], fn: T, ...arg: any[]) {
     let result: number[];
 
     if (n === 0) {
         return [];
     } else if (n > 0) {
-        result = Array.from({ length: <number>n });
+        result = Array.from({ length: n });
     } else if (n instanceof Array) {
         result = n;
     } else {

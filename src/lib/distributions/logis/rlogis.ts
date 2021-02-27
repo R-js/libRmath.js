@@ -35,7 +35,7 @@ export function rlogisOne(location = 0, scale = 1, rng: IRNG): number {
 
     if (scale === 0 || !R_FINITE(location)) return location;
     else {
-        const u: number = rng.internal_unif_rand();
+        const u: number = rng.random();
         return location + scale * log(u / (1 - u));
     }
 }

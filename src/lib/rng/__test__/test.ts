@@ -11,7 +11,7 @@ class MyIRNG extends IRNG {
         super('my-irng', IRNGTypeEnum.USER_DEFINED);
         this._seed = new Uint32Array(0);
     }
-    internal_unif_rand() {
+    random() {
         return Math.random();
     }
     get seed() {

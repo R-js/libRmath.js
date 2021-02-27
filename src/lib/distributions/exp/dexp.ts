@@ -15,26 +15,25 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { ML_ERR_return_NAN, R_D__0 } from '../common/_general';
-
+import { ML_ERR_return_NAN } from '@common/logger';
+import { R_D__0 } from '$constants';
 import { debug } from 'debug';
 
-const { log, exp } = Math;
-const { isNaN: ISNAN } = Number;
 const printer = debug('dexp');
 
-export function dexp(x: number, scale: number, give_log = false): number {
+export function dexp(x: number, rate = 1, give_log = false): number {
     /* NaNs propagated correctly */
-    if (ISNAN(x) || ISNAN(scale)) {
+    if (Number.isNaN(x) || Number.isNaN(rate)) {
         return NaN;
     }
 
-    if (scale <= 0.0) {
+    if (rate <= 0.0) {
         return ML_ERR_return_NAN(printer);
     }
 
     if (x < 0) {
         return R_D__0(give_log);
     }
-    return give_log ? -x / scale - log(scale) : exp(-x / scale) / scale;
+    const scale = 1/rate;
+    return give_log ? -x / scale - Math.log(scale) : Math.exp(-x / scale) / scale;
 }

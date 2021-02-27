@@ -115,7 +115,7 @@ export class KnuthTAOCP extends IRNG {
         return this.m_seed.slice();
     }
 
-    internal_unif_rand(): number {
+    random(): number {
         return fixup(this.KT_next() * KT);
     }
 }

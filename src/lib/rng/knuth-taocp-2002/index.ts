@@ -167,7 +167,7 @@ export class KnuthTAOCP2002 extends IRNG {
     }
 
     // called by super.random()
-    protected internal_unif_rand(): number {
+    random(): number {
         const KT = 9.31322574615479e-10;
         return fixup(this.KT_next() * KT);
     }

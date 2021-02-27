@@ -37,7 +37,7 @@ export class BoxMuller extends IRNGNormal {
         this.BM_norm_keep = 0; // not needed but tsc will give problems
     }
 
-    public internal_norm_rand() {
+    public random() {
         let s = 0.0;
         let theta = 0;
 

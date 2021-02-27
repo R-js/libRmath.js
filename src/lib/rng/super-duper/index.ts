@@ -33,7 +33,7 @@ export class SuperDuper extends IRNG {
         this.init(_seed);
     }
 
-    internal_unif_rand(): number {
+    random(): number {
         const s = this.m_seed;
         /* This is Reeds et al (1984) implementation;
          * modified using __unsigned__	seeds instead of signed ones

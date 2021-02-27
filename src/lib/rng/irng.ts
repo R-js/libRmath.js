@@ -16,17 +16,18 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { IRNGTypeEnum } from './irng-type';
+import type { IRandom } from './IRandom';
 
 export enum MessageType {
     INIT = '@@INIT@@',
 }
 
-export abstract class IRNG {
+export abstract class IRNG implements IRandom {
     protected _name: string;
     protected _kind: IRNGTypeEnum;
     private notify: Map<MessageType, ((...args: any[]) => void)[]>;
 
-    protected abstract internal_unif_rand(): number;
+    //protected abstract random(): number;
 
     constructor(name: string, kind: IRNGTypeEnum) {
         this._name = name;
@@ -47,7 +48,7 @@ export abstract class IRNG {
         n = !n || n < 0 ? 1 : n;
         const rc = new Float32Array(n);
         for (let i = 0; i < n; i++) {
-            rc[i] = this.internal_unif_rand();
+            rc[i] = this.random();
         }
         return rc;
     }
@@ -83,9 +84,7 @@ export abstract class IRNG {
         }
     }
 
-    public random() {
-        return this.internal_unif_rand();
-    }
+    public abstract random(): number;
 
     public abstract get seed(): Uint32Array | Int32Array;
     public abstract set seed(_seed: Uint32Array | Int32Array);

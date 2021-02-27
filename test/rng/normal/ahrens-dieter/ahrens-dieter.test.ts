@@ -98,7 +98,7 @@ describe('rng ahrens-dieter', function n() {
         const ad = new AhrensDieter(new SuperDuper());
         ad.rng.init(12);
         const sample = ad.internal_norm_rand();
-        const usample = ad.rng.internal_unif_rand();
+        const usample = ad.rng.random();
         const usample2 = ad.rng.unif_rand(4);
         expect(_fp([sample, usample, ...usample2])).to.deep.equal(fixtureR.case2.sampleSize);
     });

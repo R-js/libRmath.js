@@ -107,7 +107,7 @@ export class MersenneTwister extends IRNG {
         return;
     }
 
-    protected internal_unif_rand(): number {
+    public random(): number {
         const rc = this.MT_genrand();
         return fixup(rc);
     }

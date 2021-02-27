@@ -31,6 +31,7 @@ module.exports = {
     moduleNameMapper: {
         '^\\$jest-extension$': '<rootDir>/src/packages/jest-extension.ts',
         '^@distributions/(.*)$': '<rootDir>/src/lib/distributions/$1',
+        '^@dist/(.*)$': '<rootDir>/src/lib/distributions/$1',
         '^@common/(.*)$': '<rootDir>/src/packages/common/$1',
         '^\\$constants$': '<rootDir>/src/lib/common/_general.ts',
         '^\\$chebyshev$': '<rootDir>/src/lib/chebyshev',

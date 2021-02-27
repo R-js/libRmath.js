@@ -30,7 +30,7 @@ export class Inversion extends IRNGNormal {
         this._rng.unregister(MessageType.INIT, this.reset);
     }
 
-    public internal_norm_rand(): number {
+    public random(): number {
         /* unif_rand() alone is not of high enough precision */
         let u1 = this._rng.random();
         const t = this._rng.random();

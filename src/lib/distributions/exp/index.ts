@@ -14,10 +14,10 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { dexp as _dexp } from './dexp';
-import { pexp as _pexp } from './pexp';
-import { qexp as _qexp } from './qexp';
-import { rexp as _rexp } from './rexp';
+export { dexp } from './dexp';
+export { pexp } from './pexp';
+export { qexp } from './qexp';
+export { rexp } from './rexp';
 
 import { IRNG, rng } from '../rng';
 const { MersenneTwister } = rng;

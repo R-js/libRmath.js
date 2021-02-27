@@ -164,7 +164,7 @@ export class AhrensDieter extends IRNGNormal {
     }
 
     // shaper
-    protected internal_norm_rand() {
+    public random() {
         let u1: number = this._rng.random();
         let s = 0.0;
         let w: number;

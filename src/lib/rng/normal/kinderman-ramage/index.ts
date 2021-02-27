@@ -40,7 +40,7 @@ export class KindermanRamage extends IRNGNormal {
         this._rng.unregister(MessageType.INIT, this.reset);
     }
 
-    public internal_norm_rand() {
+    public random() {
         let u2: number;
         let u3: number;
         let tt: number;
