@@ -1,4 +1,4 @@
-/* This is a conversion from LIB-R-MATH to Typescript/Javascript
+y/* This is a conversion from LIB-R-MATH to Typescript/Javascript
 Copyright (C) 2018  Jacob K.F. Bogers  info@mail.jacob-bogers.com
 
 This program is free software: you can redistribute it and/or modify
@@ -50,7 +50,7 @@ export function Beta(rng: IRNGNormal = new Inversion()) {
         if (ncp === undefined || ncp === 0) {
             return _dbeta(x, shape1, shape2, log || false);
         } else {
-            return _dnbeta(x, shape1, shape2, ncp || 0, log || false);
+            return _dnbeta(x, shape1, shape2, 0, log || false);
         }
     }
 

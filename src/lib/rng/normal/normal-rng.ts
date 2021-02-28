@@ -19,7 +19,7 @@ import { IRNG, MessageType } from '../irng';
 import { IRNGNormalTypeEnum } from './in01-type';
 import type { IRandom } from '../IRandom';
 
-export abstract class IRNGNormal implements IRandom {
+export class IRNGNormal implements IRandom {
     protected _rng: IRNG;
     protected _name: string;
     protected _kind: IRNGNormalTypeEnum;
@@ -29,6 +29,9 @@ export abstract class IRNGNormal implements IRandom {
     }
 
     constructor(_rng: IRNG, name: string, kind: IRNGNormalTypeEnum) {
+        if (this.constructor.name === 'IRNGNormal'){
+            throw new TypeError(`Cannot instantiante class "IRNGNormal" directly`);
+        }
         this._rng = _rng;
         this._name = name;
         this._kind = kind;
@@ -47,7 +50,9 @@ export abstract class IRNGNormal implements IRandom {
         return rc;
     }
 
-    public abstract random(): number;
+    random(): number{
+        throw new Error(`override this function in ${this.constructor.name}`)
+    }
 
     public get name() {
         return this._name;

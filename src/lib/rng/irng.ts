@@ -21,8 +21,9 @@ import type { IRandom } from './IRandom';
 export enum MessageType {
     INIT = '@@INIT@@',
 }
+   
 
-export abstract class IRNG implements IRandom {
+export class IRNG implements IRandom {
     protected _name: string;
     protected _kind: IRNGTypeEnum;
     private notify: Map<MessageType, ((...args: any[]) => void)[]>;
@@ -30,10 +31,14 @@ export abstract class IRNG implements IRandom {
     //protected abstract random(): number;
 
     constructor(name: string, kind: IRNGTypeEnum) {
+        if (this.constructor.name === 'IRNG'){
+            throw new TypeError('IRNG should be subclassed not directly instantiated');
+        }
         this._name = name;
         this._kind = kind;
         this.notify = new Map();
         this.emit = this.emit.bind(this);
+        
     }
 
     public get name() {
@@ -51,6 +56,10 @@ export abstract class IRNG implements IRandom {
             rc[i] = this.random();
         }
         return rc;
+    }
+    
+    random(): number{
+        throw new Error(`override this function in ${this.constructor.name}`)
     }
 
     public emit(event: MessageType, ...args: any[]) {
@@ -84,10 +93,12 @@ export abstract class IRNG implements IRandom {
         }
     }
 
-    public abstract random(): number;
-
-    public abstract get seed(): Uint32Array | Int32Array;
-    public abstract set seed(_seed: Uint32Array | Int32Array);
+    public get seed(): Uint32Array | Int32Array {
+        throw new Error(`override property getter 'seed' in ${this.constructor.name}`)
+    }
+    public set seed(_seed: Uint32Array | Int32Array) {
+        throw new Error(`override property setter 'seed' in ${this.constructor.name}`)
+    }
 
     public init(seed: number): void {
         this.emit(MessageType.INIT, seed);
