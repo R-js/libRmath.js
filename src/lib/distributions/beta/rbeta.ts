@@ -16,33 +16,27 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { debug } from 'debug';
-import { DBL_MAX_EXP, ML_ERR_return_NAN } from '../common/_general';
-import { randomGenHelper } from '../r-func';
-import { IRNGNormal } from '../rng/normal';
+import { ML_ERR_return_NAN } from '@common/logger';
+import { DBL_MAX_EXP } from '$constants';
+import { IRNG } from '@rng/irng';
 
-const { LN2: M_LN2, log, min: fmin2, max: fmax2, exp, sqrt } = Math;
-const { MAX_VALUE: DBL_MAX, isFinite: R_FINITE } = Number;
 const printer = debug('rbeta');
 
-export const expmax = DBL_MAX_EXP * M_LN2; /* = log(DBL_MAX) */
+export const expmax = DBL_MAX_EXP * Math.LN2; /* = log(DBL_MAX) */
 
-export function rbeta(n: number | number[], aa: number, bb: number, rng: IRNGNormal) {
-    return randomGenHelper(n, rbetaOne, aa, bb, rng);
-}
-
-export function rbetaOne(aa: number, bb: number, rng: IRNGNormal): number {
+export function rbetaOne(aa: number, bb: number, rng: IRNG): number {
     if (aa < 0 || bb < 0) {
         return ML_ERR_return_NAN(printer);
     }
-    if (!R_FINITE(aa) && !R_FINITE(bb))
+    if (!isFinite(aa) && !isFinite(bb))
         // a = b = Inf : all mass at 1/2
         return 0.5;
     if (aa === 0 && bb === 0)
         // point mass 1/2 at each of {0,1} :
-        return rng.rng.random() < 0.5 ? 0 : 1;
+        return rng.random() < 0.5 ? 0 : 1;
     // now, at least one of a, b is finite and positive
-    if (!R_FINITE(aa) || bb === 0) return 1.0;
-    if (!R_FINITE(bb) || aa === 0) return 0.0;
+    if (!isFinite(aa) || bb === 0) return 1.0;
+    if (!isFinite(bb) || aa === 0) return 0.0;
 
     let a;
     let b;
@@ -74,19 +68,19 @@ export function rbetaOne(aa: number, bb: number, rng: IRNGNormal): number {
         oldb = bb;
     }
 
-    a = fmin2(aa, bb);
-    b = fmax2(aa, bb); /* a <= b */
+    a = Math.min(aa, bb);
+    b = Math.max(aa, bb); /* a <= b */
     alpha = a + b;
 
     function v_w_from__u1_bet(AA: number) {
-        v = beta * log(u1 / (1.0 - u1));
+        v = beta * Math.log(u1 / (1.0 - u1));
         if (v <= expmax) {
-            w = AA * exp(v);
-            if (!R_FINITE(w)) {
-                w = DBL_MAX;
+            w = AA * Math.exp(v);
+            if (!isFinite(w)) {
+                w = Number.MAX_VALUE;
             }
         } else {
-            w = DBL_MAX;
+            w = Number.MAX_VALUE;
         }
     }
 
@@ -104,8 +98,8 @@ export function rbetaOne(aa: number, bb: number, rng: IRNGNormal): number {
         }
         /* FIXME: "do { } while()", but not trivially because of "continue"s:*/
         for (;;) {
-            u1 = rng.rng.random();
-            u2 = rng.rng.random();
+            u1 = rng.random();
+            u2 = rng.random();
             if (u1 < 0.5) {
                 y = u1 * u2;
                 z = u1 * y;
@@ -121,7 +115,7 @@ export function rbetaOne(aa: number, bb: number, rng: IRNGNormal): number {
 
             v_w_from__u1_bet(b);
 
-            if (alpha * (log(alpha / (a + w)) + v) - 1.3862944 >= log(z)) break;
+            if (alpha * (Math.log(alpha / (a + w)) + v) - 1.3862944 >= Math.log(z)) break;
         }
         return aa === a ? a / (a + w) : w / (a + w);
     } else {
@@ -129,12 +123,12 @@ export function rbetaOne(aa: number, bb: number, rng: IRNGNormal): number {
 
         if (!qsame) {
             /* initialize */
-            beta = sqrt((alpha - 2.0) / (2.0 * a * b - alpha));
+            beta = Math.sqrt((alpha - 2.0) / (2.0 * a * b - alpha));
             gamma = a + 1.0 / beta;
         }
         do {
-            u1 = rng.rng.random();
-            u2 = rng.rng.random();
+            u1 = rng.random();
+            u2 = rng.random();
 
             v_w_from__u1_bet(a);
 
@@ -142,9 +136,9 @@ export function rbetaOne(aa: number, bb: number, rng: IRNGNormal): number {
             r = gamma * v - 1.3862944;
             s = a + r - w;
             if (s + 2.609438 >= 5.0 * z) break;
-            t = log(z);
+            t = Math.log(z);
             if (s > t) break;
-        } while (r + alpha * log(alpha / (b + w)) < t);
+        } while (r + alpha * Math.log(alpha / (b + w)) < t);
 
         return aa !== a ? b / (b + w) : w / (b + w);
     }

@@ -1,3 +1,5 @@
+import { emptyFloat32Array } from "$constants";
+
 /* This is a conversion from libRmath.so to Typescript/Javascript
 Copyright (C) 2018  Jacob K.F. Bogers  info@mail.jacob-bogers.com
 
@@ -327,47 +329,15 @@ export function Welch_Satterthwaite(s: number[], n: number[]): number {
     return Math.pow(sum(elts), 2) / sum(dom);
 }
 
-// eslint-disable-next-line @typescript-eslint/ban-types
-
-
-export function besselJn(x: NumArray, fn: number): Float32Array | Float64Array  {
-    // in case no ts is used
-    if (typeof nu !== 'number'){
-        throw new TypeError(`argument "nu" is missing/not a number, Execution halted`);
-    }
-    if (typeof x === 'number') {
-        x = new Float64otenoteArray([x]);
-    }
-    if (isEmptyArray(x)) {
-        return emptyFloat64Array;
-    }
-    if (!isArray(x)) {
-        throw new TypeError(`argument not of number, number[], Float64Array, Float32Array`);
-    }
-    const rc =
-        x instanceof Float64Array
-            ? new Float64Array(x.length)
-            : x instanceof Float32Array
-            ? new Float32Array(x.length)
-            : new Float64Array(x);
-
-    for (let i = 0; i < x.length; i++) {
-        rc[i]= bessel_j_scalar(x[i], nu);
-    }
-    return rc;
-}
-
-export function randomGenHelper<T extends Function>(n: number | number[], fn: T, ...arg: any[]) {
-    let result: number[];
+export function repeatedCall(n: number, fn: (...arg: any[]) => number, ...arg: any[]) {
+    let result: Float32Array;
 
     if (n === 0) {
-        return [];
+        result = emptyFloat32Array;
     } else if (n > 0) {
-        result = Array.from({ length: n });
-    } else if (n instanceof Array) {
-        result = n;
+        result = new Float32Array(n);
     } else {
-        throw new TypeError(`n argument is not a number or a number array`);
+        throw new TypeError(`"n" argument is not a number or negative`);
     }
     for (let i = 0; i < result.length; i++) {
         result[i] = fn(...arg);

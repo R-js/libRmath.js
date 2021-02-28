@@ -16,16 +16,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { debug } from 'debug';
-
-import { ML_ERR_return_NAN, R_Q_P01_boundaries } from '../common/_general';
-
-import { R_DT_qIv } from '../exp/expm1';
-
+import { ML_ERR_return_NAN, R_Q_P01_boundaries } from '@common/logger';
+import { R_DT_qIv } from '@dist/exp/expm1';
 import { pnbeta } from './pnbeta';
-
-const { isNaN: ISNAN, isFinite: R_FINITE, MIN_VALUE: DBL_MIN, EPSILON: DBL_EPSILON } = Number;
-
-const { min: fmin2 } = Math;
 
 const printer_qnbeta = debug('qnbeta');
 
@@ -38,9 +31,9 @@ export function qnbeta(p: number, a: number, b: number, ncp: number, lower_tail:
     let nx;
     let pp;
 
-    if (ISNAN(p) || ISNAN(a) || ISNAN(b) || ISNAN(ncp)) return p + a + b + ncp;
+    if (isNaN(p) || isNaN(a) || isNaN(b) || isNaN(ncp)) return p + a + b + ncp;
 
-    if (!R_FINITE(a)) return ML_ERR_return_NAN(printer_qnbeta);
+    if (!isFinite(a)) return ML_ERR_return_NAN(printer_qnbeta);
 
     if (ncp < 0 || a <= 0 || b <= 0) return ML_ERR_return_NAN(printer_qnbeta);
 
@@ -52,11 +45,11 @@ export function qnbeta(p: number, a: number, b: number, ncp: number, lower_tail:
 
     /* Invert pnbeta(.) :
      * 1. finding an upper and lower bound */
-    if (p > 1 - DBL_EPSILON) return 1.0;
-    pp = fmin2(1 - DBL_EPSILON, p * (1 + Eps));
-    for (ux = 0.5; ux < 1 - DBL_EPSILON && pnbeta(ux, a, b, ncp, true, false) < pp; ux = 0.5 * (1 + ux));
+    if (p > 1 - Number.EPSILON) return 1.0;
+    pp = Math.min(1 - Number.EPSILON, p * (1 + Eps));
+    for (ux = 0.5; ux < 1 - Number.EPSILON && pnbeta(ux, a, b, ncp, true, false) < pp; ux = 0.5 * (1 + ux));
     pp = p * (1 - Eps);
-    for (lx = 0.5; lx > DBL_MIN && pnbeta(lx, a, b, ncp, true, false) > pp; lx *= 0.5);
+    for (lx = 0.5; lx > Number.MIN_VALUE && pnbeta(lx, a, b, ncp, true, false) > pp; lx *= 0.5);
 
     /* 2. interval (lx,ux)  halving : */
     do {

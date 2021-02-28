@@ -35,3 +35,5 @@ export { IRNG, MessageType } from './irng';
 export { IRNGNormal } from './normal/normal-rng';
 export { IRNGTypeEnum } from './irng-type';
 export { IRNGNormalTypeEnum } from './normal/in01-type';
+// globalRNG
+export { RNGKind } from './globalRNG';

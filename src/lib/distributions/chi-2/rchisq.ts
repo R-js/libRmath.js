@@ -16,17 +16,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { debug } from 'debug';
-import { ML_ERR_return_NAN } from '../../common/_general';
-import { rgammaOne } from '../gamma/rgamma';
-import { randomGenHelper } from '../../r-func';
-import { IRNGNormal } from '../../rng/normal/normal-rng';
+import { ML_ERR_return_NAN } from '@common/logger';
+import { rgammaOne } from '@dist/gamma/rgamma';
+import { IRNGNormal } from '@rng/normal/normal-rng';
 
 const { isFinite: R_FINITE } = Number;
 const printer = debug('rchisq');
-
-export function rchisq(n: number | number[], df: number, rng: IRNGNormal): number[] {
-    return randomGenHelper(n, rchisqOne, df, rng);
-}
 
 export function rchisqOne(df: number, rng: IRNGNormal): number {
     if (!R_FINITE(df) || df < 0.0) {

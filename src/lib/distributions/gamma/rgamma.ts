@@ -16,12 +16,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { debug } from 'debug';
-import { ML_ERR_return_NAN } from '../../common/_general';
-import { exp_rand } from '../../exp/sexp';
-import { IRNGNormal } from '../../rng/normal/normal-rng';
-
-const { expm1, abs: fabs, sqrt, log, exp } = Math;
-const { isFinite: R_FINITE } = Number;
+import { ML_ERR_return_NAN } from '@common/logger';
+import { exp_rand } from '@dist/exp/sexp';
+import { IRNGNormal } from '@rng/normal/normal-rng';
 
 const printer_rgammaOne = debug('rgammaOne');
 
@@ -73,7 +70,7 @@ export function rgammaOne(a = 1, scale = 1, rng: IRNGNormal): number {
     let x = 0;
     let ret_val = 0;
 
-    if (!R_FINITE(a) || !R_FINITE(scale) || a < 0.0 || scale <= 0.0) {
+    if (!isFinite(a) || !isFinite(scale) || a < 0.0 || scale <= 0.0) {
         if (scale === 0) return 0;
         return ML_ERR_return_NAN(printer_rgammaOne);
     }
@@ -83,13 +80,13 @@ export function rgammaOne(a = 1, scale = 1, rng: IRNGNormal): number {
         if (a === 0) return 0;
         e = 1.0 + exp_m1 * a;
         while (true) {
-            p = e * rng.rng.random();
+            p = e * rng.uniform_rng.random();
             if (p >= 1.0) {
-                x = -log((e - p) / a);
-                if (exp_rand(rng.rng.internal_unif_rand) >= (1.0 - a) * log(x)) break;
+                x = -Math.log((e - p) / a);
+                if (exp_rand(rng.uniform_rng.random) >= (1.0 - a) * Math.log(x)) break;
             } else {
-                x = exp(log(p) / a);
-                if (exp_rand(rng.rng.internal_unif_rand) >= x) break;
+                x = Math.exp(Math.log(p) / a);
+                if (exp_rand(rng.uniform_rng.random) >= x) break;
             }
         }
         return scale * x;
@@ -101,20 +98,20 @@ export function rgammaOne(a = 1, scale = 1, rng: IRNGNormal): number {
     if (a !== aa) {
         aa = a;
         s2 = a - 0.5;
-        s = sqrt(s2);
+        s = Math.sqrt(s2);
         d = sqrt32 - s * 12.0;
     }
     /* Step 2: t = standard normal deviate,
                x = (s,1/2) -normal deviate. */
 
     /* immediate acceptance (i) */
-    t = rng.internal_norm_rand() as number;
+    t = rng.random() as number;
     x = s + 0.5 * t;
     ret_val = x * x;
     if (t >= 0.0) return scale * ret_val;
 
     /* Step 3: u = 0,1 - uniform sample. squeeze acceptance (s) */
-    u = rng.rng.random();
+    u = rng.uniform_rng.random();
     if (d * u <= t * t * t) return scale * ret_val;
 
     /* Step 4: recalculations of q0, b, si, c if necessary */
@@ -147,20 +144,20 @@ export function rgammaOne(a = 1, scale = 1, rng: IRNGNormal): number {
     if (x > 0.0) {
         /* Step 6: calculation of v and quotient q */
         v = t / (s + s);
-        if (fabs(v) <= 0.25)
+        if (Math.abs(v) <= 0.25)
             q = q0 + 0.5 * t * t * ((((((a7 * v + a6) * v + a5) * v + a4) * v + a3) * v + a2) * v + a1) * v;
-        else q = q0 - s * t + 0.25 * t * t + (s2 + s2) * log(1.0 + v);
+        else q = q0 - s * t + 0.25 * t * t + (s2 + s2) * Math.log(1.0 + v);
 
         /* Step 7: quotient acceptance (q) */
-        if (log(1.0 - u) <= q) return scale * ret_val;
+        if (Math.log(1.0 - u) <= q) return scale * ret_val;
     }
 
     while (true) {
         /* Step 8: e = standard exponential deviate
          *	u =  0,1 -uniform deviate
          *	t = (b,si)-double exponential (laplace) sample */
-        e = exp_rand(rng.rng.internal_unif_rand);
-        u = rng.rng.random();
+        e = exp_rand(rng.uniform_rng.random);
+        u = rng.uniform_rng.random();
         u = u + u - 1.0;
         if (u < 0.0) t = b - si * e;
         else t = b + si * e;
@@ -168,16 +165,16 @@ export function rgammaOne(a = 1, scale = 1, rng: IRNGNormal): number {
         if (t >= -0.71874483771719) {
             /* Step 10:	 calculation of v and quotient q */
             v = t / (s + s);
-            if (fabs(v) <= 0.25)
+            if (Math.abs(v) <= 0.25)
                 q = q0 + 0.5 * t * t * ((((((a7 * v + a6) * v + a5) * v + a4) * v + a3) * v + a2) * v + a1) * v;
-            else q = q0 - s * t + 0.25 * t * t + (s2 + s2) * log(1.0 + v);
+            else q = q0 - s * t + 0.25 * t * t + (s2 + s2) * Math.log(1.0 + v);
             /* Step 11:	 hat acceptance (h) */
             /* (if q not positive go to step 8) */
             if (q > 0.0) {
-                w = expm1(q);
+                w = Math.expm1(q);
                 /*  ^^^^^ original code had approximation with rel.err < 2e-7 */
                 /* if t is rejected sample again at step 8 */
-                if (c * fabs(u) <= w * exp(e - 0.5 * t * t)) break;
+                if (c * Math.abs(u) <= w * Math.exp(e - 0.5 * t * t)) break;
             }
         }
     } /* repeat .. until  `t' is accepted */
