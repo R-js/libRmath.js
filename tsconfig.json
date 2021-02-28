@@ -118,6 +118,12 @@
       ],
       "@dist/*" :[
         "lib/distributions/*"
+      ],
+      "$deviance":[
+        "lib/deviance"
+      ],
+      "$stirling":[
+        "lib/stirling"
       ]
     }, // maybe use later, if you decide to use this, specify baseurl
     // source maps
