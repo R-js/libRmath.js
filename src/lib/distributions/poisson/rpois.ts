@@ -131,7 +131,7 @@ export function rpoisOne(mu: number, rng: IRNGNormal): number {
 
             while (true) {
                 /* Step U. uniform sample for inversion method */
-                u = rng.rng.internal_unif_rand();
+                u = rng.rng.random();
                 if (u <= p0) return 0;
 
                 /* Step T. table comparison until the end pp[l] of the
@@ -172,7 +172,7 @@ export function rpoisOne(mu: number, rng: IRNGNormal): number {
         /* Step S. squeeze acceptance */
         fk = pois;
         difmuk = mu - fk;
-        u = rng.rng.internal_unif_rand(); /* ~ U(0,1) - sample */
+        u = rng.rng.random(); /* ~ U(0,1) - sample */
         if (d * u >= difmuk * difmuk * difmuk) return pois;
     }
 
@@ -216,7 +216,7 @@ export function rpoisOne(mu: number, rng: IRNGNormal): number {
 
             /*  sample t from the laplace 'hat'
                 (if t <= -0.6744 then pk < fk for all mu >= 10.) */
-            u = 2 * rng.rng.internal_unif_rand() - 1;
+            u = 2 * rng.rng.random() - 1;
             t = 1.8 + fsign(E, u >= 0);
         }
         if (t > -0.6744 || gotoStepF) {

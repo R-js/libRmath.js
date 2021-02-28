@@ -22,6 +22,7 @@ import { IRNGTypeEnum } from '../irng-type';
 import { seed } from '../timeseed';
 import { TAOCP1997init } from './taocp-1997-init';
 import { seedCheck } from '../seedcheck';
+import { IRandom } from '@rng/IRandom';
 /* helpers */
 /* helpers */
 /* helpers */
@@ -37,7 +38,7 @@ const mod_diff = (x: number, y: number) => (x - y) & (MM - 1);
 
 const SEED_LEN = 101;
 
-export class KnuthTAOCP extends IRNG {
+export class KnuthTAOCP extends IRNG implements IRandom {
     //private buf: ArrayBuffer;
 
     private m_seed: Uint32Array;
@@ -115,7 +116,7 @@ export class KnuthTAOCP extends IRNG {
         return this.m_seed.slice();
     }
 
-    internal_unif_rand(): number {
+    random(): number {
         return fixup(this.KT_next() * KT);
     }
 }

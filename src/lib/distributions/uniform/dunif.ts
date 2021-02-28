@@ -16,8 +16,6 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { R_D__0 } from '../../common/_general';
-
 const { isNaN: ISNAN } = Number;
 const { log } = Math;
 
@@ -28,5 +26,5 @@ export function dunif(x: number, min = 0, max = 1, logP = false): number {
     if (min <= x && x <= max) {
         return logP ? -log(max - min) : 1 / (max - min);
     }
-    return R_D__0(logP); // return logP ? ML_NEGINF : 0.0;
+    return logP ? Number.NEGATIVE_INFINITY : 0.0;
 }

@@ -30,7 +30,7 @@ export const SEED_LEN = 3;
 export class WichmannHill extends IRNG {
     private m_seed: Uint32Array;
 
-    protected internal_unif_rand(): number {
+    public random(): number {
         const s = this.m_seed;
         s[0] = (s[0] * 171) % 30269;
         s[1] = (s[1] * 172) % 30307;

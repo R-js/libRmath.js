@@ -27,10 +27,6 @@ import { lgammacor } from '@special/gamma/lgammacor';
 import type { NumArray } from '$constants';
 import { validateBetaArgs } from './helpers';
 
-const { log, log1p } = Math;
-
-const { isNaN: ISNAN, isFinite: R_FINITE, POSITIVE_INFINITY: ML_POSINF, NEGATIVE_INFINITY: ML_NEGINF } = Number;
-
 const printer = debug('lbeta');
 
 export function lbeta_scalar(a: number, b: number): number {
@@ -38,7 +34,7 @@ export function lbeta_scalar(a: number, b: number): number {
     let p: number;
     let q: number;
 
-    if (ISNAN(a) || ISNAN(b)) return a + b;
+    if (isNaN(a) || isNaN(b)) return a + b;
     p = q = a;
     if (b < p) p = b; // := min(a,b)
     if (b > q) q = b; // := max(a,b)
@@ -46,26 +42,26 @@ export function lbeta_scalar(a: number, b: number): number {
     // both arguments must be >= 0
     if (p < 0) return ML_ERR_return_NAN(printer);
     else if (p === 0) {
-        return ML_POSINF;
-    } else if (!R_FINITE(q)) {
+        return Number.POSITIVE_INFINITY;
+    } else if (!isFinite(q)) {
         // q == +Inf
-        return ML_NEGINF;
+        return Number.NEGATIVE_INFINITY;
     }
 
     if (p >= 10) {
         // p and q are big.
         corr = lgammacor(p) + lgammacor(q) - lgammacor(p + q);
-        return log(q) * -0.5 + M_LN_SQRT_2PI + corr + (p - 0.5) * log(p / (p + q)) + q * log1p(-p / (p + q));
+        return Math.log(q) * -0.5 + M_LN_SQRT_2PI + corr + (p - 0.5) * Math.log(p / (p + q)) + q * Math.log1p(-p / (p + q));
     } else if (q >= 10) {
         // p is small, but q is big.
         corr = lgammacor(q) - lgammacor(p + q);
-        return lgammafn_sign(p) + corr + p - p * log(p + q) + (q - 0.5) * log1p(-p / (p + q));
+        return lgammafn_sign(p) + corr + p - p * Math.log(p + q) + (q - 0.5) * Math.log1p(-p / (p + q));
     } else {
         // p and q are small: p <= q < 10.
         // R change for very small args
         // removed 
         if (p < 1e-306) return lgammafn_sign(p) + (lgammafn_sign(q) - lgammafn_sign(p+q))
-        else return log(gamma_internal(p) * (gamma_internal(q) / gamma_internal(p + q)));
+        else return Math.log(gamma_internal(p) * (gamma_internal(q) / gamma_internal(p + q)));
     }
 }
 

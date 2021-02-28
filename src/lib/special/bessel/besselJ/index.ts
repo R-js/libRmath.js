@@ -29,7 +29,7 @@ import type { NumArray } from '$constants';
 
 
 const { isNaN: ISNAN } = Number;
-const { floor, trunc } = Math;
+const { floor } = Math;
 
 const printer = debug('bessel_j');
 
@@ -45,17 +45,24 @@ const printer = debug('bessel_j');
     if (alpha < 0) {
         /* Using Abramowitz & Stegun  9.1.2
          * this may not be quite optimal (CPU and accuracy wise) */
-        return (
-            (alpha - na === 0.5 ? 0 : bessel_j_scalar(x, -alpha) * cospi(alpha)) +
-            (alpha === na ? 0 : bessel_y_scalar(x, -alpha) * sinpi(alpha))
-        );
+        let rc;
+        if (alpha - na === 0.5){
+            rc = 0;
+        }
+        else{
+            rc = bessel_j_scalar(x, -alpha) * cospi(alpha);
+        }
+        if (alpha !== na){
+            rc += bessel_y_scalar(x, -alpha) * sinpi(alpha);
+        }
+        return rc;
     } else if (alpha > 1e7) {
         printer('besselJ(x, nu): nu=%d too large for bessel_j() algorithm', alpha);
         return NaN;
     }
     //int
-    const nb = 1 + trunc(na); /* nb-1 <= alpha < nb */
-    alpha -= nb - 1; // ==> alpha' in [0, 1)
+    const nb = 1 + na; /* nb-1 <= alpha < nb */
+    alpha -= na; // ==> alpha' in [0, 1)
     const rc = J_bessel(x, alpha, nb);
 
     if (rc.ncalc !== nb) {

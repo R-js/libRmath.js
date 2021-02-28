@@ -17,21 +17,19 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import { debug } from 'debug';
 
+import {ML_ERR_return_NAN} from '@common/logger';
 import {
     M_LN_2PI,
-    ML_ERR_return_NAN,
     R_D__0,
     R_D__1,
     R_D_exp,
     R_D_negInonint,
     R_D_nonint_check,
-} from '../common/_general';
-import { bd0 } from '../deviance';
+} from '$constants';
+import { bd0 } from '$deviance';
 
-import { stirlerr } from '../stirling';
+import { stirlerr } from '$stirling';
 
-const { log, log1p, round: R_forceint } = Math;
-const { isNaN: ISNAN, isFinite: R_FINITE } = Number;
 const printer = debug('dbinom');
 
 export function dbinom_raw(x: number, n: number, p: number, q: number, give_log: boolean): number {
@@ -43,12 +41,12 @@ export function dbinom_raw(x: number, n: number, p: number, q: number, give_log:
 
     if (x === 0) {
         if (n === 0) return R_D__1(give_log);
-        const lc = p < 0.1 ? -bd0(n, n * q) - n * p : n * log(q);
+        const lc = p < 0.1 ? -bd0(n, n * q) - n * p : n * Math.log(q);
         return R_D_exp(give_log, lc);
     }
 
     if (x === n) {
-        lc = q < 0.1 ? -bd0(n, n * p) - n * q : n * log(p);
+        lc = q < 0.1 ? -bd0(n, n * p) - n * q : n * Math.log(p);
         return R_D_exp(give_log, lc);
     }
 
@@ -60,23 +58,23 @@ export function dbinom_raw(x: number, n: number, p: number, q: number, give_log:
 
     /* f = (M_2PI*x*(n-x))/n; could overflow or underflow */
     /* Upto R 2.7.1:
-     * lf = log(M_2PI) + log(x) + log(n-x) - log(n);
+     * lf = Math.log(M_2PI) + Math.log(x) + Math.log(n-x) - Math.log(n);
      * -- following is much better for  x << n : */
-    lf = M_LN_2PI + log(x) + log1p(-x / n);
+    lf = M_LN_2PI + Math.log(x) + Math.log1p(-x / n);
 
     return R_D_exp(give_log, lc - 0.5 * lf);
 }
 
 export function dbinom(x: number, n: number, p: number, logX = false): number {
     /* NaNs propagated correctly */
-    if (ISNAN(x) || ISNAN(n) || ISNAN(p)) return x + n + p;
+    if (isNaN(x) || isNaN(n) || isNaN(p)) return x + n + p;
 
     if (p < 0 || p > 1 || R_D_negInonint(n)) return ML_ERR_return_NAN(printer);
     R_D_nonint_check(logX, x, printer);
-    if (x < 0 || !R_FINITE(x)) return R_D__0(logX);
+    if (x < 0 || !isFinite(x)) return R_D__0(logX);
 
-    n = R_forceint(n);
-    x = R_forceint(x);
+    n = Math.round(n);
+    x = Math.round(x);
 
     return dbinom_raw(x, n, p, 1 - p, logX);
 }

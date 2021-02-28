@@ -17,8 +17,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { IRNG, MessageType } from '../irng';
 import { IRNGNormalTypeEnum } from './in01-type';
+import type { IRandom } from '../IRandom';
 
-export abstract class IRNGNormal {
+export class IRNGNormal implements IRandom {
     protected _rng: IRNG;
     protected _name: string;
     protected _kind: IRNGNormalTypeEnum;
@@ -28,12 +29,14 @@ export abstract class IRNGNormal {
     }
 
     constructor(_rng: IRNG, name: string, kind: IRNGNormalTypeEnum) {
+        if (this.constructor.name === 'IRNGNormal'){
+            throw new TypeError(`Cannot instantiante class "IRNGNormal" directly`);
+        }
         this._rng = _rng;
         this._name = name;
         this._kind = kind;
         this.random = this.random.bind(this);
         this.randoms = this.randoms.bind(this);
-        this.internal_norm_rand = this.internal_norm_rand.bind(this);
         this.reset = this.reset.bind(this);
         this._rng.register(MessageType.INIT, this.reset);
     }
@@ -42,13 +45,13 @@ export abstract class IRNGNormal {
         n = !n || n < 0 ? 1 : n;
         const rc = new Float32Array(n);
         for (let i = 0; i < n; i++) {
-            rc[i] = this.internal_norm_rand();
+            rc[i] = this.random();
         }
         return rc;
     }
 
-    public random() {
-        return this.internal_norm_rand();
+    random(): number{
+        throw new Error(`override this function in ${this.constructor.name}`)
     }
 
     public get name() {
@@ -63,6 +66,4 @@ export abstract class IRNGNormal {
         return this._rng;
     }
 
-    // implementation specific
-    protected abstract internal_norm_rand(): number;
 }

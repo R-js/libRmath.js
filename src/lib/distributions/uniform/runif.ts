@@ -32,6 +32,6 @@ export function runifOne(n = 1, min = 0, max = 1, u: IRNG): number {
     if (!(R_FINITE(min) && R_FINITE(max) && max > min)) {
         return ML_ERR_return_NAN(printer);
     }
-    const s = u.internal_unif_rand();
+    const s = u.random();
     return (max - min) * s + min;
 }

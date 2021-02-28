@@ -16,23 +16,29 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { IRNGTypeEnum } from './irng-type';
+import type { IRandom } from './IRandom';
 
 export enum MessageType {
     INIT = '@@INIT@@',
 }
+   
 
-export abstract class IRNG {
+export class IRNG implements IRandom {
     protected _name: string;
     protected _kind: IRNGTypeEnum;
     private notify: Map<MessageType, ((...args: any[]) => void)[]>;
 
-    protected abstract internal_unif_rand(): number;
+    //protected abstract random(): number;
 
     constructor(name: string, kind: IRNGTypeEnum) {
+        if (this.constructor.name === 'IRNG'){
+            throw new TypeError('IRNG should be subclassed not directly instantiated');
+        }
         this._name = name;
         this._kind = kind;
         this.notify = new Map();
         this.emit = this.emit.bind(this);
+        
     }
 
     public get name() {
@@ -47,9 +53,13 @@ export abstract class IRNG {
         n = !n || n < 0 ? 1 : n;
         const rc = new Float32Array(n);
         for (let i = 0; i < n; i++) {
-            rc[i] = this.internal_unif_rand();
+            rc[i] = this.random();
         }
         return rc;
+    }
+    
+    random(): number{
+        throw new Error(`override this function in ${this.constructor.name}`)
     }
 
     public emit(event: MessageType, ...args: any[]) {
@@ -83,12 +93,12 @@ export abstract class IRNG {
         }
     }
 
-    public random() {
-        return this.internal_unif_rand();
+    public get seed(): Uint32Array | Int32Array {
+        throw new Error(`override property getter 'seed' in ${this.constructor.name}`)
     }
-
-    public abstract get seed(): Uint32Array | Int32Array;
-    public abstract set seed(_seed: Uint32Array | Int32Array);
+    public set seed(_seed: Uint32Array | Int32Array) {
+        throw new Error(`override property setter 'seed' in ${this.constructor.name}`)
+    }
 
     public init(seed: number): void {
         this.emit(MessageType.INIT, seed);

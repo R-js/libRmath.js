@@ -15,9 +15,6 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-const { isFinite: R_FINITE, MIN_VALUE: DBL_MIN, NaN } = Number;
-const { abs: fabs, log } = Math;
-
 function bd0(x: number, np: number): number {
     let ej: number;
 
@@ -29,16 +26,16 @@ function bd0(x: number, np: number): number {
 
     let j: number;
 
-    if (!R_FINITE(x) || !R_FINITE(np) || np === 0.0) {
+    if (!isFinite(x) || !isFinite(np) || np === 0.0) {
         return NaN;
     }
 
-    if (fabs(x - np) < 0.1 * (x + np)) {
+    if (Math.abs(x - np) < 0.1 * (x + np)) {
         v = (x - np) / (x + np); // might underflow to 0
 
         s = (x - np) * v; // s using v -- change by MM
 
-        if (fabs(s) < DBL_MIN) return s;
+        if (Math.abs(s) < Number.MIN_VALUE) return s;
 
         ej = 2 * x * v;
 
@@ -64,7 +61,7 @@ function bd0(x: number, np: number): number {
 
     // else:  | x - np |  is not too small
 
-    return x * log(x / np) + np - x;
+    return x * Math.log(x / np) + np - x;
 }
 
 export { bd0 };

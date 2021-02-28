@@ -45,7 +45,7 @@ export function rwilcoxOne(m: number, n: number, rng: IRNG): number {
     const x: number[] = Array.from(seq_len({ length: k, base: 0 }));
     printer_rwilcox(`------v`);
     for (let i = 0; i < n; i++) {
-        const j = floor(k * rng.internal_unif_rand());
+        const j = floor(k * rng.random());
         r += x[j];
         x[j] = x[--k];
         printer_rwilcox('i:%d,\tn:%d\tj:%d\tk:%d\tr:%d\tx:%o', i, n, j, k, x);

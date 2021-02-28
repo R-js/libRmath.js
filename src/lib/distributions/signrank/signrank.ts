@@ -180,7 +180,7 @@ export function rsignrankOne(n: number, rng: IRNG): number {
     let r = 0.0;
     const k = floor(nRound);
     for (let i = 0; i < k /**/; ) {
-        r += ++i * floor(rng.internal_unif_rand() + 0.5);
+        r += ++i * floor(rng.random() + 0.5);
     }
     return r;
 }

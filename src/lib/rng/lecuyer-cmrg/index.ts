@@ -59,7 +59,7 @@ export class LecuyerCMRG extends IRNG {
         super.init(_seed); // emit event
     }
 
-    protected internal_unif_rand(): number {
+    random(): number {
         const II = this.m_seed;
 
         //const pp2 = pow.bind(pow, 2);

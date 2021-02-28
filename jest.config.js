@@ -31,6 +31,7 @@ module.exports = {
     moduleNameMapper: {
         '^\\$jest-extension$': '<rootDir>/src/packages/jest-extension.ts',
         '^@distributions/(.*)$': '<rootDir>/src/lib/distributions/$1',
+        '^@dist/(.*)$': '<rootDir>/src/lib/distributions/$1',
         '^@common/(.*)$': '<rootDir>/src/packages/common/$1',
         '^\\$constants$': '<rootDir>/src/lib/common/_general.ts',
         '^\\$chebyshev$': '<rootDir>/src/lib/chebyshev',
@@ -38,5 +39,7 @@ module.exports = {
         '^@trig/(.*)$': '<rootDir>/src/lib/trigonometry/$1',
         '^\\$toms708': '<rootDir>/src/lib/common/toms708',
         '^\\$test-helpers/(.*)$': '<rootDir>/src/packages/test-helpers/$1',
+        '^$deviance': '<rootDir>/src/lib/deviance/index.ts',
+        '^$stirling': '<rootDir>/src/lib/stirling/index.ts'
     },
 };

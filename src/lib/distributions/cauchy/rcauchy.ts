@@ -33,5 +33,5 @@ export function rcauchyOne(location = 0, scale = 1, rng: IRNG): number {
         return ML_ERR_return_NAN(printer);
     }
     if (scale === 0 || !R_FINITE(location)) return location;
-    else return location + scale * Math.tan(M_PI * rng.internal_unif_rand());
+    else return location + scale * Math.tan(M_PI * rng.random());
 }

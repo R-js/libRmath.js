@@ -39,7 +39,7 @@ export function rbetaOne(aa: number, bb: number, rng: IRNGNormal): number {
         return 0.5;
     if (aa === 0 && bb === 0)
         // point mass 1/2 at each of {0,1} :
-        return rng.rng.internal_unif_rand() < 0.5 ? 0 : 1;
+        return rng.rng.random() < 0.5 ? 0 : 1;
     // now, at least one of a, b is finite and positive
     if (!R_FINITE(aa) || bb === 0) return 1.0;
     if (!R_FINITE(bb) || aa === 0) return 0.0;
@@ -104,8 +104,8 @@ export function rbetaOne(aa: number, bb: number, rng: IRNGNormal): number {
         }
         /* FIXME: "do { } while()", but not trivially because of "continue"s:*/
         for (;;) {
-            u1 = rng.rng.internal_unif_rand();
-            u2 = rng.rng.internal_unif_rand();
+            u1 = rng.rng.random();
+            u2 = rng.rng.random();
             if (u1 < 0.5) {
                 y = u1 * u2;
                 z = u1 * y;
@@ -133,8 +133,8 @@ export function rbetaOne(aa: number, bb: number, rng: IRNGNormal): number {
             gamma = a + 1.0 / beta;
         }
         do {
-            u1 = rng.rng.internal_unif_rand();
-            u2 = rng.rng.internal_unif_rand();
+            u1 = rng.rng.random();
+            u2 = rng.rng.random();
 
             v_w_from__u1_bet(a);
 

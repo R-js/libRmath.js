@@ -15,15 +15,12 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { debug } from 'debug';
+import { ML_ERR_return_NAN, ME,  ML_ERROR } from '@common/logger';
+import { R_P_bounds_01 } from '$constants';
 
-import { ME, ML_ERR_return_NAN, ML_ERROR, R_P_bounds_01 } from '../common/_general';
+import { lgammafn_sign } from '@special/gamma/lgammafn_sign';
 
-import { lgammafn_sign } from '../distributions/gamma/lgammafn_sign';
-
-import { NumberW, Toms708 } from '../common/toms708';
-
-const { log1p, floor, max: fmax2, sqrt, log, exp } = Math;
-const { isNaN: ISNAN } = Number;
+import { NumberW, Toms708 } from '$toms708';
 
 const printer = debug('pnbeta_raw');
 
@@ -64,21 +61,21 @@ function pnbeta_raw(x: number, o_x: number, a: number, b: number, ncp: number): 
 
     /* initialize the series */
 
-    x0 = floor(fmax2(c - 7 * sqrt(c), 0));
+    x0 = Math.floor(Math.max(c - 7 * Math.sqrt(c), 0));
     a0 = a + x0;
     lbeta = lgammafn_sign(a0) + lgammafn_sign(b) - lgammafn_sign(a0 + b);
     /* temp = pbeta_raw(x, a0, b, TRUE, FALSE), but using (x, o_x): */
     Toms708.bratio(a0, b, x, o_x, temp, tmp_c, ierr);
 
-    gx = exp(a0 * log(x) + b * (x < 0.5 ? log1p(-x) : log(o_x)) - lbeta - log(a0));
-    if (a0 > a) q = exp(-c + x0 * log(c) - lgammafn_sign(x0 + 1));
-    else q = exp(-c);
+    gx = Math.exp(a0 * Math.log(x) + b * (x < 0.5 ? Math.log1p(-x) : Math.log(o_x)) - lbeta - Math.log(a0));
+    if (a0 > a) q = Math.exp(-c + x0 * Math.log(c) - lgammafn_sign(x0 + 1));
+    else q = Math.exp(-c);
 
     sumq = 1 - q;
     ans = ax = q * temp.val;
 
     /* recurse over subsequent terms until convergence is achieved */
-    let j = floor(x0); // x0 could be billions, and is in package EnvStats
+    let j = Math.floor(x0); // x0 could be billions, and is in package EnvStats
     do {
         j++;
         temp.val -= gx;
@@ -97,6 +94,7 @@ function pnbeta_raw(x: number, o_x: number, a: number, b: number, ncp: number): 
 }
 
 const printer_pnbeta2 = debug('pnbeta2');
+
 export function pnbeta2(
     x: number,
     o_x: number,
@@ -110,17 +108,17 @@ export function pnbeta2(
 
     /* return R_DT_val(ans), but we want to warn about cancellation here */
     if (lower_tail) {
-        return log_p ? log(ans) : ans;
+        return log_p ? Math.log(ans) : ans;
     } else {
         if (ans > 1 - 1e-10) ML_ERROR(ME.ME_PRECISION, 'pnbeta', printer_pnbeta2);
         if (ans > 1.0) ans = 1.0; /* Precaution */
         /* include standalone case */
-        return log_p ? log1p(-ans) : 1 - ans;
+        return log_p ? Math.log1p(-ans) : 1 - ans;
     }
 }
 
 export function pnbeta(x: number, a: number, b: number, ncp: number, lower_tail: boolean, log_p: boolean): number {
-    if (ISNAN(x) || ISNAN(a) || ISNAN(b) || ISNAN(ncp)) return x + a + b + ncp;
+    if (isNaN(x) || isNaN(a) || isNaN(b) || isNaN(ncp)) return x + a + b + ncp;
 
     const rc = R_P_bounds_01(lower_tail, log_p, x, 0, 1);
     if (rc !== undefined) {

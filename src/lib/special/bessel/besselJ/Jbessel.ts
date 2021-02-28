@@ -25,6 +25,49 @@ const { min, trunc, pow, sqrt, sin, cos, max, abs } = Math;
 
 const printer = debug('J_bessel');
 
+/* ---------------------------------------------------------------------
+     Mathematical constants
+ 
+    PI2	  = 2 / PI
+    TWOPI1 = first few significant digits of 2 * PI
+    TWOPI2 = (2*PI - TWOPI1) to working precision, i.e.,
+       TWOPI1 + TWOPI2 = 2 * PI to extra precision.
+    --------------------------------------------------------------------- */
+const pi2 = 0.636619772367581343075535;
+const twopi1 = 6.28125;
+const twopi2 = 0.001935307179586476925286767;
+
+/*---------------------------------------------------------------------
+ *  Factorial(N)
+ *--------------------------------------------------------------------- */
+const fact: number[] = [
+    1,
+    1,
+    2,
+    6,
+    24,
+    120,
+    720,
+    5040,
+    40320,
+    362880,
+    3628800,
+    39916800,
+    479001600,
+    6227020800,
+    87178291200,
+    1.307674368e12,
+    2.0922789888e13,
+    3.55687428096e14,
+    6.402373705728e15,
+    1.21645100408832e17,
+    2.43290200817664e18,
+    5.109094217170944e19,
+    1.12400072777760768e21,
+    2.585201673888497664e22,
+    6.2044840173323943936e23,
+];
+
 export function J_bessel(x: number, alpha: number, nb: number): IBesselRC {
     /*
      Calculates Bessel functions J_{n+alpha} (x)
@@ -97,52 +140,11 @@ export function J_bessel(x: number, alpha: number, nb: number): IBesselRC {
      *******************************************************************
      */
 
-    /* ---------------------------------------------------------------------
-      Mathematical constants
- 
-     PI2	  = 2 / PI
-     TWOPI1 = first few significant digits of 2 * PI
-     TWOPI2 = (2*PI - TWOPI1) to working precision, i.e.,
-        TWOPI1 + TWOPI2 = 2 * PI to extra precision.
-     --------------------------------------------------------------------- */
-    const pi2 = 0.636619772367581343075535;
-    const twopi1 = 6.28125;
-    const twopi2 = 0.001935307179586476925286767;
 
-    /*---------------------------------------------------------------------
-     *  Factorial(N)
-     *--------------------------------------------------------------------- */
-    const fact: number[] = [
-        1,
-        1,
-        2,
-        6,
-        24,
-        120,
-        720,
-        5040,
-        40320,
-        362880,
-        3628800,
-        39916800,
-        479001600,
-        6227020800,
-        87178291200,
-        1.307674368e12,
-        2.0922789888e13,
-        3.55687428096e14,
-        6.402373705728e15,
-        1.21645100408832e17,
-        2.43290200817664e18,
-        5.109094217170944e19,
-        1.12400072777760768e21,
-        2.585201673888497664e22,
-        6.2044840173323943936e23,
-    ];
 
     /* Local variables */
     //const int lim = nb;
-    const b2 = new Array(nb).fill(0);
+   
 
     //START ints
     let i_nend;
@@ -184,7 +186,7 @@ export function J_bessel(x: number, alpha: number, nb: number): IBesselRC {
     let xm;
     let psavel;
     let gnu;
-  
+
     let sum;
     //END DOUBLE
 
@@ -204,7 +206,6 @@ export function J_bessel(x: number, alpha: number, nb: number): IBesselRC {
 
     if (!(nb > 0 && x >= 0 && 0 <= nu && nu < 1)) {
         /* Error return -- X, NB, or ALPHA is out of range : */
-        b2[0] = 0;
         ncalc = min(nb, 0) - 1;
         return { x, nb, ncalc };
     }
@@ -216,6 +217,8 @@ export function J_bessel(x: number, alpha: number, nb: number): IBesselRC {
          * but the cutoff happens too early */
         return { x: 0, nb, ncalc };
     }
+
+    const b2 = new Float64Array(nb);
     const intxj = trunc(x);
 
     /*===================================================================

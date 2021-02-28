@@ -16,18 +16,19 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { debug } from 'debug';
-import { ML_ERR_return_NAN, R_D__0, R_D_exp } from '../common/_general';
-import { dpois_raw } from '../poisson/dpois';
-import { dbeta } from './dbeta';
+import { ML_ERR_return_NAN } from '@common/logger'
+import { R_D__0, R_D_exp } from '$constants';
+import { dpois_raw } from '@dist/poisson/dpois';
+import { dbeta_scalar } from './dbeta';
 
-const { log: ln, sqrt, ceil } = Math;
-const { isNaN: ISNAN, isFinite: R_FINITE } = Number;
 const printer = debug('dnbeta');
 
-//also used by f-distriution
 
-export function dnbeta(x: number, a: number, b: number, ncp: number, give_log: boolean): number {
-    const eps = 1e-15;
+const eps = 1e-15;
+
+//also used by f-distriution
+export function dnbeta_scalar(x: number, a: number, b: number, ncp: number, give_log: boolean): number {
+   
     //int
     let kMax;
     //double
@@ -42,12 +43,12 @@ export function dnbeta(x: number, a: number, b: number, ncp: number, give_log: b
     let p_k;
     let q;
 
-    if (ISNAN(x) || ISNAN(a) || ISNAN(b) || ISNAN(ncp)) return x + a + b + ncp;
+    if (isNaN(x) || isNaN(a) || isNaN(b) || isNaN(ncp)) return x + a + b + ncp;
     if (ncp < 0 || a <= 0 || b <= 0) {
         return ML_ERR_return_NAN(printer);
     }
 
-    if (!R_FINITE(a) || !R_FINITE(b) || !R_FINITE(ncp)) {
+    if (!isFinite(a) || !isFinite(b) || !isFinite(ncp)) {
         return ML_ERR_return_NAN(printer);
     }
 
@@ -55,7 +56,7 @@ export function dnbeta(x: number, a: number, b: number, ncp: number, give_log: b
         return R_D__0(give_log);
     }
     if (ncp === 0) {
-        return dbeta(x, a, b, give_log) as number;
+        return dbeta_scalar(x, a, b, give_log) as number;
     }
     /* New algorithm, starting with *largest* term : */
     ncp2 = 0.5 * ncp;
@@ -65,14 +66,14 @@ export function dnbeta(x: number, a: number, b: number, ncp: number, give_log: b
     if (D <= 0) {
         kMax = 0;
     } else {
-        D = ceil(d + sqrt(D));
+        D = Math.ceil(d + Math.sqrt(D));
         kMax = D > 0 ? D : 0;
     }
 
     /* The starting "middle term" --- first look at it's log scale: */
-    term = dbeta(x, a + kMax, b, /* log = */ true);
+    term = dbeta_scalar(x, a + kMax, b, /* log = */ true);
     p_k = dpois_raw(kMax, ncp2, true);
-    if (x === 0 || !R_FINITE(term) || !R_FINITE(p_k)) {
+    if (x === 0 || !isFinite(term) || !isFinite(p_k)) {
         /* if term = +Inf */
         return R_D_exp(give_log, p_k + term);
     }
@@ -103,5 +104,5 @@ export function dnbeta(x: number, a: number, b: number, ncp: number, give_log: b
         sum += term;
     } while (term > sum * eps);
 
-    return R_D_exp(give_log, p_k + ln(sum));
+    return R_D_exp(give_log, p_k + Math.log(sum));
 }

@@ -54,7 +54,7 @@ export class MarsagliaMultiCarry extends IRNG {
         super.init(_seed);
     }
 
-    protected internal_unif_rand(): number {
+    random(): number {
         const s = this.m_seed;
         s[0] = 36969 * (s[0] & 65535) + (s[0] >>> 16);
         s[1] = 18000 * (s[1] & 65535) + (s[1] >>> 16);
