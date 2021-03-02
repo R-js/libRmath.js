@@ -120,5 +120,8 @@ export function RNGKind(
     };
 }
 
+//init
+RNGKind();
+
 
 

@@ -36,6 +36,7 @@ import { rbetaOne } from './rbeta';
 //helper
 import { repeatedCall } from '$helper'
 import { IRNGNormal } from '@rng/normal/normal-rng';
+import { globalNorm } from '@rng/globalRNG';
 
 export function dbeta(x: number, shape1: number, shape2: number, ncp?: number, log?: boolean): number {
     // I added the === 0 here, because dnbeta will go back to dbeta if 0 (c source code)
@@ -69,9 +70,9 @@ export function rbeta(
     ncp = 0, // NOTE: normally the default is undefined, here it is '0'.
     rng?: IRNGNormal
 ): Float32Array {
-    const _rng = (rng && rng.uniform_rng) || undefined;
+    const _rng = rng || globalNorm();
     if (ncp === 0) {
-        return repeatedCall(n, rbetaOne, shape1, shape2, _rng);
+        return repeatedCall(n, rbetaOne, shape1, shape2, _rng.uniform_rng);
     } else {
         const ar = repeatedCall(n, rnchisqOne, 2 * shape1, ncp, _rng);
         const br = repeatedCall(n, rchisqOne, 2 * shape2, _rng);

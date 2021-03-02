@@ -22,9 +22,11 @@ import { pnbeta } from './pnbeta';
 
 const printer_qnbeta = debug('qnbeta');
 
+const accu = 1e-15;
+const eps = 1e-14; /* must be > accu */
+
 export function qnbeta(p: number, a: number, b: number, ncp: number, lower_tail: boolean, log_p: boolean): number {
-    const accu = 1e-15;
-    const Eps = 1e-14; /* must be > accu */
+   
 
     let ux;
     let lx;
@@ -46,9 +48,9 @@ export function qnbeta(p: number, a: number, b: number, ncp: number, lower_tail:
     /* Invert pnbeta(.) :
      * 1. finding an upper and lower bound */
     if (p > 1 - Number.EPSILON) return 1.0;
-    pp = Math.min(1 - Number.EPSILON, p * (1 + Eps));
+    pp = Math.min(1 - Number.EPSILON, p * (1 + eps));
     for (ux = 0.5; ux < 1 - Number.EPSILON && pnbeta(ux, a, b, ncp, true, false) < pp; ux = 0.5 * (1 + ux));
-    pp = p * (1 - Eps);
+    pp = p * (1 - eps);
     for (lx = 0.5; lx > Number.MIN_VALUE && pnbeta(lx, a, b, ncp, true, false) > pp; lx *= 0.5);
 
     /* 2. interval (lx,ux)  halving : */

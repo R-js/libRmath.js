@@ -19,14 +19,15 @@ import { debug } from 'debug';
 import { ML_ERR_return_NAN } from '@common/logger';
 import { rgammaOne } from '@dist/gamma/rgamma';
 import { rpoisOne } from '@dist/poisson/rpois';
-import { IRNGNormal } from '@rng/normal/normal-rng';
 import { rchisqOne } from '@dist/chi-2/rchisq';
 
-const printer = debug('rnchisq');
-const { isFinite: R_FINITE } = Number;
+import type { IRNGNormal } from '@rng/normal/normal-rng';
+import { globalNorm } from '@rng/globalRNG';
 
-export function rnchisqOne(df: number, lambda: number, rng: IRNGNormal): number {
-    if (!R_FINITE(df) || !R_FINITE(lambda) || df < 0 || lambda < 0) {
+const printer = debug('rnchisq');
+
+export function rnchisqOne(df: number, lambda: number, rng: IRNGNormal = globalNorm()): number {
+    if (!isFinite(df) || !isFinite(lambda) || df < 0 || lambda < 0) {
         return ML_ERR_return_NAN(printer);
     }
     if (lambda === 0) {

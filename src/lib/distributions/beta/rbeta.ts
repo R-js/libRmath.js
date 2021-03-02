@@ -19,12 +19,13 @@ import { debug } from 'debug';
 import { ML_ERR_return_NAN } from '@common/logger';
 import { DBL_MAX_EXP } from '$constants';
 import { IRNG } from '@rng/irng';
+import { globalUni } from '@rng/globalRNG';
 
 const printer = debug('rbeta');
 
 export const expmax = DBL_MAX_EXP * Math.LN2; /* = log(DBL_MAX) */
 
-export function rbetaOne(aa: number, bb: number, rng: IRNG): number {
+export function rbetaOne(aa: number, bb: number, rng: IRNG = globalUni()): number {
     if (aa < 0 || bb < 0) {
         return ML_ERR_return_NAN(printer);
     }

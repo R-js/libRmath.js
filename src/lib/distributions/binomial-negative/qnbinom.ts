@@ -17,18 +17,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import { debug } from 'debug';
 
-import { ML_ERR_return_NAN, R_DT_0, R_DT_1, R_Q_P01_boundaries } from '../common/_general';
+import { ML_ERR_return_NAN, R_Q_P01_boundaries } from '@common/logger';
+import { R_DT_0, R_DT_1  }  from '$constants';
 
-import { NumberW } from '../common/toms708';
+import { NumberW } from '$toms708';
 
-import { R_DT_qIv } from '../exp/expm1';
-import { qnorm } from '../normal/qnorm';
-
+import { R_DT_qIv } from '@dist/exp/expm1';
+import { qnorm } from '@dist/normal/qnorm';
 import { pnbinom } from './pnbinom';
-
-const { isNaN: ISNAN, POSITIVE_INFINITY: ML_POSINF, EPSILON: DBL_EPSILON } = Number;
-
-const { max: fmax2, sqrt, floor, round: R_forceint } = Math;
 
 const printer_do_search = debug('do_search');
 
@@ -50,7 +46,7 @@ function do_search(y: number, z: NumberW, p: number, n: number, pr: number, incr
                 printer_do_search('exit1');
                 return y;
             }
-            y = fmax2(0, y - incr);
+            y = Math.max(0, y - incr);
         } //while
     } else {
         // search to the right
@@ -85,7 +81,7 @@ export function qnbinom(p: number, size: number, prob: number, lower_tail: boole
 
     const z = new NumberW(0);
 
-    if (ISNAN(p) || ISNAN(size) || ISNAN(prob)) {
+    if (isNaN(p) || isNaN(size) || isNaN(prob)) {
         return NaN;
     }
 
@@ -100,14 +96,14 @@ export function qnbinom(p: number, size: number, prob: number, lower_tail: boole
 
     if (prob === 1 || size === 0) return 0;
 
-    const rc = R_Q_P01_boundaries(lower_tail, log_p, p, 0, ML_POSINF);
+    const rc = R_Q_P01_boundaries(lower_tail, log_p, p, 0, Number.POSITIVE_INFINITY);
     if (rc !== undefined) {
         return rc;
     }
     Q = 1.0 / prob;
     P = (1.0 - prob) * Q;
     mu = size * P;
-    sigma = sqrt(size * P * Q);
+    sigma = Math.sqrt(size * P * Q);
     gamma = (Q + P) / sigma;
 
     /* Note : "same" code in qpois.c, qbinom.c, qnbinom.c --
@@ -115,30 +111,30 @@ export function qnbinom(p: number, size: number, prob: number, lower_tail: boole
     if (!lower_tail || log_p) {
         p = R_DT_qIv(lower_tail, log_p, p); /* need check again (cancellation!): */
         if (p === R_DT_0(lower_tail, log_p)) return 0;
-        if (p === R_DT_1(lower_tail, log_p)) return ML_POSINF;
+        if (p === R_DT_1(lower_tail, log_p)) return Number.POSITIVE_INFINITY;
     }
     /* temporary hack --- FIXME --- */
-    if (p + 1.01 * DBL_EPSILON >= 1) return ML_POSINF;
+    if (p + 1.01 * Number.EPSILON >= 1) return Number.POSITIVE_INFINITY;
 
     /* y := approx.value (Cornish-Fisher expansion) :  */
     z.val = qnorm(p, 0, 1, /*lower_tail*/ true, /*log_p*/ false);
-    y = R_forceint(mu + sigma * (z.val + (gamma * (z.val * z.val - 1)) / 6));
+    y = Math.round(mu + sigma * (z.val + (gamma * (z.val * z.val - 1)) / 6));
 
     z.val = pnbinom(y, size, prob, /*lower_tail*/ true, /*log_p*/ false);
 
     /* fuzz to ensure left continuity: */
-    p *= 1 - 64 * DBL_EPSILON;
+    p *= 1 - 64 * Number.EPSILON;
 
     /* If the C-F value is not too large a simple search is OK */
     if (y < 1e5) return do_search(y, z, p, size, prob, 1);
     /* Otherwise be a bit cleverer in the search */
     {
-        let incr = floor(y * 0.001);
+        let incr = Math.floor(y * 0.001);
         let oldincr;
         do {
             oldincr = incr;
             y = do_search(y, z, p, size, prob, incr);
-            incr = fmax2(1, floor(incr / 100));
+            incr = Math.max(1, Math.floor(incr / 100));
         } while (oldincr > 1 && incr > y * 1e-15);
         return y;
     }

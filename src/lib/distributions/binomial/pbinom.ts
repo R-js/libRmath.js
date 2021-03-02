@@ -17,15 +17,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import { debug } from 'debug';
 
 import { pbeta } from '../beta/pbeta';
-import { ML_ERR_return_NAN, R_DT_0, R_DT_1, R_nonint } from '../common/_general';
+import { ML_ERR_return_NAN,  } from '@common/logger';
+import { R_DT_0, R_DT_1, R_nonint } from '$constants';
 
 const printer = debug('pbinom');
-const { floor, round: R_forceint } = Math;
-const { isNaN: ISNAN, isFinite: R_FINITE } = Number;
 
 export function pbinom(x: number, n: number, p: number, lowerTail = true, logP = false): number {
-    if (ISNAN(x) || ISNAN(n) || ISNAN(p)) return NaN;
-    if (!R_FINITE(n) || !R_FINITE(p)) {
+    if (isNaN(x) || isNaN(n) || isNaN(p)) return NaN;
+    if (!isFinite(n) || !isFinite(p)) {
         return ML_ERR_return_NAN(printer);
     }
 
@@ -36,14 +35,14 @@ export function pbinom(x: number, n: number, p: number, lowerTail = true, logP =
         printer('non-integer n = %d', n);
         return ML_ERR_return_NAN(printer);
     }
-    n = R_forceint(n);
+    n = Math.round(n);
     /* 
      PR#8560: n=0 is a valid value 
   */
     if (n < 0 || p < 0 || p > 1) return ML_ERR_return_NAN(printer);
 
     if (x < 0) return R_DT_0(lower_tail, log_p);
-    x = floor(x + 1e-7);
+    x = Math.floor(x + 1e-7);
     if (n <= x) return R_DT_1(lower_tail, log_p);
     printer('calling pbeta:(q=%d,a=%d,b=%d, l.t=%s, log=%s', p, x + 1, n - x, !lower_tail, log_p);
     return pbeta(p, x + 1, n - x, !lower_tail, log_p);

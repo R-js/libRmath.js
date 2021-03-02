@@ -16,118 +16,109 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { debug } from 'debug';
 
-import { ML_ERR_return_NAN, R_D__0, R_D__1, R_D_exp, R_D_nonint_check } from '../common/_general';
-
-import { dbinom_raw } from '../binomial/dbinom';
-import { lgammafn_sign } from '../gammaxxxxx/lgammafn_sign';
+import { ML_ERR_return_NAN, } from '@common/logger';
+import { R_D__0, R_D__1, R_D_exp, R_D_nonint_check } from '$constants';
+import { dbinom_raw } from '@dist/binomial/dbinom';
+import { lgammafn_sign } from '@special/gamma/lgammafn_sign';
 
 const printer = debug('dnbinom');
-const { log, round: R_forceint, log1p } = Math;
-const { isFinite: R_FINITE, isNaN: ISNAN } = Number;
 
-export function dnbinom<T>(xx: T, size: number, prob: number, give_log: boolean): T {
-    const fx: number[] = Array.isArray(xx) ? xx : ([xx] as any);
+export function dnbinom(x: number, size: number, prob: number, give_log: boolean): number {
 
-    const result = fx.map((x) => {
-        let ans: number;
-        let p: number;
+    let ans: number;
+    let p: number;
 
-        if (ISNAN(x) || ISNAN(size) || ISNAN(prob)) {
-            return x + size + prob;
-        }
+    if (isNaN(x) || isNaN(size) || isNaN(prob)) {
+        return x + size + prob;
+    }
 
-        if (prob <= 0 || prob > 1 || size < 0) {
-            return ML_ERR_return_NAN(printer);
-        }
+    if (prob <= 0 || prob > 1 || size < 0) {
+        return ML_ERR_return_NAN(printer);
+    }
 
-        const rc = R_D_nonint_check(give_log, x, printer);
-        if (rc !== undefined) {
-            return rc;
-        }
+    const rc = R_D_nonint_check(give_log, x, printer);
+    if (rc !== undefined) {
+        return rc;
+    }
 
-        if (x < 0 || !R_FINITE(x)) {
-            return R_D__0(give_log);
-        }
-        /* limiting case as size approaches zero is point mass at zero */
-        if (x === 0 && size === 0) {
-            return R_D__1(give_log);
-        }
+    if (x < 0 || !isFinite(x)) {
+        return R_D__0(give_log);
+    }
+    /* limiting case as size approaches zero is point mass at zero */
+    if (x === 0 && size === 0) {
+        return R_D__1(give_log);
+    }
 
-        x = R_forceint(x);
+    x = Math.round(x);
 
-        ans = dbinom_raw(size, x + size, prob, 1 - prob, give_log);
+    ans = dbinom_raw(size, x + size, prob, 1 - prob, give_log);
 
-        p = size / (size + x);
+    p = size / (size + x);
 
-        return give_log ? log(p) + ans : p * ans;
-    });
-
-    return result.length === 1 ? result[0] : (result as any);
+    return give_log ? Math.log(p) + ans : p * ans;
 }
 
 const printer_dnbinom_mu = debug('dnbinom_mu');
 
-export function dnbinom_mu<T>(xx: T, size: number, mu: number, give_log: boolean): T {
-    const fx: number[] = Array.isArray(xx) ? xx : ([xx] as any);
+export function dnbinom_mu(x: number, size: number, mu: number, give_log: boolean): number {
 
-    const result = fx.map((x) => {
-        /* originally, just set  prob :=  size / (size + mu)  and called dbinom_raw(),
-         * but that suffers from cancellation when   mu << size  */
-        let ans: number;
-        let p: number;
 
-        if (ISNAN(x) || ISNAN(size) || ISNAN(mu)) {
-            return x + size + mu;
+    /* originally, just set  prob :=  size / (size + mu)  and called dbinom_raw(),
+     * but that suffers from cancellation when   mu << size  */
+    let ans: number;
+    let p: number;
+
+    if (isNaN(x) || isNaN(size) || isNaN(mu)) {
+        return x + size + mu;
+    }
+
+    if (mu < 0 || size < 0) {
+        return ML_ERR_return_NAN(printer_dnbinom_mu);
+    }
+
+    const rc = R_D_nonint_check(give_log, x, printer_dnbinom_mu);
+    if (rc !== undefined) {
+        return rc;
+    }
+
+    if (x < 0 || !isFinite(x)) {
+        return R_D__0(give_log);
+    }
+
+    /* limiting case as size approaches zero is point mass at zero,
+     * even if mu is kept constant. limit distribution does not
+     * have mean mu, though.
+     */
+    if (x === 0 && size === 0) {
+        return R_D__1(give_log);
+    }
+
+    x = Math.round(x);
+    if (x === 0) {
+        /* be accurate, both for n << mu, and n >> mu :*/
+        // old code   size * (size < mu ? Math.log(size / (size + mu)) : Math.log1p(- mu / (size + mu))));
+        let llogx: number;
+        if (size < mu) {
+            llogx = Math.log(size / (size + mu));
+        } else {
+            llogx = Math.log1p(-mu / (size + mu));
         }
+        return R_D_exp(give_log, size * llogx);
+    }
+    if (x < 1e-10 * size) {
+        /* don't use dbinom_raw() but MM's formula: */
+        /* FIXME --- 1e-8 shows problem; rather use algdiv() from ./toms708.c */
+        p = size < mu ? Math.log(size / (1 + size / mu)) : Math.log(mu / (1 + mu / size));
+        return R_D_exp(give_log, x * p - mu - lgammafn_sign(x + 1) + Math.log1p((x * (x - 1)) / (2 * size)));
+    }
 
-        if (mu < 0 || size < 0) {
-            return ML_ERR_return_NAN(printer_dnbinom_mu);
-        }
+    /* else: no unnecessary cancellation inside dbinom_raw, when
+     * x_ = size and n_ = x+size are so close that n_ - x_ loses accuracy
+     */
 
-        const rc = R_D_nonint_check(give_log, x, printer_dnbinom_mu);
-        if (rc !== undefined) {
-            return rc;
-        }
+    ans = dbinom_raw(size, x + size, size / (size + mu), mu / (size + mu), give_log);
+    p = size / (size + x);
 
-        if (x < 0 || !R_FINITE(x)) {
-            return R_D__0(give_log);
-        }
+    return give_log ? Math.log(p) + ans : p * ans;
 
-        /* limiting case as size approaches zero is point mass at zero,
-         * even if mu is kept constant. limit distribution does not
-         * have mean mu, though.
-         */
-        if (x === 0 && size === 0) {
-            return R_D__1(give_log);
-        }
-
-        x = R_forceint(x);
-        if (x === 0) {
-            /* be accurate, both for n << mu, and n >> mu :*/
-            // old code   size * (size < mu ? log(size / (size + mu)) : log1p(- mu / (size + mu))));
-            let llogx: number;
-            if (size < mu) {
-                llogx = log(size / (size + mu));
-            } else {
-                llogx = log1p(-mu / (size + mu));
-            }
-            return R_D_exp(give_log, size * llogx);
-        }
-        if (x < 1e-10 * size) {
-            /* don't use dbinom_raw() but MM's formula: */
-            /* FIXME --- 1e-8 shows problem; rather use algdiv() from ./toms708.c */
-            p = size < mu ? log(size / (1 + size / mu)) : log(mu / (1 + mu / size));
-            return R_D_exp(give_log, x * p - mu - lgammafn_sign(x + 1) + log1p((x * (x - 1)) / (2 * size)));
-        }
-
-        /* else: no unnecessary cancellation inside dbinom_raw, when
-         * x_ = size and n_ = x+size are so close that n_ - x_ loses accuracy
-         */
-
-        ans = dbinom_raw(size, x + size, size / (size + mu), mu / (size + mu), give_log);
-        p = size / (size + x);
-
-        return give_log ? log(p) + ans : p * ans;
-    });
-    return result.length === 0 ? result[0] : (result as any);
 }

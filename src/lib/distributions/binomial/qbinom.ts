@@ -16,14 +16,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { debug } from 'debug';
 
-import { ML_ERR_return_NAN, R_Q_P01_boundaries } from '../common/_general';
+import { ML_ERR_return_NAN, R_Q_P01_boundaries } from '@common/logger';
 
-const { max: fmax2, min: fmin2, floor, sqrt } = Math;
-const { isNaN: ISNAN, isFinite: R_FINITE, EPSILON: DBL_EPSILON } = Number;
-
-import { NumberW } from '../common/toms708';
-import { R_DT_qIv } from '../exp/expm1';
-import { qnorm } from '../normal/qnorm';
+import { NumberW } from '$toms708';
+import { R_DT_qIv } from '@dist/exp/expm1';
+import { qnorm } from '@dist/normal/qnorm';
 import { pbinom } from './pbinom';
 
 const printer_do_search = debug('do_search');
@@ -37,7 +34,7 @@ function do_search(y: number, z: NumberW, p: number, n: number, pr: number, incr
         while (true) {
             let newz: number;
             if (y === 0 || (newz = pbinom(y - incr, n, pr, /*l._t.*/ true, /*log_p*/ false)) < p) return y;
-            y = fmax2(0, y - incr);
+            y = Math.max(0, y - incr);
             z.val = newz;
         }
     } else {
@@ -46,7 +43,7 @@ function do_search(y: number, z: NumberW, p: number, n: number, pr: number, incr
         printer_do_search('new z=%d < p = %d  --> search to right (y++) ..', z.val, p);
 
         while (true) {
-            y = fmin2(y + incr, n);
+            y = Math.min(y + incr, n);
             if (y === n || (z.val = pbinom(y, n, pr, /*l._t.*/ true, /*log_p*/ false)) >= p) return y;
         }
     }
@@ -62,13 +59,13 @@ export function qbinom(p: number, size: number, pr: number, lower_tail: boolean,
     const z = new NumberW(0);
     let y: number;
 
-    if (ISNAN(p) || ISNAN(size) || ISNAN(pr)) return NaN;
+    if (isNaN(p) || isNaN(size) || isNaN(pr)) return NaN;
 
-    if (!R_FINITE(size) || !R_FINITE(pr)) {
+    if (!isFinite(size) || !isFinite(pr)) {
         return ML_ERR_return_NAN(printer_qbinom);
     }
     /* if log_p is true, p = -Inf is a legitimate value */
-    if (!R_FINITE(p) && !log_p) {
+    if (!isFinite(p) && !log_p) {
         return ML_ERR_return_NAN(printer_qbinom);
     }
 
@@ -93,7 +90,7 @@ export function qbinom(p: number, size: number, pr: number, lower_tail: boolean,
     if (q === 0) return size; /* covers the full range of the distribution */
 
     mu = size * pr; //mean
-    sigma = sqrt(size * pr * q); //standard deviation
+    sigma = Math.sqrt(size * pr * q); //standard deviation
 
     gamma = (q - pr) / sigma; // = (  (1 - pr)-pr )/sd = (1 - 2pr)/sd
 
@@ -116,14 +113,14 @@ export function qbinom(p: number, size: number, pr: number, lower_tail: boolean,
         if (p === 1) return size;
     }
     /* temporary hack --- FIXME --- */
-    //if (p + 1.01 * DBL_EPSILON >= 1.) return size;
-    if (Math.abs(p - 1) < DBL_EPSILON) {
+    //if (p + 1.01 * Number.EPSILON >= 1.) return size;
+    if (Math.abs(p - 1) < Number.EPSILON) {
         return size;
     }
 
     /* y := approx.value (Cornish-Fisher expansion) :  */
     z.val = qnorm(p, 0, 1, /*lower_tail*/ true, /*log_p*/ false);
-    y = floor(mu + sigma * (z.val + (gamma * (z.val * z.val - 1)) / 6) + 0.5);
+    y = Math.floor(mu + sigma * (z.val + (gamma * (z.val * z.val - 1)) / 6) + 0.5);
 
     if (y > size) {
         /* way off */ y = size;
@@ -134,20 +131,20 @@ export function qbinom(p: number, size: number, pr: number, lower_tail: boolean,
     z.val = pbinom(y, size, pr, /*lower_tail*/ true, /*log_p*/ false);
 
     /* fuzz to ensure left continuity: */
-    p *= 1 - 64 * DBL_EPSILON;
+    p *= 1 - 64 * Number.EPSILON;
 
     if (size < 1e5) {
         return do_search(y, z, p, size, pr, 1);
     }
     /* Otherwise be a bit cleverer in the search */
 
-    let incr = floor(size * 0.001);
+    let incr = Math.floor(size * 0.001);
     let oldincr;
     do {
         console.log('loopdieloop');
         oldincr = incr;
         y = do_search(y, z, p, size, pr, incr);
-        incr = fmax2(1, floor(incr / 100));
+        incr = Math.max(1, Math.floor(incr / 100));
     } while (oldincr > 1 && incr > size * 1e-15);
     return y;
 }
