@@ -26,14 +26,13 @@ import { qnorm } from '@dist/normal/qnorm';
 
 const printer_qchisq_appr = debug('qchisq_appr');
 
-export function qchisq_appr(
+function qchisq_appr(
     p: number,
     nu: number,
     g: number /* = log Gamma(nu/2) */,
     lower_tail: boolean,
     log_p: boolean,
-    tol: number /* EPS1 */,
-    //normal: INormal
+    tol: number /* EPS1 */
 ): number {
     const C7 = 4.67;
     const C8 = 6.66;
@@ -104,19 +103,6 @@ export function qchisq_appr(
     }
 
     return ch;
-}
-
-export function qgamma<T>(
-    p: T,
-    alpha = 1, //named shape
-    scale = 1, //not the "rate"
-    lowerTail = true,
-    logP = false,
-): T {
-    const fa: number[] = Array.isArray(p) ? p : ([p] as any);
-    const result = fa.map((pp) => _qgamma(pp, alpha, scale, lowerTail, logP));
-
-    return result.length === 1 ? result[0] : (result as any);
 }
 
 const printer_qgamma = debug('_qgamma');

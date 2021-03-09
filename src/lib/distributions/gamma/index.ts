@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import { dgamma as _dgamma } from './dgamma';
 import { pgamma as _pgamma } from './pgamma';
-import { qgamma as _qgamma } from './qgamma';
+import { _qgamma } from './qgamma';
 import { rgammaOne as _rgammaOne } from './rgamma';
 import type { IRNGNormal } from '@rng/normal/normal-rng';
 
@@ -28,52 +28,43 @@ function gammaNormalizeParams(rate?: number, scale?: number): number {
     //C: if scale and rate are both defined and scale != 1/rate, return undefined
     //D: if scale is defined and rate is not , use scale
     //E: if rate is defined and scale is not then use 1/rate
-
     //B
     if (scale === undefined && rate === undefined) {
         return 1;
     }
-
     //C
     if (scale !== undefined && rate !== undefined) {
         throw new TypeError('Both rate and scale are defined, use either scale or rate');
     }
-
     //D
     if (scale !== undefined && rate === undefined) {
         return scale;
     }
-
     //E
     if (scale === undefined && rate !== undefined) {
         return 1 / rate;
     }
-
     throw new Error('unreachable code, you cant be here!');
 }
 
 export { rgammaOne } from './rgamma';
 
 export function dgamma(x: number, shape: number, rate?: number, scale?: number, asLog = false) {
-    // scenarios
     const _scale = gammaNormalizeParams(rate, scale);
     return _dgamma(x, shape, _scale, asLog);
 }
 
 export function qgamma(q: number, shape: number, rate?: number, scale?: number, lowerTail = true, logP = false) {
-    // scenarios
     const _scale = gammaNormalizeParams(rate, scale);
     return _qgamma(q, shape, _scale, lowerTail, logP);
 }
 
 export function pgamma(q: number, shape: number, rate?: number, scale?: number, lowerTail = true, logP = false) {
-    // scenarios
     const _scale = gammaNormalizeParams(rate, scale);
     return _pgamma(q, shape, _scale, lowerTail, logP);
 }
 
 export function rgamma(n: number, shape: number, rate?: number, scale?: number, rng?: IRNGNormal): Float32Array {
-
     const _scale = gammaNormalizeParams(rate, scale);
     return repeatedCall(n, _rgammaOne, shape, _scale, rng);
 }

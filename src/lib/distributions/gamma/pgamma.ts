@@ -27,7 +27,8 @@ import {
     R_DT_0,
     R_DT_1,
     R_P_bounds_01,
-    DBL_MAX_EXP
+    DBL_MAX_EXP,
+    M_LN2
 } from '$constants';
 
 import { R_Log1_Exp } from '@dist/exp/expm1';
@@ -35,12 +36,12 @@ import { dnorm4 as dnorm } from '@dist/normal/dnorm';
 import { pnorm5 as pnorm } from '@dist/normal/pnorm';
 import { dpois_raw } from '@dist/poisson/dpois';
 import { lgammafn_sign as lgammafn } from '@special/gamma/lgammafn_sign';
-//import { logspace_add } from './logspace-add';
+
 
 const scalefactor = 4294967296.0 ** 8;
 
 /* If |x| > |k| * M_cutoff,  then  log[ exp(-x) * k^x ]	 =~=  -x */
-const M_cutoff = (Math.LN2 * DBL_MAX_EXP) / Number.EPSILON; /*=3.196577e18*/
+const M_cutoff = (M_LN2 * DBL_MAX_EXP) / Number.EPSILON; /*=3.196577e18*/
 
 /* Continued fraction for calculation of
  *    1/i + x/(i+d) + x^2/(i+2*d) + x^3/(i+3*d) + ... = sum_{k=0}^Inf x^k/(i+k*d)

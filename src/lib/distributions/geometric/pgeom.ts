@@ -16,31 +16,29 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { debug } from 'debug';
 
-import { ML_ERR_return_NAN, R_DT_0, R_DT_1 } from '@common/logger';
+import { ML_ERR_return_NAN } from '@common/logger';
+import { R_DT_0, R_DT_1 } from '$constants';
+import { R_DT_Clog } from '@dist/exp/expm1';
 
-import { R_DT_Clog } from '../exp/expm1';
-
-const { expm1, log1p, log, exp, floor } = Math;
-const { isNaN: ISNAN, isFinite: R_FINITE } = Number;
 const printer = debug('pgeom');
 
 export function pgeom(x: number, p: number, lowerTail = true, logP = false): number {
-    if (ISNAN(x) || ISNAN(p)) return x + p;
+    if (isNaN(x) || isNaN(p)) return x + p;
 
     if (p <= 0 || p > 1) {
         return ML_ERR_return_NAN(printer);
     }
 
     if (x < 0) return R_DT_0(lowerTail, logP);
-    if (!R_FINITE(x)) return R_DT_1(lowerTail, logP);
-    x = floor(x + 1e-7);
+    if (!isFinite(x)) return R_DT_1(lowerTail, logP);
+    x = Math.floor(x + 1e-7);
 
     if (p === 1) {
         /* we cannot assume IEEE */
         x = lowerTail ? 1 : 0;
-        return logP ? log(x) : x;
+        return logP ? Math.log(x) : x;
     }
-    x = log1p(-p) * (x + 1);
+    x = Math.log1p(-p) * (x + 1);
     if (logP) return R_DT_Clog(lowerTail, logP, x);
-    else return lowerTail ? -expm1(x) : exp(x);
+    else return lowerTail ? -Math.expm1(x) : Math.exp(x);
 }

@@ -20,8 +20,6 @@ import { ML_ERR_return_NAN,  } from '@common/logger';
 import { dpois_raw } from '@dist/poisson/dpois';
 import { R_D__0 } from '$constants';
 
-const { log } = Math;
-
 const printer = debug('dgamma');
 
 export function dgamma(x: number, shape: number, scale: number, aslog = false): number {
