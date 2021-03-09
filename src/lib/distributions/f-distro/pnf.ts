@@ -16,26 +16,24 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { debug } from 'debug';
-import { ML_ERR_return_NAN, R_P_bounds_01 } from '../../common/_general';
-
-import { pnbeta2 } from '../../beta/pnbeta';
-import { pnchisq } from '../chi-2/pnchisq';
-
-const { isNaN: ISNAN, isFinite: R_FINITE, POSITIVE_INFINITY: ML_POSINF } = Number;
+import { ML_ERR_return_NAN } from '@common/logger';
+import { R_P_bounds_01} from '$constants';
+import { pnbeta2 } from '@dist/beta/pnbeta';
+import { pnchisq } from '@dist/chi-2/pnchisq';
 
 const printer_pnf = debug('pnf');
 export function pnf(x: number, df1: number, df2: number, ncp: number, lowerTail = true, logP = false): number {
     let y;
 
-    if (ISNAN(x) || ISNAN(df1) || ISNAN(df2) || ISNAN(ncp)) return x + df2 + df1 + ncp;
+    if (isNaN(x) || isNaN(df1) || isNaN(df2) || isNaN(ncp)) return x + df2 + df1 + ncp;
 
     if (df1 <= 0 || df2 <= 0 || ncp < 0) return ML_ERR_return_NAN(printer_pnf);
-    if (!R_FINITE(ncp)) return ML_ERR_return_NAN(printer_pnf);
-    if (!R_FINITE(df1) && !R_FINITE(df2))
+    if (!isFinite(ncp)) return ML_ERR_return_NAN(printer_pnf);
+    if (!isFinite(df1) && !isFinite(df2))
         /* both +Inf */
         return ML_ERR_return_NAN(printer_pnf);
 
-    const rc = R_P_bounds_01(lowerTail, logP, x, 0, ML_POSINF);
+    const rc = R_P_bounds_01(lowerTail, logP, x, 0, Number.POSITIVE_INFINITY);
     if (rc !== undefined) {
         return rc;
     }
