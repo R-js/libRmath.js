@@ -16,7 +16,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { debug } from 'debug';
 import { dbinom_raw } from '../binomial/dbinom';
-import { ML_ERR_return_NAN, R_D__0, R_D_nonint_check } from '../../common/_general';
+import { ML_ERR_return_NAN, R_D__0, R_D_nonint_check } from '@common/logger';
 
 const { isNaN: ISNAN, isFinite: R_FINITE } = Number;
 const { round: R_forceint, log } = Math;

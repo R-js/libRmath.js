@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import { debug } from 'debug';
 import { lbeta } from '../beta/lbeta';
 import { pbeta } from '../beta/pbeta';
-import { M_LN2, ML_ERR_return_NAN, R_D_Cval, R_DT_0, R_DT_1 } from '../../common/_general';
+import { M_LN2, ML_ERR_return_NAN, R_D_Cval, R_DT_0, R_DT_1 } from '@common/logger';
 import { pnorm5 as pnorm } from '../normal/pnorm';
 
 const { log1p, sqrt, log, abs: fabs, exp } = Math;

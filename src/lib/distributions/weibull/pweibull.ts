@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { debug } from 'debug';
 
-import { ML_ERR_return_NAN, R_D_exp, R_DT_0 } from '../../common/_general';
+import { ML_ERR_return_NAN, R_D_exp, R_DT_0 } from '@common/logger';
 
 import { R_Log1_Exp } from '../../exp/expm1';
 

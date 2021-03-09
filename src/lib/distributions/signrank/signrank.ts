@@ -26,7 +26,7 @@ import {
     R_DT_1,
     R_DT_val,
     R_Q_P01_check,
-} from '../../common/_general';
+} from '@common/logger';
 
 import { R_DT_qIv } from '../../exp/expm1';
 

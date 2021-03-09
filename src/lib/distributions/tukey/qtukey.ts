@@ -77,7 +77,7 @@ function qinv(p: number, c: number, v: number): number {
 
 import { debug } from 'debug';
 
-import { ME, ML_ERR_return_NAN, ML_ERROR, R_Q_P01_boundaries } from '../../common/_general';
+import { ME, ML_ERR_return_NAN, ML_ERROR, R_Q_P01_boundaries } from '@common/logger';
 import { R_DT_qIv } from '../../exp/expm1';
 import { ptukey } from './ptukey';
 

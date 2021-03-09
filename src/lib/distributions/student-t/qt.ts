@@ -30,7 +30,7 @@ import {
     R_D_Lval,
     R_D_qIv,
     R_Q_P01_boundaries,
-} from '../../common/_general';
+} from '@common/logger';
 
 import { R_D_LExp, R_DT_qIv } from '../../exp/expm1';
 import { qnorm } from '../normal/qnorm';

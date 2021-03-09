@@ -28,7 +28,7 @@ import {
     R_DT_0,
     R_DT_1,
     R_DT_val,
-} from '../../common/_general';
+} from '@common/logger';
 import { lgammafn_sign as lgammafn } from '../distributions/gamma/lgammafn_sign';
 import { pnorm5 as pnorm } from '../normal/pnorm';
 import { pt } from './pt';

@@ -15,7 +15,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { debug } from 'debug';
-import { M_1_SQRT_2PI, M_LN_SQRT_2PI, ML_ERR_return_NAN, R_D__0 } from '../../common/_general';
+import { M_1_SQRT_2PI, M_LN_SQRT_2PI, ML_ERR_return_NAN, R_D__0 } from '@common/logger';
 
 const { isNaN: ISNAN, POSITIVE_INFINITY: ML_POSINF } = Number;
 const { log, exp } = Math;

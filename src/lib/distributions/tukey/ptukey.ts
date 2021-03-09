@@ -26,9 +26,9 @@ import {
     ML_ERROR,
     R_DT_0,
     R_DT_1,
-} from '../../common/_general';
+} from '@common/logger';
 
-import { R_DT_val } from '../../common/_general';
+import { R_DT_val } from '@common/logger';
 import { lgammafn_sign as lgammafn } from '../distributions/gamma/lgammafn_sign';
 
 const { isNaN: ISNAN, isFinite: R_FINITE } = Number;

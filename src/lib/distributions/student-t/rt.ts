@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import { debug } from 'debug';
 
 import { rchisqOne } from '../chi-2/rchisq';
-import { ML_ERR_return_NAN } from '../../common/_general';
+import { ML_ERR_return_NAN } from '@common/logger';
 import { randomGenHelper } from '../../r-func';
 import { IRNGNormal } from '../rng/normal';
 

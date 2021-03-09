@@ -17,39 +17,30 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import { debug } from 'debug';
 
 import {
-    DBL_MAX_EXP,
-    ML_ERR_return_NAN,
+    ML_ERR_return_NAN
+} from '@common/logger';
+
+import {
     R_D__0,
     R_D__1,
     R_D_exp,
     R_DT_0,
     R_DT_1,
     R_P_bounds_01,
-} from '../../common/_general';
+    DBL_MAX_EXP
+} from '$constants';
 
-import { R_Log1_Exp } from '../../exp/expm1';
-import { dnorm4 as dnorm } from '../../normal/dnorm';
-import { pnorm5 as pnorm } from '../../normal/pnorm';
-import { dpois_raw } from '../../poisson/dpois';
-import { lgammafn_sign as lgammafn } from './lgammafn_sign';
+import { R_Log1_Exp } from '@dist/exp/expm1';
+import { dnorm4 as dnorm } from '@dist/normal/dnorm';
+import { pnorm5 as pnorm } from '@dist/normal/pnorm';
+import { dpois_raw } from '@dist/poisson/dpois';
+import { lgammafn_sign as lgammafn } from '@special/gamma/lgammafn_sign';
 //import { logspace_add } from './logspace-add';
 
-const { LN2: M_LN2, log1p, expm1, sqrt, floor, pow, log, exp, max: fmax2, abs: fabs } = Math;
-const {
-    isNaN: ISNAN,
-    MIN_VALUE: DBL_MIN,
-    EPSILON: DBL_EPSILON,
-    isFinite: R_FINITE,
-    // NEGATIVE_INFINITY: ML_NEGINF,
-    POSITIVE_INFINITY: ML_POSINF,
-} = Number;
-
-const { isArray } = Array;
-const sqr = (x: number) => x * x;
-const scalefactor = sqr(sqr(sqr(4294967296.0)));
+const scalefactor = 4294967296.0 ** 8;
 
 /* If |x| > |k| * M_cutoff,  then  log[ exp(-x) * k^x ]	 =~=  -x */
-const M_cutoff = (M_LN2 * DBL_MAX_EXP) / DBL_EPSILON; /*=3.196577e18*/
+const M_cutoff = (Math.LN2 * DBL_MAX_EXP) / Number.EPSILON; /*=3.196577e18*/
 
 /* Continued fraction for calculation of
  *    1/i + x/(i+d) + x^2/(i+2*d) + x^3/(i+3*d) + ... = sum_{k=0}^Inf x^k/(i+k*d)
@@ -72,7 +63,7 @@ function logcf(x: number, i: number, d: number, eps: number /* ~ relative tolera
   */
     b2 = c4 * b1 - i * b2;
 
-    while (fabs(a2 * b1 - a1 * b2) > fabs(eps * b1 * b2)) {
+    while (Math.abs(a2 * b1 - a1 * b2) > Math.abs(eps * b1 * b2)) {
         let c3 = c2 * c2 * x;
         c2 += d;
         c4 += d;
@@ -85,12 +76,12 @@ function logcf(x: number, i: number, d: number, eps: number /* ~ relative tolera
         a2 = c4 * a1 - c3 * a2;
         b2 = c4 * b1 - c3 * b2;
 
-        if (fabs(b2) > scalefactor) {
+        if (Math.abs(b2) > scalefactor) {
             a1 /= scalefactor;
             b1 /= scalefactor;
             a2 /= scalefactor;
             b2 /= scalefactor;
-        } else if (fabs(b2) < 1 / scalefactor) {
+        } else if (Math.abs(b2) < 1 / scalefactor) {
             a1 *= scalefactor;
             b1 *= scalefactor;
             a2 *= scalefactor;
@@ -105,7 +96,7 @@ function logcf(x: number, i: number, d: number, eps: number /* ~ relative tolera
 function log1pmx(x: number) {
     const minLog1Value = -0.79149064;
 
-    if (x > 1 || x < minLog1Value) return log1p(x) - x;
+    if (x > 1 || x < minLog1Value) return Math.log1p(x) - x;
     else {
         /* -.791 <=  x <= 1  -- expand in  [x/(2+x)]^2 =: y :
          * log(1+x) - x =  x/(2+x) * [ 2 * y * S(y) - x],  with
@@ -114,7 +105,7 @@ function log1pmx(x: number) {
          */
         const r = x / (2 + x);
         const y = r * r;
-        if (fabs(x) < 1e-2) {
+        if (Math.abs(x) < 1e-2) {
             const two = 2;
             return r * (((((two / 9) * y + two / 7) * y + two / 5) * y + two / 3) * y - x);
         } else {
@@ -178,10 +169,10 @@ export function lgamma1p(a: number) {
     let lgam;
     let i;
 
-    if (fabs(a) >= 0.5) return lgammafn(a + 1);
+    if (Math.abs(a) >= 0.5) return lgammafn(a + 1);
 
     /* Abramowitz & Stegun 6.1.33 : for |x| < 2,
-     * <==> log(gamma(1+x)) = -(log(1+x) - x) - gamma*x + x^2 * \sum_{n=0}^\infty c_n (-x)^n
+     * <==> Math.log(gamma(1+x)) = -(log(1+x) - x) - gamma*x + x^2 * \sum_{n=0}^\infty c_n (-x)^n
      * where c_n := (Zeta(n+2) - 1)/(n+2)  = coeffs[n]
      *
      * Here, another convergence acceleration trick is used to compute
@@ -198,7 +189,7 @@ export function lgamma1p(a: number) {
  *
  *     log (sum_i  exp (logx[i]) ) =
  *     log (e ^M * sum_i  e ^ (logx[i] - M) ) =
- *     M + log( sum_i  e ^ (logx[i] - M)
+ *     M + Math.log( sum_i  e ^ (logx[i] - M)
  *
  * without causing overflows or throwing much accuracy.
  * /
@@ -209,38 +200,38 @@ function logspace_sum(logx: number[], n: number): number {
   if (n === 2) return logspace_add(logx[0], logx[1]);
   // else (n >= 3) :
   let i;
-  // Mx := max_i log(x_i)
+  // Mx := max_i Math.log(x_i)
   let Mx = logx[0];
   for (i = 1; i < n; i++) if (Mx < logx[i]) Mx = logx[i];
   let s = 0;
   for (i = 0; i < n; i++) s += exp(logx[i] - Mx);
-  return Mx + log(s);
+  return Mx + Math.log(s);
 };
 
-// log(1 - exp(x))  in more stable form than log1p(- R_D_qIv(x)) :
+// Math.log(1 - exp(x))  in more stable form than Math.log1p(- R_D_qIv(x)) :
 /*export function R_Log1_Exp(x: number): number {
   return (
-    x > -M_LN2 ? log(-expm1(x)) : log1p(-exp(x)));
+    x > -LN2 ? Math.log(-Math.expm1(x)) : Math.log1p(-exp(x)));
 }*/
 /* dpois_wrap (x__1, lambda) := dpois(x__1 - 1, lambda);  where
  * dpois(k, L) := exp(-L) L^k / gamma(k+1)  {the usual Poisson probabilities}
  *
- * and  dpois*(.., give_log = TRUE) :=  log( dpois*(..) )
+ * and  dpois*(.., give_log = TRUE) :=  Math.log( dpois*(..) )
  */
 const pr_dpois_wrap = debug('dpois_wrap');
 
 function dpois_wrap(x_plus_1: number, lambda: number, give_log: boolean): number {
     pr_dpois_wrap('dpois_wrap(x+1=%d, lambda=%d, log=%s)', x_plus_1, lambda, give_log);
 
-    if (!R_FINITE(lambda)) {
+    if (!isFinite(lambda)) {
         return R_D__0(give_log);
     }
     if (x_plus_1 > 1) return dpois_raw(x_plus_1 - 1, lambda, give_log);
-    if (lambda > fabs(x_plus_1 - 1) * M_cutoff) return R_D_exp(give_log, -lambda - lgammafn(x_plus_1));
+    if (lambda > Math.abs(x_plus_1 - 1) * M_cutoff) return R_D_exp(give_log, -lambda - lgammafn(x_plus_1));
     else {
         const d = dpois_raw(x_plus_1, lambda, give_log);
         pr_dpois_wrap('  -> d=dpois_raw(..)=%d', d);
-        return give_log ? d + log(x_plus_1 / lambda) : d * (x_plus_1 / lambda);
+        return give_log ? d + Math.log(x_plus_1 / lambda) : d * (x_plus_1 / lambda);
     }
 }
 
@@ -267,29 +258,29 @@ function pgamma_smallx(x: number, alph: number, lowerTail: boolean, logP: boolea
         c *= -x / n;
         term = c / (alph + n);
         sum += term;
-    } while (fabs(term) > DBL_EPSILON * fabs(sum));
+    } while (Math.abs(term) > Number.EPSILON * Math.abs(sum));
 
     pr_pgamma_smallx('%d terms --> conv.sum=%d;', n, sum);
     if (lowerTail) {
-        const f1 = logP ? log1p(sum) : 1 + sum;
+        const f1 = logP ? Math.log1p(sum) : 1 + sum;
         let f2;
         if (alph > 1) {
             f2 = dpois_raw(alph, x, logP);
-            f2 = logP ? f2 + x : f2 * exp(x);
-        } else if (logP) f2 = alph * log(x) - lgamma1p(alph);
-        else f2 = pow(x, alph) / exp(lgamma1p(alph));
+            f2 = logP ? f2 + x : f2 * Math.exp(x);
+        } else if (logP) f2 = alph * Math.log(x) - lgamma1p(alph);
+        else f2 = Math.pow(x, alph) / Math.exp(lgamma1p(alph));
 
         pr_pgamma_smallx(' (f1,f2)= (%d,%d)', f1, f2);
         return logP ? f1 + f2 : f1 * f2;
     } else {
-        const lf2 = alph * log(x) - lgamma1p(alph);
-        pr_pgamma_smallx(' 1:%d  2:%d', alph * log(x), lgamma1p(alph));
-        pr_pgamma_smallx(' sum=%d  log(1+sum)=%d	 lf2=%d', sum, log1p(sum), lf2);
+        const lf2 = alph * Math.log(x) - lgamma1p(alph);
+        pr_pgamma_smallx(' 1:%d  2:%d', alph * Math.log(x), lgamma1p(alph));
+        pr_pgamma_smallx(' sum=%d  log(1+sum)=%d	 lf2=%d', sum, Math.log1p(sum), lf2);
 
-        if (logP) return R_Log1_Exp(log1p(sum) + lf2);
+        if (logP) return R_Log1_Exp(Math.log1p(sum) + lf2);
         else {
             const f1m1 = sum;
-            const f2m1 = expm1(lf2);
+            const f2m1 = Math.expm1(lf2);
             return -(f1m1 + f2m1 + f1m1 * f2m1);
         }
     }
@@ -303,14 +294,14 @@ function pd_upper_series(x: number, y: number, logP: boolean): number {
         y++;
         term *= x / y;
         sum += term;
-    } while (term > sum * DBL_EPSILON);
+    } while (term > sum * Number.EPSILON);
 
     /* sum =  \sum_{n=1}^ oo  x^n     / (y*(y+1)*...*(y+n-1))
      *	   =  \sum_{n=0}^ oo  x^(n+1) / (y*(y+1)*...*(y+n))
      *	   =  x/y * (1 + \sum_{n=1}^oo	x^n / ((y+1)*...*(y+n)))
      *	   ~  x/y +  o(x/y)   {which happens when alph -> Inf}
      */
-    return logP ? log(sum) : sum;
+    return logP ? Math.log(sum) : sum;
 }
 
 /* Continued fraction for calculation of
@@ -340,7 +331,7 @@ function pd_lower_cf(y: number, d: number): number {
 
     f0 = y / d;
     /* Needed, e.g. for  pgamma(10^c(100,295), shape= 1.1, log=TRUE): */
-    if (fabs(y - 1) < fabs(d) * DBL_EPSILON) {
+    if (Math.abs(y - 1) < Math.abs(d) * Number.EPSILON) {
         /* includes y < d = Inf */
         pr_pd_lower_cf(' very small "y" -> returning (y/d)');
         return f0;
@@ -384,7 +375,7 @@ function pd_lower_cf(y: number, d: number): number {
         if (b2 !== 0) {
             f = a2 / b2;
             /* convergence check: relative; "absolute" for very small f : */
-            if (fabs(f - of) <= DBL_EPSILON * fmax2(f0, fabs(f))) {
+            if (Math.abs(f - of) <= Number.EPSILON * Math.max(f0, Math.abs(f))) {
                 pr_pd_lower_cf(' %d iter.\n', i);
                 return f;
             }
@@ -404,7 +395,7 @@ function pd_lower_series(lambda: number, y: number): number {
 
     pr_pd_lower_series('pd_lower_series(lam=%d, y=%d) ...', lambda, y);
 
-    while (y >= 1 && term > sum * DBL_EPSILON) {
+    while (y >= 1 && term > sum * Number.EPSILON) {
         term *= y / lambda;
         sum += term;
         y--;
@@ -416,7 +407,7 @@ function pd_lower_series(lambda: number, y: number): number {
 
     pr_pd_lower_series(' done: term=%d, sum=%d, y= %d', term, sum, y);
 
-    if (y !== floor(y)) {
+    if (y !== Math.floor(y)) {
         /*
          * The series does not converge as the terms start getting
          * bigger (besides flipping sign) for y < -lambda.
@@ -470,12 +461,12 @@ function dpnorm(x: number, lowerTail: boolean, lp: number): number {
             term *= -i / x2;
             sum += term;
             i += 2;
-        } while (fabs(term) > DBL_EPSILON * sum);
+        } while (Math.abs(term) > Number.EPSILON * sum);
 
         return 1 / sum;
     } else {
         const d = dnorm(x, 0, 1, false);
-        return d / exp(lp);
+        return d / Math.exp(lp);
     }
 }
 
@@ -532,11 +523,11 @@ function ppois_asymp(x: number, lambda: number, lowerTail: boolean, logP: boolea
      coefficients of this approximation.
   */
     pt_ = -log1pmx(dfm / x);
-    s2pt = sqrt(2 * x * pt_);
+    s2pt = Math.sqrt(2 * x * pt_);
     if (dfm < 0) s2pt = -s2pt;
 
     res12 = 0;
-    res1_ig = res1_term = sqrt(x);
+    res1_ig = res1_term = Math.sqrt(x);
     res2_ig = res2_term = s2pt;
     for (i = 1; i < 8; i++) {
         res12 += res1_ig * coefs_a[i];
@@ -564,7 +555,7 @@ function ppois_asymp(x: number, lambda: number, lowerTail: boolean, logP: boolea
     if (logP) {
         const n_d_over_p = dpnorm(s2pt, !lowerTail, np);
         pr_ppois_asymp('pp*_asymp(): f=%d	 np=e^%d  nd/np=%d  f*nd/np=%d', f, np, n_d_over_p, f * n_d_over_p);
-        return np + log1p(f * n_d_over_p);
+        return np + Math.log1p(f * n_d_over_p);
     } else {
         const nd = dnorm(s2pt, 0, 1, logP);
 
@@ -582,7 +573,7 @@ export function pgamma_raw(x: number, alph: number, lowerTail = true, logP = fal
 
     pr_pgamma_raw('pgamma_raw(x=%d, alph=%d, low=%s, log=%s)', x, alph, lowerTail, logP);
 
-    const rc = R_P_bounds_01(lowerTail, logP, x, 0, ML_POSINF);
+    const rc = R_P_bounds_01(lowerTail, logP, x, 0, Number.POSITIVE_INFINITY);
     if (rc !== undefined) {
         return rc;
     }
@@ -603,15 +594,15 @@ export function pgamma_raw(x: number, alph: number, lowerTail = true, logP = fal
         pr_pgamma_raw('  x "large": d=dpois_w(*)= %d ', d);
 
         if (alph < 1) {
-            if (x * DBL_EPSILON > 1 - alph) sum = R_D__1(logP);
+            if (x * Number.EPSILON > 1 - alph) sum = R_D__1(logP);
             else {
                 const f = (pd_lower_cf(alph, x - (alph - 1)) * x) / alph;
                 /* = [alph/(x - alph+1) + o(alph/(x-alph+1))] * x/alph = 1 + o(1) */
-                sum = logP ? log(f) : f;
+                sum = logP ? Math.log(f) : f;
             }
         } else {
             sum = pd_lower_series(x, alph - 1); /* = (alph-1)/x + o((alph-1)/x) */
-            sum = logP ? log1p(sum) : 1 + sum;
+            sum = logP ? Math.log1p(sum) : 1 + sum;
         }
 
         pr_pgamma_raw(', sum= %d', sum);
@@ -626,37 +617,34 @@ export function pgamma_raw(x: number, alph: number, lowerTail = true, logP = fal
 
     /*
      * We lose a fair amount of accuracy to underflow in the cases
-     * where the final result is very close to DBL_MIN.	 In those
+     * where the final result is very close to Number.MIN_VALUE.	 In those
      * cases, simply redo via log space.
      */
-    if (!logP && res < DBL_MIN / DBL_EPSILON) {
+    if (!logP && res < Number.MIN_VALUE / Number.EPSILON) {
         /* with(.Machine, double.xmin / double.eps) #|-> 1.002084e-292 */
 
         pr_pgamma_raw(' very small res=%.14g; -> recompute via log\n', res);
-        return exp(pgamma_raw(x, alph, lowerTail, true));
+        return Math.exp(pgamma_raw(x, alph, lowerTail, true));
     } else return res;
 }
 
 const printer_pgamma = debug('pgamma');
-export function pgamma<T>(q: T, shape: number, scale: number, lowerTail: boolean, logP: boolean): T {
-    const fa: number[] = isArray(q) ? q : ([q] as any);
+export function pgamma(x: number, shape: number, scale: number, lowerTail: boolean, logP: boolean): number {
 
-    const result = fa.map((x) => {
-        if (ISNAN(x) || ISNAN(shape) || ISNAN(scale)) {
-            return x + shape + scale;
-        }
-        if (shape < 0 || scale <= 0) return ML_ERR_return_NAN(printer_pgamma);
-        x /= scale;
+    if (isNaN(x) || isNaN(shape) || isNaN(scale)) {
+        return x + shape + scale;
+    }
+    if (shape < 0 || scale <= 0) return ML_ERR_return_NAN(printer_pgamma);
+    x /= scale;
 
-        if (ISNAN(x))
-            /* eg. original x = scale = +Inf */
-            return x;
-        if (shape === 0)
-            /* limit case; useful e.g. in pnchisq() */
-            return x <= 0 ? R_DT_0(lowerTail, logP) : R_DT_1(lowerTail, logP); /* <= assert  pgamma(0,0) ==> 0 */
-        return pgamma_raw(x, shape, lowerTail, logP);
-    });
-    return result.length === 1 ? result[0] : (result as any);
+    if (isNaN(x))
+        /* eg. original x = scale = +Inf */
+        return x;
+    if (shape === 0)
+        /* limit case; useful e.g. in pnchisq() */
+        return x <= 0 ? R_DT_0(lowerTail, logP) : R_DT_1(lowerTail, logP); /* <= assert  pgamma(0,0) ==> 0 */
+    return pgamma_raw(x, shape, lowerTail, logP);
+
 }
 /* From: terra@gnome.org (Morten Welinder)
  * To: R-bugs@biostat.ku.dk

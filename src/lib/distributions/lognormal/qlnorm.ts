@@ -14,7 +14,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { R_Q_P01_boundaries } from '../../common/_general';
+import { R_Q_P01_boundaries } from '@common/logger';
 
 import { qnorm } from '../normal/qnorm';
 

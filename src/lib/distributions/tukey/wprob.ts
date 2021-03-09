@@ -15,7 +15,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { M_1_SQRT_2PI } from '../../common/_general';
+import { M_1_SQRT_2PI } from '@common/logger';
 import { pnorm5 as pnorm } from '../normal/pnorm';
 
 const { exp, pow } = Math;
