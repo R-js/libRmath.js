@@ -21,7 +21,7 @@ export { qbinom } from './qbinom';
 import { rbinomOne } from './rbinom';
 import { globalUni } from '@rng/globalRNG';
 import type { IRNG } from '@rng/irng';
-import {repeatedCall  } from '$helper';
+import { repeatedCall } from '$helper';
 
 
 export function rbinom(

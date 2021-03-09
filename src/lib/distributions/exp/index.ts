@@ -14,30 +14,28 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-export { dexp } from './dexp';
-export { pexp } from './pexp';
-export { qexp } from './qexp';
-export { rexp } from './rexp';
+import { dexp as _dexp} from './dexp';
+import { pexp as _pexp} from './pexp';
+import { qexp as _qexp} from './qexp';
+import { rexpOne } from './rexp';
 
-import { IRNG, rng } from '../rng';
-const { MersenneTwister } = rng;
+import { globalUni } from '@rng/globalRNG';
+import type { IRNG } from '@rng/irng';
+import { repeatedCall } from '$helper';
 
-export function Exponential(rng: IRNG = new MersenneTwister(0)) {
-    /*
-  NOTE: scale = 1/rate, the R code looks like
-      > rexp
-      function (n, rate = 1) 
-        .Call(C_rexp, n, 1/rate)
-        <bytecode: 0x0000000005f90fd0>
-        <environment: namespace:stats>
-  */
-    return {
-        dexp: (x: number, rate = 1, asLog = false) => _dexp(x, 1 / rate, asLog),
+export function dexp(x: number, rate = 1, asLog = false): number{
+  return _dexp(x, 1 / rate, asLog);
+}
 
-        pexp: (q: number, rate = 1, lowerTail = true, logP = false) => _pexp(q, 1 / rate, lowerTail, logP),
+export function pexp(q: number, rate = 1, lowerTail = true, logP = false) {
+  return _pexp(q, 1 / rate, lowerTail, logP);
+}
 
-        qexp: (p: number, rate = 1, lowerTail = true, logP = false) => _qexp(p, 1 / rate, lowerTail, logP),
+export function qexp(p: number, rate = 1, lowerTail = true, logP = false): number { 
+  return _qexp(p, 1 / rate, lowerTail, logP);
+}
 
-        rexp: (n: number, rate = 1) => _rexp(n, 1 / rate, rng),
-    };
+export  function rng(n: number, rate = 1, rng?: IRNG){
+  const _rng = rng || globalUni();
+  return repeatedCall(n, rexpOne, 1 / rate, _rng);
 }

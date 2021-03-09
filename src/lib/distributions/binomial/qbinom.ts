@@ -126,7 +126,7 @@ export function qbinom(p: number, size: number, pr: number, lower_tail: boolean,
         /* way off */ y = size;
     }
 
-    printer_qbinom('  new (p,1-p)=(%d,%d), z=qnorm(..)=%d, y=%d, size=%d', p, 1 - p, z.val, y, size);
+    printer_qbinom('new (p,1-p)=(%d,%d), z=qnorm(..)=%d, y=%d, size=%d', p, 1 - p, z.val, y, size);
 
     z.val = pbinom(y, size, pr, /*lower_tail*/ true, /*log_p*/ false);
 
@@ -141,7 +141,6 @@ export function qbinom(p: number, size: number, pr: number, lower_tail: boolean,
     let incr = Math.floor(size * 0.001);
     let oldincr;
     do {
-        console.log('loopdieloop');
         oldincr = incr;
         y = do_search(y, z, p, size, pr, incr);
         incr = Math.max(1, Math.floor(incr / 100));

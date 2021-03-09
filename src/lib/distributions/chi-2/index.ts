@@ -14,60 +14,56 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { Inversion, IRNGNormal } from '../rng/normal';
+import type { IRNGNormal } from '@rng/normal/normal-rng';
+
 import { dchisq as _dchisq } from './dchisq';
 import { dnchisq as _dnchisq } from './dnchisq';
 import { pchisq as _pchisq } from './pchisq';
 import { pnchisq as _pnchisq } from './pnchisq';
 import { qchisq as _qchisq } from './qchisq';
 import { qnchisq as _qnchisq } from './qnchisq';
-import { rchisq as _rchisq } from './rchisq';
-import { rnchisq as _rnchisq } from './rnchisq';
+import { globalNorm } from '@rng/globalRNG';
+import { rchisqOne } from './rchisq';
+import { rnchisqOne } from './rnchisq';
+import { repeatedCall } from '$helper';
 
-export function ChiSquared(rng: IRNGNormal = new Inversion()) {
-  function rchisq(n: number|number[] = 1, df: number, ncp?: number) {
-    return ncp === undefined
-      ? _rchisq(n, df, rng)
-      : _rnchisq(n, df, ncp, rng);
-  }
-
-  function qchisq(
-    p: number,
-    df: number,
-    ncp?: number,
-    lowerTail = true,
-    logP = false
-  ) {
-    return ncp === undefined
-      ? _qchisq(p, df, lowerTail, logP)
-      : _qnchisq(p, df, ncp, lowerTail, logP);
-  }
-
-  function pchisq(
-    p: number,
-    df: number,
-    ncp?: number,
-    lowerTail = true,
-    logP = false
-  ) {
-    return ncp === undefined
-      ? _pchisq(p, df, lowerTail, logP)
-      : _pnchisq(p, df, ncp, lowerTail, logP);
-  }
-
-  function dchisq(
-    x: number,
-    df: number,
-    ncp?: number,
-    log = false
-  ) {
-    return ncp === undefined ? _dchisq(x, df, log) : _dnchisq(x, df, ncp, log);
-  }
-
-  return {
-      dchisq,
-      pchisq,
-      qchisq,
-      rchisq
-  };
+export function rchisq(n: number, df: number, ncp?: number, rng?: IRNGNormal): Float32Array {
+  const _rng = rng || globalNorm();
+  return ncp === undefined
+    ? repeatedCall(n, rchisqOne, df, _rng)
+    : repeatedCall(n, rnchisqOne, df, ncp, _rng);
 }
+
+export function qchisq(
+  p: number,
+  df: number,
+  ncp?: number,
+  lowerTail = true,
+  logP = false
+) {
+  return ncp === undefined
+    ? _qchisq(p, df, lowerTail, logP)
+    : _qnchisq(p, df, ncp, lowerTail, logP);
+}
+
+export function pchisq(
+  p: number,
+  df: number,
+  ncp?: number,
+  lowerTail = true,
+  logP = false
+) {
+  return ncp === undefined
+    ? _pchisq(p, df, lowerTail, logP)
+    : _pnchisq(p, df, ncp, lowerTail, logP);
+}
+
+export function dchisq(
+  x: number,
+  df: number,
+  ncp?: number,
+  log = false
+) {
+  return ncp === undefined ? _dchisq(x, df, log) : _dnchisq(x, df, ncp, log);
+}
+

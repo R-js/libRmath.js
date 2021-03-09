@@ -16,29 +16,27 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { debug } from 'debug';
 
-import { ML_ERR_return_NAN, R_D_val, R_DT_0, R_DT_1 } from '../../common/_general';
+import { ML_ERR_return_NAN} from '@common/logger';
+import {  R_D_val, R_DT_0, R_DT_1  } from '$constants';
 
-import { R_D_Clog } from '../../common/_general';
-import { atanpi } from '../trigonometry';
-
-const { isNaN: ISNAN, isFinite: R_FINITE } = Number;
-const { abs: fabs } = Math;
+import { R_D_Clog } from '$constants';
+import { atanpi } from '@trig/tanpi';
 
 const printer = debug('pcauchy');
 
 export function pcauchy(x: number, location = 0, scale = 1, lowerTail = true, logP = false): number {
-    if (ISNAN(x) || ISNAN(location) || ISNAN(scale)) return x + location + scale;
+    if (isNaN(x) || isNaN(location) || isNaN(scale)) return x + location + scale;
 
     if (scale <= 0) {
         return ML_ERR_return_NAN(printer);
     }
 
     x = (x - location) / scale;
-    if (ISNAN(x)) {
+    if (isNaN(x)) {
         return ML_ERR_return_NAN(printer);
     }
 
-    if (!R_FINITE(x)) {
+    if (!isFinite(x)) {
         if (x < 0) return R_DT_0(lowerTail, logP);
         else return R_DT_1(lowerTail, logP);
     }
@@ -47,7 +45,7 @@ export function pcauchy(x: number, location = 0, scale = 1, lowerTail = true, lo
     /* for large x, the standard formula suffers from cancellation.
      * This is from Morten Welinder thanks to  Ian Smith's  atan(1/x) : */
 
-    if (fabs(x) > 1) {
+    if (Math.abs(x) > 1) {
         const y = atanpi(1 / x);
         return x > 0 ? R_D_Clog(logP, y) : R_D_val(logP, -y);
     } else {

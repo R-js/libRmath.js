@@ -14,18 +14,17 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { dcauchy } from './dcauchy';
-import { pcauchy } from './pcauchy';
-import { qcauchy } from './qcauchy';
-import { rcauchy } from './rcauchy';
+export { dcauchy } from './dcauchy';
+export { pcauchy } from './pcauchy';
+export { qcauchy } from './qcauchy';
+import { rcauchyOne } from './rcauchy';
 
-import { MersenneTwister } from '../../rng/mersenne-twister';
+import { repeatedCall } from '$helper';
+import type { IRNGNormal } from '@rng/normal/normal-rng';
+import { globalNorm } from '@rng/globalRNG';
 
-export function Cauchy(rng = new MersenneTwister(0)) {
-    return {
-        rcauchy: (n: number, location = 0, scale = 1) => rcauchy(n, location, scale, rng),
-        dcauchy,
-        pcauchy,
-        qcauchy,
-    };
+
+export function rcauchy(n: number, location = 0, scale = 1, rng?: IRNGNormal): Float32Array {
+    const _rng = rng || globalNorm();
+    return repeatedCall(n, rcauchyOne, location, scale, _rng);
 }

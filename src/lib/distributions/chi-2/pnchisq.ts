@@ -15,43 +15,36 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { debug } from 'debug';
-
+import { ML_ERR_return_NAN, ML_ERROR, ME } from '@common/logger'
 import {
     M_LN_SQRT_2PI,
-    ME,
-    ML_ERR_return_NAN,
-    ML_ERROR,
     R_D__1,
     R_D_exp,
     R_DT_0,
     R_DT_1,
     R_DT_val,
-} from '../../common/_general';
+} from '$constants';
 
-import { R_Log1_Exp } from '../../exp/expm1';
-import { lgammafn_sign as lgammafn } from '../sampling-distributions/gamma/lgammafn_sign';
-import { logspace_add } from '../gamma/logspace-add';
+import { R_Log1_Exp } from '@dist/exp/expm1';
+import { lgammafn_sign as lgammafn } from '@special/gamma/lgammafn_sign';
+import { logspace_add } from '@dist/gamma/logspace-add';
 import { pchisq } from './pchisq';
-
-const { sqrt, abs: fabs, exp, log, min: fmin2, max: fmax2, LN2: M_LN2, LN10: M_LN10 } = Math;
-
-const { isNaN: ISNAN, isFinite: R_FINITE, EPSILON: DBL_EPSILON, NEGATIVE_INFINITY: ML_NEGINF } = Number;
 
 export const DBL_MAX_EXP = Math.log2(Number.MAX_VALUE);
 export const DBL_MIN_EXP = Math.log2(Number.MIN_VALUE);
 
-const _dbl_min_exp = M_LN2 * DBL_MIN_EXP;
+const _dbl_min_exp = Math.LN2 * DBL_MIN_EXP;
 /*= -708.3964 for IEEE double precision */
-const { expm1, log1p } = Math;
+
 const printer = debug('pnchisq');
 
 export function pnchisq(x: number, df: number, ncp = 0, lower_tail = true, log_p = false): number {
     let ans;
 
-    if (ISNAN(x) || ISNAN(df) || ISNAN(ncp)) {
+    if (isNaN(x) || isNaN(df) || isNaN(ncp)) {
         return NaN;
     }
-    if (!R_FINITE(df) || !R_FINITE(ncp)) {
+    if (!isFinite(df) || !isFinite(ncp)) {
         return ML_ERR_return_NAN(printer);
     }
 
@@ -59,15 +52,15 @@ export function pnchisq(x: number, df: number, ncp = 0, lower_tail = true, log_p
         return ML_ERR_return_NAN(printer);
     }
 
-    ans = pnchisq_raw(x, df, ncp, 1e-12, 8 * DBL_EPSILON, 1000000, lower_tail, log_p);
+    ans = pnchisq_raw(x, df, ncp, 1e-12, 8 * Number.EPSILON, 1000000, lower_tail, log_p);
     if (ncp >= 80) {
         if (lower_tail) {
-            ans = fmin2(ans, R_D__1(log_p)); /* e.g., pchisq(555, 1.01, ncp = 80) */
+            ans = Math.min(ans, R_D__1(log_p)); /* e.g., pchisq(555, 1.01, ncp = 80) */
         } else {
             /* !lower_tail */
             /* since we computed the other tail cancellation is likely */
-            if (ans < (log_p ? -10 * M_LN10 : 1e-10)) ML_ERROR(ME.ME_PRECISION, 'pnchisq', printer);
-            if (!log_p) ans = fmax2(ans, 0.0); /* Precaution PR#7099 */
+            if (ans < (log_p ? -10 * Math.LN10 : 1e-10)) ML_ERROR(ME.ME_PRECISION, 'pnchisq', printer);
+            if (!log_p) ans = Math.max(ans, 0.0); /* Precaution PR#7099 */
         }
     }
     if (!log_p || ans < -1e-8) {
@@ -75,12 +68,12 @@ export function pnchisq(x: number, df: number, ncp = 0, lower_tail = true, log_p
     }
 
     // log_p  &&  ans > -1e-8
-    // prob. = exp(ans) is near one: we can do better using the other tail
+    // prob. = Math.exp(ans) is near one: we can do better using the other tail
     printer('   pnchisq_raw(*, log_p): ans=%d => 2nd call, other tail', ans);
 
     // FIXME: (sum,sum2) will be the same (=> return them as well and reuse here ?)
-    ans = pnchisq_raw(x, df, ncp, 1e-12, 8 * DBL_EPSILON, 1000000, !lower_tail, false);
-    return log1p(-ans);
+    ans = pnchisq_raw(x, df, ncp, 1e-12, 8 * Number.EPSILON, 1000000, !lower_tail, false);
+    return Math.log1p(-ans);
 }
 
 export function pnchisq_raw(
@@ -121,14 +114,14 @@ export function pnchisq_raw(
     if (x <= 0) {
         if (x === 0 && f === 0) {
             const _L = -0.5 * theta;
-            const result = lower_tail ? R_D_exp(log_p, _L) : log_p ? R_Log1_Exp(_L) : -expm1(_L);
+            const result = lower_tail ? R_D_exp(log_p, _L) : log_p ? R_Log1_Exp(_L) : -Math.expm1(_L);
             printer('result1:%d', result);
             return result;
         }
         /* x < 0  or {x==0, f > 0} */
         return R_DT_0(lower_tail, log_p);
     }
-    if (!R_FINITE(x)) return R_DT_1(lower_tail, log_p);
+    if (!isFinite(x)) return R_DT_1(lower_tail, log_p);
 
     /* This is principally for use from qnchisq */
 
@@ -144,15 +137,15 @@ export function pnchisq_raw(
         // <==>  f/2 * log(x/2) - log(Gamma(f/2+1)) < log(eps) ( ~= -708.3964 )
         // <==>        log(x/2) < 2/f*(log(Gamma(f/2+1)) + log(eps))
         // <==> log(x) < log(2) + 2/f*(log(Gamma(f/2+1)) + log(eps))
-        if (lower_tail && f > 0 && log(x) < M_LN2 + (2 / f) * (lgammafn(f / 2 + 1) + _dbl_min_exp)) {
+        if (lower_tail && f > 0 && Math.log(x) < Math.LN2 + (2 / f) * (lgammafn(f / 2 + 1) + _dbl_min_exp)) {
             // all  pchisq(x, f+2*i, lower_tail, FALSE), i=0,...,110 would underflow to 0.
             // === = > work in log scale
             const lambda = 0.5 * theta;
-            let sum = ML_NEGINF;
-            let sum2 = ML_NEGINF;
+            let sum = Number.NEGATIVE_INFINITY;
+            let sum2 = Number.NEGATIVE_INFINITY;
             let pr = -lambda;
             /* we need to renormalize here: the result could be very close to 1 */
-            for (i = 0; i < 110; pr += log(lambda) - log(++i)) {
+            for (i = 0; i < 110; pr += Math.log(lambda) - Math.log(++i)) {
                 sum2 = logspace_add(sum2, pr);
                 sum = logspace_add(sum, pr + pchisq(x, f + 2 * i, lower_tail, true));
                 if (sum2 >= -1e-15) {
@@ -171,12 +164,12 @@ export function pnchisq_raw(
                 sum2,
             );
 
-            return log_p ? ans : exp(ans);
+            return log_p ? ans : Math.exp(ans);
         } else {
             const lambda = 0.5 * theta;
             let sum = 0;
             let sum2 = 0;
-            let pr = exp(-lambda); // does this need a feature test?
+            let pr = Math.exp(-lambda); // does this need a feature test?
             /* we need to renormalize here: the result could be very close to 1 */
             for (i = 0; i < 110; pr *= lambda / ++i) {
                 // pr === =  exp(-lambda) lambda^i / i!  ===   dpois(i, lambda)
@@ -190,7 +183,7 @@ export function pnchisq_raw(
 
             printer('pnchisq(x=%d, f=%d, theta=%d); theta < 80: i=%d, sum=%d, sum2=%d', x, f, theta, i, sum, sum2);
 
-            return log_p ? log(ans) : ans;
+            return log_p ? Math.log(ans) : ans;
         }
     } // if(theta < 80)
 
@@ -208,9 +201,9 @@ export function pnchisq_raw(
            theta) */
         u = 0;
         lu = -lam; /* ===  ln(u) */
-        l_lam = log(lam);
+        l_lam = Math.log(lam);
     } else {
-        u = exp(-lam);
+        u = Math.exp(-lam);
     }
 
     /* evaluate the first term */
@@ -222,17 +215,17 @@ export function pnchisq_raw(
     printer('-- v=exp(-th/2)=%d, x/2= %d, f/2= %d', v, x2, f2);
 
     if (
-        f2 * DBL_EPSILON > 0.125 /* very large f and x ~= f: probably needs */ &&
-        fabs((t = x2 - f2)) /* another algorithm anyway */ < sqrt(DBL_EPSILON) * f2
+        f2 * Number.EPSILON > 0.125 /* very large f and x ~= f: probably needs */ &&
+        Math.abs((t = x2 - f2)) /* another algorithm anyway */ < Math.sqrt(Number.EPSILON) * f2
     ) {
         /* evade cancellation error */
-        /* t = exp((1 - t)*(2 - t/(f2 + 1))) / sqrt(2*M_PI*(f2 + 1));*/
-        lt = (1 - t) * (2 - t / (f2 + 1)) - M_LN_SQRT_2PI - 0.5 * log(f2 + 1);
+        /* t = Math.exp((1 - t)*(2 - t/(f2 + 1))) / Math.sqrt(2*M_PI*(f2 + 1));*/
+        lt = (1 - t) * (2 - t / (f2 + 1)) - M_LN_SQRT_2PI - 0.5 * Math.log(f2 + 1);
 
         printer(' (case I) === > ');
     } else {
         /* Usual case 2: careful not to overflow .. : */
-        lt = f2 * log(x2) - x2 - lgammafn(f2 + 1);
+        lt = f2 * Math.log(x2) - x2 - lgammafn(f2 + 1);
     }
 
     printer(' lt= %d', lt);
@@ -241,16 +234,16 @@ export function pnchisq_raw(
     if (tSml) {
         printer(' is very small');
 
-        if (x > f + theta + 5 * sqrt(2 * (f + 2 * theta))) {
+        if (x > f + theta + 5 * Math.sqrt(2 * (f + 2 * theta))) {
             /* x > E[X] + 5* sigma(X) */
             return R_DT_1(lower_tail, log_p); /* FIXME: could be more accurate than 0. */
         } /* else */
-        l_x = log(x);
+        l_x = Math.log(x);
         ans = term = 0;
         t = 0;
     } else {
-        t = exp(lt);
-        printer(', t=exp(lt)= %d', t);
+        t = Math.exp(lt);
+        printer(', t=Math.exp(lt)= %d', t);
         term = v * t;
         ans = term;
     }
@@ -287,13 +280,13 @@ export function pnchisq_raw(
         /* expansion and then the partial sum */
 
         if (lamSml) {
-            lu += l_lam - log(n); /* u = u* lam / n */
+            lu += l_lam - Math.log(n); /* u = u* lam / n */
             if (lu >= _dbl_min_exp) {
                 /* no underflow anymore === > change regime */
 
-                printer(' n=%d; nomore underflow in u = exp(lu) === > change', n);
+                printer(' n=%d; nomore underflow in u = Math.exp(lu) === > change', n);
 
-                v = u = exp(lu); /* the first non-0 'u' */
+                v = u = Math.exp(lu); /* the first non-0 'u' */
                 lamSml = false;
             }
         } else {
@@ -301,13 +294,13 @@ export function pnchisq_raw(
             v += u;
         }
         if (tSml) {
-            lt += l_x - log(f_2n); /* t <- t * (x / f2n) */
+            lt += l_x - Math.log(f_2n); /* t <- t * (x / f2n) */
             if (lt >= _dbl_min_exp) {
                 /* no underflow anymore === > change regime */
 
-                printer('  n=%d; nomore underflow in t = exp(lt) === > change', n);
+                printer('  n=%d; nomore underflow in t = Math.exp(lt) === > change', n);
 
-                t = exp(lt); /* the first non-0 't' */
+                t = Math.exp(lt); /* the first non-0 't' */
                 tSml = false;
             }
         } else {
