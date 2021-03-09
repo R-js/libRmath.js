@@ -15,24 +15,22 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { debug } from 'debug';
-import { ML_ERR_return_NAN, R_D__0 } from '../../common/_general';
+import { ML_ERR_return_NAN,  } from '@common/logger';
+import { R_D__0 } from '$constants';
 
-import { dnbeta } from '../../beta/dnbeta';
-import { dnchisq } from '../chi-2/dnchisq';
-import { dgamma } from '../gamma/dgamma';
-
-const { log1p, log } = Math;
-
-const { isFinite: R_FINITE, isNaN: ISNAN, POSITIVE_INFINITY: ML_POSINF } = Number;
+import { dnbeta_scalar } from '@dist/beta/dnbeta';
+import { dnchisq } from '@dist/chi-2/dnchisq';
+import { dgamma } from '@dist/gamma/dgamma';
 
 const printer = debug('dnf');
+
 
 export function dnf(x: number, df1: number, df2: number, ncp: number, giveLog: boolean): number {
     let y: number;
     let z: number;
     let f: number;
 
-    if (ISNAN(x) || ISNAN(df1) || ISNAN(df2) || ISNAN(ncp)) {
+    if (isNaN(x) || isNaN(df1) || isNaN(df2) || isNaN(ncp)) {
         return x + df2 + df1 + ncp;
     }
 
@@ -46,21 +44,21 @@ export function dnf(x: number, df1: number, df2: number, ncp: number, giveLog: b
     if (x < 0) {
         return R_D__0(giveLog);
     }
-    if (!R_FINITE(ncp)) {
+    if (!isFinite(ncp)) {
         /* ncp = +Inf -- FIXME?: in some cases, limit exists */
         return ML_ERR_return_NAN(printer);
     }
 
     /* This is not correct for  df1 == 2, ncp > 0 - and seems unneeded:
-     *  if (x == 0.) return(df1 > 2 ? R_D__0 : (df1 == 2 ? R_D__1 : ML_POSINF));
+     *  if (x == 0.) return(df1 > 2 ? R_D__0 : (df1 == 2 ? R_D__1 : POSITIVE_INFINITY));
      */
-    if (!R_FINITE(df1) && !R_FINITE(df2)) {
+    if (!isFinite(df1) && !isFinite(df2)) {
         /* both +Inf */
         /* PR: not sure about this (taken from  ncp==0)  -- FIXME ? */
-        if (x === 1) return ML_POSINF;
+        if (x === 1) return Infinity;
         else return R_D__0(giveLog);
     }
-    if (!R_FINITE(df2))
+    if (!isFinite(df2))
         /* i.e.  = +Inf */
         return df1 * dnchisq(x * df1, df1, ncp, giveLog);
     /*	 ==  dngamma(x, df1/2, 2./df1, ncp, give_log)  -- but that does not exist */
@@ -68,10 +66,10 @@ export function dnf(x: number, df1: number, df2: number, ncp: number, giveLog: b
         /* includes df1 == +Inf: code below is inaccurate there */
         f = 1 + ncp / df1; /* assumes  ncp << df1 [ignores 2*ncp^(1/2)/df1*x term] */
         z = dgamma(1 / x / f, df2 / 2, 2 / df2, giveLog);
-        return giveLog ? z - 2 * log(x) - log(f) : z / (x * x) / f;
+        return giveLog ? z - 2 * Math.log(x) - Math.log(f) : z / (x * x) / f;
     }
 
     y = (df1 / df2) * x;
-    z = dnbeta(y / (1 + y), df1 / 2, df2 / 2, ncp, giveLog) as number;
-    return giveLog ? z + log(df1) - log(df2) - 2 * log1p(y) : (z * (df1 / df2)) / (1 + y) / (1 + y);
+    z = dnbeta_scalar(y / (1 + y), df1 / 2, df2 / 2, ncp, giveLog) as number;
+    return giveLog ? z + Math.log(df1) - Math.log(df2) - 2 * Math.log1p(y) : (z * (df1 / df2)) / (1 + y) / (1 + y);
 }

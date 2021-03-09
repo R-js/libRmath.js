@@ -16,13 +16,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { debug } from 'debug';
 
-import { ML_ERR_return_NAN, R_D__0, R_D__1 } from '../../common/_general';
-
-import { dbinom_raw } from '../../binomial/dbinom';
-import { dgamma } from '../gamma/dgamma';
-
-const { log } = Math;
-const { isNaN: ISNAN, isFinite: R_FINITE, POSITIVE_INFINITY: ML_POSINF } = Number;
+import { ML_ERR_return_NAN } from '@common/logger';
+import { R_D__0, R_D__1 } from '$constants';
+import { dbinom_raw } from '@dist/binomial/dbinom';
+import { dgamma } from '@dist/gamma/dgamma';
 
 const printer_df = debug('df');
 
@@ -32,7 +29,7 @@ export function df(x: number, m: number, n: number, giveLog = false): number {
     let f: number;
     let dens: number;
 
-    if (ISNAN(x) || ISNAN(m) || ISNAN(n)) {
+    if (isNaN(x) || isNaN(m) || isNaN(n)) {
         return x + m + n;
     }
     if (m <= 0 || n <= 0) {
@@ -42,24 +39,24 @@ export function df(x: number, m: number, n: number, giveLog = false): number {
         return R_D__0(giveLog);
     }
     if (x === 0) {
-        return m > 2 ? R_D__0(giveLog) : m === 2 ? R_D__1(giveLog) : ML_POSINF;
+        return m > 2 ? R_D__0(giveLog) : m === 2 ? R_D__1(giveLog) : Number.POSITIVE_INFINITY;
     }
-    if (!R_FINITE(m) && !R_FINITE(n)) {
+    if (!isFinite(m) && !isFinite(n)) {
         /* both +Inf */
         if (x === 1) {
-            return ML_POSINF;
+            return Number.POSITIVE_INFINITY;
         } else {
             return R_D__0(giveLog);
         }
     }
-    if (!R_FINITE(n)) {
+    if (!isFinite(n)) {
         /* must be +Inf by now */
         return dgamma(x, m / 2, 2 / m, giveLog);
     }
     if (m > 1e14) {
         /* includes +Inf: code below is inaccurate there */
         dens = dgamma(1 / x, n / 2, 2 / n, giveLog);
-        return giveLog ? dens - 2 * log(x) : dens / (x * x);
+        return giveLog ? dens - 2 * Math.log(x) : dens / (x * x);
     }
 
     f = 1 / (n + x * m);
@@ -73,5 +70,5 @@ export function df(x: number, m: number, n: number, giveLog = false): number {
         f = (m * m * q) / (2 * p * (m + n));
         dens = dbinom_raw(m / 2, (m + n) / 2, p, q, giveLog);
     }
-    return giveLog ? log(f) + dens : f * dens;
+    return giveLog ? Math.log(f) + dens : f * dens;
 }

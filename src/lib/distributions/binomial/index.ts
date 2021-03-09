@@ -14,18 +14,24 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { IRNG } from '../rng/irng';
-import { MersenneTwister } from '../rng/mersenne-twister';
-import { dbinom } from './dbinom';
-import { pbinom } from './pbinom';
-import { qbinom } from './qbinom';
-import { rbinom } from './rbinom';
 
-export function Binomial(rng: IRNG = new MersenneTwister()) {
-  return {
-    dbinom,
-    pbinom,
-    qbinom,
-    rbinom: (N: number, nin: number, pp: number) => rbinom(N, nin, pp, rng)
-  };
+export { dbinom } from './dbinom';
+export { pbinom } from './pbinom';
+export { qbinom } from './qbinom';
+import { rbinomOne } from './rbinom';
+import { globalUni } from '@rng/globalRNG';
+import type { IRNG } from '@rng/irng';
+import { repeatedCall } from '$helper';
+
+
+export function rbinom(
+  n: number,
+  nin: number,
+  pp: number,
+  rng?: IRNG
+): Float32Array {
+  const _rng = rng || globalUni();
+  return repeatedCall(n, rbinomOne, nin, pp, _rng);
 }
+
+export { rbinomOne };

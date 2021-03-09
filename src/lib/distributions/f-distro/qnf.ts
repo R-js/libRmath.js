@@ -16,33 +16,31 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { debug } from 'debug';
 
-import { ML_ERR_return_NAN, R_Q_P01_boundaries } from '../../common/_general';
+import { ML_ERR_return_NAN, R_Q_P01_boundaries } from '@common/logger';
 
-import { qnbeta } from '../../beta/qnbeta';
-import { qnchisq } from '../chi-2/qnchisq';
-
-const { isNaN: ISNAN, isFinite: R_FINITE, POSITIVE_INFINITY: ML_POSINF } = Number;
+import { qnbeta } from '@dist/beta/qnbeta';
+import { qnchisq } from '@dist/chi-2/qnchisq';
 
 const printer = debug('qnf');
 
 export function qnf(p: number, df1: number, df2: number, ncp: number, lowerTail = true, logP = false): number {
     let y;
 
-    if (ISNAN(p) || ISNAN(df1) || ISNAN(df2) || ISNAN(ncp)) return p + df1 + df2 + ncp;
+    if (isNaN(p) || isNaN(df1) || isNaN(df2) || isNaN(ncp)) return p + df1 + df2 + ncp;
 
     switch (true) {
         case df1 <= 0 || df2 <= 0 || ncp < 0:
-        case !R_FINITE(ncp):
-        case !R_FINITE(df1) && !R_FINITE(df2):
+        case !isFinite(ncp):
+        case !isFinite(df1) && !isFinite(df2):
             return ML_ERR_return_NAN(printer);
         default:
             // pass through
             break;
     }
     //if (df1 <= 0 || df2 <= 0 || ncp < 0) ML_ERR_return_NAN(printer);
-    //if (!R_FINITE(ncp)) ML_ERR_return_NAN;
-    //if (!R_FINITE(df1) && !R_FINITE(df2)) ML_ERR_return_NAN;
-    const rc = R_Q_P01_boundaries(lowerTail, logP, p, 0, ML_POSINF);
+    //if (!isFinite(ncp)) ML_ERR_return_NAN;
+    //if (!isFinite(df1) && !isFinite(df2)) ML_ERR_return_NAN;
+    const rc = R_Q_P01_boundaries(lowerTail, logP, p, 0, Number.POSITIVE_INFINITY);
     if (rc !== undefined) {
         return rc;
     }

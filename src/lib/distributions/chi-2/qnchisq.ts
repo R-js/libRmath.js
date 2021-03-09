@@ -17,7 +17,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import { debug } from 'debug';
 
-import { ME, ML_ERR_return_NAN, ML_ERROR, R_D_qIv, R_Q_P01_boundaries } from '../../common/_general';
+import { R_D_qIv } from '$constants';
+
+import { ME, ML_ERR_return_NAN, R_Q_P01_boundaries, ML_ERROR } from '@common/logger';
 
 import { qchisq } from './qchisq';
 import { pnchisq_raw } from './pnchisq';

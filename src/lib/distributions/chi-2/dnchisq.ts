@@ -16,19 +16,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { debug } from 'debug';
-
-import { ML_ERR_return_NAN, R_D__0, R_D_val } from '../../common/_general';
+import { ML_ERR_return_NAN } from '@common/logger';
+import { R_D__0, R_D_val } from '$constants';
 
 import { dchisq } from './dchisq';
-import { dpois_raw } from '../../poisson/dpois';
-
-const { ceil, sqrt } = Math;
-const { isNaN: ISNAN, isFinite: R_FINITE, POSITIVE_INFINITY: ML_POSINF } = Number;
+import { dpois_raw } from '@dist/poisson/dpois';
 
 const printer_dnchisq = debug('dnchisq');
+const eps = 5e-15;
 
 export function dnchisq(x: number, df: number, ncp: number, give_log: boolean): number {
-    const eps = 5e-15;
+  
 
     let i: number;
     let ncp2: number;
@@ -39,27 +37,27 @@ export function dnchisq(x: number, df: number, ncp: number, give_log: boolean): 
     let sum: number;
     let term: number;
 
-    if (ISNAN(x) || ISNAN(df) || ISNAN(ncp)) {
+    if (isNaN(x) || isNaN(df) || isNaN(ncp)) {
         return x + df + ncp;
     }
 
-    if (!R_FINITE(df) || !R_FINITE(ncp) || ncp < 0 || df < 0) {
+    if (!isFinite(df) || !isFinite(ncp) || ncp < 0 || df < 0) {
         return ML_ERR_return_NAN(printer_dnchisq);
     }
 
     if (x < 0) {
         return R_D__0(give_log);
     }
-    if (x === 0 && df < 2) return ML_POSINF;
+    if (x === 0 && df < 2) return Number.POSITIVE_INFINITY;
     if (ncp === 0) return df > 0 ? dchisq(x, df, give_log) : R_D__0(give_log);
-    if (x === ML_POSINF) return R_D__0(give_log);
+    if (x === Number.POSITIVE_INFINITY) return R_D__0(give_log);
 
     ncp2 = 0.5 * ncp;
 
     /* find max element of sum */
-    imax = ceil((-(2 + df) + sqrt((2 - df) * (2 - df) + 4 * ncp * x)) / 4);
+    imax = Math.ceil((-(2 + df) + Math.sqrt((2 - df) * (2 - df) + 4 * ncp * x)) / 4);
     if (imax < 0) imax = 0;
-    if (R_FINITE(imax)) {
+    if (isFinite(imax)) {
         dfmid = df + 2 * imax;
         mid = dpois_raw(imax, ncp2, false) * dchisq(x, dfmid, false);
     } else {

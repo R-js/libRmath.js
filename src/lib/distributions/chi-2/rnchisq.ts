@@ -16,22 +16,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { debug } from 'debug';
-import { ML_ERR_return_NAN } from '../../common/_general';
-import { rgammaOne } from '../gamma/rgamma';
-import { rpoisOne } from '../../poisson/rpois';
-import { randomGenHelper } from '../../r-func';
-import { IRNGNormal } from '../../rng/normal/normal-rng';
-import { rchisqOne } from './rchisq';
+import { ML_ERR_return_NAN } from '@common/logger';
+import { rgammaOne } from '@dist/gamma/rgamma';
+import { rpoisOne } from '@dist/poisson/rpois';
+import { rchisqOne } from '@dist/chi-2/rchisq';
+
+import type { IRNGNormal } from '@rng/normal/normal-rng';
+import { globalNorm } from '@rng/globalRNG';
 
 const printer = debug('rnchisq');
-const { isFinite: R_FINITE } = Number;
 
-export function rnchisq(n: number | number[], df: number, lambda: number, rng: IRNGNormal): number[] {
-    return randomGenHelper(n, rnchisqOne, df, lambda, rng);
-}
-
-export function rnchisqOne(df: number, lambda: number, rng: IRNGNormal): number {
-    if (!R_FINITE(df) || !R_FINITE(lambda) || df < 0 || lambda < 0) {
+export function rnchisqOne(df: number, lambda: number, rng: IRNGNormal = globalNorm()): number {
+    if (!isFinite(df) || !isFinite(lambda) || df < 0 || lambda < 0) {
         return ML_ERR_return_NAN(printer);
     }
     if (lambda === 0) {

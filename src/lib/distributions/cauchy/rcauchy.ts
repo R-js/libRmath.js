@@ -16,19 +16,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { debug } from 'debug';
-import { ML_ERR_return_NAN } from '../../common/_general';
-import { randomGenHelper } from '../../r-func';
-import { IRNG } from '../../rng';
+import { ML_ERR_return_NAN } from '@common/logger';
 
 const { isNaN: ISNAN, isFinite: R_FINITE } = Number;
 const { PI: M_PI } = Math;
 const printer = debug('rcauchy');
+import { globalNorm } from '@rng/globalRNG';
 
-export function rcauchy(n: number, location = 0, scale = 1, rng: IRNG): number[] {
-    return randomGenHelper(n, rcauchyOne, location, scale, rng);
-}
 
-export function rcauchyOne(location = 0, scale = 1, rng: IRNG): number {
+
+export function rcauchyOne(location = 0, scale = 1, rng = globalNorm()): number {
     if (ISNAN(location) || !R_FINITE(scale) || scale < 0) {
         return ML_ERR_return_NAN(printer);
     }

@@ -1,6 +1,9 @@
 'use strict';
 
+
+
 //rng
+import { IRNG } from '@rng/irng';
 import { KnuthTAOCP } from '@rng/knuth-taocp';
 import { KnuthTAOCP2002 } from '@rng/knuth-taocp-2002';
 import { LecuyerCMRG } from '@rng/lecuyer-cmrg';
@@ -10,6 +13,7 @@ import { SuperDuper } from '@rng/super-duper';
 import { WichmannHill } from '@rng/wichmann-hill';
 
 // normal
+import { IRNGNormal } from '@rng/normal/normal-rng';
 import { AhrensDieter } from '@rng/normal/ahrens-dieter';
 import { BoxMuller } from '@rng/normal/box-muller';
 import { BuggyKindermanRamage } from '@rng/normal/buggy-kinderman-ramage';
@@ -41,18 +45,38 @@ const normalMap = {
     [IRNGNormalTypeEnum.KINDERMAN_RAMAGE]: KindermanRamage
 }
 
-export function RNGKind(uniform?: IRNGTypeEnum | IRNGNormalTypeEnum, normal?: IRNGNormalTypeEnum) {
+const symRNG = Symbol.for('rngUNIFORM');
+const symRNGNormal = Symbol.for('rngNORMAL');
+
+export function globalUni(d?: IRNG): IRNG {
+    if (d) {
+        (globalThis as any)[symRNG] = d;
+    }
+    return (globalThis as any)[symRNG];
+}
+
+export function globalNorm(d?: IRNGNormal): IRNGNormal {
+    if (d) {
+        (globalThis as any)[symRNGNormal] = d;
+    }
+    return (globalThis as any)[symRNGNormal];
+}
+
+export function RNGKind(
+    uniform?: IRNGTypeEnum | IRNGNormalTypeEnum,
+    normal?: IRNGNormalTypeEnum
+): { uniform: IRNG, normal: IRNGNormal } {
     let uni;
     let norm;
     if (!uniform && !normal) {
-        uniform = IRNGTypeEnum.MERSENNE_TWISTER;
-        normal = IRNGNormalTypeEnum.INVERSION;
+        const tu = globalUni() ? globalUni().kind :IRNGTypeEnum.MERSENNE_TWISTER;
+        const tn = globalNorm() ? globalNorm().kind : IRNGNormalTypeEnum.INVERSION;
+        return RNGKind(tu, tn);
     }
     if (!normal && uniform) {
         // is the uniform a normal?
         if (!normalMap[uniform as IRNGNormalTypeEnum]) {
-            normal = uniform as IRNGNormalTypeEnum;
-            uniform = IRNGTypeEnum.MERSENNE_TWISTER;
+            return RNGKind(IRNGTypeEnum.MERSENNE_TWISTER, uniform as IRNGNormalTypeEnum);
         }
     }
     // at this point we have uni/normals, be it defaults or not
@@ -71,33 +95,33 @@ export function RNGKind(uniform?: IRNGTypeEnum | IRNGNormalTypeEnum, normal?: IR
     // we have both normal and uniform, but are the different then globals?
     let uniChange;
     if (
-        undefined === (globalThis as any)[Symbol.for('UNIRNG')]
+        undefined === globalUni()
         ||
-        uni.name !== (globalThis as any)[Symbol.for('UNIRNG')]
+        uni.name !== globalNorm().constructor.name
     ) {
-        (globalThis as any)[Symbol.for('UNIRNG')] = new uni();
+        globalUni(new uni());
         uniChange = true;
     }
 
-   
+
     if (
         uniChange  // if uni-rng changed, re-create the normal rng regardless
         ||
-        undefined === (globalThis as any)[Symbol.for('NORMRNG')]
+        undefined === globalNorm()
+        ||
+        globalNorm().constructor.name !== norm.name
     ) {
-        (globalThis as any)[Symbol.for('NORMRNG')] = new norm((globalThis as any)[Symbol.for('UNIRNG')])
+        globalNorm(new norm(globalUni()))
     }
 
-    // specified different normal-rng
-    if ((globalThis as any)[Symbol.for('NORMRNG')].constructor.name !== norm.name){
-        (globalThis as any)[Symbol.for('NORMRNG')] = new norm((globalThis as any)[Symbol.for('UNIRNG')])
-    }
-    
-    return { 
-        uniform: (globalThis as any)[Symbol.for('UNIRNG')],
-        normal: (globalThis as any)[Symbol.for('NORMRNG')],
-    }
+    return {
+        uniform: globalUni(),
+        normal: globalNorm(),
+    };
 }
+
+//init
+RNGKind();
 
 
 

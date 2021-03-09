@@ -124,6 +124,9 @@
       ],
       "$stirling":[
         "lib/stirling"
+      ],
+      "$helper":[
+        "lib/r-func"
       ]
     }, // maybe use later, if you decide to use this, specify baseurl
     // source maps
