@@ -15,22 +15,17 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { IRNG } from '../../rng/irng';
-import { MersenneTwister } from '../../rng/mersenne-twister';
-import { dlogis } from './dlogis';
-import { plogis } from './plogis';
-import { qlogis } from './qlogis';
-import { rlogis as _rlogis } from './rlogis';
 
-export function Logistic(rng: IRNG = new MersenneTwister(0)) {
-    //
-    function rlogis(N: number, location = 0, scale = 1) {
-        return _rlogis(N, location, scale, rng);
-    }
+export { dlogis } from './dlogis';
+export { plogis } from './plogis';
+export { qlogis } from './qlogis';
+import { rlogisOne } from './rlogis';
+import { repeatedCall } from '$helper';
 
-    return {
-        dlogis,
-        plogis,
-        qlogis,
-        rlogis,
-    };
+export { rlogisOne };
+
+export function rlogis(n: number, location = 0, scale = 1, rng?: IRNG) {
+    return repeatedCall(n, rlogisOne, location, scale, rng);
 }
+
+

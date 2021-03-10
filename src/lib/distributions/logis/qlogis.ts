@@ -18,18 +18,14 @@ import { debug } from 'debug';
 
 import { ML_ERR_return_NAN, R_Q_P01_boundaries } from '@common/logger';
 
-import { R_Log1_Exp } from '../exp/expm1';
-
-const { isNaN: ISNAN, POSITIVE_INFINITY: ML_POSINF, NEGATIVE_INFINITY: ML_NEGINF } = Number;
-
-const { log } = Math;
+import { R_Log1_Exp } from '@dist/exp/expm1';
 
 const printer_qlogis = debug('qlogis');
 
 export function qlogis(p: number, location = 0, scale = 1, lower_tail = true, log_p = false): number {
-    if (ISNAN(p) || ISNAN(location) || ISNAN(scale)) return p + location + scale;
+    if (isNaN(p) || isNaN(location) || isNaN(scale)) return p + location + scale;
 
-    const rc = R_Q_P01_boundaries(lower_tail, log_p, p, ML_NEGINF, ML_POSINF);
+    const rc = R_Q_P01_boundaries(lower_tail, log_p, p, Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY);
     if (rc !== undefined) {
         return rc;
     }
@@ -43,7 +39,7 @@ export function qlogis(p: number, location = 0, scale = 1, lower_tail = true, lo
     if (log_p) {
         if (lower_tail) p = p - R_Log1_Exp(p);
         else p = R_Log1_Exp(p) - p;
-    } else p = log(lower_tail ? p / (1 - p) : (1 - p) / p);
+    } else p = Math.log(lower_tail ? p / (1 - p) : (1 - p) / p);
 
     return location + scale * p;
 }

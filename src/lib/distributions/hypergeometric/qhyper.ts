@@ -19,9 +19,6 @@ import { ML_ERR_return_NAN, R_Q_P01_boundaries } from '@common/logger';
 import { lfastchoose } from '@special/choose';
 import { R_DT_qIv } from '@distributions/exp/expm1';
 
-const { log, exp, min: fmin2, max: fmax2, round: R_forceint } = Math;
-const { isNaN: ISNAN, isFinite: R_FINITE, EPSILON: DBL_EPSILON } = Number;
-
 const printer_qhyper = debug('qhyper');
 
 export function qhyper(p: number, nr: number, nb: number, n: number, lowerTail = true, logP = false): number {
@@ -35,22 +32,22 @@ export function qhyper(p: number, nr: number, nb: number, n: number, lowerTail =
     let term;
     //let small_N;
 
-    if (ISNAN(p) || ISNAN(nr) || ISNAN(nb) || ISNAN(n)) return NaN;
+    if (isNaN(p) || isNaN(nr) || isNaN(nb) || isNaN(n)) return NaN;
 
-    if (/*!R_FINITE(p) ||*/ !R_FINITE(nr) || !R_FINITE(nb) || !R_FINITE(n)) return ML_ERR_return_NAN(printer_qhyper);
+    if (/*!isFinite(p) ||*/ !isFinite(nr) || !isFinite(nb) || !isFinite(n)) return ML_ERR_return_NAN(printer_qhyper);
 
-    let NR = R_forceint(nr);
-    let NB = R_forceint(nb);
+    let NR = Math.round(nr);
+    let NB = Math.round(nb);
     const N = NR + NB;
-    n = R_forceint(n);
+    n = Math.round(n);
     if (NR < 0 || NB < 0 || n < 0 || n > N) return ML_ERR_return_NAN(printer_qhyper);
 
     /* Goal:  Find  xr (= #{red balls in sample}) such that
      *   phyper(xr,  NR,NB, n) >= p > phyper(xr - 1,  NR,NB, n)
      */
 
-    const xstart = fmax2(0, n - NB);
-    const xend = fmin2(n, NR);
+    const xstart = Math.max(0, n - NB);
+    const xend = Math.min(n, NR);
 
     const rc = R_Q_P01_boundaries(lowerTail, logP, p, xstart, xend);
     if (rc !== undefined) {
@@ -63,22 +60,22 @@ export function qhyper(p: number, nr: number, nb: number, n: number, lowerTail =
     /* if N is small,  term := product.ratio( bin.coef );
        otherwise work with its logarithm to protect against underflow */
     term = lfastchoose(NR, xr) + lfastchoose(NB, xb) - lfastchoose(N, n);
-    if (small_N) term = exp(term);
+    if (small_N) term = Math.exp(term);
     NR -= xr;
     NB -= xb;
 
     if (!lowerTail || logP) {
         p = R_DT_qIv(lowerTail, logP, p);
     }
-    p *= 1 - 1000 * DBL_EPSILON; /* was 64, but failed on FreeBSD sometimes */
-    sum = small_N ? term : exp(term);
+    p *= 1 - 1000 * Number.EPSILON; /* was 64, but failed on FreeBSD sometimes */
+    sum = small_N ? term : Math.exp(term);
 
     while (sum < p && xr < xend) {
         xr++;
         NB++;
         if (small_N) term *= (NR / xr) * (xb / NB);
-        else term += log((NR / xr) * (xb / NB));
-        sum += small_N ? term : exp(term);
+        else term += Math.log((NR / xr) * (xb / NB));
+        sum += small_N ? term : Math.exp(term);
         xb--;
         NR--;
     }

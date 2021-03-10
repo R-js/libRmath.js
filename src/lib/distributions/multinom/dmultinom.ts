@@ -14,16 +14,14 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-import special from '../gamma';
-import { flatten, sum } from '../../r-func';
+import { lgammafn_sign } from '@special/gamma/lgammafn_sign';
+import { sumfp } from '$constants';
 const { isFinite } = Number;
 
-const { lgamma } = special;
-
 export interface IdmultinomOptions {
-    x: number[];
+    x: Float32Array;
     size?: number;
-    prob: number[];
+    prob: Float32Array;
     asLog?: boolean;
 }
 
@@ -31,11 +29,11 @@ export function dmultinom(o: IdmultinomOptions): number {
     // init
     // first prob and x must have the same length
     o.asLog = !!o.asLog;
-    let x: number[] = Array.from(flatten(o.x)).filter((f) => !!f);
-    //
-    let prob: number[] = Array.from(flatten(o.prob));
+    let x = o.x;
+    let prob = o.prob;
+   
     const badProb = !!prob.find((f) => !isFinite(f) || f < 0);
-    const s = sum(prob);
+    const s = sumfp(prob);
     if (badProb || s === 0) {
         throw new Error('probabilities must be finite, non-negative and not all 0');
     }
@@ -44,13 +42,13 @@ export function dmultinom(o: IdmultinomOptions): number {
     if (x.find((v) => v < 0)) {
         throw new Error('probabilities must be finite, non-negative and not all 0');
     }
-    const N = sum(x);
+    const N = sumfp(x);
     const size = !!o.size ? o.size : N;
     if (size !== N) {
         throw new Error(`size:${size} != sum(x):${N}, i.e. one is wrong`);
     }
-    const i0 = prob.map((p) => p === 0);
-    if (i0.includes(true)) {
+    const i0 = prob.map((p) => p === 0 ? 1: 0);
+    if (i0.includes(1)) {
         if (i0.find((_v, i) => x[i] !== 0)) {
             return o.asLog ? -Infinity : 0;
         }
@@ -73,10 +71,10 @@ export function dmultinom(o: IdmultinomOptions): number {
     if (errMsg.length) {
         throw new Error(errMsg.join('\n'));
     }
-    const s1 = x.map((v) => v + 1).map((v) => lgamma(v)); //(x.map(v=>v+1));
+    const s1 = x.map((v) => v + 1).map((v) => lgammafn_sign(v)); //(x.map(v=>v+1));
     const s2 = prob.map(Math.log);
     const s3 = x.map((v, i) => v * s2[i] - s1[i]);
 
-    const r = lgamma(size + 1) + sum(s3);
+    const r = lgammafn_sign(size + 1) + sumfp(s3);
     return o.asLog ? r : Math.exp(r);
 }

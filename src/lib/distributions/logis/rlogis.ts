@@ -16,26 +16,20 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { debug } from 'debug';
-
 import { ML_ERR_return_NAN } from '@common/logger';
-import { IRNG } from '../../rng';
+import type { IRNG } from '@rng/irng';
+import { globalUni } from '@rng/globalRNG';
 
-const { log } = Math;
-const { isNaN: ISNAN, isFinite: R_FINITE } = Number;
 const printer_rlogis = debug('rlogis');
 
-export function rlogis(N: number, location = 0, scale = 1, rng: IRNG): number[] {
-    return Array.from({ length: N }).map(() => rlogisOne(location, scale, rng));
-}
-
-export function rlogisOne(location = 0, scale = 1, rng: IRNG): number {
-    if (ISNAN(location) || !R_FINITE(scale)) {
+export function rlogisOne(location = 0, scale = 1, rng: IRNG = globalUni()): number {
+    if (isNaN(location) || !isFinite(scale)) {
         return ML_ERR_return_NAN(printer_rlogis);
     }
 
-    if (scale === 0 || !R_FINITE(location)) return location;
+    if (scale === 0 || !isFinite(location)) return location;
     else {
         const u: number = rng.random();
-        return location + scale * log(u / (1 - u));
+        return location + scale * Math.log(u / (1 - u));
     }
 }

@@ -16,10 +16,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { debug } from 'debug';
 //
-import { rbinomOne } from '../binomial/rbinom';
+import { rbinomOne } from '@dist/binomial/rbinom';
 import { ML_ERR_return_NAN } from '@common/logger';
 import { imax2, imin2, M_LN_SQRT_2PI } from '$constants';
-import { IRNG } from '@rng/irng';
+import type { IRNG } from '@rng/irng';
 import { qhyper } from './qhyper';
 //
 const { log, round: R_forceint, exp, sqrt } = Math;
@@ -27,7 +27,7 @@ const { isFinite: R_FINITE, MAX_SAFE_INTEGER: INT_MAX } = Number;
 const printer_afc = debug('afc');
 
 // afc(i) :=  ln( i! )	[logarithm of the factorial i]
-export function afc(i: number): number {
+function afc(i: number): number {
     // If (i > 7), use Stirling's approximation, otherwise use table lookup.
     const al = [
         0.0 /*ln(0!)=ln(1)*/,
@@ -59,14 +59,10 @@ export function afc(i: number): number {
     return (di + 0.5) * log(di) - di + M_LN_SQRT_2PI + (0.0833333333333333 - 0.00277777777777778 / i2) / di;
 }
 
-export function rhyper(N: number, nn1in: number, nn2in: number, kkin: number, rng: IRNG): number[] {
-    return Array.from({ length: N }).map(() => rhyperOne(nn1in, nn2in, kkin, rng));
-}
-
 //     rhyper(NR, NB, n) -- NR 'red', NB 'blue', n drawn, how many are 'red'
 const printer_rhyper = debug('_rhyper');
 
-function rhyperOne(nn1in: number, nn2in: number, kkin: number, rng: IRNG): number {
+export function rhyperOne(nn1in: number, nn2in: number, kkin: number, rng: IRNG): number {
     /* extern double afc(int); */
 
     let nn1 = 0;

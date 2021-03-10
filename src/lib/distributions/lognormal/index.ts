@@ -15,19 +15,15 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { dlnorm } from './dlnorm';
-import { plnorm } from './plnorm';
-import { qlnorm } from './qlnorm';
-import { rlnorm } from './rlnorm';
+export { dlnorm } from './dlnorm';
+export { plnorm } from './plnorm';
+export { qlnorm } from './qlnorm';
+import { rlnormOne } from './rlnorm';
+import { repeatedCall } from '$helper'
 
-import { Inversion, IRNGNormal } from '../rng/normal';
+import type { IRNGNormal } from '@rng/normal/normal-rng';
+export { rlnormOne }
+export function rlnorm(n: number, meanlog = 0, sdlog = 1, rng?: IRNGNormal) {
+  repeatedCall(n, rlnormOne, meanlog, sdlog, rng)
+};
 
-export function LogNormal(rng: IRNGNormal = new Inversion()) {
-  return {
-    dlnorm,
-    plnorm,
-    qlnorm,
-    rlnorm: (n: number, meanlog = 0, sdlog = 1): number | number[] =>
-      rlnorm(n, meanlog, sdlog, rng)
-  };
-}

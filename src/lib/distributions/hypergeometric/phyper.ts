@@ -16,12 +16,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { debug } from 'debug';
-import { ML_ERR_return_NAN, R_D_Lval, R_DT_0, R_DT_1 } from '@common/logger';
-import { R_DT_log } from '../../exp/expm1';
+import { ML_ERR_return_NAN } from '@common/logger';
+import { R_D_Lval, R_DT_0, R_DT_1 } from '$constants';
+import { R_DT_log } from '@dist/exp/expm1';
 import { dhyper } from './dhyper';
-
-const { floor, round: R_forceint, log1p } = Math;
-const { EPSILON: DBL_EPSILON, isNaN: ISNAN, isFinite: R_FINITE } = Number;
 
 //NOTE: p[d]hyper is not  typo!!
 //const printer_pdhyper = debug('pdhyper');
@@ -43,14 +41,14 @@ function pdhyper(x: number, NR: number, NB: number, n: number, log_p: boolean): 
     let sum = 0;
     let term = 1;
 
-    while (x > 0 && term >= DBL_EPSILON * sum) {
+    while (x > 0 && term >= Number.EPSILON * sum) {
         term *= (x * (NB - n + x)) / (n + 1 - x) / (NR + 1 - x);
         sum += term;
         x--;
     }
 
     const ss = sum;
-    return log_p ? log1p(ss) : 1 + ss;
+    return log_p ? Math.log1p(ss) : 1 + ss;
 }
 
 /* FIXME: The old phyper() code was basically used in ./qhyper.c as well
@@ -68,14 +66,14 @@ export function phyper(x: number, nr: number, nb: number, nn: number, lowerTail 
     let NR = nr;
     let NB = nb;
     let n = nn;
-    if (ISNAN(x) || ISNAN(NR) || ISNAN(NB) || ISNAN(n)) return x + NR + NB + n;
+    if (isNaN(x) || isNaN(NR) || isNaN(NB) || isNaN(n)) return x + NR + NB + n;
 
-    x = floor(x + 1e-7);
-    NR = R_forceint(NR);
-    NB = R_forceint(NB);
-    n = R_forceint(n);
+    x = Math.floor(x + 1e-7);
+    NR = Math.round(NR);
+    NB = Math.round(NB);
+    n = Math.round(n);
 
-    if (NR < 0 || NB < 0 || !R_FINITE(NR + NB) || n < 0 || n > NR + NB) {
+    if (NR < 0 || NB < 0 || !isFinite(NR + NB) || n < 0 || n > NR + NB) {
         return ML_ERR_return_NAN(printer_phyper);
     }
 

@@ -19,7 +19,7 @@ import { phyper } from './phyper';
 import { qhyper } from './qhyper';
 import { rhyper as _rhyper } from './rhyper';
 
-import { IRNG } from '../../rng/irng';
+import type { IRNG } from '@rng/irng';
 import { MersenneTwister } from '../../rng/mersenne-twister';
 
 export function HyperGeometric(rng: IRNG = new MersenneTwister()) {
