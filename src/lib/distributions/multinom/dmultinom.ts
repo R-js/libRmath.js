@@ -14,67 +14,51 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+import { debug } from 'debug';
 import { lgammafn_sign } from '@special/gamma/lgammafn_sign';
 import { sumfp } from '$constants';
-const { isFinite } = Number;
+import { checks } from './helper';
 
-export interface IdmultinomOptions {
-    x: Float32Array;
-    size?: number;
-    prob: Float32Array;
-    asLog?: boolean;
-}
+const printer_dmultinom = debug('dmultinom');
 
-export function dmultinom(o: IdmultinomOptions): number {
-    // init
-    // first prob and x must have the same length
-    o.asLog = !!o.asLog;
-    let x = o.x;
-    let prob = o.prob;
-   
-    const badProb = !!prob.find((f) => !isFinite(f) || f < 0);
-    const s = sumfp(prob);
-    if (badProb || s === 0) {
-        throw new Error('probabilities must be finite, non-negative and not all 0');
-    }
-    prob = prob.map((v) => v / s);
-    x = x.map(Math.round);
-    if (x.find((v) => v < 0)) {
-        throw new Error('probabilities must be finite, non-negative and not all 0');
-    }
+export function dmultinom(x: Float32Array, prob: Float32Array, asLog = false): number {
     const N = sumfp(x);
-    const size = !!o.size ? o.size : N;
-    if (size !== N) {
-        throw new Error(`size:${size} != sum(x):${N}, i.e. one is wrong`);
-    }
-    const i0 = prob.map((p) => p === 0 ? 1: 0);
-    if (i0.includes(1)) {
-        if (i0.find((_v, i) => x[i] !== 0)) {
-            return o.asLog ? -Infinity : 0;
+    const sum = checks(prob,N,1, printer_dmultinom);
+    if (!sum){
+        // all x is zero?
+        if (x.every(v=>v===0)){
+            return asLog ? 0 : 1;
         }
-        x = x.filter((_v, i) => i0[i]);
-        prob = prob.filter((_v, i) => i0[i]);
+        return NaN;
     }
-    // checks after cleaning
-    const errMsg: string[] = [];
-    if (prob.length <= 1) {
-        errMsg.push(`number of propabilities need to be at least 2, it is:${prob.length}`);
+    // must be integers
+    let xerr = 0;
+    let rc= lgammafn_sign(N+1);
+    for (let i = 0; i < x.length && xerr < 10; i++){
+        if (x[i] < 0){
+            printer_dmultinom('x is negative at index %i', i);
+            xerr++;
+        }
+        if (!isFinite(x[i])){
+            printer_dmultinom('x is negative at index %i', i);
+            xerr++;
+        }
+        x[i] = Math.round(x[i]);
     }
-    if (x.length <= 1) {
-        errMsg.push(`number of quantiles need to be at least 2, it is :${x.length}`);
-    }
-    if (x.length !== prob.length) {
-        errMsg.push(
-            `number of effective quantiles:${x.length} is not equal to number of effective probabilities:${prob.length}.`,
-        );
-    }
-    if (errMsg.length) {
-        throw new Error(errMsg.join('\n'));
-    }
-    const s1 = x.map((v) => v + 1).map((v) => lgammafn_sign(v)); //(x.map(v=>v+1));
-    const s2 = prob.map(Math.log);
-    const s3 = x.map((v, i) => v * s2[i] - s1[i]);
 
-    const r = lgammafn_sign(size + 1) + sumfp(s3);
-    return o.asLog ? r : Math.exp(r);
+    // loop over all probs
+    for (let i = 0; i< prob.length; i++){
+        const p = prob[i]/sum;
+        if (p === 0){
+            if (x[i] !== 0){
+                return asLog ? -Infinity: 0;
+            }
+            continue; //skip
+        }
+        // R code snippet   r <- lgamma(size + 1) + sum(x * log(prob) - lgamma(x + 1))
+        rc +=  x[i]*Math.log(p) - lgammafn_sign(x[i] + 1);
+    }
+
+    return asLog ? rc : Math.exp(rc);
+
 }
