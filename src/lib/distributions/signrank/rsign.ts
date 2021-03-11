@@ -17,14 +17,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { debug } from 'debug';
 import { ML_ERR_return_NAN } from '@common/logger';
-import { IRNG } from '../../rng/irng';
+import type { IRNG } from '@rng/irng';
 
 const { isNaN: ISNAN } = Number;
 const { floor, round } = Math;
 const printer_rsignrank = debug('rsignrank');
 
-export function rsignrank(nn: number, n: number, rng: IRNG): number | number[] {
-    return Array.from({ length: nn }).map(() => {
+export function rsignrankOne(n: number, rng: IRNG) {
         /* NaNs propagated correctly */
         if (ISNAN(n)) return n;
         const nRound = round(n);
@@ -37,5 +36,4 @@ export function rsignrank(nn: number, n: number, rng: IRNG): number | number[] {
             r += ++i * floor(rng.random() + 0.5);
         }
         return r;
-    });
 }

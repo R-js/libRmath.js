@@ -17,24 +17,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { debug } from 'debug';
-
 import { ML_ERR_return_NAN, R_Q_P01_boundaries } from '@common/logger';
-import { R_DT_CIv, R_DT_qIv } from '../exp/expm1';
+import { R_DT_CIv, R_DT_qIv } from '@dist/exp/expm1';
 
 const printer = debug('qnorm4');
-
-const { isNaN: ISNAN } = Number;
-const { log, sqrt, abs: fabs } = Math;
-const ML_NEGINF = -Infinity;
-const ML_POSINF = Infinity;
 
 export function qnorm(p: number, mu = 0, sigma = 1, lower_tail = true, log_p = false): number {
     let r;
     let val;
 
-    if (ISNAN(p) || ISNAN(mu) || ISNAN(sigma)) return p + mu + sigma;
+    if (isNaN(p) || isNaN(mu) || isNaN(sigma)) return p + mu + sigma;
 
-    const rc = R_Q_P01_boundaries(lower_tail, log_p, p, ML_NEGINF, ML_POSINF);
+    const rc = R_Q_P01_boundaries(lower_tail, log_p, p, -Infinity, Infinity);
     if (rc !== undefined) {
         return rc;
     }
@@ -56,7 +50,7 @@ export function qnorm(p: number, mu = 0, sigma = 1, lower_tail = true, log_p = f
             (original fortran code used PARAMETER(..) for the coefficients
              and provided hash codes for checking them...)
     */
-    if (fabs(q) <= 0.425) {
+    if (Math.abs(q) <= 0.425) {
         /* 0.075 <= p <= 0.925 */
         r = 0.180625 - q * q;
         val =
@@ -88,7 +82,7 @@ export function qnorm(p: number, mu = 0, sigma = 1, lower_tail = true, log_p = f
         if (q > 0) r = R_DT_CIv(lower_tail, log_p, p);
         /* 1-p */ else r = p_; /* = R_DT_Iv(p) ^=  p */
 
-        r = sqrt(-(log_p && ((lower_tail && q <= 0) || (!lower_tail && q > 0)) ? p : /* else */ log(r)));
+        r = Math.sqrt(-(log_p && ((lower_tail && q <= 0) || (!lower_tail && q > 0)) ? p : /* else */ Math.log(r) ) );
         /* r = sqrt(-log(r))  <==>  min(p, 1-p) = exp( - r^2 ) */
 
         printer('close to 0 or 1: r = %7d', r);

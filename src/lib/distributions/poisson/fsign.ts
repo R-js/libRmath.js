@@ -16,13 +16,10 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-const { abs:fabs } = Math;
-const { isNaN:ISNAN } = Number;
-
 // needed by rpois
 export function fsign(x: number, signal: boolean) {
-    if (ISNAN(x)) return x;
-    return signal ? fabs(x) : -fabs(x); 
+    if (isNaN(x)) return x;
+    return signal ? Math.abs(x) : -Math.abs(x); 
 }
 
 
