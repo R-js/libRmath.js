@@ -21,40 +21,14 @@ import { rbinomOne } from '@dist/binomial/rbinom';
 import { IRNG } from '@rng/irng';
 import { globalUni } from '@rng/globalRNG';
 import { emptyFloat32Array } from '$constants';
+import { checks } from './helper';
 
 const printer_rmultinom = debug('rmultinom');
 
-function checks(prob: Float32Array, size: number, n: number) {
-    if (prob.length === 0) {
-        printer_rmultinom('no positive probabilites');
-        return 0;
-    }
-    if (size < 0) {
-        printer_rmultinom('invalid size, is negative');
-        return 0;
-    }
-    //check probabilities
-    let sum = 0;
-    for (let i = 0; i < prob.length; i++) {
-        if (!isFinite(prob[i])) {
-            printer_rmultinom('probability contains non finite number');
-            return 0;
-        }
-        if (prob[i] < 0) {
-            printer_rmultinom('probability contains negative number');
-            return 0;
-        }
-        sum += prob[i];
-    }
-    if (!sum) {
-        printer_rmultinom('no positive probabilities');
-    }
-    return sum;
-}
 
 export function rmultinom(n: number, size: number, prob: Float32Array, rng = globalUni()): Float32Array {
     // returns matrix n x prob
-    const sum = checks(prob, size, n);
+    const sum = checks(prob, size, n, printer_rmultinom);
     if (!sum) {
         return emptyFloat32Array;
     }
