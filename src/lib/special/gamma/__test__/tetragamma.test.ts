@@ -24,8 +24,8 @@ describe('tetragamma', function () {
         expect(actual).toEqualFloatingPointBinary([2000000001106159104, 1999999998795606016, 2000000000725793]);
     });
     it('single numerical values -1.5, 100', () => {
-        const ac1 = tetragamma(-1.5 as any);
-        const ac2 = tetragamma(100 as any);
+        const ac1 = tetragamma(-1.5);
+        const ac2 = tetragamma(100);
         expect(ac1).toEqualFloatingPointBinary(-0.23620405164171604);
         expect(ac2).toEqualFloatingPointBinary(-0.00010100499983335);
     });
