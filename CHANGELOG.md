@@ -1,3 +1,8 @@
+## version "1.0.89"
+## fixed
+## PR (Jacob Bogers <jkfbogers@gmail.com>)
+ - fix emitting the ts decleration files
+
 ## version "1.0.88"
 ### fixed 
 ### PR #41 (Richard D. Morey <richarddmorey@gmail.com>)
