@@ -20,7 +20,7 @@ import { ML_ERR_return_NAN } from '@common/logger';
 
 import { M_LN_SQRT_2PI } from '$constants';
 
-import { gamma_internal } from '@special/gamma';
+import { gammaOne } from '@special/gamma';
 import { lgammafn_sign } from '@special/gamma/lgammafn_sign';
 import { lgammacor } from '@special/gamma/lgammacor';
 
@@ -61,7 +61,7 @@ export function lbeta_scalar(a: number, b: number): number {
         // R change for very small args
         // removed 
         if (p < 1e-306) return lgammafn_sign(p) + (lgammafn_sign(q) - lgammafn_sign(p+q))
-        else return Math.log(gamma_internal(p) * (gamma_internal(q) / gamma_internal(p + q)));
+        else return Math.log(gammaOne(p) * (gammaOne(q) / gammaOne(p + q)));
     }
 }
 

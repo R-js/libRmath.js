@@ -28,7 +28,7 @@ import { ME, ML_ERROR } from '@common/logger';
 
 import sinpi from '@trig/sinpi';
 import { lgammacor } from './lgammacor';
-import { gamma_internal } from './';
+import { gammaOne } from './';
 import type { NumArray } from '$constants';
 
 const { isNaN: ISNAN, POSITIVE_INFINITY: ML_POSINF } = Number;
@@ -110,7 +110,7 @@ export function lgammafn_sign(x: number, sgn?: Int8Array): number {
     const y = fabs(x);
 
     if (y < 1e-306) return -log(y); // denormalized range, R change
-    if (y <= 10) return log(fabs(gamma_internal(x) as number));
+    if (y <= 10) return log(fabs(gammaOne(x) as number));
 
     //  ELSE  y = |x| > 10 ----------------------
 

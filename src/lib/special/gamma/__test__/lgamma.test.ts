@@ -6,7 +6,7 @@ import '$jest-extension';
 import { loadData } from '$test-helpers/load';
 
 //app
-import { lgamma, lgamma_internal } from '..';
+import { lgamma, lgammaOne } from '..';
 
 describe('lgamma', () => {
     it('ranges [0.09, 3.99] and [-0.09,-3.99]', async () => {
@@ -74,10 +74,10 @@ describe('lgamma', () => {
     });
     it('x=-0.5 should return sign -1, x=-1.5 should return sign 1', () => {
         const sign = new Int8Array(1);
-        const s1 = lgamma_internal(-0.5, sign);
+        const s1 = lgammaOne(-0.5, sign);
         expect(sign[0]).toBe(-1);
         expect(s1).toEqualFloatingPointBinary(1.26551212348465);
-        const s2 = lgamma_internal(-1.5, sign);
+        const s2 = lgammaOne(-1.5, sign);
         expect(s2).toEqualFloatingPointBinary(0.860047015376481);
         expect(sign[0]).toBe(1);
     });

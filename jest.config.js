@@ -37,9 +37,10 @@ module.exports = {
         '^\\$chebyshev$': '<rootDir>/src/lib/chebyshev',
         '^@special/(.*)$': '<rootDir>/src/lib/special/$1',
         '^@trig/(.*)$': '<rootDir>/src/lib/trigonometry/$1',
-        '^\\$toms708': '<rootDir>/src/lib/common/toms708',
+        '^\\$toms708$': '<rootDir>/src/lib/common/toms708',
         '^\\$test-helpers/(.*)$': '<rootDir>/src/packages/test-helpers/$1',
-        '^$deviance': '<rootDir>/src/lib/deviance/index.ts',
-        '^$stirling': '<rootDir>/src/lib/stirling/index.ts'
+        '^\\$deviance$': '<rootDir>/src/lib/deviance/index.ts',
+        '^\\$stirling$': '<rootDir>/src/lib/stirling/index.ts',
+        '^@rng/(.*)$': '<rootDir>/src/lib/rng/$1'
     },
 };

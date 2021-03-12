@@ -4,7 +4,7 @@
 
 //rng
 import { IRNG } from '@rng/irng';
-import { KnuthTAOCP } from '@rng/knuth-taocp';
+import { KnuthTAOCP } from './knuth-taocp';
 import { KnuthTAOCP2002 } from '@rng/knuth-taocp-2002';
 import { LecuyerCMRG } from '@rng/lecuyer-cmrg';
 import { MarsagliaMultiCarry } from '@rng/marsaglia-multicarry';
