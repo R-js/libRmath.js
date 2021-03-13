@@ -14,24 +14,15 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { dhyper } from './dhyper';
-import { phyper } from './phyper';
-import { qhyper } from './qhyper';
-import { rhyper as _rhyper } from './rhyper';
+export { dhyper } from './dhyper';
+export { phyper } from './phyper';
+export { qhyper } from './qhyper';
+import { rhyperOne } from './rhyper';
 
 import type { IRNG } from '@rng/irng';
-import { MersenneTwister } from '../../rng/mersenne-twister';
+import { repeatedCall } from '$helper';
 
-export function HyperGeometric(rng: IRNG = new MersenneTwister()) {
-    //rhyper(nn, m, n, k)
-    function rhyper(N: number, nn1in: number, nn2in: number, kkin: number) {
-        return _rhyper(N, nn1in, nn2in, kkin, rng);
-    }
-
-    return {
-        dhyper,
-        phyper,
-        qhyper,
-        rhyper,
-    };
+//rhyper(nn, m, n, k)
+export function rhyper(N: number, nn1in: number, nn2in: number, kkin: number, rng?: IRNG) {
+   return repeatedCall(N, rhyperOne, nn1in, nn2in, kkin, rng);
 }

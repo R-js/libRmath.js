@@ -19,36 +19,31 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import { debug } from 'debug';
 
 import {
-    DBL_MANT_DIG,
-    M_1_PI,
-    M_PI_2,
     ME,
     ML_ERR_return_NAN,
     ML_ERROR,
-    R_D_Cval,
-    R_D_log,
-    R_D_Lval,
-    R_D_qIv,
     R_Q_P01_boundaries,
 } from '@common/logger';
 
-import { R_D_LExp, R_DT_qIv } from '../../exp/expm1';
-import { qnorm } from '../normal/qnorm';
-import { tanpi } from '../../trigonometry/cospi';
+import {
+    DBL_MANT_DIG,
+    M_1_PI,
+    M_PI_2,
+    R_D_Cval,
+    R_D_log,
+    R_D_Lval,
+    R_D_qIv
+} from '$constants';
+
+import { R_D_LExp, R_DT_qIv } from '@dist/exp/expm1';
+import { qnorm } from '@dist/normal/qnorm';
+import { tanpi } from '@trig/tanpi';
 import { dt } from './dt';
 import { pt } from './pt';
 
 const { LN2: M_LN2, PI: M_PI, SQRT2: M_SQRT2, sqrt, pow, log, exp, min: fmin2, abs: fabs, expm1 } = Math;
 
-const {
-    isNaN: ISNAN,
-    EPSILON: DBL_EPSILON,
-    MAX_VALUE: DBL_MAX,
-    MIN_VALUE: DBL_MIN,
-    POSITIVE_INFINITY: ML_POSINF,
-    NEGATIVE_INFINITY: ML_NEGINF,
-    isFinite: R_FINITE,
-} = Number;
+
 
 const printer_qt = debug('qt');
 
@@ -60,9 +55,9 @@ export function qt(p: number, ndf: number, lower_tail: boolean, log_p: boolean):
     const accu = 1e-13;
     const Eps = 1e-11; /* must be > accur */
 
-    if (ISNAN(p) || ISNAN(ndf)) return p + ndf;
+    if (isNaN(p) || isNaN(ndf)) return p + ndf;
 
-    const rc = R_Q_P01_boundaries(lower_tail, log_p, p, ML_NEGINF, ML_POSINF);
+    const rc = R_Q_P01_boundaries(lower_tail, log_p, p, -Infinity, Infinity);
     if (rc !== undefined) {
         return rc;
     }
@@ -82,11 +77,11 @@ export function qt(p: number, ndf: number, lower_tail: boolean, log_p: boolean):
 
         /* Invert pt(.) :
          * 1. finding an upper and lower bound */
-        if (p > 1 - DBL_EPSILON) return ML_POSINF;
-        pp = fmin2(1 - DBL_EPSILON, p * (1 + Eps));
-        for (ux = 1; ux < DBL_MAX && pt(ux, ndf, true, false) < pp; ux *= 2);
+        if (p > 1 - Number.EPSILON) return Infinity;
+        pp = fmin2(1 - Number.EPSILON, p * (1 + Eps));
+        for (ux = 1; ux < Number.MAX_VALUE && pt(ux, ndf, true, false) < pp; ux *= 2);
         pp = p * (1 - Eps);
-        for (lx = -1; lx > -DBL_MAX && pt(lx, ndf, true, false) > pp; lx *= 2);
+        for (lx = -1; lx > -Number.MAX_VALUE && pt(lx, ndf, true, false) > pp; lx *= 2);
 
         /* 2. interval (lx,ux)  halving
        regula falsi failed on qt(0.1, 0.1)
@@ -126,8 +121,8 @@ export function qt(p: number, ndf: number, lower_tail: boolean, log_p: boolean):
 
     if (fabs(ndf - 2) < eps) {
         /* df ~= 2 */
-        if (P > DBL_MIN) {
-            if (3 * P < DBL_EPSILON)
+        if (P > Number.MIN_VALUE) {
+            if (3 * P < Number.EPSILON)
                 /* P ~= 0 */
                 q = 1 / sqrt(P);
             else if (P > 0.9)
@@ -137,7 +132,7 @@ export function qt(p: number, ndf: number, lower_tail: boolean, log_p: boolean):
         } else {
             /* P << 1, q = 1/sqrt(P) = ... */
             if (log_p) q = is_neg_lower ? exp(-p / 2) / M_SQRT2 : 1 / sqrt(-expm1(p));
-            else q = ML_POSINF;
+            else q = Infinity;
         }
     } else if (ndf < 1 + eps) {
         /* df ~= 1  (df < 1 excluded above): Cauchy */
@@ -152,7 +147,7 @@ export function qt(p: number, ndf: number, lower_tail: boolean, log_p: boolean):
             if (log_p)
                 /* 1/tan(e) ~ 1/e */
                 q = is_neg_lower ? M_1_PI * exp(-p) : -1 / (M_PI * expm1(p));
-            else q = ML_POSINF;
+            else q = Infinity;
         }
     } else {
         /*-- usual case;  including, e.g.,  df = 1.1 */
@@ -164,12 +159,12 @@ export function qt(p: number, ndf: number, lower_tail: boolean, log_p: boolean):
         let c = (((20700 * a) / b - 98) * a - 16) * a + 96.36;
         const d = ((94.5 / (b + c) - 3) / b + 1) * sqrt(a * M_PI_2) * ndf;
 
-        const P_ok1 = P > DBL_MIN || !log_p;
+        const P_ok1 = P > Number.MIN_VALUE || !log_p;
         let P_ok = P_ok1;
 
         if (P_ok1) {
             y = pow(d * P, 2.0 / ndf);
-            P_ok = y >= DBL_EPSILON;
+            P_ok = y >= Number.EPSILON;
         }
         if (!P_ok) {
             // log.p && P very.small  ||  (d*P)^(2/df) =: y < eps_c
@@ -191,7 +186,7 @@ export function qt(p: number, ndf: number, lower_tail: boolean, log_p: boolean):
             y = expm1(a * y * y);
             q = sqrt(ndf * y);
         } else if (!P_ok && x < -M_LN2 * DBL_MANT_DIG) {
-            /* 0.5* log(DBL_EPSILON) */
+            /* 0.5* log(Number.EPSILON) */
             /* y above might have underflown */
             q = sqrt(ndf) * exp(-x);
         } else {
@@ -216,7 +211,7 @@ export function qt(p: number, ndf: number, lower_tail: boolean, log_p: boolean):
             while (
                 it++ < 10 &&
                 (y = dt(q, ndf, false)) > 0 &&
-                R_FINITE((x = (pt(q, ndf, false, false) - P / 2) / y)) &&
+                isFinite((x = (pt(q, ndf, false, false) - P / 2) / y)) &&
                 fabs(x) > 1e-14 * fabs(q)
             )
                 /* Newton (=Taylor 1 term):

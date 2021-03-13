@@ -16,19 +16,16 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { debug } from 'debug';
-import { M_LN_SQRT_PI, ML_ERR_return_NAN, R_D__0 } from '@common/logger';
-
-import { lgammafn_sign as lgammafn } from '../distributions/gamma/lgammafn_sign';
-import { dnorm4 as dnorm } from '../normal/dnorm';
+import { ML_ERR_return_NAN,  } from '@common/logger';
+import { M_LN_SQRT_PI, R_D__0 } from '$constants';
+import { lgammaOne } from '@special/gamma';
+import { dnorm } from '@dist/normal';
 import { dt } from './dt';
 import { pnt } from './pnt';
 
-const { isNaN: ISNAN, isFinite: R_FINITE, EPSILON: DBL_EPSILON } = Number;
-const { abs: fabs, sqrt, log, exp } = Math;
-
 const printer_dnt = debug('dnt');
 export function dnt(x: number, df: number, ncp = 0, giveLog = false): number {
-    if (ISNAN(x) || ISNAN(df)) return x + df;
+    if (isNaN(x) || isNaN(df)) return x + df;
 
     /* If non-positive df then error */
     if (df <= 0.0) return ML_ERR_return_NAN(printer_dnt);
@@ -36,32 +33,32 @@ export function dnt(x: number, df: number, ncp = 0, giveLog = false): number {
     if (ncp === 0.0) return dt(x, df, giveLog);
 
     /* If x is infinite then return 0 */
-    if (!R_FINITE(x)) return R_D__0(giveLog);
+    if (!isFinite(x)) return R_D__0(giveLog);
 
     /* If infinite df then the density is identical to a
      normal distribution with mean = ncp.  However, the formula
      loses a lot of accuracy around df=1e9
   */
-    if (!R_FINITE(df) || df > 1e8) return dnorm(x, ncp, 1, giveLog);
+    if (!isFinite(df) || df > 1e8) return dnorm(x, ncp, 1, giveLog);
 
     /* Do calculations on log scale to stabilize */
 
     /* Consider two cases: x ~= 0 or not */
     const u = (function () {
-        if (fabs(x) > sqrt(df * DBL_EPSILON)) {
-            printer_dnt('fabs(x:%d)>sqrt(df*espsilon):%d', fabs(x), sqrt(df * DBL_EPSILON));
+        if (Math.abs(x) > Math.sqrt(df * Number.EPSILON)) {
+            printer_dnt('Math.abs(x:%d)>Math.sqrt(df*espsilon):%d', Math.abs(x), Math.sqrt(df * Number.EPSILON));
             return (
-                log(df) -
-                log(fabs(x)) +
-                log(fabs(pnt(x * sqrt((df + 2) / df), df + 2, ncp, true, false) - pnt(x, df, ncp, true, false)))
+                Math.log(df) -
+                Math.log(Math.abs(x)) +
+                Math.log(Math.abs(pnt(x * Math.sqrt((df + 2) / df), df + 2, ncp, true, false) - pnt(x, df, ncp, true, false)))
             );
             /* FIXME: the above still suffers from cancellation (but not horribly) */
         } else {
             /* x ~= 0 : -> same value as for  x = 0 */
-            printer_dnt('fabs(x:%d)<=sqrt(df*espsilon):%d', fabs(x), sqrt(df * DBL_EPSILON));
-            return lgammafn((df + 1) / 2) - lgammafn(df / 2) - (M_LN_SQRT_PI + 0.5 * (log(df) + ncp * ncp));
+            printer_dnt('Math.abs(x:%d)<=Math.sqrt(df*espsilon):%d', Math.abs(x), Math.sqrt(df * Number.EPSILON));
+            return lgammaOne((df + 1) / 2) - lgammaOne(df / 2) - (M_LN_SQRT_PI + 0.5 * (Math.exp(df) + ncp * ncp));
         }
     })();
     printer_dnt('u=%d, giveLog=%s', u, giveLog);
-    return giveLog ? u : exp(u);
+    return giveLog ? u : Math.exp(u);
 }

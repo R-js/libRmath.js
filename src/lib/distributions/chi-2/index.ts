@@ -27,6 +27,8 @@ import { rchisqOne } from './rchisq';
 import { rnchisqOne } from './rnchisq';
 import { repeatedCall } from '$helper';
 
+export { rchisqOne };
+
 export function rchisq(n: number, df: number, ncp?: number, rng?: IRNGNormal): Float32Array {
   const _rng = rng || globalNorm();
   return ncp === undefined

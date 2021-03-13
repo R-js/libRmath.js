@@ -18,8 +18,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import { debug } from 'debug';
 import { ML_ERR_return_NAN, R_Q_P01_boundaries } from '@common/logger';
-import { R_DT_qIv } from '../../exp/expm1';
-import { qnorm } from '../normal/qnorm';
+import { R_DT_qIv } from '@dist/exp/expm1';
+import { qnorm } from '@dist/normal/qnorm';
 import { pnt } from './pnt';
 import { qt } from './qt';
 

@@ -20,28 +20,24 @@ import { debug } from 'debug';
 
 import { rchisqOne } from '../chi-2/rchisq';
 import { ML_ERR_return_NAN } from '@common/logger';
-import { randomGenHelper } from '../../r-func';
-import { IRNGNormal } from '../rng/normal';
+import type { IRNGNormal } from '@rng/normal/normal-rng';
+import { globalNorm } from '@rng/globalRNG';
 
 const { sqrt } = Math;
 const { isNaN: ISNAN, isFinite: R_FINITE } = Number;
 
 const printer = debug('rt');
 
-export function rt(n: number | number[], df: number, rng: IRNGNormal) {
-    return randomGenHelper(n, rtOne, df, rng);
-}
-
-export function rtOne(df: number, rng: IRNGNormal): number {
+export function rtOne(df: number, rng: IRNGNormal = globalNorm()): number {
     if (ISNAN(df) || df <= 0.0) {
         return ML_ERR_return_NAN(printer);
     }
 
-    if (!R_FINITE(df)) return rng.internal_norm_rand();
+    if (!R_FINITE(df)) return rng.random();
 
     /* Some compilers (including MW6) evaluated this from right to left
         return norm_rand() / sqrt(rchisq(df) / df); */
 
-    const num = rng.internal_norm_rand();
+    const num = rng.random();
     return num / sqrt(rchisqOne(df, rng) / df);
 }

@@ -17,19 +17,20 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { debug } from 'debug';
-import { pbeta } from '../beta/pbeta';
+import { pbeta } from '@dist/beta/pbeta';
 import {
-    //DBL_MIN_EXP,
-    M_LN_SQRT_PI,
-    M_SQRT_2dPI,
     ME,
     ML_ERR_return_NAN,
-    ML_ERROR,
+    ML_ERROR
+} from '@common/logger';
+import {
+    M_LN_SQRT_PI,
+    M_SQRT_2dPI,
     R_DT_0,
     R_DT_1,
     R_DT_val,
-} from '@common/logger';
-import { lgammafn_sign as lgammafn } from '../distributions/gamma/lgammafn_sign';
+} from '$constants';
+import { lgammaOne } from '@special/gamma';
 import { pnorm5 as pnorm } from '../normal/pnorm';
 import { pt } from './pt';
 
@@ -157,7 +158,7 @@ export function pnt(_t: number, df: number, ncp: number, lower_tail = true, log_
         /* rxb = (1 - x) ^ b   [ ~= 1 - b*x for tiny x --> see 'xeven' below]
          *       where '(1 - x)' =: rxb {accurately!} above */
         rxb = pow(rxb, b);
-        const albeta = M_LN_SQRT_PI + lgammafn(b) - lgammafn(0.5 + b);
+        const albeta = M_LN_SQRT_PI + lgammaOne(b) - lgammaOne(0.5 + b);
         xodd = pbeta(x, a, b, /*lower*/ true, /*log_p*/ false);
         printer_pnt('return from pbeta:%d', xodd);
         godd = 2 * rxb * exp(a * log(x) - albeta);
