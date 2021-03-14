@@ -18,26 +18,23 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import { debug } from 'debug';
 
-import { rchisqOne } from '../chi-2/rchisq';
+import { rchisqOne } from '@dist/chi-2/rchisq';
 import { ML_ERR_return_NAN } from '@common/logger';
 import type { IRNGNormal } from '@rng/normal/normal-rng';
 import { globalNorm } from '@rng/globalRNG';
 
-const { sqrt } = Math;
-const { isNaN: ISNAN, isFinite: R_FINITE } = Number;
-
 const printer = debug('rt');
 
 export function rtOne(df: number, rng: IRNGNormal = globalNorm()): number {
-    if (ISNAN(df) || df <= 0.0) {
+    if (isNaN(df) || df <= 0.0) {
         return ML_ERR_return_NAN(printer);
     }
 
-    if (!R_FINITE(df)) return rng.random();
+    if (!isFinite(df)) return rng.random();
 
     /* Some compilers (including MW6) evaluated this from right to left
-        return norm_rand() / sqrt(rchisq(df) / df); */
+        return norm_rand() / Math.sqrt((rchisq(df) / df); */
 
     const num = rng.random();
-    return num / sqrt(rchisqOne(df, rng) / df);
+    return num / Math.sqrt(rchisqOne(df, rng) / df);
 }

@@ -23,9 +23,6 @@ import { ML_ERR_return_NAN  } from '@common/logger';
 import { M_LN2, R_D_Cval, R_DT_0, R_DT_1 } from '$constants';
 import { pnorm5 as pnorm } from '@dist/normal/pnorm';
 
-const { log1p, sqrt, log, abs: fabs, exp } = Math;
-const { isNaN: ISNAN, isFinite: R_FINITE } = Number;
-
 const printer = debug('pt');
 
 export function pt(x: number, n: number, lowerTail = true, log_p = false): number {
@@ -39,17 +36,17 @@ export function pt(x: number, n: number, lowerTail = true, log_p = false): numbe
 
     let lower_tail = lowerTail;
 
-    if (ISNAN(x) || ISNAN(n)) return x + n;
+    if (isNaN(x) || isNaN(n)) return x + n;
 
     if (n <= 0.0) {
         return ML_ERR_return_NAN(printer);
     }
 
-    if (!R_FINITE(x)) {
+    if (!isFinite(x)) {
         return x < 0 ? R_DT_0(lower_tail, log_p) : R_DT_1(lower_tail, log_p);
     }
 
-    if (!R_FINITE(n)) {
+    if (!isFinite(n)) {
         return pnorm(x, 0.0, 1.0, lower_tail, log_p);
     }
 
@@ -57,7 +54,7 @@ export function pt(x: number, n: number, lowerTail = true, log_p = false): numbe
         /*-- Fixme(?): test should depend on `n' AND `x' ! */
         /* Approx. from	 Abramowitz & Stegun 26.7.8 (p.949) */
         val = 1 / (4 * n);
-        return pnorm((x * (1 - val)) / sqrt(1 + x * x * 2 * val), 0.0, 1.0, lower_tail, log_p);
+        return pnorm((x * (1 - val)) / Math.sqrt(1 + x * x * 2 * val), 0.0, 1.0, lower_tail, log_p);
     }
 
     nx = 1 + (x / n) * x;
@@ -71,8 +68,8 @@ export function pt(x: number, n: number, lowerTail = true, log_p = false): numbe
            with z = 1/nx,  a = n/2,  b= 1/2 :
         */
         let lval;
-        lval = -0.5 * n * (2 * log(fabs(x)) - log(n)) - lbeta_scalar(0.5 * n, 0.5) - log(0.5 * n);
-        val = log_p ? lval : exp(lval);
+        lval = -0.5 * n * (2 * Math.log(Math.abs(x)) - Math.log(n)) - lbeta_scalar(0.5 * n, 0.5) - Math.log(0.5 * n);
+        val = log_p ? lval : Math.exp(lval);
     } else {
         val =
             n > x * x
@@ -87,9 +84,9 @@ export function pt(x: number, n: number, lowerTail = true, log_p = false): numbe
 
     if (log_p) {
         if (lower_tail) {
-            return log1p(-0.5 * exp(val));
+            return Math.log1p(-0.5 * Math.exp(val));
         } else {
-            return val - M_LN2; /* = log(.5* pbeta(....)) */
+            return val - M_LN2; /* = Math.log(.5* pbeta(....)) */
         }
     } else {
         val /= 2;

@@ -23,15 +23,6 @@ import { qnorm } from '@dist/normal/qnorm';
 import { pnt } from './pnt';
 import { qt } from './qt';
 
-const { abs: fabs, max: fmax2, min: fmin2 } = Math;
-const {
-    MAX_VALUE: DBL_MAX,
-    EPSILON: DBL_EPSILON,
-    isFinite: R_FINITE,
-    POSITIVE_INFINITY: ML_POSINF,
-    NEGATIVE_INFINITY: ML_NEGINF,
-    isNaN: ISNAN,
-} = Number;
 const printer = debug('qnt');
 
 export function qnt(p: number, df: number, ncp: number, lower_tail: boolean, log_p: boolean) {
@@ -43,7 +34,7 @@ export function qnt(p: number, df: number, ncp: number, lower_tail: boolean, log
     let nx;
     let pp;
 
-    if (ISNAN(p) || ISNAN(df) || ISNAN(ncp)) return p + df + ncp;
+    if (isNaN(p) || isNaN(df) || isNaN(ncp)) return p + df + ncp;
 
     /* Was
      * df = floor(df + 0.5);
@@ -53,11 +44,11 @@ export function qnt(p: number, df: number, ncp: number, lower_tail: boolean, log
 
     if (ncp === 0.0 && df >= 1.0) return qt(p, df, lower_tail, log_p);
 
-    const rc = R_Q_P01_boundaries(lower_tail, log_p, p, ML_NEGINF, ML_POSINF);
+    const rc = R_Q_P01_boundaries(lower_tail, log_p, p, Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY);
     if (rc !== undefined) {
         return rc;
     }
-    if (!R_FINITE(df))
+    if (!isFinite(df))
         // df = Inf ==> limit N(ncp,1)
         return qnorm(p, ncp, 1, lower_tail, log_p);
 
@@ -65,18 +56,18 @@ export function qnt(p: number, df: number, ncp: number, lower_tail: boolean, log
 
     /* Invert pnt(.) :
      * 1. finding an upper and lower bound */
-    if (p > 1 - DBL_EPSILON) return ML_POSINF;
-    pp = fmin2(1 - DBL_EPSILON, p * (1 + Eps));
-    for (ux = fmax2(1, ncp); ux < DBL_MAX && pnt(ux, df, ncp, true, false) < pp; ux *= 2);
+    if (p > 1 - Number.EPSILON) return Number.POSITIVE_INFINITY;
+    pp = Math.min(1 - Number.EPSILON, p * (1 + Eps));
+    for (ux = Math.max(1, ncp); ux < Number.MAX_VALUE && pnt(ux, df, ncp, true, false) < pp; ux *= 2);
     pp = p * (1 - Eps);
-    for (lx = fmin2(-1, -ncp); lx > -DBL_MAX && pnt(lx, df, ncp, true, false) > pp; lx *= 2);
+    for (lx = Math.min(-1, -ncp); lx > -Number.MAX_VALUE && pnt(lx, df, ncp, true, false) > pp; lx *= 2);
 
     /* 2. interval (lx,ux)  halving : */
     do {
         nx = 0.5 * (lx + ux); // could be zero
         if (pnt(nx, df, ncp, true, false) > p) ux = nx;
         else lx = nx;
-    } while (ux - lx > accu * fmax2(fabs(lx), fabs(ux)));
+    } while (ux - lx > accu * Math.max(Math.abs(lx), Math.abs(ux)));
 
     return 0.5 * (lx + ux);
 }
