@@ -20,19 +20,16 @@ import { debug } from 'debug';
 import { wprob } from './wprob';
 
 import {
-    //M_1_SQRT_2PI,
     ME,
     ML_ERR_return_NAN,
     ML_ERROR,
-    R_DT_0,
-    R_DT_1,
 } from '@common/logger';
 
-import { R_DT_val } from '@common/logger';
-import { lgammafn_sign as lgammafn } from '../distributions/gamma/lgammafn_sign';
-
-const { isNaN: ISNAN, isFinite: R_FINITE } = Number;
-const { exp, sqrt, log, LN2: M_LN2 } = Math;
+import {
+    R_DT_val, R_DT_0,
+    R_DT_1,
+} from '$constants';
+import { lgammaOne } from '@special/gamma';
 
 const printer_ptukey = debug('_ptukey');
 
@@ -44,12 +41,12 @@ function (q, nmeans, df, nranges = 1, lower.tail = TRUE, log.p = FALSE)
 <environment: namespace:stats>
 
 double ptukey(
-	double q, // q
-	double rr, // nranges
-	double cc, // nmeans
-	double df, // df
+    double q, // q
+    double rr, // nranges
+    double cc, // nmeans
+    double df, // df
   int lower_tail, // lowertail
-	int log_p //logp
+    int log_p //logp
 */
 export function ptukey(q: number, rr: number, cc: number, df: number, lower_tail = true, log_p = false): number {
     /*  function ptukey() [was qprob() ]:
@@ -88,7 +85,7 @@ export function ptukey(q: number, rr: number, cc: number, df: number, lower_tail
     
         d.f. > dlarg:	the range is used to calculate integral.
     
-        M_LN2 = log(2)
+        M_LN2 = Math.log(2)
     
         xlegq = legendre 16-point nodes
         alegq = legendre 16-point coefficients
@@ -104,9 +101,9 @@ export function ptukey(q: number, rr: number, cc: number, df: number, lower_tail
         All values matched the tables (provided in same reference)
         to 30 significant digits.
     
-        f(x) = .5 + erf(x / sqrt(2)) / 2      for x > 0
+        f(x) = .5 + erf(x / Math.sqrt((2)) / 2      for x > 0
     
-        f(x) = erfc( -x / sqrt(2)) / 2	      for x < 0
+        f(x) = erfc( -x / Math.sqrt((2)) / 2	      for x < 0
     
         where f(x) is standard normal c. d. f.
     
@@ -162,7 +159,7 @@ export function ptukey(q: number, rr: number, cc: number, df: number, lower_tail
     let wprb: number;
     //let j: number;
 
-    if (ISNAN(q) || ISNAN(rr) || ISNAN(cc) || ISNAN(df)) {
+    if (isNaN(q) || isNaN(rr) || isNaN(cc) || isNaN(df)) {
         return ML_ERR_return_NAN(printer_ptukey);
     }
 
@@ -175,15 +172,15 @@ export function ptukey(q: number, rr: number, cc: number, df: number, lower_tail
 
     if (df < 2 || rr < 1 || cc < 2) return ML_ERR_return_NAN(printer_ptukey);
 
-    if (!R_FINITE(q)) return R_DT_1(lower_tail, log_p);
+    if (!isFinite(q)) return R_DT_1(lower_tail, log_p);
 
     if (df > dlarg) return R_DT_val(lower_tail, log_p, wprob(q, rr, cc));
 
     /* calculate leading constant */
 
     f2 = df * 0.5;
-    /* lgammafn(u) = log(gamma(u)) */
-    f2lf = f2 * log(df) - df * M_LN2 - lgammafn(f2);
+    /* lgammafn(u) = Math.log(gamma(u)) */
+    f2lf = f2 * Math.log(df) - df * Math.LN2 - lgammaOne(f2);
     f21 = f2 - 1.0;
 
     /* integral is divided into unit, half-unit, quarter-unit, or */
@@ -196,7 +193,7 @@ export function ptukey(q: number, rr: number, cc: number, df: number, lower_tail
     else if (df <= deigh) ulen = ulen3;
     else ulen = ulen4;
 
-    f2lf += log(ulen);
+    f2lf += Math.log(ulen);
 
     /* integrate over each subinterval */
 
@@ -214,21 +211,21 @@ export function ptukey(q: number, rr: number, cc: number, df: number, lower_tail
             const j = ihalfq < jj ? jj - ihalfq - 1 : jj - 1;
             const t1 =
                 ihalfq < jj
-                    ? f2lf + f21 * log(twa1 + xlegq[j] * ulen) - (xlegq[j] * ulen + twa1) * ff4
-                    : f2lf + f21 * log(twa1 - xlegq[j] * ulen) + (xlegq[j] * ulen - twa1) * ff4;
+                    ? f2lf + f21 * Math.log(twa1 + xlegq[j] * ulen) - (xlegq[j] * ulen + twa1) * ff4
+                    : f2lf + f21 * Math.log(twa1 - xlegq[j] * ulen) + (xlegq[j] * ulen - twa1) * ff4;
 
-            /* if exp(t1) < 9e-14, then doesn't contribute to integral */
+            /* if Math.exp(t1) < 9e-14, then doesn't contribute to integral */
             if (t1 >= eps1) {
                 if (ihalfq < jj) {
-                    qsqz = q * sqrt((xlegq[j] * ulen + twa1) * 0.5);
+                    qsqz = q * Math.sqrt((xlegq[j] * ulen + twa1) * 0.5);
                 } else {
-                    qsqz = q * sqrt((-(xlegq[j] * ulen) + twa1) * 0.5);
+                    qsqz = q * Math.sqrt((-(xlegq[j] * ulen) + twa1) * 0.5);
                 }
 
                 /* call wprob to find integral of range portion */
 
                 wprb = wprob(qsqz, rr, cc);
-                rotsum = wprb * alegq[j] * exp(t1);
+                rotsum = wprb * alegq[j] * Math.exp(t1);
                 otsum += rotsum;
             }
             /* end legendre integral for interval i */
