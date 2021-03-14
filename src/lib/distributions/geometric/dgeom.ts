@@ -23,7 +23,6 @@ import { R_D__0, R_D_nonint_check } from '$constants';
 const printer = debug('dgeom');
 
 export function dgeom(x: number, p: number, giveLog = false): number {
-    let prob: number;
 
     if (isNaN(x) || isNaN(p)) return x + p;
 
@@ -41,7 +40,7 @@ export function dgeom(x: number, p: number, giveLog = false): number {
     x = Math.round(x);
 
     /* prob = (1-p)^x, stable for small p */
-    prob = dbinom_raw(0, x, p, 1 - p, giveLog);
+    const prob = dbinom_raw(0, x, p, 1 - p, giveLog);
 
     return giveLog ? Math.log(p) + prob : p * prob;
 }

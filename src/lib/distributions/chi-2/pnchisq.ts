@@ -87,9 +87,6 @@ export function pnchisq_raw(
     log_p: boolean,
 ): number {
     //double
-    let lam;
-    let x2;
-    let f2;
     let term;
     let bound;
     let f_x_2n;
@@ -193,7 +190,7 @@ export function pnchisq_raw(
 
     // Series expansion ------- FIXME: log_p=TRUE, lower_tail=FALSE only applied at end
 
-    lam = 0.5 * theta;
+    const lam = 0.5 * theta;
     lamSml = -lam < _dbl_min_exp;
     if (lamSml) {
         /* MATHLIB_ERROR(
@@ -208,8 +205,8 @@ export function pnchisq_raw(
 
     /* evaluate the first term */
     v = u;
-    x2 = 0.5 * x;
-    f2 = 0.5 * f;
+    const x2 = 0.5 * x;
+    const f2 = 0.5 * f;
     f_x_2n = f - x;
 
     printer('-- v=exp(-th/2)=%d, x/2= %d, f/2= %d', v, x2, f2);

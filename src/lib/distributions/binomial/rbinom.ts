@@ -56,10 +56,6 @@ export function rbinomOne(nin: number, pp: number, rng: IRNG): number {
     let x2: number;
     let z: number;
     let z2: number;
-    let p: number;
-    let q: number;
-    let np: number;
-    let g: number;
     let r: number;
     let al: number;
     let alv: number;
@@ -71,7 +67,7 @@ export function rbinomOne(nin: number, pp: number, rng: IRNG): number {
     let i;
     let ix = 0;
     let k;
-    let n;
+   
 
     if (!isFinite(nin)) return ML_ERR_return_NAN(printer_rbinom);
     r = Math.round(nin);
@@ -101,13 +97,13 @@ export function rbinomOne(nin: number, pp: number, rng: IRNG): number {
         );
     }
     /* else */
-    n = Math.trunc(r);
+    const n = Math.trunc(r);
 
-    p = Math.min(pp, 1 - pp);
-    q = 1 - p;
-    np = n * p;
+    const p = Math.min(pp, 1 - pp);
+    const q = 1 - p;
+    const np = n * p;
     r = p / q;
-    g = r * (n + 1);
+    const g = r * (n + 1);
 
     /* Setup, perform only when parameters change [using static (globals): */
 

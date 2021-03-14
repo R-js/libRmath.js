@@ -27,7 +27,7 @@ export function dexp(x: number, rate = 1, asLog = false): number{
   return _dexp(x, 1 / rate, asLog);
 }
 
-export function pexp(q: number, rate = 1, lowerTail = true, logP = false) {
+export function pexp(q: number, rate = 1, lowerTail = true, logP = false): number {
   return _pexp(q, 1 / rate, lowerTail, logP);
 }
 
@@ -35,7 +35,6 @@ export function qexp(p: number, rate = 1, lowerTail = true, logP = false): numbe
   return _qexp(p, 1 / rate, lowerTail, logP);
 }
 
-export  function rng(n: number, rate = 1, rng?: IRNG){
-  const _rng = rng || globalUni();
-  return repeatedCall(n, rexpOne, 1 / rate, _rng);
+export  function rng(n: number, rate = 1, rng: IRNG = globalUni()):Float32Array{
+  return repeatedCall(n, rexpOne, 1 / rate, rng);
 }

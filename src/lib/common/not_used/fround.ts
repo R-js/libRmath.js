@@ -33,7 +33,7 @@ const { abs: fabs, floor } = Math;
 const MAX_DIGITS = Math.trunc(Math.log10(Number.MAX_VALUE));
 
 /* also used potentially in fprec.c and main/format.c */
-export function private_rint(x: number) {
+export function private_rint(x: number): number {
     let tmp: number;
     let sgn = 1.0;
     let ltmp: number;
@@ -60,7 +60,7 @@ export function private_rint(x: number) {
     return sgn * tmp;
 }
 
-export function fround(x: number, digits: number) {
+export function fround(x: number, digits: number): number {
     /* = 308 (IEEE); was till R 0.99: (DBL_DIG - 1) */
     /* Note that large digits make sense for very small numbers */
 

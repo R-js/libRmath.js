@@ -39,9 +39,7 @@ function qchisq_appr(
     const C9 = 6.73;
     const C10 = 13.32;
 
-    let alpha;
     let a;
-    let c;
     let ch;
     let p1;
     let p2;
@@ -61,8 +59,8 @@ function qchisq_appr(
         return ML_ERR_return_NAN(printer_qchisq_appr);
     }
 
-    alpha = 0.5 * nu; /* = [pq]gamma() shape */
-    c = alpha - 1;
+    const alpha = 0.5 * nu; /* = [pq]gamma() shape */
+    const c = alpha - 1;
 
     if (nu < -1.24 * (p1 = R_DT_log(lower_tail, log_p, p))) {
         /* for small chi-squared */

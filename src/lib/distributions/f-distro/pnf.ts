@@ -23,7 +23,6 @@ import { pnchisq } from '@dist/chi-2/pnchisq';
 
 const printer_pnf = debug('pnf');
 export function pnf(x: number, df1: number, df2: number, ncp: number, lowerTail = true, logP = false): number {
-    let y;
 
     if (isNaN(x) || isNaN(df1) || isNaN(df2) || isNaN(ncp)) return x + df2 + df1 + ncp;
 
@@ -41,6 +40,6 @@ export function pnf(x: number, df1: number, df2: number, ncp: number, lowerTail 
         /* avoid problems with +Inf and loss of accuracy */
         return pnchisq(x * df1, df1, ncp, lowerTail, logP);
 
-    y = (df1 / df2) * x;
+    const y = (df1 / df2) * x;
     return pnbeta2(y / (1 + y), 1 / (1 + y), df1 / 2, df2 / 2, ncp, lowerTail, logP);
 }

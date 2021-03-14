@@ -76,7 +76,7 @@ export function rpoisOne(mu: number, rng: IRNGNormal = globalNorm()): number {
     let fk = 0;
     let fx;
     let fy;
-    let g;
+    //let g;
     let px;
     let py;
     let t = 0;
@@ -86,7 +86,7 @@ export function rpoisOne(mu: number, rng: IRNGNormal = globalNorm()): number {
     let pois = -1;
     let k;
     let kflag = 0;
-    let big_mu;
+    //let big_mu;
     let new_big_mu = false;
 
     if (!R_FINITE(mu) || mu < 0) {
@@ -94,7 +94,7 @@ export function rpoisOne(mu: number, rng: IRNGNormal = globalNorm()): number {
     }
     if (mu <= 0) return 0;
 
-    big_mu = mu >= 10;
+    const big_mu = mu >= 10;
     if (big_mu) {
         new_big_mu = false;
     }
@@ -160,7 +160,7 @@ export function rpoisOne(mu: number, rng: IRNGNormal = globalNorm()): number {
     /* Only if mu >= 10 : ----------------------- */
 
     /* Step N. normal sample */
-    g = mu + s * rng.random(); /* norm_rand() ~ N(0,1), standard normal */
+    const g = mu + s * rng.random(); /* norm_rand() ~ N(0,1), standard normal */
 
     if (g >= 0) {
         pois = floor(g);

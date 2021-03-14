@@ -58,9 +58,6 @@ const printer_phyper = debug('phyper');
 
 export function phyper(x: number, nr: number, nb: number, nn: number, lowerTail = true, logP = false): number {
     /* Sample of  n balls from  NR red  and	 NB black ones;	 x are red */
-
-    let d: number;
-    let pd: number;
     let lower_tail = lowerTail; //copy it gets changed
     const log_p = logP;
     let NR = nr;
@@ -89,8 +86,8 @@ export function phyper(x: number, nr: number, nb: number, nn: number, lowerTail 
     if (x < 0) return R_DT_0(lower_tail, log_p);
     if (x >= NR || x >= n) return R_DT_1(lower_tail, log_p);
 
-    d = dhyper(x, NR, NB, n, log_p);
-    pd = pdhyper(x, NR, NB, n, log_p);
+    const d = dhyper(x, NR, NB, n, log_p);
+    const pd = pdhyper(x, NR, NB, n, log_p);
 
     return log_p ? R_DT_log(lower_tail, log_p, d + pd) : R_D_Lval(lower_tail, d * pd);
 }

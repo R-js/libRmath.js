@@ -24,8 +24,6 @@ import { dgamma } from '@dist/gamma/dgamma';
 const printer_df = debug('df');
 
 export function df(x: number, m: number, n: number, giveLog = false): number {
-    let p: number;
-    let q: number;
     let f: number;
     let dens: number;
 
@@ -60,8 +58,8 @@ export function df(x: number, m: number, n: number, giveLog = false): number {
     }
 
     f = 1 / (n + x * m);
-    q = n * f;
-    p = x * m * f;
+    const q = n * f;
+    const p = x * m * f;
 
     if (m >= 2) {
         f = (m * q) / 2;

@@ -21,7 +21,8 @@ export { qpois } from './qpois';
 import { rpoisOne } from './rpois';
 import type { IRNGNormal } from '@rng/normal/normal-rng';
 import { repeatedCall } from '$helper';
+import { globalNorm } from '@rng/globalRNG';
 
-export function rpois(n: number, lamda: number, rng?: IRNGNormal) {
+export function rpois(n: number, lamda: number, rng: IRNGNormal = globalNorm()): Float32Array {
   return repeatedCall(n, rpoisOne, lamda, rng);
 }

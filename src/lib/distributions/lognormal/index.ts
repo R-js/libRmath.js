@@ -22,8 +22,9 @@ import { rlnormOne } from './rlnorm';
 import { repeatedCall } from '$helper'
 
 import type { IRNGNormal } from '@rng/normal/normal-rng';
+import { globalNorm } from '@rng/globalRNG';
 export { rlnormOne }
-export function rlnorm(n: number, meanlog = 0, sdlog = 1, rng?: IRNGNormal) {
-  repeatedCall(n, rlnormOne, meanlog, sdlog, rng)
+export function rlnorm(n: number, meanlog = 0, sdlog = 1, rng: IRNGNormal = globalNorm()): Float32Array {
+  return repeatedCall(n, rlnormOne, meanlog, sdlog, rng)
 }
 

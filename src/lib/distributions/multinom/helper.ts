@@ -1,5 +1,5 @@
 
-export function checks(prob: Float32Array, size: number, n: number, printer: (...args: unknown[]) => void) {
+export function checks(prob: Float32Array, size: number, n: number, printer: (...args: unknown[]) => void): number {
     if (prob.length === 0) {
         printer('no positive probabilites');
         return 0;

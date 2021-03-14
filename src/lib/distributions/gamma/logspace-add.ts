@@ -15,6 +15,6 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-export function logspace_add(logx: number, logy: number) {
+export function logspace_add(logx: number, logy: number): number {
     return Math.max(logx, logy) + Math.log1p(Math.exp(-Math.abs(logx - logy)));
 }

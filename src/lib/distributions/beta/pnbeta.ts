@@ -33,11 +33,8 @@ function pnbeta_raw(x: number, o_x: number, a: number, b: number, ncp: number): 
     const itrmax = 10000; /* 100 is not enough for pf(ncp=200)
                      see PR#11277 */
     // double
-    let a0;
-    let lbeta;
-    let c;
     let errbd;
-    let x0;
+
     const temp = new NumberW(0);
     const tmp_c = new NumberW(0);
     // int
@@ -57,13 +54,13 @@ function pnbeta_raw(x: number, o_x: number, a: number, b: number, ncp: number): 
     if (x < 0 || o_x > 1 || (x === 0 && o_x === 1)) return 0;
     if (x > 1 || o_x < 0 || (x === 1 && o_x === 0)) return 1;
 
-    c = ncp / 2;
+    const c = ncp / 2;
 
     /* initialize the series */
 
-    x0 = Math.floor(Math.max(c - 7 * Math.sqrt(c), 0));
-    a0 = a + x0;
-    lbeta = lgammafn_sign(a0) + lgammafn_sign(b) - lgammafn_sign(a0 + b);
+    const x0 = Math.floor(Math.max(c - 7 * Math.sqrt(c), 0));
+    const a0 = a + x0;
+    const lbeta = lgammafn_sign(a0) + lgammafn_sign(b) - lgammafn_sign(a0 + b);
     /* temp = pbeta_raw(x, a0, b, TRUE, FALSE), but using (x, o_x): */
     Toms708.bratio(a0, b, x, o_x, temp, tmp_c, ierr);
 
@@ -103,7 +100,7 @@ export function pnbeta2(
     ncp: number /* o_x  == 1 - x  but maybe more accurate */,
     lower_tail: boolean,
     log_p: boolean,
-) {
+): number {
     let ans = pnbeta_raw(x, o_x, a, b, ncp);
 
     /* return R_DT_val(ans), but we want to warn about cancellation here */

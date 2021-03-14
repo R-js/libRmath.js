@@ -52,10 +52,7 @@ function do_search(y: number, z: NumberW, p: number, n: number, pr: number, incr
 const printer_qbinom = debug('_qbinom');
 
 export function qbinom(p: number, size: number, pr: number, lower_tail: boolean, log_p: boolean): number {
-    let q: number;
-    let mu: number;
-    let sigma: number;
-    let gamma: number;
+
     const z = new NumberW(0);
     let y: number;
 
@@ -86,13 +83,13 @@ export function qbinom(p: number, size: number, pr: number, lower_tail: boolean,
 
     if (pr === 0 || size === 0) return 0;
 
-    q = 1 - pr;
+    const q = 1 - pr;
     if (q === 0) return size; /* covers the full range of the distribution */
 
-    mu = size * pr; //mean
-    sigma = Math.sqrt(size * pr * q); //standard deviation
+    const mu = size * pr; //mean
+    const sigma = Math.sqrt(size * pr * q); //standard deviation
 
-    gamma = (q - pr) / sigma; // = (  (1 - pr)-pr )/sd = (1 - 2pr)/sd
+    const gamma = (q - pr) / sigma; // = (  (1 - pr)-pr )/sd = (1 - 2pr)/sd
 
     printer_qbinom(
         'qbinom(p=%d, n=%d, pr=%d, l.t.=%s, log=%s): sigm=%d, gam=%d',

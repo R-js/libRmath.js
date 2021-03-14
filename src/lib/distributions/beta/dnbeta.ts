@@ -28,14 +28,11 @@ const eps = 1e-15;
 
 //also used by f-distriution
 export function dnbeta_scalar(x: number, a: number, b: number, ncp: number, give_log: boolean): number {
-   
+
     //int
     let kMax;
     //double
     let k;
-    let ncp2;
-    let dx2;
-    let d;
     let D;
     let term;
     //long double
@@ -59,9 +56,9 @@ export function dnbeta_scalar(x: number, a: number, b: number, ncp: number, give
         return dbeta_scalar(x, a, b, give_log) as number;
     }
     /* New algorithm, starting with *largest* term : */
-    ncp2 = 0.5 * ncp;
-    dx2 = ncp2 * x;
-    d = (dx2 - a - 1) / 2;
+    const ncp2 = 0.5 * ncp;
+    const dx2 = ncp2 * x;
+    const d = (dx2 - a - 1) / 2;
     D = d * d + dx2 * (a + b) - a;
     if (D <= 0) {
         kMax = 0;

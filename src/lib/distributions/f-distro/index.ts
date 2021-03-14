@@ -31,7 +31,7 @@ import { qnf } from './qnf';
 import { rfOne as _rfOne } from './rf';
 import { globalNorm } from '@rng/globalRNG';
 
-export function df(x: number, df1: number, df2: number, ncp?: number, log = false) {
+export function df(x: number, df1: number, df2: number, ncp?: number, log = false): number {
     /*
 function (x, df1, df2, ncp, log = FALSE) 
   {
@@ -46,7 +46,7 @@ else .Call(C_dnf, x, df1, df2, ncp, log)
     return dnf(x, df1, df2, ncp, log);
 }
 
-export function pf(q: number, df1: number, df2: number, ncp?: number, lowerTail = true, logP = false) {
+export function pf(q: number, df1: number, df2: number, ncp?: number, lowerTail = true, logP = false): number {
     /*  if (missing(ncp)) 
     .Call(C_pf, q, df1, df2, lower.tail, log.p)
 else .Call(C_pnf, q, df1, df2, ncp, lower.tail, log.p)
@@ -57,14 +57,14 @@ else .Call(C_pnf, q, df1, df2, ncp, lower.tail, log.p)
     return pnf(q, df1, df2, ncp, lowerTail, logP);
 }
 
-export function qf(p: number, df1: number, df2: number, ncp?: number, lowerTail = true, logP = false) {
+export function qf(p: number, df1: number, df2: number, ncp?: number, lowerTail = true, logP = false): number {
     if (ncp === undefined) {
         return _qf(p, df1, df2, lowerTail, logP);
     }
     return qnf(p, df1, df2, ncp, lowerTail, logP);
 }
 
-export function rf(n: number | number, n1: number, n2: number, rng?: IRNGNormal) {
+export function rf(n: number | number, n1: number, n2: number, rng?: IRNGNormal): Float32Array {
     return repeatedCall(n, rfOne, n1, n2, rng);
 }
 

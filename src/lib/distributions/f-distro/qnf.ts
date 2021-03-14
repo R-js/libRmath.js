@@ -24,7 +24,6 @@ import { qnchisq } from '@dist/chi-2/qnchisq';
 const printer = debug('qnf');
 
 export function qnf(p: number, df1: number, df2: number, ncp: number, lowerTail = true, logP = false): number {
-    let y;
 
     if (isNaN(p) || isNaN(df1) || isNaN(df2) || isNaN(ncp)) return p + df1 + df2 + ncp;
 
@@ -49,6 +48,6 @@ export function qnf(p: number, df1: number, df2: number, ncp: number, lowerTail 
         /* avoid problems with +Inf and loss of accuracy */
         return qnchisq(p, df1, ncp, lowerTail, logP) / df1;
 
-    y = qnbeta(p, df1 / 2, df2 / 2, ncp, lowerTail, logP);
+    const y = qnbeta(p, df1 / 2, df2 / 2, ncp, lowerTail, logP);
     return (y / (1 - y)) * (df2 / df1);
 }

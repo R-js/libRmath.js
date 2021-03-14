@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import { debug } from 'debug';
 import { ML_ERR_return_NAN,  } from '@common/logger';
 import { R_DT_0, R_DT_1, R_DT_val} from '$constants';
-import { csignrank } from './signrank';
+import { csignrank } from './csignrank';
 
 const { round, trunc, LN2: M_LN2, exp } = Math;
 const { isNaN: ISNAN, isFinite: R_FINITE } = Number;
@@ -29,7 +29,7 @@ export function psignrank(x: number, n: number, lowerTail = true, logP = false):
     const roundN = round(n);
     const u = (roundN * (roundN + 1)) / 2;
     const c = trunc(u / 2);
-    const w = Array.from<number>({ length: c + 1 }).fill(0);
+    const w = new Float32Array(c + 1);
 
     x = round(x + 1e-7);
     let lowerT = lowerTail; // temp copy on each iteration

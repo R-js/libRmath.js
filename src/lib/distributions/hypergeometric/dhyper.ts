@@ -24,11 +24,6 @@ import { dbinom_raw } from '@dist/binomial/dbinom';
 const printer = debug('dhyper');
 
 export function dhyper(x: number, r: number, b: number, n: number, give_log = false): number {
-    let p: number;
-    let q: number;
-    let p1: number;
-    let p2: number;
-    let p3: number;
 
     if (isNaN(x) || isNaN(r) || isNaN(b) || isNaN(n)) return x + r + b + n;
 
@@ -46,12 +41,12 @@ export function dhyper(x: number, r: number, b: number, n: number, give_log = fa
     if (n < x || r < x || n - x > b) return R_D__0(give_log);
     if (n === 0) return x === 0 ? R_D__1(give_log) : R_D__0(give_log);
 
-    p = n / (r + b);
-    q = (r + b - n) / (r + b);
+    const p = n / (r + b);
+    const q = (r + b - n) / (r + b);
 
-    p1 = dbinom_raw(x, r, p, q, give_log);
-    p2 = dbinom_raw(n - x, b, p, q, give_log);
-    p3 = dbinom_raw(n, r + b, p, q, give_log);
+    const p1 = dbinom_raw(x, r, p, q, give_log);
+    const p2 = dbinom_raw(n - x, b, p, q, give_log);
+    const p3 = dbinom_raw(n, r + b, p, q, give_log);
 
     return give_log ? p1 + p2 - p3 : (p1 * p2) / p3;
 }

@@ -23,6 +23,6 @@ import { repeatedCall } from '$helper';
 
 import type { IRNGNormal } from '@rng/normal/normal-rng';
 
-export function rnorm(n=1, mu=0, sigma=1, rng?:IRNGNormal) {
+export function rnorm(n=1, mu=0, sigma=1, rng?:IRNGNormal): Float32Array {
     return repeatedCall(n, rnormOne, mu, sigma, rng);
 }

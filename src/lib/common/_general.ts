@@ -42,12 +42,12 @@ export function matchFloatType(n: number, ...a: (NumArray | undefined)[]): Float
     return fp32 ? new Float32Array(n) : new Float64Array(n);
 }
 
-export function isEmptyArray(x: NumArray) {
+export function isEmptyArray(x: NumArray): boolean {
     return isArray(x) && x.length === 0;
 }
 
 export const M_SQRT2 = 1.41421356237309504880168872421; /* sqrt(2) */
-export const frac = (x: number) => x - Math.trunc(x);
+export function frac(x: number): number { return x - Math.trunc(x) }
 export const M_SQRT_32 = 5.656854249492380195206754896838; /* sqrt(32) */
 
 //gamma
@@ -77,9 +77,9 @@ export const DBL_MAX_EXP = Math.log2(Number.MAX_VALUE);
 // gamma
 export const DBL_MIN_EXP = Math.log2(Number.MIN_VALUE);
 
-export const R_D__1 = (logP: boolean) => {
+export function R_D__1(logP: boolean): number {
     return logP ? 0 : 1.0;
-};
+}
 
 export const R_D__0 = (logP: boolean): number => {
     return logP ? Number.NEGATIVE_INFINITY : 0.0;
@@ -91,15 +91,15 @@ export const R_DT_0 = (lower_tail: boolean, log_p: boolean): number => {
 export const R_DT_1 = (lower_tail: boolean, log_p: boolean): number => {
     return lower_tail ? R_D__1(log_p) : R_D__0(log_p);
 };
-export const R_D_val = (log_p: boolean, x: number) => {
+export function R_D_val(log_p: boolean, x: number): number {
     return log_p ? Math.log(x) : x;
-};
+}
 
 export function R_D_Clog(log_p: boolean, p: number): number {
     return log_p ? Math.log1p(-p) : 0.5 - p + 0.5; /* [log](1-p) */
 }
 
-export function R_DT_val(lower_tail: boolean, log_p: boolean, x: number) {
+export function R_DT_val(lower_tail: boolean, log_p: boolean, x: number): number {
     return lower_tail ? R_D_val(log_p, x) : R_D_Clog(log_p, x);
 }
 
@@ -127,7 +127,7 @@ export function R_P_bounds_Inf_01(lowerTail: boolean, log_p: boolean, x: number)
     return undefined;
 }
 
-export function R_D_half(log_p: boolean) {
+export function R_D_half(log_p: boolean): number {
     return log_p ? -M_LN2 : 0.5; // 1/2 (lower- or upper tail)
 }
 
@@ -148,7 +148,7 @@ export const R_D_exp = (log_p: boolean, x: number): number => {
     /* exp(x) */
 };
 
-export function R_D_nonint_check(log: boolean, x: number, printer: debug.IDebugger) {
+export function R_D_nonint_check(log: boolean, x: number, printer: debug.IDebugger): number|undefined {
     if (R_nonint(x)) {
         printer('non-integer x = %d', x);
         return R_D__0(log);
@@ -158,7 +158,7 @@ export function R_D_nonint_check(log: boolean, x: number, printer: debug.IDebugg
 
 //gamma
 //bessel
-export function fmod(x: number, y: number) {
+export function fmod(x: number, y: number): number {
     return x % y;
 }
 
@@ -166,7 +166,7 @@ export function imax2(x: number, y: number): number {
     return Math.trunc(Math.max(x, y));
 }
 
-export function isOdd(k: number) {
+export function isOdd(k: number): boolean {
     return Math.floor(k) % 2 === 1;
 }
 
@@ -188,11 +188,11 @@ export function isEpsilonNear(x: number, target: number): boolean {
     return false;
 }
 
-export function R_D_negInonint(x: number) {
+export function R_D_negInonint(x: number): boolean {
     return x < 0.0 || R_nonint(x);
 }
 
-export function R_nonint(x: number) {
+export function R_nonint(x: number): boolean {
     return !Number.isInteger(x); //Math.abs(x - Math.round(x)) > 1e-7 * Math.max(1, Math.abs(x));
 }
 
@@ -227,7 +227,7 @@ export const sqxmin_BESS_K = 1.49e-154;
 export const M_eps_sinc = 2.149e-8;
 
 // gamma
-export function R_pow_di(x: number, n: number) {
+export function R_pow_di(x: number, n: number): number {
     let pow = 1.0;
 
     if (Number.isNaN(x)) return x;
@@ -288,14 +288,18 @@ export function R_pow(x: number, y: number): number {
     return NaN; // all other cases: (-Inf)^{+-Inf, non-int}; (neg)^{+-Inf}
 }
 
-export const R_finite = (x: number) => !Number.isFinite(x);
+export function R_finite(x: number): boolean { 
+    return !Number.isFinite(x);
+}
 
 /* C++ math header undefines any isnan macro. This file
    doesn't get C++ headers and so is safe. */
-export const R_isnancpp = (x: number) => Number.isNaN(x);
+export function R_isnancpp(x: number): boolean {
+    return Number.isNaN(x);
+}
 
 // gamma
-export function myfmod(x1: number, x2: number) {
+export function myfmod(x1: number, x2: number): number {
     const q = x1 / x2;
     return x1 - Math.floor(q) * x2;
 }
@@ -344,16 +348,16 @@ export function ldexp(x: number, y: number): number {
     return x * Math.pow(2, y);
 }
 
-export function R_D_log(log_p: boolean, p: number) {
+export function R_D_log(log_p: boolean, p: number): number {
     return log_p ? p : Math.log(p); /* log(p) */
 }
 
 //#define R_D_qIv(p)	(log_p	? exp(p) : (p))		/*  p  in qF(p,..) */
-export function R_D_qIv(logP: boolean, p: number) {
+export function R_D_qIv(logP: boolean, p: number): number {
     return logP ? Math.exp(p) : p;
 }
 
 
-export function sumfp(x: Float32Array) {
+export function sumfp(x: Float32Array): number {
     return x.reduce((pv, v) => pv + v, 0);
 }

@@ -39,9 +39,7 @@ export function rbetaOne(aa: number, bb: number, rng: IRNG = globalUni()): numbe
     if (!isFinite(aa) || bb === 0) return 1.0;
     if (!isFinite(bb) || aa === 0) return 0.0;
 
-    let a;
-    let b;
-    let alpha;
+  
     let r;
     let s;
     let t;
@@ -51,7 +49,7 @@ export function rbetaOne(aa: number, bb: number, rng: IRNG = globalUni()): numbe
     let w = 0;
     let y;
     let z;
-    let qsame;
+
     /* FIXME:  Keep Globals (properly) for threading */
     /* Uses these GLOBALS to save time when many rv's are generated : */
     let beta = 0;
@@ -63,15 +61,15 @@ export function rbetaOne(aa: number, bb: number, rng: IRNG = globalUni()): numbe
     let oldb = -1.0;
 
     /* Test if we need new "initializing" */
-    qsame = olda === aa && oldb === bb;
+    const qsame = olda === aa && oldb === bb;
     if (!qsame) {
         olda = aa;
         oldb = bb;
     }
 
-    a = Math.min(aa, bb);
-    b = Math.max(aa, bb); /* a <= b */
-    alpha = a + b;
+    const a = Math.min(aa, bb);
+    const b = Math.max(aa, bb); /* a <= b */
+    const alpha = a + b;
 
     function v_w_from__u1_bet(AA: number) {
         v = beta * Math.log(u1 / (1.0 - u1));

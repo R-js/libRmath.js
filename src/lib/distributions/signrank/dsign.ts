@@ -29,7 +29,7 @@ export function dsignrank(x: number, n: number, logX = false): number {
     const rn = round(n);
     const u = (rn * (rn + 1)) / 2;
     const c = trunc(u / 2);
-    const w = Array.from<number>({ length: c + 1 }).fill(0);
+    const w = new Float32Array(c + 1);
     if (ISNAN(x) || ISNAN(n)) return x + n;
 
     if (n <= 0) {

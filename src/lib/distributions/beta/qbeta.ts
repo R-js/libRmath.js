@@ -151,11 +151,9 @@ export function qbeta_raw(
     let i_inn;
     let a;
     let la;
-    let logbeta;
     let g;
     let h;
     let pp;
-    let p_;
     let qq;
     let r;
     let s;
@@ -227,9 +225,9 @@ export function qbeta_raw(
     }
 
     /* initialize */
-    p_ = R_DT_qIv(lower_tail, log_p, alpha); /* lower_tail prob (in any case) */
+    const p_ = R_DT_qIv(lower_tail, log_p, alpha); /* lower_tail prob (in any case) */
     // Conceptually,  0 < p_ < 1  (but can be 0 or 1 because of cancellation!)
-    logbeta = lbeta_scalar(p, q);
+    const logbeta = lbeta_scalar(p, q);
 
     swap_tail = swap_choose ? p_ > 0.5 : swap_01;
     // change tail; default (swap_01 = NA): afterwards 0 < a <= 1/2

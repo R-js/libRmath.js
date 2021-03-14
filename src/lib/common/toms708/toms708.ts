@@ -805,7 +805,7 @@ export class Toms708 {
         else return -0.5 * log(b) + e + w - v - u;
     }
 
-    public static bfrac(a: number, b: number, x: number, y: number, lambda: number, eps: number) {
+    public static bfrac(a: number, b: number, x: number, y: number, lambda: number, eps: number): number {
         //
         // c*********************************************************************72
         // c
@@ -904,7 +904,7 @@ export class Toms708 {
         return dResult;
     }
 
-    public static bgrat(a: number, b: number, x: number, y: number, w: NumberW, eps: number, ierr: NumberW) {
+    public static bgrat(a: number, b: number, x: number, y: number, w: NumberW, eps: number, ierr: NumberW): void {
         //
         // c*********************************************************************72
         // c
@@ -1040,7 +1040,7 @@ export class Toms708 {
         }
     }
 
-    public static brcomp(a: number, b: number, x: number, y: number) {
+    public static brcomp(a: number, b: number, x: number, y: number): number {
         // C*********************************************************************72
         // C
         // Cc BRCOMP evaluates X**A*Y**B/BETA(A,B).
@@ -1180,7 +1180,7 @@ export class Toms708 {
         return Const * Math.sqrt(b * x0) * z * Math.exp(-Toms708.bcorr(a, b));
     }
 
-    public static brcmp1(mu: number, a: number, b: number, x: number, y: number) {
+    public static brcmp1(mu: number, a: number, b: number, x: number, y: number): number {
         // C*********************************************************************
         // C
         // C BRCMP1 evaluates EXP(MU) * (X**A*Y**B/BETA(A,B)).
@@ -1326,7 +1326,7 @@ export class Toms708 {
         return invSqrtPi * Math.sqrt(b * x0) * z * Math.exp(-Toms708.bcorr(a, b));
     }
 
-    public static bpser(a: number, b: number, x: number, eps: number) {
+    public static bpser(a: number, b: number, x: number, eps: number): number {
         //
         // c*********************************************************************72
         // c
@@ -1453,7 +1453,7 @@ export class Toms708 {
         return dResult;
     }
 
-    public static bratio(a: number, b: number, x: number, y: number, w: NumberW, w1: NumberW, ierr: NumberW) {
+    public static bratio(a: number, b: number, x: number, y: number, w: NumberW, w1: NumberW, ierr: NumberW): void {
         //
         // c*********************************************************************72
         // C
@@ -1906,7 +1906,7 @@ export class Toms708 {
         }
     }
 
-    static bup(a: number, b: number, x: number, y: number, n: number, eps: number) {
+    static bup(a: number, b: number, x: number, y: number, n: number, eps: number): number {
         //
         // c*********************************************************************72
         // c
@@ -2263,7 +2263,7 @@ export class Toms708 {
         return dResult;
     }
 
-    public static esum(mu: number, x: number) {
+    public static esum(mu: number, x: number): number {
         //
         // c*********************************************************************72
         // c
@@ -2607,7 +2607,7 @@ export class Toms708 {
         }
     }
 
-    public static grat1(a: number, x: number, r: number, p: NumberW, q: NumberW, eps: number) {
+    public static grat1(a: number, x: number, r: number, p: NumberW, q: NumberW, eps: number): void {
         //
         // c*********************************************************************72
         // c
@@ -2961,7 +2961,7 @@ export class Toms708 {
         }
     }
 
-    public static gamma_log_values(nData: NumberW, x: NumberW, fx: NumberW) {
+    public static gamma_log_values(nData: NumberW, x: NumberW, fx: NumberW): void {
         // C *********************************************************************72
         // C
         // C  GAMMA_LOG_VALUES returns some values of the Log Gamma function for testing.
@@ -3175,7 +3175,7 @@ export class Toms708 {
         return Toms708.gamln1(x - 1.0) + log(x * (1.0 + x));
     }
 
-    public static psi(xx: number) {
+    public static psi(xx: number): number {
         //
         // c*********************************************************************72
         // C
@@ -3382,7 +3382,7 @@ export class Toms708 {
         return aug + log(x);
     }
 
-    public static psi_values(n: NumberW, x: NumberW, fx: NumberW) {
+    public static psi_values(n: NumberW, x: NumberW, fx: NumberW): void {
         // C *********************************************************************72
         // C
         // C  PSI_VALUES returns some values of the Psi or Digamma function for testing.
@@ -3493,7 +3493,7 @@ export class Toms708 {
         return r;
     }
 
-    public static rexp(x: number) {
+    public static rexp(x: number): number {
         //
         // c*********************************************************************72
         // c
@@ -3530,7 +3530,7 @@ export class Toms708 {
         }
     }
 
-    public static rlog1(x: number) {
+    public static rlog1(x: number): number {
         //
         // c*********************************************************************72
         // c
@@ -3613,7 +3613,7 @@ export class Toms708 {
         return a2 >= 0 ? Math.abs(a1) : -Math.abs(a1);
     }
 
-    public static spmpar(i: number) {
+    public static spmpar(i: number): number {
         //
         // c*********************************************************************72
         // c

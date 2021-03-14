@@ -19,16 +19,13 @@ import { ML_ERR_return_NAN } from '@common/logger';
 const printer_dlogis = debug('dlogis');
 
 export function dlogis(x: number, location = 0, scale = 1, give_log = false): number {
-    let e: number;
-    let f: number;
-
     if (isNaN(x) || isNaN(location) || isNaN(scale)) return NaN;
     if (scale <= 0.0) {
         return ML_ERR_return_NAN(printer_dlogis);
     }
 
     x = Math.abs((x - location) / scale);
-    e = Math.exp(-x);
-    f = 1.0 + e;
+    const e = Math.exp(-x);
+    const f = 1.0 + e;
     return give_log ? -(x + Math.log(scale * f * f)) : e / (scale * f * f);
 }
