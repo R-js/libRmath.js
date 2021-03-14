@@ -15,22 +15,17 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { dweibull } from './dweibull';
-import { pweibull } from './pweibull';
-import { qweibull } from './qweibull';
-import { rweibull as _rweibull } from './rweibull';
+export { dweibull } from './dweibull';
+export { pweibull } from './pweibull';
+export { qweibull } from './qweibull';
+import { rweibullOne } from './rweibull';
 
-import { IRNG, rng as _rng } from '../../rng';
+import type { IRNG } from '@rng/irng';
+import { repeatedCall } from '$helper';
+import { globalUni } from '@rng/globalRNG';
 
-export function Weibull(rng: IRNG = new _rng.MersenneTwister(0)) {
-    function rweibull(n: number, shape: number, scale = 1) {
-        return _rweibull(n, shape, scale, rng);
-    }
-
-    return {
-        dweibull,
-        pweibull,
-        qweibull,
-        rweibull,
-    };
+export { rweibullOne };
+export function rweibull(n: number, shape: number, scale = 1, rng: IRNG = globalUni()) {
+    return repeatedCall(n, rweibullOne, shape, scale, rng);
 }
+

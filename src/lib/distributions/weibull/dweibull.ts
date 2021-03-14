@@ -18,22 +18,20 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import { debug } from 'debug';
 
-import { ML_ERR_return_NAN, R_D__0 } from '@common/logger';
-
-const { pow, log, exp } = Math;
-const { isNaN: ISNAN, isFinite: R_FINITE, POSITIVE_INFINITY: ML_POSINF } = Number;
+import { ML_ERR_return_NAN } from '@common/logger';
+import { R_D__0 } from '$constants';
 const printer = debug('dweilbull');
 
 export function dweibull(x: number, shape: number, scale = 1, give_log = false): number {
-    if (ISNAN(x) || ISNAN(shape) || ISNAN(scale)) return x + shape + scale;
+    if (isNaN(x) || isNaN(shape) || isNaN(scale)) return x + shape + scale;
     if (shape <= 0 || scale <= 0) return ML_ERR_return_NAN(printer);
 
     if (x < 0) return R_D__0(give_log);
-    if (!R_FINITE(x)) return R_D__0(give_log);
+    if (!isFinite(x)) return R_D__0(give_log);
     /* need to handle x == 0 separately */
-    if (x === 0 && shape < 1) return ML_POSINF;
-    const tmp1 = pow(x / scale, shape - 1);
+    if (x === 0 && shape < 1) return Number.POSITIVE_INFINITY;
+    const tmp1 = Math.pow(x / scale, shape - 1);
     const tmp2 = tmp1 * (x / scale);
     /* These are incorrect if tmp1 == 0 */
-    return give_log ? -tmp2 + log((shape * tmp1) / scale) : (shape * tmp1 * exp(-tmp2)) / scale;
+    return give_log ? -tmp2 + Math.log((shape * tmp1) / scale) : (shape * tmp1 * Math.exp(-tmp2)) / scale;
 }
