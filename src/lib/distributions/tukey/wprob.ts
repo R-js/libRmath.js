@@ -88,13 +88,13 @@ export function wprob(w: number, rr: number, cc: number): number {
     let ac: number;
     let pr_w: number;
     let b: number;
-    let binc: number;
+    //let binc: number;
     let c: number;
-    let cc1: number;
+    //let cc1: number;
     let pminus: number;
     let pplus: number;
     let qexpo: number;
-    let qsqz: number;
+    //let qsqz: number;
     let rinsum: number;
     let wi: number;
     let wincr: number;
@@ -108,7 +108,7 @@ export function wprob(w: number, rr: number, cc: number): number {
     //
     let j: number;
 
-    qsqz = w * 0.5;
+    const qsqz = w * 0.5;
 
     /* if w >= 16 then the integral lower bound (occurs for c=20) */
     /* is 0.99999999999995 so return a value of 1. */
@@ -140,13 +140,13 @@ export function wprob(w: number, rr: number, cc: number): number {
     /* blb and bub are lower and upper limits of integration. */
 
     blb = qsqz;
-    binc = (bb - qsqz) / wincr;
+    const binc = (bb - qsqz) / wincr;
     bub = blb + binc;
     einsum = 0.0;
 
     /* integrate over each interval */
 
-    cc1 = cc - 1.0;
+    const cc1 = cc - 1.0;
     for (wi = 1; wi <= wincr; wi++) {
         elsum = 0.0;
         a = 0.5 * (bub + blb);

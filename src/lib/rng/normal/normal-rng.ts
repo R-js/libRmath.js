@@ -24,7 +24,7 @@ export class IRNGNormal implements IRandom {
     protected _name: string;
     protected _kind: IRNGNormalTypeEnum;
 
-    protected reset() {
+    protected reset(): void {
         /* dud */
     }
 
@@ -54,15 +54,15 @@ export class IRNGNormal implements IRandom {
         throw new Error(`override this function in ${this.constructor.name}`)
     }
 
-    public get name() {
+    public get name(): string {
         return this._name;
     }
 
-    public get kind() {
+    public get kind(): IRNGNormalTypeEnum  {
         return this._kind;
     }
 
-    public get uniform_rng() {
+    public get uniform_rng(): IRNG {
         return this._rng;
     }
 

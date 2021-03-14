@@ -18,13 +18,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import { debug } from 'debug';
 
-import { fmod } from '../common/_general';
+import { fmod } from '$constants';
 
 import { ME, ML_ERROR } from '@common/logger';
-
-const { abs: fabs, PI: M_PI } = Math;
-
-const { NaN: ML_NAN, isNaN: ISNAN, isFinite: R_FINITE } = Number;
 
 /* HAVE_COSPI etc will not be defined in standalone-use: the
    intention is to make the versions here available in that case.
@@ -37,16 +33,16 @@ const printer_cospi = debug('cospi');
 
 export function cospi(x: number): number {
     // NaNs propagated correctly
-    if (ISNAN(x)) return x;
-    if (!R_FINITE(x)) {
+    if (isNaN(x)) return x;
+    if (!isFinite(x)) {
         ML_ERROR(ME.ME_DOMAIN, '', printer_cospi);
-        return ML_NAN;
+        return NaN;
     }
 
-    x = fmod(fabs(x), 2); // cos() symmetric; cos(pi(x + 2k)) == cos(pi x) for all integer k
+    x = fmod(Math.abs(x), 2); // cos() symmetric; cos(pi(x + 2k)) == cos(pi x) for all integer k
     if (fmod(x, 1) === 0.5) return 0;
     if (x === 1) return -1;
     if (x === 0) return 1;
     // otherwise
-    return Math.cos(M_PI * x);
+    return Math.cos(Math.PI * x);
 }

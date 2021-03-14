@@ -28,7 +28,7 @@ export class BuggyKindermanRamage extends IRNGNormal {
         this._rng.unregister(MessageType.INIT, this.reset);
     }
 
-    public random() {
+    public random(): number {
         /* see Reference above */
         /* note: this has problems, but is retained for
          * reproducibility of older codes, with the same

@@ -32,7 +32,7 @@ export function pt(x: number, n: number, lowerTail = true, log_p = false): numbe
      *	--> ./pnt.c for NON-central
      */
     let val;
-    let nx;
+    //let nx;
 
     let lower_tail = lowerTail;
 
@@ -57,7 +57,7 @@ export function pt(x: number, n: number, lowerTail = true, log_p = false): numbe
         return pnorm((x * (1 - val)) / Math.sqrt(1 + x * x * 2 * val), 0.0, 1.0, lower_tail, log_p);
     }
 
-    nx = 1 + (x / n) * x;
+    const nx = 1 + (x / n) * x;
     /* FIXME: This test is probably losing rather than gaining precision,
      * now that pbeta(*, log_p = TRUE) is much better.
      * Note however that a version of this test *is* needed for x*x > D_MAX */
@@ -67,8 +67,8 @@ export function pt(x: number, n: number, lowerTail = true, log_p = false): numbe
            pbeta(z, a, b) ~ z^a(1-z)^b / aB(a,b) ~ z^a / aB(a,b),
            with z = 1/nx,  a = n/2,  b= 1/2 :
         */
-        let lval;
-        lval = -0.5 * n * (2 * Math.log(Math.abs(x)) - Math.log(n)) - lbeta_scalar(0.5 * n, 0.5) - Math.log(0.5 * n);
+        //let lval;
+        const lval = -0.5 * n * (2 * Math.log(Math.abs(x)) - Math.log(n)) - lbeta_scalar(0.5 * n, 0.5) - Math.log(0.5 * n);
         val = log_p ? lval : Math.exp(lval);
     } else {
         val =

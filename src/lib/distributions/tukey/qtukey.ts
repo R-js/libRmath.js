@@ -34,13 +34,13 @@ function qinv(p: number, c: number, v: number): number {
     const c5 = 1.4142;
     const vmax = 120.0;
 
-    let ps;
+    //let ps;
     let q;
     let t;
-    let yi;
+    //let yi;
 
-    ps = 0.5 - 0.5 * p;
-    yi = Math.sqrt(Math.log(1.0 / (ps * ps)));
+    const ps = 0.5 - 0.5 * p;
+    const yi = Math.sqrt(Math.log(1.0 / (ps * ps)));
     t = yi + ((((yi * p4 + p3) * yi + p2) * yi + p1) * yi + p0) / ((((yi * q4 + q3) * yi + q2) * yi + q1) * yi + q0);
     if (v < vmax) t += (t * t * t + t) / v / 4.0;
     q = c1 - c2 * t;

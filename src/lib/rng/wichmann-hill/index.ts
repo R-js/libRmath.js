@@ -59,7 +59,7 @@ export class WichmannHill extends IRNG {
         return;
     }
 
-    public init(_seed: number = seed()) {
+    public init(_seed: number = seed()): void {
         /* Initial scrambling */
         const s = new Uint32Array([_seed]);
 
@@ -80,7 +80,7 @@ export class WichmannHill extends IRNG {
         this.fixupSeeds();
     }
 
-    public get seed() {
+    public get seed(): Uint32Array {
         return this.m_seed.slice();
     }
 }

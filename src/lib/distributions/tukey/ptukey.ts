@@ -146,10 +146,10 @@ export function ptukey(q: number, rr: number, cc: number, df: number, lower_tail
     ];
     //double
     let ans: number;
-    let f2: number;
-    let f21: number;
+    //let f2: number;
+    //let f21: number;
     let f2lf: number;
-    let ff4: number;
+    //let ff4: number;
     let otsum: number;
     let qsqz: number;
     let rotsum: number;
@@ -178,16 +178,16 @@ export function ptukey(q: number, rr: number, cc: number, df: number, lower_tail
 
     /* calculate leading constant */
 
-    f2 = df * 0.5;
+    const f2 = df * 0.5;
     /* lgammafn(u) = Math.log(gamma(u)) */
     f2lf = f2 * Math.log(df) - df * Math.LN2 - lgammaOne(f2);
-    f21 = f2 - 1.0;
+    const f21 = f2 - 1.0;
 
     /* integral is divided into unit, half-unit, quarter-unit, or */
     /* eighth-unit length intervals depending on the value of the */
     /* degrees of freedom. */
 
-    ff4 = df * 0.25;
+    const ff4 = df * 0.25;
     if (df <= dhaf) ulen = ulen1;
     else if (df <= dquar) ulen = ulen2;
     else if (df <= deigh) ulen = ulen3;

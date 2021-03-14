@@ -25,5 +25,5 @@ import type { IRNGNormal } from '@rng/normal/normal-rng';
 export { rlnormOne }
 export function rlnorm(n: number, meanlog = 0, sdlog = 1, rng?: IRNGNormal) {
   repeatedCall(n, rlnormOne, meanlog, sdlog, rng)
-};
+}
 

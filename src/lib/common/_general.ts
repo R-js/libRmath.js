@@ -21,10 +21,12 @@ export const emptyFloat32Array = new Float32Array(0);
 //beta
 export const emptyFloat64Array = new Float64Array(0);
 
+export const nanFloat32Array =new Float32Array([NaN]);
+
 export type NumArray = number[] | Float32Array | Float64Array;
 //gamma
 //beta
-export function isArray(x: any) {
+export function isArray(x: unknown): boolean {
     return Array.isArray(x) || x instanceof Float32Array || x instanceof Float64Array;
 }
 //beta

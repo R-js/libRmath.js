@@ -46,7 +46,7 @@ export class Toms708 {
      *
      */
 
-    public static alnrel(a: number) {
+    public static alnrel(a: number): number {
         //
         // c*********************************************************************72
         // c
@@ -84,7 +84,7 @@ export class Toms708 {
         //
     }
 
-    public static algdiv(a: number, b: number) {
+    public static algdiv(a: number, b: number): number {
         //
         // c*********************************************************************72
         // C

@@ -26,7 +26,7 @@ import {
 
 import { ME, ML_ERROR } from '@common/logger';
 
-import sinpi from '@trig/sinpi';
+import { sinpi } from '@trig/sinpi';
 import { lgammacor } from './lgammacor';
 import { gammaOne } from './';
 import type { NumArray } from '$constants';
@@ -39,7 +39,7 @@ const printer_sign = debug('lgammafn_sign');
 const xmax = 2.5327372760800758e305;
 const dxrel = 1.490116119384765625e-8;
 
-export function lgammafn<T extends NumArray>(x: T): Float64Array | Float32Array {
+export function lgammafn(x: NumArray|number): Float64Array | Float32Array {
     if (typeof x === 'number') {
         return new Float64Array([lgammafn_sign(x)]);
     }

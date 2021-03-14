@@ -15,13 +15,13 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import sinpi from '@trig/sinpi';
+import { sinpi } from '@trig/sinpi';
 
 const { PI: M_PI, log, exp, trunc } = Math;
 
 const { EPSILON: DBL_EPSILON, MIN_VALUE: DBL_MIN, POSITIVE_INFINITY: ML_POSINF } = Number;
 
-export function Rf_gamma_cody(x: number) {
+export function Rf_gamma_cody(x: number): number {
     /*
  *
  *  NOTES

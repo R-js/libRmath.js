@@ -6,7 +6,7 @@ import '$jest-extension';
 import { loadData } from '$test-helpers/load';
 
 //app
-import { trigamma } from '..';
+import { trigamma } from '@special/gamma';
 
 describe('trigamma', function () {
     it('ranges [0.0005, 0.9005] [1,50]', async () => {
@@ -25,8 +25,8 @@ describe('trigamma', function () {
         expect(actual).toEqualFloatingPointBinary(y);
     });
     it('single numerical values -1.5, 100', () => {
-        const ac1 = trigamma(-1.5 as any);
-        const ac2 = trigamma(100 as any);
+        const ac1 = trigamma(-1.5);
+        const ac2 = trigamma(100);
         expect(ac1).toEqualFloatingPointBinary(9.37924664498912363797);
         expect(ac2).toEqualFloatingPointBinary(0.010050166663333566161);
     });

@@ -29,7 +29,7 @@ export function dnchisq(x: number, df: number, ncp: number, give_log: boolean): 
   
 
     let i: number;
-    let ncp2: number;
+    //let ncp2: number;
     let q: number;
     let mid: number;
     let dfmid: number;
@@ -52,7 +52,7 @@ export function dnchisq(x: number, df: number, ncp: number, give_log: boolean): 
     if (ncp === 0) return df > 0 ? dchisq(x, df, give_log) : R_D__0(give_log);
     if (x === Number.POSITIVE_INFINITY) return R_D__0(give_log);
 
-    ncp2 = 0.5 * ncp;
+    const ncp2 = 0.5 * ncp;
 
     /* find max element of sum */
     imax = Math.ceil((-(2 + df) + Math.sqrt((2 - df) * (2 - df) + 4 * ncp * x)) / 4);

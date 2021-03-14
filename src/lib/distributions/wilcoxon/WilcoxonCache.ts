@@ -15,13 +15,19 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-export class WilcoxonCache {
-  
-  //private _map = new Map<number, Map<number, Map<number, number>>>();
-  private _map2:any = {};
-  constructor() {
 
-  }
+type WCache = {
+  [index: number]: WCache
+}
+|
+{
+  [index: number]: number
+}
+
+export class WilcoxonCache {
+
+  //private _map = new Map<number, Map<number, Map<number, number>>>();
+  private _map2: WCache = {};
 
   public get(i: number, j: number, k: number): number | undefined {
     /*const jMap = this._map.get(i);
@@ -33,16 +39,16 @@ export class WilcoxonCache {
     }
     return undefined;*/
     const jstruct = this._map2[i];
-    if (jstruct !== undefined){
-      const kstruct = jstruct[j];
-      if (kstruct !==  undefined ){
-        return kstruct[k];
+    if (jstruct !== undefined) {
+      const kstruct = (jstruct as WCache)[j];
+      if (kstruct !== undefined) {
+        return (kstruct as WCache)[k] as number;
       }
     }
     return undefined;
   }
 
-  public set(i: number, j: number, k: number, value: number ){
+  public set(i: number, j: number, k: number, value: number): void {
     /*
     USING old fashioned way of simple objects to mimic key-value mapping
     DONT USE: new Map(), it will cause performance problems
@@ -59,15 +65,15 @@ export class WilcoxonCache {
     }
     kMap.set(k, value);*/
     let jstruct = this._map2[i];
-    if (jstruct === undefined){
+    if (jstruct === undefined) {
       jstruct = {};
       this._map2[i] = jstruct;
     }
-    let kstruct = jstruct[j];
-    if (kstruct === undefined){
+    let kstruct = (jstruct as WCache)[j];
+    if (kstruct === undefined) {
       kstruct = {};
-      jstruct[j] = kstruct;
+      (jstruct as WCache)[j] = kstruct;
     }
-    kstruct[k] = value;
+    (kstruct as WCache)[k] = value;
   }
 }

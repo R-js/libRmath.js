@@ -57,7 +57,7 @@ export class SuperDuper extends IRNG {
         return;
     }
 
-    public init(_seed: number = seed()) {
+    public init(_seed: number = seed()):void {
         /* Initial scrambling */
         const s = new Uint32Array([_seed]);
         for (let j = 0; j < 50; j++) {
@@ -77,7 +77,7 @@ export class SuperDuper extends IRNG {
         this.fixupSeeds();
     }
 
-    public get seed() {
+    public get seed(): Int32Array|Uint32Array {
         return this.m_seed.slice();
     }
 }

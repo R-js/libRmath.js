@@ -30,7 +30,7 @@ describe('gamma', function () {
         expect(neg3).toEqualFloatingPointBinary(0.9181687423997606512);
     });
     it('force number argument', () => {
-        const neg1 = gamma(-1.2 as any);
+        const neg1 = gamma(-1.2);
         expect(neg1).toEqualFloatingPointBinary(4.8509571405220981433);
     });
     it('force empty array', () => {
@@ -46,7 +46,7 @@ describe('gamma', function () {
     });
     it('invalid argument should throw', () => {
         expect(() => {
-            gamma('hello' as any);
+            gamma('hello' as never);
         }).toThrow('gammafn: argument not of number, number[], Float64Array, Float32Array');
     });
     it('1E-308 should become Infinity', () => {

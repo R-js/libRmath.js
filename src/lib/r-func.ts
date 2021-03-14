@@ -16,108 +16,6 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-const { max } = Math;
-
-function isIterator<T>(it: any): it is IterableIterator<T> {
-    return it && it[Symbol.iterator] === 'function';
-}
-
-export function* flatten<T>(...rest: T[]): IterableIterator<T> {
-    for (const itm of rest) {
-        if (itm === null || ['undefined', 'string', 'symbol', 'number', 'boolean'].includes(typeof itm)) {
-            yield itm;
-            continue;
-        }
-        if (itm instanceof Map || itm instanceof Set) {
-            for (const v of <any>itm) {
-                yield* flatten(v);
-            }
-            continue;
-        }
-        if (itm instanceof Array) {
-            for (const v of itm) {
-                yield* flatten(v);
-            }
-            continue;
-        }
-
-        if (isIterator(itm)) {
-            for (const v of <any>itm) {
-                yield* flatten(v);
-            }
-            continue;
-        }
-    }
-}
-
-export function numberPrecision(prec = 6) {
-    return function convert(x: any): typeof x {
-        // try to loop over the object
-        if (isObject(x)) {
-            for (const [prop, value] of Object.entries(x)) {
-                //recursion
-                x[prop] = convert(value);
-            }
-            return x;
-        }
-        // this is a number!!
-        if (isNumber(x)) {
-            x = Number.parseFloat(x.toPrecision(prec)) as any;
-        }
-        return x;
-    };
-}
-
-export function chain<F extends (...argv: any[]) => unknown>(fn0: F, ...fns: F[]) {
-    fns.push(fn0);
-    if (fns.length === 0) {
-        throw new TypeError(`specifiy functions to chain`);
-    }
-    for (let i = 0; i < fns.length; i++) {
-        if (typeof fns[i] !== 'function') {
-            throw new TypeError(`argument ${i + 1} is not a function`);
-        }
-    }
-
-    return function (...args: Parameters<F>): ReturnType<F> {
-        let lastArgs: unknown[] = args;
-        if (args)
-            for (let i = fns.length - 1; i >= 0; i--) {
-                const fn = fns[i];
-                lastArgs = [fn.apply(fn, lastArgs)];
-                //console.log(lastArgs);
-            }
-        return lastArgs[0] as ReturnType<F>;
-    };
-}
-
-export const precision9 = numberPrecision(9);
-
-export function* seq_len({ length, base = 1 }: { length: number; base: number }): IterableIterator<number> {
-    for (let i = 0; i < length; i++) {
-        yield base + i;
-    }
-}
-
-export const sequenceFactory = (adjust = 0, adjustMin = adjust) => (start: number, end: number, delta = 1) =>
-    Array.from(lazySeq(start, end, delta, adjust, adjustMin));
-
-export function* lazySeq(start: number, end = 1, step = 1, adjust = -1, adjustMin = adjust) {
-    if (step === 0) {
-        throw new TypeError(`argument 'delta' cannot be zero`);
-    }
-    if (end > start && step < 0) {
-        throw new TypeError(`'end' > 'start' so delta must be positive`);
-    }
-    if (end < start && step > 0) {
-        throw new TypeError(`'end' < 'start' so delta must be negative`);
-    }
-    const adj = step > 0 ? adjust : adjustMin;
-    do {
-        yield start + adj;
-        start = start + step;
-    } while ((step > 0 && start <= end) || (step < 0 && start >= end));
-}
 
 export type strTypes =
     | 'boolean'
@@ -132,109 +30,12 @@ export type strTypes =
 
 export type system = boolean | number | undefined | string | null | symbol;
 
-function _typeOf(v: any): strTypes {
-    if (v === null) return 'null';
-    if (v instanceof Array) return 'array';
-    if (v instanceof Function) return 'function';
-    const tv = typeof v;
-    switch (tv) {
-        case 'boolean':
-        case 'number':
-        case 'undefined':
-        case 'string':
-        case 'symbol':
-        case 'object':
-            return tv;
-    }
-    throw new TypeError(`unknown type ${tv}`);
-}
-
-export function* multiplexer(...rest: any[]): IterableIterator<any[]> {
-    //
-    // Analyze
-    //
-    const analyzed: _t[] = [];
-    type _t = boolean[] | number[] | undefined[] | string[] | null[] | symbol[] | any[];
-
-    function simplePush<T extends _t>(v: T) {
-        analyzed.push(v);
-    }
-
-    const select = {
-        ['undefined'](v: null) {
-            simplePush([v]);
-        },
-        ['null'](v: null) {
-            simplePush([v]);
-        },
-        ['number'](v: null) {
-            simplePush([v]);
-        },
-        ['string'](v: string) {
-            simplePush(v.split(''));
-        },
-        ['boolean'](v: boolean) {
-            simplePush([v]);
-        },
-        ['array'](v: _t) {
-            simplePush(v);
-        },
-        ['object'](v: _t) {
-            throw new Error('M001, Looping over properties not yet supported');
-        },
-        ['function'](v: _t) {
-            throw new Error('M002, arguments of type "function" are not yet supported');
-        },
-    };
-
-    for (let k = 0; k < rest.length; k++) {
-        //TODO: new in typescript you can pick types of function argument, use that
-        const arg = rest[k];
-        const to: keyof typeof select = _typeOf(arg) as any;
-        const selector = select[to];
-        selector(arg as never);
-    } //for
-    // find the longest array
-    const _max = max(...analyzed.map((a) => a.length));
-    for (let k = 0; k < _max; k++) {
-        const result: any[] = [];
-        for (let j = 0; j < analyzed.length; j++) {
-            const arr: any[] = analyzed[j];
-            const idx = k % arr.length;
-            result.push(arr[idx]);
-        }
-        yield result;
-    }
-}
-
-export const c = chain(Array.from, flatten as any);
-
-export function Rcycle(fn: (...args: any[]) => unknown) {
-    return function (...args: any[]) {
-        const gen = multiplexer(...args);
-        const rc: any[] = [];
-        for (const arg of gen) {
-            rc[rc.length] = fn(...arg);
-        }
-        return rc;
-    };
-}
-
-function isNumber(x: any): x is number {
-    return typeof x === 'number';
-}
-
-// eslint-disable-next-line @typescript-eslint/ban-types
-function isObject(o: any): o is Object {
-    return o && typeof o === 'object' && !Array.isArray(o);
-}
-
-export function sum(x: number[]) {
+export function sum(x: number[]): number {
     const rc = x.reduce((pv: number, v: number) => pv + v, 0);
     return rc;
 }
 
-export function sumfp(x: Float32Array){
+export function sumfp(x: Float32Array): number {
     return x.reduce((pv: number, v: number) => pv + v, 0);
 }
 
@@ -329,7 +130,7 @@ export function Welch_Satterthwaite(s: number[], n: number[]): number {
     return Math.pow(sum(elts), 2) / sum(dom);
 }
 
-export function repeatedCall(n: number, fn: (...arg: any[]) => number, ...arg: any[]) {
+export function repeatedCall(n: number, fn: (...arg: any[]) => number, ...arg: unknown[]): Float32Array {
     let result: Float32Array;
 
     if (n === 0) {
@@ -354,26 +155,4 @@ export type Sliced<T> = {
     value: T[keyof T];
 };
 
-function slicer<T>(x: Slicee<T>): Sliced<T>[] {
-    const keys: (keyof T)[] = Object.keys(x) as any;
-    const map = keys.map((key) => ({ key, value: x[key] }));
-    return map;
-}
 
-export function map<T, S>(data: Slicee<T>): { (fn: (value: T[keyof T], idx: keyof T) => S): S[] } {
-    const fx = slicer(data);
-    return function k(fn) {
-        return fx.map((o) => fn(o.value, o.key));
-    };
-}
-
-export function each<T>(data: Slicee<T>): { (fn: (value: T[keyof T], idx: keyof T) => void): void } {
-    const fx = slicer(data);
-    return function k(fn) {
-        fx.forEach((o) => fn(o.value, o.key));
-    };
-}
-
-export function array_flatten<T = unknown>(...rest: (T | IterableIterator<T> | T[])[]) {
-    return Array.from(flatten(...rest));
-}

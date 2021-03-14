@@ -16,9 +16,9 @@ describe('digamma', function () {
         expect(actual).toEqualFloatingPointBinary(y);
     });
     it('value 0,-1,-2  single values', () => {
-        const g1 = digamma(-0 as any);
-        const g2 = digamma(-1 as any);
-        const g3 = digamma(-100.2 as any);
+        const g1 = digamma(-0);
+        const g2 = digamma(-1 );
+        const g3 = digamma(-100.2 );
         expect(g1).toEqualFloatingPointBinary(NaN);
         expect(g2).toEqualFloatingPointBinary(NaN);
         expect(g3).toEqualFloatingPointBinary(8.9361812384800352049);
@@ -32,7 +32,7 @@ describe('digamma', function () {
         expect(neg3).toEqualFloatingPointBinary(0.9181687423997606512);
     });
     it('force number argument', () => {
-        const neg1 = gamma(-1.2 as any);
+        const neg1 = gamma(-1.2 );
         expect(neg1).toEqualFloatingPointBinary(4.8509571405220981433);
     });
     it('force empty array', () => {
@@ -48,7 +48,7 @@ describe('digamma', function () {
     });
     it('invalid argument should throw', () => {
         expect(() => {
-            gamma('hello' as any);
+            gamma('hello' );
         }).toThrow('gammafn: argument not of number, number[], Float64Array, Float32Array');
     });
     it('1E-308 should become Infinity', () => {

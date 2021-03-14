@@ -19,7 +19,7 @@ describe('bessel function of order 0', function () {
         expect(actual).toEqualFloatingPointBinary(y);
     });
     it('single value', async () => {
-        const actual = besselJn(4 as any, 0);
+        const actual = besselJn(4 as never, 0);
         expect(actual).toEqualFloatingPointBinary(-0.3971498098638474028);
     });
     it('empty array', async () => {
@@ -27,10 +27,10 @@ describe('bessel function of order 0', function () {
         expect(actual).toEqualFloatingPointBinary([]);
     });
     it('missing nu', async () => {
-        expect(() => besselJn([], undefined as any)).toThrow('argument "nu" is missing/not a number, Execution halted');
+        expect(() => besselJn([], undefined as never)).toThrow('argument "nu" is missing/not a number, Execution halted');
     });
     it('not a "NumArray"', async () => {
-        expect(() => besselJn('something' as any, 1)).toThrow('argument not of number, number[], Float64Array, Float32Array');
+        expect(() => besselJn('something' as never, 1)).toThrow('argument not of number, number[], Float64Array, Float32Array');
     });
     it('fp32 in, fp32 out', async () => {
         const actual = besselJn(new Float32Array([4, 5, 6]), 0);

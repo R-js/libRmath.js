@@ -96,7 +96,7 @@ export class KnuthTAOCP extends IRNG implements IRandom {
         this.init(_seed);
     }
 
-    public init(_seed: number = seed()) {
+    public init(_seed: number = seed()): void {
         /* Initial scrambling */
         const s = new Uint32Array([0]);
         s[0] = _seed;
@@ -112,7 +112,7 @@ export class KnuthTAOCP extends IRNG implements IRandom {
         this.m_seed.set(_seed);
     }
 
-    public get seed() {
+    public get seed(): Uint32Array {
         return this.m_seed.slice();
     }
 

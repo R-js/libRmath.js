@@ -28,7 +28,7 @@ describe(`Tools&Die`, () => {
             const { input } = test
             const comment = createComment(input)
             it(`test:${testName}\t→${comment}`,
-                function (this: any, fn, args, expected) {
+                function (this: unknown, fn, args, expected) {
                     args = Array.isArray(args) ? args : [args]
                     const rfn = Rcycle(fn)
                     const result = rfn.apply(rfn, args);
@@ -43,7 +43,7 @@ describe(`Tools&Die`, () => {
             const { input } = test
             const comment = createComment(input)
             it(`error-test:${testName}\t→${comment}`,
-                function (this: any, fn, args, expected) {
+                function (this: unknown, fn, args, expected) {
                     const rfn = Rcycle(fn)
                     expect(() => rfn.apply(rfn, args)).to.throw(expected.msg);
                 }.bind(null, input.fn, input.args, test.expected) // mocha "it" is called in next eventloop
@@ -57,7 +57,7 @@ describe(`Tools&Die`, () => {
             const { input } = test
             const comment = createComment(input)
             it(`test:${testName}\t→${comment}`,
-                function (this: any, args, expected) {
+                function (this: unknown, args, expected) {
                     const actual = c(...args)
                     expect(actual).to.deep.equal(expected)
                 }.bind(null, input.args, test.expected) // mocha "it" is called in next eventloop
@@ -316,7 +316,7 @@ describe(`Tools&Die`, () => {
     })
     describe('lazyMap', () => {
         it(`lazyMap(fn,obj)=>arr`, function () {
-            const collect: any[] = [];
+            const collect: unknown[] = [];
             const s = new Set(['hello', 'world', 'first', 'last']);
             const it = lazyMap((v, k) => `${k}=${v}`)(s.keys());
             for (const i of it) {

@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
+/* exslint-disable @typescript-eslint/no-var-requires */
 module.exports = {
     automock: false,
     collectCoverage: true,

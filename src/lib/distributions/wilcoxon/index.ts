@@ -25,6 +25,6 @@ import type { IRNG } from '@rng/irng';
 import { globalUni } from '@rng/globalRNG';
 
 export { rwilcoxOne };
-export function rwilcox(N: number, m: number, n: number, rng:IRNG = globalUni()) {
+export function rwilcox(N: number, m: number, n: number, rng:IRNG = globalUni()): Float32Array {
     return repeatedCall(N, rwilcoxOne, m, n, rng);
 }

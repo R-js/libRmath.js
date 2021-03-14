@@ -5,6 +5,8 @@ jest.mock('@common/logger');
 
 import { ML_ERR_return_NAN, ML_ERROR } from '@common/logger';
 
+const ML_ERR_return_NANMocked = <jest.Mock<typeof ML_ERR_return_NAN>>(ML_ERR_return_NAN as unknown);
+const ML_ERRORMocked = <jest.Mock<typeof ML_ERROR>>(ML_ERROR as unknown);
 //app
 import { beta } from '..';
 
@@ -39,9 +41,9 @@ describe('beta(a,b)', function () {
     });
     it('a<0 or b >=0 returns NaN', () => {
         const nan = beta([-1, 0]);
-        expect(ML_ERR_return_NAN).toHaveBeenCalledTimes(1);
-        expect((ML_ERR_return_NAN as any).mock.calls[0][0]).toBeInstanceOf(Function);
-        (ML_ERR_return_NAN as any).mockReset();
+        expect(ML_ERR_return_NANMocked).toHaveBeenCalledTimes(1);
+        expect(ML_ERR_return_NANMocked.mock.calls[0][0]).toBeInstanceOf(Function);
+        ML_ERR_return_NANMocked.mockReset();
         expect(nan).toEqualFloatingPointBinary(NaN);
     });
     it('a=Infinity returns 0', () => {
@@ -63,9 +65,9 @@ describe('beta(a,b)', function () {
     it('domain: (a + b) >>>> 171.61447887182298', () => {
         const ans = beta([520, 520]);
         expect(ML_ERROR).toHaveBeenCalledTimes(1);
-        const args = (ML_ERROR as any).mock.calls[0].map((v: any) => (typeof v === 'function' ? Function : v));
+        const args = ML_ERRORMocked.mock.calls[0].map((v: unknown) => (typeof v === 'function' ? Function : v));
         expect(args).toEqual([16, 'beta', Function]);
-        (ML_ERROR as any).mockReset();
+        ML_ERRORMocked.mockReset();
         expect(ans).toEqualFloatingPointBinary(1.319812e-314, 18, false, true);
     });
 });

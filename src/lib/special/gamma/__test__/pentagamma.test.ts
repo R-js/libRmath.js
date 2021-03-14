@@ -5,7 +5,7 @@ import { resolve } from 'path';
 import '$jest-extension';
 import { loadData } from '$test-helpers/load';
 
-import { pentagamma } from '..';
+import { pentagamma } from '@special/gamma';
 
 describe('pentagamma', function () {
     it('ranges [-1,-2] [0,10] [-30,_20]', async () => {
@@ -27,7 +27,7 @@ describe('pentagamma', function () {
         ]);
     });
     it('single numerical values', () => {
-        const ac1 = pentagamma(0 as any);
+        const ac1 = pentagamma(0);
         expect(ac1).toEqualFloatingPointBinary(Infinity);
     });
     it('empty array should return empty array', () => {

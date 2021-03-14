@@ -40,7 +40,7 @@ export class LecuyerCMRG extends IRNG {
         this.init(_seed);
     }
 
-    public init(_seed: number = seed()) {
+    public init(_seed: number = seed()): void {
         /* Initial scrambling */
         const s = new Int32Array([0]);
 
@@ -100,7 +100,7 @@ export class LecuyerCMRG extends IRNG {
         this.m_seed.set(_seed);
     }
 
-    public get seed() {
+    public get seed(): Int32Array {
         return this.m_seed.slice();
     }
 }

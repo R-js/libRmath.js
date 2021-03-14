@@ -126,7 +126,7 @@ export function createFloatBitFieldComparator(use64BIT = false) {
     }
 }
 
-export function createComment(inputObj: any): string {
+export function createComment(inputObj: unknown): string {
     const proto = Object.keys(inputObj).reduce((builder, key) => {
         const v = inputObj[key]
         if (v === undefined) {

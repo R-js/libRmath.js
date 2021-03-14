@@ -25,7 +25,7 @@ import { repeatedCall } from '$helper';
 import { globalUni } from '@rng/globalRNG';
 
 export { rweibullOne };
-export function rweibull(n: number, shape: number, scale = 1, rng: IRNG = globalUni()) {
+export function rweibull(n: number, shape: number, scale = 1, rng: IRNG = globalUni()): Float32Array {
     return repeatedCall(n, rweibullOne, shape, scale, rng);
 }
 

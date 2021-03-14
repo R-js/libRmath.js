@@ -32,14 +32,14 @@ import { repeatedCall } from '$helper';
 import { emptyFloat32Array } from '$constants';
 export { rtOne };
 
-export function dt(x: number, df: number, ncp?: number, asLog = false) {
+export function dt(x: number, df: number, ncp?: number, asLog = false): number {
     if (ncp === undefined) {
         return _dt(x, df, asLog);
     }
     return dnt(x, df, ncp, asLog);
 }
 
-export function pt(q: number, df: number, ncp?: number, lowerTail = true, logP = false) {
+export function pt(q: number, df: number, ncp?: number, lowerTail = true, logP = false): number {
     if (ncp === undefined) {
         return _pt(q, df, lowerTail, logP);
     }
@@ -47,14 +47,14 @@ export function pt(q: number, df: number, ncp?: number, lowerTail = true, logP =
     return pnt(q, df, ncp, lowerTail, logP);
 }
 
-export function qt(p: number, df: number, ncp?: number, lowerTail = true, logP = false) {
+export function qt(p: number, df: number, ncp?: number, lowerTail = true, logP = false): number {
     if (ncp === undefined) {
         return _qt(p, df, lowerTail, logP);
     }
     return qnt(p, df, ncp, lowerTail, logP);
 }
 
-export function rt(n: number, df: number, ncp?: number, rng?: IRNGNormal) {
+export function rt(n: number, df: number, ncp?: number, rng?: IRNGNormal): Float32Array {
     if (ncp === undefined) {
         return repeatedCall(n, rtOne, n, df, rng);
     } else if (isNaN(ncp)) {
@@ -62,10 +62,10 @@ export function rt(n: number, df: number, ncp?: number, rng?: IRNGNormal) {
     } else {
         const norm = rnorm(n, ncp, 1, rng); // bleed this first from rng
         const chisq = rchisq(n, df, undefined, rng);
-        for (let i= 0; i < n; i++){
+        for (let i = 0; i < n; i++) {
             chisq[i] /= df;
             chisq[i] = Math.sqrt(chisq[i]);
-            norm[i] /= chisq[i]; 
+            norm[i] /= chisq[i];
         }
         return norm;
     }

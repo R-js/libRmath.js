@@ -553,7 +553,7 @@ function dpsifn(
 const print_psigamma = debug('psigamma');
 
 function _render(
-    x: NumArray|number,
+    x: NumArray | number,
     calculate: (x: number, ans: Float64Array, nz: Uint8Array, ierr: Uint8Array) => void,
     final: (_ans: number) => number,
 ) {
@@ -570,8 +570,8 @@ function _render(
         x instanceof Float64Array
             ? new Float64Array(x.length)
             : x instanceof Float32Array
-            ? new Float32Array(x.length)
-            : new Float64Array(x);
+                ? new Float32Array(x.length)
+                : new Float64Array(x);
 
     const ans = new Float64Array(1);
     const nz = new Uint8Array();
@@ -595,7 +595,7 @@ function _render(
     return rc;
 }
 
-export function psigamma(x: NumArray, deriv: number): Float32Array | Float64Array {
+export function psigamma(x: NumArray | number, deriv: number): Float32Array | Float64Array {
     deriv = R_forceint(deriv);
     const n = deriv >> 0;
     if (n > n_max) {
@@ -619,7 +619,7 @@ export function psigamma(x: NumArray, deriv: number): Float32Array | Float64Arra
 }
 
 // https://ru.wikipedia.org/wiki/%D0%A4%D0%B0%D0%B9%D0%BB:Pentagamma_function_plot.png
-export function pentagamma(x: NumArray): Float32Array | Float64Array {
+export function pentagamma(x: NumArray | number): Float32Array | Float64Array {
     return _render(
         x,
         (x0: number, ans: Float64Array, nz: Uint8Array, ierr: Uint8Array) => dpsifn(x0, 3, 1, 1, ans, nz, ierr),
@@ -628,7 +628,7 @@ export function pentagamma(x: NumArray): Float32Array | Float64Array {
 }
 
 //https://commons.wikimedia.org/wiki/Category:Polygamma_function#/media/File:Tetragamma_function_plot.png
-export function tetragamma(x: NumArray|number): Float32Array | Float64Array {
+export function tetragamma(x: NumArray | number): Float32Array | Float64Array {
     return _render(
         x,
         (x0: number, ans: Float64Array, nz: Uint8Array, ierr: Uint8Array) => dpsifn(x0, 2, 1, 1, ans, nz, ierr),
@@ -638,7 +638,7 @@ export function tetragamma(x: NumArray|number): Float32Array | Float64Array {
 
 //https://commons.wikimedia.org/wiki/Category:Polygamma_function#/media/File:Trigamma_function_plot.png
 
-export function trigamma(x: NumArray): Float32Array | Float64Array {
+export function trigamma(x: NumArray | number): Float32Array | Float64Array {
     return _render(
         x,
         (x0: number, ans: Float64Array, nz: Uint8Array, ierr: Uint8Array) => dpsifn(x0, 1, 1, 1, ans, nz, ierr),
@@ -647,7 +647,7 @@ export function trigamma(x: NumArray): Float32Array | Float64Array {
 }
 
 //https://commons.wikimedia.org/wiki/File:Digamma_function_plot.png
-export function digamma(x: NumArray): Float32Array | Float64Array {
+export function digamma(x: NumArray | number): Float32Array | Float64Array {
     return _render(
         x,
         (x0: number, ans: Float64Array, nz: Uint8Array, ierr: Uint8Array) => dpsifn(x0, 0, 1, 1, ans, nz, ierr),

@@ -2,7 +2,7 @@
 //https://en.wikipedia.org/wiki/Mann%E2%80%93Whitney_U_test
 
 process.env.DEBUGx = 'dnt, pnt, pbeta, seq';
-const libR = require('../dist/lib/libR.js');
+const libR = require('../');
 const {
     Wilcoxon,
     rng: { SuperDuper },

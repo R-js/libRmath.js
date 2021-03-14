@@ -1,4 +1,4 @@
-export const fixture = () => {
+export function fixture(): unknown {
     return {
         case0: {
             sample: [
@@ -237,4 +237,4 @@ export const fixture = () => {
             ],
         },
     };
-};
+}
