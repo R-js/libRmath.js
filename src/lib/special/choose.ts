@@ -15,7 +15,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { debug } from 'debug';
-import { isOdd } from '../common/_general';
+import { isOdd } from '$constants';
 
 const { abs: fabs, log, exp, round } = Math;
 const { isInteger, NEGATIVE_INFINITY: ML_NEGINF, isNaN: ISNAN } = Number;
@@ -37,7 +37,7 @@ function lfastchoose2(n: number, k: number, sChoose?: Int8Array) {
 
 const printer_lchoose = debug('lchoose');
 
-function internal_lchoose(n: number, k: number): number {
+function lchoose(n: number, k: number): number {
     const k0 = k;
     k = Math.round(k);
     /* NaNs propagated correctly */
@@ -51,12 +51,12 @@ function internal_lchoose(n: number, k: number): number {
     }
     /* else: k >= 2 */
     if (n < 0) {
-        return internal_lchoose(-n + k - 1, k);
+        return lchoose(-n + k - 1, k);
     } else if (isInteger(n)) {
         n = round(n);
         if (n < k) return ML_NEGINF;
         /* k <= n :*/
-        if (n - k < 2) return internal_lchoose(n, n - k); /* <- Symmetry */
+        if (n - k < 2) return lchoose(n, n - k); /* <- Symmetry */
         /* else: n >= k+2 */
         return lfastchoose(n, k);
     }
@@ -74,7 +74,7 @@ const k_small_max = 30;
  */
 const printer_choose = debug('choose');
 
-function internal_choose(n: number, k: number): number {
+function choose(n: number, k: number): number {
     let r: number;
     const k0 = k;
     k = round(k);
@@ -94,13 +94,13 @@ function internal_choose(n: number, k: number): number {
     }
     /* else: k >= k_small_max */
     if (n < 0) {
-        r = internal_choose(-n + k - 1, k);
+        r = choose(-n + k - 1, k);
         if (isOdd(k)) r = -r;
         return r;
     } else if (isInteger(n)) {
         n = round(n);
         if (n < k) return 0;
-        if (n - k < k_small_max) return internal_choose(n, n - k); /* <- Symmetry */
+        if (n - k < k_small_max) return choose(n, n - k); /* <- Symmetry */
         return round(exp(lfastchoose(n, k)));
     }
     /* else non-integer n >= 0 : */
@@ -112,6 +112,6 @@ function internal_choose(n: number, k: number): number {
     return exp(lfastchoose(n, k));
 }
 
-export { internal_choose as choose };
-export { internal_lchoose as lchoose };
+export { lchoose };
+export { choose };
 export { lfastchoose2 as lfastchoose };

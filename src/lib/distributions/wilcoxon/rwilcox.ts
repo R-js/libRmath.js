@@ -19,37 +19,45 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import { debug } from 'debug';
 
 import { ML_ERR_return_NAN } from '@common/logger';
-import { randomGenHelper, seq_len } from '../../r-func';
-import { IRNG } from '../../rng';
+import { IRNG } from '@rng/irng';
+import { globalUni } from '@rng/globalRNG';
 
 const printer_rwilcox = debug('rwilcox');
-const { round: R_forceint, trunc, floor } = Math;
-const { isNaN: ISNAN } = Number;
+;
 
-export function rwilcox(N: number | number[], m: number, n: number, rng: IRNG): number[] {
-    return randomGenHelper(N, rwilcoxOne, m, n, rng);
-}
+const MAXSIZE = 4294967296;
 
-export function rwilcoxOne(m: number, n: number, rng: IRNG): number {
+export function rwilcoxOne(m: number, n: number, rng: IRNG = globalUni()): number {
     /* NaNs propagated correctly */
-    if (ISNAN(m) || ISNAN(n)) return m + n;
-
-    m = R_forceint(m);
-    n = R_forceint(n);
+    if (isNaN(m) || isNaN(n)) return m + n;
+    m = Math.round(m);
+    n = Math.round(n);
     if (m < 0 || n < 0) return ML_ERR_return_NAN(printer_rwilcox);
-
     if (m === 0 || n === 0) return 0;
 
+    let k = Math.trunc(m + n);
+
+    let x;
+    if (k <= 65536) {
+        x = new Uint16Array(k);
+    }
+    else if (k <= MAXSIZE) {
+        x = new Uint32Array(k);
+    }
+    else {
+        return ML_ERR_return_NAN(printer_rwilcox);
+    }
+
+    for (let i = 0; i < k; i++) {
+        x[i] = i+1;
+    }
     let r = 0.0;
-    let k = trunc(m + n);
-    const x: number[] = Array.from(seq_len({ length: k, base: 0 }));
     printer_rwilcox(`------v`);
     for (let i = 0; i < n; i++) {
-        const j = floor(k * rng.random());
+        const j = Math.floor(k * rng.random());
         r += x[j];
         x[j] = x[--k];
         printer_rwilcox('i:%d,\tn:%d\tj:%d\tk:%d\tr:%d\tx:%o', i, n, j, k, x);
     }
-
     return r - (n * (n - 1)) / 2;
 }
