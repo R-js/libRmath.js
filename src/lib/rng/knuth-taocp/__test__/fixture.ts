@@ -1,4 +1,5 @@
-export function fixture(): unknown {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function fixture(): any {
     return {
         case0: {
             sample: [
