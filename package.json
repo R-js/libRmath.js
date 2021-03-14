@@ -73,7 +73,7 @@
         "browser"
     ],
     "scripts": {
-        "prebuild": "cross-env rm -rf *.tsbuildinfo es6 commonjs browser",
+        "prebuild": "rimraf *.tsbuildinfo es6 commonjs browser",
         "build": "ttsc -p tsconfig-es6.json && ttsc -p tsconfig-commonjs.json",
         "postbuild": "node rollup.build.js",
         "prepublush": "npm run build",
@@ -100,9 +100,9 @@
         "@types/node": "^6.0.96",
         "@typescript-eslint/eslint-plugin": "^4.8.1",
         "@typescript-eslint/parser": "^4.8.1",
-        "cross-env": "^7.0.3",
         "eslint": "^7.14.0",
         "jest": "26.6.3",
+        "rimraf": "^3.0.2",
         "rollup": "^2.33.1",
         "rollup-plugin-terser": "^7.0.2",
         "ts-jest": "26.4.4",
