@@ -16,15 +16,12 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-const { isNaN: ISNAN } = Number;
-const { log } = Math;
-
 export function dunif(x: number, min = 0, max = 1, logP = false): number {
-    if (ISNAN(x) || ISNAN(min) || ISNAN(max)) {
+    if (isNaN(x) || isNaN(min) || isNaN(max)) {
         return x + min + max;
     }
     if (min <= x && x <= max) {
-        return logP ? -log(max - min) : 1 / (max - min);
+        return logP ? -Math.log(max - min) : 1 / (max - min);
     }
     return logP ? Number.NEGATIVE_INFINITY : 0.0;
 }

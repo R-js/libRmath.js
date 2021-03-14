@@ -19,19 +19,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import { ML_ERR_return_NAN, R_Q_P01_check } from '@common/logger';
 
 import { debug } from 'debug';
-import { R_DT_qIv } from '$constants';
+import { R_DT_qIv } from '@dist/exp/expm1';
 
-const { isNaN: ISNAN, isFinite: R_FINITE } = Number;
 const printer = debug('qunif');
 
 export function qunif(p: number, min = 0, max = 1, lowerTail = true, logP = false): number {
-    if (ISNAN(p) || ISNAN(min) || ISNAN(max)) return NaN;
+    if (isNaN(p) || isNaN(min) || isNaN(max)) return NaN;
 
     const rc = R_Q_P01_check(logP, p);
     if (rc !== undefined) {
         return rc;
     }
-    if (!R_FINITE(min) || !R_FINITE(max)) return ML_ERR_return_NAN(printer);
+    if (!isFinite(min) || !isFinite(max)) return ML_ERR_return_NAN(printer);
     if (max < min) return ML_ERR_return_NAN(printer);
     if (max === min) return min;
 

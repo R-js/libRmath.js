@@ -18,18 +18,26 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import { debug } from 'debug';
 import { ML_ERR_return_NAN } from '@common/logger';
-import { randomGenHelper } from '../../r-func';
-import { IRNG } from '../../rng';
+import type { IRNG } from '@rng/irng';
+import { globalUni } from '@rng/globalRNG';
 
-const { isFinite: R_FINITE } = Number;
 const printer = debug('runif');
 
-export function runif(n: number | number[], min = 0, max = 1, u: IRNG) {
-    return randomGenHelper(n, runifOne, min, max, u);
+export function runif(n: number, min = 0, max = 1, u: IRNG = globalUni()) {
+    // do the check once
+    if (!(isFinite(min) && isFinite(max) && max > min)) {
+        return ML_ERR_return_NAN(printer);
+    }
+    const rc = new Float32Array(n);
+    for (let i = 0; i < n; i++){
+        const s = u.random();
+        rc[i] = (max - min) * s + min;
+    }
+    return rc;
 }
 
-export function runifOne(n = 1, min = 0, max = 1, u: IRNG): number {
-    if (!(R_FINITE(min) && R_FINITE(max) && max > min)) {
+export function runifOne(min = 0, max = 1, u: IRNG = globalUni()): number {
+    if (!(isFinite(min) && isFinite(max) && max > min)) {
         return ML_ERR_return_NAN(printer);
     }
     const s = u.random();
