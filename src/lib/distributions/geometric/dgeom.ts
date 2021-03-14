@@ -15,18 +15,17 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { debug } from 'debug';
-import { dbinom_raw } from '../binomial/dbinom';
-import { ML_ERR_return_NAN, R_D__0, R_D_nonint_check } from '../../common/_general';
+import { dbinom_raw } from '@dist/binomial/dbinom';
+import { ML_ERR_return_NAN  } from '@common/logger';
 
-const { isNaN: ISNAN, isFinite: R_FINITE } = Number;
-const { round: R_forceint, log } = Math;
+import { R_D__0, R_D_nonint_check } from '$constants';
 
 const printer = debug('dgeom');
 
 export function dgeom(x: number, p: number, giveLog = false): number {
     let prob: number;
 
-    if (ISNAN(x) || ISNAN(p)) return x + p;
+    if (isNaN(x) || isNaN(p)) return x + p;
 
     if (p <= 0 || p > 1) {
         return ML_ERR_return_NAN(printer);
@@ -36,13 +35,13 @@ export function dgeom(x: number, p: number, giveLog = false): number {
     if (rc !== undefined) {
         return rc;
     }
-    if (x < 0 || !R_FINITE(x) || p === 0) {
+    if (x < 0 || !isFinite(x) || p === 0) {
         return R_D__0(giveLog);
     }
-    x = R_forceint(x);
+    x = Math.round(x);
 
     /* prob = (1-p)^x, stable for small p */
     prob = dbinom_raw(0, x, p, 1 - p, giveLog);
 
-    return giveLog ? log(p) + prob : p * prob;
+    return giveLog ? Math.log(p) + prob : p * prob;
 }

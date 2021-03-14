@@ -15,10 +15,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { M_1_SQRT_2PI } from '../../common/_general';
-import { pnorm5 as pnorm } from '../normal/pnorm';
-
-const { exp, pow } = Math;
+import { M_1_SQRT_2PI } from '$constants';
+import { pnorm5 as pnorm } from '@dist/normal/pnorm';
 
 const bb = 8;
 const C2 = -50;
@@ -124,7 +122,7 @@ export function wprob(w: number, rr: number, cc: number): number {
 
     pr_w = 2 * pnorm(qsqz, 0, 1, true, false) - 1; /* erf(qsqz / M_SQRT2) */
     /* if pr_w ^ cc < 2e-22 then set pr_w = 0 */
-    if (pr_w >= exp(C2 / cc)) pr_w = pow(pr_w, cc);
+    if (pr_w >= Math.exp(C2 / cc)) pr_w = Math.pow(pr_w, cc);
     else pr_w = 0.0;
 
     /* if w is large then the second component of the */
@@ -181,8 +179,8 @@ export function wprob(w: number, rr: number, cc: number): number {
             /* then doesn't contribute to integral */
 
             rinsum = pplus * 0.5 - pminus * 0.5;
-            if (rinsum >= exp(C1 / cc1)) {
-                rinsum = aleg[j - 1] * exp(-(0.5 * qexpo)) * pow(rinsum, cc1);
+            if (rinsum >= Math.exp(C1 / cc1)) {
+                rinsum = aleg[j - 1] * Math.exp(-(0.5 * qexpo)) * Math.pow(rinsum, cc1);
                 elsum += rinsum;
             }
         }
@@ -194,9 +192,9 @@ export function wprob(w: number, rr: number, cc: number): number {
 
     /* if pr_w ^ rr < 9e-14, then return 0 */
     pr_w += einsum;
-    if (pr_w <= exp(C1 / rr)) return 0;
+    if (pr_w <= Math.exp(C1 / rr)) return 0;
 
-    pr_w = pow(pr_w, rr);
+    pr_w = Math.pow(pr_w, rr);
     if (pr_w >= 1)
         /* 1 was iMax was eps */
         return 1;

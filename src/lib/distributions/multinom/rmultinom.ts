@@ -17,92 +17,76 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import { debug } from 'debug';
 
-const { isFinite: R_FINITE } = Number;
-const { abs: fabs } = Math;
-
-import { rbinom } from '../binomial/rbinom';
-import { flatten, possibleScalar, sum } from '../../r-func';
-import { IRNG } from '../../rng/irng';
+import { rbinomOne } from '@dist/binomial/rbinom';
+import { IRNG } from '@rng/irng';
+import { globalUni } from '@rng/globalRNG';
+import { emptyFloat32Array } from '$constants';
+import { checks } from './helper';
 
 const printer_rmultinom = debug('rmultinom');
-//const sequence = seq()();
 
-export function rmultinom(n: number, size: number, prob: number | number[], rng: IRNG): number[] | number[][] {
-    const result = Array.from({ length: n }).map(() => _rmultinom(size, prob, rng));
-    return possibleScalar(result);
+
+export function rmultinom(n: number, size: number, prob: Float32Array, rng = globalUni()): Float32Array {
+    // returns matrix n x prob
+    const sum = checks(prob, size, n, printer_rmultinom);
+    if (!sum) {
+        return emptyFloat32Array;
+    }
+    const data = new Float32Array(n * prob.length);
+    for (let i = 0; i < n; i++) {
+        const offset = i * prob.length;
+        rmultinomOne(data, offset, size, prob, sum, rng);
+    }
+    return data;
 }
 
 //workhorse
-export function rmultinomOne(size: number, prob: number | number[], rng: IRNG): number[] {
+export function rmultinomOne(
+    data: Float32Array,
+    offset: number,
+    size: number,
+    prob: Float32Array,
+    sum: number,
+    rng: IRNG
+): void {
     /* `Return' vector  rN[1:K] {K := length(prob)}
      *  where rN[j] ~ Bin(n, prob[j]) ,  sum_j rN[j] == n,  sum_j prob[j] == 1,
      */
-    const rN: number[] = [];
-    const p = Array.from(flatten(prob));
-    const K = p.length;
-    //let pp;
-    /* This calculation is sensitive to exact values, so we try to
-       ensure that the calculations are as accurate as possible
-       so different platforms are more likely to give the same
-       result. */
-    if (p.length === 0) {
-        printer_rmultinom('list of probabilities cannot be empty');
-        return rN;
-    }
-    if (size < 0) {
-        printer_rmultinom('Illegal Argument:size is negative');
-        rN.splice(0);
-        return rN;
-    }
-    /* Note: prob[K] is only used here for checking  sum_k prob[k] = 1 ;
-     *       Could make loop one shorter and drop that check !
-     */
-    //check probabilities
-    if (p.find((pp) => !R_FINITE(pp) || pp < 0)) {
-        printer_rmultinom('some propbabilities are invalid or negative numbers');
-        rN.splice(0);
-        return rN;
-    }
-
-    rN.splice(0, rN.length, ...new Array(K).fill(0)); //remove, insert and init
-
-    if (size === 0) {
-        return rN;
-    }
+    const K = prob.length;
     /* Generate the first K-1 obs. via binomials */
     // context vars for the next loop
     let _size = size;
-    let p_tot = sum(p);
-
-    printer_rmultinom('%o', { p, p_tot, _size, K, rN });
+    let p_tot = sum;
+    printer_rmultinom('%o', { prob, p_tot, _size, K });
     for (let k = 0; k < K - 1; k++) {
         //can happen, protect against devide by zero
-        if (fabs(p_tot) < Number.EPSILON) {
-            rN[k] = _size;
+        if (Math.abs(p_tot) < Number.EPSILON) {
+            data[offset + k] = _size;
             _size = 0;
             p_tot = 0;
             continue;
         }
-
-        const pp = p[k] / p_tot;
+        const pp = prob[k] / p_tot;
 
         if (pp === 0) {
-            rN[k] = 0;
+            data[offset + k] = 0;
             continue;
         }
         // nothing left, rest will be zero
         if (_size === 0) {
-            rN[k] = 0;
+            data[offset + k] = 0;
             continue;
         }
-        /* printf("[%d] %.17f\n", k+1, pp); */
-        rN[k] = pp < 1 ? (rbinomOne(_size, pp, rng) as number) : _size;
-        //adjust size
-        _size -= rN[k];
+        if (pp === 1) {
+            data[offset + k] = _size;
+        }
+        else {
+            data[offset + k] = rbinomOne(_size, pp, rng);
+        }
+        _size -= data[offset + k];
         //adjust probabilities
-        p_tot -= p[k];
-        printer_rmultinom('%o', { p_tot, _size, k, rN });
+        p_tot -= prob[k];
+        printer_rmultinom('%o', { p_tot, _size, k });
     }
-    rN[K - 1] = _size; //left over
-    return rN;
+    data[offset + K - 1] = _size; //left over
 }

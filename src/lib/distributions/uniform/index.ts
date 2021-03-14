@@ -16,19 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { dunif } from './dunif';
-import { punif } from './punif';
-import { qunif } from './qunif';
-import { runif } from './runif';
-
-import { IRNG, rng } from '../../rng';
-const { MersenneTwister } = rng;
-
-export function Uniform(rng: IRNG = new MersenneTwister(0)) {
-    return {
-        dunif,
-        punif,
-        qunif,
-        runif: (n = 1, min = 0, max = 1) => runif(n, min, max, rng),
-    };
-}
+export { dunif } from './dunif';
+export { punif } from './punif';
+export { qunif } from './qunif';
+export { runif, runifOne } from './runif';

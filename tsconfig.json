@@ -30,7 +30,7 @@
     // warn for potential cross-module transpile problems
     // example: ambient const enum member generate errors
     // https://www.typescriptlang.org/tsconfig#isolatedModules
-    "isolatedModules": true,
+    // "isolatedModules": true,
     // "jsx": --> "undefined",
     //
     // this is not the transpilation target

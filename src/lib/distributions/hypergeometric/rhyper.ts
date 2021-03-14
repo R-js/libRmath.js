@@ -16,18 +16,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { debug } from 'debug';
 //
-import { rbinomOne } from '../binomial/rbinom';
+import { rbinomOne } from '@dist/binomial/rbinom';
 import { ML_ERR_return_NAN } from '@common/logger';
 import { imax2, imin2, M_LN_SQRT_2PI } from '$constants';
-import { IRNG } from '@rng/irng';
+import type { IRNG } from '@rng/irng';
 import { qhyper } from './qhyper';
 //
-const { log, round: R_forceint, exp, sqrt } = Math;
-const { isFinite: R_FINITE, MAX_SAFE_INTEGER: INT_MAX } = Number;
 const printer_afc = debug('afc');
 
 // afc(i) :=  ln( i! )	[logarithm of the factorial i]
-export function afc(i: number): number {
+function afc(i: number): number {
     // If (i > 7), use Stirling's approximation, otherwise use table lookup.
     const al = [
         0.0 /*ln(0!)=ln(1)*/,
@@ -56,17 +54,13 @@ export function afc(i: number): number {
     // else i >= 8 :
     const di = i;
     const i2 = di * di;
-    return (di + 0.5) * log(di) - di + M_LN_SQRT_2PI + (0.0833333333333333 - 0.00277777777777778 / i2) / di;
-}
-
-export function rhyper(N: number, nn1in: number, nn2in: number, kkin: number, rng: IRNG): number[] {
-    return Array.from({ length: N }).map(() => rhyperOne(nn1in, nn2in, kkin, rng));
+    return (di + 0.5) * Math.log(di) - di + M_LN_SQRT_2PI + (0.0833333333333333 - 0.00277777777777778 / i2) / di;
 }
 
 //     rhyper(NR, NB, n) -- NR 'red', NB 'blue', n drawn, how many are 'red'
 const printer_rhyper = debug('_rhyper');
 
-function rhyperOne(nn1in: number, nn2in: number, kkin: number, rng: IRNG): number {
+export function rhyperOne(nn1in: number, nn2in: number, kkin: number, rng: IRNG): number {
     /* extern double afc(int); */
 
     let nn1 = 0;
@@ -106,14 +100,14 @@ function rhyperOne(nn1in: number, nn2in: number, kkin: number, rng: IRNG): numbe
 
     /* check parameter validity */
 
-    if (!R_FINITE(nn1in) || !R_FINITE(nn2in) || !R_FINITE(kkin)) return ML_ERR_return_NAN(printer_rhyper);
+    if (!isFinite(nn1in) || !isFinite(nn2in) || !isFinite(kkin)) return ML_ERR_return_NAN(printer_rhyper);
 
-    nn1in = R_forceint(nn1in);
-    nn2in = R_forceint(nn2in);
-    kkin = R_forceint(kkin);
+    nn1in = Math.round(nn1in);
+    nn2in = Math.round(nn2in);
+    kkin = Math.round(kkin);
 
     if (nn1in < 0 || nn2in < 0 || kkin < 0 || kkin > nn1in + nn2in) return ML_ERR_return_NAN(printer_rhyper);
-    if (nn1in >= INT_MAX || nn2in >= INT_MAX || kkin >= INT_MAX) {
+    if (nn1in >= Number.MAX_SAFE_INTEGER || nn2in >= Number.MAX_SAFE_INTEGER || kkin >= Number.MAX_SAFE_INTEGER) {
         /* large n -- evade integer overflow (and inappropriate algorithms)
            -------- */
         // FIXME: Much faster to give rbinom() approx when appropriate; -> see Kuensch(1989)
@@ -198,7 +192,7 @@ function rhyperOne(nn1in: number, nn2in: number, kkin: number, rng: IRNG): numbe
             } else {
                 lw = afc(n1) + afc(k) - afc(k - n2) - afc(n1 + n2);
             }
-            w = exp(lw + con);
+            w = Math.exp(lw + con);
         }
         let p = 0;
         let u = 0;
@@ -237,7 +231,7 @@ function rhyperOne(nn1in: number, nn2in: number, kkin: number, rng: IRNG): numbe
         // let v = 0;
 
         if (setup1 || setup2) {
-            s = sqrt(((tn - k) * k * n1 * n2) / (tn - 1) / tn / tn);
+            s = Math.sqrt(((tn - k) * k * n1 * n2) / (tn - 1) / tn / tn);
 
             /* remark: d is defined in reference without int. */
             /* the truncation centers the cell boundaries at 0.5 */
@@ -246,10 +240,10 @@ function rhyperOne(nn1in: number, nn2in: number, kkin: number, rng: IRNG): numbe
             xl = m - d + 0.5;
             xr = m + d + 0.5;
             a = afc(m) + afc(n1 - m) + afc(k - m) + afc(n2 - k + m);
-            kl = exp(a - afc(xl) - afc(n1 - xl) - afc(k - xl) - afc(n2 - k + xl));
-            kr = exp(a - afc(xr - 1) - afc(n1 - xr + 1) - afc(k - xr + 1) - afc(n2 - k + xr - 1));
-            lamdl = -log((xl * (n2 - k + xl)) / (n1 - xl + 1) / (k - xl + 1));
-            lamdr = -log(((n1 - xr + 1) * (k - xr + 1)) / xr / (n2 - k + xr));
+            kl = Math.exp(a - afc(xl) - afc(n1 - xl) - afc(k - xl) - afc(n2 - k + xl));
+            kr = Math.exp(a - afc(xr - 1) - afc(n1 - xr + 1) - afc(k - xr + 1) - afc(n2 - k + xr - 1));
+            lamdl = -Math.log((xl * (n2 - k + xl)) / (n1 - xl + 1) / (k - xl + 1));
+            lamdr = -Math.log(((n1 - xr + 1) * (k - xr + 1)) / xr / (n2 - k + xr));
             p1 = d + d;
             p2 = p1 + kl / lamdl;
             p3 = p2 + kr / lamdr;
@@ -283,7 +277,7 @@ function rhyperOne(nn1in: number, nn2in: number, kkin: number, rng: IRNG): numbe
                 ix = xl + u;
             } else if (u <= p2) {
                 /* left tail */
-                ix = xl + log(v) / lamdl;
+                ix = xl + Math.log(v) / lamdl;
                 if (ix < minjx) {
                     //goto_L30 = true;
                     continue;
@@ -292,7 +286,7 @@ function rhyperOne(nn1in: number, nn2in: number, kkin: number, rng: IRNG): numbe
                 v = v * (u - p1) * lamdl;
             } else {
                 /* right tail */
-                ix = xr - log(v) / lamdr;
+                ix = xr - Math.log(v) / lamdr;
                 if (ix > maxjx) {
                     //goto_L30 = true;
                     continue;
@@ -380,7 +374,7 @@ function rhyperOne(nn1in: number, nn2in: number, kkin: number, rng: IRNG): numbe
                     xk * t * (1 + t * (-0.5 + t / 3.0)) +
                     nm * e * (1 + e * (-0.5 + e / 3.0));
                 /* test against upper bound */
-                const alv = log(v);
+                const alv = Math.log(v);
                 if (alv > ub) {
                     reject = true;
                 } else {

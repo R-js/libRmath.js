@@ -16,21 +16,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { debug } from 'debug';
 
-import { ML_ERR_return_NAN } from '../../common/_general';
-import { exp_rand } from '../exp/sexp';
-import { rpoisOne } from '../poisson/rpois';
-import { IRNGNormal } from '../rng/normal';
-
-const { isFinite: R_FINITE } = Number;
+import { ML_ERR_return_NAN } from '@common/logger';
+import { exp_rand } from '@dist/exp/sexp';
+import { rpoisOne } from '@dist/poisson/rpois';
+import type { IRNG } from '@rng/irng';
+import { globalUni } from '@rng/globalRNG';
 
 const printer = debug('rgeom');
 
-export function rgeom(n, p, rng): number[] {
-    return Array.from({ length: n }).map(() => rgeomOne(p, rng));
-}
-
-export function rgeomOne(p: number, rng: IRNGNormal): number {
-    if (!R_FINITE(p) || p <= 0 || p > 1) return ML_ERR_return_NAN(printer);
-
-    return rpoisOne(exp_rand(rng.rng.internal_unif_rand) * ((1 - p) / p), rng) as number;
+export function rgeomOne(p: number, rng: IRNG = globalUni()) {
+    if (!isFinite(p) || p <= 0 || p > 1) return ML_ERR_return_NAN(printer);
+    return rpoisOne(exp_rand(rng.random) * ((1 - p) / p), rng);
 }

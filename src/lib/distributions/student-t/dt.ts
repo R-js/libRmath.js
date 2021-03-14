@@ -17,27 +17,32 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { debug } from 'debug';
 
-import { M_1_SQRT_2PI, M_LN_SQRT_2PI, ML_ERR_return_NAN, R_D__0 } from '../../common/_general';
+import { 
+    ML_ERR_return_NAN, 
+} from '@common/logger';
 
-import { bd0 } from '../../deviance/bd0';
-import { dnorm4 as dnorm } from '../normal/dnorm';
-import { stirlerr } from '../stirling/stirlerror';
+import {
+    M_1_SQRT_2PI, 
+    M_LN_SQRT_2PI,
+    R_D__0 
+} from '$constants'
 
-const { log1p, abs: fabs, exp, log, sqrt } = Math;
-const { isNaN: ISNAN, EPSILON: DBL_EPSILON, isFinite: R_FINITE } = Number;
+import { bd0 } from '$deviance';
+import { dnorm } from '@dist/normal';
+import { stirlerr } from '$stirling';
 
 const printer_dt = debug('dt');
 export function dt(x: number, n: number, giveLog = false): number {
-    if (ISNAN(x) || ISNAN(n)) {
+    if (isNaN(x) || isNaN(n)) {
         return x + n;
     }
     if (n <= 0) {
         return ML_ERR_return_NAN(printer_dt);
     }
-    if (!R_FINITE(x)) {
+    if (!isFinite(x)) {
         return R_D__0(giveLog);
     }
-    if (!R_FINITE(n)) {
+    if (!isFinite(n)) {
         return dnorm(x, 0, 1, giveLog);
     }
 
@@ -47,23 +52,23 @@ export function dt(x: number, n: number, giveLog = false): number {
     // in  [0, Inf]
     let ax = 0; // <- -Wpedantic
     let l_x2n; // := log(sqrt(1 + x2n)) = log(1 + x2n)/2
-    const lrg_x2n: boolean = x2n > 1 / DBL_EPSILON;
+    const lrg_x2n: boolean = x2n > 1 / Number.EPSILON;
     if (lrg_x2n) {
         // large x^2/n :
-        ax = fabs(x);
-        l_x2n = log(ax) - log(n) / 2; // = log(x2n)/2 = 1/2 * log(x^2 / n)
+        ax = Math.abs(x);
+        l_x2n = Math.log(ax) - Math.log(n) / 2; // = log(x2n)/2 = 1/2 * log(x^2 / n)
         u = n * l_x2n; //  log(1 + x2n) * n/2 =  n * log(1 + x2n)/2 =
     } else if (x2n > 0.2) {
-        l_x2n = log(1 + x2n) / 2;
+        l_x2n = Math.log(1 + x2n) / 2;
         u = n * l_x2n;
     } else {
-        l_x2n = log1p(x2n) / 2;
+        l_x2n = Math.log1p(x2n) / 2;
         u = -bd0(n / 2, (n + x * x) / 2) + (x * x) / 2;
     }
 
     //old: return  R_D_fexp(M_2PI*(1+x2n), t-u);
 
-    // R_D_fexp(f,x) :=  (give_log ? -0.5*log(f)+(x) : exp(x)/sqrt(f))
+    // R_D_fexp(f,x) :=  (give_log ? -0.5*log(f)+(x) : Math.exp(x)/sqrt(f))
     // f = 2pi*(1+x2n)
     //  ==> 0.5*log(f) = log(2pi)/2 + log(1+x2n)/2 = log(2pi)/2 + l_x2n
     //	     1/sqrt(f) = 1/sqrt(2pi * (1+ x^2 / n))
@@ -72,6 +77,6 @@ export function dt(x: number, n: number, giveLog = false): number {
     if (giveLog) return t - u - (M_LN_SQRT_2PI + l_x2n);
 
     // else :  if(lrg_x2n) : sqrt(1 + 1/x2n) ='= sqrt(1) = 1
-    const I_sqrt_ = lrg_x2n ? sqrt(n) / ax : exp(-l_x2n);
-    return exp(t - u) * M_1_SQRT_2PI * I_sqrt_;
+    const I_sqrt_ = lrg_x2n ? Math.sqrt(n) / ax : Math.exp(-l_x2n);
+    return Math.exp(t - u) * M_1_SQRT_2PI * I_sqrt_;
 }

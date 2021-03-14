@@ -15,22 +15,14 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 'use strict';
-import { dnorm4 as dnorm } from './dnorm';
-import { pnorm5 as pnorm } from './pnorm';
-import { qnorm } from './qnorm';
-import { rnorm as _rnorm } from './rnorm';
+export { dnorm4 as dnorm } from './dnorm';
+export { pnorm5 as pnorm } from './pnorm';
+export { qnorm } from './qnorm';
+import { rnormOne } from './rnorm';
+import { repeatedCall } from '$helper';
 
-import { IRNGNormal, rng as _rng } from '../rng';
-const {
-    normal: { Inversion },
-} = _rng;
+import type { IRNGNormal } from '@rng/normal/normal-rng';
 
-export function Normal(prng: IRNGNormal = new Inversion()) {
-    return {
-        rnorm: (n = 1, mu = 0, sigma = 1) => _rnorm(n, mu, sigma, prng),
-        dnorm,
-        pnorm,
-        qnorm,
-        rng: prng,
-    };
+export function rnorm(n=1, mu=0, sigma=1, rng?:IRNGNormal) {
+    return repeatedCall(n, rnormOne, mu, sigma, rng);
 }

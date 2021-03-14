@@ -15,24 +15,20 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { debug } from 'debug';
-import { ML_ERR_return_NAN } from '../../common/_general';
-
-const { log, exp, abs: fabs } = Math;
-const { isNaN: ISNAN } = Number;
-
+import { ML_ERR_return_NAN } from '@common/logger';
 const printer_dlogis = debug('dlogis');
 
 export function dlogis(x: number, location = 0, scale = 1, give_log = false): number {
     let e: number;
     let f: number;
 
-    if (ISNAN(x) || ISNAN(location) || ISNAN(scale)) return NaN;
+    if (isNaN(x) || isNaN(location) || isNaN(scale)) return NaN;
     if (scale <= 0.0) {
         return ML_ERR_return_NAN(printer_dlogis);
     }
 
-    x = fabs((x - location) / scale);
-    e = exp(-x);
+    x = Math.abs((x - location) / scale);
+    e = Math.exp(-x);
     f = 1.0 + e;
-    return give_log ? -(x + log(scale * f * f)) : e / (scale * f * f);
+    return give_log ? -(x + Math.log(scale * f * f)) : e / (scale * f * f);
 }

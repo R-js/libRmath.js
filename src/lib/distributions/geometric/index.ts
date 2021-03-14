@@ -14,18 +14,15 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { Inversion, IRNGNormal } from '../rng/normal';
+export { dgeom } from './dgeom';
+export { pgeom } from './pgeom';
+export { qgeom } from './qgeom';
+import { rgeomOne } from './rgeom';
+import type { IRNG } from '@rng/irng';
+import { repeatedCall } from '$helper';
 
-import { dgeom } from './dgeom';
-import { pgeom } from './pgeom';
-import { qgeom } from './qgeom';
-import { rgeom as _rgeom } from './rgeom';
-
-export function Geometric(rng: IRNGNormal = new Inversion()) {
-  return {
-    dgeom,
-    pgeom,
-    qgeom,
-    rgeom: (N: number, prob: number) => _rgeom(N, prob, rng)
-  };
+export function rgeom(n: number, prob: number, rng?: IRNG) {
+  return repeatedCall(n, rgeomOne, prob, rng);
 }
+
+export { rgeomOne }

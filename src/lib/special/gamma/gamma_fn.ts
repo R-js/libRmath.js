@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import { chebyshev_eval } from '$chebyshev';
 import { ME, ML_ERROR } from '@common/logger';
-import stirlerr from '../../stirling';
+import { stirlerr } from '$stirling';
 import sinpi from '@trig/sinpi';
 import type { NumArray } from '$constants';
 import { isArray, isEmptyArray, emptyFloat64Array } from '$constants';

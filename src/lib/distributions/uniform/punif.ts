@@ -21,10 +21,8 @@ const printer = debug('punif');
 import { ML_ERR_return_NAN } from '@common/logger';
 import { R_D_val, R_DT_0, R_DT_1 } from '$constants';
 
-const { isNaN: ISNAN, isFinite: R_FINITE } = Number;
-
 export function punif(q: number, min = 0, max = 1, lowerTail = true, logP = false): number {
-    if (ISNAN(q) || ISNAN(min) || ISNAN(max)) {
+    if (isNaN(q) || isNaN(min) || isNaN(max)) {
         return q + min + max;
     }
 
@@ -32,7 +30,7 @@ export function punif(q: number, min = 0, max = 1, lowerTail = true, logP = fals
         return ML_ERR_return_NAN(printer);
     }
 
-    if (!R_FINITE(min) || !R_FINITE(max)) {
+    if (!isFinite(min) || !isFinite(max)) {
         return ML_ERR_return_NAN(printer);
     }
 

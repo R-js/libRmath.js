@@ -18,12 +18,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import { debug } from 'debug';
 
-import { imax2, imin2, M_1_SQRT_2PI, ML_ERR_return_NAN } from '../common/_general';
-
-import { exp_rand } from '../exp/sexp';
-import { randomGenHelper } from '../r-func';
-import { IRNGNormal } from '../rng/normal';
-import { fsign } from '../signrank/fsign';
+import {  ML_ERR_return_NAN } from '@common/logger';
+import { imax2, imin2, M_1_SQRT_2PI,} from '$constants';
+import { exp_rand } from '@dist/exp/sexp';
+import type { IRNGNormal } from '@rng/normal/normal-rng';
+import { fsign } from './fsign';
+import { globalNorm } from '@rng/globalRNG';
 
 const { trunc, log, abs: fabs, pow, exp, floor, sqrt } = Math;
 const { isFinite: R_FINITE } = Number;
@@ -43,18 +43,15 @@ const one_24 = 0.0416666666666666667;
 
 const printer_rpois = debug('rpois');
 
-export function rpois(n: number, mu: number, rng: IRNGNormal): number[] {
-    return randomGenHelper(n, rpoisOne, mu, rng);
-}
 
-export function rpoisOne(mu: number, rng: IRNGNormal): number {
+export function rpoisOne(mu: number, rng: IRNGNormal = globalNorm()): number {
     /* Factorial Table (0:9)! */
     const fact = [1, 1, 2, 6, 24, 120, 720, 5040, 40320, 362880];
 
     /* These are static --- persistent between calls for same mu : */
     let l = 0;
     let m = 0;
-    const pp = new Array(36);
+    const pp = new Float32Array(36);
     let b1 = 0;
     let b2 = 0;
     let c = 0;
@@ -131,7 +128,7 @@ export function rpoisOne(mu: number, rng: IRNGNormal): number {
 
             while (true) {
                 /* Step U. uniform sample for inversion method */
-                u = rng.rng.random();
+                u = rng.uniform_rng.random();
                 if (u <= p0) return 0;
 
                 /* Step T. table comparison until the end pp[l] of the
@@ -163,7 +160,7 @@ export function rpoisOne(mu: number, rng: IRNGNormal): number {
     /* Only if mu >= 10 : ----------------------- */
 
     /* Step N. normal sample */
-    g = mu + s * rng.internal_norm_rand(); /* norm_rand() ~ N(0,1), standard normal */
+    g = mu + s * rng.random(); /* norm_rand() ~ N(0,1), standard normal */
 
     if (g >= 0) {
         pois = floor(g);
@@ -172,7 +169,7 @@ export function rpoisOne(mu: number, rng: IRNGNormal): number {
         /* Step S. squeeze acceptance */
         fk = pois;
         difmuk = mu - fk;
-        u = rng.rng.random(); /* ~ U(0,1) - sample */
+        u = rng.uniform_rng.random(); /* ~ U(0,1) - sample */
         if (d * u >= difmuk * difmuk * difmuk) return pois;
     }
 
@@ -212,11 +209,11 @@ export function rpoisOne(mu: number, rng: IRNGNormal): number {
         if (!gotoStepF) {
             /* Step E. Exponential Sample */
 
-            E = exp_rand(rng.rng.internal_unif_rand); /* ~ Exp(1) (standard exponential) */
+            E = exp_rand(rng.uniform_rng.random); /* ~ Exp(1) (standard exponential) */
 
             /*  sample t from the laplace 'hat'
                 (if t <= -0.6744 then pk < fk for all mu >= 10.) */
-            u = 2 * rng.rng.random() - 1;
+            u = 2 * rng.uniform_rng.random() - 1;
             t = 1.8 + fsign(E, u >= 0);
         }
         if (t > -0.6744 || gotoStepF) {

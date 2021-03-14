@@ -15,10 +15,9 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { rchisq } from '../chi-2/rchisq';
-import { rnorm } from '../normal/rnorm';
-import { IRNGNormal } from '../../rng/normal/normal-rng';
-import { Inversion } from '../../rng/normal/inversion';
+import { rchisq } from '@dist/chi-2';
+import { rnorm } from '@dist/normal';
+import { IRNGNormal } from '@rng/normal/normal-rng';
 //
 import { dnt } from './dnt';
 import { dt as _dt } from './dt';
@@ -27,50 +26,48 @@ import { pt as _pt } from './pt';
 import { qnt } from './qnt';
 import { qt as _qt } from './qt';
 //
-import { rt as _rt } from './rt';
+import { rtOne } from './rt';
 
-export function StudentT(rng: IRNGNormal = new Inversion()) {
-    function dt(x: number, df: number, ncp?: number, asLog = false) {
-        if (ncp === undefined) {
-            return _dt(x, df, asLog);
-        }
-        return dnt(x, df, ncp, asLog);
+import { repeatedCall } from '$helper';
+import { emptyFloat32Array } from '$constants';
+export { rtOne };
+
+export function dt(x: number, df: number, ncp?: number, asLog = false) {
+    if (ncp === undefined) {
+        return _dt(x, df, asLog);
     }
-
-    function pt(q: number, df: number, ncp?: number, lowerTail = true, logP = false) {
-        if (ncp === undefined) {
-            return _pt(q, df, lowerTail, logP);
-        }
-
-        return pnt(q, df, ncp, lowerTail, logP);
-    }
-
-    function qt(p: number, df: number, ncp?: number, lowerTail = true, logP = false) {
-        if (ncp === undefined) {
-            return _qt(p, df, lowerTail, logP);
-        }
-        return qnt(p, df, ncp, lowerTail, logP);
-    }
-
-    function rt(n: number, df: number, ncp?: number) {
-        if (ncp === undefined) {
-            return _rt(n, df, rng);
-        } else if (Number.isNaN(ncp)) {
-            return Array.from({ length: n }).fill(NaN);
-        } else {
-            const norm = rnorm(n, ncp, 1, rng); // bleed this first from rng
-            const chisq = rchisq(n, df, rng)
-                .map((v) => v / df)
-                .map(Math.sqrt);
-            const result = norm.map((n, i) => n / chisq[i]);
-            return result;
-        }
-    }
-
-    return {
-        dt,
-        pt,
-        qt,
-        rt,
-    };
+    return dnt(x, df, ncp, asLog);
 }
+
+export function pt(q: number, df: number, ncp?: number, lowerTail = true, logP = false) {
+    if (ncp === undefined) {
+        return _pt(q, df, lowerTail, logP);
+    }
+
+    return pnt(q, df, ncp, lowerTail, logP);
+}
+
+export function qt(p: number, df: number, ncp?: number, lowerTail = true, logP = false) {
+    if (ncp === undefined) {
+        return _qt(p, df, lowerTail, logP);
+    }
+    return qnt(p, df, ncp, lowerTail, logP);
+}
+
+export function rt(n: number, df: number, ncp?: number, rng?: IRNGNormal) {
+    if (ncp === undefined) {
+        return repeatedCall(n, rtOne, n, df, rng);
+    } else if (isNaN(ncp)) {
+        return emptyFloat32Array;
+    } else {
+        const norm = rnorm(n, ncp, 1, rng); // bleed this first from rng
+        const chisq = rchisq(n, df, undefined, rng);
+        for (let i= 0; i < n; i++){
+            chisq[i] /= df;
+            chisq[i] = Math.sqrt(chisq[i]);
+            norm[i] /= chisq[i]; 
+        }
+        return norm;
+    }
+}
+

@@ -16,14 +16,14 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { ML_ERR_return_NAN, R_DT_0, R_DT_1 } from '../common/_general';
-
+import { ML_ERR_return_NAN, } from '@common/logger';
+import { R_DT_0, R_DT_1 } from '$constants';
 const { isNaN: ISNAN, isFinite: R_FINITE } = Number;
 const { floor, max: fmax2 } = Math;
 
 import { debug } from 'debug';
-import { NumberW } from '../common/toms708';
-import { pgamma } from '../distributions/gamma/pgamma';
+import { NumberW } from '$toms708';
+import { pgamma } from '@dist/gamma/pgamma';
 
 const printer = debug('ppois');
 

@@ -16,7 +16,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { debug } from 'debug';
-import { ML_ERR_return_NAN, R_DT_0, R_DT_1, R_DT_val } from '../../common/_general';
+import { ML_ERR_return_NAN,  } from '@common/logger';
+import { R_DT_0, R_DT_1, R_DT_val} from '$constants';
 import { csignrank } from './signrank';
 
 const { round, trunc, LN2: M_LN2, exp } = Math;

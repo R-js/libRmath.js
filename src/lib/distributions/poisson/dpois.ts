@@ -24,9 +24,7 @@ import { bd0 } from '$deviance';
 import { lgammafn_sign as lgammafn } from '@special/gamma/lgammafn_sign';
 import { stirlerr } from '$stirling';
 
-const { round: R_forceint, log, PI } = Math;
-const { isNaN: ISNAN, isFinite: R_FINITE, MIN_VALUE: DBL_MIN } = Number;
-const M_2PI = 2 * PI;
+const M_2PI = 2 * Math.PI;
 const printer = debug('dpois');
 
 export function dpois_raw(x: number, lambda: number, give_log: boolean): number {
@@ -34,16 +32,16 @@ export function dpois_raw(x: number, lambda: number, give_log: boolean): number 
         lambda >= 0
     */
     if (lambda === 0) return x === 0 ? R_D__1(give_log) : R_D__0(give_log);
-    if (!R_FINITE(lambda)) return R_D__0(give_log);
+    if (!isFinite(lambda)) return R_D__0(give_log);
     if (x < 0) return R_D__0(give_log);
-    if (x <= lambda * DBL_MIN) return R_D_exp(give_log, -lambda);
-    if (lambda < x * DBL_MIN) return R_D_exp(give_log, -lambda + x * log(lambda) - lgammafn(x + 1));
+    if (x <= lambda * Number.MIN_VALUE) return R_D_exp(give_log, -lambda);
+    if (lambda < x * Number.MIN_VALUE) return R_D_exp(give_log, -lambda + x * Math.log(lambda) - lgammafn(x + 1));
 
     return R_D_fexp(give_log, M_2PI * x, -stirlerr(x) - bd0(x, lambda));
 }
 
 export function dpois(x: number, lambda: number, give_log = false): number {
-    if (ISNAN(x) || ISNAN(lambda)) {
+    if (isNaN(x) || isNaN(lambda)) {
         return x + lambda;
     }
 
@@ -54,9 +52,9 @@ export function dpois(x: number, lambda: number, give_log = false): number {
     if (rc !== undefined) {
         return rc;
     }
-    if (x < 0 || !R_FINITE(x)) {
+    if (x < 0 || !isFinite(x)) {
         return R_D__0(give_log);
     }
-    x = R_forceint(x);
+    x = Math.round(x);
     return dpois_raw(x, lambda, give_log);
 }

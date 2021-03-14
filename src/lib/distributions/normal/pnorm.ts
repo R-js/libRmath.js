@@ -19,25 +19,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import * as debug from 'debug'
 
 import {
-  M_1_SQRT_2PI,
-  M_SQRT_32,
-  ML_ERR_return_NAN,
-  R_D__0,
-  R_D__1,
+  ML_ERR_return_NAN
+} from '@common/logger';
+
+import {
   R_DT_0,
   R_DT_1
-} from '../common/_general';
-
-const {
-  isNaN: ISNAN,
-  isFinite: R_FINITE,
-  NaN: ML_NAN
-} = Number;
+} from '$constants';
 
 import { pnorm_both } from './pnorm_both'
 
 const printer = debug('pnorm5');
-import { NumberW } from '../common/toms708';
+import { NumberW } from '$toms708';
 
 export function pnorm5(
   q: number,
@@ -47,7 +40,6 @@ export function pnorm5(
   logP = false
 ): number {
 
-
   const p = new NumberW(0);
   const cp = new NumberW(0);
 
@@ -55,16 +47,16 @@ export function pnorm5(
    * For example, if x == mu and sigma == 0, we get the correct answer 1.
    */
 
-  if (ISNAN(q) || ISNAN(mu) || ISNAN(sigma)) return q + mu + sigma;
+  if (isNaN(q) || isNaN(mu) || isNaN(sigma)) return q + mu + sigma;
 
-  if (!R_FINITE(q) && mu === q) return ML_NAN; /* x-mu is NaN */
+  if (!isFinite(q) && mu === q) return NaN; /* x-mu is NaN */
   if (sigma <= 0) {
     if (sigma < 0) return ML_ERR_return_NAN(printer);
     /* sigma = 0 : */
     return q < mu ? R_DT_0(lowerTail, logP) : R_DT_1(lowerTail, logP);
   }
   p.val = (q - mu) / sigma;
-  if (!R_FINITE(p.val))
+  if (!isFinite(p.val))
     return q < mu ? R_DT_0(lowerTail, logP) : R_DT_1(lowerTail, logP);
   q = p.val;
 

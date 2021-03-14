@@ -1,16 +1,13 @@
 
-import { NumberW } from '../common/toms708';
+import { NumberW } from '$toms708';
 import { do_del } from './do_del';
-
-const {  log, abs: fabs} = Math;
-
 
 import {
     M_1_SQRT_2PI,
     M_SQRT_32,
     R_D__0,
     R_D__1
-  } from '../common/_general';
+  } from '$constants';
 
 const {
     EPSILON: DBL_EPSILON,
@@ -103,7 +100,7 @@ export function pnorm_both(
     lower = i_tail !== true;
     upper = i_tail !== false;
   
-    y = fabs(x);
+    y = Math.abs(x);
     if (y <= 0.67448975) {
       /* qnorm(3/4) = .6744.... -- earlier had 0.66291 */
       if (y > eps) {
@@ -122,8 +119,8 @@ export function pnorm_both(
       if (lower) cum.val = 0.5 + temp;
       if (upper) ccum.val = 0.5 - temp;
       if (log_p) {
-        if (lower) cum.val = log(cum.val);
-        if (upper) ccum.val = log(ccum.val);
+        if (lower) cum.val = Math.log(cum.val);
+        if (upper) ccum.val = Math.log(ccum.val);
       }
     } else if (y <= M_SQRT_32) {
       /* Evaluate pnorm for 0.674.. = qnorm(3/4) < |x| <= sqrt(32) ~= 5.657 */

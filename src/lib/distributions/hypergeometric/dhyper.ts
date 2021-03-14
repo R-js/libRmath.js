@@ -17,13 +17,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import { debug } from 'debug';
 
-import { ML_ERR_return_NAN, R_D__0, R_D__1, R_D_negInonint, R_D_nonint_check } from '../../common/_general';
-
-import { dbinom_raw } from '../binomial/dbinom';
+import { ML_ERR_return_NAN,  } from '@common/logger';
+import { R_D__0, R_D__1, R_D_negInonint, R_D_nonint_check } from '$constants';
+import { dbinom_raw } from '@dist/binomial/dbinom';
 
 const printer = debug('dhyper');
-const { round: R_forceint } = Math;
-const { isNaN: ISNAN } = Number;
 
 export function dhyper(x: number, r: number, b: number, n: number, give_log = false): number {
     let p: number;
@@ -32,7 +30,7 @@ export function dhyper(x: number, r: number, b: number, n: number, give_log = fa
     let p2: number;
     let p3: number;
 
-    if (ISNAN(x) || ISNAN(r) || ISNAN(b) || ISNAN(n)) return x + r + b + n;
+    if (isNaN(x) || isNaN(r) || isNaN(b) || isNaN(n)) return x + r + b + n;
 
     if (R_D_negInonint(r) || R_D_negInonint(b) || R_D_negInonint(n) || n > r + b) return ML_ERR_return_NAN(printer);
     if (x < 0) return R_D__0(give_log);
@@ -40,10 +38,10 @@ export function dhyper(x: number, r: number, b: number, n: number, give_log = fa
     if (rc !== undefined) {
         return rc;
     }
-    x = R_forceint(x);
-    r = R_forceint(r);
-    b = R_forceint(b);
-    n = R_forceint(n);
+    x = Math.round(x);
+    r = Math.round(r);
+    b = Math.round(b);
+    n = Math.round(n);
 
     if (n < x || r < x || n - x > b) return R_D__0(give_log);
     if (n === 0) return x === 0 ? R_D__1(give_log) : R_D__0(give_log);

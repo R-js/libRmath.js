@@ -18,23 +18,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import { debug } from 'debug';
 
-import { ML_ERR_return_NAN } from '../common/_general';
-import { randomGenHelper } from '../r-func';
-import { IRNGNormal } from '../rng/normal';
+import { ML_ERR_return_NAN } from '@common/logger';
+import type { IRNGNormal } from '@rng/normal/normal-rng';
+import { globalNorm } from '@rng/globalRNG';
 
-const { isNaN: ISNAN, isFinite: R_FINITE } = Number;
 const printer = debug('rnorm');
 
-export function rnorm(n: number, mu = 0, sigma = 1, rng: IRNGNormal): number[] {
-    return randomGenHelper(n, rnormOne, mu, sigma, rng);
-}
-
-export function rnormOne(mu = 0, sigma = 1, rng: IRNGNormal): number {
-    if (ISNAN(mu) || !R_FINITE(sigma) || sigma < 0) {
+export function rnormOne(mu = 0, sigma = 1, rng: IRNGNormal = globalNorm()): number {
+    if (isNaN(mu) || !isFinite(sigma) || sigma < 0) {
         return ML_ERR_return_NAN(printer);
     }
-    if (sigma === 0 || !R_FINITE(mu)) {
+    if (sigma === 0 || !isFinite(mu)) {
         return mu; /* includes mu = +/- Inf with finite sigma */
     }
-    return mu + sigma * (rng.internal_norm_rand() as number);
+    return mu + sigma * rng.random();
 }

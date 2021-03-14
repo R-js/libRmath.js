@@ -24,21 +24,17 @@ import { R_DT_0, R_DT_1 } from '$constants';
 import { R_DT_qIv } from '@distributions/exp/expm1';
 import { cwilcox } from './cwilcox';
 import { WilcoxonCache } from './WilcoxonCache';
-
 import { choose } from '@special/choose';
-
-const { round: R_forceint, trunc } = Math;
-const { isNaN: ISNAN, isFinite: R_FINITE, EPSILON: DBL_EPSILON } = Number;
 
 const printer_qwilcox = debug('qwilcox');
 
 export function qwilcox(x: number, m: number, n: number, lowerTail = true, logP = false): number {
-    m = R_forceint(m);
-    n = R_forceint(n);
+    m = Math.round(m);
+    n = Math.round(n);
     const w = new WilcoxonCache();
 
-    if (ISNAN(x) || ISNAN(m) || ISNAN(n)) return x + m + n;
-    if (!R_FINITE(x) || !R_FINITE(m) || !R_FINITE(n)) return ML_ERR_return_NAN(printer_qwilcox);
+    if (isNaN(x) || isNaN(m) || isNaN(n)) return x + m + n;
+    if (!isFinite(x) || !isFinite(m) || !isFinite(n)) return ML_ERR_return_NAN(printer_qwilcox);
     R_Q_P01_check(logP, x);
 
     if (m <= 0 || n <= 0) return ML_ERR_return_NAN(printer_qwilcox);
@@ -52,18 +48,18 @@ export function qwilcox(x: number, m: number, n: number, lowerTail = true, logP 
     let p = 0;
     let q = 0;
     if (x <= 0.5) {
-        x = x - 10 * DBL_EPSILON;
+        x = x - 10 * Number.EPSILON;
         while (true) {
             p += cwilcox(q, m, n, w) / c;
             if (p >= x) break;
             q++;
         }
     } else {
-        x = 1 - x + 10 * DBL_EPSILON;
+        x = 1 - x + 10 * Number.EPSILON;
         while (true) {
             p += cwilcox(q, m, n, w) / c;
             if (p > x) {
-                q = trunc(m * n - q);
+                q = Math.trunc(m * n - q);
                 break;
             }
             q++;

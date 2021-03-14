@@ -15,23 +15,16 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { dwilcox } from './dwilcox';
-import { pwilcox } from './pwilcox';
-import { qwilcox } from './qwilcox';
-import { rwilcox as _rwilc } from './rwilcox';
-//import { WilcoxonCache } from './WilcoxonCache';
+export { dwilcox } from './dwilcox';
+export { pwilcox } from './pwilcox';
+export { qwilcox } from './qwilcox';
+import { rwilcoxOne } from './rwilcox';
+import { repeatedCall } from '$helper';
 
-import { IRNG } from '../../rng';
-import { MersenneTwister } from '../../rng/mersenne-twister';
+import type { IRNG } from '@rng/irng';
+import { globalUni } from '@rng/globalRNG';
 
-export function Wilcoxon(rng: IRNG = new MersenneTwister(0)) {
-    function rwilcox(nn: number, m: number, n: number) {
-        return _rwilc(nn, m, n, rng);
-    }
-    return {
-        dwilcox,
-        pwilcox,
-        qwilcox,
-        rwilcox,
-    };
+export { rwilcoxOne };
+export function rwilcox(N: number, m: number, n: number, rng:IRNG = globalUni()) {
+    return repeatedCall(N, rwilcoxOne, m, n, rng);
 }

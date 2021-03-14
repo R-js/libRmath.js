@@ -15,23 +15,13 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { IRNG, rng } from '../../rng';
-import { dsignrank } from './dsign';
-import { psignrank } from './psign';
-import { qsignrank } from './qsign';
-import { rsignrank as _rsignrank } from './rsign';
+import type { IRNG } from '@rng/irng';
+export { dsignrank } from './dsign';
+export { psignrank } from './psign';
+export { qsignrank } from './qsign';
+import { rsignrankOne } from './rsign';
+import { repeatedCall } from '$helper';
 
-const { MersenneTwister } = rng;
-
-export function SignRank(rng: IRNG = new MersenneTwister(0)) {
-    function rsignrank(N: number, n: number) {
-        return _rsignrank(N, n, rng);
-    }
-
-    return {
-        dsignrank,
-        psignrank,
-        qsignrank,
-        rsignrank,
-    };
+export function rsignrank(N: number, n: number, rng?:IRNG) {
+   return repeatedCall(N, rsignrankOne,  n, rng);
 }

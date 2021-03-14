@@ -15,8 +15,6 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-const { max: fmax2, log1p, exp, abs: fabs } = Math;
-
 export function logspace_add(logx: number, logy: number) {
-    return fmax2(logx, logy) + log1p(exp(-fabs(logx - logy)));
+    return Math.max(logx, logy) + Math.log1p(Math.exp(-Math.abs(logx - logy)));
 }

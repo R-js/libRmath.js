@@ -18,15 +18,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import { debug } from 'debug';
 
-import { ML_ERR_return_NAN, R_Q_P01_boundaries } from '../common/_general';
+import { ML_ERR_return_NAN, R_Q_P01_boundaries } from '@common/logger';
 
-import { NumberW } from '../common/toms708';
+import { NumberW } from '$toms708';
 
 import { ppois } from './ppois';
 
-import { qnorm } from '../normal/qnorm';
+import { qnorm } from '@dist/normal/qnorm';
 
-import { R_DT_qIv } from '../exp/expm1';
+import { R_DT_qIv } from '@dist/exp/expm1';
 
 const { max: fmax2, sqrt, floor, round: nearbyint } = Math;
 const { isNaN: ISNAN, EPSILON: DBL_EPSILON, POSITIVE_INFINITY: ML_POSINF, isFinite: R_FINITE } = Number;

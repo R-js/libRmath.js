@@ -15,14 +15,12 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { debug } from 'debug';
-import { M_1_SQRT_2PI, M_LN_SQRT_2PI, ML_ERR_return_NAN, R_D__0 } from '../../common/_general';
-
-const { isNaN: ISNAN, POSITIVE_INFINITY: ML_POSINF } = Number;
-const { log, exp } = Math;
+import { ML_ERR_return_NAN  } from '@common/logger';
+import { M_1_SQRT_2PI, M_LN_SQRT_2PI, R_D__0 } from '$constants';
 const printer = debug('dlnorm');
 
 export function dlnorm(fx: number, meanlog: number, sdlog: number, give_log: boolean): number {
-    if (ISNAN(fx) || ISNAN(meanlog) || ISNAN(sdlog)) {
+    if (isNaN(fx) || isNaN(meanlog) || isNaN(sdlog)) {
         return fx + meanlog + sdlog;
     }
     if (sdlog <= 0) {
@@ -30,14 +28,14 @@ export function dlnorm(fx: number, meanlog: number, sdlog: number, give_log: boo
             return ML_ERR_return_NAN(printer);
         }
         // sdlog == 0 :
-        return log(fx) === meanlog ? ML_POSINF : R_D__0(give_log);
+        return Math.log(fx) === meanlog ? Number.POSITIVE_INFINITY : R_D__0(give_log);
     }
     if (fx <= 0) {
         return R_D__0(give_log);
     }
-    const y = (log(fx) - meanlog) / sdlog;
+    const y = (Math.log(fx) - meanlog) / sdlog;
     return give_log
-        ? -(M_LN_SQRT_2PI + 0.5 * y * y + log(fx * sdlog))
-        : (M_1_SQRT_2PI * exp(-0.5 * y * y)) / (fx * sdlog);
+        ? -(M_LN_SQRT_2PI + 0.5 * y * y + Math.log(fx * sdlog))
+        : (M_1_SQRT_2PI * Math.exp(-0.5 * y * y)) / (fx * sdlog);
     /* M_1_SQRT_2PI = 1 / sqrt(2 * pi) */
 }

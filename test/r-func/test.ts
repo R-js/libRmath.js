@@ -5,22 +5,14 @@ import { createComment } from '../test-helpers';
 import {
     Rcycle, //done
     c, //done
-    compose, //done
-    pipe, //done
     each, //done implicit
     flatten,
-    forcePrecision,
-    isNumber,
-    lazyMap,
     lazySeq,
     map,
     multiplexer,
-    randomGenHelper,
-    range,
     seq_len,
     sequenceFactory,
-    sum,
-    typeOf
+    sum
 } from '../../src/lib/r-func';
 
 import { fixture } from './fixture';

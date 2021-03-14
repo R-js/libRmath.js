@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 export class WilcoxonCache {
   
   //private _map = new Map<number, Map<number, Map<number, number>>>();
-  private _map2 = {};
+  private _map2:any = {};
   constructor() {
 
   }

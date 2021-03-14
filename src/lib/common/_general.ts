@@ -350,3 +350,8 @@ export function R_D_log(log_p: boolean, p: number) {
 export function R_D_qIv(logP: boolean, p: number) {
     return logP ? Math.exp(p) : p;
 }
+
+
+export function sumfp(x: Float32Array) {
+    return x.reduce((pv, v) => pv + v, 0);
+}

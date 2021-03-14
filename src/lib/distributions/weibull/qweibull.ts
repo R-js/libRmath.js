@@ -18,22 +18,20 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import { debug } from 'debug';
 
-import { ML_ERR_return_NAN, R_Q_P01_boundaries } from '../../common/_general';
+import { ML_ERR_return_NAN, R_Q_P01_boundaries } from '@common/logger';
 
-import { R_DT_Clog } from '../../exp/expm1';
+import { R_DT_Clog } from '@dist/exp/expm1';
 
-const { pow } = Math;
-const { isNaN: ISNAN, POSITIVE_INFINITY: ML_POSINF } = Number;
 const printer = debug('qweibull');
 
 export function qweibull(p: number, shape: number, scale = 1, lowerTail = true, logP = false): number {
-    if (ISNAN(p) || ISNAN(shape) || ISNAN(scale)) return p + shape + scale;
+    if (isNaN(p) || isNaN(shape) || isNaN(scale)) return p + shape + scale;
 
     if (shape <= 0 || scale <= 0) return ML_ERR_return_NAN(printer);
 
-    const rc = R_Q_P01_boundaries(lowerTail, logP, p, 0, ML_POSINF);
+    const rc = R_Q_P01_boundaries(lowerTail, logP, p, 0, Number.POSITIVE_INFINITY);
     if (rc !== undefined) {
         return rc;
     }
-    return scale * pow(-R_DT_Clog(lowerTail, logP, p), 1 / shape);
+    return scale * Math.pow(-R_DT_Clog(lowerTail, logP, p), 1 / shape);
 }

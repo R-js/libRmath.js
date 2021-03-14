@@ -15,19 +15,13 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { dpois } from './dpois';
-import { ppois } from './ppois';
-import { qpois } from './qpois';
-import { rpois } from './rpois';
+export { dpois } from './dpois';
+export { ppois } from './ppois';
+export { qpois } from './qpois';
+import { rpoisOne } from './rpois';
+import type { IRNGNormal } from '@rng/normal/normal-rng';
+import { repeatedCall } from '$helper';
 
-import { Inversion, IRNGNormal } from '../rng/normal';
-
-
-export function Poisson(rng: IRNGNormal = new Inversion()) {
-  return {
-    dpois,
-    ppois,
-    qpois,
-    rpois: (n: number, lambda: number) => rpois(n, lambda, rng)
-  };
+export function rpois(n: number, lamda: number, rng?: IRNGNormal) {
+  return repeatedCall(n, rpoisOne, lamda, rng);
 }

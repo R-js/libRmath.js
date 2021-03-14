@@ -16,40 +16,23 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { debug } from 'debug';
 
-import { M_LN2, ML_ERR_return_NAN, R_D__0, R_Q_P01_boundaries, R_Q_P01_check } from '../../common/_general';
-
-import { R_DT_Clog, R_DT_log, R_DT_qIv } from '../../exp/expm1';
-
+import { ML_ERR_return_NAN, R_Q_P01_boundaries, R_Q_P01_check } from '@common/logger';
+import { M_LN2, R_D__0, } from '$constants';
+import { R_DT_Clog, R_DT_log, R_DT_qIv } from '@dist/exp/expm1';
 import { dgamma } from './dgamma';
-import { lgammafn_sign as lgammafn } from './lgammafn_sign';
-import { pgamma } from './pgamma';
-
-import { pgamma_raw } from './pgamma';
-
-import { lgamma1p } from './pgamma';
-
-import { qnorm } from '../../normal/qnorm';
-const { isArray } = Array;
-
-const { abs: fabs, sqrt, pow, exp, log } = Math;
-const {
-    isNaN: ISNAN,
-    POSITIVE_INFINITY: ML_POSINF,
-    NEGATIVE_INFINITY: ML_NEGINF,
-    MIN_VALUE: DBL_MIN,
-    isFinite: R_FINITE,
-} = Number;
+import { lgammafn_sign as lgammafn } from '@special/gamma/lgammafn_sign';
+import { pgamma, pgamma_raw, lgamma1p } from './pgamma';
+import { qnorm } from '@dist/normal/qnorm';
 
 const printer_qchisq_appr = debug('qchisq_appr');
 
-export function qchisq_appr(
+function qchisq_appr(
     p: number,
     nu: number,
     g: number /* = log Gamma(nu/2) */,
     lower_tail: boolean,
     log_p: boolean,
-    tol: number /* EPS1 */,
-    //normal: INormal
+    tol: number /* EPS1 */
 ): number {
     const C7 = 4.67;
     const C8 = 6.66;
@@ -68,7 +51,7 @@ export function qchisq_appr(
 
     /* test arguments and initialise */
 
-    if (ISNAN(p) || ISNAN(nu)) return p + nu;
+    if (isNaN(p) || isNaN(nu)) return p + nu;
 
     const rc = R_Q_P01_check(log_p, p);
     if (rc !== undefined) {
@@ -83,12 +66,12 @@ export function qchisq_appr(
 
     if (nu < -1.24 * (p1 = R_DT_log(lower_tail, log_p, p))) {
         /* for small chi-squared */
-        /* log(alpha) + g = log(alpha) + log(gamma(alpha)) =
-         *        = log(alpha*gamma(alpha)) = lgamma(alpha+1) suffers from
+        /* Math.log(alpha) + g = Math.log(alpha) + Math.log(gamma(alpha)) =
+         *        = Math.log(alpha*gamma(alpha)) = lgamma(alpha+1) suffers from
          *  catastrophic cancellation when alpha << 1
          */
-        const lgam1pa = alpha < 0.5 ? lgamma1p(alpha) : log(alpha) + g;
-        ch = exp((lgam1pa + p1) / alpha + M_LN2);
+        const lgam1pa = alpha < 0.5 ? lgamma1p(alpha) : Math.log(alpha) + g;
+        ch = Math.exp((lgam1pa + p1) / alpha + M_LN2);
 
         printer_qchisq_appr(' small chi-sq., ch0 = %d', ch);
     } else if (nu > 0.32) {
@@ -96,12 +79,12 @@ export function qchisq_appr(
 
         x = qnorm(p, 0, 1, lower_tail, log_p);
         p1 = 2 / (9 * nu);
-        ch = nu * pow(x * sqrt(p1) + 1 - p1, 3);
+        ch = nu * Math.pow(x * Math.sqrt(p1) + 1 - p1, 3);
 
         printer_qchisq_appr(' nu > .32: Wilson-Hilferty; x = %d', x);
 
         /* approximation for p tending to 1: */
-        if (ch > 2.2 * nu + 6) ch = -2 * (R_DT_Clog(lower_tail, log_p, p) - c * log(0.5 * ch) + g);
+        if (ch > 2.2 * nu + 6) ch = -2 * (R_DT_Clog(lower_tail, log_p, p) - c * Math.log(0.5 * ch) + g);
     } else {
         /* "small nu" : 1.24*(-log(p)) <= nu <= 0.32 */
 
@@ -115,24 +98,11 @@ export function qchisq_appr(
             p1 = 1 / (1 + ch * (C7 + ch));
             p2 = ch * (C9 + ch * (C8 + ch));
             t = -0.5 + (C7 + 2 * ch) * p1 - (C9 + ch * (C10 + 3 * ch)) / p2;
-            ch -= (1 - exp(a + 0.5 * ch) * p2 * p1) / t;
-        } while (fabs(q - ch) > tol * fabs(ch));
+            ch -= (1 - Math.exp(a + 0.5 * ch) * p2 * p1) / t;
+        } while (Math.abs(q - ch) > tol * Math.abs(ch));
     }
 
     return ch;
-}
-
-export function qgamma<T>(
-    p: T,
-    alpha = 1, //named shape
-    scale = 1, //not the "rate"
-    lowerTail = true,
-    logP = false,
-): T {
-    const fa: number[] = isArray(p) ? p : ([p] as any);
-    const result = fa.map((pp) => _qgamma(pp, alpha, scale, lowerTail, logP));
-
-    return result.length === 1 ? result[0] : (result as any);
 }
 
 const printer_qgamma = debug('_qgamma');
@@ -188,9 +158,9 @@ export function _qgamma(
 
     let goto_END = false;
 
-    if (ISNAN(p) || ISNAN(alpha) || ISNAN(scale)) return p + alpha + scale;
+    if (isNaN(p) || isNaN(alpha) || isNaN(scale)) return p + alpha + scale;
 
-    const rc = R_Q_P01_boundaries(lower_tail, log_p, p, 0, ML_POSINF);
+    const rc = R_Q_P01_boundaries(lower_tail, log_p, p, 0, Number.POSITIVE_INFINITY);
     if (rc !== undefined) {
         return rc;
     }
@@ -214,7 +184,7 @@ export function _qgamma(
 
     /*----- Phase I : Starting Approximation */
     ch = qchisq_appr(p, /* nu= 'df' =  */ 2 * alpha, /* lgamma(nu/2)= */ g, lower_tail, log_p, /* tol= */ EPS1);
-    if (!R_FINITE(ch)) {
+    if (!isFinite(ch)) {
         /* forget about all iterations! */
         max_it_Newton = 0;
         goto_END = true;
@@ -258,7 +228,7 @@ export function _qgamma(
             if (i === 1) printer_qgamma(' Ph.II iter; ch=%d, p2=%d', ch, p2);
             if (i >= 2) printer_qgamma('     it=%d,  ch=%d, p2=%d', i, ch, p2);
 
-            if (!R_FINITE(p2) || ch <= 0) {
+            if (!isFinite(p2) || ch <= 0) {
                 ch = ch0;
                 max_it_Newton = 27;
                 goto_END = true;
@@ -266,7 +236,7 @@ export function _qgamma(
                 //goto END;
             } /*was  return ML_NAN;*/
 
-            t = p2 * exp(alpha * M_LN2 + g + p1 - c * log(ch));
+            t = p2 * Math.exp(alpha * M_LN2 + g + p1 - c * Math.log(ch));
             b = t / ch;
             a = 0.5 * t - b * c;
             s1 = (210 + a * (140 + a * (105 + a * (84 + a * (70 + 60 * a))))) * i420;
@@ -276,12 +246,12 @@ export function _qgamma(
             s5 = (84 + 2264 * a + c * (1175 + 606 * a)) * i2520;
 
             ch += t * (1 + 0.5 * t * s1 - b * c * (s1 - b * (s2 - b * (s3 - b * (s4 - b * (s5 - b * s6))))));
-            if (fabs(q - ch) < EPS2 * ch) {
+            if (Math.abs(q - ch) < EPS2 * ch) {
                 //   goto END;
                 goto_END = true;
                 break;
             }
-            if (fabs(q - ch) > 0.1 * ch) {
+            if (Math.abs(q - ch) > 0.1 * ch) {
                 /* diverging? -- also forces ch > 0 */
                 if (ch < q) ch = 0.9 * q;
                 else ch = 1.1 * q;
@@ -289,7 +259,7 @@ export function _qgamma(
         }
         /* no convergence in MAXIT iterations -- but we add Newton now... */
 
-        printer_qgamma('qgamma(%d) not converged in %d iterations; rel.ch=%d', p, MAXIT, ch / fabs(q - ch));
+        printer_qgamma('qgamma(%d) not converged in %d iterations; rel.ch=%d', p, MAXIT, ch / Math.abs(q - ch));
 
         /* was
          *    ML_ERROR(ME_PRECISION, "qgamma");
@@ -309,25 +279,25 @@ export function _qgamma(
     if (max_it_Newton) {
         /* always use log scale */
         if (!log_p) {
-            p = log(p);
+            p = Math.log(p);
             log_p = true;
         }
         if (x === 0) {
             const _1_p = 1 + 1e-7;
             const _1_m = 1 - 1e-7;
-            x = DBL_MIN;
+            x = Number.MIN_VALUE;
             p_ = pgamma(x, alpha, scale, lower_tail, log_p);
             if ((lower_tail && p_ > p * _1_p) || (!lower_tail && p_ < p * _1_m)) return 0;
-            /* else:  continue, using x = DBL_MIN instead of  0  */
+            /* else:  continue, using x = Number.MIN_VALUE instead of  0  */
         } else p_ = pgamma(x, alpha, scale, lower_tail, log_p);
-        if (p_ === ML_NEGINF) return 0; /* PR#14710 */
+        if (p_ === Number.NEGATIVE_INFINITY) return 0; /* PR#14710 */
         for (i = 1; i <= max_it_Newton; i++) {
             p1 = p_ - p;
 
             if (i === 1) printer_qgamma(' it=%d: p=%d, x = %d, p.=%d; p1=d{p}=%d', i, p, x, p_, p1);
             if (i >= 2) printer_qgamma('          x{it= %d} = %d, p.=%d, p1=d{p}=%d', i, x, p_, p1);
 
-            if (fabs(p1) < fabs(EPS_N * p)) break;
+            if (Math.abs(p1) < Math.abs(EPS_N * p)) break;
             /* else */
             g = dgamma(x, alpha, scale, log_p);
             if (g === R_D__0(log_p)) {
@@ -337,12 +307,12 @@ export function _qgamma(
             /* else :
              * delta x = f(x)/f'(x);
              * if(log_p) f(x) := log P(x) - p; f'(x) = d/dx log P(x) = P' / P
-             * ==> f(x)/f'(x) = f*P / P' = f*exp(p_) / P' (since p_ = log P(x))
+             * ==> f(x)/f'(x) = f*P / P' = f*Math.exp(p_) / P' (since p_ = log P(x))
              */
-            t = log_p ? p1 * exp(p_ - g) : p1 / g; /* = "delta x" */
+            t = log_p ? p1 * Math.exp(p_ - g) : p1 / g; /* = "delta x" */
             t = lower_tail ? x - t : x + t;
             p_ = pgamma(t, alpha, scale, lower_tail, log_p);
-            if (fabs(p_ - p) > fabs(p1) || (i > 1 && fabs(p_ - p) === fabs(p1)) /* <- against flip-flop */) {
+            if (Math.abs(p_ - p) > Math.abs(p1) || (i > 1 && Math.abs(p_ - p) === Math.abs(p1)) /* <- against flip-flop */) {
                 /* no improvement */
 
                 if (i === 1 && max_it_Newton > 1) printer_qgamma('no Newton step done since delta{p} >= last delta');

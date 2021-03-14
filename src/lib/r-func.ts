@@ -230,12 +230,12 @@ function isObject(o: any): o is Object {
 }
 
 export function sum(x: number[]) {
-    let sum = 0;
-    const gen = flatten(x);
-    for (let v = gen.next(); !v.done; v = gen.next()) {
-        sum += v.value as any;
-    }
-    return sum;
+    const rc = x.reduce((pv: number, v: number) => pv + v, 0);
+    return rc;
+}
+
+export function sumfp(x: Float32Array){
+    return x.reduce((pv: number, v: number) => pv + v, 0);
 }
 
 export interface ISummary {

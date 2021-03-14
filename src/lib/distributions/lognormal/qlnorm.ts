@@ -14,17 +14,14 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { R_Q_P01_boundaries } from '../../common/_general';
+import { R_Q_P01_boundaries } from '@common/logger';
 
-import { qnorm } from '../normal/qnorm';
-
-const { exp } = Math;
-const { isNaN: ISNAN, POSITIVE_INFINITY: ML_POSINF } = Number;
+import { qnorm } from '@dist/normal/qnorm';
 
 export function qlnorm(p: number, meanlog = 0, sdlog = 1, lower_tail = true, log_p = false): number {
-    if (ISNAN(p) || ISNAN(meanlog) || ISNAN(sdlog)) return p + meanlog + sdlog;
+    if (isNaN(p) || isNaN(meanlog) || isNaN(sdlog)) return p + meanlog + sdlog;
 
-    R_Q_P01_boundaries(lower_tail, log_p, p, 0, ML_POSINF);
+    R_Q_P01_boundaries(lower_tail, log_p, p, 0, Number.POSITIVE_INFINITY);
 
-    return exp(qnorm(p, meanlog, sdlog, lower_tail, log_p));
+    return Math.exp(qnorm(p, meanlog, sdlog, lower_tail, log_p));
 }

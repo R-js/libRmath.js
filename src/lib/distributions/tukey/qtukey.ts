@@ -16,8 +16,6 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-const { sqrt, log } = Math;
-
 function qinv(p: number, c: number, v: number): number {
     const p0 = 0.322232421088;
     const q0 = 0.99348462606e-1;
@@ -42,12 +40,12 @@ function qinv(p: number, c: number, v: number): number {
     let yi;
 
     ps = 0.5 - 0.5 * p;
-    yi = sqrt(log(1.0 / (ps * ps)));
+    yi = Math.sqrt(Math.log(1.0 / (ps * ps)));
     t = yi + ((((yi * p4 + p3) * yi + p2) * yi + p1) * yi + p0) / ((((yi * q4 + q3) * yi + q2) * yi + q1) * yi + q0);
     if (v < vmax) t += (t * t * t + t) / v / 4.0;
     q = c1 - c2 * t;
     if (v < vmax) q += -c3 / v + (c4 * t) / v;
-    return t * (q * log(c - 1.0) + c5);
+    return t * (q * Math.log(c - 1.0) + c5);
 }
 
 /*
@@ -77,11 +75,11 @@ function qinv(p: number, c: number, v: number): number {
 
 import { debug } from 'debug';
 
-import { ME, ML_ERR_return_NAN, ML_ERROR, R_Q_P01_boundaries } from '../../common/_general';
-import { R_DT_qIv } from '../../exp/expm1';
+import { ME, ML_ERR_return_NAN, ML_ERROR, R_Q_P01_boundaries } from '@common/logger';
+import { R_DT_qIv } from '@dist/exp/expm1';
 import { ptukey } from './ptukey';
 
-const { isNaN: ISNAN, POSITIVE_INFINITY: ML_POSINF } = Number;
+const { isNaN: isNaN, POSITIVE_INFINITY: ML_POSINF } = Number;
 const { abs: fabs, max: fmax2 } = Math;
 const printer = debug('qtukey');
 /**
@@ -112,7 +110,7 @@ export function qtukey(
     let xabs;
     let iter;
 
-    if (ISNAN(p) || ISNAN(rr) || ISNAN(cc) || ISNAN(df)) {
+    if (isNaN(p) || isNaN(rr) || isNaN(cc) || isNaN(df)) {
         ML_ERROR(ME.ME_DOMAIN, 'qtukey', printer);
         return NaN;
     }

@@ -553,7 +553,7 @@ function dpsifn(
 const print_psigamma = debug('psigamma');
 
 function _render(
-    x: NumArray,
+    x: NumArray|number,
     calculate: (x: number, ans: Float64Array, nz: Uint8Array, ierr: Uint8Array) => void,
     final: (_ans: number) => number,
 ) {
@@ -628,7 +628,7 @@ export function pentagamma(x: NumArray): Float32Array | Float64Array {
 }
 
 //https://commons.wikimedia.org/wiki/Category:Polygamma_function#/media/File:Tetragamma_function_plot.png
-export function tetragamma(x: NumArray): Float32Array | Float64Array {
+export function tetragamma(x: NumArray|number): Float32Array | Float64Array {
     return _render(
         x,
         (x0: number, ans: Float64Array, nz: Uint8Array, ierr: Uint8Array) => dpsifn(x0, 2, 1, 1, ans, nz, ierr),
