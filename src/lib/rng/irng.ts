@@ -68,13 +68,13 @@ export class IRNG implements IRandom {
         }
     }
 
-    public register(event: MessageType, handler: (...args: unknown[]) => void): void {
+    public register(event: MessageType, handler: (...args: any[]) => void): void {
         const handlers = this.notify.get(event) || [];
         this.notify.set(event, handlers);
         handlers.push(handler);
     }
 
-    public unregister(event: MessageType, handler?: (...args: unknown[]) => void): void {
+    public unregister(event: MessageType, handler?: (...args: any[]) => void): void {
         if (!handler) {
             this.notify.delete(event);
             return;
