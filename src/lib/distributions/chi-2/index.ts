@@ -42,7 +42,7 @@ export function qchisq(
   ncp?: number,
   lowerTail = true,
   logP = false
-) {
+): number {
   return ncp === undefined
     ? _qchisq(p, df, lowerTail, logP)
     : _qnchisq(p, df, ncp, lowerTail, logP);
@@ -54,7 +54,7 @@ export function pchisq(
   ncp?: number,
   lowerTail = true,
   logP = false
-) {
+): number {
   return ncp === undefined
     ? _pchisq(p, df, lowerTail, logP)
     : _pnchisq(p, df, ncp, lowerTail, logP);
@@ -65,7 +65,7 @@ export function dchisq(
   df: number,
   ncp?: number,
   log = false
-) {
+): number {
   return ncp === undefined ? _dchisq(x, df, log) : _dnchisq(x, df, ncp, log);
 }
 

@@ -11,7 +11,7 @@ class MyIRNG extends IRNG {
         super('my-irng', IRNGTypeEnum.USER_DEFINED);
         this._seed = new Uint32Array(0);
     }
-    random() {
+    random(): number {
         return Math.random();
     }
     get seed() {
@@ -27,7 +27,7 @@ describe('irng', function n() {
         const usr = new MyIRNG();
         const fn = (seed: number) => seed;
         const mockCallback = jest.fn(fn);
-        usr.register(MessageType.INIT, mockCallback);
+        usr.register(MessageType.INIT, mockCallback as typeof fn);
         usr.init(1234);
         expect(mockCallback.mock.calls[0][0]).toBe(1234);
     });

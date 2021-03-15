@@ -6,7 +6,7 @@ import '$jest-extension';
 import { loadData } from '$test-helpers/load';
 
 //app
-import { tetragamma } from '..';
+import { tetragamma } from '@special/gamma';
 
 describe('tetragamma', function () {
     it('ranges [0.009, 4]', async () => {
@@ -43,7 +43,7 @@ describe('tetragamma', function () {
         expect(actual).toEqualFloatingPointBinary([-0.23620405164171604, -0.00010100499983335], 18);
     });
     it('NaNs should return NaNs', () => {
-        const actual = tetragamma(NaN as any);
+        const actual = tetragamma(NaN);
         expect(actual).toEqualFloatingPointBinary(NaN);
     });
 });

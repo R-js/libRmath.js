@@ -1,8 +1,3 @@
-'use strict';
-
-
-
-//rng
 import { IRNG } from '@rng/irng';
 import { KnuthTAOCP } from './knuth-taocp';
 import { KnuthTAOCP2002 } from '@rng/knuth-taocp-2002';
@@ -36,6 +31,8 @@ const uniformMap = {
     [IRNGTypeEnum.WICHMANN_HILL]: WichmannHill,
 }
 
+type uniformMapKey = keyof (typeof uniformMap);
+
 const normalMap = {
     // normal
     [IRNGNormalTypeEnum.AHRENS_DIETER]: AhrensDieter,
@@ -45,31 +42,38 @@ const normalMap = {
     [IRNGNormalTypeEnum.KINDERMAN_RAMAGE]: KindermanRamage
 }
 
+//type normalMapKey = keyof (typeof normalMap);
+
 const symRNG = Symbol.for('rngUNIFORM');
 const symRNGNormal = Symbol.for('rngNORMAL');
 
+type EgT = typeof globalThis & {
+    [symRNG]: IRNG,
+    [symRNGNormal]: IRNGNormal
+};
+
 export function globalUni(d?: IRNG): IRNG {
     if (d) {
-        (globalThis as any)[symRNG] = d;
+        (globalThis as EgT)[symRNG] = d;
     }
-    return (globalThis as any)[symRNG];
+    return (globalThis as EgT)[symRNG];
 }
 
 export function globalNorm(d?: IRNGNormal): IRNGNormal {
     if (d) {
-        (globalThis as any)[symRNGNormal] = d;
+        (globalThis as EgT)[symRNGNormal] = d;
     }
-    return (globalThis as any)[symRNGNormal];
+    return (globalThis as EgT)[symRNGNormal];
 }
 
 export function RNGKind(
     uniform?: IRNGTypeEnum | IRNGNormalTypeEnum,
     normal?: IRNGNormalTypeEnum
 ): { uniform: IRNG, normal: IRNGNormal } {
-    let uni;
-    let norm;
+    //let uni;
+    //let norm;
     if (!uniform && !normal) {
-        const tu = globalUni() ? globalUni().kind :IRNGTypeEnum.MERSENNE_TWISTER;
+        const tu = globalUni() ? globalUni().kind : IRNGTypeEnum.MERSENNE_TWISTER;
         const tn = globalNorm() ? globalNorm().kind : IRNGNormalTypeEnum.INVERSION;
         return RNGKind(tu, tn);
     }
@@ -81,16 +85,18 @@ export function RNGKind(
     }
     // at this point we have uni/normals, be it defaults or not
     // uniform is ok?
-    if (!uniformMap[uniform as IRNGTypeEnum]) {
+
+    if (!uniformMap[uniform as uniformMapKey]) {
         throw new TypeError(`wrong rng kind specified for uniform "${uniform}"`);
     }
-    uni = uniformMap[uniform as IRNGTypeEnum];
+
+    const uni = uniformMap[IRNGTypeEnum.KNUTH_TAOCP];
 
     // normal ok?
     if (!normalMap[normal as IRNGNormalTypeEnum]) {
         throw new TypeError(`wrong rng kind specified for normal "${normal}"`);
     }
-    norm = normalMap[normal as IRNGNormalTypeEnum];
+    const norm = normalMap[normal as IRNGNormalTypeEnum];
 
     // we have both normal and uniform, but are the different then globals?
     let uniChange;

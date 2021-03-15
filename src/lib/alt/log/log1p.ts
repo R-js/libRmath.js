@@ -129,7 +129,7 @@ export function log1p(x: number): number {
  *		without overflow or destructive underflow.
  */
 
-export function hypot(a: number, b: number) {
+export function hypot(a: number, b: number): number {
     let p: number;
     let r: number;
     let s: number;

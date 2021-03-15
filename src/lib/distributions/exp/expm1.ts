@@ -20,11 +20,11 @@ import { M_LN2, R_D_Cval, R_D_log, R_D_Lval } from '$constants';
 
 const { exp, expm1, log, log1p } = Math;
 
-function R_DT_qIv(lower_tail: boolean, log_p: boolean, p: number) {
+function R_DT_qIv(lower_tail: boolean, log_p: boolean, p: number): number {
     return log_p ? (lower_tail ? exp(p) : -expm1(p)) : R_D_Lval(lower_tail, p);
 }
 
-function R_DT_CIv(lower_tail: boolean, log_p: boolean, p: number) {
+function R_DT_CIv(lower_tail: boolean, log_p: boolean, p: number): number {
     return log_p ? (lower_tail ? -expm1(p) : exp(p)) : R_D_Cval(lower_tail, p);
 }
 
@@ -54,7 +54,7 @@ function R_D_LExp(log_p: boolean, x: number): number {
 }
 
 // log(1 - exp(x))  in more stable form than log1p(- R_D_qIv(x)) :
-function R_Log1_Exp(x: number) {
+function R_Log1_Exp(x: number): number {
     if (x > -M_LN2) {
         return log(-expm1(x));
     }

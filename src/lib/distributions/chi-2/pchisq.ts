@@ -17,6 +17,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import { pgamma } from '@dist/gamma/pgamma';
 
-export function pchisq(x: number, df: number, lowerTail = true, logP = false) {
+export function pchisq(x: number, df: number, lowerTail = true, logP = false): number {
     return pgamma(x, df / 2, 2, lowerTail, logP);
 }

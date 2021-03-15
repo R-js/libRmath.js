@@ -25,9 +25,6 @@ const printer = debug('dnbinom');
 
 export function dnbinom(x: number, size: number, prob: number, give_log: boolean): number {
 
-    let ans: number;
-    let p: number;
-
     if (isNaN(x) || isNaN(size) || isNaN(prob)) {
         return x + size + prob;
     }
@@ -51,9 +48,9 @@ export function dnbinom(x: number, size: number, prob: number, give_log: boolean
 
     x = Math.round(x);
 
-    ans = dbinom_raw(size, x + size, prob, 1 - prob, give_log);
+    const ans = dbinom_raw(size, x + size, prob, 1 - prob, give_log);
 
-    p = size / (size + x);
+    const p = size / (size + x);
 
     return give_log ? Math.log(p) + ans : p * ans;
 }
@@ -65,7 +62,7 @@ export function dnbinom_mu(x: number, size: number, mu: number, give_log: boolea
 
     /* originally, just set  prob :=  size / (size + mu)  and called dbinom_raw(),
      * but that suffers from cancellation when   mu << size  */
-    let ans: number;
+ 
     let p: number;
 
     if (isNaN(x) || isNaN(size) || isNaN(mu)) {
@@ -116,7 +113,7 @@ export function dnbinom_mu(x: number, size: number, mu: number, give_log: boolea
      * x_ = size and n_ = x+size are so close that n_ - x_ loses accuracy
      */
 
-    ans = dbinom_raw(size, x + size, size / (size + mu), mu / (size + mu), give_log);
+    const ans = dbinom_raw(size, x + size, size / (size + mu), mu / (size + mu), give_log);
     p = size / (size + x);
 
     return give_log ? Math.log(p) + ans : p * ans;

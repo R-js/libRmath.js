@@ -1,7 +1,15 @@
 import type { NumArray } from '$constants';
 import { isArray, matchFloatType, emptyFloat64Array } from '$constants';
 
-export function validateBetaArgs(tag: string, a: NumArray, b?: NumArray) {
+export type rt = {
+    rc: Float64Array| Float64Array;
+    onlyA?: undefined;
+} | {
+    rc: Float32Array | Float64Array;
+    onlyA: boolean;
+};
+
+export function validateBetaArgs(tag: string, a: NumArray, b?: NumArray):rt {
     // check "a" (must always be there)
     const fa = isArray(a);
     const fb = isArray(b);

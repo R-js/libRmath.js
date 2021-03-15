@@ -17,21 +17,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { debug } from 'debug';
 
-import { fmod } from '../common/_general';
+import { fmod } from '$constants';
 
 import { ME, ML_ERROR } from '@common/logger';
-
-const { PI: M_PI } = Math;
-
-const { NaN: ML_NAN, isNaN: ISNAN, isFinite: R_FINITE } = Number;
 
 // sin(pi * x)  -- exact when x = k/2  for all integer k
 const printer_sinpi = debug('sinpi');
 export function sinpi(x: number): number {
-    if (ISNAN(x)) return x;
-    if (!R_FINITE(x)) {
+    if (isNaN(x)) return x;
+    if (!isFinite(x)) {
         ML_ERROR(ME.ME_DOMAIN, 'sinpi not finite', printer_sinpi);
-        return ML_NAN;
+        return NaN;
     }
     x = fmod(x, 2); // sin(pi(x + 2k)) == sin(pi x)  for all integer k
     // map (-2,2) --> (-1,1] :
@@ -41,7 +37,5 @@ export function sinpi(x: number): number {
     if (x === 0.5) return 1;
     if (x === -0.5) return -1;
     // otherwise
-    return Math.sin(M_PI * x);
+    return Math.sin(Math.PI * x);
 }
-
-export default sinpi;

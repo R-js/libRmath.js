@@ -72,11 +72,7 @@ function do_search(y: number, z: NumberW, p: number, n: number, pr: number, incr
 const printer_qnbinom = debug('qnbinom');
 
 export function qnbinom(p: number, size: number, prob: number, lower_tail: boolean, log_p: boolean): number {
-    let P;
-    let Q;
-    let mu;
-    let sigma;
-    let gamma;
+
     let y;
 
     const z = new NumberW(0);
@@ -100,11 +96,11 @@ export function qnbinom(p: number, size: number, prob: number, lower_tail: boole
     if (rc !== undefined) {
         return rc;
     }
-    Q = 1.0 / prob;
-    P = (1.0 - prob) * Q;
-    mu = size * P;
-    sigma = Math.sqrt(size * P * Q);
-    gamma = (Q + P) / sigma;
+    const Q = 1.0 / prob;
+    const P = (1.0 - prob) * Q;
+    const mu = size * P;
+    const sigma = Math.sqrt(size * P * Q);
+    const gamma = (Q + P) / sigma;
 
     /* Note : "same" code in qpois.c, qbinom.c, qnbinom.c --
      * FIXME: This is far from optimal [cancellation for p ~= 1, etc]: */

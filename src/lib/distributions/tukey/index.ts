@@ -42,7 +42,7 @@ export function ptukey(
   nranges = 1,
   lowerTail = true,
   logP = false
-) {
+): number {
   return _pt(q, nranges, nmeans, df, lowerTail, logP);
 }
 //
@@ -61,6 +61,6 @@ export function qtukey(
   nranges = 1,
   lowerTail = true,
   logP = false
-) {
+): number {
   return _qt(q, nranges, nmeans, df, lowerTail, logP);
 }

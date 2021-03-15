@@ -278,7 +278,7 @@ _Note: Only the first argument is vectorized_
 _typescript decl_
 
 ```typescript
-declare function arrayrify<T, R>(fn: (x: T, ...rest: any[]) => R);
+declare function arrayrify<T, R>(fn: (x: T, ...rest: unknown[]) => R);
 ```
 
 #### R example

@@ -84,13 +84,11 @@ export function qnchisq(p: number, df: number, ncp: number, lower_tail = true, l
         /* This is Pearson's (1959) approximation,
        which is usually good to 4 figs or so.  */
         //double
-        let b;
-        let c;
-        let ff;
+       
 
-        b = (ncp * ncp) / (df + 3 * ncp);
-        c = (df + 3 * ncp) / (df + 2 * ncp);
-        ff = (df + 2 * ncp) / (c * c);
+        const b = (ncp * ncp) / (df + 3 * ncp);
+        const c = (df + 3 * ncp) / (df + 2 * ncp);
+        const ff = (df + 2 * ncp) / (c * c);
         ux = b + c * qchisq(p, ff, lower_tail, log_p);
         if (ux < 0) ux = 1;
         ux0 = ux;

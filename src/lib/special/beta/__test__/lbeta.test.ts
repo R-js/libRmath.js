@@ -21,12 +21,13 @@ describe('lbeta(a,b)', function () {
         expect(empty).toEqualFloatingPointBinary([]);
     });
     it('a=undefined, b = undefined', () => {
-        const fn = () => lbeta(undefined as any);
+        const fn = () => lbeta(undefined as never);
         expect(fn).toThrow('lbeta(a,b): argument "a" be an array of number[], Float32Array, Float64Array');
     });
     it('a=[1,3], b=[1,2,3] should throw', () => {
         const a = [1, 3];
         const b = {};
+         /* eslint-disable  @typescript-eslint/no-explicit-any */
         const fn = () => lbeta(a, b as any);
         expect(fn).toThrow(
             'lbeta(a,b): argument "b" (if defined) must be an array of number[], Float32Array, Float64Array',
@@ -50,9 +51,11 @@ describe('lbeta(a,b)', function () {
         expect(rc).toEqualFloatingPointBinary(NaN);
     });
     it('a < 0, b > 0 should return NaN', () => {
+        /* eslint-disable-line  @typescript-eslint/no-explicit-any */
         (ML_ERR_return_NAN as any).mockReset();
         const rc = lbeta([-1,0.5]);
         expect(ML_ERR_return_NAN).toHaveBeenCalledTimes(1);
+         /* eslint-disable-line  @typescript-eslint/no-explicit-any */
         expect((ML_ERR_return_NAN as any).mock.calls[0][0]).toBeInstanceOf(Function);
         expect(rc).toEqualFloatingPointBinary(NaN);
     });
@@ -84,6 +87,7 @@ describe('lbeta(a,b)', function () {
     it('a<0 or b >=0 returns NaN', () => {
         const nan = beta([-1, 0]);
         expect(ML_ERR_return_NAN).toHaveBeenCalledTimes(1);
+        
         expect((ML_ERR_return_NAN as any).mock.calls[0][0]).toBeInstanceOf(Function);
         (ML_ERR_return_NAN as any).mockReset();
         expect(nan).toEqualFloatingPointBinary(NaN);
@@ -107,7 +111,7 @@ describe('lbeta(a,b)', function () {
     it('domain: (a + b) >>>> 171.61447887182298', () => {
         const ans = beta([520, 520]);
         expect(ML_ERROR).toHaveBeenCalledTimes(1);
-        const args = (ML_ERROR as any).mock.calls[0].map((v: any) => (typeof v === 'function' ? Function : v));
+        const args = (ML_ERROR as any).mock.calls[0].map((v: unknown) => (typeof v === 'function' ? Function : v));
         expect(args).toEqual([16, 'beta', Function]);
         (ML_ERROR as any).mockReset();
         expect(ans).toEqualFloatingPointBinary(1.319812e-314, 18, false, true);

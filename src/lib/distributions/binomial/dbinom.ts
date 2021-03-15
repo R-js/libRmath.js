@@ -34,7 +34,6 @@ import { stirlerr } from '$stirling';
 const printer = debug('dbinom');
 
 export function dbinom_raw(x: number, n: number, p: number, q: number, give_log: boolean): number {
-    let lf: number;
     let lc: number;
 
     if (p === 0) return x === 0 ? R_D__1(give_log) : R_D__0(give_log);
@@ -61,7 +60,7 @@ export function dbinom_raw(x: number, n: number, p: number, q: number, give_log:
     /* Upto R 2.7.1:
      * lf = Math.log(M_2PI) + Math.log(x) + Math.log(n-x) - Math.log(n);
      * -- following is much better for  x << n : */
-    lf = M_LN_2PI + Math.log(x) + Math.log1p(-x / n);
+    const lf = M_LN_2PI + Math.log(x) + Math.log1p(-x / n);
 
     return R_D_exp(give_log, lc - 0.5 * lf);
 }

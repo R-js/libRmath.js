@@ -20,7 +20,7 @@ export function pnorm_both(
     ccum: NumberW,
     i_tail: boolean,
     log_p: boolean
-  ) {
+  ): void {
     /* i_tail in {0,1,2} means: "lower", "upper", or "both" :
          if(lower) return  *cum := P[X <= x]
          if(upper) return *ccum := P[X >  x] = 1 - P[X <= x]
@@ -80,12 +80,11 @@ export function pnorm_both(
     let temp;
     
     let xsq;
-    let y;
+
   
     const min = DBL_MIN;
   
-    let lower: boolean;
-    let upper: boolean;
+
   
     /* will never happen
     if (ISNAN(x)) {
@@ -97,10 +96,10 @@ export function pnorm_both(
     const eps = DBL_EPSILON * 0.5; //1.1102230246251565e-16
   
     /* i_tail in {0,1,2} =^= {lower, upper, both} */
-    lower = i_tail !== true;
-    upper = i_tail !== false;
+    const lower = i_tail !== true;
+    const upper = i_tail !== false;
   
-    y = Math.abs(x);
+    const y = Math.abs(x);
     if (y <= 0.67448975) {
       /* qnorm(3/4) = .6744.... -- earlier had 0.66291 */
       if (y > eps) {

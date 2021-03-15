@@ -19,7 +19,7 @@ export class NumberW {
     constructor(v = 0) {
         this._val = v;
     }
-    get val() {
+    get val(): number {
         return this._val;
     }
     set val(a: number) {

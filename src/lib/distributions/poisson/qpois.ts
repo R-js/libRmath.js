@@ -57,9 +57,6 @@ export function qpois(
     log_p: boolean,
     // normal: INormal
 ): number {
-    let mu;
-    let sigma;
-    let gamma;
     let y;
     const z = new NumberW(0);
 
@@ -76,10 +73,10 @@ export function qpois(
         return rc;
     }
 
-    mu = lambda;
-    sigma = sqrt(lambda);
+    const mu = lambda;
+    const sigma = sqrt(lambda);
     /* gamma = sigma; PR#8058 should be kurtosis which is mu^-0.5 */
-    gamma = 1.0 / sigma;
+    const gamma = 1.0 / sigma;
 
     /* Note : "same" code in qpois.c, qbinom.c, qnbinom.c --
      * FIXME: This is far from optimal [cancellation for p ~= 1, etc]: */

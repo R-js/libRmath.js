@@ -49,17 +49,17 @@ function gammaNormalizeParams(rate?: number, scale?: number): number {
 
 export { rgammaOne } from './rgamma';
 
-export function dgamma(x: number, shape: number, rate?: number, scale?: number, asLog = false) {
+export function dgamma(x: number, shape: number, rate?: number, scale?: number, asLog = false): number {
     const _scale = gammaNormalizeParams(rate, scale);
     return _dgamma(x, shape, _scale, asLog);
 }
 
-export function qgamma(q: number, shape: number, rate?: number, scale?: number, lowerTail = true, logP = false) {
+export function qgamma(q: number, shape: number, rate?: number, scale?: number, lowerTail = true, logP = false): number {
     const _scale = gammaNormalizeParams(rate, scale);
     return _qgamma(q, shape, _scale, lowerTail, logP);
 }
 
-export function pgamma(q: number, shape: number, rate?: number, scale?: number, lowerTail = true, logP = false) {
+export function pgamma(q: number, shape: number, rate?: number, scale?: number, lowerTail = true, logP = false): number {
     const _scale = gammaNormalizeParams(rate, scale);
     return _pgamma(q, shape, _scale, lowerTail, logP);
 }

@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
+/* exslint-disable @typescript-eslint/no-var-requires */
 module.exports = {
     automock: false,
     collectCoverage: true,
@@ -6,7 +6,9 @@ module.exports = {
         'src/lib/rng/**/*.ts',
         'src/lib/special/gamma/**/*.ts',
         'src/lib/special/beta/**/*.ts',
-        'src/lib/special/bessel/**/*.ts'
+        'src/lib/special/bessel/**/*.ts',
+        'src/lib/distributions/**/*.ts'
+
     ],
     coveragePathIgnorePatterns: ['node_modules', 'test', 'doc.ts'],
     coverageDirectory: 'coverage',
@@ -41,6 +43,7 @@ module.exports = {
         '^\\$test-helpers/(.*)$': '<rootDir>/src/packages/test-helpers/$1',
         '^\\$deviance$': '<rootDir>/src/lib/deviance/index.ts',
         '^\\$stirling$': '<rootDir>/src/lib/stirling/index.ts',
-        '^@rng/(.*)$': '<rootDir>/src/lib/rng/$1'
+        '^@rng/(.*)$': '<rootDir>/src/lib/rng/$1',
+        '^\\$helper$': '<rootDir>/src/lib/r-func.ts'
     },
 };

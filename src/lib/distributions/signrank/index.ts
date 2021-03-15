@@ -21,7 +21,8 @@ export { psignrank } from './psign';
 export { qsignrank } from './qsign';
 import { rsignrankOne } from './rsign';
 import { repeatedCall } from '$helper';
+import { globalUni } from '@rng/globalRNG';
 
-export function rsignrank(N: number, n: number, rng?:IRNG) {
+export function rsignrank(N: number, n: number, rng:IRNG=globalUni()): Float32Array {
    return repeatedCall(N, rsignrankOne,  n, rng);
 }

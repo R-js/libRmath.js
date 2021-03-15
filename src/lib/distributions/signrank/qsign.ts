@@ -19,7 +19,7 @@ import { debug } from 'debug';
 import { ML_ERR_return_NAN,  R_Q_P01_check } from '@common/logger';
 import { R_DT_0, R_DT_1,} from '$constants';
 import { R_DT_qIv } from '@dist/exp/expm1';
-import { csignrank } from './signrank';
+import { csignrank } from './csignrank';
 
 const { round, trunc, LN2: M_LN2, exp } = Math;
 const { isNaN: ISNAN, isFinite: R_FINITE, EPSILON: DBL_EPSILON } = Number;
@@ -29,7 +29,7 @@ export function qsignrank(x: number, n: number, lowerTail = true, logP = false):
     const roundN = round(n);
     const u = (roundN * (roundN + 1)) / 2;
     const c = trunc(u / 2);
-    const w = Array.from<number>({ length: c + 1 }).fill(0);
+    const w =  new Float32Array(c + 1);
 
     if (ISNAN(x) || ISNAN(n)) {
         return NaN;

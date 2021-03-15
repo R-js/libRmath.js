@@ -18,10 +18,11 @@ export { dgeom } from './dgeom';
 export { pgeom } from './pgeom';
 export { qgeom } from './qgeom';
 import { rgeomOne } from './rgeom';
-import type { IRNG } from '@rng/irng';
+import type { IRNGNormal } from '@rng/normal/normal-rng';
 import { repeatedCall } from '$helper';
+import { globalNorm } from '@rng/globalRNG';
 
-export function rgeom(n: number, prob: number, rng?: IRNG) {
+export function rgeom(n: number, prob: number, rng: IRNGNormal = globalNorm()): Float32Array {
   return repeatedCall(n, rgeomOne, prob, rng);
 }
 

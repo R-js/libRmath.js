@@ -25,7 +25,7 @@ import { qt } from './qt';
 
 const printer = debug('qnt');
 
-export function qnt(p: number, df: number, ncp: number, lower_tail: boolean, log_p: boolean) {
+export function qnt(p: number, df: number, ncp: number, lower_tail: boolean, log_p: boolean): number {
     const accu = 1e-13;
     const Eps = 1e-11; /* must be > accu */
 

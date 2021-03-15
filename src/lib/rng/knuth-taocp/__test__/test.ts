@@ -34,8 +34,9 @@ describe('rng knuth-taocp', function n() {
         expect(knuth1997.kind).toEqual('KNUTH_TAOCP');
         knuth1997.init(0);
         expect(knuth1997.randoms(0)).toEqualFloatingPointBinary(0.6274007670581344);
-        expect(() => (knuth1997.seed = ['hello', 'world'] as any)).toThrow(
-            'the seed is not of type Array for rng:KNUTH_TAOCP',
+        const data = ['hello', 'world'];
+        expect(() => (knuth1997.seed = data as never)).toThrow(
+            'the seed is not of type Array for rng:KNUTH_TAOCP'
         );
         expect(() => (knuth1997.seed = new Uint32Array(0))).toThrow(
             'the seed is not an array of proper size for rng KNUTH_TAOCP',

@@ -24,13 +24,13 @@ import { lbeta_scalar } from '@special/beta/lbeta';
 import { lgammafn_sign } from '@special/gamma/lgammafn_sign';
 
 // used by "qhyper"
-function lfastchoose(n: number, k: number) {
+function lfastchoose(n: number, k: number): number {
     return -log(n + 1) - lbeta_scalar(n - k + 1, k + 1);
 }
 /* mathematically the same:
    less stable typically, but useful if n-k+1 < 0 : */
 
-function lfastchoose2(n: number, k: number, sChoose?: Int8Array) {
+function lfastchoose2(n: number, k: number, sChoose?: Int8Array): number {
     const r = lgammafn_sign(n - k + 1, sChoose);
     return lgammafn_sign(n + 1) - lgammafn_sign(k + 1) - r;
 }

@@ -122,7 +122,7 @@ export class MersenneTwister extends IRNG {
         super.init(_seed);
     }
 
-    public init(_seed: number = seed()) {
+    public init(_seed: number = seed()):void {
         /* Initial scrambling */
         const s = new Uint32Array([0]);
         s[0] = _seed;
@@ -144,7 +144,7 @@ export class MersenneTwister extends IRNG {
         this.fixupSeeds();
     }
 
-    public get seed() {
+    public get seed(): Int32Array {
         return this.m_seed.slice();
     }
 }

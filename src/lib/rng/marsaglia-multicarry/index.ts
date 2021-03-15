@@ -40,7 +40,7 @@ export class MarsagliaMultiCarry extends IRNG {
         this.init(_seed);
     }
 
-    public init(_seed: number = seed()) {
+    public init(_seed: number = seed()):void {
         /* Initial scrambling */
         const s = new Int32Array([_seed]);
         for (let j = 0; j < 50; j++) {
@@ -75,7 +75,7 @@ export class MarsagliaMultiCarry extends IRNG {
         this.fixupSeeds();
     }
 
-    public get seed() {
+    public get seed(): Int32Array {
         return this.m_seed.slice();
     }
 }

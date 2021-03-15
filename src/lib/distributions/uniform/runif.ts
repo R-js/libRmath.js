@@ -20,13 +20,18 @@ import { debug } from 'debug';
 import { ML_ERR_return_NAN } from '@common/logger';
 import type { IRNG } from '@rng/irng';
 import { globalUni } from '@rng/globalRNG';
+import { emptyFloat32Array, nanFloat32Array } from '$constants';
 
 const printer = debug('runif');
 
-export function runif(n: number, min = 0, max = 1, u: IRNG = globalUni()) {
+export function runif(n: number, min = 0, max = 1, u: IRNG = globalUni()): Float32Array {
     // do the check once
+    if (n === 0){
+        return emptyFloat32Array;
+    }
     if (!(isFinite(min) && isFinite(max) && max > min)) {
-        return ML_ERR_return_NAN(printer);
+        ML_ERR_return_NAN(printer);
+        return nanFloat32Array
     }
     const rc = new Float32Array(n);
     for (let i = 0; i < n; i++){

@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 // needed by rpois
-export function fsign(x: number, signal: boolean) {
+export function fsign(x: number, signal: boolean) : number{
     if (isNaN(x)) return x;
     return signal ? Math.abs(x) : -Math.abs(x); 
 }

@@ -28,7 +28,7 @@ const M_PI = 3.14159265358979323846264338327950288;
 export class BoxMuller extends IRNGNormal {
     private BM_norm_keep: number;
 
-    protected reset() {
+    protected reset():void {
         this.BM_norm_keep = 0;
     }
 
@@ -37,7 +37,7 @@ export class BoxMuller extends IRNGNormal {
         this.BM_norm_keep = 0; // not needed but tsc will give problems
     }
 
-    public random() {
+    public random(): number {
         let s = 0.0;
         let theta = 0;
 

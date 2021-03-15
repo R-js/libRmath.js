@@ -15,7 +15,7 @@ describe('lgamma', () => {
         expect(received).toEqualFloatingPointBinary(y);
     });
     it('force number argument', () => {
-        const neg1 = lgamma(-1.2 as any);
+        const neg1 = lgamma(-1.2);
         expect(neg1).toEqualFloatingPointBinary(1.5791760340399834117);
     });
     it('force empty array', () => {
@@ -31,6 +31,7 @@ describe('lgamma', () => {
     });
     it('invalid argument should throw', () => {
         expect(() => {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             lgamma('hello' as any);
         }).toThrow('lgammafn: argument not of number, number[], Float64Array, Float32Array');
     });

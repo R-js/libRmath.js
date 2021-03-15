@@ -117,7 +117,7 @@ function log1pmx(x: number) {
 }
 
 /* Compute  log(gamma(a+1))  accurately also for small a (0 < a < 0.5). */
-export function lgamma1p(a: number) {
+export function lgamma1p(a: number): number {
     const eulers_const = 0.5772156649015328606065120900824024;
 
     /* coeffs[i] holds (zeta(i+2)-1)/(i+2) , i = 0:(N-1), N = 40 : */
@@ -413,13 +413,12 @@ function pd_lower_series(lambda: number, y: number): number {
          * The series does not converge as the terms start getting
          * bigger (besides flipping sign) for y < -lambda.
          */
-        let f;
-
+ 
         pr_pd_lower_series(' y not int: add another term ');
 
         /* FIXME: in quite few cases, adding  term*f  has no effect (f too small)
          *	  and is unnecessary e.g. for pgamma(4e12, 121.1) */
-        f = pd_lower_cf(y, lambda + 1 - y);
+        const f = pd_lower_cf(y, lambda + 1 - y);
         pr_pd_lower_series('  (= %d) * term = %d to sum %d', f, term * f, sum);
 
         sum += term * f;
@@ -510,20 +509,16 @@ function ppois_asymp(x: number, lambda: number, lowerTail: boolean, logP: boolea
     let res1_ig: number;
     let res2_term: number;
     let res2_ig: number;
-    let dfm: number;
-    let pt_: number;
     let s2pt: number;
-    let f: number;
-    let np: number;
     let i: number;
 
-    dfm = lambda - x;
+    const dfm = lambda - x;
     /* If lambda is large, the distribution is highly concentrated
      about lambda.  So representation error in x or lambda can lead
      to arbitrarily large values of pt_ and hence divergence of the
      coefficients of this approximation.
   */
-    pt_ = -log1pmx(dfm / x);
+    const pt_ = -log1pmx(dfm / x);
     s2pt = Math.sqrt(2 * x * pt_);
     if (dfm < 0) s2pt = -s2pt;
 
@@ -549,9 +544,9 @@ function ppois_asymp(x: number, lambda: number, lowerTail: boolean, logP: boolea
 
     pr_ppois_asymp('res12 = %d   elfb=%d', elfb, res12);
 
-    f = res12 / elfb;
+    const f = res12 / elfb;
 
-    np = pnorm(s2pt, 0.0, 1.0, !lowerTail, logP);
+    const np = pnorm(s2pt, 0.0, 1.0, !lowerTail, logP);
 
     if (logP) {
         const n_d_over_p = dpnorm(s2pt, !lowerTail, np);

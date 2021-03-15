@@ -23,7 +23,7 @@ import { IRNG } from '@rng/irng';
 import { globalUni } from '@rng/globalRNG';
 
 const printer_rwilcox = debug('rwilcox');
-;
+
 
 const MAXSIZE = 4294967296;
 

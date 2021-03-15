@@ -61,7 +61,7 @@ export function beta_scalar(a: number, b: number): number {
     }
 }
 
-export function beta(a: NumArray, b?: NumArray) {
+export function beta(a: NumArray, b?: NumArray): Float32Array | Float64Array {
     const { rc, onlyA } = validateBetaArgs('lbeta(a,b)', a, b);
     if (rc.length === 0) {
         return rc;

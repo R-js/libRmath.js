@@ -1,9 +1,11 @@
+
 export {};
 
 declare global {
+    // eslint-disable-next-line @typescript-eslint/no-namespace
     namespace jest {
         interface Matchers<R> {
-            toEqualFloatingPointBinary(expected: any, mantissa?: number, cylce?: boolean, hf?: boolean): R;
+            toEqualFloatingPointBinary(expected: unknown, mantissa?: number, cylce?: boolean, hf?: boolean): R;
         }
     }
 }
@@ -25,7 +27,7 @@ type ObjectTypes =
 
 type NumberExtended = NumberTypes | 'other';
 
-function typeOf(o: any): ObjectTypes {
+function typeOf(o: unknown): ObjectTypes {
     if (o === null) return 'null';
     if (o === undefined) return 'undefined';
     if (o instanceof Float32Array) return 'Float32Array';

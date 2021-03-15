@@ -22,7 +22,6 @@ const { PI: M_PI, log } = Math;
 const printer = debug('dcauchy');
 
 export function dcauchy(x: number, location = 0, scale = 1, giveLog = false): number {
-    let y: number;
     /* NaNs propagated correctly */
     if (ISNAN(x) || ISNAN(location) || ISNAN(scale)) {
         return x + location + scale;
@@ -32,6 +31,6 @@ export function dcauchy(x: number, location = 0, scale = 1, giveLog = false): nu
         return ML_ERR_return_NAN(printer);
     }
 
-    y = (x - location) / scale;
+    const y = (x - location) / scale;
     return giveLog ? -log(M_PI * scale * (1 + y * y)) : 1 / (M_PI * scale * (1 + y * y));
 }

@@ -1,4 +1,5 @@
-export const fixture = () => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function fixture(): any {
     return {
         case0: {
             sample: [
@@ -237,4 +238,4 @@ export const fixture = () => {
             ],
         },
     };
-};
+}

@@ -19,12 +19,12 @@ import { debug } from 'debug';
 import { ML_ERR_return_NAN } from '@common/logger';
 import { exp_rand } from '@dist/exp/sexp';
 import { rpoisOne } from '@dist/poisson/rpois';
-import type { IRNG } from '@rng/irng';
-import { globalUni } from '@rng/globalRNG';
+import { globalNorm } from '@rng/globalRNG';
+import { IRNGNormal } from '@rng/normal/normal-rng';
 
 const printer = debug('rgeom');
 
-export function rgeomOne(p: number, rng: IRNG = globalUni()) {
+export function rgeomOne(p: number, rng: IRNGNormal = globalNorm()): number {
     if (!isFinite(p) || p <= 0 || p > 1) return ML_ERR_return_NAN(printer);
-    return rpoisOne(exp_rand(rng.random) * ((1 - p) / p), rng);
+    return rpoisOne(exp_rand(rng.uniform_rng.random) * ((1 - p) / p), rng);
 }

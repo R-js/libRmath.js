@@ -41,7 +41,7 @@ const nalgm = 5;
 const xbig = 94906265.62425156;
 const xmax = 3.745194030963158e306;
 
-export function lgammacor(x: number) {
+export function lgammacor(x: number): number {
     let tmp: number;
 
     // For IEEE double precision DBL_EPSILON = 2^-52 = 2.220446049250313e-16 :
