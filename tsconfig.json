@@ -47,7 +47,7 @@
       {
         "name": "typescript-eslint-language-service"
       },
-      { "transform": "typescript-transform-paths" }
+      { "transform": "typescript-transform-paths", "afterDeclarations": true }
     ],
     "removeComments": false, // babel should handle it
     "rootDir": "./src",
