@@ -32,7 +32,7 @@ export function pnf(x: number, df1: number, df2: number, ncp: number, lowerTail 
         /* both +Inf */
         return ML_ERR_return_NAN(printer_pnf);
 
-    const rc = R_P_bounds_01(lowerTail, logP, x, 0, Number.POSITIVE_INFINITY);
+    const rc = R_P_bounds_01(lowerTail, logP, x, 0, Infinity);
     if (rc !== undefined) {
         return rc;
     }

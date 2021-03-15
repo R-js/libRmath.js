@@ -44,7 +44,7 @@ export function qnt(p: number, df: number, ncp: number, lower_tail: boolean, log
 
     if (ncp === 0.0 && df >= 1.0) return qt(p, df, lower_tail, log_p);
 
-    const rc = R_Q_P01_boundaries(lower_tail, log_p, p, Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY);
+    const rc = R_Q_P01_boundaries(lower_tail, log_p, p, -Infinity, Infinity);
     if (rc !== undefined) {
         return rc;
     }
@@ -56,7 +56,7 @@ export function qnt(p: number, df: number, ncp: number, lower_tail: boolean, log
 
     /* Invert pnt(.) :
      * 1. finding an upper and lower bound */
-    if (p > 1 - Number.EPSILON) return Number.POSITIVE_INFINITY;
+    if (p > 1 - Number.EPSILON) return Infinity;
     pp = Math.min(1 - Number.EPSILON, p * (1 + Eps));
     for (ux = Math.max(1, ncp); ux < Number.MAX_VALUE && pnt(ux, df, ncp, true, false) < pp; ux *= 2);
     pp = p * (1 - Eps);

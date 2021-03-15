@@ -158,7 +158,7 @@ export function _qgamma(
 
     if (isNaN(p) || isNaN(alpha) || isNaN(scale)) return p + alpha + scale;
 
-    const rc = R_Q_P01_boundaries(lower_tail, log_p, p, 0, Number.POSITIVE_INFINITY);
+    const rc = R_Q_P01_boundaries(lower_tail, log_p, p, 0, Infinity);
     if (rc !== undefined) {
         return rc;
     }
@@ -288,7 +288,7 @@ export function _qgamma(
             if ((lower_tail && p_ > p * _1_p) || (!lower_tail && p_ < p * _1_m)) return 0;
             /* else:  continue, using x = Number.MIN_VALUE instead of  0  */
         } else p_ = pgamma(x, alpha, scale, lower_tail, log_p);
-        if (p_ === Number.NEGATIVE_INFINITY) return 0; /* PR#14710 */
+        if (p_ === -Infinity) return 0; /* PR#14710 */
         for (i = 1; i <= max_it_Newton; i++) {
             p1 = p_ - p;
 

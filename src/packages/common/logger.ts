@@ -54,7 +54,7 @@ export function R_Q_P01_boundaries(
         if (p === 0)
             /* upper bound*/
             return lower_tail ? _RIGHT_ : _LEFT_;
-        if (p === Number.NEGATIVE_INFINITY) return lower_tail ? _LEFT_ : _RIGHT_;
+        if (p === -Infinity) return lower_tail ? _LEFT_ : _RIGHT_;
     } else {
         /* !log_p */
         if (p < 0 || p > 1) {

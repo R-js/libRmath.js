@@ -569,7 +569,7 @@ export function pgamma_raw(x: number, alph: number, lowerTail = true, logP = fal
 
     pr_pgamma_raw('pgamma_raw(x=%d, alph=%d, low=%s, log=%s)', x, alph, lowerTail, logP);
 
-    const rc = R_P_bounds_01(lowerTail, logP, x, 0, Number.POSITIVE_INFINITY);
+    const rc = R_P_bounds_01(lowerTail, logP, x, 0, Infinity);
     if (rc !== undefined) {
         return rc;
     }

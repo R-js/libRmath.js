@@ -34,7 +34,7 @@ export function beta_scalar(a: number, b: number): number {
     if (isNaN(a) || isNaN(b)) return a + b;
 
     if (a < 0 || b < 0) return ML_ERR_return_NAN(printer_beta);
-    else if (a === 0 || b === 0) return Number.POSITIVE_INFINITY;
+    else if (a === 0 || b === 0) return Infinity;
     else if (!isFinite(a) || !isFinite(b)) return 0;
 
     if (a + b < xmax) {

@@ -29,7 +29,7 @@ export function qweibull(p: number, shape: number, scale = 1, lowerTail = true, 
 
     if (shape <= 0 || scale <= 0) return ML_ERR_return_NAN(printer);
 
-    const rc = R_Q_P01_boundaries(lowerTail, logP, p, 0, Number.POSITIVE_INFINITY);
+    const rc = R_Q_P01_boundaries(lowerTail, logP, p, 0, Infinity);
     if (rc !== undefined) {
         return rc;
     }

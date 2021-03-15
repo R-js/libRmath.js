@@ -37,12 +37,12 @@ export function df(x: number, m: number, n: number, giveLog = false): number {
         return R_D__0(giveLog);
     }
     if (x === 0) {
-        return m > 2 ? R_D__0(giveLog) : m === 2 ? R_D__1(giveLog) : Number.POSITIVE_INFINITY;
+        return m > 2 ? R_D__0(giveLog) : m === 2 ? R_D__1(giveLog) : Infinity;
     }
     if (!isFinite(m) && !isFinite(n)) {
         /* both +Inf */
         if (x === 1) {
-            return Number.POSITIVE_INFINITY;
+            return Infinity;
         } else {
             return R_D__0(giveLog);
         }

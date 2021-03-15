@@ -42,10 +42,10 @@ export function lbeta_scalar(a: number, b: number): number {
     // both arguments must be >= 0
     if (p < 0) return ML_ERR_return_NAN(printer);
     else if (p === 0) {
-        return Number.POSITIVE_INFINITY;
+        return Infinity;
     } else if (!isFinite(q)) {
         // q == +Inf
-        return Number.NEGATIVE_INFINITY;
+        return -Infinity;
     }
 
     if (p >= 10) {

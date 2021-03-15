@@ -25,7 +25,7 @@ const printer_qlogis = debug('qlogis');
 export function qlogis(p: number, location = 0, scale = 1, lower_tail = true, log_p = false): number {
     if (isNaN(p) || isNaN(location) || isNaN(scale)) return p + location + scale;
 
-    const rc = R_Q_P01_boundaries(lower_tail, log_p, p, Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY);
+    const rc = R_Q_P01_boundaries(lower_tail, log_p, p, -Infinity, Infinity);
     if (rc !== undefined) {
         return rc;
     }

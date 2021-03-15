@@ -82,7 +82,7 @@ const outputOptions = {
     },
     extend: true,
     plugins:[
-        terser()
+        //terser()
     ]
 };
 

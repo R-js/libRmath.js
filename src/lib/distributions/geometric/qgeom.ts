@@ -25,7 +25,7 @@ export function qgeom(p: number, prob: number, lower_tail = true, log_p = false)
         return ML_ERR_return_NAN(printer);
     }
 
-    const rc = R_Q_P01_boundaries(lower_tail, log_p, p, 0, Number.POSITIVE_INFINITY);
+    const rc = R_Q_P01_boundaries(lower_tail, log_p, p, 0, Infinity);
     if (rc !== undefined) {
         return rc;
     }
