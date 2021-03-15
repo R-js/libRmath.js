@@ -28,7 +28,7 @@ function shims() {
     return {
         name: 'stubbing for browser',
         async resolveId(source, importer) {
-            console.log(`${importer} <- ${source}`);
+           // console.log(`${importer} <- ${source}`);
             if (!importer) {
                 return null; // skip entry files
             }
@@ -54,7 +54,7 @@ function shims() {
 // see below for details on the options
 const inputOptions = {
     input: {
-        'lib-r-math': 'es6/lib/rng/index.js',
+        'lib-r-math': 'es6/lib/index.js',
     },
     external: (id, parentId, isResolved) => {
         /* if (/logger/.test(id)) {
@@ -72,15 +72,18 @@ const inputOptions = {
 };
 
 const outputOptions = {
-    format: 'es',
+    format: 'iife',
     dir: 'browser',
     sourcemap: true,
     name: 'R',
-    preserveModules: true,
+    //preserveModules: true,
     globals: {
         [resolve('./es6/packages/common/logger')]: 'R.logger',
     },
     extend: true,
+    plugins:[
+        terser()
+    ]
 };
 
 async function build() {
@@ -90,7 +93,7 @@ async function build() {
     const bundle = await rollup.rollup(inputOptions);
     const { output } = await bundle.generate(outputOptions);
     console.log('OutputGenerated');
-    let taocp1997init;
+
     for (const chunkOrAsset of output) {
         if (chunkOrAsset.type === 'asset') {
             // For assets, this contains
@@ -103,9 +106,9 @@ async function build() {
         } else {
             const { name, type, fileName, modules, code } = chunkOrAsset;
             if (name === 'taocp-1997-init') {
-                console.log(code)
+                //console.log(code)
             }
-            console.log(`${name}, ${type}, ${fileName}, ${JSON.stringify(modules)}`);
+            //console.log(`${name}, ${type}, ${fileName}, ${JSON.stringify(modules)}`);
             // For chunks, this contains
             // {
             //   code: string,                  // the generated JS code

@@ -38,6 +38,8 @@ import { repeatedCall } from '$helper'
 import { IRNGNormal } from '@rng/normal/normal-rng';
 import { globalNorm } from '@rng/globalRNG';
 
+export { rbetaOne };
+
 export function dbeta(x: number, shape1: number, shape2: number, ncp?: number, log?: boolean): number {
     // I added the === 0 here, because dnbeta will go back to dbeta if 0 (c source code)
     if (ncp === undefined || ncp === 0) {

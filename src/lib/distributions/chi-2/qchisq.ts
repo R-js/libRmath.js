@@ -15,8 +15,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { qgamma } from '../gamma/qgamma';
+import { _qgamma } from '@dist/gamma/qgamma';
 
 export function qchisq(p: number, df: number, lowerTail = true, logP = false): number {
-    return qgamma(p, 0.5 * df, 2.0, lowerTail, logP);
+    return _qgamma(p, 0.5 * df, 2.0, lowerTail, logP);
 }

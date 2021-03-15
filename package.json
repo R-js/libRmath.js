@@ -73,8 +73,6 @@
         "browser"
     ],
     "scripts": {
-        "prepack": "rimraf *.tsbuildinfo es6 commonjs browser",
-        "pack": "ttsc -p tsconfig-es6.json && ttsc -p tsconfig-commonjs.json && node rollup.build.js",
         "prebuild": "rimraf *.tsbuildinfo es6 commonjs browser",
         "build": "ttsc -p tsconfig-es6.json && ttsc -p tsconfig-commonjs.json",
         "postbuild": "node rollup.build.js",

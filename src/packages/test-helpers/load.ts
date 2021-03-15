@@ -5,7 +5,7 @@ const matchNaN = /^(\-|\+)?NaN$/i;
 const matchInf = /^(\-|\+)?Inf$/i;
 
 export function loadData(fullPath: string, sep = /,/, ...columns: number[]): Promise<Float64Array[]> {
-    let resolve: (d?: unknown) => void;
+    let resolve: (value: Float64Array[] | PromiseLike<Float64Array[]>) => void
 
     const reader = rtl.createInterface({
         input: createReadStream(fullPath, { encoding: 'utf8' }),
