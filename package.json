@@ -66,7 +66,7 @@
     "main": "commonjs/lib/index.js",
     "module": "es6/lib/index.js",
     "browser": "browser/lib-r-math.min.js",
-    "types": "es6/types/lib/index.d.ts",
+    "types": "commonjs/types/lib/index.d.ts",
     "files": [
         "commonjs",
         "es6",
