@@ -23,7 +23,6 @@ function shims() {
     }`;
     const debugSource = `
       export function debug(ns) { return function(...args) { console.error(ns,...args) }; }
-      export default debug;
     `;
     return {
         name: 'stubbing for browser',
@@ -82,7 +81,7 @@ const outputOptions = {
     },
     extend: true,
     plugins:[
-        //terser()
+        terser()
     ]
 };
 
