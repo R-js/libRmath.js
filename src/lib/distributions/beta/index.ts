@@ -45,7 +45,7 @@ export function dbeta(x: number, shape1: number, shape2: number, ncp?: number, l
     if (ncp === undefined || ncp === 0) {
         return dbeta_scalar(x, shape1, shape2, log || false);
     } else {
-        return dnbeta_scalar(x, shape1, shape2, 0, log || false);
+        return dnbeta_scalar(x, shape1, shape2, ncp, log || false);
     }
 }
 

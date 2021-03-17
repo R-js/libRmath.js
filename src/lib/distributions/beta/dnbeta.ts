@@ -52,9 +52,9 @@ export function dnbeta_scalar(x: number, a: number, b: number, ncp: number, give
     if (x < 0 || x > 1) {
         return R_D__0(give_log);
     }
-    if (ncp === 0) {
-        return dbeta_scalar(x, a, b, give_log) as number;
-    }
+    //if (ncp === 0) {
+    //    return dbeta_scalar(x, a, b, give_log) as number;
+    //}
     /* New algorithm, starting with *largest* term : */
     const ncp2 = 0.5 * ncp;
     const dx2 = ncp2 * x;
