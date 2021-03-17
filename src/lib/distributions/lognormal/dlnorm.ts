@@ -28,7 +28,7 @@ export function dlnorm(fx: number, meanlog: number, sdlog: number, give_log: boo
             return ML_ERR_return_NAN(printer);
         }
         // sdlog == 0 :
-        return Math.log(fx) === meanlog ? Number.POSITIVE_INFINITY : R_D__0(give_log);
+        return Math.log(fx) === meanlog ? Infinity : R_D__0(give_log);
     }
     if (fx <= 0) {
         return R_D__0(give_log);

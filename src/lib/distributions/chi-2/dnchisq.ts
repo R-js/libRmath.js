@@ -48,9 +48,9 @@ export function dnchisq(x: number, df: number, ncp: number, give_log: boolean): 
     if (x < 0) {
         return R_D__0(give_log);
     }
-    if (x === 0 && df < 2) return Number.POSITIVE_INFINITY;
+    if (x === 0 && df < 2) return Infinity;
     if (ncp === 0) return df > 0 ? dchisq(x, df, give_log) : R_D__0(give_log);
-    if (x === Number.POSITIVE_INFINITY) return R_D__0(give_log);
+    if (x === Infinity) return R_D__0(give_log);
 
     const ncp2 = 0.5 * ncp;
 

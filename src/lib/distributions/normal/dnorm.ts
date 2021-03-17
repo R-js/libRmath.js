@@ -50,7 +50,7 @@ export function dnorm4(x: number, mu = 0, sigma = 1, give_log = false): number {
             return ML_ERR_return_NAN(printer);
         }
         /* sigma == 0 */
-        return x === mu ? Number.POSITIVE_INFINITY : R_D__0(give_log);
+        return x === mu ? Infinity : R_D__0(give_log);
     }
     x = (x - mu) / sigma;
 

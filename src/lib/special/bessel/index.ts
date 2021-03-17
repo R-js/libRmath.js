@@ -14,9 +14,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-/*
+
 export { bessel_i as besselI } from './besselI';
-export { bessel_j as besselJ } from './besselJ';
+export * from './besselJ';
 export { bessel_k as besselK } from './besselK';
-export { bessel_y as besselY } from './besselY';
-*/
+export *  from './besselY';

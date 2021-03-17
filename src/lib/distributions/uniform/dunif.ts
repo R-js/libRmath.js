@@ -23,5 +23,5 @@ export function dunif(x: number, min = 0, max = 1, logP = false): number {
     if (min <= x && x <= max) {
         return logP ? -Math.log(max - min) : 1 / (max - min);
     }
-    return logP ? Number.NEGATIVE_INFINITY : 0.0;
+    return logP ? -Infinity : 0.0;
 }

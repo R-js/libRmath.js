@@ -7,7 +7,7 @@
         "noEmit": false,
         "module": "CommonJS",
         "outDir": "commonjs",
-        "target": "ES2019",
+        "target": "es2020",
         "declarationDir": "commonjs/types"
     }
 }

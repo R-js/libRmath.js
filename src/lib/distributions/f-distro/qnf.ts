@@ -39,7 +39,7 @@ export function qnf(p: number, df1: number, df2: number, ncp: number, lowerTail 
     //if (df1 <= 0 || df2 <= 0 || ncp < 0) ML_ERR_return_NAN(printer);
     //if (!isFinite(ncp)) ML_ERR_return_NAN;
     //if (!isFinite(df1) && !isFinite(df2)) ML_ERR_return_NAN;
-    const rc = R_Q_P01_boundaries(lowerTail, logP, p, 0, Number.POSITIVE_INFINITY);
+    const rc = R_Q_P01_boundaries(lowerTail, logP, p, 0, Infinity);
     if (rc !== undefined) {
         return rc;
     }

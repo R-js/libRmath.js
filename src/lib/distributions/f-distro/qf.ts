@@ -29,7 +29,7 @@ export function qf(p: number, df1: number, df2: number, lower_tail: boolean, log
 
     if (df1 <= 0 || df2 <= 0) return ML_ERR_return_NAN(printer);
 
-    const rc = R_Q_P01_boundaries(lower_tail, log_p, p, 0, Number.POSITIVE_INFINITY);
+    const rc = R_Q_P01_boundaries(lower_tail, log_p, p, 0, Infinity);
     if (rc !== undefined) {
         return rc;
     }

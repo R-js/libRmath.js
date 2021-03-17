@@ -82,7 +82,7 @@ export function R_D__1(logP: boolean): number {
 }
 
 export const R_D__0 = (logP: boolean): number => {
-    return logP ? Number.NEGATIVE_INFINITY : 0.0;
+    return logP ? -Infinity : 0.0;
 };
 
 export const R_DT_0 = (lower_tail: boolean, log_p: boolean): number => {
@@ -118,7 +118,7 @@ export function R_D_Cval(lowerTail: boolean, p: number): number {
 }
 
 export function R_P_bounds_Inf_01(lowerTail: boolean, log_p: boolean, x: number): number | undefined {
-    if (!Number.isFinite(x)) {
+    if (!isFinite(x)) {
         if (x > 0) {
             return R_DT_1(lowerTail, log_p);
         }
@@ -171,9 +171,9 @@ export function isOdd(k: number): boolean {
 }
 
 export function epsilonNear(x: number, target: number): number {
-    if (Number.isNaN(x)) return x;
+    if (isNaN(x)) return x;
     if (!isFinite(x)) return x;
-    if (Number.isNaN(target)) return x;
+    if (isNaN(target)) return x;
     if (!isFinite(target)) return x;
 
     const diff = x - target;
@@ -230,9 +230,9 @@ export const M_eps_sinc = 2.149e-8;
 export function R_pow_di(x: number, n: number): number {
     let pow = 1.0;
 
-    if (Number.isNaN(x)) return x;
+    if (isNaN(x)) return x;
     if (n !== 0) {
-        if (!Number.isFinite(x)) return R_pow(x, n);
+        if (!isFinite(x)) return R_pow(x, n);
         if (n < 0) {
             n = -n;
             x = 1 / x;
@@ -256,33 +256,33 @@ export function R_pow(x: number, y: number): number {
     if (x === 1 || y === 0) return 1;
     if (x === 0) {
         if (y > 0) return 0;
-        else if (y < 0) return Number.POSITIVE_INFINITY;
+        else if (y < 0) return Infinity;
         else return y; /* NA or NaN, we assert */
     }
-    if (Number.isFinite(x) && Number.isFinite(y)) {
+    if (isFinite(x) && isFinite(y)) {
         /* There was a special case for y == 0.5 here, but
            gcc 4.3.0 -g -O2 mis-compiled it.  Showed up with
            100^0.5 as 3.162278, example(pbirthday) failed. */
         return Math.pow(x, y);
     }
-    if (Number.isNaN(x) || Number.isNaN(y)) return x + y;
-    if (!Number.isFinite(x)) {
+    if (isNaN(x) || isNaN(y)) return x + y;
+    if (!isFinite(x)) {
         if (x > 0)
             /* Inf ^ y */
-            return y < 0 ? 0 : Number.POSITIVE_INFINITY;
+            return y < 0 ? 0 : Infinity;
         else {
             /* (-Inf) ^ y */
-            if (Number.isFinite(y) && y === Math.floor(y))
+            if (isFinite(y) && y === Math.floor(y))
                 /* (-Inf) ^ n */
                 return y < 0 ? 0 : myfmod(y, 2) ? x : -x;
         }
     }
-    if (!Number.isFinite(y)) {
+    if (!isFinite(y)) {
         if (x >= 0) {
             if (y > 0)
                 /* y == +Inf */
-                return x >= 1 ? Number.POSITIVE_INFINITY : 0;
-            /* y == -Inf */ else return x < 1 ? Number.POSITIVE_INFINITY : 0;
+                return x >= 1 ? Infinity : 0;
+            /* y == -Inf */ else return x < 1 ? Infinity : 0;
         }
     }
     return NaN; // all other cases: (-Inf)^{+-Inf, non-int}; (neg)^{+-Inf}
@@ -308,7 +308,7 @@ export function R_powV(x: number, y: number): number /* = x ^ y */ {
     if (x === 1 || y === 0) return 1;
     if (x === 0) {
         if (y > 0) return 0;
-        /* y < 0 */ return Number.POSITIVE_INFINITY;
+        /* y < 0 */ return Infinity;
     }
     if (Number.isFinite(x) && Number.isFinite(y)) return Math.pow(x, y);
     if (Number.isNaN(x) || Number.isNaN(y)) {
@@ -317,7 +317,7 @@ export function R_powV(x: number, y: number): number /* = x ^ y */ {
     if (!Number.isFinite(x)) {
         if (x > 0)
             /* Inf ^ y */
-            return y < 0 ? 0 : Number.POSITIVE_INFINITY;
+            return y < 0 ? 0 : Infinity;
         else {
             /* (-Inf) ^ y */
             if (Number.isFinite(y) && y === Math.floor(y))
@@ -329,8 +329,8 @@ export function R_powV(x: number, y: number): number /* = x ^ y */ {
         if (x >= 0) {
             if (y > 0)
                 /* y == +Inf */
-                return x >= 1 ? Number.POSITIVE_INFINITY : 0;
-            /* y == -Inf */ else return x < 1 ? Number.POSITIVE_INFINITY : 0;
+                return x >= 1 ? Infinity : 0;
+            /* y == -Inf */ else return x < 1 ? Infinity : 0;
         }
     }
     return NaN; /* all other cases: (-Inf)^{+-Inf,
@@ -343,7 +343,7 @@ export function ldexp(x: number, y: number): number {
         return x + y;
     }
     if (!Number.isFinite(x) || !Number.isFinite(y)) {
-        return Number.POSITIVE_INFINITY;
+        return Infinity;
     }
     return x * Math.pow(2, y);
 }

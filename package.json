@@ -66,7 +66,7 @@
     "main": "commonjs/lib/index.js",
     "module": "es6/lib/index.js",
     "browser": "browser/lib-r-math.min.js",
-    "types": "es6/types/lib/index.d.ts",
+    "types": "commonjs/types/lib/index.d.ts",
     "files": [
         "commonjs",
         "es6",
@@ -106,6 +106,6 @@
         "ttypescript": "^1.5.12",
         "typescript": "^4.1.2",
         "typescript-eslint-language-service": "^4.1.1",
-        "typescript-transform-paths": "^2.2.0"
+        "typescript-transform-paths": "2.2.1"
     }
 }

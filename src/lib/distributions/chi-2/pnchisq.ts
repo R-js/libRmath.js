@@ -138,8 +138,8 @@ export function pnchisq_raw(
             // all  pchisq(x, f+2*i, lower_tail, FALSE), i=0,...,110 would underflow to 0.
             // === = > work in log scale
             const lambda = 0.5 * theta;
-            let sum = Number.NEGATIVE_INFINITY;
-            let sum2 = Number.NEGATIVE_INFINITY;
+            let sum = -Infinity;
+            let sum2 = -Infinity;
             let pr = -lambda;
             /* we need to renormalize here: the result could be very close to 1 */
             for (i = 0; i < 110; pr += Math.log(lambda) - Math.log(++i)) {

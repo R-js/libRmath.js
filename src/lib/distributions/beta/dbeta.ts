@@ -38,32 +38,32 @@ export function dbeta_scalar(x: number, a: number, b: number, asLog: boolean): n
     if (a === 0 || b === 0 || !isFinite(a) || !isFinite(b)) {
         if (a === 0 && b === 0) {
             // point mass 1/2 at each of {0,1} :
-            if (x === 0 || x === 1) return Number.POSITIVE_INFINITY;
+            if (x === 0 || x === 1) return Infinity;
             else return R_D__0(asLog);
         }
         if (a === 0 || a / b === 0) {
             // point mass 1 at 0
-            if (x === 0) return Number.POSITIVE_INFINITY;
+            if (x === 0) return Infinity;
             else return R_D__0(asLog);
         }
         if (b === 0 || b / a === 0) {
             // point mass 1 at 1
-            if (x === 1) return Number.POSITIVE_INFINITY;
+            if (x === 1) return Infinity;
             else return R_D__0(asLog);
         }
         // else, remaining case:  a = b = Inf : point mass 1 at 1/2
-        if (x === 0.5) return Number.POSITIVE_INFINITY;
+        if (x === 0.5) return Infinity;
         else return R_D__0(asLog);
     }
 
     if (x === 0) {
         if (a > 1) return R_D__0(asLog);
-        if (a < 1) return Number.POSITIVE_INFINITY;
+        if (a < 1) return Infinity;
         /* a == 1 : */ return R_D_val(asLog, b);
     }
     if (x === 1) {
         if (b > 1) return R_D__0(asLog);
-        if (b < 1) return Number.POSITIVE_INFINITY;
+        if (b < 1) return Infinity;
         /* b == 1 : */ return R_D_val(asLog, a);
     }
 

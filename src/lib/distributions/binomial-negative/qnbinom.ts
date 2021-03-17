@@ -92,7 +92,7 @@ export function qnbinom(p: number, size: number, prob: number, lower_tail: boole
 
     if (prob === 1 || size === 0) return 0;
 
-    const rc = R_Q_P01_boundaries(lower_tail, log_p, p, 0, Number.POSITIVE_INFINITY);
+    const rc = R_Q_P01_boundaries(lower_tail, log_p, p, 0, Infinity);
     if (rc !== undefined) {
         return rc;
     }
@@ -107,10 +107,10 @@ export function qnbinom(p: number, size: number, prob: number, lower_tail: boole
     if (!lower_tail || log_p) {
         p = R_DT_qIv(lower_tail, log_p, p); /* need check again (cancellation!): */
         if (p === R_DT_0(lower_tail, log_p)) return 0;
-        if (p === R_DT_1(lower_tail, log_p)) return Number.POSITIVE_INFINITY;
+        if (p === R_DT_1(lower_tail, log_p)) return Infinity;
     }
     /* temporary hack --- FIXME --- */
-    if (p + 1.01 * Number.EPSILON >= 1) return Number.POSITIVE_INFINITY;
+    if (p + 1.01 * Number.EPSILON >= 1) return Infinity;
 
     /* y := approx.value (Cornish-Fisher expansion) :  */
     z.val = qnorm(p, 0, 1, /*lower_tail*/ true, /*log_p*/ false);

@@ -29,7 +29,7 @@ export function dweibull(x: number, shape: number, scale = 1, give_log = false):
     if (x < 0) return R_D__0(give_log);
     if (!isFinite(x)) return R_D__0(give_log);
     /* need to handle x == 0 separately */
-    if (x === 0 && shape < 1) return Number.POSITIVE_INFINITY;
+    if (x === 0 && shape < 1) return Infinity;
     const tmp1 = Math.pow(x / scale, shape - 1);
     const tmp2 = tmp1 * (x / scale);
     /* These are incorrect if tmp1 == 0 */

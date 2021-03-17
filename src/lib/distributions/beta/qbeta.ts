@@ -95,7 +95,7 @@ const const4 = 0.04481;
 
 function return_q_0(give_log_q: boolean, qb: NumArray): void {
     if (give_log_q) {
-        qb[0] = Number.NEGATIVE_INFINITY;
+        qb[0] = -Infinity;
         qb[1] = 0;
     } else {
         qb[0] = 0;
@@ -107,7 +107,7 @@ function return_q_0(give_log_q: boolean, qb: NumArray): void {
 function return_q_1(give_log_q: boolean, qb: NumArray): void {
     if (give_log_q) {
         qb[0] = 0;
-        qb[1] = Number.NEGATIVE_INFINITY;
+        qb[1] = -Infinity;
     } else {
         qb[0] = 1;
         qb[1] = 0;
@@ -143,7 +143,7 @@ export function qbeta_raw(
     const swap_choose = swap_01 === MLOGICAL_NA;
     let swap_tail;
     let log_;
-    const give_log_q = log_q_cut === Number.POSITIVE_INFINITY;
+    const give_log_q = log_q_cut === Infinity;
     let use_log_x = give_log_q; // or u < log_q_cut  below
     let warned = false;
     let add_N_step = true;
@@ -358,7 +358,7 @@ export function qbeta_raw(
                     // xx > 0 ==> 1 - e^xx < 0 .. is nonsense
                     R_ifDEBUG_printf(' xx=%g > 0: xinbta:= 1-e^xx < 0\n', xx);
                     xinbta = 0;
-                    u = Number.NEGATIVE_INFINITY; /// FIXME can do better?
+                    u = -Infinity; /// FIXME can do better?
                 }
             } else {
                 t = s / t;
@@ -438,7 +438,7 @@ export function qbeta_raw(
                     u_n = DBL_log_v_MIN; // = Math.log(DBL_very_MIN)
                 } else {
                     tx = 0;
-                    u_n = Number.NEGATIVE_INFINITY;
+                    u_n = -Infinity;
                 }
                 use_log_x = log_p;
                 add_N_step = false;
@@ -455,7 +455,7 @@ export function qbeta_raw(
 
         /* Sometimes the approximation is negative (and === 0 is also not "ok") */
         if (bad_init && !(use_log_x && tx > 0)) {
-            if (u === Number.NEGATIVE_INFINITY) {
+            if (u === -Infinity) {
                 R_ifDEBUG_printf('  u = -Inf;');
                 u = M_LN2 * DBL_MIN_EXP;
                 xinbta = Number.MIN_VALUE;
@@ -503,7 +503,7 @@ export function qbeta_raw(
                            = logbeta + (1-p) u + (1-q) Math.log(1-e^u)
                  */
                 w =
-                    y === Number.NEGATIVE_INFINITY // y = -Inf  well possible: we are on log scale!
+                    y === -Infinity // y = -Inf  well possible: we are on log scale!
                         ? 0
                         : (y - la) * Math.exp(y - u + logbeta + r * u + t * R_Log1_Exp(u));
                 if (!isFinite(w)) break;
@@ -538,7 +538,7 @@ export function qbeta_raw(
                                 break;
                                 //goto L_converged;
                             }
-                            // if (u_n != Number.NEGATIVE_INFINITY && u_n != 1)
+                            // if (u_n != -Infinity && u_n != 1)
                             break;
                         }
                     }
@@ -564,7 +564,7 @@ export function qbeta_raw(
                 y = pbeta_raw(xinbta, pp, qq, /*lower_tail = */ true, log_p);
                 // delta{y} :   d_y = y - (log_p ? la : a);
 
-                if (!isFinite(y) && !(log_p && y === Number.NEGATIVE_INFINITY)) {
+                if (!isFinite(y) && !(log_p && y === -Infinity)) {
                     // y = -Inf  is ok if(log_p)
                     // ML_ERR_return_NAN :
                     ML_ERROR(ME.ME_DOMAIN, '', printer_qbeta_raw);
@@ -641,7 +641,7 @@ export function qbeta_raw(
             y - (log_ ? la : a),
             log_ ? ' (log_)' : '',
         );
-        if ((log_ && y === Number.NEGATIVE_INFINITY) || (!log_ && y === 0)) {
+        if ((log_ && y === -Infinity) || (!log_ && y === 0)) {
             // stuck at left, try if smallest positive number is "better"
             w = pbeta_raw(DBL_very_MIN, pp, qq, true, log_);
             if (log_ || Math.abs(w - a) <= Math.abs(y - a)) {
@@ -653,7 +653,7 @@ export function qbeta_raw(
             if (
                 !(
                     log_ &&
-                    y === Number.NEGATIVE_INFINITY &&
+                    y === -Infinity &&
                     // e.g. qbeta(-1e-10, .2, .03, log=TRUE) cannot get accurate ==> do NOT warn
                     pbeta_raw(
                         DBL_1__eps, // = 1 - eps
