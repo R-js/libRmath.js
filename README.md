@@ -41,11 +41,15 @@ The module directory contains a minimized bundle for use in html `<script>` tag.
 ```html
 <!-- script src="your_server_url/libR.min.js"></script -->
 <!-- this example uses unpkg as CDN -->
-<script src="https://unpkg.com/lib-r-math.js@1.0.74/dist/lib/libR.min.js">
+<script src="https://unpkg.com/lib-r-math.js@1.0.89/dist/lib/libR.min.js">
 <script>
   const libR = window.libR;
   //fetch some distribution namespaces
   const { Tukey, Normal, Beta, StudentT, Wilcoxon } = libR;
+  // prepare normal namespace
+  const normal = Normal(); 
+  // generate 4 number with normal distribution, using defaults sd=1, mu=0
+  console.log(normal.rnorm(4));
 </script>
 ```
 
