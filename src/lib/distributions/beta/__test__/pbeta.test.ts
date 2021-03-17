@@ -21,16 +21,24 @@ describe('pbeta, ncp != undefined', function () {
         const actual = x.map(_x => pbeta(_x, 3, 3, 0.5, true));
         expect(actual).toEqualFloatingPointBinary(y);
     });
-    it('ranges x = NaN, shape1=3, shape2=3, ncp=2', async () => {
+    it('x = NaN, shape1=3, shape2=3, ncp=2', async () => {
         const actual = pbeta(NaN, 3, 3, 0.5, true);
         expect(actual).toBe(NaN);
     });
-    it('ranges x = 0.5, shape1=3, shape2=3, ncp=2', async () => {
+    it('x = 0.5, shape1=3, shape2=3, ncp=2, lowerTail=true, log=true', async () => {
         const actual = pbeta(0.5, 3, 3, 0.5, true, true);
         expect(actual).toEqualFloatingPointBinary(-0.77187133575811151);
     });
-    it('ranges x = 0.5, shape1=3, shape2=3, ncp=2', async () => {
+    it('ranges x = 0.5, shape1=3, shape2=3, ncp=2, lowerTail=false, log=false', async () => {
         const actual = pbeta(0.5, 3, 3, 0.5, false, false);
         expect(actual).toEqualFloatingPointBinary(0.53785257439328626);
+    });
+    it('ranges x = 0.5, shape1=3, shape2=3, ncp=2, lowerTail=false, log=true', async () => {
+        const actual = pbeta(0.5, 3, 3, 0.5, false, true);
+        expect(actual).toEqualFloatingPointBinary(-0.62017078166343242);
+    });
+    it.only('ranges x = 1.5, shape1=3, shape2=3, ncp=2, lowerTail=true, log=false', async () => {
+        const actual = pbeta(1.5, 3, 3, 0.5, true, false);
+        expect(actual).toEqualFloatingPointBinary(1);
     });
 });
