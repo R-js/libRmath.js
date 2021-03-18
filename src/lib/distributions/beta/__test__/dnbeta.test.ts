@@ -23,7 +23,7 @@ describe('dbeta, ncp != undefined', function () {
     });
     it('ranges x = NaN, shape1=3, shape2=3, ncp=2', async () => {
         const nan = dbeta(NaN, 3, 3, 2);
-        expect(nan).toBe(NaN);
+        expect(nan).toBeNaN();
     });
     it('ranges x = 0.5, shape1=3, shape2=3, ncp=-2', async () => {
         ML_ERR_return_NANMocked.mockReset();
