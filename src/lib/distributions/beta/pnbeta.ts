@@ -15,7 +15,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { debug } from 'debug';
-import { ML_ERR_return_NAN, ME,  ML_ERROR } from '@common/logger';
+import { ML_ERR_return_NAN, ME, ML_ERROR } from '@common/logger';
 import { R_P_bounds_01 } from '$constants';
 
 import { lgammafn_sign } from '@special/gamma/lgammafn_sign';
@@ -24,14 +24,14 @@ import { NumberW, Toms708 } from '$toms708';
 
 const printer = debug('pnbeta_raw');
 
+/* change errmax and itrmax if desired;
+   * original (AS 226, R84) had  (errmax; itrmax) = (1e-6; 100) */
+const errmax = 1.0e-9;
+const itrmax = 10000; /* 100 is not enough for pf(ncp=200)
+                   see PR#11277 */
+
 function pnbeta_raw(x: number, o_x: number, a: number, b: number, ncp: number): number {
     /* o_x  == 1 - x  but maybe more accurate */
-
-    /* change errmax and itrmax if desired;
-     * original (AS 226, R84) had  (errmax; itrmax) = (1e-6; 100) */
-    const errmax = 1.0e-9;
-    const itrmax = 10000; /* 100 is not enough for pf(ncp=200)
-                     see PR#11277 */
     // double
     let errbd;
 
@@ -50,9 +50,6 @@ function pnbeta_raw(x: number, o_x: number, a: number, b: number, ncp: number): 
     if (ncp < 0 || a <= 0 || b <= 0) {
         return ML_ERR_return_NAN(printer);
     }
-
-    if (x < 0 || o_x > 1 || (x === 0 && o_x === 1)) return 0;
-    if (x > 1 || o_x < 0 || (x === 1 && o_x === 0)) return 1;
 
     const c = ncp / 2;
 
@@ -92,7 +89,7 @@ function pnbeta_raw(x: number, o_x: number, a: number, b: number, ncp: number): 
 
 const printer_pnbeta2 = debug('pnbeta2');
 
-export function pnbeta2(
+function pnbeta2(
     x: number,
     o_x: number,
     a: number,
@@ -102,7 +99,7 @@ export function pnbeta2(
     log_p: boolean,
 ): number {
     let ans = pnbeta_raw(x, o_x, a, b, ncp);
-
+    if (isNaN(ans)) return NaN;
     /* return R_DT_val(ans), but we want to warn about cancellation here */
     if (lower_tail) {
         return log_p ? Math.log(ans) : ans;
