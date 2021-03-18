@@ -89,7 +89,7 @@ function pnbeta_raw(x: number, o_x: number, a: number, b: number, ncp: number): 
 
 const printer_pnbeta2 = debug('pnbeta2');
 
-function pnbeta2(
+export function pnbeta2(
     x: number,
     o_x: number,
     a: number,

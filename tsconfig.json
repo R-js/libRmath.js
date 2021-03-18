@@ -47,10 +47,12 @@
       {
         "name": "typescript-eslint-language-service"
       },
-      { "transform": "typescript-transform-paths"  },
-     /// { "transform": "typescript-transform-paths" }
+      {
+        "transform": "typescript-transform-paths",
+        "afterDeclarations": true
+      }
     ],
-    "removeComments": false, 
+    "removeComments": false,
     "rootDir": "./src",
     "sourceMap": true, // not sure if this should be turned on if you use babel
     "target": "ES2020", // no down transpiling , that is for babel
@@ -113,19 +115,19 @@
       "@trig/*": [
         "lib/trigonometry/*"
       ],
-      "@distributions/*" :[
+      "@distributions/*": [
         "lib/distributions/*"
       ],
-      "@dist/*" :[
+      "@dist/*": [
         "lib/distributions/*"
       ],
-      "$deviance":[
+      "$deviance": [
         "lib/deviance"
       ],
-      "$stirling":[
+      "$stirling": [
         "lib/stirling"
       ],
-      "$helper":[
+      "$helper": [
         "lib/r-func"
       ]
     }, // maybe use later, if you decide to use this, specify baseurl
