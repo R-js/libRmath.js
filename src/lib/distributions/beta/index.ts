@@ -25,7 +25,7 @@ import { pbeta as _pbeta } from './pbeta';
 import { pnbeta as _pnbeta } from './pnbeta';
 
 //qbeta
-import { qbeta_scalar } from './qbeta';
+import { qbeta as _qbeta } from './qbeta';
 import { qnbeta as _qnbeta } from './qnbeta';
 
 //rbeta
@@ -45,7 +45,7 @@ export function dbeta(x: number, shape1: number, shape2: number, ncp?: number, l
     if (ncp === undefined || ncp === 0) {
         return dbeta_scalar(x, shape1, shape2, log || false);
     } else {
-        return dnbeta_scalar(x, shape1, shape2, 0, log || false);
+        return dnbeta_scalar(x, shape1, shape2, ncp, log || false);
     }
 }
 
@@ -59,7 +59,7 @@ export function pbeta(q: number, shape1: number, shape2: number, ncp?: number, l
 
 export function qbeta(p: number, shape1: number, shape2: number, ncp?: number, lowerTail = true, logP = false): number {
     if (ncp === undefined) {
-        return qbeta_scalar(p, shape1, shape2, lowerTail, logP);
+        return _qbeta(p, shape1, shape2, lowerTail, logP);
     } else {
         return _qnbeta(p, shape1, shape2, ncp, lowerTail, logP);
     }

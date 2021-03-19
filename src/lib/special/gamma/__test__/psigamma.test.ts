@@ -17,7 +17,7 @@ describe('psigamma', function () {
         /* load data from fixture */
         const [x, y] = await loadData(resolve(__dirname, 'fixture-generation', 'psigamma.R'), /\s+/, 1, 2);
         const actual = psigamma(x, 6);
-        expect(actual).toEqualFloatingPointBinary(y);
+        expect(actual).toEqualFloatingPointBinary(y, 10);
     });
     it('deriv=-1 should return NaN', () => {
         /* load data from fixture */

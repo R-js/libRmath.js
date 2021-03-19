@@ -44,7 +44,7 @@ describe('lbeta(a,b)', function () {
         const a = [1, 3];
         const b = [4, 2];
         const rc = lbeta(a, b);
-        expect(rc).toEqualFloatingPointBinary([-1.386294361, -2.484906650]);
+        expect(rc).toEqualFloatingPointBinary([-1.386294361, -2.484906650], 31);
     });
     it('a=[NaN, NaN] should return NaN', () => {
         const rc = lbeta([NaN, NaN]);
@@ -65,11 +65,11 @@ describe('lbeta(a,b)', function () {
     });
     it('a >= 5, b = 20', () => {
         const rc = lbeta([5,20]);
-        expect(rc).toEqualFloatingPointBinary(-12.26679138);
+        expect(rc).toEqualFloatingPointBinary(-12.26679138, 32);
     });
     it('a = 1E-307, b = 5', () => {
         const rc = lbeta([1e-307,5]);
-        expect(rc).toEqualFloatingPointBinary(706.8936235);
+        expect(rc).toEqualFloatingPointBinary(706.8936235, 32);
     });
 
     /*it('a=[1], b[2] to be 0.5', () => {

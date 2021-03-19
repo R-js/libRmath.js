@@ -288,10 +288,6 @@ export function R_pow(x: number, y: number): number {
     return NaN; // all other cases: (-Inf)^{+-Inf, non-int}; (neg)^{+-Inf}
 }
 
-export function R_finite(x: number): boolean { 
-    return !Number.isFinite(x);
-}
-
 /* C++ math header undefines any isnan macro. This file
    doesn't get C++ headers and so is safe. */
 export function R_isnancpp(x: number): boolean {

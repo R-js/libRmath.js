@@ -12,7 +12,7 @@ describe('lgamma', () => {
     it('ranges [0.09, 3.99] and [-0.09,-3.99]', async () => {
         const [x, y] = await loadData(resolve(__dirname, 'fixture-generation', 'lgamma-fixture.R'), /\s+/, 1, 2);
         const received = lgamma(x);
-        expect(received).toEqualFloatingPointBinary(y);
+        expect(received).toEqualFloatingPointBinary(y, 40);
     });
     it('force number argument', () => {
         const neg1 = lgamma(-1.2);
@@ -77,9 +77,9 @@ describe('lgamma', () => {
         const sign = new Int8Array(1);
         const s1 = lgammaOne(-0.5, sign);
         expect(sign[0]).toBe(-1);
-        expect(s1).toEqualFloatingPointBinary(1.26551212348465);
+        expect(s1).toEqualFloatingPointBinary(1.26551212348465, 45);
         const s2 = lgammaOne(-1.5, sign);
-        expect(s2).toEqualFloatingPointBinary(0.860047015376481);
+        expect(s2).toEqualFloatingPointBinary(0.860047015376481, 51);
         expect(sign[0]).toBe(1);
     });
 });

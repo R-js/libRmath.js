@@ -12,7 +12,7 @@ describe('pentagamma', function () {
         /* load data from fixture */
         const [x, y] = await loadData(resolve(__dirname, 'fixture-generation', 'pentagamma.R'), /\s+/, 1, 2);
         const actual = pentagamma(x);
-        expect(actual).toEqualFloatingPointBinary(y);
+        expect(actual).toEqualFloatingPointBinary(y, 35);
     });
     it('[0, -1,-2,-3,-10] return Infinity', () => {
         const actual = pentagamma([0, -1, -2, -3, -10]);

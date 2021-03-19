@@ -20,7 +20,26 @@ module.exports = {
     cacheDirectory: '.jest-cache',
     testPathIgnorePatterns: ['/es6/', '/commonjs/'],
     //testMatch: ['**/__tests__/**/*.[t]s?(x)', '**/?(*.)+(spec|test).[t]s?(x)'],
-    testRegex: '/__test__/(.*?\\.)?test.ts$',
+    testRegex: [
+        '/distributions/beta/__test__/(.*?\\.)?test.ts$',
+        '/special/bessel/besselJ/__test__/(.*?\\.)?test.ts$',
+        '/special/gamma/__test__/(.*?\\.)?test.ts$',
+        '/special/beta/__test__/(.*?\\.)?test.ts$',
+        '/rng/knuth-taocp/__test__/(.*?\\.)?test.ts$',
+        '/rng/knuth-taocp-2002/__test__/(.*?\\.)?test.ts$',
+        '/rng/lecuyer-cmrg/__test__/(.*?\\.)?test.ts$',
+        '/rng/marsaglia-multicarry/__test__/(.*?\\.)?test.ts$',
+        '/rng/mersenne-twister/__test__/(.*?\\.)?test.ts$',
+        '/rng/wichmann-hill/__test__/(.*?\\.)?test.ts$',
+        '/rng/normal/ahrens-dieter/__test__/(.*?\\.)?test.ts$',
+        '/rng/normal/box-muller/__test__/(.*?\\.)?test.ts$',
+        '/rng/normal/buggy-kinderman-ramage/__test__/(.*?\\.)?test.ts$',
+        '/rng/normal/inversion/__test__/(.*?\\.)?test.ts$',
+        '/rng/normal/kinderman-ramage/__test__/(.*?\\.)?test.ts$',
+       
+  
+  
+    ],
     globals: {
         'ts-jest': {
             compiler: 'typescript',
