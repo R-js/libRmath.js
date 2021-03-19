@@ -18,7 +18,7 @@ describe('dbeta', function () {
         /* load data from fixture */
         const [x, y] = await loadData(resolve(__dirname, 'fixture-generation', 'dbeta.R'), /\s+/, 1, 2);
         const actual = x.map(_x => dbeta(_x, 2, 3));
-        expect(actual).toEqualFloatingPointBinary(y);
+        expect(actual).toEqualFloatingPointBinary(y,40);
     });
     it('x=NaN, shape1=2,shape2=3', () => {
         const actual = dbeta(NaN, 2, 3);
@@ -86,7 +86,7 @@ describe('dbeta', function () {
         const z = dbeta(0, 1, 3);
         expect(z).toBe(3);
         const z2 = dbeta(0, 1, 3, undefined, true);
-        expect(z2).toEqualFloatingPointBinary(1.0986122886681098);
+        expect(z2).toEqualFloatingPointBinary(1.0986122886681098,51);
     });
     it('x=1,shape1=4,shape2=0.2', () => {
         const z = dbeta(1, 4, 0.2);
@@ -104,6 +104,6 @@ describe('dbeta', function () {
     });
     it('x=0.6,shape1=3,shape2=3', () => {
         const z = dbeta(0.6, 3, 3);
-        expect(z).toEqualFloatingPointBinary(1.728);
+        expect(z).toEqualFloatingPointBinary(1.728,51);
     });
 });

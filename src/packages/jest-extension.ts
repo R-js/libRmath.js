@@ -186,7 +186,7 @@ function toScalar(o: NumArray, alt: string) {
 }
 
 expect.extend({
-    toEqualFloatingPointBinary(received, expected, mantissa = Infinity, cycle = true, hf = false) {
+    toEqualFloatingPointBinary(received, expected, mantissa = Infinity, cycle = true, hf = true) {
         const options = {
             isNot: this.isNot,
             promise: this.promise,
@@ -286,8 +286,7 @@ expect.extend({
         const bpeR = received.BYTES_PER_ELEMENT || (hf ? 8 : 4);
         const bpeE = expected.BYTES_PER_ELEMENT || (hf ? 8 : 4);
         const bpe: 4 | 8 = Math.min(bpeE, bpeR) as 4 | 8;
-        let mantissa2: number = Math.min(mantissa, hf ? 52 : 23);
-        mantissa2 = Math.min(mantissa2, hf ? 52 : 23);
+        const mantissa2 = Math.min(mantissa, (bpe === 4 || hf === false) ? 23 : 52);
         if (mantissa2 !== mantissa) {
             errMsg += `Mantissa forced to ${mantissa2} bits`;
         }

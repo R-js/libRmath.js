@@ -38,7 +38,7 @@ describe('pbeta, ncp = 0', function () {
         /* load data from fixture */
         const [x, y] = await loadData(resolve(__dirname, 'fixture-generation', 'pbeta.R'), /\s+/, 1, 2);
         const actual = x.map(_x => pbeta(_x, 3, 3, undefined, true));
-        expect(actual).toEqualFloatingPointBinary(y);
+        expect(actual).toEqualFloatingPointBinary(y,40);
     });
     it('x=NaN, shape1=3, shape2=3', () => {
         const nan = pbeta(NaN, 3, 3);
@@ -79,7 +79,7 @@ describe('pbeta, ncp = 0', function () {
         /* load data from fixture */
         const [x, y] = await loadData(resolve(__dirname, 'fixture-generation', 'pbeta2.R'), /\s+/, 1, 2);
         const actual = x.map(_x => pbeta(_x, 1, 1, undefined, false, true));
-        expect(actual).toEqualFloatingPointBinary(y);
+        expect(actual).toEqualFloatingPointBinary(y, 43);
     });
 
 });

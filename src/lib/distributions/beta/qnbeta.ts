@@ -25,6 +25,7 @@ const printer_qnbeta = debug('qnbeta');
 const accu = 1e-15;
 const eps = 1e-14; /* must be > accu */
 
+
 export function qnbeta(p: number, a: number, b: number, ncp: number, lower_tail: boolean, log_p: boolean): number {
    
 

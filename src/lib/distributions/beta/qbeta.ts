@@ -48,7 +48,7 @@ const MLOGICAL_NA = -1;
 */
 
 const printer_qbeta = debug('qbeta');
-export function qbeta_scalar(p: number, shape1: number, shape2: number, lower_tail: boolean, log_p: boolean): number {
+export function qbeta(p: number, shape1: number, shape2: number, lower_tail: boolean, log_p: boolean): number {
     /* test for admissibility of parameters */
 
     if (isNaN(shape1) || isNaN(shape2) || isNaN(p)) return shape1 + shape2 + p;

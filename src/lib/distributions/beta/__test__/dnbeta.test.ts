@@ -19,7 +19,7 @@ describe('dbeta, ncp != undefined', function () {
         /* load data from fixture */
         const [x, y] = await loadData(resolve(__dirname, 'fixture-generation', 'dnbeta.R'), /\s+/, 1, 2);
         const actual = x.map(_x => dbeta(_x, 3, 3, 2));
-        expect(actual).toEqualFloatingPointBinary(y);
+        expect(actual).toEqualFloatingPointBinary(y, 45);
     });
     it('ranges x = NaN, shape1=3, shape2=3, ncp=2', async () => {
         const nan = dbeta(NaN, 3, 3, 2);

@@ -13,7 +13,7 @@ describe('digamma', function () {
         /* load data from fixture */
         const [x, y] = await loadData(resolve(__dirname, 'fixture-generation', 'digamma.R'), /\s+/, 1, 2);
         const actual = digamma(x);
-        expect(actual).toEqualFloatingPointBinary(y);
+        expect(actual).toEqualFloatingPointBinary(y, 37);
     });
     it('value 0,-1,-2  single values', () => {
         const g1 = digamma(-0);
