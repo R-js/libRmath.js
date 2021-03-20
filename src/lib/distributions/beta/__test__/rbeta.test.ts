@@ -1,9 +1,9 @@
 // node
-import { resolve } from 'path';
+//import { resolve } from 'path';
 
 //helper
 import '$jest-extension';
-import { loadData } from '$test-helpers/load';
+//import { loadData } from '$test-helpers/load';
 
 jest.mock('@common/logger', () => {
     // Require the original module to not be mocked...
@@ -28,18 +28,43 @@ jest.mock('@common/logger', () => {
     };
 });
 
-const cl = require('@common/logger');
+//const cl = require('@common/logger');
 //app
-import { qbeta } from '..';
+import { rbeta } from '..';
+import { IRNGTypeEnum } from '@rng/irng-type';
+import { IRNGNormalTypeEnum } from '@rng/normal/in01-type';
+import { globalNorm, globalUni, RNGKind } from '@rng/globalRNG';
 
-describe('qbeta, ncp != undefined', async function () {
-    it('ranges x ∊ [0, 1], shape1=1, shape2=2, ncp=3', async () => {
-        /* load data from fixture */
-        const [x, y] = await loadData(resolve(__dirname, 'fixture-generation', 'qnbeta.R'), /\s+/, 1, 2);
-        const actual = x.map(_x => qbeta(_x, 1, 2, 3));
-        expect(actual).toEqualFloatingPointBinary(y, 6);
+
+describe('rbeta', function () {
+
+    beforeAll(() => {
+        RNGKind(IRNGTypeEnum.MERSENNE_TWISTER, IRNGNormalTypeEnum.INVERSION);
     });
-    it('x = 0.5, shape1=NaN, shape2=2, ncp=3', () => {
+    it('sample 5 numbers, n=5, scp1=1, scp2=2', () => {
+        /*
+        > set.seed(1234)
+        > rbeta(5,2,2)
+        [1] 0.189691764891692205 0.577896080507901089
+        [3] 0.783976975547130639 0.036048134677882052
+        [5] 0.619700000680055485
+        */
+        const uni = globalUni();
+        const no = globalNorm();
+        uni.init(1234);
+        expect(uni.kind).toBe('MERSENNE_TWISTER');
+        expect(no.kind).toBe('INVERSION');
+        const actual = rbeta(5, 2, 2);
+        console.log(actual);
+        expect(actual).toEqualFloatingPointBinary([
+            0.189691764891692205,
+            0.577896080507901089,
+            0.783976975547130639,
+            0.036048134677882052,
+            0.619700000680055485
+        ]);
+    });
+    /*it('x = 0.5, shape1=NaN, shape2=2, ncp=3', () => {
         const nan = qbeta(0.5, NaN, 2, 3);
         expect(nan).toBe(NaN);
     });
@@ -60,5 +85,5 @@ describe('qbeta, ncp != undefined', async function () {
     it('x=1-EPSILON/2, shape1=-2, shape2=2, ncp=4', () => {
         const z = qbeta(1 - Number.EPSILON / 2, 2, 2, 4, true);
         expect(z).toBe(1);
-    });
+    });*/
 });

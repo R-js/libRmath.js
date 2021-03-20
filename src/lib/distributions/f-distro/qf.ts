@@ -18,7 +18,7 @@ import { debug } from 'debug';
 
 import { ML_ERR_return_NAN, R_Q_P01_boundaries } from '@common/logger';
 
-import { qbeta_scalar } from '@dist/beta/qbeta';
+import { qbeta } from '@dist/beta/qbeta';
 import { qchisq } from '@dist/chi-2/qchisq';
 
 const printer = debug('qf');
@@ -51,6 +51,6 @@ export function qf(p: number, df1: number, df2: number, lower_tail: boolean, log
     }
 
     // FIXME: (1/qb - 1) = (1 - qb)/qb; if we know qb ~= 1, should use other tail
-    p = (1 / qbeta_scalar(p, df2 / 2, df1 / 2, !lower_tail, log_p) - 1) * (df2 / df1);
+    p = (1 / qbeta(p, df2 / 2, df1 / 2, !lower_tail, log_p) - 1) * (df2 / df1);
     return isFinite(p) ? p : NaN;
 }

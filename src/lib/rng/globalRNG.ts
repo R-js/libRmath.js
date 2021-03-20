@@ -31,7 +31,7 @@ const uniformMap = {
     [IRNGTypeEnum.WICHMANN_HILL]: WichmannHill,
 }
 
-type uniformMapKey = keyof (typeof uniformMap);
+type UniformMapKey = keyof (typeof uniformMap);
 
 const normalMap = {
     // normal
@@ -70,56 +70,40 @@ export function RNGKind(
     uniform?: IRNGTypeEnum | IRNGNormalTypeEnum,
     normal?: IRNGNormalTypeEnum
 ): { uniform: IRNG, normal: IRNGNormal } {
-    //let uni;
-    //let norm;
-    if (!uniform && !normal) {
-        const tu = globalUni() ? globalUni().kind : IRNGTypeEnum.MERSENNE_TWISTER;
-        const tn = globalNorm() ? globalNorm().kind : IRNGNormalTypeEnum.INVERSION;
-        return RNGKind(tu, tn);
-    }
-    if (!normal && uniform) {
-        // is the uniform a normal?
-        if (!normalMap[uniform as IRNGNormalTypeEnum]) {
-            return RNGKind(IRNGTypeEnum.MERSENNE_TWISTER, uniform as IRNGNormalTypeEnum);
-        }
-    }
-    // at this point we have uni/normals, be it defaults or not
-    // uniform is ok?
 
-    if (!uniformMap[uniform as uniformMapKey]) {
-        throw new TypeError(`wrong rng kind specified for uniform "${uniform}"`);
+    const gu = globalUni();
+    const no = globalNorm();
+
+    if (uniform && !normal) {
+        normal = uniform as IRNGNormalTypeEnum;
+        uniform = no ? no.kind : IRNGTypeEnum.MERSENNE_TWISTER;
     }
 
-    const uni = uniformMap[IRNGTypeEnum.KNUTH_TAOCP];
+    if (!uniform) {
+        uniform = (gu && gu.kind) || IRNGTypeEnum.MERSENNE_TWISTER;
+    }
 
-    // normal ok?
-    if (!normalMap[normal as IRNGNormalTypeEnum]) {
-        throw new TypeError(`wrong rng kind specified for normal "${normal}"`);
+    if (!normal) {
+        normal = (no && no.kind) || IRNGNormalTypeEnum.INVERSION;
+    }
+
+    //check if normal exist
+    const errors: string[] = [];
+    const uni = uniformMap[uniform as UniformMapKey];
+    if (!uni){
+        errors.push(`Uknown uniform type ${uniform}`);
+    }
+    else {
+        globalUni(new uni());
     }
     const norm = normalMap[normal as IRNGNormalTypeEnum];
-
-    // we have both normal and uniform, but are the different then globals?
-    let uniChange;
-    if (
-        undefined === globalUni()
-        ||
-        uni.name !== globalNorm().constructor.name
-    ) {
-        globalUni(new uni());
-        uniChange = true;
+    if (!norm){
+        errors.push(`Uknown normal type ${normal}`);
     }
-
-
-    if (
-        uniChange  // if uni-rng changed, re-create the normal rng regardless
-        ||
-        undefined === globalNorm()
-        ||
-        globalNorm().constructor.name !== norm.name
-    ) {
-        globalNorm(new norm(globalUni()))
+    else {
+        globalNorm(new norm(globalUni()));
     }
-
+   
     return {
         uniform: globalUni(),
         normal: globalNorm(),
