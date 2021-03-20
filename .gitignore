@@ -2,6 +2,7 @@
 logs
 logs
 es6/
+doxx/
 browser/
 commonjs/
 *.tsbuildinfo
