@@ -95,34 +95,34 @@ const const4 = 0.04481;
 
 const log_eps_c = M_LN2 * (1 - DBL_MANT_DIG);
 
-function return_q_0(give_log_q: boolean, qb: NumArray): void {
-    if (give_log_q) {
-        qb[0] = -Infinity;
-        qb[1] = 0;
-    } else {
+function return_q_0(_give_log_q: boolean, qb: NumArray): void {
+    //if (give_log_q) {
+    //    qb[0] = -Infinity;
+    //    qb[1] = 0;
+    //} else {
         qb[0] = 0;
         qb[1] = 1;
-    }
+    //}
     return;
 }
 
-function return_q_1(give_log_q: boolean, qb: NumArray): void {
-    if (give_log_q) {
-        qb[0] = 0;
-        qb[1] = -Infinity;
-    } else {
+function return_q_1(_give_log_q: boolean, qb: NumArray): void {
+    //if (give_log_q) {
+    //    qb[0] = 0;
+    //    qb[1] = -Infinity;
+    //} else {
         qb[0] = 1;
         qb[1] = 0;
-    }
+    //}
     return;
 }
 
 function return_q_half(give_log_q: boolean, qb: NumArray): void {
-    if (give_log_q) {
-        qb[0] = qb[1] = -M_LN2;
-    } else {
+    //if (give_log_q) {
+    //    qb[0] = qb[1] = -M_LN2;
+    //} else {
         qb[0] = qb[1] = 0.5;
-    }
+    //}
     return;
 }
 
@@ -131,7 +131,7 @@ const { abs: fabs, log } = Math;
 const printer_qbeta_raw = debug('qbeta_raw');
 const R_ifDEBUG_printf = printer_qbeta_raw;
 // Returns both qbeta() and its "mirror" 1-qbeta(). Useful notably when qbeta() ~= 1
-export function qbeta_raw(
+function qbeta_raw(
     alpha: number,
     p: number,
     q: number,
@@ -148,7 +148,7 @@ export function qbeta_raw(
     const swap_choose: boolean = swap_01 === MLOGICAL_NA;
     let swap_tail: boolean;
     let log_: boolean;
-    const give_log_q: boolean = log_q_cut === Infinity;
+    const give_log_q = false; //: boolean = log_q_cut === Infinity;
     let use_log_x: boolean = give_log_q; // or u < log_q_cut  below
     let warned = false;
     let add_N_step = true;
@@ -230,15 +230,15 @@ export function qbeta_raw(
 
         } else if (p === 0 || p / q === 0) {
             // point mass 1 at 0 - "flipped around"
-            return_q_0(give_log_q, qb);
+            return return_q_0(give_log_q, qb);
 
         } else if (q === 0 || q / p === 0) {
             // point mass 1 at 0 - "flipped around"
-            return_q_1(give_log_q, qb);
+            return return_q_1(give_log_q, qb);
 
         }
         // else:  p = q = Inf : point mass 1 at 1/2
-        return_q_half(give_log_q, qb);
+        return return_q_half(give_log_q, qb);
     }
 
     /* initialize */
@@ -301,7 +301,7 @@ export function qbeta_raw(
 
     const L_return = () => {
 
-        if (give_log_q) {
+        /*if (give_log_q) {
             // ==> use_log_x , too
             if (!use_log_x)
                 // (see if claim above is true)
@@ -314,7 +314,7 @@ export function qbeta_raw(
                 qb[0] = u_n;
                 qb[1] = r;
             }
-        } else {
+        } else {*/
             if (use_log_x) {
                 if (add_N_step) {
                     /* add one last Newton step on original x scale, e.g., for
@@ -350,7 +350,7 @@ export function qbeta_raw(
                 qb[0] = tx;
                 qb[1] = 1 - tx;
             }
-        }
+        //}
     }
 
     const L_converged = () => { //L_converged:

@@ -42,7 +42,7 @@ export { rbetaOne };
 
 export function dbeta(x: number, shape1: number, shape2: number, ncp?: number, log?: boolean): number {
     // I added the === 0 here, because dnbeta will go back to dbeta if 0 (c source code)
-    if (ncp === undefined || ncp === 0) {
+    if (ncp === undefined) {
         return dbeta_scalar(x, shape1, shape2, log || false);
     } else {
         return dnbeta_scalar(x, shape1, shape2, ncp, log || false);
@@ -50,7 +50,7 @@ export function dbeta(x: number, shape1: number, shape2: number, ncp?: number, l
 }
 
 export function pbeta(q: number, shape1: number, shape2: number, ncp?: number, lowerTail = true, logP = false): number {
-    if (ncp === undefined || ncp === 0) {
+    if (ncp === undefined) {
         return _pbeta(q, shape1, shape2, lowerTail, logP);
     } else {
         return _pnbeta(q, shape1, shape2, ncp, lowerTail, logP);
@@ -58,7 +58,7 @@ export function pbeta(q: number, shape1: number, shape2: number, ncp?: number, l
 }
 
 export function qbeta(p: number, shape1: number, shape2: number, ncp?: number, lowerTail = true, logP = false): number {
-    if (ncp === undefined || ncp === 0) {
+    if (ncp === undefined) {
         return _qbeta(p, shape1, shape2, lowerTail, logP);
     } else {
         return _qnbeta(p, shape1, shape2, ncp, lowerTail, logP);
@@ -69,11 +69,11 @@ export function rbeta(
     n: number,
     shape1: number,
     shape2: number,
-    ncp = 0, // NOTE: normally the default is undefined, here it is '0'.
+    ncp?: number,
     rng?: IRNGNormal
 ): Float32Array {
     const _rng = rng || globalNorm();
-    if (ncp === 0) {
+    if (ncp === undefined) {
         return repeatedCall(n, rbetaOne, shape1, shape2, _rng.uniform_rng);
     } else {
         const ar = repeatedCall(n, rnchisqOne, 2 * shape1, ncp, _rng);

@@ -32,7 +32,7 @@ const cl = require('@common/logger');
 //app
 import { qbeta } from '..';
 
-describe('qbeta, ncp != undefined', async function () {
+describe('qbeta, ncp != undefined',  function () {
     it('ranges x ∊ [0, 1], shape1=1, shape2=2, ncp=3', async () => {
         /* load data from fixture */
         const [x, y] = await loadData(resolve(__dirname, 'fixture-generation', 'qnbeta.R'), /\s+/, 1, 2);

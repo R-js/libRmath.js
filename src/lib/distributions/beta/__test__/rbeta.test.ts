@@ -28,7 +28,7 @@ jest.mock('@common/logger', () => {
     };
 });
 
-//const cl = require('@common/logger');
+const cl = require('@common/logger');
 //app
 import { rbeta } from '..';
 import { IRNGTypeEnum } from '@rng/irng-type';
@@ -41,7 +41,7 @@ describe('rbeta', function () {
     beforeAll(() => {
         RNGKind(IRNGTypeEnum.MERSENNE_TWISTER, IRNGNormalTypeEnum.INVERSION);
     });
-    it('sample 5 numbers, n=5, scp1=1, scp2=2', () => {
+    it('sample 5 numbers, n=5, scp1=2, scp2=2', () => {
         /*
         > set.seed(1234)
         > rbeta(5,2,2)
@@ -55,7 +55,6 @@ describe('rbeta', function () {
         expect(uni.kind).toBe('MERSENNE_TWISTER');
         expect(no.kind).toBe('INVERSION');
         const actual = rbeta(5, 2, 2);
-        console.log(actual);
         expect(actual).toEqualFloatingPointBinary([
             0.189691764891692205,
             0.577896080507901089,
@@ -64,10 +63,71 @@ describe('rbeta', function () {
             0.619700000680055485
         ]);
     });
-    /*it('x = 0.5, shape1=NaN, shape2=2, ncp=3', () => {
-        const nan = qbeta(0.5, NaN, 2, 3);
-        expect(nan).toBe(NaN);
+    it('scp1=-1, scp2=2', () => {
+        const dest: string[] = [];
+        cl.setDestination(dest);
+        const actual = rbeta(1, -1, 2);
+        expect(actual).toEqualFloatingPointBinary(NaN);
     });
+    it('scp1=NAN, scp2=2', () => {
+        const dest: string[] = [];
+        cl.setDestination(dest);
+        const actual = rbeta(1, NaN, 2);
+        expect(actual).toEqualFloatingPointBinary(NaN);
+    });
+    it('scp1=Inf, scp2=Inf', () => {
+        const actual = rbeta(1, Infinity, Infinity);
+        expect(actual).toEqualFloatingPointBinary(0.5);
+    });
+    it('scp1=0, scp2=0', () => {
+        const uni = globalUni();
+        const no = globalNorm();
+        uni.init(1234);
+        expect(uni.kind).toBe('MERSENNE_TWISTER');
+        expect(no.kind).toBe('INVERSION');
+        //> set.seed(1234)
+        //> rbeta(40,0,0)
+        // [1] 0 1 1 1 1 1 0 0 1 1 1 1 0 1 0 1 0 0 0 0 0 0 0 0 0 1 1 1 1 0 0 0 0 1 0 1 0 0
+        //[39] 1 1
+        const actual = rbeta(40, 0, 0);
+        expect(actual).toEqualFloatingPointBinary([
+            0, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0, 1, 0, 1, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0,
+            1, 1
+        ]);
+    });
+    it('scp1=Inf, scp2=4', () => {
+
+        const actual = rbeta(1, Infinity, 4);
+        expect(actual).toEqualFloatingPointBinary(1);
+    });
+    it('scp1=Inf, scp2=4', () => {
+
+        const actual = rbeta(1, .2, Infinity);
+        expect(actual).toEqualFloatingPointBinary(0);
+    });
+
+    it('scp1=.2,scp2=8.2', () => {
+        const uni = globalUni();
+        const no = globalNorm();
+        uni.init(1234);
+        expect(uni.kind).toBe('MERSENNE_TWISTER');
+        expect(no.kind).toBe('INVERSION');
+
+        const actual = rbeta(10, .2, 8.2);
+        expect(actual).toEqualFloatingPointBinary([
+            2.6385199256583115e-03,
+            7.7165715328026546e-04,
+            4.1022800723002035e-04,
+            1.4372295851080399e-02,
+            8.3811079909799024e-06,
+            5.5559730466607102e-02,
+            8.2905224011662424e-03,
+            6.0129201610609076e-04,
+            2.3202929870389292e-04,
+            2.6784435398568788e-02])
+    });
+    /*
     it('x=0.5, shape1=Infinite,shape2=3, ncp=3', () => {
         const dest: unknown[] = [];
         cl.setDestination(dest);

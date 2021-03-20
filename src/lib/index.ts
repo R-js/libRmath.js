@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 // distributions
-export * from '@dist/beta';
+export { qbeta} from '@dist/beta';
 export * from '@dist/binomial';
 export * from '@dist/binomial-negative';
 export * from '@dist/cauchy';

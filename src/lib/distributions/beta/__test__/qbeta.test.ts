@@ -47,6 +47,22 @@ describe('qbeta', function () {
         const actual = shape1.map(_shape1 => qbeta(0.5, _shape1, 2, undefined, true, false));
         expect(actual).toEqualFloatingPointBinary(y, 9);
     });
+    it('shape1 x ∊ [0, 10], x=0.5, shape2=2, tail=true, logp=true', async () => {
+        const dest: unknown[] = [];
+        cl.setDestination(dest);
+        /* load data from fixture */
+        const [x, y] = await loadData(resolve(__dirname, 'fixture-generation', 'qbeta.log.R'), /\s+/, 1, 2);
+        const actual = x.map(_x => qbeta(_x, 2, 2, undefined, true, true));
+        expect(actual).toEqualFloatingPointBinary(y,9);
+    });
+    it('shape1 x ∊ [0, 10], x=0.5, shape2=2', async () => {
+        const dest: unknown[] = [];
+        cl.setDestination(dest);
+        /* load data from fixture */
+        const [shape1, shape2, y] = await loadData(resolve(__dirname, 'fixture-generation', 'qbeta3.R'), /\s+/, 1, 2, 3);
+        const actual = shape1.map((s1,i) => qbeta(0.5, s1, shape2[i]));
+        expect(actual).toEqualFloatingPointBinary(y,9);
+    });
     /*it('x = 0.5, shape1=NaN, shape2=2, ncp=3', () => {
         const nan = qbeta(0.5, NaN, 2, 3);
         expect(nan).toBe(NaN);

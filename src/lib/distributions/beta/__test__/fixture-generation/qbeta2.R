@@ -1,7 +1,7 @@
 #> shape1=seq(0,10,0.1)
 #> y=qbeta(0.5,shape1,2,0,T,F)
 #Warning message:
-#In qbeta(0.5, shape1, 2, 0, T, F) : NaNs produced
+#In qbeta(0.5, shape1, 2) : NaNs produced
 #> data.frame(shape1,y)
 #                  shape1                      y
 1    0.00000000000000000 0.00000000000000000000
