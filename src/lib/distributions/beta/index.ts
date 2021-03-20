@@ -58,7 +58,7 @@ export function pbeta(q: number, shape1: number, shape2: number, ncp?: number, l
 }
 
 export function qbeta(p: number, shape1: number, shape2: number, ncp?: number, lowerTail = true, logP = false): number {
-    if (ncp === undefined) {
+    if (ncp === undefined || ncp === 0) {
         return _qbeta(p, shape1, shape2, lowerTail, logP);
     } else {
         return _qnbeta(p, shape1, shape2, ncp, lowerTail, logP);

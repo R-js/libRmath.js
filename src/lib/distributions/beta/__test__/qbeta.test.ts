@@ -22,13 +22,13 @@ jest.mock('@common/logger', () => {
         setDestination(arr: unknown[]) {
             array = arr;
         },
-        getDestination(){
+        getDestination() {
             return array;
         }
     };
 });
 
-//const cl = require('@common/logger');
+const cl = require('@common/logger');
 //app
 import { qbeta } from '..';
 
@@ -36,10 +36,16 @@ describe('qbeta', function () {
     it('ranges x ∊ [0, 1], shape1=1, shape2=2', async () => {
         /* load data from fixture */
         const [x, y] = await loadData(resolve(__dirname, 'fixture-generation', 'qbeta.R'), /\s+/, 1, 2);
-        const actual = x.map(_x => qbeta(_x, 2, 2));
-        const rc = qbeta(0.5,2,2);
-        rc;
-        expect(actual).toEqualFloatingPointBinary(y,9);
+        const actual = x.map(_x => qbeta(_x, 2, 2, 0, true, false));
+        expect(actual).toEqualFloatingPointBinary(y, 9);
+    });
+    it('shape1 x ∊ [0, 10], x=0.5, shape2=2', async () => {
+        const dest: unknown[] = [];
+        cl.setDestination(dest);
+        /* load data from fixture */
+        const [shape1, y] = await loadData(resolve(__dirname, 'fixture-generation', 'qbeta2.R'), /\s+/, 1, 2);
+        const actual = shape1.map(_shape1 => qbeta(0.5, _shape1, 2, 0, true, false));
+        expect(actual).toEqualFloatingPointBinary(y, 9);
     });
     /*it('x = 0.5, shape1=NaN, shape2=2, ncp=3', () => {
         const nan = qbeta(0.5, NaN, 2, 3);

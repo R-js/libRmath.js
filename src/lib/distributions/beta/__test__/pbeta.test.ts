@@ -33,7 +33,7 @@ const cl = require('@common/logger');
 //app
 import { pbeta } from '..';
 
-describe('pbeta, ncp = 0', async function () {
+describe('pbeta, ncp = 0', function () {
     it('ranges x ∊ [0, 1], shape1=3, shape2=3', async () => {
         /* load data from fixture */
         const [x, y] = await loadData(resolve(__dirname, 'fixture-generation', 'pbeta.R'), /\s+/, 1, 2);
