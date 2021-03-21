@@ -26,6 +26,9 @@ const printer = debug('rbeta');
 export const expmax = DBL_MAX_EXP * Math.LN2; /* = log(DBL_MAX) */
 
 export function rbetaOne(aa: number, bb: number, rng: IRNG = globalUni()): number {
+    if (isNaN(aa)|| isNaN(bb)){
+        return ML_ERR_return_NAN(printer);
+    }
     if (aa < 0 || bb < 0) {
         return ML_ERR_return_NAN(printer);
     }

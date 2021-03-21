@@ -70,7 +70,11 @@ export function dbinom(x: number, n: number, p: number, logX = false): number {
     if (isNaN(x) || isNaN(n) || isNaN(p)) return x + n + p;
 
     if (p < 0 || p > 1 || R_D_negInonint(n)) return ML_ERR_return_NAN(printer);
-    R_D_nonint_check(logX, x, printer);
+
+    const ch = R_D_nonint_check(logX, x, printer);
+    if (ch !== undefined){
+        return ch;
+    }
     if (x < 0 || !isFinite(x)) return R_D__0(logX);
 
     n = Math.round(n);
