@@ -51,7 +51,7 @@ function do_search(y: number, z: NumberW, p: number, n: number, pr: number, incr
 
 const printer_qbinom = debug('_qbinom');
 
-export function qbinom(p: number, size: number, pr: number, lower_tail: boolean, log_p: boolean): number {
+export function qbinom(p: number, size: number, pr: number, lower_tail = true, log_p = false): number {
 
     const z = new NumberW(0);
     let y: number;
@@ -106,12 +106,12 @@ export function qbinom(p: number, size: number, pr: number, lower_tail: boolean,
      * FIXME: This is far from optimal [cancellation for p ~= 1, etc]: */
     if (!lower_tail || log_p) {
         p = R_DT_qIv(lower_tail, log_p, p); /* need check again (cancellation!): */
-        if (p === 0) return 0;
-        if (p === 1) return size;
+        if (p === 0) return 0; // will never happen
+        if (p === 1) return size; // will never happen
     }
     /* temporary hack --- FIXME --- */
     //if (p + 1.01 * Number.EPSILON >= 1.) return size;
-    if (Math.abs(p - 1) < Number.EPSILON) {
+    if ((1-p) < Number.EPSILON) {
         return size;
     }
 

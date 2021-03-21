@@ -16,7 +16,6 @@ import { dbeta } from '..';
 
 describe('dbeta, ncp != undefined', () => {
     it('ranges x ∊ [0, 1], shape1=3, shape2=3, ncp=2', async () => {
-        /* load data from fixture */
         const [x, y] = await loadData(resolve(__dirname, 'fixture-generation', 'dnbeta.R'), /\s+/, 1, 2);
         const actual = x.map(_x => dbeta(_x, 3, 3, 2));
         expect(actual).toEqualFloatingPointBinary(y, 45);

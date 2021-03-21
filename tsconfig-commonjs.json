@@ -7,7 +7,8 @@
         "noEmit": false,
         "module": "CommonJS",
         "outDir": "commonjs",
-        "target": "es2020",
-        "declarationDir": "commonjs/types"
+        "target": "es2015",
+        "declarationDir": "commonjs/types",
+        "importHelpers": true
     }
 }
