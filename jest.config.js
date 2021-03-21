@@ -21,7 +21,9 @@ module.exports = {
     testPathIgnorePatterns: ['/es6/', '/commonjs/'],
     //testMatch: ['**/__tests__/**/*.[t]s?(x)', '**/?(*.)+(spec|test).[t]s?(x)'],
     testRegex: [
+        '/distributions/binomial/__test__/(.*?\\.)?test.ts$',
         '/distributions/beta/__test__/(.*?\\.)?test.ts$',
+        //'/distributions/beta/__test__/qbeta.test.ts',
         '/special/bessel/besselJ/__test__/(.*?\\.)?test.ts$',
         '/special/gamma/__test__/(.*?\\.)?test.ts$',
         '/special/beta/__test__/(.*?\\.)?test.ts$',
@@ -36,6 +38,7 @@ module.exports = {
         '/rng/normal/buggy-kinderman-ramage/__test__/(.*?\\.)?test.ts$',
         '/rng/normal/inversion/__test__/(.*?\\.)?test.ts$',
         '/rng/normal/kinderman-ramage/__test__/(.*?\\.)?test.ts$',
+        '/rng/super-duper/__test__/(.*?\\.)?test.ts$',
        
   
   
