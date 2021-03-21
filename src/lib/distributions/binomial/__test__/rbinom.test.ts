@@ -1,7 +1,10 @@
 //helper
 import '$jest-extension';
-import { loadData } from '$test-helpers/load';
-import { resolve } from 'path';
+import { IRNGNormalTypeEnum } from '@rng/normal/in01-type';
+import { globalUni, RNGKind } from '@rng/globalRNG';
+import { IRNGTypeEnum } from '@rng/irng-type';
+//import { loadData } from '$test-helpers/load';
+//import { resolve } from 'path';
 
 jest.mock('@common/logger', () => {
     // Require the original module to not be mocked...
@@ -27,20 +30,32 @@ jest.mock('@common/logger', () => {
 });
 
 const cl = require('@common/logger');
+cl.setDestination([]);
 //app
-import { qbinom } from '..';
+import { rbinom } from '..';
 
-describe('qbinom', function () {
-    it('ranges p ∊ [0, 1, step 0.01] size=10, prob=0.5', async () => {
-        const [x, y] = await loadData(resolve(__dirname, 'fixture-generation', 'qbinom1.R'), /\s+/, 1, 2);
-        const actual = x.map(_x => qbinom(_x, 10, 0.5));
-        expect(actual).toEqualFloatingPointBinary(y)
+describe('rbinom', function () {
+    beforeAll(() => {
+        RNGKind(IRNGTypeEnum.MERSENNE_TWISTER, IRNGNormalTypeEnum.INVERSION);
+    });
+    it('n=10, unifrom=Mersenne T, norm=Inversion, size=100, n=10, prob=0.2', () => {
+        const uni = globalUni();
+        uni.init(1234);
+        const actual = rbinom(10, 100, 0.5);
+        expect(actual).toEqualFloatingPointBinary([47, 40, 48, 47, 48, 53, 52, 53, 53, 47]);
     });
     it('p = NaN, size=NaN, prob=0.01', () => {
-         const actual = qbinom(NaN, NaN, 0.01);
-         expect(actual).toBeNaN();
+        rbinom(10,Infinity,0.4);
+        rbinom(10,10.2,0.4);
+        rbinom(10,10,1.4);
+        rbinom(10,0,0.5);
+        rbinom(10,4,1);
+        rbinom(10,Number.MAX_SAFE_INTEGER*2,0.5);
+        rbinom(100, 500,0.90);
+        rbinom(100, 500,0.001);
+        
     });
-    it('p = Infinity, size=10, prob=0.5', () => {
+    /*it('p = Infinity, size=10, prob=0.5', () => {
         const dest: string[] = [];
         cl.setDestination(dest);
         const actual = qbinom(Infinity, 10, 0.5);
@@ -81,7 +96,7 @@ describe('qbinom', function () {
         expect(z0).toBe(20);
     });
     it('p=(1-EPSILON/2), size=50 , prob=0.3', () => {
-        const z0 = qbinom(1-Number.EPSILON/2, 50, 0.3);
+        const z0 = qbinom(1 - Number.EPSILON / 2, 50, 0.3);
         console.log(z0);
         expect(z0).toBe(50);
     });
@@ -93,4 +108,15 @@ describe('qbinom', function () {
         const z0 = qbinom(0.9999999, 1e6, 0.99);
         expect(z0).toBe(990513);
     });
+
+
+    /* it('x = 5, size=Infinity, prob=0.01', () => {
+         const dest: string[] = [];
+         cl.setDestination(dest);
+         const actual = pbinom(5, Infinity, 0.01);
+         expect(actual).toBeNaN();
+         expect(dest.length).toBe(1);
+         console.log(dest);
+     });
+     */
 });

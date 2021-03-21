@@ -86,7 +86,6 @@ describe('dbinom', function () {
         const z0 = dbinom(4, 100, 3); // 100%, you always score "head", never "tail"
         expect(z0).toBeNaN();
         expect(dest.length).toBe(1);
-        console.log(dest);
     });
     it('x=4, size=NaN, prob=0.5', () => {
         const z0 = dbinom(4, NaN, 0.5); // 100%, you always score "head", never "tail"
