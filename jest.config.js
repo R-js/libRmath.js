@@ -3,11 +3,13 @@ module.exports = {
     automock: false,
     collectCoverage: true,
     collectCoverageFrom: [
-        'src/lib/**/*.ts',
+        //'src/lib/distributions/beta/*.ts',
+        //'src/lib/distributions/binomial/*.ts',
+        'src/lib/distributions/binomial-negative/*.ts',
     ],
     coveragePathIgnorePatterns: ['node_modules', 'test', 'doc.ts'],
     coverageDirectory: 'coverage',
-    coverageProvider: 'v8',
+    coverageProvider: 'babel', //v8 is experimental
     coverageReporters: ['json', 'lcov', 'text', 'clover'],
     preset: 'ts-jest',
     testEnvironment: 'node',
@@ -17,21 +19,36 @@ module.exports = {
     //testMatch: ['**/__tests__/**/*.[t]s?(x)', '**/?(*.)+(spec|test).[t]s?(x)'],
     testRegex: [
         // beta
-        // ok '/distributions/beta/__test__/dbeta.test.ts$',
-        // ok '/distributions/beta/__test__/dnbeta.test.ts$',
-        // ok '/distributions/beta/__test__/pbeta.test.ts$',
-        // ok '/distributions/beta/__test__/pnbeta.test.ts$',
-        // ok '/distributions/beta/__test__/qbeta.test.ts$',
-        // ok '/distributions/beta/__test__/qnbeta.test.ts$',
-        // ok '/distributions/beta/__test__/rbeta.test.ts$',
+        // ok
+     /*    '/distributions/beta/__test__/dbeta.test.ts$',
+        // ok 
+        '/distributions/beta/__test__/dnbeta.test.ts$',
+        // ok 
+        '/distributions/beta/__test__/pbeta.test.ts$',
+        // ok 
+        '/distributions/beta/__test__/pnbeta.test.ts$',
+        // ok 
+        '/distributions/beta/__test__/qbeta.test.ts$',
+        // ok 
+        '/distributions/beta/__test__/qnbeta.test.ts$',
+        // ok 
+        '/distributions/beta/__test__/rbeta.test.ts$',
        
        
         // binom
-        // ok '/distributions/binomial/__test__/dbinom.test.ts$',
-        // ok '/distributions/binomial/__test__/pbinom.test.ts$',
-        // ok '/distributions/binomial/__test__/qbinom.test.ts$',
-        // ok '/distributions/binomial/__test__/rbinom.test.ts$',
-         
+        // ok 
+        '/distributions/binomial/__test__/dbinom.test.ts$',
+        // ok 
+        '/distributions/binomial/__test__/pbinom.test.ts$',
+        // ok 
+        '/distributions/binomial/__test__/qbinom.test.ts$',
+        // ok 
+        '/distributions/binomial/__test__/rbinom.test.ts$',
+     */    
+        // negative-binom
+        // ok
+        //'/distributions/binomial-negative/__test__/dnbinom.test.ts$',
+        '/distributions/binomial-negative/__test__/pnbinom.test.ts$',
      
         /*'/special/bessel/besselJ/__test__/(.*?\\.)?test.ts$',
         '/special/gamma/__test__/(.*?\\.)?test.ts$',

@@ -30,5 +30,5 @@ export function rexpOne(scale = 1, rng: IRNG): number {
         /* else */
         return ML_ERR_return_NAN(printer);
     }
-    return scale * exp_rand(rng.random); // --> in ./sexp.c
+    return scale * exp_rand(rng); // --> in ./sexp.c
 }

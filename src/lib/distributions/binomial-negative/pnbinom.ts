@@ -71,7 +71,9 @@ export function pnbinom_mu(x: number, size: number, mu: number, lowerTail: boole
         const w = new NumberW(0);
         const wc = new NumberW(0);
         Toms708.bratio(size, x + 1, size / (size + mu), mu / (size + mu), w, wc, ierr);
-        if (ierr) printer('pnbinom_mu() -> bratio() gave error code %d', ierr.val);
+        if (ierr.val) {
+            printer('pnbinom_mu() -> bratio() gave error code %d', ierr.val);
+        }
         if (logP) {
             w.val = Math.log(w.val);
             wc.val = Math.log(wc.val);

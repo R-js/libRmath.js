@@ -26,5 +26,5 @@ const printer = debug('rgeom');
 
 export function rgeomOne(p: number, rng: IRNGNormal = globalNorm()): number {
     if (!isFinite(p) || p <= 0 || p > 1) return ML_ERR_return_NAN(printer);
-    return rpoisOne(exp_rand(rng.uniform_rng.random) * ((1 - p) / p), rng);
+    return rpoisOne(exp_rand(rng.uniform_rng) * ((1 - p) / p), rng);
 }

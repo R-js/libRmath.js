@@ -17,68 +17,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import type { IRNGNormal } from '@rng/normal/normal-rng';
 import { globalNorm } from '@rng/globalRNG';
 import { dnbinom as _dnb, dnbinom_mu } from './dnbinom';
-import { pnbinom as _pnb , pnbinom_mu } from './pnbinom';
+import { pnbinom as _pnb, pnbinom_mu } from './pnbinom';
 import { qnbinom as _qnb, qnbinom_mu } from './qnbinom';
 import { rnbinomOne, rnbinom_muOne } from './rnbinom';
-import { repeatedCall } from '$helper';
+import { repeatedCall64 } from '$helper';
 
-const errText = [
-  'at most specify either argument "mu" or  "prob", but not both at the same time!',
-  'both arguments "mu" and "prob" are undefined'
-];
-
-interface dnbmu {
-  d: typeof dnbinom_mu,
-  p: typeof pnbinom_mu,
-  q: typeof qnbinom_mu,
-  r: typeof rnbinom_muOne
-}
-
-interface p {
-  d: typeof _dnb,
-  p: typeof _pnb,
-  q: typeof _qnb,
-  r: typeof rnbinomOne
-}
-
-interface sel {
-  mu: dnbmu,
-  p:p
-}
-
-const selector:sel = {
-  mu: {
-    d: dnbinom_mu,
-    p: pnbinom_mu,
-    q: qnbinom_mu,
-    r: rnbinom_muOne
-  },
-  p: {
-    d: _dnb,
-    p: _pnb,
-    q: _qnb,
-    r: rnbinomOne
-  }
-};
-
-function select<F extends keyof p & keyof dnbmu>(
-  fs: F,
-  mu?: number,
-  prob?: number
-) {
-  
-  if (prob !== undefined && mu !== undefined) {
-    throw new Error(errText[0]);
-  }
-  if (prob === undefined && mu === undefined) {
-    throw new Error(errText[1]);
-  }
-  const s: keyof sel = prob === undefined ? 'mu' : 'p';
-  const ss = selector[s];
-  const fn = ss[fs];
-  return fn;
-}
-
+const probAndMuBoth = '"prob" and "mu" both specified';
+const probMis = 'argument "prob" is missing, with no default';
 
 export function dnbinom(
   x: number,
@@ -87,10 +32,17 @@ export function dnbinom(
   mu?: number,
   giveLog = false
 ): number {
-  const val: number = (mu || prob) as number;
-  const fn = select('d', mu, prob);
-  return fn(x, size, val, giveLog);
-}
+  if (mu !== undefined && prob !== undefined) {
+    throw new TypeError(probAndMuBoth);
+  }
+  if (mu !== undefined) {
+    return dnbinom_mu(x, size, mu, giveLog);
+  }
+  if (prob === undefined) {
+    throw new TypeError(probMis);
+  }
+  return _dnb(x, size, prob, giveLog);
+} 
 
 export function pnbinom(
   q: number,
@@ -99,23 +51,37 @@ export function pnbinom(
   mu?: number,
   lowerTail = true,
   logP = false
-): number  {
-  const val = (mu || prob) as number;
-  const fn = select('p', mu, prob);
-  return fn(q, size, val, lowerTail, logP);
+): number {
+  if (mu !== undefined && prob !== undefined) {
+    throw new TypeError(probAndMuBoth);
+  }
+  if (mu !== undefined) {
+    return pnbinom_mu(q, size, mu, lowerTail, logP);
+  }
+  if (prob === undefined) {
+    throw new TypeError(probMis);
+  }
+  return _pnb(q, size, prob, lowerTail, logP);
 }
 
 export function qnbinom(
-  q: number,
+  p: number,
   size: number,
   prob?: number,
   mu?: number,
   lowerTail = true,
   logP = false
 ): number {
-  const val = (mu || prob) as number;
-  const fn = select('q', mu, prob);
-  return fn(q, size, val, lowerTail, logP);
+  if (mu !== undefined && prob !== undefined) {
+    throw new TypeError(probAndMuBoth);
+  }
+  if (mu !== undefined) {
+    return qnbinom_mu(p, size, mu, lowerTail, logP);
+  }
+  if (prob === undefined) {
+    throw new TypeError(probMis);
+  }
+  return _qnb(p, size, prob, lowerTail, logP);
 }
 
 export function rnbinom(
@@ -124,9 +90,16 @@ export function rnbinom(
   prob?: number,
   mu?: number,
   rng: IRNGNormal = globalNorm()
-): Float32Array {
-  const val = (mu || prob) as number;
-  const fn = select('r', mu, prob);
-  return repeatedCall(n, fn, size, val, rng);
+): Float64Array {
+  if (mu !== undefined && prob !== undefined) {
+    throw new TypeError(probAndMuBoth);
+  }
+  if (mu !== undefined) {
+    return repeatedCall64(n, rnbinom_muOne, size, mu, rng);
+  }
+  if (prob === undefined) {
+    throw new TypeError(probMis);
+  }
+  return repeatedCall64(n, rnbinomOne, size, prob as number, rng);
 }
 

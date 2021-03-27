@@ -146,7 +146,7 @@ export function repeatedCall(n: number, fn: (...arg: any[]) => number, ...arg: u
     return result;
 }
 
-export function repeatedCall64(n: number, fn: (...arg: any[]) => number, ...arg: unknown[]): Float64Array {
+export function repeatedCall64<F extends (...args:any[]) => number>(n: number, fn: F, ...args: Parameters<F>): Float64Array {
     let result: Float64Array;
 
     if (n === 0) {
@@ -157,7 +157,7 @@ export function repeatedCall64(n: number, fn: (...arg: any[]) => number, ...arg:
         throw new TypeError(`"n" argument is not a number or negative`);
     }
     for (let i = 0; i < result.length; i++) {
-        result[i] = fn(...arg);
+        result[i] = fn(...args);
     }
     return result;
 }
