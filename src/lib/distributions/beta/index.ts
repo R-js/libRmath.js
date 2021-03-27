@@ -35,7 +35,6 @@ import { rbetaOne } from './rbeta';
 
 //helper
 import { repeatedCall } from '$helper'
-import { IRNGNormal } from '@rng/normal/normal-rng';
 import { globalNorm } from '@rng/globalRNG';
 
 export { rbetaOne };
@@ -70,14 +69,13 @@ export function rbeta(
     shape1: number,
     shape2: number,
     ncp?: number,
-    rng?: IRNGNormal
+    rng = globalNorm()
 ): Float32Array {
-    const _rng = rng || globalNorm();
     if (ncp === undefined) {
-        return repeatedCall(n, rbetaOne, shape1, shape2, _rng.uniform_rng);
+        return repeatedCall(n, rbetaOne, shape1, shape2, rng.uniform_rng);
     } else {
-        const ar = repeatedCall(n, rnchisqOne, 2 * shape1, ncp, _rng);
-        const br = repeatedCall(n, rchisqOne, 2 * shape2, _rng);
+        const ar = repeatedCall(n, rnchisqOne, 2 * shape1, ncp, rng);
+        const br = repeatedCall(n, rchisqOne, 2 * shape2, rng);
         const result = ar.map((a, i) => a/(a+br[i]));
         return result;
     }

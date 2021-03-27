@@ -78,7 +78,8 @@
         "postbuild": "node rollup.build.js",
         "lint": "eslint src/**/*.ts",
         "lint:fix": "eslint src/**/*.ts --fix",
-        "test": "jest"
+        "pretest": "rimraf coverage .jest-cache",
+        "test": "jest --runInBand"
     },
     "contributes": {
         "typescriptServerPlugins": [

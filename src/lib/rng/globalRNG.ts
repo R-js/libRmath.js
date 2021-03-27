@@ -90,20 +90,24 @@ export function RNGKind(
     //check if normal exist
     const errors: string[] = [];
     const uni = uniformMap[uniform as UniformMapKey];
-    if (!uni){
+    if (!uni) {
         errors.push(`Uknown uniform type ${uniform}`);
     }
     else {
-        globalUni(new uni());
+        if (!(gu && gu.kind === uniform)) {
+            globalUni(new uni());
+        }
     }
     const norm = normalMap[normal as IRNGNormalTypeEnum];
-    if (!norm){
+    if (!norm) {
         errors.push(`Uknown normal type ${normal}`);
     }
     else {
-        globalNorm(new norm(globalUni()));
+        if (!(no && no.kind !== normal)) {
+            globalNorm(new norm(globalUni()));
+        }
     }
-   
+
     return {
         uniform: globalUni(),
         normal: globalNorm(),

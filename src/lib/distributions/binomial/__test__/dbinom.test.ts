@@ -3,6 +3,9 @@ import '$jest-extension';
 import { loadData } from '$test-helpers/load';
 import { resolve } from 'path';
 
+import { dbinom } from '..';
+
+
 jest.mock('@common/logger', () => {
     // Require the original module to not be mocked...
     const originalModule = jest.requireActual('@common/logger');
@@ -17,7 +20,7 @@ jest.mock('@common/logger', () => {
         ...originalModule,
         ML_ERROR: jest.fn((x: unknown, s: unknown) => ML_ERROR(x, s, pr)),
         ML_ERR_return_NAN: jest.fn(() => ML_ERR_return_NAN(pr)),
-        setDestination(arr: unknown[]) {
+        setDestination(arr: unknown[]=[]) {
             array = arr;
         },
         getDestination() {
@@ -25,12 +28,12 @@ jest.mock('@common/logger', () => {
         }
     };
 });
-
-const cl = require('@common/logger');
 //app
-import { dbinom } from '..';
+const cl = require('@common/logger');
+cl.setDestination();
 
 describe('dbinom', function () {
+   
     it('ranges x ∊ [0, 12] size=12, prob=0.01', async () => {
         const [x, y] = await loadData(resolve(__dirname, 'fixture-generation', 'dbinom1.R'), /\s+/, 1, 2);
         const actual = x.map(_x => dbinom(_x, 12, 0.01));
@@ -81,8 +84,7 @@ describe('dbinom', function () {
         expect(z2).toBe(0);
     });
     it('x=4, size=100, prob=3 (>1)', () => {
-        const dest: string[] = [];
-        cl.setDestination(dest);
+        const dest = cl.getDestination();
         const z0 = dbinom(4, 100, 3); // 100%, you always score "head", never "tail"
         expect(z0).toBeNaN();
         expect(dest.length).toBe(1);

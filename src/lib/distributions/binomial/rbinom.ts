@@ -84,17 +84,19 @@ export function rbinomOne(nin: number, pp: number, rng: IRNG): number {
     if (r === 0 || pp === 0) return 0;
     if (pp === 1) return r;
 
-    if (r >= Number.MAX_SAFE_INTEGER) {
+    if (r >= 2147483647 /*INT_MAX*/) {
         /* evade integer overflow,
             and r == INT_MAX gave only even values */
+        const _p = rng.random(); //between 0 and 1
         printer_rbinom('Evade overflow:%d > MAX_SAFE_INTEGER', r);
-        return qbinom(
-            rng.random(), //between 0 and 1
+        const retv = qbinom(
+            _p,
             r,
             pp,
             /*lower_tail*/ false,
             /*log_p*/ false,
         );
+        return retv;
     }
     /* else */
     const n = Math.trunc(r);
@@ -139,41 +141,41 @@ export function rbinomOne(nin: number, pp: number, rng: IRNG): number {
 
 
     //if (pp !== psave || n !== nsave) {
-        psave = pp;
-        //nsave = Math.trunc(n);
-        if (np < 30.0) {
-            /* inverse cdf logic for mean less than 30 */
-            qn = R_pow_di(q, n);
-            L_np_small();
-            return finis();
-            //goto L_np_small;
-        } else {
-            ffm = np + p;
-            m = Math.trunc(ffm);
-            fm = m;
-            npq = np * q;
-            p1 = Math.trunc(2.195 * Math.sqrt(npq) - 4.6 * q) + 0.5;
-            xm = fm + 0.5;
-            xl = xm - p1;
-            xr = xm + p1;
-            c = 0.134 + 20.5 / (15.3 + fm);
-            al = (ffm - xl) / (ffm - xl * p);
-            xll = al * (1.0 + 0.5 * al);
-            al = (xr - ffm) / (xr * q);
-            xlr = al * (1.0 + 0.5 * al);
-            p2 = p1 * (1.0 + c + c);
-            p3 = p2 + c / xll;
-            p4 = p3 + c / xlr;
-        }
+    psave = pp;
+    //nsave = Math.trunc(n);
+    if (np < 30.0) {
+        /* inverse cdf logic for mean less than 30 */
+        qn = R_pow_di(q, n);
+        L_np_small();
+        return finis();
+        //goto L_np_small;
+    } else {
+        ffm = np + p;
+        m = Math.trunc(ffm);
+        fm = m;
+        npq = np * q;
+        p1 = Math.trunc(2.195 * Math.sqrt(npq) - 4.6 * q) + 0.5;
+        xm = fm + 0.5;
+        xl = xm - p1;
+        xr = xm + p1;
+        c = 0.134 + 20.5 / (15.3 + fm);
+        al = (ffm - xl) / (ffm - xl * p);
+        xll = al * (1.0 + 0.5 * al);
+        al = (xr - ffm) / (xr * q);
+        xlr = al * (1.0 + 0.5 * al);
+        p2 = p1 * (1.0 + c + c);
+        p3 = p2 + c / xll;
+        p4 = p3 + c / xlr;
+    }
     //}
-     /*else if (n === nsave) {
-        if (np < 30.0) {
-            //goto L_np_small;
-            L_np_small();
-            return finis();
+    /*else if (n === nsave) {
+       if (np < 30.0) {
+           //goto L_np_small;
+           L_np_small();
+           return finis();
 
-        }
-    }*/
+       }
+   }*/
 
     /*-------------------------- np = n*p >= 30 : ------------------- */
     while (true) {

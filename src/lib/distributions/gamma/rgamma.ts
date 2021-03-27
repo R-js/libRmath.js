@@ -85,10 +85,10 @@ export function rgammaOne(a = 1, scale=1, rng: IRNGNormal = globalNorm()): numbe
             p = e * rng.uniform_rng.random();
             if (p >= 1.0) {
                 x = -Math.log((e - p) / a);
-                if (exp_rand(rng.uniform_rng.random) >= (1.0 - a) * Math.log(x)) break;
+                if (exp_rand(rng.uniform_rng) >= (1.0 - a) * Math.log(x)) break;
             } else {
                 x = Math.exp(Math.log(p) / a);
-                if (exp_rand(rng.uniform_rng.random) >= x) break;
+                if (exp_rand(rng.uniform_rng) >= x) break;
             }
         }
         return scale * x;
@@ -158,7 +158,7 @@ export function rgammaOne(a = 1, scale=1, rng: IRNGNormal = globalNorm()): numbe
         /* Step 8: e = standard exponential deviate
          *	u =  0,1 -uniform deviate
          *	t = (b,si)-double exponential (laplace) sample */
-        e = exp_rand(rng.uniform_rng.random);
+        e = exp_rand(rng.uniform_rng);
         u = rng.uniform_rng.random();
         u = u + u - 1.0;
         if (u < 0.0) t = b - si * e;

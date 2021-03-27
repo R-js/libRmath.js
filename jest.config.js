@@ -3,12 +3,7 @@ module.exports = {
     automock: false,
     collectCoverage: true,
     collectCoverageFrom: [
-        'src/lib/rng/**/*.ts',
-        'src/lib/special/gamma/**/*.ts',
-        'src/lib/special/beta/**/*.ts',
-        'src/lib/special/bessel/**/*.ts',
-        'src/lib/distributions/**/*.ts'
-
+        'src/lib/**/*.ts',
     ],
     coveragePathIgnorePatterns: ['node_modules', 'test', 'doc.ts'],
     coverageDirectory: 'coverage',
@@ -21,18 +16,32 @@ module.exports = {
     testPathIgnorePatterns: ['/es6/', '/commonjs/'],
     //testMatch: ['**/__tests__/**/*.[t]s?(x)', '**/?(*.)+(spec|test).[t]s?(x)'],
     testRegex: [
-        '/distributions/binomial/__test__/(.*?\\.)?test.ts$',
-        '/distributions/beta/__test__/(.*?\\.)?test.ts$',
-        //'/distributions/beta/__test__/qbeta.test.ts',
-        '/special/bessel/besselJ/__test__/(.*?\\.)?test.ts$',
+        // beta
+        // ok '/distributions/beta/__test__/dbeta.test.ts$',
+        // ok '/distributions/beta/__test__/dnbeta.test.ts$',
+        // ok '/distributions/beta/__test__/pbeta.test.ts$',
+        // ok '/distributions/beta/__test__/pnbeta.test.ts$',
+        // ok '/distributions/beta/__test__/qbeta.test.ts$',
+        // ok '/distributions/beta/__test__/qnbeta.test.ts$',
+        // ok '/distributions/beta/__test__/rbeta.test.ts$',
+       
+       
+        // binom
+        // ok '/distributions/binomial/__test__/dbinom.test.ts$',
+        // ok '/distributions/binomial/__test__/pbinom.test.ts$',
+        // ok '/distributions/binomial/__test__/qbinom.test.ts$',
+        // ok '/distributions/binomial/__test__/rbinom.test.ts$',
+         
+     
+        /*'/special/bessel/besselJ/__test__/(.*?\\.)?test.ts$',
         '/special/gamma/__test__/(.*?\\.)?test.ts$',
         '/special/beta/__test__/(.*?\\.)?test.ts$',
         '/rng/knuth-taocp/__test__/(.*?\\.)?test.ts$',
         '/rng/knuth-taocp-2002/__test__/(.*?\\.)?test.ts$',
         '/rng/lecuyer-cmrg/__test__/(.*?\\.)?test.ts$',
-        '/rng/marsaglia-multicarry/__test__/(.*?\\.)?test.ts$',
-        '/rng/mersenne-twister/__test__/(.*?\\.)?test.ts$',
-        '/rng/wichmann-hill/__test__/(.*?\\.)?test.ts$',
+        '/rng/marsaglia-multicarry/__test__/(.*?\\.)?test.ts$',*/
+       // '/rng/mersenne-twister/__test__/(.*?\\.)?test.ts$',
+       /* '/rng/wichmann-hill/__test__/(.*?\\.)?test.ts$',
         '/rng/normal/ahrens-dieter/__test__/(.*?\\.)?test.ts$',
         '/rng/normal/box-muller/__test__/(.*?\\.)?test.ts$',
         '/rng/normal/buggy-kinderman-ramage/__test__/(.*?\\.)?test.ts$',
@@ -40,7 +49,7 @@ module.exports = {
         '/rng/normal/kinderman-ramage/__test__/(.*?\\.)?test.ts$',
         '/rng/super-duper/__test__/(.*?\\.)?test.ts$',
        
-  
+  */
   
     ],
     globals: {

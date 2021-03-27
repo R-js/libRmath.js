@@ -19,7 +19,7 @@ jest.mock('@common/logger', () => {
         ...originalModule,
         ML_ERROR: jest.fn((x: unknown, s: unknown) => ML_ERROR(x, s, pr)),
         ML_ERR_return_NAN: jest.fn(() => ML_ERR_return_NAN(pr)),
-        setDestination(arr: unknown[]) {
+        setDestination(arr: unknown[]=[]) {
             array = arr;
         },
         getDestination() {

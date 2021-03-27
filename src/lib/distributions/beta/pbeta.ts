@@ -23,21 +23,23 @@ const printer_pbeta_raw = debug('pbeta_raw');
 
 export function pbeta_raw(x: number, a: number, b: number, lower_tail: boolean, log_p: boolean): number {
     // treat limit cases correctly here:
-    if (a === 0 || b === 0 || !isFinite(a) || !isFinite(b)) {
-        // NB:  0 < x < 1 :
-        if (a === 0 && b === 0)
-            // point mass 1/2 at each of {0,1} :
-            return log_p ? -Math.LN2 : 0.5;
-        if (a === 0 || a / b === 0)
-            // point mass 1 at 0 ==> P(X <= x) = 1, all x > 0
-            return R_DT_1(lower_tail, log_p);
-        if (b === 0 || b / a === 0)
-            // point mass 1 at 1 ==> P(X <= x) = 0, all x < 1
-            return R_DT_0(lower_tail, log_p);
-        // else, remaining case:  a = b = Inf : point mass 1 at 1/2
+    //if (a === 0 || b === 0 || !isFinite(a) || !isFinite(b)) {
+    // NB:  0 < x < 1 :
+    if (a === 0 && b === 0)
+        // point mass 1/2 at each of {0,1} :
+        return log_p ? -Math.LN2 : 0.5;
+    if (a === 0 || a / b === 0)
+        // point mass 1 at 0 ==> P(X <= x) = 1, all x > 0
+        return R_DT_1(lower_tail, log_p);
+    if (b === 0 || b / a === 0)
+        // point mass 1 at 1 ==> P(X <= x) = 0, all x < 1
+        return R_DT_0(lower_tail, log_p);
+    // else, remaining case:  a = b = Inf : point mass 1 at 1/2
+    if (!isFinite(a) || !isFinite(b)) {
         if (x < 0.5) return R_DT_0(lower_tail, log_p);
         else return R_DT_1(lower_tail, log_p);
     }
+    //}
     // Now:  0 < a < Inf;  0 < b < Inf
     const x1 = 0.5 - x + 0.5;
     const w: NumberW = new NumberW(0);

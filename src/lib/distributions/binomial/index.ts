@@ -20,15 +20,15 @@ export { pbinom } from './pbinom';
 export { qbinom } from './qbinom';
 import { rbinomOne } from './rbinom';
 import { globalUni } from '@rng/globalRNG';
-import { repeatedCall } from '$helper';
+import { repeatedCall64 } from '$helper';
 
 export function rbinom(
   n: number,
   size: number,
   pp: number,
   rng = globalUni()
-): Float32Array {
-  return repeatedCall(n, rbinomOne, size, pp, rng);
+): Float64Array {
+  return repeatedCall64(n, rbinomOne, size, pp, rng);
 }
 
 export { rbinomOne };

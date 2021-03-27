@@ -82,7 +82,6 @@ describe('qbinom', function () {
     });
     it('p=(1-EPSILON/2), size=50 , prob=0.3', () => {
         const z0 = qbinom(1-Number.EPSILON/2, 50, 0.3);
-        console.log(z0);
         expect(z0).toBe(50);
     });
     it('p=0.99, size=50 , prob=0.99', () => {
@@ -93,4 +92,12 @@ describe('qbinom', function () {
         const z0 = qbinom(0.9999999, 1e6, 0.99);
         expect(z0).toBe(990513);
     });
+    it('p=0.72, size=2147483647 , prob=0.80', () => {
+        const z0 = qbinom(0.72, 2147483647, 0.80);
+        expect(z0).toBe(1717997721);
+    });
+    it('p = 0.3, size=NaN, prob=NaN', () => {
+        const actual = qbinom(0.3, NaN, NaN);
+        expect(actual).toBeNaN();
+   });
 });
