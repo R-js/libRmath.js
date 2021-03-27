@@ -15,9 +15,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+import type { IRNG } from '@rng/irng';
 
-
-export function exp_rand(unif_rand: () => number): number {
+export function exp_rand(rng: IRNG): number {
 
   const q: number[] = [
     0.6931471805599453,
@@ -39,8 +39,8 @@ export function exp_rand(unif_rand: () => number): number {
   ];
 
   let a = 0.;
-  let u = unif_rand();    // precaution if u = 0 is ever returned
-  while (u <= 0. || u >= 1.) u = unif_rand();
+  let u = rng.random();    // precaution if u = 0 is ever returned
+  while (u <= 0. || u >= 1.) u =  rng.random();
   while (true) {
     u += u;
     if (u > 1.)
@@ -53,10 +53,10 @@ export function exp_rand(unif_rand: () => number): number {
     return a + u;
 
   let i = 0;
-  let ustar = unif_rand();
+  let ustar =  rng.random();
   let umin = ustar;
   do {
-    ustar = unif_rand();
+    ustar =  rng.random();
     if (umin > ustar)
       umin = ustar;
     i++;

@@ -10,7 +10,7 @@ Globals
 
 # beforeAll(fn, timeout)
 
-Jest has some freaky shit when it comes to excution of fucntions
+Jest has some freaky shit when it comes to excution of functions
 
 function exampleYield(cb) {
     // do some stuff

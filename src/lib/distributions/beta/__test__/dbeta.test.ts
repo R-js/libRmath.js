@@ -8,7 +8,7 @@ import { loadData } from '$test-helpers/load';
 jest.mock('@common/logger');
 
 import { ML_ERR_return_NAN } from '@common/logger';
-const ML_ERR_return_NANMocked = <jest.Mock<number, [debug.Debugger]>>(ML_ERR_return_NAN);
+const ML_ERR_return_NANMocked = <jest.Mock<number, [debug.IDebugger]>>(ML_ERR_return_NAN);
 //const ML_ERRORMocked = <jest.Mock<typeof ML_ERROR>>(ML_ERROR as unknown);
 //app
 import { dbeta } from '..';

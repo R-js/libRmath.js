@@ -81,5 +81,4 @@ describe('pbeta, ncp = 0', function () {
         const actual = x.map(_x => pbeta(_x, 1, 1, undefined, false, true));
         expect(actual).toEqualFloatingPointBinary(y, 43);
     });
-
 });

@@ -127,6 +127,29 @@ describe('rbeta', function () {
             2.3202929870389292e-04,
             2.6784435398568788e-02])
     });
+    it('n=12, scp1=2,scp2=5, ncp=4', () => {
+        const uni = globalUni();
+        const no = globalNorm();
+        uni.init(12345);
+        expect(uni.kind).toBe('MERSENNE_TWISTER');
+        expect(no.kind).toBe('INVERSION');
+        const actual = rbeta(12, 2, 5, 4);
+        expect(actual).toEqualFloatingPointBinary([
+            0.588099435516149627,
+            0.606215223801127245,
+            0.301138033143182826,
+            0.164688655960936736,
+            0.424809413668907343,
+            0.048744713047327734,
+            0.436441221070007712,
+            0.626410267291842904,
+            0.083090139689396048,
+            0.418669670150109474,
+            0.504225708172377995,
+            0.549149971710310880
+        ],
+        22)
+    });
     /*
     it('x=0.5, shape1=Infinite,shape2=3, ncp=3', () => {
         const dest: unknown[] = [];

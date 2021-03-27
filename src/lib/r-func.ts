@@ -1,4 +1,4 @@
-import { emptyFloat32Array } from "$constants";
+import { emptyFloat32Array, emptyFloat64Array } from "$constants";
 
 /* This is a conversion from libRmath.so to Typescript/Javascript
 Copyright (C) 2018  Jacob K.F. Bogers  info@mail.jacob-bogers.com
@@ -142,6 +142,22 @@ export function repeatedCall(n: number, fn: (...arg: any[]) => number, ...arg: u
     }
     for (let i = 0; i < result.length; i++) {
         result[i] = fn(...arg);
+    }
+    return result;
+}
+
+export function repeatedCall64<F extends (...args:any[]) => number>(n: number, fn: F, ...args: Parameters<F>): Float64Array {
+    let result: Float64Array;
+
+    if (n === 0) {
+        result = emptyFloat64Array;
+    } else if (n > 0) {
+        result = new Float64Array(n);
+    } else {
+        throw new TypeError(`"n" argument is not a number or negative`);
+    }
+    for (let i = 0; i < result.length; i++) {
+        result[i] = fn(...args);
     }
     return result;
 }

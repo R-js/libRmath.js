@@ -220,10 +220,10 @@ function qbeta_raw(
         if (p === 0 && q === 0) {
             // point mass 1/2 at each of {0,1} :
             if (alpha < R_D_half(log_p)) {
-                return_q_0(give_log_q, qb);
+                return return_q_0(give_log_q, qb);
             }
             if (alpha > R_D_half(log_p)) {
-                return_q_1(give_log_q, qb);
+                return return_q_1(give_log_q, qb);
             }
             // else:  alpha === "1/2"
             return return_q_half(give_log_q, qb);

@@ -53,36 +53,63 @@ describe('qbeta', function () {
         /* load data from fixture */
         const [x, y] = await loadData(resolve(__dirname, 'fixture-generation', 'qbeta.log.R'), /\s+/, 1, 2);
         const actual = x.map(_x => qbeta(_x, 2, 2, undefined, true, true));
-        expect(actual).toEqualFloatingPointBinary(y,9);
+        expect(actual).toEqualFloatingPointBinary(y, 9);
     });
     it('shape1 x ∊ [0, 10], x=0.5, shape2=2', async () => {
         const dest: unknown[] = [];
         cl.setDestination(dest);
         /* load data from fixture */
         const [shape1, shape2, y] = await loadData(resolve(__dirname, 'fixture-generation', 'qbeta3.R'), /\s+/, 1, 2, 3);
-        const actual = shape1.map((s1,i) => qbeta(0.5, s1, shape2[i]));
-        expect(actual).toEqualFloatingPointBinary(y,9);
+        const actual = shape1.map((s1, i) => qbeta(0.5, s1, shape2[i]));
+        expect(actual).toEqualFloatingPointBinary(y, 9);
     });
-    /*it('x = 0.5, shape1=NaN, shape2=2, ncp=3', () => {
-        const nan = qbeta(0.5, NaN, 2, 3);
-        expect(nan).toBe(NaN);
+    it('shape1=NaN, q=0.2, shape2=4, ncp=undefined', () => {
+        const nan = qbeta(0.2, NaN, 4);
+        expect(nan).toEqualFloatingPointBinary(NaN);
     });
-    it('x=0.5, shape1=Infinite,shape2=3, ncp=3',()=>{
+    it('shape1=-1, q=0.2, shape2=4, ncp=undefined', () => {
         const dest: unknown[] = [];
         cl.setDestination(dest);
-        const nan = qbeta(0.5, Infinity, 2, 3);
-        expect(nan).toBeNaN();
+        const nan = qbeta(0.2, -3, 4);
+        expect(nan).toEqualFloatingPointBinary(NaN);
         expect(dest.length).toBe(1);
     });
-    it('x=0.5, shape1=-2,shape2=3, ncp=3',()=>{
-        const dest: unknown[] = [];
-        cl.setDestination(dest);
-        const nan = qbeta(0.5, -2, 2, 3);
-        expect(nan).toBeNaN();
-        expect(dest.length).toBe(1);
+    it('shape1=3, q=0.2, shape2=4, ncp=undefined, log.p=TRUE', () => {
+        const nan = qbeta(0.2, 3, 4, undefined, false, true);
+        expect(nan).toEqualFloatingPointBinary(NaN);
     });
-    it('x=1-EPSILON/2, shape1=-2, shape2=2, ncp=4',()=>{
-        const z = qbeta(1-Number.EPSILON/2,2,2,4,true);
+    it('shape1=3, q=-40.2, shape2=4, ncp=undefined, log.p=false', () => {
+        const nan = qbeta(-40.2, 3, 4, undefined, false, false);
+        expect(nan).toBeNaN();
+    });
+    it('shape1=0, q=-40.2, shape2=0, ncp=undefined, lower=false, log.p=false', () => {
+        const z0 = qbeta(0.2, 0, 0, undefined, false, false);
+        expect(z0).toBe(0);
+    });
+    it('shape1=0, q=0.2, shape2=0, ncp=undefined, lowertail=true, log.p=true', () => {
+        const nan = qbeta(0.2, 0, 0, undefined, true, true);
+        expect(nan).toBeNaN();
+    });
+    it('shape1=0, q=0.4, shape2=0, ncp=undefined, lowertail=true, log.p=false', () => {
+        const z = qbeta(0.6, 0, 0, undefined, true, false);
         expect(z).toBe(1);
-    })*/
+    })
+    it('shape1=0, q=0.4, shape2=0, ncp=undefined, lowertail=true, log.p=false', () => {
+        const z = qbeta(0.5, 0, 0, undefined, true, false);
+        expect(z).toBe(0.5);
+    });
+    it('shape1=3, q=0.6, shape2=Infinity, ncp=undefined, lowertail=true, log.p=false', () => {
+        const z = qbeta(0.6, 3, Infinity, undefined, true, false);
+        expect(z).toBe(0);
+    });
+    it('shape1=Infinity, q=0.6, shape2=8, ncp=undefined, lowertail=true, log.p=false', () => {
+        const z = qbeta(0.6, Infinity, 8, undefined, true, false);
+        expect(z).toBe(1);
+    });
+    it('shape1=Infinity, q=0.6, shape2=Infinity, ncp=undefined, lowertail=true, log.p=false', () => {
+        const z = qbeta(0.6, Infinity, Infinity, undefined, true, false);
+        expect(z).toBe(0.5);
+    });
+
+
 });

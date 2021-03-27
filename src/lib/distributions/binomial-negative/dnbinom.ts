@@ -22,7 +22,14 @@ import { dbinom_raw } from '@dist/binomial/dbinom';
 import { lgammafn_sign } from '@special/gamma/lgammafn_sign';
 
 const printer = debug('dnbinom');
-
+/**
+ * 
+ * @param {number} x - The number of failures after of "size" successes. When number of failures is reached stop 
+ * @param {number} size - number of success while accumulating all the failures 
+ * @param prob - probability of success
+ * @param give_log - x given as log
+ * @returns {number} - returns probability
+ */
 export function dnbinom(x: number, size: number, prob: number, give_log: boolean): number {
 
     if (isNaN(x) || isNaN(size) || isNaN(prob)) {
@@ -38,7 +45,7 @@ export function dnbinom(x: number, size: number, prob: number, give_log: boolean
         return rc;
     }
 
-    if (x < 0 || !isFinite(x)) {
+    if (x < 0 /*|| !isFinite(x)*/) {
         return R_D__0(give_log);
     }
     /* limiting case as size approaches zero is point mass at zero */

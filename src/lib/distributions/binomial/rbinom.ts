@@ -15,7 +15,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { debug } from 'debug';
-import { ML_ERR_return_NAN  } from '@common/logger';
+import { ML_ERR_return_NAN } from '@common/logger';
 import { R_pow_di } from '$constants';
 
 import type { IRNG } from '@rng/irng';
@@ -40,7 +40,7 @@ export function rbinomOne(nin: number, pp: number, rng: IRNG): number {
     let psave = -1.0;
 
     //int
-    let nsave = -1;
+    //let nsave = -1;
     let m = 0;
 
     //double
@@ -67,7 +67,7 @@ export function rbinomOne(nin: number, pp: number, rng: IRNG): number {
     let i;
     let ix = 0;
     let k;
-   
+
 
     if (!isFinite(nin)) return ML_ERR_return_NAN(printer_rbinom);
     r = Math.round(nin);
@@ -84,17 +84,19 @@ export function rbinomOne(nin: number, pp: number, rng: IRNG): number {
     if (r === 0 || pp === 0) return 0;
     if (pp === 1) return r;
 
-    if (r >= Number.MAX_SAFE_INTEGER) {
+    if (r >= 2147483647 /*INT_MAX*/) {
         /* evade integer overflow,
             and r == INT_MAX gave only even values */
+        const _p = rng.random(); //between 0 and 1
         printer_rbinom('Evade overflow:%d > MAX_SAFE_INTEGER', r);
-        return qbinom(
-            rng.random(), //between 0 and 1
+        const retv = qbinom(
+            _p,
             r,
             pp,
             /*lower_tail*/ false,
             /*log_p*/ false,
         );
+        return retv;
     }
     /* else */
     const n = Math.trunc(r);
@@ -110,48 +112,79 @@ export function rbinomOne(nin: number, pp: number, rng: IRNG): number {
     /* FIXING: Want this thread safe
        -- use as little (thread globals) as possible
     */
-    let gotoL_np_small = false;
-    if (pp !== psave || n !== nsave) {
-        psave = pp;
-        nsave = n;
-        if (np < 30.0) {
-            /* inverse cdf logic for mean less than 30 */
-            qn = R_pow_di(q, n);
-            gotoL_np_small = true;
-            //goto L_np_small;
-        } else {
-            ffm = np + p;
-            m = Math.trunc(ffm);
-            fm = m;
-            npq = np * q;
-            p1 = Math.trunc(2.195 * Math.sqrt(npq) - 4.6 * q) + 0.5;
-            xm = fm + 0.5;
-            xl = xm - p1;
-            xr = xm + p1;
-            c = 0.134 + 20.5 / (15.3 + fm);
-            al = (ffm - xl) / (ffm - xl * p);
-            xll = al * (1.0 + 0.5 * al);
-            al = (xr - ffm) / (xr * q);
-            xlr = al * (1.0 + 0.5 * al);
-            p2 = p1 * (1.0 + c + c);
-            p3 = p2 + c / xll;
-            p4 = p3 + c / xlr;
+    const finis = () => {
+        if (psave > 0.5) {
+            ix = n - ix;
         }
-    } else if (n === nsave) {
-        if (np < 30.0) gotoL_np_small = true;
-        //goto L_np_small;
+        return ix;
     }
+    const L_np_small = () => {
+        //L_np_small:
+        /*---------------------- np = n*p < 30 : ------------------------- */
+        while (true) {
+            ix = 0;
+            f = qn;
+            u = rng.random();
+            while (true) {
+                if (u < f) {
+                    //goto finis;
+                    return;
+                }
+                if (ix > 110) break;
+                u -= f;
+                ix++;
+                f *= g / ix - r;
+            }
+        }
+    };
+
+
+
+    //if (pp !== psave || n !== nsave) {
+    psave = pp;
+    //nsave = Math.trunc(n);
+    if (np < 30.0) {
+        /* inverse cdf logic for mean less than 30 */
+        qn = R_pow_di(q, n);
+        L_np_small();
+        return finis();
+        //goto L_np_small;
+    } else {
+        ffm = np + p;
+        m = Math.trunc(ffm);
+        fm = m;
+        npq = np * q;
+        p1 = Math.trunc(2.195 * Math.sqrt(npq) - 4.6 * q) + 0.5;
+        xm = fm + 0.5;
+        xl = xm - p1;
+        xr = xm + p1;
+        c = 0.134 + 20.5 / (15.3 + fm);
+        al = (ffm - xl) / (ffm - xl * p);
+        xll = al * (1.0 + 0.5 * al);
+        al = (xr - ffm) / (xr * q);
+        xlr = al * (1.0 + 0.5 * al);
+        p2 = p1 * (1.0 + c + c);
+        p3 = p2 + c / xll;
+        p4 = p3 + c / xlr;
+    }
+    //}
+    /*else if (n === nsave) {
+       if (np < 30.0) {
+           //goto L_np_small;
+           L_np_small();
+           return finis();
+
+       }
+   }*/
 
     /*-------------------------- np = n*p >= 30 : ------------------- */
-    let gotoFinis = false;
-    while (true && !gotoL_np_small) {
+    while (true) {
         u = rng.random() * p4;
         v = rng.random();
         /* triangular region */
         if (u <= p1) {
             ix = Math.trunc(xm - p1 * v + u);
-            gotoFinis = true;
-            break;
+            return finis();
             //goto finis;
         }
         /* parallelogram region */
@@ -184,8 +217,7 @@ export function rbinomOne(nin: number, pp: number, rng: IRNG): number {
                 for (i = ix + 1; i <= m; i++) f /= g / i - r;
             }
             if (v <= f) {
-                gotoFinis = true;
-                break;
+                return finis()
                 //goto finis;
             }
         } else {
@@ -194,8 +226,7 @@ export function rbinomOne(nin: number, pp: number, rng: IRNG): number {
             ynorm = (-k * k) / (2.0 * npq);
             alv = Math.log(v);
             if (alv < ynorm - amaxp) {
-                gotoFinis = true;
-                break;
+                return finis();
                 //goto finis;
             }
             if (alv <= ynorm + amaxp) {
@@ -212,46 +243,21 @@ export function rbinomOne(nin: number, pp: number, rng: IRNG): number {
                 if (
                     alv <=
                     xm * Math.log(f1 / x1) +
-                        (n - m + 0.5) * Math.log(z / w) +
-                        (ix - m) * Math.log((w * p) / (x1 * q)) +
-                        (13860.0 - (462.0 - (132.0 - (99.0 - 140.0 / f2) / f2) / f2) / f2) / f1 / 166320.0 +
-                        (13860.0 - (462.0 - (132.0 - (99.0 - 140.0 / z2) / z2) / z2) / z2) / z / 166320.0 +
-                        (13860.0 - (462.0 - (132.0 - (99.0 - 140.0 / x2) / x2) / x2) / x2) / x1 / 166320.0 +
-                        (13860.0 - (462.0 - (132.0 - (99.0 - 140.0 / w2) / w2) / w2) / w2) / w / 166320
+                    (n - m + 0.5) * Math.log(z / w) +
+                    (ix - m) * Math.log((w * p) / (x1 * q)) +
+                    (13860.0 - (462.0 - (132.0 - (99.0 - 140.0 / f2) / f2) / f2) / f2) / f1 / 166320.0 +
+                    (13860.0 - (462.0 - (132.0 - (99.0 - 140.0 / z2) / z2) / z2) / z2) / z / 166320.0 +
+                    (13860.0 - (462.0 - (132.0 - (99.0 - 140.0 / x2) / x2) / x2) / x2) / x1 / 166320.0 +
+                    (13860.0 - (462.0 - (132.0 - (99.0 - 140.0 / w2) / w2) / w2) / w2) / w / 166320
                 ) {
-                    gotoFinis = true; // finis;
-                    break;
+                    return finis(); // goto finis
                 }
             }
         }
     }
-    if (!gotoFinis) {
-        //L_np_small:
-        /*---------------------- np = n*p < 30 : ------------------------- */
+    // unreachable code
+    // throw new Error(`internal error unreachable code`)
+    //L_np_small();
+    //return finis();
 
-        while (true) {
-            ix = 0;
-            f = qn;
-            u = rng.random();
-            while (true) {
-                if (u < f) {
-                    //goto finis;
-                    gotoFinis = true;
-                    break;
-                }
-                if (ix > 110) break;
-                u -= f;
-                ix++;
-                f *= g / ix - r;
-            }
-            if (gotoFinis) {
-                break;
-            }
-        }
-    }
-    //finis:
-    if (psave > 0.5) {
-        ix = n - ix;
-    }
-    return ix;
 }
