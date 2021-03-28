@@ -36,6 +36,10 @@ import { prob2mu } from './test-helpers';
 
 
 describe('pnbinom', function () {
+    describe('invalid input', () => {
+        expect(() => pnbinom(1, 10, undefined, undefined)).toThrowError('argument "prob" is missing, with no default');
+        expect(() => pnbinom(1, 10, 5, 6)).toThrowError('"prob" and "mu" both specified');
+    });
     describe('using prob, not "mu" parameter', () => {
         beforeEach(() => {
             out.splice(0);//clear out

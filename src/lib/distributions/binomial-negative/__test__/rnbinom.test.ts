@@ -1,9 +1,12 @@
 //helper
 import '$jest-extension';
+import { BoxMuller } from '@rng/normal/box-muller';
+import { globalUni } from '@rng/globalRNG';
+import { SuperDuper } from '@rng/super-duper';
 //import { loadData } from '$test-helpers/load';
 //import { resolve } from 'path';
 
-import { qnbinom } from '..';
+import { rnbinom } from '..';
 
 
 jest.mock('@common/logger', () => {
@@ -32,85 +35,71 @@ jest.mock('@common/logger', () => {
 const cl = require('@common/logger');
 const out = cl.getDestination();
 
-import { mu2Prob } from './test-helpers';
-
 
 describe('rnbinom', function () {
+    describe('invalid input', () => {
+        expect(() => rnbinom(1, 10, undefined, undefined)).toThrowError('argument "prob" is missing, with no default');
+        expect(() => rnbinom(1, 10, 5, 6)).toThrowError('"prob" and "mu" both specified');
+    });
     describe('using prob, not "mu" parameter', () => {
         beforeEach(() => {
             out.splice(0);//clear out
+            globalUni().init(97865);
         });
-        it('p=NaN, prob=0.5, size=10', () => {
-            const nan = qnbinom(NaN, 10, 0.5);
-            expect(nan).toBeNaN();
+        it('n=10, size=4, prob=0.5', () => {
+            const r = rnbinom(10, 4, 0.5);
+            expect(r).toEqualFloatingPointBinary([4, 8, 3, 5, 4, 3, 6, 4, 2, 5]);
         });
-        it('p=1, prob=NaN, size=10', () => {
-            const nan = qnbinom(1, 10, NaN);
-            expect(nan).toBeNaN();
+        it('n=10, size=400E+3, prob=0.5', () => {
+            const r = rnbinom(10, 400E3, 0.5);
+            expect(r).toEqualFloatingPointBinary([
+                400308,
+                401016,
+                399030,
+                399988,
+                399968,
+                400430,
+                401002,
+                399588,
+                398948,
+                399601
+            ]);
         });
-        it('p=1, prob=0.5, size=NaN', () => {
-            const nan = qnbinom(1, NaN, 0.5);
-            expect(nan).toBeNaN();
+        it('n=1, size=Infinity, prob=0.5', () => {
+            const nan = rnbinom(10, Infinity, 0.5);
+            expect(nan).toEqualFloatingPointBinary(NaN);
         });
-        it('p=1, prob=0, size=0', () => {
-            const z = qnbinom(1, 0, 0);
-            expect(z).toBe(0);
+        it('n=1, size=1, prob=1', () => {
+            const z = rnbinom(2, 1, 1);
+            expect(z).toEqualFloatingPointBinary(0);
         });
-        it('p=0.5, prob=-1(<0), size=0', () => {
-            const nan = qnbinom(0.5, 4, -1);
-            expect(nan).toBeNaN();
-            expect(out.length).toBe(1);
-        });
-        it('p=1, prob=0.3, size=-4', () => {
-            const nan = qnbinom(1, -4, 0.3);
-            expect(nan).toBeNaN();
-            expect(out.length).toBe(1);
-        });
-        it('p=1, prob=1, size=4', () => {
-            const z = qnbinom(1, 4, 1);
-            expect(z).toBe(0);
-        });
-        it('p=1, prob=0.5, size=0', () => {
-            const z = qnbinom(1, 0, 0.5);
-            expect(z).toBe(0);
-        });
-        it('p=1, prob=0.3, size=5', () => {
-            const inf = qnbinom(1, 5, 0.3);
-            expect(inf).toBe(Infinity);
-        });
-        it('p=0.8, prob=0.3, size=5', () => {
-            const z = qnbinom(0.8, 5, 0.3);
-            expect(z).toBe(16);
-        });
-        it('p=0.8, prob=0.3, size=5, lower=false', () => {
-            const z = qnbinom(0.8, 5, 0.3, undefined, false);
-            expect(z).toBe(6);
-        });
-        it('p=log(1), prob=0.3, size=5, lower=true, log.p=true', () => {
-            const z = qnbinom(0 ,5,0.3, undefined, true, true);
-            expect(z).toBe(Infinity);
-        });
-        it('p=log(1), prob=0.3, size=5, lower=false, log.p=true', () => {
-            const z = qnbinom(0 ,5,0.3, undefined, false, true);
-            expect(z).toBe(0);
-        });
-        it('p=1-epsilon/2, prob=0.3, size=5', () => {
-            const z = qnbinom(1-Number.EPSILON/2 ,5,0.3);
-            expect(z).toBe(Infinity);
-        });
-        it('p=0.8, prob=0.0003, size=50', () => {
-            const z = qnbinom(0.8 ,50,0.0003);
-            expect(z).toBe(186128);
+        it('n=1, size=1, prob=1', () => {
+            const un = new SuperDuper(1234);
+            const bm = new BoxMuller(un);
+            const z = rnbinom(10, 8, 0.2, undefined, bm);
+            expect(z).toEqualFloatingPointBinary([
+                21, 39, 44, 20, 26, 42, 59, 23, 22, 35
+            ]);
         });
     });
     describe('using mu, not "prob" parameter', () => {
         beforeEach(() => {
             out.splice(0);//clear out
         });
-        it('p=0.8, size=500, mu=600, (prob=lower=true, log.p=true', () => {
-            console.log(mu2Prob(500,600));
-            const z = qnbinom(0.8,500,undefined, 600);
-            expect(z).toBe(630);
+        it('n=10, size=8, mu=12 (prob=0.6)', () => {
+            const un = new SuperDuper(1234);
+            const bm = new BoxMuller(un);
+            const z = rnbinom(10, 8, undefined, 12, bm);
+            expect(z).toEqualFloatingPointBinary([10, 10, 17, 6, 9, 14, 10, 12, 3, 5]);
+        });
+        it('n=1, size=8, mu=NaN', () => {
+            const nan = rnbinom(1, 8, undefined, NaN);
+            expect(nan).toEqualFloatingPointBinary(NaN);
+            expect(out.length).toBe(1);
+        });
+        it('n=1, size=8, mu=0', () => {
+            const z = rnbinom(1, 8, undefined, 0);
+            expect(z).toEqualFloatingPointBinary(0);
         });
     });
 });
