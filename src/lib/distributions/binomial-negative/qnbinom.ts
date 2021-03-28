@@ -106,8 +106,11 @@ export function qnbinom(p: number, size: number, prob: number, lower_tail: boole
      * FIXME: This is far from optimal [cancellation for p ~= 1, etc]: */
     if (!lower_tail || log_p) {
         p = R_DT_qIv(lower_tail, log_p, p); /* need check again (cancellation!): */
-        if (p === R_DT_0(lower_tail, log_p)) return 0;
-        if (p === R_DT_1(lower_tail, log_p)) return Infinity;
+        // code below will not execute because of "R_Q_P01_boundaries" check above
+        const rdt0 = R_DT_0(lower_tail, log_p);
+        const rdt1 = R_DT_1(lower_tail, log_p);
+        if (p === rdt0) return 0;
+        if (p === rdt1) return Infinity;
     }
     /* temporary hack --- FIXME --- */
     if (p + 1.01 * Number.EPSILON >= 1) return Infinity;

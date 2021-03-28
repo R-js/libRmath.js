@@ -48,8 +48,12 @@ module.exports = {
         // negative-binom
         // ok
         //'/distributions/binomial-negative/__test__/dnbinom.test.ts$',
-        '/distributions/binomial-negative/__test__/pnbinom.test.ts$',
-     
+        // ok
+        //'/distributions/binomial-negative/__test__/pnbinom.test.ts$',
+        // ok
+        //'/distributions/binomial-negative/__test__/qnbinom.test.ts$',
+        '/distributions/binomial-negative/__test__/rnbinom.test.ts$',
+
         /*'/special/bessel/besselJ/__test__/(.*?\\.)?test.ts$',
         '/special/gamma/__test__/(.*?\\.)?test.ts$',
         '/special/beta/__test__/(.*?\\.)?test.ts$',
