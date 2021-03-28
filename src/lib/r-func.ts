@@ -130,7 +130,7 @@ export function Welch_Satterthwaite(s: number[], n: number[]): number {
     return Math.pow(sum(elts), 2) / sum(dom);
 }
 
-export function repeatedCall(n: number, fn: (...arg: any[]) => number, ...arg: unknown[]): Float32Array {
+export function repeatedCall<F extends (...args:any[]) => number>(n: number, fn: F, ...arg: Parameters<F>): Float32Array {
     let result: Float32Array;
 
     if (n === 0) {

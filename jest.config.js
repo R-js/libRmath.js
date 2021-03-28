@@ -3,9 +3,9 @@ module.exports = {
     automock: false,
     collectCoverage: true,
     collectCoverageFrom: [
-        //'src/lib/distributions/beta/*.ts',
-        //'src/lib/distributions/binomial/*.ts',
-        //'src/lib/distributions/binomial-negative/*.ts',
+        'src/lib/distributions/beta/*.ts',
+        'src/lib/distributions/binomial/*.ts',
+        'src/lib/distributions/binomial-negative/*.ts',
         'src/lib/distributions/cauchy/*.ts',
     ],
     coveragePathIgnorePatterns: ['node_modules', 'test', 'doc.ts'],
@@ -19,7 +19,7 @@ module.exports = {
     testPathIgnorePatterns: ['/es6/', '/commonjs/'],
     //testMatch: ['**/__tests__/**/*.[t]s?(x)', '**/?(*.)+(spec|test).[t]s?(x)'],
     testRegex: [
-       /* // beta
+        // beta
         // ok
          '/distributions/beta/__test__/dbeta.test.ts$',
         // ok 
@@ -46,7 +46,7 @@ module.exports = {
         // ok 
         '/distributions/binomial/__test__/rbinom.test.ts$',
          
-        // negative-binom
+        // binom-negative
         // ok
         '/distributions/binomial-negative/__test__/dnbinom.test.ts$',
         // ok
@@ -55,13 +55,16 @@ module.exports = {
         '/distributions/binomial-negative/__test__/qnbinom.test.ts$',
         //ok
         '/distributions/binomial-negative/__test__/rnbinom.test.ts$',
-*/
+
         // cauchy
         // ok
-        //'/distributions/cauchy/__test__/dcauchy.test.ts$',
+        '/distributions/cauchy/__test__/dcauchy.test.ts$',
         // ok
-        //'/distributions/cauchy/__test__/pcauchy.test.ts$',
+        '/distributions/cauchy/__test__/pcauchy.test.ts$',
+        // ok
         '/distributions/cauchy/__test__/qcauchy.test.ts$',
+        //ok
+        '/distributions/cauchy/__test__/rcauchy.test.ts$',
 
         /*'/special/bessel/besselJ/__test__/(.*?\\.)?test.ts$',
         '/special/gamma/__test__/(.*?\\.)?test.ts$',

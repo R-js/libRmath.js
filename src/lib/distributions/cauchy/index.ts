@@ -20,11 +20,9 @@ export { qcauchy } from './qcauchy';
 import { rcauchyOne } from './rcauchy';
 
 import { repeatedCall } from '$helper';
-import type { IRNGNormal } from '@rng/normal/normal-rng';
-import { globalNorm } from '@rng/globalRNG';
+import { globalUni } from '@rng/globalRNG';
 
 
-export function rcauchy(n: number, location = 0, scale = 1, rng: IRNGNormal = globalNorm()): Float32Array {
-    const _rng = rng || globalNorm();
-    return repeatedCall(n, rcauchyOne, location, scale, _rng);
+export function rcauchy(n: number, location = 0, scale = 1, rng = globalUni()): Float32Array {
+    return repeatedCall(n, rcauchyOne, location, scale, rng);
 }
