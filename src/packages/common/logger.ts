@@ -67,7 +67,10 @@ export function R_Q_P01_boundaries(
 }
 
 export function R_Q_P01_check(logP: boolean, p: number): number | undefined {
-    if ((logP && p > 0) || (!logP && (p < 0 || p > 1))) {
+    if (
+        (logP && p > 0) 
+        || 
+        (!logP && (p < 0 || p > 1))) {
         return ML_ERR_return_NAN(debug_R_Q_P01_check);
     }
     return undefined;
