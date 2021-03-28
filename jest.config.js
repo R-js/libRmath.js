@@ -3,9 +3,10 @@ module.exports = {
     automock: false,
     collectCoverage: true,
     collectCoverageFrom: [
-        //'src/lib/distributions/beta/*.ts',
-        //'src/lib/distributions/binomial/*.ts',
+        'src/lib/distributions/beta/*.ts',
+        'src/lib/distributions/binomial/*.ts',
         'src/lib/distributions/binomial-negative/*.ts',
+        'src/lib/distributions/cauchy/*.ts',
     ],
     coveragePathIgnorePatterns: ['node_modules', 'test', 'doc.ts'],
     coverageDirectory: 'coverage',
@@ -20,7 +21,7 @@ module.exports = {
     testRegex: [
         // beta
         // ok
-     /*    '/distributions/beta/__test__/dbeta.test.ts$',
+         '/distributions/beta/__test__/dbeta.test.ts$',
         // ok 
         '/distributions/beta/__test__/dnbeta.test.ts$',
         // ok 
@@ -44,12 +45,27 @@ module.exports = {
         '/distributions/binomial/__test__/qbinom.test.ts$',
         // ok 
         '/distributions/binomial/__test__/rbinom.test.ts$',
-     */    
-        // negative-binom
+         
+        // binom-negative
         // ok
-        //'/distributions/binomial-negative/__test__/dnbinom.test.ts$',
+        '/distributions/binomial-negative/__test__/dnbinom.test.ts$',
+        // ok
         '/distributions/binomial-negative/__test__/pnbinom.test.ts$',
-     
+        // ok
+        '/distributions/binomial-negative/__test__/qnbinom.test.ts$',
+        //ok
+        '/distributions/binomial-negative/__test__/rnbinom.test.ts$',
+
+        // cauchy
+        // ok
+        '/distributions/cauchy/__test__/dcauchy.test.ts$',
+        // ok
+        '/distributions/cauchy/__test__/pcauchy.test.ts$',
+        // ok
+        '/distributions/cauchy/__test__/qcauchy.test.ts$',
+        //ok
+        '/distributions/cauchy/__test__/rcauchy.test.ts$',
+
         /*'/special/bessel/besselJ/__test__/(.*?\\.)?test.ts$',
         '/special/gamma/__test__/(.*?\\.)?test.ts$',
         '/special/beta/__test__/(.*?\\.)?test.ts$',

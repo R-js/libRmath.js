@@ -21,11 +21,10 @@ import { ML_ERR_return_NAN } from '@common/logger';
 import { rgammaOne } from '@dist/gamma/rgamma';
 import { rpoisOne } from '@dist/poisson/rpois';
 import type { IRNGNormal } from '@rng/normal/normal-rng';
-import { globalNorm } from '@rng/globalRNG';
 
 const printer_rnbinom = debug('rnbinom');
 
-export function rnbinomOne(size: number, prob: number, rng: IRNGNormal = globalNorm()): number {
+export function rnbinomOne(size: number, prob: number, rng: IRNGNormal): number {
     if (!isFinite(size) || !isFinite(prob) || size <= 0 || prob <= 0 || prob > 1) {
         /* prob = 1 is ok, PR#1218 */
         return ML_ERR_return_NAN(printer_rnbinom);
@@ -35,7 +34,7 @@ export function rnbinomOne(size: number, prob: number, rng: IRNGNormal = globalN
 
 const printer_rnbinom_mu = debug('rnbinom_mu');
 
-export function rnbinom_muOne(size: number, mu: number, rng: IRNGNormal = globalNorm()): number {
+export function rnbinom_muOne(size: number, mu: number, rng: IRNGNormal): number {
     if (!isFinite(size) || !isFinite(mu) || size <= 0 || mu < 0) {
         return ML_ERR_return_NAN(printer_rnbinom_mu);
     }

@@ -67,7 +67,7 @@ const inputOptions = {
         }
         return false;
     },
-    plugins: [shims()],
+   plugins: [shims()],
 };
 
 const outputOptions = {
@@ -81,7 +81,7 @@ const outputOptions = {
     },
     extend: true,
     plugins:[
-        terser()
+       // terser()
     ]
 };
 

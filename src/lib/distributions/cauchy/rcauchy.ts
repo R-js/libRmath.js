@@ -18,17 +18,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import { debug } from 'debug';
 import { ML_ERR_return_NAN } from '@common/logger';
 
-const { isNaN: ISNAN, isFinite: R_FINITE } = Number;
-const { PI: M_PI } = Math;
 const printer = debug('rcauchy');
-import { globalNorm } from '@rng/globalRNG';
+import type { IRNG } from '@rng/irng';
 
-
-
-export function rcauchyOne(location = 0, scale = 1, rng = globalNorm()): number {
-    if (ISNAN(location) || !R_FINITE(scale) || scale < 0) {
+export function rcauchyOne(location: number, scale: number, rng: IRNG): number {
+    if (isNaN(location) || !isFinite(scale) || scale < 0) {
         return ML_ERR_return_NAN(printer);
     }
-    if (scale === 0 || !R_FINITE(location)) return location;
-    else return location + scale * Math.tan(M_PI * rng.random());
+    if (scale === 0 || !isFinite(location)) {
+        return location;
+    }
+    return location + scale * Math.tan(Math.PI * rng.random());
 }

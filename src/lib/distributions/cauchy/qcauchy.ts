@@ -36,7 +36,8 @@ export function qcauchy(p: number, location = 0, scale = 1, lowerTail = true, lo
         /* else */ return ML_ERR_return_NAN(printer);
     }
 
-    const my_INF = location + (lower_tail ? scale : -scale) * +Infinity;
+    //const my_INF = location + (lower_tail ? scale : -scale) * +Infinity;
+    const my_INF = lower_tail ? Infinity : -Infinity;
     if (logP) {
         if (p > -1) {
             /* when ep := exp(p),
@@ -44,12 +45,16 @@ export function qcauchy(p: number, location = 0, scale = 1, lowerTail = true, lo
              *		 = -tan(pi*(-Math.expm1(p))
              * for p ~ 0, exp(p) ~ 1, tan(~0) may be better than tan(~pi).
              */
-            if (p === 0)
+            if (p === 0) {
                 /* needed, since 1/tan(-0) = -Inf  for some arch. */
                 return my_INF;
+            }
             lower_tail = !lower_tail;
             p = -Math.expm1(p);
-        } else p = Math.exp(p);
+        } 
+        else {
+            p = Math.exp(p);
+        }
     } else {
         if (p > 0.5) {
             if (p === 1) return my_INF;
@@ -59,7 +64,8 @@ export function qcauchy(p: number, location = 0, scale = 1, lowerTail = true, lo
     }
 
     if (p === 0.5) return location; // avoid 1/Inf below
-    if (p === 0) return location + (lower_tail ? scale : -scale) * -Infinity; // p = 1. is handled above
+    //if (p === 0) return location + (lower_tail ? scale : -scale) * -Infinity; // p = 1. is handled above
+    if (p === 0) return lower_tail ? -Infinity : Infinity;
     return location + (lower_tail ? -scale : scale) / tanpi(p);
     /*	-1/tan(pi * p) = -cot(pi * p) = tan(pi * (p - 1/2))  */
 }
