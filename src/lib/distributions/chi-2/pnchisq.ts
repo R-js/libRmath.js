@@ -134,7 +134,10 @@ export function pnchisq_raw(
         // <==>  f/2 * log(x/2) - log(Gamma(f/2+1)) < log(eps) ( ~= -708.3964 )
         // <==>        log(x/2) < 2/f*(log(Gamma(f/2+1)) + log(eps))
         // <==> log(x) < log(2) + 2/f*(log(Gamma(f/2+1)) + log(eps))
-        if (lower_tail && f > 0 && Math.log(x) < Math.LN2 + (2 / f) * (lgammafn(f / 2 + 1) + _dbl_min_exp)) {
+        const p1 = lgammafn(f / 2 + 1);
+        const p2 =  Math.LN2 + (2 / f)*p1 + _dbl_min_exp;
+        const p3 = Math.log(x)
+        if (lower_tail && f > 0 && p3 < p2) {
             // all  pchisq(x, f+2*i, lower_tail, FALSE), i=0,...,110 would underflow to 0.
             // === = > work in log scale
             const lambda = 0.5 * theta;

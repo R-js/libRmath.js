@@ -1,40 +1,59 @@
 import '$jest-extension';
 import { loadData } from '$test-helpers/load';
 import { resolve } from 'path';
+import type { debug } from 'debug';
 
-jest.mock('@common/logger', () => {
+jest.mock('debug', () => {
     // Require the original module to not be mocked...
-    const originalModule = jest.requireActual('@common/logger');
-    const { ML_ERROR, ML_ERR_return_NAN } = originalModule;
-    let array: unknown[] = [];
-    function pr(...args: unknown[]): void {
-        array.push([...args]);
-    }
+    const originalModule = jest.requireActual('debug');
+    const createDebugger = originalModule.debug as typeof debug;
+    const map = new Map<string, string[][]>();
 
     return {
         __esModule: true, // Use it when dealing with esModules
-        ...originalModule,
-        ML_ERROR: jest.fn((x: unknown, s: unknown) => ML_ERROR(x, s, pr)),
-        ML_ERR_return_NAN: jest.fn(() => ML_ERR_return_NAN(pr)),
-        setDestination(arr: unknown[] = []) {
-            array = arr;
+        debug(ns: string) {
+            const lines: string[][] = [];
+            const printer = createDebugger(ns);
+            map.set(ns, lines);
+            return function (...args: string[]) {
+                lines.push(args);
+                const [fmt, ...rest] = args;
+                printer(fmt, ...rest);
+            };
         },
-        getDestination() {
-            return array;
+        get(ns: string) {
+            return map.get(ns);
+        },
+        clear(ns: string) {
+            const lines = map.get(ns);
+            if (lines) {
+                lines.splice(0);
+            }
         }
     };
 });
 
 //app
-const cl = require('@common/logger');
-const out = cl.getDestination();
+const cl = require('debug');
 
+function get() {
+    return cl.get('pnchisq');
+}
+
+function getNaNWarns(filter: string) {
+    const logs = get();
+    if (logs) {
+        const answ = logs.filter((s: string[]) => s[0] === filter);
+        return answ;
+    }
+    return [];
+}
 
 import { pchisq } from '..';
 
-describe('pncauchy', function () {
-    beforeEach(()=>{
-        out.splice(0);
+describe('pnchisq', function () {
+    beforeEach(() => {
+        cl.clear('pnchisq');
     })
     it('ranges x ∊ [0, 40, step 0.5] df=13, ncp=8', async () => {
         const [x, y] = await loadData(resolve(__dirname, 'fixture-generation', 'pnchisq.R'), /\s+/, 1, 2);
@@ -58,16 +77,51 @@ describe('pncauchy', function () {
     it('x=80 df=Infinity, ncp=8, log=true', () => {
         const nan = pchisq(80, Infinity, 8, undefined, true);
         expect(nan).toBeNaN();
-        expect(out.length).toBe(1);
+        expect(getNaNWarns("argument out of domain in '%s'")).toHaveLength(1);
     });
     it('x=80 df=-3(<0), ncp=8, log=true', () => {
         const nan = pchisq(80, -3, 8, undefined, true);
         expect(nan).toBeNaN();
-        expect(out.length).toBe(1);
+        expect(getNaNWarns("argument out of domain in '%s'")).toHaveLength(1);
     });
     it('ranges x ∊ [80, 100], df=13, ncp=85(>80) log=true', async () => {
         const [x, y] = await loadData(resolve(__dirname, 'fixture-generation', 'pnchisq4.R'), /\s+/, 1, 2);
         const actual = x.map(_x => pchisq(_x, 13, 85, true, true));
         expect(actual).toEqualFloatingPointBinary(y, 8);
+    });
+    it('(precison warning): x = 490, df=13, ncp=85, lower=false, log=false', () => {
+        const actual = pchisq(490, 13, 85, false, false);
+        expect(actual).toBeLessThan(1e-10);
+        expect(getNaNWarns("full precision may not have been achieved in '%s'")).toHaveLength(1);
+    });
+    it('(precison warning): x = 490, df=13, ncp=85, lower=false, log=true', () => {
+        const actual = pchisq(490, 13, 85, false, true);
+        const expected = -31.643050368870338;
+        expect(Math.abs(actual - expected)).toBeLessThan(0.02);
+        expect(getNaNWarns("full precision may not have been achieved in '%s'")).toHaveLength(1);
+    });
+    it('x = 200, df=13, ncp=85, lower=false, log=true', () => {
+        const actual = pchisq(200, 13, 85, false, true);
+        const expected = -12.131050756693373;
+        expect(actual).toEqualFloatingPointBinary(expected, 34);
+        expect(getNaNWarns("argument out of domain in '%s'")).toHaveLength(0);
+    });
+    it('x = 0, df=0, ncp=85, lower=false, log=false', () => {
+        const actual = pchisq(0, 0, 85, false, false);
+        expect(actual).toBe(1);
+    });
+    it('x = 0, df=0, ncp=85, lower=false, log=true', () => {
+        const actual = pchisq(0, 0, 85, false, true);
+        expect(actual).toEqualFloatingPointBinary(-3.4872615319944465e-19);
+    });
+    it('x = Inf, df=0, ncp=85, lower=false, log=true|false', () => {
+        const z = pchisq(Infinity, 0, 85, false, true);
+        expect(z).toBe(-Infinity);
+        const z1 = pchisq(Infinity, 0, 85, false, false);
+        expect(z1).toBe(0);
+    });
+    it('x = 45, df=5, ncp=75, lower=false, log=false', () => {
+        const z = pchisq(45, 5, 75, true, false);
+       console.log(z);
     });
 });

@@ -37,7 +37,7 @@ const out = cl.getDestination();
 import { dchisq } from '..';
 
 
-describe('dncauchy', function () {
+describe('dnchisq', function () {
     beforeEach(() => {
         out.splice(0);//clear out
     })
