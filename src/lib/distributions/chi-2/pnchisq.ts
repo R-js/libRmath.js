@@ -38,7 +38,7 @@ const _dbl_min_exp = Math.LN2 * DBL_MIN_EXP;
 
 const printer = debug('pnchisq');
 
-export function pnchisq(x: number, df: number, ncp = 0, lower_tail = true, log_p = false): number {
+export function pnchisq(x: number, df: number, ncp: number, lower_tail: boolean, log_p: boolean): number {
     let ans;
 
     if (isNaN(x) || isNaN(df) || isNaN(ncp)) {

@@ -64,6 +64,8 @@ export function dchisq(
   ncp?: number,
   log = false
 ): number {
-  return ncp === undefined ? _dchisq(x, df, log) : _dnchisq(x, df, ncp, log);
+  return ncp === undefined
+    ? _dchisq(x, df, log)
+    : _dnchisq(x, df, ncp, log);
 }
 
