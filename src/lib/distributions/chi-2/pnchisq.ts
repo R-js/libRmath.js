@@ -135,7 +135,7 @@ export function pnchisq_raw(
         // <==>        log(x/2) < 2/f*(log(Gamma(f/2+1)) + log(eps))
         // <==> log(x) < log(2) + 2/f*(log(Gamma(f/2+1)) + log(eps))
         const p1 = lgammafn(f / 2 + 1);
-        const p2 =  Math.LN2 + (2 / f)*p1 + _dbl_min_exp;
+        const p2 =  Math.LN2 + (2 / f)*(p1 + _dbl_min_exp);
         const p3 = Math.log(x)
         if (lower_tail && f > 0 && p3 < p2) {
             // all  pchisq(x, f+2*i, lower_tail, FALSE), i=0,...,110 would underflow to 0.

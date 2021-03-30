@@ -1,37 +1,7 @@
 import '$jest-extension';
 import { loadData } from '$test-helpers/load';
 import { resolve } from 'path';
-import type { debug } from 'debug';
-
-jest.mock('debug', () => {
-    // Require the original module to not be mocked...
-    const originalModule = jest.requireActual('debug');
-    const createDebugger = originalModule.debug as typeof debug;
-    const map = new Map<string, string[][]>();
-
-    return {
-        __esModule: true, // Use it when dealing with esModules
-        debug(ns: string) {
-            const lines: string[][] = [];
-            const printer = createDebugger(ns);
-            map.set(ns, lines);
-            return function (...args: string[]) {
-                lines.push(args);
-                const [fmt, ...rest] = args;
-                printer(fmt, ...rest);
-            };
-        },
-        get(ns: string) {
-            return map.get(ns);
-        },
-        clear(ns: string) {
-            const lines = map.get(ns);
-            if (lines) {
-                lines.splice(0);
-            }
-        }
-    };
-});
+import './helper';// for the side effects
 
 //app
 const cl = require('debug');
@@ -120,8 +90,16 @@ describe('pnchisq', function () {
         const z1 = pchisq(Infinity, 0, 85, false, false);
         expect(z1).toBe(0);
     });
-    it('x = 45, df=5, ncp=75, lower=false, log=false', () => {
-        const z = pchisq(45, 5, 75, true, false);
-       console.log(z);
+    it('x = 45, df=1000, ncp=75, lower=false, log=false|true', () => {
+        const z = pchisq(45, 1000, 75, true, false);
+        expect(z).toBe(0);
+        const z1 = pchisq(45, 1000, 75, true, true);
+        expect(z1).toEqualFloatingPointBinary(-1112.8456957296012);
+    });
+    it('x = 45, df=1000, ncp=2000, lower=false, log=false|true', () => {
+        const z = pchisq(45, 1000, 2000, true, false);
+        expect(z).toBe(0);
+        const z1 = pchisq(45, 1000, 2000, true, true);
+        expect(z1).toBe(-Infinity);
     });
 });

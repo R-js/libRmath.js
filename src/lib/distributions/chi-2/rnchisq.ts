@@ -31,7 +31,7 @@ export function rnchisqOne(df: number, lambda: number, rng: IRNGNormal = globalN
         return ML_ERR_return_NAN(printer);
     }
     if (lambda === 0) {
-        return df === 0 ? 0 : (rgammaOne(df / 2, 2, rng) as number);
+        return df === 0 ? 0 : rgammaOne(df / 2, 2, rng);
     } else {
         let r = rpoisOne(lambda / 2, rng);
         if (r > 0) r = rchisqOne(2 * r, rng);

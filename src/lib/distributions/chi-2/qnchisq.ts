@@ -26,14 +26,13 @@ import { pnchisq_raw } from './pnchisq';
 
 const printer = debug('_qnchisq');
 
-export function qnchisq(p: number, df: number, ncp: number, lower_tail = true, log_p = false): number {
-   
-    const accu = 1e-13;
-    const racc = 4 * Number.EPSILON;
-    /* these two are for the "search" loops, can have less accuracy: */
-    const Eps = 1e-11; /* must be > accu */
-    const rEps = 1e-10; /* relative tolerance ... */
+const accu = 1e-13;
+const racc = 4 * Number.EPSILON;
+/* these two are for the "search" loops, can have less accuracy: */
+const Eps = 1e-11; /* must be > accu */
+const rEps = 1e-10; /* relative tolerance ... */
 
+export function qnchisq(p: number, df: number, ncp: number, lower_tail: boolean, log_p: boolean): number {
     // double
     let ux: number;
     let lx: number;

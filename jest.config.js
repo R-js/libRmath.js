@@ -74,7 +74,12 @@ module.exports = {
         //'/distributions/chi-2/__test__/dnchisq.test.ts$',
         //ok
         //'/distributions/chi-2/__test__/pchisq.test.ts$',
-        '/distributions/chi-2/__test__/pnchisq.test.ts$',
+        //ok
+        //'/distributions/chi-2/__test__/pnchisq.test.ts$',
+        //ok
+        //'/distributions/chi-2/__test__/qchisq.test.ts$',
+        //ok
+        '/distributions/chi-2/__test__/qnchisq.test.ts$',
 
         /*'/special/bessel/besselJ/__test__/(.*?\\.)?test.ts$',
         '/special/gamma/__test__/(.*?\\.)?test.ts$',
