@@ -38,7 +38,7 @@ export function dnchisq(x: number, df: number, ncp: number, give_log: boolean): 
     let term: number;
 
     if (isNaN(x) || isNaN(df) || isNaN(ncp)) {
-        return x + df + ncp;
+        return x + df + ncp;                          
     }
 
     if (!isFinite(df) || !isFinite(ncp) || ncp < 0 || df < 0) {
@@ -55,26 +55,33 @@ export function dnchisq(x: number, df: number, ncp: number, give_log: boolean): 
     const ncp2 = 0.5 * ncp;
 
     /* find max element of sum */
-    imax = Math.ceil((-(2 + df) + Math.sqrt((2 - df) * (2 - df) + 4 * ncp * x)) / 4);
+    // at this point:
+    // 1. ncp is never negative, or infinity or nan
+    // 2. x is never negative or infinity or nan
+    // 3. df is never infinity, nan or negative
+    // example:
+    // if df=20 and ncp=8 , x=19
+    //   then imax=NaN
+    imax = Math.ceil(
+        (
+            -(2 + df) + Math.sqrt((2 - df) * (2 - df) + 4 * ncp * x)
+        )/4
+    );
     if (imax < 0) imax = 0;
+    //         
     if (isFinite(imax)) {
         dfmid = df + 2 * imax;
         mid = dpois_raw(imax, ncp2, false) * dchisq(x, dfmid, false);
     } else {
-        /* imax = Inf */
-        // mid = 0;
-        // }
-
-        // if (mid === 0) {
-        /* underflow to 0 -- maybe numerically correct; maybe can be more accurate,
-         * particularly when  give_log = TRUE */
-        /* Use  central-chisq approximation formula when appropriate;
-         * ((FIXME: the optimal cutoff also depends on (x,df);  use always here? )) */
+        throw new Error(`Internal Error IE989: imax=${imax}`);
+     /*
+        
         if (give_log || ncp > 1000) {
             const nl = df + ncp;
-            const ic = nl / (nl + ncp); /* = "1/(1+b)" Abramowitz & St.*/
+            const ic = nl / (nl + ncp); // = "1/(1+b)" Abramowitz & St
             return dchisq(x * ic, nl * ic, give_log);
         } else return R_D__0(give_log);
+        */
     }
 
     sum = mid;

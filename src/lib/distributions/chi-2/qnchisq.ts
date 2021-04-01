@@ -19,32 +19,24 @@ import { debug } from 'debug';
 
 import { R_D_qIv } from '$constants';
 
-import { ME, ML_ERR_return_NAN, R_Q_P01_boundaries, ML_ERROR } from '@common/logger';
+import { 
+    ME, ML_ERROR,
+     ML_ERR_return_NAN, R_Q_P01_boundaries,  } from '@common/logger';
 
 import { qchisq } from './qchisq';
 import { pnchisq_raw } from './pnchisq';
 
-const { expm1, min: fmin2 } = Math;
-const {
-    MAX_VALUE: DBL_MAX,
-    MIN_VALUE: DBL_MIN,
-    EPSILON: DBL_EPSILON,
-    isNaN: ISNAN,
-    isFinite: R_FINITE,
-    POSITIVE_INFINITY: ML_POSINF,
-} = Number;
-
 const printer = debug('_qnchisq');
 
-export function qnchisq(p: number, df: number, ncp: number, lower_tail = true, log_p = false): number {
-    printer('start');
+const accu = 1e-13;
+const racc = 4 * Number.EPSILON;
+const DBL_MIN =  2.2250738585072014e-308;
+const DBL_MAX = 1.7976931348623158e+308;
+/* these two are for the "search" loops, can have less accuracy: */
+const Eps = 1e-11; /* must be > accu */
+const rEps = 1e-10; /* relative tolerance ... */
 
-    const accu = 1e-13;
-    const racc = 4 * DBL_EPSILON;
-    /* these two are for the "search" loops, can have less accuracy: */
-    const Eps = 1e-11; /* must be > accu */
-    const rEps = 1e-10; /* relative tolerance ... */
-
+export function qnchisq(p: number, df: number, ncp: number, lower_tail: boolean, log_p: boolean): number {
     // double
     let ux: number;
     let lx: number;
@@ -52,11 +44,11 @@ export function qnchisq(p: number, df: number, ncp: number, lower_tail = true, l
     let nx: number;
     let pp: number;
 
-    if (ISNAN(p) || ISNAN(df) || ISNAN(ncp)) {
+    if (isNaN(p) || isNaN(df) || isNaN(ncp)) {
         return NaN;
     }
 
-    if (!R_FINITE(df)) {
+    if (!isFinite(df)) {
         return ML_ERR_return_NAN(printer);
     }
 
@@ -68,14 +60,14 @@ export function qnchisq(p: number, df: number, ncp: number, lower_tail = true, l
         return ML_ERR_return_NAN(printer);
     }
 
-    const rc = R_Q_P01_boundaries(lower_tail, log_p, p, 0, ML_POSINF);
+    const rc = R_Q_P01_boundaries(lower_tail, log_p, p, 0, Infinity);
     if (rc !== undefined) {
         return rc;
     }
 
     pp = R_D_qIv(log_p, p);
-    if (pp > 1 - DBL_EPSILON) {
-        return lower_tail ? ML_POSINF : 0.0;
+    if (pp > 1 - Number.EPSILON) {
+        return lower_tail ? Infinity : 0.0;
     }
 
     /* Invert pnchisq(.) :
@@ -84,7 +76,7 @@ export function qnchisq(p: number, df: number, ncp: number, lower_tail = true, l
         /* This is Pearson's (1959) approximation,
        which is usually good to 4 figs or so.  */
         //double
-       
+
 
         const b = (ncp * ncp) / (df + 3 * ncp);
         const c = (df + 3 * ncp) / (df + 2 * ncp);
@@ -94,30 +86,54 @@ export function qnchisq(p: number, df: number, ncp: number, lower_tail = true, l
         ux0 = ux;
     }
 
-    if (!lower_tail && ncp >= 80) {
-        /* in this case, pnchisq() works via lower_tail = TRUE */
+   if (!lower_tail && ncp >= 80) {
+        // in this case, pnchisq() works via lower_tail = TRUE 
         if (pp < 1e-10) ML_ERROR(ME.ME_PRECISION, 'qnchisq', printer);
-        p = /* R_DT_qIv(p)*/ log_p ? -expm1(p) : 0.5 - p + 0.5;
+        // p = R_DT_qIv(p)
+        p =  log_p ? -Math.expm1(pp) : 1 - pp;
         lower_tail = true;
-    } else {
+    }
+    else
+    {
         p = pp;
     }
 
-    pp = fmin2(1 - DBL_EPSILON, p * (1 + Eps));
+    pp = Math.min(1 - Number.EPSILON, p * (1 + Eps));
     if (lower_tail) {
-        for (; ux < DBL_MAX && pnchisq_raw(ux, df, ncp, Eps, rEps, 10000, true, false) < pp; ux *= 2);
+        for (
+            ; 
+            ux <DBL_MAX
+            && 
+            pnchisq_raw(ux, df, ncp, Eps, rEps, 10000, true, false) < pp;
+            ux *= 2
+        );
         pp = p * (1 - Eps);
         for (
-            lx = fmin2(ux0, DBL_MAX);
-            lx > DBL_MIN && pnchisq_raw(lx, df, ncp, Eps, rEps, 10000, true, false) > pp;
+            lx = Math.min(ux0, DBL_MAX)
+            ;
+            lx > DBL_MIN && pnchisq_raw(lx, df, ncp, Eps, rEps, 10000, true, false) > pp
+            ;
             lx *= 0.5
         );
-    } else {
-        for (; ux < DBL_MAX && pnchisq_raw(ux, df, ncp, Eps, rEps, 10000, false, false) > pp; ux *= 2);
+    } 
+    else
+    {
+        for (
+            ;
+            ux < DBL_MAX
+            &&
+            pnchisq_raw(ux, df, ncp, Eps, rEps, 10000, false, false) > pp
+            ;
+            ux *= 2
+        );
         pp = p * (1 - Eps);
         for (
-            lx = fmin2(ux0, DBL_MAX);
-            lx > DBL_MIN && pnchisq_raw(lx, df, ncp, Eps, rEps, 10000, false, false) < pp;
+            lx = Math.min(ux0, DBL_MAX)
+            ;
+            lx > DBL_MIN
+            &&
+            pnchisq_raw(lx, df, ncp, Eps, rEps, 10000, false, false) < pp
+            ;
             lx *= 0.5
         );
     }
@@ -126,14 +142,20 @@ export function qnchisq(p: number, df: number, ncp: number, lower_tail = true, l
     if (lower_tail) {
         do {
             nx = 0.5 * (lx + ux);
-            if (pnchisq_raw(nx, df, ncp, accu, racc, 100000, true, false) > p) ux = nx;
-            else lx = nx;
+            if (pnchisq_raw(nx, df, ncp, accu, racc, 100000, true, false) > p)
+                ux = nx;
+            else
+                lx = nx;
         } while ((ux - lx) / nx > accu);
-    } else {
+    }
+    else
+    {
         do {
             nx = 0.5 * (lx + ux);
-            if (pnchisq_raw(nx, df, ncp, accu, racc, 100000, false, false) < p) ux = nx;
-            else lx = nx;
+            if (pnchisq_raw(nx, df, ncp, accu, racc, 100000, false, false) < p)
+                ux = nx;
+            else
+                lx = nx;
         } while ((ux - lx) / nx > accu);
     }
     return 0.5 * (ux + lx);

@@ -17,6 +17,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import { _qgamma } from '@dist/gamma/qgamma';
 
-export function qchisq(p: number, df: number, lowerTail = true, logP = false): number {
+export function qchisq(p: number, df: number, lowerTail: boolean, logP: boolean): number {
     return _qgamma(p, 0.5 * df, 2.0, lowerTail, logP);
 }

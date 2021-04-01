@@ -3,10 +3,11 @@ module.exports = {
     automock: false,
     collectCoverage: true,
     collectCoverageFrom: [
-        'src/lib/distributions/beta/*.ts',
-        'src/lib/distributions/binomial/*.ts',
-        'src/lib/distributions/binomial-negative/*.ts',
-        'src/lib/distributions/cauchy/*.ts',
+       // 'src/lib/distributions/beta/*.ts',
+       // 'src/lib/distributions/binomial/*.ts',
+       // 'src/lib/distributions/binomial-negative/*.ts',
+       // 'src/lib/distributions/cauchy/*.ts',
+        'src/lib/distributions/chi-2/*.ts',
     ],
     coveragePathIgnorePatterns: ['node_modules', 'test', 'doc.ts'],
     coverageDirectory: 'coverage',
@@ -21,7 +22,7 @@ module.exports = {
     testRegex: [
         // beta
         // ok
-         '/distributions/beta/__test__/dbeta.test.ts$',
+ /*     '/distributions/beta/__test__/dbeta.test.ts$',
         // ok 
         '/distributions/beta/__test__/dnbeta.test.ts$',
         // ok 
@@ -65,6 +66,21 @@ module.exports = {
         '/distributions/cauchy/__test__/qcauchy.test.ts$',
         //ok
         '/distributions/cauchy/__test__/rcauchy.test.ts$',
+*/
+        //chisq
+        //ok
+        //'/distributions/chi-2/__test__/dchisq.test.ts$',
+        //ok
+        //'/distributions/chi-2/__test__/dnchisq.test.ts$',
+        //ok
+        //'/distributions/chi-2/__test__/pchisq.test.ts$',
+        //ok
+        //'/distributions/chi-2/__test__/pnchisq.test.ts$',
+        //ok
+        //'/distributions/chi-2/__test__/qchisq.test.ts$',
+        //ok
+        //'/distributions/chi-2/__test__/qnchisq.test.ts$',
+        '/distributions/chi-2/__test__/rchisq.test.ts$',
 
         /*'/special/bessel/besselJ/__test__/(.*?\\.)?test.ts$',
         '/special/gamma/__test__/(.*?\\.)?test.ts$',

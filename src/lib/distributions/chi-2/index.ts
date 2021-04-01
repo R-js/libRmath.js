@@ -14,7 +14,6 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-import type { IRNGNormal } from '@rng/normal/normal-rng';
 
 import { dchisq as _dchisq } from './dchisq';
 import { dnchisq as _dnchisq } from './dnchisq';
@@ -25,15 +24,14 @@ import { qnchisq as _qnchisq } from './qnchisq';
 import { globalNorm } from '@rng/globalRNG';
 import { rchisqOne } from './rchisq';
 import { rnchisqOne } from './rnchisq';
-import { repeatedCall } from '$helper';
+import { repeatedCall64 } from '$helper';
 
 export { rchisqOne };
 
-export function rchisq(n: number, df: number, ncp?: number, rng?: IRNGNormal): Float32Array {
-  const _rng = rng || globalNorm();
+export function rchisq(n: number, df: number, ncp?: number, rng = globalNorm()): Float64Array {
   return ncp === undefined
-    ? repeatedCall(n, rchisqOne, df, _rng)
-    : repeatedCall(n, rnchisqOne, df, ncp, _rng);
+    ? repeatedCall64(n, rchisqOne, df, rng)
+    : repeatedCall64(n, rnchisqOne, df, ncp, rng);
 }
 
 export function qchisq(
@@ -66,6 +64,8 @@ export function dchisq(
   ncp?: number,
   log = false
 ): number {
-  return ncp === undefined ? _dchisq(x, df, log) : _dnchisq(x, df, ncp, log);
+  return ncp === undefined
+    ? _dchisq(x, df, log)
+    : _dnchisq(x, df, ncp, log);
 }
 

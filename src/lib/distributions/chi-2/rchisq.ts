@@ -19,11 +19,10 @@ import { debug } from 'debug';
 import { ML_ERR_return_NAN } from '@common/logger';
 import { rgammaOne } from '@dist/gamma/rgamma';
 import type { IRNGNormal } from '@rng/normal/normal-rng';
-import { globalNorm } from '@rng/globalRNG';
 
 const printer = debug('rchisq');
 
-export function rchisqOne(df: number, rng: IRNGNormal = globalNorm()): number {
+export function rchisqOne(df: number, rng: IRNGNormal): number {
     if (!isFinite(df) || df < 0.0) {
         return ML_ERR_return_NAN(printer);
     }
