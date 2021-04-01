@@ -95,6 +95,7 @@
         "@rollup/plugin-commonjs": "^16.0.0",
         "@rollup/plugin-node-resolve": "^10.0.0",
         "@types/debug": "^4.1.5",
+        "@types/jest": "^26.0.22",
         "@types/node": "^6.0.96",
         "@typescript-eslint/eslint-plugin": "^4.8.1",
         "@typescript-eslint/parser": "^4.8.1",

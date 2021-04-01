@@ -75,7 +75,7 @@ module.exports = {
         //ok
         //'/distributions/chi-2/__test__/pchisq.test.ts$',
         //ok
-        //'/distributions/chi-2/__test__/pnchisq.test.ts$',
+        '/distributions/chi-2/__test__/pnchisq.test.ts$',
         //ok
         //'/distributions/chi-2/__test__/qchisq.test.ts$',
         //ok
