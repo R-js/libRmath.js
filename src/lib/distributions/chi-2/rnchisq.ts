@@ -22,11 +22,10 @@ import { rpoisOne } from '@dist/poisson/rpois';
 import { rchisqOne } from '@dist/chi-2/rchisq';
 
 import type { IRNGNormal } from '@rng/normal/normal-rng';
-import { globalNorm } from '@rng/globalRNG';
 
 const printer = debug('rnchisq');
 
-export function rnchisqOne(df: number, lambda: number, rng: IRNGNormal = globalNorm()): number {
+export function rnchisqOne(df: number, lambda: number, rng: IRNGNormal): number {
     if (!isFinite(df) || !isFinite(lambda) || df < 0 || lambda < 0) {
         return ML_ERR_return_NAN(printer);
     }
