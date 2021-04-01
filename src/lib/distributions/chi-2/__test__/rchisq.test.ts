@@ -30,7 +30,7 @@ describe('rchisq', function () {
         RNGKind(IRNGTypeEnum.MERSENNE_TWISTER, IRNGNormalTypeEnum.INVERSION);
         globalUni().init(98765);
     })
-    it('n=10, df=34, defaults', () => {
+    it('n=10, df=34', () => {
         rchisq(10,45); // skip 10
         const actual = rchisq(10, 45);
         expect(actual).toEqualFloatingPointBinary([
@@ -46,9 +46,24 @@ describe('rchisq', function () {
             47.739896277088462
         ]);
     });
-    it('n=1, location=NaN, defaults', () => {
+    it('n=1, location=NaN', () => {
         const nan = rchisq(1, NaN);
         expect(nan).toEqualFloatingPointBinary(NaN);
         expect(rchisqDomainWarns()).toHaveLength(1);
+    });
+    it('n=10, df=4500', () => {
+        const actual = rchisq(10, 4500);
+        expect(actual).toEqualFloatingPointBinary([
+            4583.4082148930993,
+            4448.7885945022099,
+            4649.1117566271450,
+            4453.9528251108313,
+            4501.8382499200725,
+            4262.2344010794750,
+            4614.1007111202061,
+            4394.8048456547158,
+            4429.5644098095063,
+            4555.7421319737768
+        ]);
     });
 });
