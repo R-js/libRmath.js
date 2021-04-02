@@ -105,7 +105,8 @@
         "lib/chebyshev"
       ],
       "$*": [ // this needs to be really its own module
-        "packages/*"
+        "packages/*",
+        "packages/test-helpers/*"
       ],
       "@common/*": [
         "packages/common/*"

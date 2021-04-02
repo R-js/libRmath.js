@@ -1,7 +1,7 @@
 import '$jest-extension';
 import { loadData } from '$test-helpers/load';
 import { resolve } from 'path';
-import './helper';// for the side effects
+import '$mock-of-debug';// for the side effects
 
 //app
 const cl = require('debug');

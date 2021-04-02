@@ -8,6 +8,7 @@ module.exports = {
        // 'src/lib/distributions/binomial-negative/*.ts',
        // 'src/lib/distributions/cauchy/*.ts',
         'src/lib/distributions/chi-2/*.ts',
+        'src/lib/distributions/exp/dexp.ts'
     ],
     coveragePathIgnorePatterns: ['node_modules', 'test', 'doc.ts'],
     coverageDirectory: 'coverage',
@@ -67,20 +68,27 @@ module.exports = {
         //ok
         '/distributions/cauchy/__test__/rcauchy.test.ts$',
 */
+/*
         //chisq
         //ok
-        //'/distributions/chi-2/__test__/dchisq.test.ts$',
+        '/distributions/chi-2/__test__/dchisq.test.ts$',
         //ok
-        //'/distributions/chi-2/__test__/dnchisq.test.ts$',
+        '/distributions/chi-2/__test__/dnchisq.test.ts$',
         //ok
-        //'/distributions/chi-2/__test__/pchisq.test.ts$',
+        '/distributions/chi-2/__test__/pchisq.test.ts$',
         //ok
-        //'/distributions/chi-2/__test__/pnchisq.test.ts$',
+        '/distributions/chi-2/__test__/pnchisq.test.ts$',
         //ok
-        //'/distributions/chi-2/__test__/qchisq.test.ts$',
+        '/distributions/chi-2/__test__/qchisq.test.ts$',
         //ok
-        //'/distributions/chi-2/__test__/qnchisq.test.ts$',
+        '/distributions/chi-2/__test__/qnchisq.test.ts$',
+        //ok
         '/distributions/chi-2/__test__/rchisq.test.ts$',
+        //ok
+        '/distributions/chi-2/__test__/rnchisq.test.ts$',
+*/
+        // exponential
+        '/distributions/exp/__test__/dexp.test.ts$',
 
         /*'/special/bessel/besselJ/__test__/(.*?\\.)?test.ts$',
         '/special/gamma/__test__/(.*?\\.)?test.ts$',
@@ -124,6 +132,7 @@ module.exports = {
         '^\\$deviance$': '<rootDir>/src/lib/deviance/index.ts',
         '^\\$stirling$': '<rootDir>/src/lib/stirling/index.ts',
         '^@rng/(.*)$': '<rootDir>/src/lib/rng/$1',
-        '^\\$helper$': '<rootDir>/src/lib/r-func.ts'
+        '^\\$helper$': '<rootDir>/src/lib/r-func.ts',
+        '^\\$mock-of-debug$': '<rootDir>/src/packages/test-helpers/mock-of-debug'
     },
 };

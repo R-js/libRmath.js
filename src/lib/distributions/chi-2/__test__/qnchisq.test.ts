@@ -1,7 +1,7 @@
 import '$jest-extension';
 import { loadData } from '$test-helpers/load';
 import { resolve } from 'path';
-import './helper';// for the side effects
+import '$mock-of-debug';// for the side effects
 
 //app
 
@@ -86,12 +86,12 @@ describe('qnchisq', function () {
         //expect(z).toEqualFloatingPointBinary(85.835418035816787);
     });*/
     it('p [0,1], df=3, ncp=25, lower=false', async ()=>{
-        const [p, y] = await loadData(resolve(__dirname, 'fixture-generation', 'qnchisq.R'), /\s+/, 1, 2, 3, 4, 5);
+        const [p, y] = await loadData(resolve(__dirname, 'fixture-generation', 'qnchisq.R'), /\s+/, 1, 2);
         const actual = p.map(_p => qchisq(_p, 3, 25, false));
         expect(actual).toEqualFloatingPointBinary(y,48);
     })
     it('p [0,1], df=3, ncp=85, lower=false', async ()=>{
-        const [p, y] = await loadData(resolve(__dirname, 'fixture-generation', 'qnchisq2.R'), /\s+/, 1, 2, 3, 4, 5);
+        const [p, y] = await loadData(resolve(__dirname, 'fixture-generation', 'qnchisq2.R'), /\s+/, 1, 2);
         const actual = p.map(_p => qchisq(_p, 3, 85, false));
         expect(actual).toEqualFloatingPointBinary(y,49);
     })

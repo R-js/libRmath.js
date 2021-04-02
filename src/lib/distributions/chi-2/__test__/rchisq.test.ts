@@ -1,6 +1,6 @@
 //helper
 import '$jest-extension';
-import './helper';// for the side effects
+import '$mock-of-debug';// for the side effects
 import { globalUni, RNGKind } from '@rng/globalRNG';
 
 import { rchisq } from '..';
