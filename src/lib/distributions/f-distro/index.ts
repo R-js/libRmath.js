@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import { rchisqOne } from '../chi-2/rchisq';
 import { rnchisqOne } from '../chi-2/rnchisq';
 import { repeatedCall } from '$helper';
-import { IRNGNormal } from '@rng/normal/normal-rng';
+import type { IRNGNormal } from '@rng/normal/normal-rng';
 //
 import { df as _df } from './df';
 import { dnf } from './dnf';
