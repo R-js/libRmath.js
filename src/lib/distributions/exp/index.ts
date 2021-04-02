@@ -21,7 +21,7 @@ import { rexpOne } from './rexp';
 
 import { globalUni } from '@rng/globalRNG';
 import type { IRNG } from '@rng/irng';
-import { repeatedCall } from '$helper';
+import { repeatedCall64 } from '$helper';
 
 export function dexp(x: number, rate = 1, asLog = false): number{
   return _dexp(x, 1 / rate, asLog);
@@ -35,6 +35,6 @@ export function qexp(p: number, rate = 1, lowerTail = true, logP = false): numbe
   return _qexp(p, 1 / rate, lowerTail, logP);
 }
 
-export  function rng(n: number, rate = 1, rng: IRNG = globalUni()):Float32Array{
-  return repeatedCall(n, rexpOne, 1 / rate, rng);
+export  function rexp(n: number, rate = 1, rng: IRNG = globalUni()):Float64Array{
+  return repeatedCall64(n, rexpOne, 1 / rate, rng);
 }

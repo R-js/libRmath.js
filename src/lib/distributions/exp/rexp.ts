@@ -21,11 +21,10 @@ import { debug } from 'debug';
 import { IRNG } from '@rng/irng';
 import { exp_rand } from './sexp';
 
-const { isFinite: R_FINITE } = Number;
 const printer = debug('rexp');
 
-export function rexpOne(scale = 1, rng: IRNG): number {
-    if (!R_FINITE(scale) || scale <= 0.0) {
+export function rexpOne(scale: number, rng: IRNG): number {
+    if (!Number.isFinite(scale) || scale <= 0.0) {
         if (scale === 0) return 0;
         /* else */
         return ML_ERR_return_NAN(printer);
