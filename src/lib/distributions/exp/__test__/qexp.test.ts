@@ -29,7 +29,7 @@ dexpDomainWarns;
 #data.frame(x,y1,y2,y3)
 */
 
-describe('pexp', function () {
+describe('qexp', function () {
     beforeEach(() => {
         cl.clear('qexp');
     })

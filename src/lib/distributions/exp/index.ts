@@ -35,6 +35,6 @@ export function qexp(p: number, rate = 1, lowerTail = true, logP = false): numbe
   return _qexp(p, 1 / rate, lowerTail, logP);
 }
 
-export  function rng(n: number, rate = 1, rng: IRNG = globalUni()):Float32Array{
+export  function rexp(n: number, rate = 1, rng: IRNG = globalUni()):Float32Array{
   return repeatedCall(n, rexpOne, 1 / rate, rng);
 }
