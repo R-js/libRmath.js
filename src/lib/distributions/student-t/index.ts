@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { rchisq } from '@dist/chi-2';
 import { rnorm } from '@dist/normal';
-import { IRNGNormal } from '@rng/normal/normal-rng';
+
 //
 import { dnt } from './dnt';
 import { dt as _dt } from './dt';
@@ -30,7 +30,10 @@ import { rtOne } from './rt';
 
 import { repeatedCall } from '$helper';
 import { emptyFloat32Array } from '$constants';
+import { globalNorm } from '@rng/globalRNG';
 export { rtOne };
+
+
 
 export function dt(x: number, df: number, ncp?: number, asLog = false): number {
     if (ncp === undefined) {
@@ -54,9 +57,9 @@ export function qt(p: number, df: number, ncp?: number, lowerTail = true, logP =
     return qnt(p, df, ncp, lowerTail, logP);
 }
 
-export function rt(n: number, df: number, ncp?: number, rng?: IRNGNormal): Float32Array {
+export function rt(n: number, df: number, ncp?: number, rng = globalNorm()): Float32Array {
     if (ncp === undefined) {
-        return repeatedCall(n, rtOne, n, df, rng);
+        return repeatedCall(n, rtOne, df, rng);
     } else if (isNaN(ncp)) {
         return emptyFloat32Array;
     } else {

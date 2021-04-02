@@ -18,12 +18,11 @@ export { dhyper } from './dhyper';
 export { phyper } from './phyper';
 export { qhyper } from './qhyper';
 import { rhyperOne } from './rhyper';
-
-import type { IRNG } from '@rng/irng';
-import { repeatedCall } from '$helper';
 import { globalUni } from '@rng/globalRNG';
+import { repeatedCall } from '$helper';
+
 
 //rhyper(nn, m, n, k)
-export function rhyper(N: number, nn1in: number, nn2in: number, kkin: number, rng: IRNG = globalUni()): Float32Array {
+export function rhyper(N: number, nn1in: number, nn2in: number, kkin: number, rng = globalUni()): Float32Array {
    return repeatedCall(N, rhyperOne, nn1in, nn2in, kkin, rng);
 }

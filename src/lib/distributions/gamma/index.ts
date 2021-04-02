@@ -20,6 +20,7 @@ import { pgamma as _pgamma } from './pgamma';
 import { _qgamma } from './qgamma';
 import { rgammaOne as _rgammaOne } from './rgamma';
 import type { IRNGNormal } from '@rng/normal/normal-rng';
+import { globalNorm } from '@rng/globalRNG';
 
 import { repeatedCall } from '$helper';
 
@@ -64,7 +65,7 @@ export function pgamma(q: number, shape: number, rate?: number, scale?: number, 
     return _pgamma(q, shape, _scale, lowerTail, logP);
 }
 
-export function rgamma(n: number, shape: number, rate?: number, scale?: number, rng?: IRNGNormal): Float32Array {
+export function rgamma(n: number, shape: number, rate?: number, scale?: number, rng: IRNGNormal = globalNorm()): Float32Array {
     const _scale = gammaNormalizeParams(rate, scale);
     return repeatedCall(n, _rgammaOne, shape, _scale, rng);
 }

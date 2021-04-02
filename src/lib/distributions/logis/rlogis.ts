@@ -18,11 +18,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import { debug } from 'debug';
 import { ML_ERR_return_NAN } from '@common/logger';
 import type { IRNG } from '@rng/irng';
-import { globalUni } from '@rng/globalRNG';
 
 const printer_rlogis = debug('rlogis');
 
-export function rlogisOne(location = 0, scale = 1, rng: IRNG = globalUni()): number {
+export function rlogisOne(location = 0, scale = 1, rng: IRNG): number {
     if (isNaN(location) || !isFinite(scale)) {
         return ML_ERR_return_NAN(printer_rlogis);
     }
