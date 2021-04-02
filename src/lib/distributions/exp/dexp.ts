@@ -21,19 +21,18 @@ import { debug } from 'debug';
 
 const printer = debug('dexp');
 
-export function dexp(x: number, rate = 1, give_log = false): number {
+export function dexp(x: number, scale: number, give_log: boolean): number {
     /* NaNs propagated correctly */
-    if (Number.isNaN(x) || Number.isNaN(rate)) {
+    if (Number.isNaN(x) || Number.isNaN(scale)) {
         return NaN;
     }
 
-    if (rate <= 0.0) {
+    if (scale <= 0.0) {
         return ML_ERR_return_NAN(printer);
     }
 
     if (x < 0) {
         return R_D__0(give_log);
     }
-    const scale = 1/rate;
     return give_log ? -x / scale - Math.log(scale) : Math.exp(-x / scale) / scale;
 }
