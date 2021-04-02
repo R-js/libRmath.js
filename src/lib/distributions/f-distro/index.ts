@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //needed for rf
 import { rchisqOne } from '../chi-2/rchisq';
 import { rnchisqOne } from '../chi-2/rnchisq';
-import { repeatedCall } from '$helper';
+import { repeatedCall64 } from '$helper';
 import type { IRNGNormal } from '@rng/normal/normal-rng';
 //
 import { df as _df } from './df';
@@ -52,8 +52,8 @@ export function qf(p: number, df1: number, df2: number, ncp?: number, lowerTail 
     return qnf(p, df1, df2, ncp, lowerTail, logP);
 }
 
-export function rf(n: number | number, n1: number, n2: number, ncp?: number, rng: IRNGNormal = globalNorm()): Float32Array {
-    return repeatedCall(n, rfOne, n1, n2, rng, ncp);
+export function rf(n: number, n1: number, n2: number, ncp?: number, rng: IRNGNormal = globalNorm()): Float64Array {
+    return repeatedCall64(n, rfOne, n1, n2, rng, ncp);
 }
 
 function rfOne(df1: number, df2: number, rng: IRNGNormal, ncp?: number) {

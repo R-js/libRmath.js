@@ -22,7 +22,7 @@ import { IRNGNormal } from '@rng/normal/normal-rng';
 
 const printer_rgammaOne = debug('rgammaOne');
 // default scale = 1
-export function rgammaOne(a = 1, scale=1, rng: IRNGNormal): number {
+export function rgammaOne(a: number, scale: number, rng: IRNGNormal): number {
 
     /* Constants : */
     const sqrt32 = 5.656854;
