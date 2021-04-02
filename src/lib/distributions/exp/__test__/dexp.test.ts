@@ -19,7 +19,6 @@ function select(ns: string) {
 
 const dexpLogs = select('dexp');
 const dexpDomainWarns = dexpLogs("argument out of domain in '%s'");
-dexpDomainWarns;
 
 describe('dexp', function () {
     beforeEach(() => {
@@ -48,6 +47,7 @@ describe('dexp', function () {
     it('rate = -3 (<0)', () => {
         const nan = dexp(0, -3);
         expect(nan).toBeNaN();
+        expect(dexpDomainWarns()).toHaveLength(1);
     });
     it('asLog = true, rate = 5, x=0', () => {
         const z = dexp(0, 5, true);
