@@ -3,16 +3,16 @@ module.exports = {
     automock: false,
     collectCoverage: true,
     collectCoverageFrom: [
-       // 'src/lib/distributions/beta/*.ts',
-       // 'src/lib/distributions/binomial/*.ts',
-       // 'src/lib/distributions/binomial-negative/*.ts',
-       // 'src/lib/distributions/cauchy/*.ts',
+        'src/lib/distributions/beta/*.ts',
+        'src/lib/distributions/binomial/*.ts',
+        'src/lib/distributions/binomial-negative/*.ts',
+        'src/lib/distributions/cauchy/*.ts',
         'src/lib/distributions/chi-2/*.ts',
-        'src/lib/distributions/exp/dexp.ts'
+        'src/lib/distributions/exp/*.ts'
     ],
     coveragePathIgnorePatterns: ['node_modules', 'test', 'doc.ts'],
     coverageDirectory: 'coverage',
-    coverageProvider: 'babel', //v8 is experimental
+    coverageProvider: 'babel', //"v8" is still experimental
     coverageReporters: ['json', 'lcov', 'text', 'clover'],
     preset: 'ts-jest',
     testEnvironment: 'node',
@@ -23,7 +23,7 @@ module.exports = {
     testRegex: [
         // beta
         // ok
- /*     '/distributions/beta/__test__/dbeta.test.ts$',
+        '/distributions/beta/__test__/dbeta.test.ts$',
         // ok 
         '/distributions/beta/__test__/dnbeta.test.ts$',
         // ok 
@@ -36,8 +36,8 @@ module.exports = {
         '/distributions/beta/__test__/qnbeta.test.ts$',
         // ok 
         '/distributions/beta/__test__/rbeta.test.ts$',
-       
-       
+
+
         // binom
         // ok 
         '/distributions/binomial/__test__/dbinom.test.ts$',
@@ -47,7 +47,7 @@ module.exports = {
         '/distributions/binomial/__test__/qbinom.test.ts$',
         // ok 
         '/distributions/binomial/__test__/rbinom.test.ts$',
-         
+
         // binom-negative
         // ok
         '/distributions/binomial-negative/__test__/dnbinom.test.ts$',
@@ -67,8 +67,7 @@ module.exports = {
         '/distributions/cauchy/__test__/qcauchy.test.ts$',
         //ok
         '/distributions/cauchy/__test__/rcauchy.test.ts$',
-*/
-/*
+
         //chisq
         //ok
         '/distributions/chi-2/__test__/dchisq.test.ts$',
@@ -86,9 +85,12 @@ module.exports = {
         '/distributions/chi-2/__test__/rchisq.test.ts$',
         //ok
         '/distributions/chi-2/__test__/rnchisq.test.ts$',
-*/
+
         // exponential
+        //ok
         '/distributions/exp/__test__/dexp.test.ts$',
+        //ok
+        '/distributions/exp/__test__/pexp.test.ts$',
 
         /*'/special/bessel/besselJ/__test__/(.*?\\.)?test.ts$',
         '/special/gamma/__test__/(.*?\\.)?test.ts$',
@@ -97,17 +99,17 @@ module.exports = {
         '/rng/knuth-taocp-2002/__test__/(.*?\\.)?test.ts$',
         '/rng/lecuyer-cmrg/__test__/(.*?\\.)?test.ts$',
         '/rng/marsaglia-multicarry/__test__/(.*?\\.)?test.ts$',*/
-       // '/rng/mersenne-twister/__test__/(.*?\\.)?test.ts$',
-       /* '/rng/wichmann-hill/__test__/(.*?\\.)?test.ts$',
-        '/rng/normal/ahrens-dieter/__test__/(.*?\\.)?test.ts$',
-        '/rng/normal/box-muller/__test__/(.*?\\.)?test.ts$',
-        '/rng/normal/buggy-kinderman-ramage/__test__/(.*?\\.)?test.ts$',
-        '/rng/normal/inversion/__test__/(.*?\\.)?test.ts$',
-        '/rng/normal/kinderman-ramage/__test__/(.*?\\.)?test.ts$',
-        '/rng/super-duper/__test__/(.*?\\.)?test.ts$',
-       
-  */
-  
+        // '/rng/mersenne-twister/__test__/(.*?\\.)?test.ts$',
+        /* '/rng/wichmann-hill/__test__/(.*?\\.)?test.ts$',
+         '/rng/normal/ahrens-dieter/__test__/(.*?\\.)?test.ts$',
+         '/rng/normal/box-muller/__test__/(.*?\\.)?test.ts$',
+         '/rng/normal/buggy-kinderman-ramage/__test__/(.*?\\.)?test.ts$',
+         '/rng/normal/inversion/__test__/(.*?\\.)?test.ts$',
+         '/rng/normal/kinderman-ramage/__test__/(.*?\\.)?test.ts$',
+         '/rng/super-duper/__test__/(.*?\\.)?test.ts$',
+        
+   */
+
     ],
     globals: {
         'ts-jest': {

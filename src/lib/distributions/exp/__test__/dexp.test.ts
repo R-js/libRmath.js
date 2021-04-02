@@ -53,4 +53,8 @@ describe('dexp', function () {
         const z = dexp(0, 5, true);
         expect(z).toEqualFloatingPointBinary(1.6094379124341003);
     })
+    it('defaults', () => {
+        const z = dexp(3);
+        expect(z).toEqualFloatingPointBinary(0.049787068367863944);
+    })
 });
