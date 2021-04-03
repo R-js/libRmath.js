@@ -138,7 +138,7 @@ export function repeatedCall<F extends (...args:any[]) => number>(n: number, fn:
     } else if (n > 0 && isFinite(n)) {
         result = new Float32Array(n);
     } else {
-        throw new TypeError(`"n" argument is not a number or negative`);
+        throw new TypeError(`"n" argument is not a finite number or negative`);
     }
     for (let i = 0; i < result.length; i++) {
         result[i] = fn(...arg);
@@ -154,7 +154,7 @@ export function repeatedCall64<F extends (...args:any[]) => number>(n: number, f
     } else if (n > 0 && isFinite(n)) {
         result = new Float64Array(n);
     } else {
-        throw new TypeError(`"n" argument is not a number or negative`);
+        throw new TypeError(`"n" argument is not a finite number or negative`);
     }
     for (let i = 0; i < result.length; i++) {
         result[i] = fn(...args);
