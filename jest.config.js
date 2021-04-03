@@ -3,12 +3,13 @@ module.exports = {
     automock: false,
     collectCoverage: true,
     collectCoverageFrom: [
-        'src/lib/distributions/beta/*.ts',
+        /*'src/lib/distributions/beta/*.ts',
         'src/lib/distributions/binomial/*.ts',
         'src/lib/distributions/binomial-negative/*.ts',
         'src/lib/distributions/cauchy/*.ts',
         'src/lib/distributions/chi-2/*.ts',
-        'src/lib/distributions/exp/*.ts'
+        'src/lib/distributions/exp/*.ts',*/
+        'src/lib/distributions/f-distro/*.ts'
     ],
     coveragePathIgnorePatterns: ['node_modules', 'test', 'doc.ts'],
     coverageDirectory: 'coverage',
@@ -22,7 +23,7 @@ module.exports = {
     //testMatch: ['**/__tests__/**/*.[t]s?(x)', '**/?(*.)+(spec|test).[t]s?(x)'],
     testRegex: [
         // beta
-        // ok
+      /*  // ok
         '/distributions/beta/__test__/dbeta.test.ts$',
         // ok 
         '/distributions/beta/__test__/dnbeta.test.ts$',
@@ -91,6 +92,18 @@ module.exports = {
         '/distributions/exp/__test__/dexp.test.ts$',
         //ok
         '/distributions/exp/__test__/pexp.test.ts$',
+        //ok
+        '/distributions/exp/__test__/qexp.test.ts$',
+        //ok
+        '/distributions/exp/__test__/rexp.test.ts$',
+*/
+        // F  Fisher–Snedecor distribution
+        //ok
+        '/distributions/f-distro/__test__/df.test.ts$',
+        //
+        '/distributions/f-distro/__test__/dnf.test.ts$',
+
+       
 
         /*'/special/bessel/besselJ/__test__/(.*?\\.)?test.ts$',
         '/special/gamma/__test__/(.*?\\.)?test.ts$',

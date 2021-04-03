@@ -19,11 +19,10 @@ import { debug } from 'debug';
 
 import { ML_ERR_return_NAN } from '@common/logger';
 import { IRNG } from '@rng/irng';
-import { globalUni } from '@rng/globalRNG';
 
 const printer = debug('rweibull');
 
-export function rweibullOne(shape: number, scale = 1, rng: IRNG = globalUni()): number {
+export function rweibullOne(shape: number, scale: number, rng: IRNG): number {
     if (!isFinite(shape) || !isFinite(scale) || shape <= 0 || scale <= 0) {
         if (scale === 0) return 0;
         /* else */

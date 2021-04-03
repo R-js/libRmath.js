@@ -17,8 +17,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //needed for rf
 import { rchisqOne } from '../chi-2/rchisq';
 import { rnchisqOne } from '../chi-2/rnchisq';
-import { repeatedCall } from '$helper';
-import { IRNGNormal } from '@rng/normal/normal-rng';
+import { repeatedCall64 } from '$helper';
+import type { IRNGNormal } from '@rng/normal/normal-rng';
 //
 import { df as _df } from './df';
 import { dnf } from './dnf';
@@ -32,14 +32,6 @@ import { rfOne as _rfOne } from './rf';
 import { globalNorm } from '@rng/globalRNG';
 
 export function df(x: number, df1: number, df2: number, ncp?: number, log = false): number {
-    /*
-function (x, df1, df2, ncp, log = FALSE) 
-  {
-if (missing(ncp)) 
-    .Call(C_df, x, df1, df2, log)
-else .Call(C_dnf, x, df1, df2, ncp, log)
-  }
-*/
     if (ncp === undefined) {
         return _df(x, df1, df2, log);
     }
@@ -47,10 +39,6 @@ else .Call(C_dnf, x, df1, df2, ncp, log)
 }
 
 export function pf(q: number, df1: number, df2: number, ncp?: number, lowerTail = true, logP = false): number {
-    /*  if (missing(ncp)) 
-    .Call(C_pf, q, df1, df2, lower.tail, log.p)
-else .Call(C_pnf, q, df1, df2, ncp, lower.tail, log.p)
-*/
     if (ncp === undefined) {
         return _pf(q, df1, df2, lowerTail, logP);
     }
@@ -64,18 +52,19 @@ export function qf(p: number, df1: number, df2: number, ncp?: number, lowerTail 
     return qnf(p, df1, df2, ncp, lowerTail, logP);
 }
 
-export function rf(n: number | number, n1: number, n2: number, rng?: IRNGNormal): Float32Array {
-    return repeatedCall(n, rfOne, n1, n2, rng);
+export function rf(n: number, n1: number, n2: number, ncp?: number, rng: IRNGNormal = globalNorm()): Float64Array {
+    
+    if (ncp === undefined){
+        return repeatedCall64(n, _rfOne, n1, n2, rng);
+    }
+    if (isNaN(ncp)){
+        return repeatedCall64(n, ()=>NaN);
+    }
+    return repeatedCall64(n, rfOne, n1, n2, rng, ncp);
 }
 
-function rfOne(df1: number, df2: number, ncp?: number, rng: IRNGNormal = globalNorm()) {
-    if (ncp === undefined) {
-        return _rfOne(df1, df2, rng);
-    }
-
-    if (Number.isNaN(ncp)) {
-        return NaN;
-    }
+function rfOne(df1: number, df2: number, rng: IRNGNormal, ncp: number) {
+    
     const numerator = rnchisqOne(df1, ncp, rng) / df1;
     const denominator = rchisqOne(df2, rng) / df2;
 

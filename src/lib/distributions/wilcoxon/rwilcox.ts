@@ -20,14 +20,13 @@ import { debug } from 'debug';
 
 import { ML_ERR_return_NAN } from '@common/logger';
 import { IRNG } from '@rng/irng';
-import { globalUni } from '@rng/globalRNG';
 
 const printer_rwilcox = debug('rwilcox');
 
 
 const MAXSIZE = 4294967296;
 
-export function rwilcoxOne(m: number, n: number, rng: IRNG = globalUni()): number {
+export function rwilcoxOne(m: number, n: number, rng: IRNG): number {
     /* NaNs propagated correctly */
     if (isNaN(m) || isNaN(n)) return m + n;
     m = Math.round(m);

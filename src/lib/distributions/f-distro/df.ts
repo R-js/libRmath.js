@@ -23,7 +23,7 @@ import { dgamma } from '@dist/gamma/dgamma';
 
 const printer_df = debug('df');
 
-export function df(x: number, m: number, n: number, giveLog = false): number {
+export function df(x: number, m: number, n: number, giveLog: boolean): number {
     let f: number;
     let dens: number;
 
