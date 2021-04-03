@@ -62,8 +62,8 @@ describe('dnf (df with ncp is finite)', function () {
         const z = df(1, 1e15, 23, 98, true);
         expect(z).toEqualFloatingPointBinary(0.2949904301786088201);
     });
-    it('x=5, df1=3, df2=5, ncp=34, log=true', () => {
-        const z = df(5, 3, 5, 34, true);
+    it('x=5, df1=3, df2=5, ncp=24, log=true', () => {
+        const z = df(5, 3, 5, 24, true);
         expect(z).toEqualFloatingPointBinary(-2.6178541411440345854);
     });/*
     it('x=1, df1=1, df2=1, log=true', () => {
