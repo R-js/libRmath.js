@@ -100,8 +100,10 @@ module.exports = {
         // F  Fisher–Snedecor distribution
         //ok
         '/distributions/f-distro/__test__/df.test.ts$',
-        //
+        //ok
         '/distributions/f-distro/__test__/dnf.test.ts$',
+        //
+        '/distributions/f-distro/__test__/pf.test.ts$',
 
        
 

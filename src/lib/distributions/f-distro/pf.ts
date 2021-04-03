@@ -16,7 +16,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { debug } from 'debug';
 
-import { ML_ERR_return_NAN,  } from '@common/logger';
+import { ML_ERR_return_NAN, } from '@common/logger';
 import { R_DT_0, R_DT_1, R_P_bounds_01 } from '$constants';
 
 //import { INormal } from '../exp/expm1'normal';
@@ -25,7 +25,7 @@ import { pchisq } from '@dist/chi-2/pchisq';
 
 const printer_pf = debug('pf');
 
-export function pf(q: number, df1: number, df2: number, lowerTail = true, logP = false): number {
+export function pf(q: number, df1: number, df2: number, lowerTail: boolean, logP: boolean): number {
     if (isNaN(q) || isNaN(df1) || isNaN(df2)) return q + df2 + df1;
 
     if (df1 <= 0 || df2 <= 0) {
@@ -49,9 +49,12 @@ export function pf(q: number, df1: number, df2: number, lowerTail = true, logP =
         return pchisq(q * df1, df1, lowerTail, logP);
     }
 
-    if (df1 === Infinity)
+    if (df1 === Infinity) {
         /* was "fudge"	'df1 > 4e5' in 2.0.q */
-        return pchisq(df2 / q, df2, !lowerTail, logP);
+        console.log({ df2, q, lowerTail, logP });
+        const _d = pchisq(df2 / q, df2, !lowerTail, logP);
+        return _d;
+    }
 
     /* Avoid squeezing pbeta's first parameter against 1 :  */
     if (df1 * q > df2) q = pbeta(df2 / (df2 + df1 * q), df2 / 2, df1 / 2, !lowerTail, logP);
