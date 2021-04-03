@@ -19,7 +19,7 @@ function select(ns: string) {
 
 const pfLogs = select('pf');
 const pfDomainWarns = pfLogs("argument out of domain in '%s'");
-pfDomainWarns;
+
 describe('pf', function () {
     beforeEach(() => {
         cl.clear('pf');

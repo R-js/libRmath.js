@@ -22,7 +22,7 @@ import { pnbeta2 } from '@dist/beta/pnbeta';
 import { pnchisq } from '@dist/chi-2/pnchisq';
 
 const printer_pnf = debug('pnf');
-export function pnf(x: number, df1: number, df2: number, ncp: number, lowerTail = true, logP = false): number {
+export function pnf(x: number, df1: number, df2: number, ncp: number, lowerTail: boolean, logP: boolean): number {
 
     if (isNaN(x) || isNaN(df1) || isNaN(df2) || isNaN(ncp)) return x + df2 + df1 + ncp;
 

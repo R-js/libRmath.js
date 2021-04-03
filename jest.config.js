@@ -102,8 +102,9 @@ module.exports = {
         '/distributions/f-distro/__test__/df.test.ts$',
         //ok
         '/distributions/f-distro/__test__/dnf.test.ts$',
-        //
+        //ok
         '/distributions/f-distro/__test__/pf.test.ts$',
+        '/distributions/f-distro/__test__/pnf.test.ts$',
 
        
 
