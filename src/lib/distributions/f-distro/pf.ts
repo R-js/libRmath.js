@@ -43,7 +43,7 @@ export function pf(q: number, df1: number, df2: number, lowerTail: boolean, logP
         if (df1 === Infinity) {
             if (q < 1) return R_DT_0(lowerTail, logP);
             if (q === 1) return logP ? -Math.LN2 : 0.5;
-            if (q > 1) return R_DT_1(lowerTail, logP);
+            return R_DT_1(lowerTail, logP);
         }
 
         return pchisq(q * df1, df1, lowerTail, logP);
@@ -51,7 +51,7 @@ export function pf(q: number, df1: number, df2: number, lowerTail: boolean, logP
 
     if (df1 === Infinity) {
         /* was "fudge"	'df1 > 4e5' in 2.0.q */
-        console.log({ df2, q, lowerTail, logP });
+        //console.log({ df2, q, lowerTail, logP });
         const _d = pchisq(df2 / q, df2, !lowerTail, logP);
         return _d;
     }
