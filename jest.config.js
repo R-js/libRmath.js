@@ -91,12 +91,13 @@ module.exports = {
         '/distributions/exp/__test__/dexp.test.ts$',
         //ok
         '/distributions/exp/__test__/pexp.test.ts$',
-        
-        
+        //ok
+        '/distributions/exp/__test__/qexp.test.ts$',
         
         
         //ok
         '/distributions/exp/__test__/rexp.test.ts$',
+       
 
         /*'/special/bessel/besselJ/__test__/(.*?\\.)?test.ts$',
         '/special/gamma/__test__/(.*?\\.)?test.ts$',

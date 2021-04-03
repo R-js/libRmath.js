@@ -19,7 +19,6 @@ function select(ns: string) {
 
 const dexpLogs = select('pexp');
 const dexpDomainWarns = dexpLogs("argument out of domain in '%s'");
-dexpDomainWarns;
 
 describe('pexp', function () {
     beforeEach(() => {
@@ -39,7 +38,6 @@ describe('pexp', function () {
 
         const a4 = p.map(_p => pexp(_p, 5, false));
         expect(a4).toEqualFloatingPointBinary(y4, 50);
-
     });
     
     it('rate = NaN', () => {
@@ -49,6 +47,7 @@ describe('pexp', function () {
     it('rate = -3 (<0)', () => {
         const nan = pexp(0, -3);
         expect(nan).toBeNaN();
+        expect(dexpDomainWarns()).toHaveLength(1);
     });
     it('asLog = true, rate = 5, x=2', () => {
         const z = pexp(2, 5, undefined, true);
