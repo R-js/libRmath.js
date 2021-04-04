@@ -63,7 +63,7 @@ describe('pgamma', function () {
       
         const [p, y1] = await loadData(resolve(__dirname, 'fixture-generation', 'pgamma4.R'), /\s+/, 1, 2);
         const a1 = p.map(_p => pgamma(_p, 50, undefined, 25));
-        expect(a1).toEqualFloatingPointBinary(y1, 30);
+        expect(a1).toEqualFloatingPointBinary(y1, 40);
     });
     /*
     it('x = 4, shape=1.6, rate=2, scale=4, should throw error', () => {
