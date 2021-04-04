@@ -3,13 +3,15 @@ module.exports = {
     automock: false,
     collectCoverage: true,
     collectCoverageFrom: [
-        /*'src/lib/distributions/beta/*.ts',
+       /* 'src/lib/distributions/beta/*.ts',
         'src/lib/distributions/binomial/*.ts',
         'src/lib/distributions/binomial-negative/*.ts',
         'src/lib/distributions/cauchy/*.ts',
         'src/lib/distributions/chi-2/*.ts',
-        'src/lib/distributions/exp/*.ts',*/
-        'src/lib/distributions/f-distro/*.ts'
+        'src/lib/distributions/exp/*.ts',
+        'src/lib/distributions/f-distro/*.ts',*/
+        'src/lib/distributions/gamma/*.ts'
+        //'src/lib/distributions/poisson/*.ts'
     ],
     coveragePathIgnorePatterns: ['node_modules', 'test', 'doc.ts'],
     coverageDirectory: 'coverage',
@@ -22,8 +24,8 @@ module.exports = {
     testPathIgnorePatterns: ['/es6/', '/commonjs/'],
     //testMatch: ['**/__tests__/**/*.[t]s?(x)', '**/?(*.)+(spec|test).[t]s?(x)'],
     testRegex: [
-        // beta
-      /*  // ok
+     /*   // beta
+       // ok
         '/distributions/beta/__test__/dbeta.test.ts$',
         // ok 
         '/distributions/beta/__test__/dnbeta.test.ts$',
@@ -96,14 +98,31 @@ module.exports = {
         '/distributions/exp/__test__/qexp.test.ts$',
         //ok
         '/distributions/exp/__test__/rexp.test.ts$',
-*/
+
         // F  Fisher–Snedecor distribution
         //ok
         '/distributions/f-distro/__test__/df.test.ts$',
-        //
+        //ok
         '/distributions/f-distro/__test__/dnf.test.ts$',
-
-       
+        //ok
+        '/distributions/f-distro/__test__/pf.test.ts$',
+        //ok
+        '/distributions/f-distro/__test__/pnf.test.ts$',
+        //ok
+        '/distributions/f-distro/__test__/qf.test.ts$',
+        //ok
+        '/distributions/f-distro/__test__/qnf.test.ts$',
+        //ok
+        '/distributions/f-distro/__test__/rf.test.ts$',
+        //ok
+        '/distributions/f-distro/__test__/rnf.test.ts$',
+        */
+        // gamma distribution
+        //ok
+        //'/distributions/gamma/__test__/dgamma.test.ts$',
+        '/distributions/gamma/__test__/pgamma.test.ts$',
+        // poisson
+        //'/distributions/poisson/__test__/dpois.test.ts$',
 
         /*'/special/bessel/besselJ/__test__/(.*?\\.)?test.ts$',
         '/special/gamma/__test__/(.*?\\.)?test.ts$',
