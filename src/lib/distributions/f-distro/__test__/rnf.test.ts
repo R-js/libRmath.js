@@ -21,7 +21,7 @@ function select(ns: string) {
 const rnfLogs = select('rnf');
 const rnfDomainWarns = rnfLogs("argument out of domain in '%s'");
 rnfDomainWarns;
-describe('rf with ncp defined', function () {
+describe('rnf with ncp defined', function () {
     beforeEach(() => {
         RNGKind(IRNGTypeEnum.MERSENNE_TWISTER, IRNGNormalTypeEnum.INVERSION);
         cl.clear('rnf');
@@ -30,36 +30,20 @@ describe('rf with ncp defined', function () {
     it('n=2 df1=3, df2=55 ncp=NaN', () => {
         const actual = rf(2, 3, 55, NaN);
         expect(actual).toEqualFloatingPointBinary([NaN,NaN]);
-    });/*
-    it('n=1, df1=-3(<0), df2=55', () => {
-        const nan = rf(1, -3, 55);
-        expect(nan).toEqualFloatingPointBinary(NaN);
-        expect(rfDomainWarns()).toHaveLength(1);
     });
-    it('n=1, df1=Inf, df2=Inf', () => {
-        const z = rf(1, Infinity, Infinity);
-        expect(z).toEqualFloatingPointBinary(1);
+    it('n=10 df1=3, df2=55 ncp=103', () => {
+        const actual = rf(10, 3, 55, 103);
+        expect(actual).toEqualFloatingPointBinary([
+            36.086018122592449,
+            57.142263266447628,
+            63.933651254769231,
+            23.738717907188740,
+            33.824969929551663,
+            31.170841402172535,
+            44.968630201348780,
+            39.322796055487871,
+            38.410787618223637,
+            39.444431372623981
+        ]);
     });
-    /*
-    it('p=0.2 df1=Nan, df2=231', () => {
-        const nan = qf(0.2, NaN, 231);
-        expect(nan).toBeNaN();
-    });
-    it('p=0.2, df1=-2(<0), df2=4', () => {
-        const nan = qf(0.2, -2, 4,);
-        expect(nan).toBeNaN();
-        expect(qfDomainWarns()).toHaveLength(1);
-    });
-    it('p=0.3, df1=35, df2=4e6', () => {
-        const z = qf(0.3, 35, 4e6);
-        expect(z).toEqualFloatingPointBinary(0.86223349387851478);
-    });
-    it('p=0.3, df1=Infinity, df2=Infinity', () => {
-        const z = qf(0.3, Infinity, Infinity);
-        expect(z).toBe(1);
-    });
-    it('p=0.3, df1=1e6, df2=234', () => {
-        const z = qf(0.3, 1e6, 234);
-        expect(z).toEqualFloatingPointBinary( 0.95571309656704362);
-    });*/
 });

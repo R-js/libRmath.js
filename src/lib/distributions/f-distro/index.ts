@@ -57,16 +57,18 @@ export function rf(n: number, df1: number, df2: number, ncp?: number, rng: IRNGN
     if (ncp === undefined){
         return repeatedCall64(n, _rfOne, df1, df2, rng);
     }
-    if (isNaN(ncp)){
+    
+    // short cuts
+    if (isNaN(ncp) || isNaN(df1) || isNaN(df2) || !isFinite(df1) || !isFinite(df2) ){
         return repeatedCall64(n, ()=>NaN);
     }
-    return repeatedCall64(n, rnfOne, df1, df2, rng, ncp);
-}
 
-function rnfOne(df1: number, df2: number, rng: IRNGNormal, ncp: number) {
-    
-    const numerator = rnchisqOne(df1, ncp, rng) / df1;
-    const denominator = rchisqOne(df2, rng) / df2;
-
-    return numerator / denominator;
+    // R fidelity
+    const noms = repeatedCall64(n, ()=> rnchisqOne(df1, ncp, rng) / df1);
+    // loop over all noms
+    for (let i = 0; i < noms.length; i++){
+        const dom = rchisqOne(df2, rng) / df2;
+        noms[i] = noms[i]/dom;
+    }
+    return noms;
 }
