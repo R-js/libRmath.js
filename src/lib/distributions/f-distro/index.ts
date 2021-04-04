@@ -57,12 +57,11 @@ export function rf(n: number, df1: number, df2: number, ncp?: number, rng: IRNGN
     if (ncp === undefined){
         return repeatedCall64(n, _rfOne, df1, df2, rng);
     }
-    
+
     // short cuts
     if (isNaN(ncp) || isNaN(df1) || isNaN(df2) || !isFinite(df1) || !isFinite(df2) ){
         return repeatedCall64(n, ()=>NaN);
     }
-
     // R fidelity
     const noms = repeatedCall64(n, ()=> rnchisqOne(df1, ncp, rng) / df1);
     // loop over all noms
