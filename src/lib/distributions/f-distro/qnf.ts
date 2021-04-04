@@ -23,22 +23,20 @@ import { qnchisq } from '@dist/chi-2/qnchisq';
 
 const printer = debug('qnf');
 
-export function qnf(p: number, df1: number, df2: number, ncp: number, lowerTail = true, logP = false): number {
+export function qnf(p: number, df1: number, df2: number, ncp: number, lowerTail: boolean, logP: boolean): number {
 
     if (isNaN(p) || isNaN(df1) || isNaN(df2) || isNaN(ncp)) return p + df1 + df2 + ncp;
 
-    switch (true) {
-        case df1 <= 0 || df2 <= 0 || ncp < 0:
-        case !isFinite(ncp):
-        case !isFinite(df1) && !isFinite(df2):
-            return ML_ERR_return_NAN(printer);
-        default:
-            // pass through
-            break;
+    if (
+        (df1 <= 0 || df2 <= 0 || ncp < 0)
+        ||
+        !isFinite(ncp)
+        ||
+        (!isFinite(df1) && !isFinite(df2))
+    ) {
+        return ML_ERR_return_NAN(printer);
     }
-    //if (df1 <= 0 || df2 <= 0 || ncp < 0) ML_ERR_return_NAN(printer);
-    //if (!isFinite(ncp)) ML_ERR_return_NAN;
-    //if (!isFinite(df1) && !isFinite(df2)) ML_ERR_return_NAN;
+
     const rc = R_Q_P01_boundaries(lowerTail, logP, p, 0, Infinity);
     if (rc !== undefined) {
         return rc;
@@ -47,7 +45,8 @@ export function qnf(p: number, df1: number, df2: number, ncp: number, lowerTail 
     if (df2 > 1e8)
         /* avoid problems with +Inf and loss of accuracy */
         return qnchisq(p, df1, ncp, lowerTail, logP) / df1;
-
+    //console.log({p,df1,df2,ncp,lowerTail, logP})
     const y = qnbeta(p, df1 / 2, df2 / 2, ncp, lowerTail, logP);
-    return (y / (1 - y)) * (df2 / df1);
+    //console.log({y});
+    return y / (1 - y) * (df2 / df1);
 }

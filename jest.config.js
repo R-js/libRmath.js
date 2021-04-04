@@ -99,15 +99,21 @@ module.exports = {
 */
         // F  Fisher–Snedecor distribution
         //ok
-        '/distributions/f-distro/__test__/df.test.ts$',
+       /* '/distributions/f-distro/__test__/df.test.ts$',
         //ok
         '/distributions/f-distro/__test__/dnf.test.ts$',
         //ok
         '/distributions/f-distro/__test__/pf.test.ts$',
         //ok
         '/distributions/f-distro/__test__/pnf.test.ts$',
-
+        //ok
         '/distributions/f-distro/__test__/qf.test.ts$',
+        //ok
+        '/distributions/f-distro/__test__/qnf.test.ts$',
+        */
+        '/distributions/f-distro/__test__/rf.test.ts$',
+        '/distributions/f-distro/__test__/rnf.test.ts$',
+        
 
 
         /*'/special/bessel/besselJ/__test__/(.*?\\.)?test.ts$',

@@ -52,18 +52,18 @@ export function qf(p: number, df1: number, df2: number, ncp?: number, lowerTail 
     return qnf(p, df1, df2, ncp, lowerTail, logP);
 }
 
-export function rf(n: number, n1: number, n2: number, ncp?: number, rng: IRNGNormal = globalNorm()): Float64Array {
+export function rf(n: number, df1: number, df2: number, ncp?: number, rng: IRNGNormal = globalNorm()): Float64Array {
     
     if (ncp === undefined){
-        return repeatedCall64(n, _rfOne, n1, n2, rng);
+        return repeatedCall64(n, _rfOne, df1, df2, rng);
     }
     if (isNaN(ncp)){
         return repeatedCall64(n, ()=>NaN);
     }
-    return repeatedCall64(n, rfOne, n1, n2, rng, ncp);
+    return repeatedCall64(n, rnfOne, df1, df2, rng, ncp);
 }
 
-function rfOne(df1: number, df2: number, rng: IRNGNormal, ncp: number) {
+function rnfOne(df1: number, df2: number, rng: IRNGNormal, ncp: number) {
     
     const numerator = rnchisqOne(df1, ncp, rng) / df1;
     const denominator = rchisqOne(df2, rng) / df2;
