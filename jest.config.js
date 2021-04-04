@@ -104,9 +104,11 @@ module.exports = {
         '/distributions/f-distro/__test__/dnf.test.ts$',
         //ok
         '/distributions/f-distro/__test__/pf.test.ts$',
+        //ok
         '/distributions/f-distro/__test__/pnf.test.ts$',
 
-       
+        '/distributions/f-distro/__test__/qf.test.ts$',
+
 
         /*'/special/bessel/besselJ/__test__/(.*?\\.)?test.ts$',
         '/special/gamma/__test__/(.*?\\.)?test.ts$',
