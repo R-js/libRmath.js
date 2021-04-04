@@ -65,6 +65,11 @@ describe('pgamma', function () {
         const a1 = p.map(_p => pgamma(_p, 50, undefined, 25));
         expect(a1).toEqualFloatingPointBinary(y1, 40);
     });
+    it('x =3 shape=0.5, defaults', () => {
+      
+        pgamma(3,0.5);
+        pgamma(3,1);
+    });
     /*
     it('x = 4, shape=1.6, rate=2, scale=4, should throw error', () => {
         expect(() => dgamma(4, 1.6, 2, 2)).toThrowError("specify 'rate' or 'scale' but not both");
