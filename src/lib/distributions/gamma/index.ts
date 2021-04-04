@@ -24,48 +24,45 @@ import { globalNorm } from '@rng/globalRNG';
 
 import { repeatedCall } from '$helper';
 
-function gammaNormalizeParams(rate: number, scale: number): number {
-    //B: if scale and rate are undefined then _scale = 1
-    //C: if scale and rate are both defined and scale != 1/rate, return undefined
-    //D: if scale is defined and rate is not , use scale
-    //E: if rate is defined and scale is not then use 1/rate
-    //B
-    if (scale === undefined && rate === undefined) {
-        return 1;
+function gammaNormalizeParams(rate?: number, scale?: number): number {
+    // decision table
+    //  |                  | rate=undefined | rate=value    |
+    //  | ---------------- | -------------- | ------------- |
+    //  | scale= undefined | return 1       | return 1/rate |
+    //  | scale= vale      | return scale   | throw error   |
+
+
+    if (scale === undefined) {
+        if (rate === undefined) {
+            return 1;
+        }
+        return 1 / rate;
     }
-    //C
-    if (scale !== undefined && rate !== undefined ) {
-        throw new TypeError("specify 'rate' or 'scale' but not both");
-    }
-    //D
-    if (scale !== undefined && rate === undefined) {
+    // scale is defined
+    if (rate === undefined) {
         return scale;
     }
-    //E
-    //if (scale === undefined && rate !== undefined) {
-    return 1 / rate;
-    //}
-    //throw new Error('unreachable code, you cant be here!');
+    throw new TypeError("specify 'rate' or 'scale' but not both");
 }
 
 export { rgammaOne } from './rgamma';
 
-export function dgamma(x: number, shape: number, rate=1, scale=1/rate, asLog = false): number {
+export function dgamma(x: number, shape: number, rate?: number, scale?: number, asLog = false): number {
     const _scale = gammaNormalizeParams(rate, scale);
     return _dgamma(x, shape, _scale, asLog);
 }
 
-export function qgamma(q: number, shape: number, rate=1, scale=1/rate, lowerTail = true, logP = false): number {
+export function qgamma(q: number, shape: number, rate?: number, scale?: number, lowerTail = true, logP = false): number {
     const _scale = gammaNormalizeParams(rate, scale);
     return _qgamma(q, shape, _scale, lowerTail, logP);
 }
 
-export function pgamma(q: number, shape: number, rate=1, scale=1/rate, lowerTail = true, logP = false): number {
+export function pgamma(q: number, shape: number, rate?: number, scale?: number, lowerTail = true, logP = false): number {
     const _scale = gammaNormalizeParams(rate, scale);
     return _pgamma(q, shape, _scale, lowerTail, logP);
 }
 
-export function rgamma(n: number, shape: number, rate=1, scale=1/rate, rng: IRNGNormal = globalNorm()): Float32Array {
+export function rgamma(n: number, shape: number, rate?: number, scale?: number, rng: IRNGNormal = globalNorm()): Float32Array {
     const _scale = gammaNormalizeParams(rate, scale);
     return repeatedCall(n, _rgammaOne, shape, _scale, rng);
 }

@@ -22,7 +22,7 @@ import { R_D__0 } from '$constants';
 
 const printer = debug('dgamma');
 
-export function dgamma(x: number, shape: number, scale: number, aslog = false): number {
+export function dgamma(x: number, shape: number, scale: number, aslog: boolean): number {
     let pr: number;
 
     if (isNaN(x) || isNaN(shape) || isNaN(scale)) return x + shape + scale;

@@ -19,10 +19,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import { debug } from 'debug';
 
 import { ML_ERR_return_NAN } from '@common/logger'
-import { R_D__0, R_D__1, R_D_exp, R_D_fexp, R_D_nonint_check } from '$constants';
+import { R_D__0, R_D__1, R_D_exp, R_D_fexp, R_D_nonint_check, DBL_MIN } from '$constants';
 import { bd0 } from '$deviance';
 import { lgammafn_sign as lgammafn } from '@special/gamma/lgammafn_sign';
 import { stirlerr } from '$stirling';
+
 
 const M_2PI = 2 * Math.PI;
 const printer = debug('dpois');
@@ -34,15 +35,21 @@ export function dpois_raw(x: number, lambda: number, give_log: boolean): number 
     if (lambda === 0) return x === 0 ? R_D__1(give_log) : R_D__0(give_log);
     if (!isFinite(lambda)) return R_D__0(give_log);
     if (x < 0) return R_D__0(give_log);
-    if (x <= lambda * Number.MIN_VALUE) return R_D_exp(give_log, -lambda);
-    if (lambda < x * Number.MIN_VALUE) return R_D_exp(give_log, -lambda + x * Math.log(lambda) - lgammafn(x + 1));
+    if (x <= lambda * DBL_MIN) {
+        return R_D_exp(give_log, -lambda);
+    }
+    if (lambda < x * DBL_MIN) {
+        const  inp =  -lambda + x * Math.log(lambda) - lgammafn(x + 1);
+        return R_D_exp(give_log, inp);
+    }
 
     return R_D_fexp(give_log, M_2PI * x, -stirlerr(x) - bd0(x, lambda));
+
 }
 
 export function dpois(x: number, lambda: number, give_log = false): number {
     if (isNaN(x) || isNaN(lambda)) {
-        return x + lambda;
+        return NaN;
     }
 
     if (lambda < 0) {

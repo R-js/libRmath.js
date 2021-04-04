@@ -32,8 +32,8 @@ import {
 } from '$constants';
 
 import { R_Log1_Exp } from '@dist/exp/expm1';
-import { dnorm4 as dnorm } from '@dist/normal/dnorm';
-import { pnorm5 as pnorm } from '@dist/normal/pnorm';
+//import { dnorm4 as dnorm } from '@dist/normal/dnorm';
+//import { pnorm5 as pnorm } from '@dist/normal/pnorm';
 import { dpois_raw } from '@dist/poisson/dpois';
 import { lgammafn_sign as lgammafn } from '@special/gamma/lgammafn_sign';
 
@@ -437,15 +437,15 @@ function pd_lower_series(lambda: number, y: number): number {
  *
  * Abramowitz & Stegun 26.2.12
  */
-function dpnorm(x: number, lowerTail: boolean, lp: number): number {
-    /*
-     * So as not to repeat a pnorm call, we expect
-     *
-     *	 lp == pnorm (x, 0, 1, lowerTail, TRUE)
-     *
-     * but use it only in the non-critical case where either x is small
-     * or p==exp(lp) is close to 1.
-     */
+/*function dpnorm(x: number, lowerTail: boolean, lp: number): number {
+    //
+    // So as not to repeat a pnorm call, we expect
+    //
+    //	 lp == pnorm (x, 0, 1, lowerTail, TRUE)
+    //
+    // but use it only in the non-critical case where either x is small
+    // or p==exp(lp) is close to 1.
+    
 
     if (x < 0) {
         x = -x;
@@ -469,7 +469,7 @@ function dpnorm(x: number, lowerTail: boolean, lp: number): number {
         return d / Math.exp(lp);
     }
 }
-
+*/
 /*
  * Asymptotic expansion to calculate the probability that Poisson variate
  * has value <= x.
@@ -477,11 +477,11 @@ function dpnorm(x: number, lowerTail: boolean, lp: number): number {
  * http://members.aol.com/iandjmsmith/PoissonApprox.htm
  */
 
-const pr_ppois_asymp = debug('ppois_asymp');
+//const pr_ppois_asymp = debug('ppois_asymp');
 
-function ppois_asymp(x: number, lambda: number, lowerTail: boolean, logP: boolean): number {
+/*function ppois_asymp(x: number, lambda: number, lowerTail: boolean, logP: boolean): number {
     const coefs_a = [
-        -1e99 /* placeholder used for 1-indexing */,
+        -1e99, // placeholder used for 1-indexing
         2 / 3,
         -4 / 135,
         8 / 2835,
@@ -492,7 +492,7 @@ function ppois_asymp(x: number, lambda: number, lowerTail: boolean, logP: boolea
     ];
 
     const coefs_b = [
-        -1e99 /* placeholder */,
+        -1e99 ,// placeholder
         1 / 12,
         1 / 288,
         -139 / 51840,
@@ -513,11 +513,11 @@ function ppois_asymp(x: number, lambda: number, lowerTail: boolean, logP: boolea
     let i: number;
 
     const dfm = lambda - x;
-    /* If lambda is large, the distribution is highly concentrated
-     about lambda.  So representation error in x or lambda can lead
-     to arbitrarily large values of pt_ and hence divergence of the
-     coefficients of this approximation.
-  */
+    // If lambda is large, the distribution is highly concentrated
+    // about lambda.  So representation error in x or lambda can lead
+    // to arbitrarily large values of pt_ and hence divergence of the
+    // coefficients of this approximation.
+  
     const pt_ = -log1pmx(dfm / x);
     s2pt = Math.sqrt(2 * x * pt_);
     if (dfm < 0) s2pt = -s2pt;
@@ -558,11 +558,12 @@ function ppois_asymp(x: number, lambda: number, lowerTail: boolean, logP: boolea
         pr_ppois_asymp('pp*_asymp(): f=%d	 np=%d  nd=%d  f*nd=%d', f, np, nd, f * nd);
         return np + f * nd;
     }
-} /* ppois_asymp() */
+}*/
+/* ppois_asymp() */
 
 const pr_pgamma_raw = debug('pgamma_raw');
 
-export function pgamma_raw(x: number, alph: number, lowerTail = true, logP = false): number {
+export function pgamma_raw(x: number, alph: number, lowerTail: boolean, logP: boolean): number {
     /* Here, assume that  (x,alph) are not NA  &  alph > 0 . */
 
     let res;
@@ -574,16 +575,29 @@ export function pgamma_raw(x: number, alph: number, lowerTail = true, logP = fal
         return rc;
     }
 
-    if (x < 1) {
+    if (x < 1)
+    {
         res = pgamma_smallx(x, alph, lowerTail, logP);
-    } else if (x <= alph - 1 && x < 0.8 * (alph + 50)) {
+    } 
+    else if (x <= alph - 1 && x < 0.8 * (alph + 50))
+    {
+    
         /* incl. large alph compared to x */
         const sum = pd_upper_series(x, alph, logP); /* = x/alph + o(x/alph) */
         const d = dpois_wrap(alph, x, logP);
         pr_pgamma_raw(' alph "large": sum=pd_upper*()= %d, d=dpois_w(*)= %d', sum, d);
-        if (!lowerTail) res = logP ? R_Log1_Exp(d + sum) : 1 - d * sum;
-        else res = logP ? sum + d : sum * d;
-    } else if (alph - 1 < x && alph < 0.8 * (x + 50)) {
+        if (!lowerTail)
+        {
+            res = logP ? R_Log1_Exp(d + sum) : 1 - d * sum;
+        }
+        else
+        {
+             res = logP ? sum + d : sum * d;
+        }
+    } 
+    else if (alph - 1 < x && alph < 0.8 * (x + 50))
+    {
+    
         /* incl. large x compared to alph */
         let sum;
         const d = dpois_wrap(alph, x, logP);
@@ -604,11 +618,14 @@ export function pgamma_raw(x: number, alph: number, lowerTail = true, logP = fal
         pr_pgamma_raw(', sum= %d', sum);
         if (!lowerTail) res = logP ? sum + d : sum * d;
         else res = logP ? R_Log1_Exp(d + sum) : 1 - d * sum;
-    } else {
+    }
+    else
+    {
         /* x >= 1 and x fairly near alph. */
 
-        pr_pgamma_raw(' using ppois_asymp()');
-        res = ppois_asymp(alph - 1, x, !lowerTail, logP);
+        //pr_pgamma_raw(' using ppois_asymp()');
+        throw new Error(`internal error trying to call ppois-asymp x=${x} alph=${alph}, lower=${lowerTail}, logP=${logP}`);
+        //res = ppois_asymp(alph - 1, x, !lowerTail, logP);
     }
 
     /*
@@ -631,11 +648,9 @@ export function pgamma(x: number, shape: number, scale: number, lowerTail: boole
         return x + shape + scale;
     }
     if (shape < 0 || scale <= 0) return ML_ERR_return_NAN(printer_pgamma);
+
     x /= scale;
 
-    if (isNaN(x))
-        /* eg. original x = scale = +Inf */
-        return x;
     if (shape === 0)
         /* limit case; useful e.g. in pnchisq() */
         return x <= 0 ? R_DT_0(lowerTail, logP) : R_DT_1(lowerTail, logP); /* <= assert  pgamma(0,0) ==> 0 */
