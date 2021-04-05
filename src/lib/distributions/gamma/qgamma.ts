@@ -49,7 +49,7 @@ function qchisq_appr(
 
     /* test arguments and initialise */
 
-    if (isNaN(p) || isNaN(nu)) return p + nu;
+    if (isNaN(p) || isNaN(nu)) return NaN;
 
     const rc = R_Q_P01_check(log_p, p);
     if (rc !== undefined) {
