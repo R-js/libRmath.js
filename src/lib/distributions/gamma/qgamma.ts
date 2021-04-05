@@ -103,7 +103,7 @@ function qchisq_appr(
     return ch;
 }
 
-const printer_qgamma = debug('_qgamma');
+const printer_qgamma = debug('qgamma');
 
  /*			shape = alpha */
  const EPS1 = 1e-2;
@@ -122,13 +122,12 @@ const printer_qgamma = debug('_qgamma');
  const i2520 = 1 / 2520;
  const i5040 = 1 / 5040;
 
-export function _qgamma(
+export function qgamma(
     p: number,
-    alpha = 1,
-    scale: number = 1 / alpha,
-    lower_tail = true,
-    log_p = false,
-    //normal: INormal
+    alpha: number,
+    scale: number,
+    lower_tail: boolean,
+    log_p: boolean
 ): number {
     let p_;
     let a;

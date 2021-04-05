@@ -23,7 +23,7 @@ const qgammaDomainWarns = qgammaLogs("argument out of domain in '%s'");
 describe('qgamma', function () {
     describe('invalid input', () => {
         beforeEach(() => {
-            cl.clear('pgamma');
+            cl.clear('qgamma');
         });
         it('x=NaN, shape=1.6, defaults', () => {
             const z = qgamma(NaN, 1.6);
