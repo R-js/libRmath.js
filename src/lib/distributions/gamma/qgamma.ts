@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import { debug } from 'debug';
 
 import { ML_ERR_return_NAN, R_Q_P01_boundaries, R_Q_P01_check } from '@common/logger';
-import { M_LN2, R_D__0, } from '$constants';
+import { M_LN2, R_D__0, DBL_MIN } from '$constants';
 import { R_DT_Clog, R_DT_log, R_DT_qIv } from '@dist/exp/expm1';
 import { dgamma } from './dgamma';
 import { lgammafn_sign as lgammafn } from '@special/gamma/lgammafn_sign';
@@ -105,6 +105,23 @@ function qchisq_appr(
 
 const printer_qgamma = debug('_qgamma');
 
+ /*			shape = alpha */
+ const EPS1 = 1e-2;
+ const EPS2 = 5e-7; /* final precision of AS 91 */
+ const EPS_N = 1e-15; /* precision of Newton step / iterations */
+
+ // LN_EPS unused
+ //const LN_EPS = -36.043653389117156; /* = log(.Machine$double.eps) iff IEEE_754 */
+
+ const MAXIT = 1000; /* was 20 */
+
+ const pMIN = 1e-100; /* was 0.000002 = 2e-6 */
+ const pMAX = 1 - 1e-14; /* was (1-1e-12) and 0.999998 = 1 - 2e-6 */
+
+ const i420 = 1 / 420;
+ const i2520 = 1 / 2520;
+ const i5040 = 1 / 5040;
+
 export function _qgamma(
     p: number,
     alpha = 1,
@@ -113,23 +130,6 @@ export function _qgamma(
     log_p = false,
     //normal: INormal
 ): number {
-    /*			shape = alpha */
-    const EPS1 = 1e-2;
-    const EPS2 = 5e-7; /* final precision of AS 91 */
-    const EPS_N = 1e-15; /* precision of Newton step / iterations */
-
-    // LN_EPS unused
-    //const LN_EPS = -36.043653389117156; /* = log(.Machine$double.eps) iff IEEE_754 */
-
-    const MAXIT = 1000; /* was 20 */
-
-    const pMIN = 1e-100; /* was 0.000002 = 2e-6 */
-    const pMAX = 1 - 1e-14; /* was (1-1e-12) and 0.999998 = 1 - 2e-6 */
-
-    const i420 = 1 / 420;
-    const i2520 = 1 / 2520;
-    const i5040 = 1 / 5040;
-
     let p_;
     let a;
     let b;
@@ -283,10 +283,10 @@ export function _qgamma(
         if (x === 0) {
             const _1_p = 1 + 1e-7;
             const _1_m = 1 - 1e-7;
-            x = Number.MIN_VALUE;
+            x = DBL_MIN;
             p_ = pgamma(x, alpha, scale, lower_tail, log_p);
             if ((lower_tail && p_ > p * _1_p) || (!lower_tail && p_ < p * _1_m)) return 0;
-            /* else:  continue, using x = Number.MIN_VALUE instead of  0  */
+            /* else:  continue, using x = MIN_VALUE instead of  0  */
         } else p_ = pgamma(x, alpha, scale, lower_tail, log_p);
         if (p_ === -Infinity) return 0; /* PR#14710 */
         for (i = 1; i <= max_it_Newton; i++) {
