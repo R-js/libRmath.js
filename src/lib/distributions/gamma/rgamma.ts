@@ -21,37 +21,36 @@ import { exp_rand } from '@dist/exp/sexp';
 import { IRNGNormal } from '@rng/normal/normal-rng';
 
 const printer_rgammaOne = debug('rgammaOne');
-// default scale = 1
+
+/* Constants : */
+const sqrt32 = 5.656854;
+const exp_m1 = 0.36787944117144232159; /* exp(-1) = 1/e */
+
+/* Coefficients q[k] - for q0 = sum(q[k]*a^(-k))
+ * Coefficients a[k] - for q = q0+(t*t/2)*sum(a[k]*v^k)
+ * Coefficients e[k] - for exp(q)-1 = sum(e[k]*q^k)
+ */
+const q1 = 0.04166669;
+const q2 = 0.02083148;
+const q3 = 0.00801191;
+const q4 = 0.00144121;
+const q5 = -7.388e-5;
+const q6 = 2.4511e-4;
+const q7 = 2.424e-4;
+
+const a1 = 0.3333333;
+const a2 = -0.250003;
+const a3 = 0.2000062;
+const a4 = -0.1662921;
+const a5 = 0.1423657;
+const a6 = -0.1367177;
+const a7 = 0.1233795;
+
 export function rgammaOne(a: number, scale: number, rng: IRNGNormal): number {
-
-    /* Constants : */
-    const sqrt32 = 5.656854;
-    const exp_m1 = 0.36787944117144232159; /* exp(-1) = 1/e */
-
-    /* Coefficients q[k] - for q0 = sum(q[k]*a^(-k))
-     * Coefficients a[k] - for q = q0+(t*t/2)*sum(a[k]*v^k)
-     * Coefficients e[k] - for exp(q)-1 = sum(e[k]*q^k)
-     */
-    const q1 = 0.04166669;
-    const q2 = 0.02083148;
-    const q3 = 0.00801191;
-    const q4 = 0.00144121;
-    const q5 = -7.388e-5;
-    const q6 = 2.4511e-4;
-    const q7 = 2.424e-4;
-
-    const a1 = 0.3333333;
-    const a2 = -0.250003;
-    const a3 = 0.2000062;
-    const a4 = -0.1662921;
-    const a5 = 0.1423657;
-    const a6 = -0.1367177;
-    const a7 = 0.1233795;
-
     /* State variables [FIXME for threading!] :*/
 
-    let aa = 0;
-    let aaa = 0;
+    //let aa = 0;
+    //let aaa = 0;
     let s = 0;
     let s2 = 0;
     let d = 0; /* no. 1 (step 1) */
@@ -80,7 +79,7 @@ export function rgammaOne(a: number, scale: number, rng: IRNGNormal): number {
         /* GS algorithm for parameters a < 1 */
         if (a === 0) return 0;
         e = 1.0 + exp_m1 * a;
-        while (true) {
+        for (; ;) {
             p = e * rng.uniform_rng.random();
             if (p >= 1.0) {
                 x = -Math.log((e - p) / a);
@@ -96,12 +95,12 @@ export function rgammaOne(a: number, scale: number, rng: IRNGNormal): number {
     /* --- a >= 1 : GD algorithm --- */
 
     /* Step 1: Recalculations of s2, s, d if a has changed */
-    if (a !== aa) {
-        aa = a;
-        s2 = a - 0.5;
-        s = Math.sqrt(s2);
-        d = sqrt32 - s * 12.0;
-    }
+    //if (a !== aa) {
+    //    aa = a;
+    s2 = a - 0.5;
+    s = Math.sqrt(s2);
+    d = sqrt32 - s * 12.0;
+    //}
     /* Step 2: t = standard normal deviate,
                x = (s,1/2) -normal deviate. */
 
@@ -117,29 +116,29 @@ export function rgammaOne(a: number, scale: number, rng: IRNGNormal): number {
 
     /* Step 4: recalculations of q0, b, si, c if necessary */
 
-    if (a !== aaa) {
-        aaa = a;
-        r = 1.0 / a;
-        q0 = ((((((q7 * r + q6) * r + q5) * r + q4) * r + q3) * r + q2) * r + q1) * r;
+    //if (a !== aaa) {
+    //  aaa = a;
+    r = 1.0 / a;
+    q0 = ((((((q7 * r + q6) * r + q5) * r + q4) * r + q3) * r + q2) * r + q1) * r;
 
-        /* Approximation depending on size of parameter a */
-        /* The constants in the expressions for b, si and c */
-        /* were established by numerical experiments */
+    /* Approximation depending on size of parameter a */
+    /* The constants in the expressions for b, si and c */
+    /* were established by numerical experiments */
 
-        if (a <= 3.686) {
-            b = 0.463 + s + 0.178 * s2;
-            si = 1.235;
-            c = 0.195 / s - 0.079 + 0.16 * s;
-        } else if (a <= 13.022) {
-            b = 1.654 + 0.0076 * s2;
-            si = 1.68 / s + 0.275;
-            c = 0.062 / s + 0.024;
-        } else {
-            b = 1.77;
-            si = 0.75;
-            c = 0.1515 / s;
-        }
+    if (a <= 3.686) {
+        b = 0.463 + s + 0.178 * s2;
+        si = 1.235;
+        c = 0.195 / s - 0.079 + 0.16 * s;
+    } else if (a <= 13.022) {
+        b = 1.654 + 0.0076 * s2;
+        si = 1.68 / s + 0.275;
+        c = 0.062 / s + 0.024;
+    } else {
+        b = 1.77;
+        si = 0.75;
+        c = 0.1515 / s;
     }
+    //}
     /* Step 5: no quotient test if x not positive */
 
     if (x > 0.0) {
