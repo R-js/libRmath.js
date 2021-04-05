@@ -119,8 +119,11 @@ module.exports = {
         */
         // gamma distribution
         //ok
-        //'/distributions/gamma/__test__/dgamma.test.ts$',
+        '/distributions/gamma/__test__/dgamma.test.ts$',
+        //ok
         '/distributions/gamma/__test__/pgamma.test.ts$',
+        
+        '/distributions/gamma/__test__/qgamma.test.ts$',
         // poisson
         //'/distributions/poisson/__test__/dpois.test.ts$',
 

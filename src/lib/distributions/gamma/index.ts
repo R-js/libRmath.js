@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import { dgamma as _dgamma } from './dgamma';
 import { pgamma as _pgamma } from './pgamma';
-import { _qgamma } from './qgamma';
+import { qgamma as _qgamma } from './qgamma';
 import { rgammaOne as _rgammaOne } from './rgamma';
 import type { IRNGNormal } from '@rng/normal/normal-rng';
 import { globalNorm } from '@rng/globalRNG';
