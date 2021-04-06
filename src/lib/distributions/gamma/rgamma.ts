@@ -70,14 +70,15 @@ export function rgammaOne(a: number, scale: number, rng: IRNGNormal): number {
     let x = 0;
     let ret_val = 0;
 
-    if (!isFinite(a) || !isFinite(scale) || a < 0.0 || scale <= 0.0) {
-        if (scale === 0) return 0;
+    if (scale === 0) return 0;
+    if (a === 0) return 0;
+
+    if (!isFinite(a) || !isFinite(scale) || a < 0.0 || scale < 0.0) {
         return ML_ERR_return_NAN(printer_rgammaOne);
     }
-
+    // a > 0
     if (a < 1) {
         /* GS algorithm for parameters a < 1 */
-        if (a === 0) return 0;
         e = 1.0 + exp_m1 * a;
         for (; ;) {
             p = e * rng.uniform_rng.random();
@@ -145,14 +146,19 @@ export function rgammaOne(a: number, scale: number, rng: IRNGNormal): number {
         /* Step 6: calculation of v and quotient q */
         v = t / (s + s);
         if (Math.abs(v) <= 0.25)
+        {
             q = q0 + 0.5 * t * t * ((((((a7 * v + a6) * v + a5) * v + a4) * v + a3) * v + a2) * v + a1) * v;
-        else q = q0 - s * t + 0.25 * t * t + (s2 + s2) * Math.log(1.0 + v);
+        }
+        else 
+        {
+            q = q0 - s * t + 0.25 * t * t + (s2 + s2) * Math.log(1.0 + v);
+        }
 
         /* Step 7: quotient acceptance (q) */
         if (Math.log(1.0 - u) <= q) return scale * ret_val;
     }
 
-    while (true) {
+    for (;;) {
         /* Step 8: e = standard exponential deviate
          *	u =  0,1 -uniform deviate
          *	t = (b,si)-double exponential (laplace) sample */

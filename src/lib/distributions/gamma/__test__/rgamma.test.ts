@@ -6,6 +6,8 @@ import { IRNGNormalTypeEnum } from '@rng/normal/in01-type';
 import { globalUni, RNGKind } from '@rng/globalRNG';
 import { IRNGTypeEnum } from '@rng/irng-type';
 import { rgamma } from '..';
+import { loadData } from '$test-helpers/load';
+import { resolve } from 'path';
 
 const cl = require('debug');
 
@@ -47,13 +49,56 @@ describe('rgamma', function () {
             const z = rgamma(1, 4, undefined, 0);
             expect(z).toEqualFloatingPointBinary(0);
         });
-
+        it('n=1, scale=3, shape=0', () => {
+            const z = rgamma(1, 0, 1 / 3);
+            expect(z).toEqualFloatingPointBinary(0);
+        });
     });
-    describe('fidelity', () => {
+    describe('fidelity, Mersenne-Twister & Inversion', () => {
         beforeEach(() => {
             RNGKind(IRNGTypeEnum.MERSENNE_TWISTER, IRNGNormalTypeEnum.INVERSION);
         });
-        it('n=10, seed=12345, shape=34, Mersenne-Twister, Inversion', () => {
+        it('n=100, shape=1, scale=3', async () => {
+            const [y] = await loadData(
+                resolve(__dirname, 'fixture-generation', 'rgamma1.R'),
+                /\s+/,
+                1
+            );
+            globalUni().init(12345);
+            const a = rgamma(100, 1, 1 / 3);
+            expect(a).toEqualFloatingPointBinary(y);
+        });
+        it('n=100, shape=0.2 (<1), scale=3', async () => {
+            const [y] = await loadData(
+                resolve(__dirname, 'fixture-generation', 'rgamma2.R'),
+                /\s+/,
+                1
+            );
+            globalUni().init(12345);
+            const a = rgamma(100, 0.2, 1 / 3);
+            expect(a).toEqualFloatingPointBinary(y, 45);
+        });
+        it('n=100, shape=2.5 (1< shape <3.68), scale=3', async () => {
+            const [y] = await loadData(
+                resolve(__dirname, 'fixture-generation', 'rgamma3.R'),
+                /\s+/,
+                1
+            );
+            globalUni().init(12345);
+            const z = rgamma(100, 2.5, 1 / 3);
+            expect(z).toEqualFloatingPointBinary(y);
+        });
+        it('n=100, shape=2.5 (3.68 < shape < 13.022), scale=3', async () => {
+            const [y] = await loadData(
+                resolve(__dirname, 'fixture-generation', 'rgamma4.R'),
+                /\s+/,
+                1
+            );
+            globalUni().init(12345);
+            const z = rgamma(100, 12.5, 1 / 3);
+            expect(z).toEqualFloatingPointBinary(y);
+        });
+        it('n=10, shape=34, ', () => {
             globalUni().init(12345);
             const act = rgamma(10, 34);
             expect(act).toEqualFloatingPointBinary([
