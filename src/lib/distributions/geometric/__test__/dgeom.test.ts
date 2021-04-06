@@ -57,8 +57,4 @@ describe('dgeom', function () {
             expect(a2).toEqualFloatingPointBinary(y2);
         });
     });
-    describe('other', () => {
-       //
-    });
-
 });
