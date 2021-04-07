@@ -22,7 +22,7 @@ import { rgammaOne as _rgammaOne } from './rgamma';
 import type { IRNGNormal } from '@rng/normal/normal-rng';
 import { globalNorm } from '@rng/globalRNG';
 
-import { repeatedCall } from '$helper';
+import { repeatedCall64 } from '$helper';
 
 function gammaNormalizeParams(rate?: number, scale?: number): number {
     // decision table
@@ -62,9 +62,15 @@ export function pgamma(q: number, shape: number, rate?: number, scale?: number, 
     return _pgamma(q, shape, _scale, lowerTail, logP);
 }
 
-export function rgamma(n: number, shape: number, rate?: number, scale?: number, rng: IRNGNormal = globalNorm()): Float32Array {
+export function rgamma(
+    n: number,
+    shape: number,
+    rate?: number,
+    scale?: number,
+    rng: IRNGNormal = globalNorm()
+    ): Float64Array {
     const _scale = gammaNormalizeParams(rate, scale);
-    return repeatedCall(n, _rgammaOne, shape, _scale, rng);
+    return repeatedCall64(n, _rgammaOne, shape, _scale, rng);
 }
 
 

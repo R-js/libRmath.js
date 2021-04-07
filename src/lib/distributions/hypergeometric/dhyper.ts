@@ -25,10 +25,14 @@ const printer = debug('dhyper');
 
 export function dhyper(x: number, r: number, b: number, n: number, give_log = false): number {
 
-    if (isNaN(x) || isNaN(r) || isNaN(b) || isNaN(n)) return x + r + b + n;
+    if (isNaN(x) || isNaN(r) || isNaN(b) || isNaN(n)) return NaN;
 
-    if (R_D_negInonint(r) || R_D_negInonint(b) || R_D_negInonint(n) || n > r + b) return ML_ERR_return_NAN(printer);
-    if (x < 0) return R_D__0(give_log);
+    if (R_D_negInonint(r) || R_D_negInonint(b) || R_D_negInonint(n) || n > r + b) {
+        return ML_ERR_return_NAN(printer);
+    }
+    if (x < 0) { 
+        return R_D__0(give_log);
+    }
     const rc = R_D_nonint_check(give_log, x, printer); // incl warning
     if (rc !== undefined) {
         return rc;
@@ -39,7 +43,9 @@ export function dhyper(x: number, r: number, b: number, n: number, give_log = fa
     n = Math.round(n);
 
     if (n < x || r < x || n - x > b) return R_D__0(give_log);
-    if (n === 0) return x === 0 ? R_D__1(give_log) : R_D__0(give_log);
+    if (n === 0) { // implies x < n is false so x ===0
+        return R_D__1(give_log);
+    }
 
     const p = n / (r + b);
     const q = (r + b - n) / (r + b);
