@@ -9,8 +9,9 @@ module.exports = {
         'src/lib/distributions/cauchy/*.ts',
         'src/lib/distributions/chi-2/*.ts',
         'src/lib/distributions/exp/*.ts',
-        'src/lib/distributions/f-distro/*.ts',*/
-        'src/lib/distributions/gamma/*.ts'
+        'src/lib/distributions/f-distro/*.ts',
+        'src/lib/distributions/gamma/*.ts',*/
+        'src/lib/distributions/geometric/*.ts'
         //'src/lib/distributions/poisson/*.ts'
     ],
     coveragePathIgnorePatterns: ['node_modules', 'test', 'doc.ts'],
@@ -116,7 +117,7 @@ module.exports = {
         '/distributions/f-distro/__test__/rf.test.ts$',
         //ok
         '/distributions/f-distro/__test__/rnf.test.ts$',
-       */ 
+       
         // gamma distribution
         //ok
         '/distributions/gamma/__test__/dgamma.test.ts$',
@@ -124,9 +125,16 @@ module.exports = {
         '/distributions/gamma/__test__/pgamma.test.ts$',
         //ok
         '/distributions/gamma/__test__/qgamma.test.ts$',
+        //ok
         '/distributions/gamma/__test__/rgamma.test.ts$',
+        */
+
+        //geometric
+        //'/distributions/geometric/__test__/dgeom.test.ts$',
+        //'/distributions/geometric/__test__/pgeom.test.ts$',
+        '/distributions/geometric/__test__/qgeom.test.ts$',
         
-        
+
         // poisson
         //'/distributions/poisson/__test__/dpois.test.ts$',
 

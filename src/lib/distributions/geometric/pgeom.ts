@@ -23,7 +23,7 @@ import { R_DT_Clog } from '@dist/exp/expm1';
 const printer = debug('pgeom');
 
 export function pgeom(x: number, p: number, lowerTail = true, logP = false): number {
-    if (isNaN(x) || isNaN(p)) return x + p;
+    if (isNaN(x) || isNaN(p)) return NaN;
 
     if (p <= 0 || p > 1) {
         return ML_ERR_return_NAN(printer);
