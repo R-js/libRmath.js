@@ -130,9 +130,14 @@ module.exports = {
         */
 
         //geometric
+        //ok
         //'/distributions/geometric/__test__/dgeom.test.ts$',
+        //ok
         //'/distributions/geometric/__test__/pgeom.test.ts$',
-        '/distributions/geometric/__test__/qgeom.test.ts$',
+        //ok
+        //'/distributions/geometric/__test__/qgeom.test.ts$',
+        //ok
+        //'/distributions/geometric/__test__/rgeom.test.ts$',
         
 
         // poisson
