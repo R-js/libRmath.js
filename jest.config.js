@@ -11,7 +11,8 @@ module.exports = {
         'src/lib/distributions/exp/*.ts',
         'src/lib/distributions/f-distro/*.ts',
         'src/lib/distributions/gamma/*.ts',*/
-        'src/lib/distributions/geometric/*.ts'
+        //'src/lib/distributions/geometric/*.ts',
+        'src/lib/distributions/hypergeometric/*.ts'
         //'src/lib/distributions/poisson/*.ts'
     ],
     coveragePathIgnorePatterns: ['node_modules', 'test', 'doc.ts'],
@@ -132,6 +133,16 @@ module.exports = {
         //geometric
         //ok
         //'/distributions/geometric/__test__/dgeom.test.ts$',
+        //ok
+        //'/distributions/geometric/__test__/pgeom.test.ts$',
+        //ok
+        //'/distributions/geometric/__test__/qgeom.test.ts$',
+        //ok
+        //'/distributions/geometric/__test__/rgeom.test.ts$',
+
+        //hypergeometric
+        //ok
+        '/distributions/hypergeometric/__test__/dhyper.test.ts$',
         //ok
         //'/distributions/geometric/__test__/pgeom.test.ts$',
         //ok
