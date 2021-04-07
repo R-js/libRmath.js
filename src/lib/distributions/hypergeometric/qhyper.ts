@@ -21,7 +21,14 @@ import { R_DT_qIv } from '@distributions/exp/expm1';
 
 const printer_qhyper = debug('qhyper');
 
-export function qhyper(p: number, nr: number, nb: number, n: number, lowerTail = true, logP = false): number {
+export function qhyper(
+    p: number,
+    nr: number,
+    nb: number,
+    n: number,
+    lowerTail = true,
+    logP = false
+    ): number {
     /* This is basically the same code as  ./phyper.c  *used* to be --> FIXME! */
     //let N;
     //let xstart;
@@ -32,9 +39,13 @@ export function qhyper(p: number, nr: number, nb: number, n: number, lowerTail =
     let term;
     //let small_N;
 
-    if (isNaN(p) || isNaN(nr) || isNaN(nb) || isNaN(n)) return NaN;
+    if (isNaN(p) || isNaN(nr) || isNaN(nb) || isNaN(n)) {
+        return NaN;
+    }
 
-    if (/*!isFinite(p) ||*/ !isFinite(nr) || !isFinite(nb) || !isFinite(n)) return ML_ERR_return_NAN(printer_qhyper);
+    if (!isFinite(p) || !isFinite(nr) || !isFinite(nb) || !isFinite(n)) {
+        return ML_ERR_return_NAN(printer_qhyper);
+    }
 
     let NR = Math.round(nr);
     let NB = Math.round(nb);

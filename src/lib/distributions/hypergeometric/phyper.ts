@@ -63,14 +63,30 @@ export function phyper(x: number, nr: number, nb: number, nn: number, lowerTail 
     let NR = nr;
     let NB = nb;
     let n = nn;
-    if (isNaN(x) || isNaN(NR) || isNaN(NB) || isNaN(n)) return x + NR + NB + n;
+    if (isNaN(x)
+        ||
+        isNaN(NR)
+        ||
+        isNaN(NB)
+        ||
+        isNaN(n)
+    ) return NaN;
 
     x = Math.floor(x + 1e-7);
     NR = Math.round(NR);
     NB = Math.round(NB);
     n = Math.round(n);
 
-    if (NR < 0 || NB < 0 || !isFinite(NR + NB) || n < 0 || n > NR + NB) {
+    if (
+        NR < 0
+        ||
+        NB < 0
+        ||
+        !isFinite(NR + NB)
+        ||
+        n < 0
+        ||
+        n > NR + NB) {
         return ML_ERR_return_NAN(printer_phyper);
     }
 
@@ -83,10 +99,19 @@ export function phyper(x: number, nr: number, nb: number, nn: number, lowerTail 
         lower_tail = !lower_tail;
     }
 
-    if (x < 0) return R_DT_0(lower_tail, log_p);
+    if (x < 0 || x < n - NB) return R_DT_0(lower_tail, log_p);
     if (x >= NR || x >= n) return R_DT_1(lower_tail, log_p);
 
     const d = dhyper(x, NR, NB, n, log_p);
+
+    if (
+        (!log_p && d == 0.)
+        ||
+        (log_p && d == -Infinity)
+    ) {
+        return R_DT_0(lowerTail, log_p);
+    }
+
     const pd = pdhyper(x, NR, NB, n, log_p);
 
     return log_p ? R_DT_log(lower_tail, log_p, d + pd) : R_D_Lval(lower_tail, d * pd);

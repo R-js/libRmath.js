@@ -18,32 +18,36 @@ import { debug } from 'debug';
 //
 import { rbinomOne } from '@dist/binomial/rbinom';
 import { ML_ERR_return_NAN } from '@common/logger';
-import { imax2, imin2, M_LN_SQRT_2PI } from '$constants';
+import { INT_MAX, imax2, imin2, M_LN_SQRT_2PI } from '$constants';
 import type { IRNG } from '@rng/irng';
 import { qhyper } from './qhyper';
 //
 const printer_afc = debug('afc');
 
+const al = new Float64Array([
+    0.0 /*ln(0!)=ln(1)*/,
+    0.0 /*ln(1!)=ln(1)*/,
+    0.69314718055994530941723212145817 /*ln(2) */,
+    1.7917594692280550008124773583807 /*ln(6) */,
+    3.17805383034794561964694160129705 /*ln(24)*/,
+    4.78749174278204599424770093452324,
+    6.57925121201010099506017829290394,
+    8.52516136106541430016553103634712,
+    /* 10.60460290274525022841722740072165, approx. value below =
+       10.6046028788027; rel.error = 2.26 10^{-9}
+
+      FIXME: Use constants and if(n > ..) decisions from ./stirlerr.c
+      -----  will be even *faster* for n > 500 (or so)
+    */
+]);
+
+const scale = 1e25;
+const con = 57.5646273248511421;
+
 // afc(i) :=  ln( i! )	[logarithm of the factorial i]
 function afc(i: number): number {
     // If (i > 7), use Stirling's approximation, otherwise use table lookup.
-    const al = [
-        0.0 /*ln(0!)=ln(1)*/,
-        0.0 /*ln(1!)=ln(1)*/,
-        0.69314718055994530941723212145817 /*ln(2) */,
-        1.7917594692280550008124773583807 /*ln(6) */,
-        3.17805383034794561964694160129705 /*ln(24)*/,
-        4.78749174278204599424770093452324,
-        6.57925121201010099506017829290394,
-        8.52516136106541430016553103634712,
-        /* 10.60460290274525022841722740072165, approx. value below =
-           10.6046028788027; rel.error = 2.26 10^{-9}
-
-          FIXME: Use constants and if(n > ..) decisions from ./stirlerr.c
-          -----  will be even *faster* for n > 500 (or so)
-        */
-    ];
-
+    i = Math.trunc(i);
     if (i < 0) {
         printer_afc('rhyper.c: afc(i), i=%d < 0 -- SHOULD NOT HAPPEN!', i);
         return -1; // unreached
@@ -169,6 +173,22 @@ export function rhyperOne(nn1in: number, nn2in: number, kkin: number, rng: IRNG)
             maxjx,
         );
     }
+
+    const L_finis = () => {
+        /* return appropriate variate */
+
+        if (kk + kk >= tn) {
+            if (nn1 > nn2) {
+                ix = kk - nn2 + ix;
+            } else {
+                ix = nn1 - ix;
+            }
+        } else {
+            if (nn1 > nn2) ix = kk - ix;
+        }
+        return ix;
+    }
+
     /* generate random variate --- Three basic cases */
 
     //let goto_L_finis = false;
@@ -178,12 +198,11 @@ export function rhyperOne(nn1in: number, nn2in: number, kkin: number, rng: IRNG)
         printer_rhyper('rhyper(), branch I (degenerate)');
 
         ix = maxjx;
-        //goto_L_finis = true;
-        //goto L_finis; // return appropriate variate
+        return L_finis(); // return appropriate variate
     } else if (m - minjx < 10) {
         // II: (Scaled) algorithm HIN (inverse transformation) ----
-        const scale = 1e25; // scaling factor against (early) underflow
-        const con = 57.5646273248511421;
+        //const scale = 1e25; // scaling factor against (early) underflow
+        //const con = 57.5646273248511421;
         // 25*log(10) = log(scale) { <==> exp(con) == scale }
         if (setup1 || setup2) {
             let lw; // log(w);  w = exp(lw) * scale = exp(lw + log(scale)) = exp(lw + con)
@@ -194,13 +213,12 @@ export function rhyperOne(nn1in: number, nn2in: number, kkin: number, rng: IRNG)
             }
             w = Math.exp(lw + con);
         }
-        let p = 0;
-        let u = 0;
+        let p: number;
+        let u: number;
         printer_rhyper('rhyper(), branch II; w = %d > 0', w);
 
-        //L10:
-        let goto_L10 = false;
-        while (true) {
+        L10:
+        for (; ;) {
             p = w;
             ix = minjx;
             u = rng.random() * scale;
@@ -214,21 +232,16 @@ export function rhyperOne(nn1in: number, nn2in: number, kkin: number, rng: IRNG)
                 p = p / ix / (n2 - k + ix);
                 printer_rhyper('       ix=%d, u=%d, p=%d (u-p=%d)\n', ix, u, p, u - p);
                 if (ix > maxjx) {
-                    goto_L10 = true;
-                    break;
-                    //goto L10;
+                    continue L10;//goto L10;
                     // FIXME  if(p == 0.)  we also "have lost"  => goto L10
                 }
-            }
-            if (!goto_L10) {
-                break;
             }
         }
     } else {
         /* III : H2PE Algorithm --------------------------------------- */
         // never used??
         //let u = 0;
-        // let v = 0;
+        //let v = 0;
 
         if (setup1 || setup2) {
             s = Math.sqrt(((tn - k) * k * n1 * n2) / (tn - 1) / tn / tn);
@@ -236,7 +249,7 @@ export function rhyperOne(nn1in: number, nn2in: number, kkin: number, rng: IRNG)
             /* remark: d is defined in reference without int. */
             /* the truncation centers the cell boundaries at 0.5 */
 
-            d = 1.5 * s + 0.5;
+            d = Math.trunc(1.5 * s) + 0.5;
             xl = m - d + 0.5;
             xr = m + d + 0.5;
             a = afc(m) + afc(n1 - m) + afc(k - m) + afc(n2 - k + m);
@@ -259,9 +272,9 @@ export function rhyperOne(nn1in: number, nn2in: number, kkin: number, rng: IRNG)
         printer_rhyper('-------- p123= c(%d,%d,%d)\n', p1, p2, p3);
 
         let n_uv = 0;
-        //L30:
+        L30:
         //let goto_L30 = false;
-        while (true) {
+        for (; ;) {
             const u: number = rng.random() * p3;
             let v: number = rng.random();
             n_uv++;
@@ -279,7 +292,6 @@ export function rhyperOne(nn1in: number, nn2in: number, kkin: number, rng: IRNG)
                 /* left tail */
                 ix = xl + Math.log(v) / lamdl;
                 if (ix < minjx) {
-                    //goto_L30 = true;
                     continue;
                     //goto L30;
                 }
@@ -288,7 +300,6 @@ export function rhyperOne(nn1in: number, nn2in: number, kkin: number, rng: IRNG)
                 /* right tail */
                 ix = xr - Math.log(v) / lamdr;
                 if (ix > maxjx) {
-                    //goto_L30 = true;
                     continue;
                     //goto L30;
                 }
@@ -408,17 +419,6 @@ export function rhyperOne(nn1in: number, nn2in: number, kkin: number, rng: IRNG)
         } // for the goto_L30
     }
 
-    //L_finis:
-    /* return appropriate variate */
 
-    if (kk + kk >= tn) {
-        if (nn1 > nn2) {
-            ix = kk - nn2 + ix;
-        } else {
-            ix = nn1 - ix;
-        }
-    } else {
-        if (nn1 > nn2) ix = kk - ix;
-    }
-    return ix;
+    return L_finis()
 }
