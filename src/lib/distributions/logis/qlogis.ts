@@ -23,7 +23,7 @@ import { R_Log1_Exp } from '@dist/exp/expm1';
 const printer_qlogis = debug('qlogis');
 
 export function qlogis(p: number, location = 0, scale = 1, lower_tail = true, log_p = false): number {
-    if (isNaN(p) || isNaN(location) || isNaN(scale)) return p + location + scale;
+    if (isNaN(p) || isNaN(location) || isNaN(scale)) return NaN;
 
     const rc = R_Q_P01_boundaries(lower_tail, log_p, p, -Infinity, Infinity);
     if (rc !== undefined) {

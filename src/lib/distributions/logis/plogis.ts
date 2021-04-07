@@ -28,7 +28,7 @@ export function Rf_log1pexp(x: number): number {
 const printer_plogis = debug('plogis');
 
 export function plogis(x: number, location = 0, scale = 1, lower_tail = true, log_p = false): number {
-    if (isNaN(x) || isNaN(location) || isNaN(scale)) return x + location + scale;
+    if (isNaN(x) || isNaN(location) || isNaN(scale)) return NaN;
 
     if (scale <= 0.0) {
         return ML_ERR_return_NAN(printer_plogis);

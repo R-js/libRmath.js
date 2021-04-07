@@ -20,13 +20,13 @@ export { dlogis } from './dlogis';
 export { plogis } from './plogis';
 export { qlogis } from './qlogis';
 import { rlogisOne } from './rlogis';
-import { repeatedCall } from '$helper';
+import { repeatedCall64 } from '$helper';
 import { globalUni } from '@rng/globalRNG';
 
 export { rlogisOne };
 
-export function rlogis(n: number, location = 0, scale = 1, rng: IRNG = globalUni()): Float32Array {
-    return repeatedCall(n, rlogisOne, location, scale, rng);
+export function rlogis(n: number, location = 0, scale = 1, rng: IRNG = globalUni()): Float64Array {
+    return repeatedCall64(n, rlogisOne, location, scale, rng);
 }
 
 

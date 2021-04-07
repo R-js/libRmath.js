@@ -34,7 +34,7 @@ const printer = debug('dnorm4');
 
 export function dnorm4(x: number, mu = 0, sigma = 1, give_log = false): number {
     if (isNaN(x) || isNaN(mu) || isNaN(sigma)) {
-        return x + mu + sigma;
+        return NaN;
     }
 
     if (!isFinite(sigma)) {
@@ -42,7 +42,7 @@ export function dnorm4(x: number, mu = 0, sigma = 1, give_log = false): number {
     }
 
     if (!isFinite(x) && mu === x) {
-        return Number.NaN; /* x-mu is NaN */
+        return NaN; /* x-mu is NaN */
     }
 
     if (sigma <= 0) {

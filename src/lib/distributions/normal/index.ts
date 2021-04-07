@@ -19,10 +19,10 @@ export { dnorm4 as dnorm } from './dnorm';
 export { pnorm5 as pnorm } from './pnorm';
 export { qnorm } from './qnorm';
 import { rnormOne } from './rnorm';
-import { repeatedCall } from '$helper';
+import { repeatedCall64 } from '$helper';
 
 import type { IRNGNormal } from '@rng/normal/normal-rng';
 
-export function rnorm(n=1, mu=0, sigma=1, rng?:IRNGNormal): Float32Array {
-    return repeatedCall(n, rnormOne, mu, sigma, rng);
+export function rnorm(n=1, mu=0, sigma=1, rng?:IRNGNormal): Float64Array {
+    return repeatedCall64(n, rnormOne, mu, sigma, rng);
 }
