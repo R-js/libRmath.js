@@ -38,7 +38,7 @@ describe('qhyper(p,m,n,k,log)', function () {
         beforeEach(() => {
             cl.clear('qhyper');
             cl.clear('R_Q_P01_boundaries');
-         });
+        });
         it('test inputs p, nr, ,b, n on NaN', () => {
             const nan1 = qhyper(NaN, 0, 0, 0);
             const nan2 = qhyper(0, NaN, 0, 0);
@@ -84,18 +84,43 @@ describe('qhyper(p,m,n,k,log)', function () {
         });
     });
     describe('with fixtures', () => {
-        it('p ∈ [0,1], m=300, n=150, k=400', async () => {
-            const [x, y1, y2, y3] = await loadData(
+        it('p ∈ [0,1], m=300, n=150, k=400 (k < 1000, "small"), lower={true|false}, log={true|false}', async () => {
+            const [p, y1, y2, y3, y4] = await loadData(
                 resolve(__dirname, 'fixture-generation', 'qhyper.R'),
-                /,/,
-                1, 2, 3, 4
+                /\s+/,
+                1, 2, 3, 4, 5
             );
-            const a1 = x.map(_x => qhyper(_x, 15, 20, 15));
-            const a2 = x.map(_x => qhyper(_x, 15, 20, 15, false));
-            const a3 = x.map(_x => qhyper(_x, 15, 20, 15, false, true));
+            // log.p = false
+            const a1 = p.map(_p => qhyper(_p, 300, 150, 400));
+            const a2 = p.map(_p => qhyper(_p, 300, 150, 400, false));
+            // log.p = true
+            const a3 = p.map(_p => qhyper(Math.log(_p), 300, 150, 400, true, true));
+            const a4 = p.map(_p => qhyper(Math.log(_p), 300, 150, 400, false, true));
             expect(a1).toEqualFloatingPointBinary(y1, 45);
             expect(a2).toEqualFloatingPointBinary(y2, 45);
             expect(a3).toEqualFloatingPointBinary(y3, 45);
+            expect(a4).toEqualFloatingPointBinary(y4, 45);
+        });
+        it('p ∈ [0,1], m=1300, n=150, k=1400 (k >= 1000, "big"), lower={true|false}, log={true|false}', async () => {
+            const [p, y1, y2, y3, y4] = await loadData(
+                resolve(__dirname, 'fixture-generation', 'qhyper2.R'),
+                /\s+/,
+                1, 2, 3, 4, 5
+            );
+            const m = 1300;
+            const n = 150;
+            const k = 1400;
+
+            // log.p = false
+            const a1 = p.map(_p => qhyper(_p, m, n, k));
+            const a2 = p.map(_p => qhyper(_p, m, n, k, false));
+            // log.p = true
+            const a3 = p.map(_p => qhyper(Math.log(_p), m, n, k, true, true));
+            const a4 = p.map(_p => qhyper(Math.log(_p), m, n, k, false, true));
+            expect(a1).toEqualFloatingPointBinary(y1, 45);
+            expect(a2).toEqualFloatingPointBinary(y2, 45);
+            expect(a3).toEqualFloatingPointBinary(y3, 45);
+            expect(a4).toEqualFloatingPointBinary(y4, 45);
         });
     });
 });
