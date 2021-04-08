@@ -107,8 +107,6 @@ describe('phyper(x,m,n,k,log)', function () {
             const z = phyper(10, 4000, 2000, 1000);
             expect(z).toBe(0);
         });
-
-        phyper(10, 4000, 2000, 1000);
     });
 
     describe('with fixtures', () => {

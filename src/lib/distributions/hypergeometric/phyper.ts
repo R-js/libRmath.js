@@ -101,6 +101,10 @@ export function phyper(x: number, nr: number, nb: number, nn: number, lowerTail 
         
     */
     // condition A
+    const ox = x;
+    const onn = nn;
+    const onr = nr;
+    const onb = nb;
     if (x * (nr + nb) > nn * nr) {
         /* Swap tails.	*/
         const oldnb = nb;
@@ -115,7 +119,14 @@ export function phyper(x: number, nr: number, nb: number, nn: number, lowerTail 
     // these clauses cannot be true at the same time:
     //   1. condition A ot be not true
     //   2. (x >= k AND x < nr) 
-    if (x >= nr || x >= nn) return R_DT_1(lower_tail, log_p);
+    if (x >= nr){
+        return R_DT_1(lower_tail, log_p);
+    }
+
+    if(x >= nn) { // this condition does not happen? (see above)
+        printer_phyper('trace x>=nn x=%d nr=%d nb=%d nn=%d', ox, onr, onb, onn);
+        return R_DT_1(lower_tail, log_p);
+    }
 
     const d = dhyper(x, nr, nb, nn, log_p);
 

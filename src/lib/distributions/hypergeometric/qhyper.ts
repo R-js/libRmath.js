@@ -38,7 +38,7 @@ export function qhyper(
     let sum;
     let term;
     //let small_N;
-
+   
     if (isNaN(p) || isNaN(nr) || isNaN(nb) || isNaN(n)) {
         return NaN;
     }

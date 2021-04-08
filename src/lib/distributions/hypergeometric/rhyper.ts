@@ -330,29 +330,11 @@ export function rhyperOne(nn1in: number, nn2in: number, kkin: number, rng: IRNG)
                 const deltal = 0.0078;
                 const deltau = 0.0034;
 
-                //let e;
-                //let g;
-                //let r;
-                //let t;
-                //let y;
                 let de;
                 let dg;
                 let dr;
                 let ds;
                 let dt;
-                //let gl;
-                //let gu;
-                //let nk;
-                //let nm;
-                //let ub;
-                //let xk;
-                //let xm;
-                //let xn;
-                //let y1;
-                //let ym;
-                //let yn;
-                //let yk;
-                //let alv;
 
                 printer_rhyper(" ... accept/reject 'large' case v=%d", v);
 
