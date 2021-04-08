@@ -45,18 +45,21 @@ const scale = 1e25;
 const con = 57.5646273248511421;
 
 // afc(i) :=  ln( i! )	[logarithm of the factorial i]
-function afc(i: number): number {
+// js is singlethreaded so can put the i outside
+const afc_i = new Int32Array(1);
+
+function afc(_i: number): number {
     // If (i > 7), use Stirling's approximation, otherwise use table lookup.
-    i = Math.trunc(i);
-    if (i < 0) {
-        printer_afc('rhyper.c: afc(i), i=%d < 0 -- SHOULD NOT HAPPEN!', i);
+    afc_i[0] = _i;
+    if (afc_i[0] < 0) {
+        printer_afc('rhyper.c: afc(i), i=%d < 0 -- SHOULD NOT HAPPEN!', afc_i[0]);
         return -1; // unreached
     }
-    if (i <= 7) {
-        return al[i];
+    if (afc_i[0] <= 7) {
+        return al[afc_i[0]];
     }
     // else i >= 8 :
-    const di = i;
+    const di = afc_i[0];
     const i2 = di * di;
     return (di + 0.5) * Math.log(di) - di + M_LN_SQRT_2PI + (0.0833333333333333 - 0.00277777777777778 / i2) / di;
 }
@@ -64,26 +67,38 @@ function afc(i: number): number {
 //     rhyper(NR, NB, n) -- NR 'red', NB 'blue', n drawn, how many are 'red'
 const printer_rhyper = debug('rhyper');
 
+const r_i = new Int32Array(10);
+const _nn1 = 0;
+const _nn2 = 1;
+const _kk = 2;
+const _ix = 3;
+const _n1 = 4;
+const _n2 = 5;
+const _k = 6;
+const _m = 7;
+const _minjx = 8;
+const _maxjx = 9;
+r_i[_maxjx]
 export function rhyperOne(nn1in: number, nn2in: number, kkin: number, rng: IRNG): number {
     /* extern double afc(int); */
 
-    let nn1 = 0;
-    let nn2 = 0;
-    let kk = 0;
-    let ix = 0; // return value (coerced to double at the very end)
+    //let nn1 = 0; this is now r_i[_nn1]
+    //let nn2 = 0;
+    //let kk = 0;
+    //let ix = 0; // return value (coerced to double at the very end)
     //let setup1 = false;
     //let setup2 = false;
 
     /* These should become 'thread_local globals' : */
-   /* let ks = -1;
-    let n1s = -1;
-    let n2s = -1;*/
-    let m = 0;
-    let minjx = 0;
-    let maxjx = 0;
-    let k = 0;
-    let n1 = 0;
-    let n2 = 0; // <- not allowing larger integer par
+    /* let ks = -1;
+     let n1s = -1;
+     let n2s = -1;*/
+    //let m = 0;
+    //let minjx = 0;
+    //let maxjx = 0;
+    //let k = 0;
+    //let n1 = 0;
+    //let n2 = 0; // <- not allowing larger integer par
     let tn = 0;
 
     // II :
@@ -122,100 +137,103 @@ export function rhyperOne(nn1in: number, nn2in: number, kkin: number, rng: IRNG)
         }
         // Slow, but safe: return  F^{-1}(U)  where F(.) = phyper(.) and  U ~ U[0,1]
         // This will take crazy long time even in C native code, I throw an error
-        if (kkin > 1E6){
+        if (kkin > 1E6) {
             throw new TypeError(`Blocked, these input parameters takes (even in R) 2 min to run k=${kkin},nr=${nn1in},nb=${nn2in}`);
         }
         return qhyper(rng.random(), nn1in, nn2in, kkin, false, false);
     }
-    nn1 = nn1in;
-    nn2 = nn2in;
-    kk = kkin;
+    //nn1 = nn1in;
+    r_i[_nn1] = nn1in;
+    r_i[_nn2] = nn2in;
+    r_i[_kk] = kkin;
+    //console.log(r_i);
 
     /* if new parameter values, initialize */
-   // if (nn1 !== n1s || nn2 !== n2s) {
-       // setup1 = true;
-       // setup2 = true;
-   /* } else if (kk !== ks) {
-        setup1 = false;
-        setup2 = true;
-    } else {
-        setup1 = false;
-        setup2 = false;
-    }*/
+    // if (nn1 !== n1s || nn2 !== n2s) {
+    // setup1 = true;
+    // setup2 = true;
+    /* } else if (kk !== ks) {
+         setup1 = false;
+         setup2 = true;
+     } else {
+         setup1 = false;
+         setup2 = false;
+     }*/
+
     //if (setup1) {
     //    n1s = nn1;
     //    n2s = nn2;
-        tn = nn1 + nn2;
-        if (nn1 <= nn2) {
-            n1 = nn1;
-            n2 = nn2;
-        } else {
-            n1 = nn2;
-            n2 = nn1;
-        }
+    tn = r_i[_nn1] + r_i[_nn2];
+    if (r_i[_nn1] <= r_i[_nn2]) {
+        r_i[_n1] = r_i[_nn1];
+        r_i[_n2] = r_i[_nn2];
+    } else {
+        r_i[_n1] = r_i[_nn2];
+        r_i[_n2] = r_i[_nn1];
+    }
     //}
     //if (setup2) {
-      //  ks = kk;
-        if (kk + kk >= tn) {
-            k = tn - kk;
-        } else {
-            k = kk;
-        }
+    //  ks = kk;
+    if (r_i[_kk] + r_i[_kk] >= tn) {
+        r_i[_k] = tn - r_i[_kk];
+    } else {
+        r_i[_k] = r_i[_kk];
+    }
     //}
     //if (setup1 || setup2) {
-        m = ((k + 1) * (n1 + 1)) / (tn + 2);
-        minjx = imax2(0, k - n2);
-        maxjx = imin2(n1, k);
+    r_i[_m] = (r_i[_k] + 1) * (r_i[_n1] + 1) / (tn + 2);
+    r_i[_minjx] = imax2(0, r_i[_k] - r_i[_n2]);
+    r_i[_maxjx] = imin2(r_i[_n1], r_i[_k]);
 
-        printer_rhyper(
-            'rhyper(nn1=%d, nn2=%d, kk=%d), setup: floor(mean)= m=%d, jx in (%d..%d)',
-            nn1,
-            nn2,
-            kk,
-            m,
-            minjx,
-            maxjx,
-        );
+    printer_rhyper(
+        'rhyper(nn1=%d, nn2=%d, kk=%d), setup: floor(mean)= m=%d, jx in (%d..%d)',
+        r_i[_nn1],
+        r_i[_nn2],
+        r_i[_kk],
+        r_i[_m],
+        r_i[_minjx],
+        r_i[_maxjx],
+    );
     //}
 
     const L_finis = () => {
         /* return appropriate variate */
 
-        if (kk + kk >= tn) {
-            if (nn1 > nn2) {
-                ix = kk - nn2 + ix;
+        if (r_i[_kk] + r_i[_kk] >= tn) {
+            if (r_i[_nn1] > r_i[_nn2]) {
+                r_i[_ix] = r_i[_kk] - r_i[_nn2] + r_i[_ix];
             } else {
-                ix = nn1 - ix;
+                r_i[_ix] = r_i[_nn1] - r_i[_ix];
             }
         } else {
-            if (nn1 > nn2) ix = kk - ix;
+            if (r_i[_nn1] > r_i[_nn2]) r_i[_ix] = r_i[_kk] - r_i[_ix];
         }
-        return ix;
+        return r_i[_ix];
     }
 
     /* generate random variate --- Three basic cases */
 
     //let goto_L_finis = false;
-    if (minjx === maxjx) {
+    if (r_i[_minjx] === r_i[_maxjx]) {
         /* I: degenerate distribution ---------------- */
 
         printer_rhyper('rhyper(), branch I (degenerate)');
 
-        ix = maxjx;
+        r_i[_ix] = r_i[_maxjx];
         return L_finis(); // return appropriate variate
-    } else if (m - minjx < 10) {
+    } else if (r_i[_m] - r_i[_minjx] < 10) {
         // II: (Scaled) algorithm HIN (inverse transformation) ----
         //const scale = 1e25; // scaling factor against (early) underflow
         //const con = 57.5646273248511421;
         // 25*log(10) = log(scale) { <==> exp(con) == scale }
         //if (setup1 || setup2) {
-            let lw; // log(w);  w = exp(lw) * scale = exp(lw + log(scale)) = exp(lw + con)
-            if (k < n2) {
-                lw = afc(n2) + afc(n1 + n2 - k) - afc(n2 - k) - afc(n1 + n2);
-            } else {
-                lw = afc(n1) + afc(k) - afc(k - n2) - afc(n1 + n2);
-            }
-            w = Math.exp(lw + con);
+        let lw; // log(w);  w = exp(lw) * scale = exp(lw + log(scale)) = exp(lw + con)
+        if (r_i[_k] < r_i[_n2]) {
+            lw = afc(r_i[_n2]) + afc(r_i[_n1] + r_i[_n2] - r_i[_k]) - afc(r_i[_n2] - r_i[_k]) - afc(r_i[_n1] + r_i[_n2]);
+        } else {
+            lw = afc(r_i[_n1]) + afc(r_i[_k]) - afc(r_i[_k] - r_i[_n2]) - afc(r_i[_n1] + r_i[_n2]);
+        }
+        w = Math.exp(lw + con);
         //}
         let p: number;
         let u: number;
@@ -224,18 +242,18 @@ export function rhyperOne(nn1in: number, nn2in: number, kkin: number, rng: IRNG)
         L10:
         for (; ;) {
             p = w;
-            ix = minjx;
+            r_i[_ix] = r_i[_minjx];
             u = rng.random() * scale;
 
             printer_rhyper('  _new_ u = %d', u);
 
             while (u > p) {
                 u -= p;
-                p *= (n1 - ix) * (k - ix);
-                ix++;
-                p = p / ix / (n2 - k + ix);
-                printer_rhyper('       ix=%d, u=%d, p=%d (u-p=%d)\n', ix, u, p, u - p);
-                if (ix > maxjx) {
+                p *= (r_i[_n1] - r_i[_ix]) * (r_i[_k] - r_i[_ix]);
+                r_i[_ix]++;
+                p = p / r_i[_ix] / (r_i[_n2] - r_i[_k] + r_i[_ix]);
+                printer_rhyper('       ix=%d, u=%d, p=%d (u-p=%d)\n', r_i[_ix], u, p, u - p);
+                if (r_i[_ix] > r_i[_maxjx]) {
                     continue L10;//goto L10;
                     // FIXME  if(p == 0.)  we also "have lost"  => goto L10
                 }
@@ -249,22 +267,22 @@ export function rhyperOne(nn1in: number, nn2in: number, kkin: number, rng: IRNG)
         //let v = 0;
 
         //if (setup1 || setup2) {
-            s = Math.sqrt(((tn - k) * k * n1 * n2) / (tn - 1) / tn / tn);
+        s = Math.sqrt(((tn - r_i[_k]) * r_i[_k] * r_i[_n1] * r_i[_n2]) / (tn - 1) / tn / tn);
 
-            /* remark: d is defined in reference without int. */
-            /* the truncation centers the cell boundaries at 0.5 */
+        /* remark: d is defined in reference without int. */
+        /* the truncation centers the cell boundaries at 0.5 */
 
-            d = Math.trunc(1.5 * s) + 0.5;
-            xl = m - d + 0.5;
-            xr = m + d + 0.5;
-            a = afc(m) + afc(n1 - m) + afc(k - m) + afc(n2 - k + m);
-            kl = Math.exp(a - afc(xl) - afc(n1 - xl) - afc(k - xl) - afc(n2 - k + xl));
-            kr = Math.exp(a - afc(xr - 1) - afc(n1 - xr + 1) - afc(k - xr + 1) - afc(n2 - k + xr - 1));
-            lamdl = -Math.log((xl * (n2 - k + xl)) / (n1 - xl + 1) / (k - xl + 1));
-            lamdr = -Math.log(((n1 - xr + 1) * (k - xr + 1)) / xr / (n2 - k + xr));
-            p1 = d + d;
-            p2 = p1 + kl / lamdl;
-            p3 = p2 + kr / lamdr;
+        d = Math.trunc(1.5 * s) + 0.5;
+        xl =r_i[_m] - d + 0.5;
+        xr = r_i[_m] + d + 0.5;
+        a = afc(r_i[_m]) + afc(r_i[_n1] - r_i[_m]) + afc(r_i[_k] -r_i[_m]) + afc(r_i[_n2] - r_i[_k] +r_i[_m]);
+        kl = Math.exp(a - afc(xl) - afc(r_i[_n1] - xl) - afc(r_i[_k] - xl) - afc(r_i[_n2] - r_i[_k] + xl));
+        kr = Math.exp(a - afc(xr - 1) - afc(r_i[_n1] - xr + 1) - afc(r_i[_k] - xr + 1) - afc(r_i[_n2] - r_i[_k] + xr - 1));
+        lamdl = -Math.log((xl * (r_i[_n2] - r_i[_k] + xl)) / (r_i[_n1] - xl + 1) / (r_i[_k] - xl + 1));
+        lamdr = -Math.log(((r_i[_n1] - xr + 1) * (r_i[_k] - xr + 1)) / xr / (r_i[_n2] - r_i[_k] + xr));
+        p1 = d + d;
+        p2 = p1 + kl / lamdl;
+        p3 = p2 + kr / lamdr;
         //}
 
         printer_rhyper(
@@ -280,8 +298,8 @@ export function rhyperOne(nn1in: number, nn2in: number, kkin: number, rng: IRNG)
         //L30:
         //let goto_L30 = false;
         for (; ;) {
-            const u: number = rng.random() * p3;
-            let v: number = rng.random();
+            const u = rng.random() * p3;
+            let v = rng.random();
             n_uv++;
             if (n_uv >= 10000) {
                 printer_rhyper('rhyper() branch III: giving up after %d rejections', n_uv);
@@ -292,19 +310,19 @@ export function rhyperOne(nn1in: number, nn2in: number, kkin: number, rng: IRNG)
 
             if (u < p1) {
                 /* rectangular region */
-                ix = xl + u;
+                r_i[_ix] = xl + u;
             } else if (u <= p2) {
                 /* left tail */
-                ix = xl + Math.log(v) / lamdl;
-                if (ix < minjx) {
+                r_i[_ix] = xl + Math.log(v) / lamdl;
+                if (r_i[_ix] < r_i[_minjx]) {
                     continue;
                     //goto L30;
                 }
                 v = v * (u - p1) * lamdl;
             } else {
                 /* right tail */
-                ix = xr - Math.log(v) / lamdr;
-                if (ix > maxjx) {
+                r_i[_ix] = xr - Math.log(v) / lamdr;
+                if (r_i[_ix] > r_i[_maxjx]) {
                     continue;
                     //goto L30;
                 }
@@ -314,7 +332,7 @@ export function rhyperOne(nn1in: number, nn2in: number, kkin: number, rng: IRNG)
             /* acceptance/rejection test */
             let reject = true;
 
-            if (m < 100 || ix <= 50) {
+            if (r_i[_m] < 100 || r_i[_ix] <= 50) {
                 /* explicit evaluation */
                 /* The original algorithm (and TOMS 668) have
                    f = f * i * (n2 - k + i) / (n1 - i) / (k - i);
@@ -323,10 +341,10 @@ export function rhyperOne(nn1in: number, nn2in: number, kkin: number, rng: IRNG)
                    needed. */
                 let i;
                 let f = 1.0;
-                if (m < ix) {
-                    for (i = m + 1; i <= ix; i++) f = (f * (n1 - i + 1) * (k - i + 1)) / (n2 - k + i) / i;
-                } else if (m > ix) {
-                    for (i = ix + 1; i <= m; i++) f = (f * i * (n2 - k + i)) / (n1 - i + 1) / (k - i + 1);
+                if (r_i[_m] < r_i[_ix]) {
+                    for (i = r_i[_m] + 1; i <= r_i[_ix]; i++) f = (f * (r_i[_n1] - i + 1) * (r_i[_k] - i + 1)) / (r_i[_n2] - r_i[_k] + i) / i;
+                } else if (r_i[_m] > r_i[_ix]) {
+                    for (i = r_i[_ix] + 1; i <= r_i[_m]; i++) f = (f * i * (r_i[_n2] - r_i[_k] + i)) / (r_i[_n1] - i + 1) / (r_i[_k] - i + 1);
                 }
                 if (v <= f) {
                     reject = false;
@@ -344,12 +362,12 @@ export function rhyperOne(nn1in: number, nn2in: number, kkin: number, rng: IRNG)
                 printer_rhyper(" ... accept/reject 'large' case v=%d", v);
 
                 /* squeeze using upper and lower bounds */
-                const y = ix;
+                const y = r_i[_ix];
                 const y1 = y + 1.0;
-                const ym = y - m;
-                const yn = n1 - y + 1.0;
-                const yk = k - y + 1.0;
-                const nk = n2 - k + y1;
+                const ym = y -r_i[_m];
+                const yn = r_i[_n1] - y + 1.0;
+                const yk = r_i[_k] - y + 1.0;
+                const nk = r_i[_n2] - r_i[_k] + y1;
                 const r = -ym / y1;
                 const s = ym / yn;
                 const t = ym / yk;
@@ -359,13 +377,13 @@ export function rhyperOne(nn1in: number, nn2in: number, kkin: number, rng: IRNG)
                 if (g < 0.0) dg = 1.0 + g;
                 const gu = g * (1.0 + g * (-0.5 + g / 3.0));
                 const gl = gu - (0.25 * (g * g * g * g)) / dg;
-                const xm = m + 0.5;
-                const xn = n1 - m + 0.5;
-                const xk = k - m + 0.5;
-                const nm = n2 - k + xm;
+                const xm = r_i[_m]+ 0.5;
+                const xn = r_i[_n1] - r_i[_m] + 0.5;
+                const xk = r_i[_k] - r_i[_m] + 0.5;
+                const nm = r_i[_n2] - r_i[_k] + xm;
                 const ub =
                     y * gu -
-                    m * gl +
+                    r_i[_m] * gl +
                     deltau +
                     xm * r * (1 + r * (-0.5 + r / 3.0)) +
                     xn * s * (1 + s * (-0.5 + s / 3.0)) +
@@ -385,12 +403,20 @@ export function rhyperOne(nn1in: number, nn2in: number, kkin: number, rng: IRNG)
                     if (t < 0.0) dt /= 1.0 + t;
                     de = nm * (e * e * e * e);
                     if (e < 0.0) de /= 1.0 + e;
-                    if (alv < ub - 0.25 * (dr + ds + dt + de) + (y + m) * (gl - gu) - deltal) {
+                    if (alv < ub - 0.25 * (dr + ds + dt + de) + (y + r_i[_m]) * (gl - gu) - deltal) {
                         reject = false;
                     } else {
                         /** Stirling's formula to machine accuracy
                          */
-                        if (alv <= a - afc(ix) - afc(n1 - ix) - afc(k - ix) - afc(n2 - k + ix)) {
+                        if (
+                            alv
+                            <=
+                            (
+                                a - afc(r_i[_ix]) - afc(r_i[_n1] - r_i[_ix])
+                                - afc(r_i[_k] - r_i[_ix]) - afc(r_i[_n2]
+                                    - r_i[_k] + r_i[_ix])
+                            )
+                        ) {
                             reject = false;
                         } else {
                             reject = true;
@@ -405,7 +431,5 @@ export function rhyperOne(nn1in: number, nn2in: number, kkin: number, rng: IRNG)
             break;
         } // for the goto_L30
     }
-
-
     return L_finis()
 }

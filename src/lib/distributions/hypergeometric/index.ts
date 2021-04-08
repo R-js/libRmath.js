@@ -19,9 +19,9 @@ export { phyper } from './phyper';
 export { qhyper } from './qhyper';
 import { rhyperOne } from './rhyper';
 import { globalUni } from '@rng/globalRNG';
-import { repeatedCall } from '$helper';
+import { repeatedCall64 } from '$helper';
 
 //rhyper(nn, m, n, k)
-export function rhyper(N: number, nn1in: number, nn2in: number, kkin: number, rng = globalUni()): Float32Array {
-   return repeatedCall(N, rhyperOne, nn1in, nn2in, kkin, rng);
+export function rhyper(N: number, nn1in: number, nn2in: number, kkin: number, rng = globalUni()): Float64Array {
+   return repeatedCall64(N, rhyperOne, nn1in, nn2in, kkin, rng);
 }
