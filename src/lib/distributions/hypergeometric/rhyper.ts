@@ -111,7 +111,7 @@ export function rhyperOne(nn1in: number, nn2in: number, kkin: number, rng: IRNG)
     kkin = Math.round(kkin);
 
     if (nn1in < 0 || nn2in < 0 || kkin < 0 || kkin > nn1in + nn2in) return ML_ERR_return_NAN(printer_rhyper);
-    if (nn1in >= Number.MAX_SAFE_INTEGER || nn2in >= Number.MAX_SAFE_INTEGER || kkin >= Number.MAX_SAFE_INTEGER) {
+    if (nn1in >= INT_MAX || nn2in >= INT_MAX || kkin >= INT_MAX) {
         /* large n -- evade integer overflow (and inappropriate algorithms)
            -------- */
         // FIXME: Much faster to give rbinom() approx when appropriate; -> see Kuensch(1989)
@@ -272,7 +272,7 @@ export function rhyperOne(nn1in: number, nn2in: number, kkin: number, rng: IRNG)
         printer_rhyper('-------- p123= c(%d,%d,%d)\n', p1, p2, p3);
 
         let n_uv = 0;
-        L30:
+        //L30:
         //let goto_L30 = false;
         for (; ;) {
             const u: number = rng.random() * p3;
