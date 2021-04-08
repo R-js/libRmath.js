@@ -23,10 +23,6 @@ function select(ns: string) {
 
 const rgeomLogs = select('rgeom');
 const rgeomDomainWarns = rgeomLogs("argument out of domain in '%s'");
-const rgeomWarns = select('R_Q_P01_check')("argument out of domain in '%s'");
-
-rgeomDomainWarns;
-rgeomWarns;
 
 describe('rgeom', function () {
     describe('invalid input', () => {

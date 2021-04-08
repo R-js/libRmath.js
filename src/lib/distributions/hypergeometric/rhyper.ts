@@ -62,7 +62,7 @@ function afc(i: number): number {
 }
 
 //     rhyper(NR, NB, n) -- NR 'red', NB 'blue', n drawn, how many are 'red'
-const printer_rhyper = debug('_rhyper');
+const printer_rhyper = debug('rhyper');
 
 export function rhyperOne(nn1in: number, nn2in: number, kkin: number, rng: IRNG): number {
     /* extern double afc(int); */
@@ -71,13 +71,13 @@ export function rhyperOne(nn1in: number, nn2in: number, kkin: number, rng: IRNG)
     let nn2 = 0;
     let kk = 0;
     let ix = 0; // return value (coerced to double at the very end)
-    let setup1 = false;
-    let setup2 = false;
+    //let setup1 = false;
+    //let setup2 = false;
 
     /* These should become 'thread_local globals' : */
-    let ks = -1;
+   /* let ks = -1;
     let n1s = -1;
-    let n2s = -1;
+    let n2s = -1;*/
     let m = 0;
     let minjx = 0;
     let maxjx = 0;
@@ -121,6 +121,10 @@ export function rhyperOne(nn1in: number, nn2in: number, kkin: number, rng: IRNG)
             return rbinomOne(kkin, nn1in / (nn1in + nn2in), rng);
         }
         // Slow, but safe: return  F^{-1}(U)  where F(.) = phyper(.) and  U ~ U[0,1]
+        // This will take crazy long time even in C native code, I throw an error
+        if (kkin > 1E6){
+            throw new TypeError(`Blocked, these input parameters takes (even in R) 2 min to run k=${kkin},nr=${nn1in},nb=${nn2in}`);
+        }
         return qhyper(rng.random(), nn1in, nn2in, kkin, false, false);
     }
     nn1 = nn1in;
@@ -128,19 +132,19 @@ export function rhyperOne(nn1in: number, nn2in: number, kkin: number, rng: IRNG)
     kk = kkin;
 
     /* if new parameter values, initialize */
-    if (nn1 !== n1s || nn2 !== n2s) {
-        setup1 = true;
-        setup2 = true;
-    } else if (kk !== ks) {
+   // if (nn1 !== n1s || nn2 !== n2s) {
+       // setup1 = true;
+       // setup2 = true;
+   /* } else if (kk !== ks) {
         setup1 = false;
         setup2 = true;
     } else {
         setup1 = false;
         setup2 = false;
-    }
-    if (setup1) {
-        n1s = nn1;
-        n2s = nn2;
+    }*/
+    //if (setup1) {
+    //    n1s = nn1;
+    //    n2s = nn2;
         tn = nn1 + nn2;
         if (nn1 <= nn2) {
             n1 = nn1;
@@ -149,16 +153,16 @@ export function rhyperOne(nn1in: number, nn2in: number, kkin: number, rng: IRNG)
             n1 = nn2;
             n2 = nn1;
         }
-    }
-    if (setup2) {
-        ks = kk;
+    //}
+    //if (setup2) {
+      //  ks = kk;
         if (kk + kk >= tn) {
             k = tn - kk;
         } else {
             k = kk;
         }
-    }
-    if (setup1 || setup2) {
+    //}
+    //if (setup1 || setup2) {
         m = ((k + 1) * (n1 + 1)) / (tn + 2);
         minjx = imax2(0, k - n2);
         maxjx = imin2(n1, k);
@@ -172,7 +176,7 @@ export function rhyperOne(nn1in: number, nn2in: number, kkin: number, rng: IRNG)
             minjx,
             maxjx,
         );
-    }
+    //}
 
     const L_finis = () => {
         /* return appropriate variate */
@@ -204,7 +208,7 @@ export function rhyperOne(nn1in: number, nn2in: number, kkin: number, rng: IRNG)
         //const scale = 1e25; // scaling factor against (early) underflow
         //const con = 57.5646273248511421;
         // 25*log(10) = log(scale) { <==> exp(con) == scale }
-        if (setup1 || setup2) {
+        //if (setup1 || setup2) {
             let lw; // log(w);  w = exp(lw) * scale = exp(lw + log(scale)) = exp(lw + con)
             if (k < n2) {
                 lw = afc(n2) + afc(n1 + n2 - k) - afc(n2 - k) - afc(n1 + n2);
@@ -212,7 +216,7 @@ export function rhyperOne(nn1in: number, nn2in: number, kkin: number, rng: IRNG)
                 lw = afc(n1) + afc(k) - afc(k - n2) - afc(n1 + n2);
             }
             w = Math.exp(lw + con);
-        }
+        //}
         let p: number;
         let u: number;
         printer_rhyper('rhyper(), branch II; w = %d > 0', w);
@@ -236,6 +240,7 @@ export function rhyperOne(nn1in: number, nn2in: number, kkin: number, rng: IRNG)
                     // FIXME  if(p == 0.)  we also "have lost"  => goto L10
                 }
             }
+            break;
         }
     } else {
         /* III : H2PE Algorithm --------------------------------------- */
@@ -243,7 +248,7 @@ export function rhyperOne(nn1in: number, nn2in: number, kkin: number, rng: IRNG)
         //let u = 0;
         //let v = 0;
 
-        if (setup1 || setup2) {
+        //if (setup1 || setup2) {
             s = Math.sqrt(((tn - k) * k * n1 * n2) / (tn - 1) / tn / tn);
 
             /* remark: d is defined in reference without int. */
@@ -260,7 +265,7 @@ export function rhyperOne(nn1in: number, nn2in: number, kkin: number, rng: IRNG)
             p1 = d + d;
             p2 = p1 + kl / lamdl;
             p3 = p2 + kr / lamdr;
-        }
+        //}
 
         printer_rhyper(
             'rhyper(), branch III {accept/reject}: (xl,xr)= (%d,%d); (lamdl,lamdr)= (%d,%d)\n',

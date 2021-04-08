@@ -60,7 +60,7 @@ export const M_LN_2PI = 1.837877066409345483560659472811;
 export const M_1_PI = 1.0 / Math.PI;
 export const M_PI_2 = Math.PI / 2;
 export const M_LN_SQRT_PI = 0.57236494292470008; // log(sqrt(pi))
-export const INT_MAX = 2**32-1;
+export const INT_MAX = 2**31-1;
 // gamma
 export const M_LN_SQRT_2PI = 0.918938533204672741780329736406; // log(sqrt(2*pi))
 
