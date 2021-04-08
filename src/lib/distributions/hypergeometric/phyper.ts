@@ -60,49 +60,64 @@ export function phyper(x: number, nr: number, nb: number, nn: number, lowerTail 
     /* Sample of  n balls from  NR red  and	 NB black ones;	 x are red */
     let lower_tail = lowerTail; //copy it gets changed
     const log_p = logP;
-    let NR = nr;
-    let NB = nb;
-    let n = nn;
+        
     if (isNaN(x)
         ||
-        isNaN(NR)
+        isNaN(nr)
         ||
-        isNaN(NB)
+        isNaN(nb)
         ||
-        isNaN(n)
+        isNaN(nn)
     ) return NaN;
 
     x = Math.floor(x + 1e-7);
-    NR = Math.round(NR);
-    NB = Math.round(NB);
-    n = Math.round(n);
+    nr = Math.round(nr);
+    nb = Math.round(nb);
+    nn = Math.round(nn);
 
     if (
-        NR < 0
+        nr < 0
         ||
-        NB < 0
+        nb < 0
         ||
-        !isFinite(NR + NB)
+        !isFinite(nr + nb)
         ||
-        n < 0
+        nn < 0
         ||
-        n > NR + NB) {
+        nn > nr + nb) {
         return ML_ERR_return_NAN(printer_phyper);
     }
 
-    if (x * (NR + NB) > n * NR) {
+    /*
+
+    (x * (nr + nb) > nn * nr)
+
+    view below like this
+    
+    with k == nn
+    
+    x/k > nr/(nr+nb) (here we devided away nr = 0 from the original equation)
+    hence  nr/(nr+nb) alwaus < 1 unless nr=0 or nb=0 (but not both) then nr/(nr+nb) == 1
+        
+    */
+    // condition A
+    if (x * (nr + nb) > nn * nr) {
         /* Swap tails.	*/
-        const oldNB = NB;
-        NB = NR;
-        NR = oldNB;
-        x = n - x - 1;
+        const oldnb = nb;
+        nb = nr;
+        nr = oldnb;
+        x = nn - x - 1;
         lower_tail = !lower_tail;
     }
 
-    if (x < 0 || x < n - NB) return R_DT_0(lower_tail, log_p);
-    if (x >= NR || x >= n) return R_DT_1(lower_tail, log_p);
+    if (x < 0 || x < nn - nb) return R_DT_0(lower_tail, log_p);
+    // if x>=nr then also x>=nn (this is true at the same time because of condition A)
+    // these clauses cannot be true at the same time:
+    //   1. condition A ot be not true
+    //   2. (x >= k AND x < nr) 
+    if (x >= nr || x >= nn) return R_DT_1(lower_tail, log_p);
 
-    const d = dhyper(x, NR, NB, n, log_p);
+    const d = dhyper(x, nr, nb, nn, log_p);
 
     if (
         (!log_p && d == 0.)
@@ -112,7 +127,7 @@ export function phyper(x: number, nr: number, nb: number, nn: number, lowerTail 
         return R_DT_0(lowerTail, log_p);
     }
 
-    const pd = pdhyper(x, NR, NB, n, log_p);
+    const pd = pdhyper(x, nr, nb, nn, log_p);
 
     return log_p ? R_DT_log(lower_tail, log_p, d + pd) : R_D_Lval(lower_tail, d * pd);
 }

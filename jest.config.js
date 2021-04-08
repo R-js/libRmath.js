@@ -144,6 +144,8 @@ module.exports = {
         //ok
         '/distributions/hypergeometric/__test__/dhyper.test.ts$',
         //ok
+        '/distributions/hypergeometric/__test__/phyper.test.ts$',
+        //ok
         //'/distributions/geometric/__test__/pgeom.test.ts$',
         //ok
         //'/distributions/geometric/__test__/qgeom.test.ts$',
