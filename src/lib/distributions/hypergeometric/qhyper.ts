@@ -18,9 +18,16 @@ import { debug } from 'debug';
 import { ML_ERR_return_NAN, R_Q_P01_boundaries } from '@common/logger';
 import { lfastchoose } from '@special/choose';
 import { R_DT_qIv } from '@distributions/exp/expm1';
-
+import { DBL_EPSILON } from '$constants';
 const printer_qhyper = debug('qhyper');
 
+const _d = new Float64Array(7);
+const ixr = 0;
+const isum = 1;
+const ixb = 2;
+const iterm = 3;
+const iNR = 4;
+const iNB = 5;
 export function qhyper(
     p: number,
     nr: number,
@@ -28,17 +35,17 @@ export function qhyper(
     n: number,
     lowerTail = true,
     logP = false
-    ): number {
+): number {
     /* This is basically the same code as  ./phyper.c  *used* to be --> FIXME! */
     //let N;
     //let xstart;
     //let xend;
-    let xr;
-    let xb;
-    let sum;
-    let term;
+    //let xr;
+    //let xb;
+    //let sum;
+    //let term;
     //let small_N;
-   
+
     if (isNaN(p) || isNaN(nr) || isNaN(nb) || isNaN(n)) {
         return NaN;
     }
@@ -47,48 +54,53 @@ export function qhyper(
         return ML_ERR_return_NAN(printer_qhyper);
     }
 
-    let NR = Math.round(nr);
-    let NB = Math.round(nb);
-    const N = NR + NB;
+    _d[iNR] = Math.round(nr);
+    _d[iNB] = Math.round(nb);
+    const N = _d[iNR] + _d[iNB];
     n = Math.round(n);
-    if (NR < 0 || NB < 0 || n < 0 || n > N) return ML_ERR_return_NAN(printer_qhyper);
+    if (_d[iNR] < 0 || _d[iNB] < 0 || n < 0 || n > N) return ML_ERR_return_NAN(printer_qhyper);
 
     /* Goal:  Find  xr (= #{red balls in sample}) such that
      *   phyper(xr,  NR,NB, n) >= p > phyper(xr - 1,  NR,NB, n)
      */
 
-    const xstart = Math.max(0, n - NB);
-    const xend = Math.min(n, NR);
+    const xstart = Math.max(0, n - _d[iNB]);
+    const xend = Math.min(n, _d[iNR]);
 
     const rc = R_Q_P01_boundaries(lowerTail, logP, p, xstart, xend);
     if (rc !== undefined) {
         return rc;
     }
-    xr = xstart;
-    xb = n - xr; /* always ( = #{black balls in sample} ) */
+    _d[ixr] = xstart;
+    _d[ixb] = n - _d[ixr]; /* always ( = #{black balls in sample} ) */
 
     const small_N = N < 1000; /* won't have underflow in product below */
     /* if N is small,  term := product.ratio( bin.coef );
        otherwise work with its logarithm to protect against underflow */
-    term = lfastchoose(NR, xr) + lfastchoose(NB, xb) - lfastchoose(N, n);
-    if (small_N) term = Math.exp(term);
-    NR -= xr;
-    NB -= xb;
+    _d[iterm] = 
+    lfastchoose(_d[iNR], _d[ixr]) 
+    + 
+    lfastchoose(_d[iNB], _d[ixb])
+    - 
+    lfastchoose(N, n);
+    if (small_N) _d[iterm] = Math.exp(_d[iterm]);
+    _d[iNR] -= _d[ixr];
+    _d[iNB] -= _d[ixb];
 
     if (!lowerTail || logP) {
         p = R_DT_qIv(lowerTail, logP, p);
     }
-    p *= 1 - 1000 * Number.EPSILON; /* was 64, but failed on FreeBSD sometimes */
-    sum = small_N ? term : Math.exp(term);
+    p *= 1 - 1000 * DBL_EPSILON; /* was 64, but failed on FreeBSD sometimes */
+    _d[isum] = small_N ? _d[iterm] : Math.exp(_d[iterm]);
 
-    while (sum < p && xr < xend) {
-        xr++;
-        NB++;
-        if (small_N) term *= (NR / xr) * (xb / NB);
-        else term += Math.log((NR / xr) * (xb / NB));
-        sum += small_N ? term : Math.exp(term);
-        xb--;
-        NR--;
+    while (_d[isum] < p && _d[ixr] < xend) {
+        _d[ixr]++;
+        _d[iNB]++;
+        if (small_N) _d[iterm] *= (_d[iNR] / _d[ixr]) * (_d[ixb] / _d[iNB]);
+        else _d[iterm] += Math.log((_d[iNR] / _d[ixr]) * (_d[ixb] / _d[iNB]));
+        _d[isum] += small_N ? _d[iterm] : Math.exp(_d[iterm]);
+        _d[ixb]--;
+        _d[iNR]--;
     }
-    return xr;
+    return _d[ixr];
 }
