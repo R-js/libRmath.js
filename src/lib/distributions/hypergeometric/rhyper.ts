@@ -137,9 +137,9 @@ export function rhyperOne(nn1in: number, nn2in: number, kkin: number, rng: IRNG)
         }
         // Slow, but safe: return  F^{-1}(U)  where F(.) = phyper(.) and  U ~ U[0,1]
         // This will take crazy long time even in C native code, I throw an error
-        if (kkin > 1E6) {
+       /* if (kkin > 1E6) {
             throw new TypeError(`Blocked, these input parameters takes (even in R) 2 min to run k=${kkin},nr=${nn1in},nb=${nn2in}`);
-        }
+        }*/
         return qhyper(rng.random(), nn1in, nn2in, kkin, false, false);
     }
     //nn1 = nn1in;

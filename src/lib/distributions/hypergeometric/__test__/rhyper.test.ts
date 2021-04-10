@@ -89,10 +89,15 @@ describe('rhyper', function () {
             globalUni().init(12345);
         });
         it('n=100', async () => {
-            //rhyper(1, 23,45,10);
-            //consorhyper(10,23,45,10));
-            rhyper(100,2**31-2,2**31-2,2**31-2)
-            console.log(rhyper(1,2**31-2,2**31-2,2**31-1));
+            rhyper(100,2**31-2,2**31-2,2**31-2);
+        });
+        it('n=100 , nr > MAX_INT', async () => {
+            // now one of the params is >= MAX_INT
+            rhyper(100,2**31-1,2**31-2,1E5);
+        });
+        it('n=100 , nr > MAX_INT', async () => {
+            console.log(rhyper(1,2**31-1,2**31-2, 2**31-3));
+            // the answer was: 
         });
     });
 });
