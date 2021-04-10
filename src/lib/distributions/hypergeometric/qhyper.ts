@@ -77,12 +77,12 @@ export function qhyper(
     const small_N = N < 1000; /* won't have underflow in product below */
     /* if N is small,  term := product.ratio( bin.coef );
        otherwise work with its logarithm to protect against underflow */
-    _d[iterm] = 
-    lfastchoose(_d[iNR], _d[ixr]) 
-    + 
-    lfastchoose(_d[iNB], _d[ixb])
-    - 
-    lfastchoose(N, n);
+    _d[iterm] =
+        lfastchoose(_d[iNR], _d[ixr])
+        +
+        lfastchoose(_d[iNB], _d[ixb])
+        -
+        lfastchoose(N, n);
     if (small_N) _d[iterm] = Math.exp(_d[iterm]);
     _d[iNR] -= _d[ixr];
     _d[iNB] -= _d[ixb];
@@ -92,15 +92,41 @@ export function qhyper(
     }
     p *= 1 - 1000 * DBL_EPSILON; /* was 64, but failed on FreeBSD sometimes */
     _d[isum] = small_N ? _d[iterm] : Math.exp(_d[iterm]);
-
-    while (_d[isum] < p && _d[ixr] < xend) {
-        _d[ixr]++;
-        _d[iNB]++;
-        if (small_N) _d[iterm] *= (_d[iNR] / _d[ixr]) * (_d[ixb] / _d[iNB]);
-        else _d[iterm] += Math.log((_d[iNR] / _d[ixr]) * (_d[ixb] / _d[iNB]));
-        _d[isum] += small_N ? _d[iterm] : Math.exp(_d[iterm]);
-        _d[ixb]--;
-        _d[iNR]--;
+/*
+    let lc = 0;
+    const log = (x: number) => {
+        lc++;
+        return Math.log(x);
     }
+
+    let ec = 0;
+    const exp = (x: number) => {
+        ec++;
+        return Math.exp(x);
+    }
+*/
+    // for speed, removed if (small_N) out of the while loop
+    if (small_N) {
+        while (_d[isum] < p && _d[ixr] < xend) {
+            _d[ixr]++;
+            _d[iNB]++;
+            _d[iterm] *= (_d[iNR] / _d[ixr]) * (_d[ixb] / _d[iNB]);
+            _d[isum] += _d[iterm];
+            _d[ixb]--;
+            _d[iNR]--;
+        }
+    }
+    else {
+        while (_d[isum] < p && _d[ixr] < xend) {
+            _d[ixr]++;
+            _d[iNB]++;
+            _d[iterm] += Math.log((_d[iNR] / _d[ixr]) * (_d[ixb] / _d[iNB]));
+            _d[isum] += Math.exp(_d[iterm]);
+            _d[ixb]--;
+            _d[iNR]--;
+        }
+    }
+
+//    console.log({ lc, ec });
     return _d[ixr];
 }

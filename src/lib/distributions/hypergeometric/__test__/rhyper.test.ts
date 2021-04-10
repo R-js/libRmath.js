@@ -53,18 +53,22 @@ describe('rhyper', function () {
         it('test with m, n, k bigger then INT_MAX (2^31-1)', () => {
             RNGKind(IRNGTypeEnum.MERSENNE_TWISTER, IRNGNormalTypeEnum.INVERSION);
             globalUni().init(1234);
-            const z = rhyper(10,2**31,2**31,1)
-            expect(z).toEqualFloatingPointBinary([0, 1, 1, 1, 1, 1, 0, 0, 1, 1]);
-            const z2 = rhyper(10,2**31-2,2**31,1)
-            expect(z2).toEqualFloatingPointBinary([ 1, 1, 0, 1, 0, 1, 0, 0, 0, 0]);
+            //const z = rhyper(10,2**31,2**31,1)
+            //expect(z).toEqualFloatingPointBinary([0, 1, 1, 1, 1, 1, 0, 0, 1, 1]);
+            //const z2 = rhyper(10,2**31-2,2**31,1)
+            //expect(z2).toEqualFloatingPointBinary([ 1, 1, 0, 1, 0, 1, 0, 0, 0, 0]);
             globalUni().init(1234);
             const z3 = rhyper(
                 1,
-                2**31-2,
-                2**31-2,
+                2**31-1,
+                2**31-1,
                 2**31-1
             );
             console.log(z3);
+            /*for (let i=0; i < 0.5*2**31-1;i++){
+                Math.log(i);
+                Math.exp(-i)
+            }
            /* expect(z3).toEqualFloatingPointBinary([
                 500603, 499844, 499861, 499843, 499458, 499820, 501173, 500365, 499785, 499982
             ]);*/
