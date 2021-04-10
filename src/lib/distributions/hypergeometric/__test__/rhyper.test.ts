@@ -28,7 +28,7 @@ const rhyperDomainWarns = rhyperLogs("argument out of domain in '%s'");
 
 
 describe('rhyper', function () {
-    xdescribe('invalid input', () => {
+    describe('invalid input', () => {
         beforeEach(() => {
             cl.clear('rhyper');
         });
@@ -49,45 +49,34 @@ describe('rhyper', function () {
         });
     });
 
-    xdescribe('edge cases', () => {
+    describe('edge cases', () => {
         it('test with m, n, k bigger then INT_MAX (2^31-1)', () => {
             RNGKind(IRNGTypeEnum.MERSENNE_TWISTER, IRNGNormalTypeEnum.INVERSION);
             globalUni().init(1234);
-            const z = rhyper(10,2**31-1,2**31,1)
+            const z = rhyper(10,2**31,2**31,1)
             expect(z).toEqualFloatingPointBinary([0, 1, 1, 1, 1, 1, 0, 0, 1, 1]);
             const z2 = rhyper(10,2**31-2,2**31,1)
             expect(z2).toEqualFloatingPointBinary([ 1, 1, 0, 1, 0, 1, 0, 0, 0, 0]);
-            // this will take a fucking long time in R
             globalUni().init(1234);
             const z3 = rhyper(
-                10,
-                2**31-1,
-                2**31-1,
-                1E6
+                1,
+                2**31-2,
+                2**31-2,
+                2**31-1
             );
-            //console.log(z3);
-            expect(z3).toEqualFloatingPointBinary([
+            console.log(z3);
+           /* expect(z3).toEqualFloatingPointBinary([
                 500603, 499844, 499861, 499843, 499458, 499820, 501173, 500365, 499785, 499982
-            ]);
-            globalUni().init(1234);
-            const z4 = rhyper(
-                10,
-                2**29,
-                2**31-1,
-                1E6
-            );
-            //console.log(z4);
-            expect(z4).toEqualFloatingPointBinary([
-                200483, 199875, 199889, 199874, 199566, 199856, 200939, 200292, 199828, 199986
-            ]);
+            ]);*/
         });
     });
 
-    describe('with fixtures', () => {
+    xdescribe('with fixtures', () => {
         beforeAll(()=>{
             RNGKind(IRNGTypeEnum.MERSENNE_TWISTER, IRNGNormalTypeEnum.INVERSION);
             globalUni().init(12345);
         });
+<<<<<<< HEAD
         it('n=100', async () => {
             rhyper(100,2**31-2,2**31-2,2**31-2);
         });
@@ -98,6 +87,19 @@ describe('rhyper', function () {
         it('n=100 , nr > MAX_INT', async () => {
             console.log(rhyper(1,2**31-1,2**31-2, 2**31-3));
             // the answer was: 
+=======
+        xit('n=100', async () => {
+            //rhyper(1, 23,45,10);
+            //consorhyper(10,23,45,10));
+            rhyper(100,2**31-2,2**31-2,2**31-2)
+            console.log(rhyper(1,2**31-2,2**31-2,2**31-1));
+        });
+        xit('n=100', async () => {
+            //rhyper(1, 23,45,10);
+            //consorhyper(10,23,45,10));
+            rhyper(100,2**31-2,2**31-2,2**31-2)
+            console.log(rhyper(1,2**31-2,2**31-2,2**31-1));
+>>>>>>> 0b04fda114de97eb8236abeedff209b5dec3dbda
         });
     });
 });

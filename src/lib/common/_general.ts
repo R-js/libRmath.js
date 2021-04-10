@@ -51,6 +51,7 @@ export function frac(x: number): number { return x - Math.trunc(x) }
 export const M_SQRT_32 = 5.656854249492380195206754896838; /* sqrt(32) */
 
 //gamma
+export const DBL_EPSILON = 2.2204460492503131e-016;
 export const DBL_MANT_DIG = 18;
 export const DBL_MIN = 2.2250738585072014e-308; 
 export const M_LN2 = 0.693147180559945309417232121458; /* ln(2) */
