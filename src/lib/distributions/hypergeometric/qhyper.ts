@@ -77,7 +77,7 @@ export function qhyper(
     const small_N = N < 1000; /* won't have underflow in product below */
     /* if N is small,  term := product.ratio( bin.coef );
        otherwise work with its logarithm to protect against underflow */
-    _d[iterm] = 
+     _d[iterm] = 
     lfastchoose(_d[iNR], _d[ixr]) 
     + 
     lfastchoose(_d[iNB], _d[ixb])
@@ -92,7 +92,8 @@ export function qhyper(
     }
     p *= 1 - 1000 * DBL_EPSILON; /* was 64, but failed on FreeBSD sometimes */
     _d[isum] = small_N ? _d[iterm] : Math.exp(_d[iterm]);
-
+     
+   
     while (_d[isum] < p && _d[ixr] < xend) {
         _d[ixr]++;
         _d[iNB]++;
@@ -103,4 +104,5 @@ export function qhyper(
         _d[iNR]--;
     }
     return _d[ixr];
+   
 }

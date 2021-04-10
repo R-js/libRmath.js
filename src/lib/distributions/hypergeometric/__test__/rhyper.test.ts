@@ -59,10 +59,10 @@ describe('rhyper', function () {
             expect(z2).toEqualFloatingPointBinary([ 1, 1, 0, 1, 0, 1, 0, 0, 0, 0]);
             globalUni().init(1234);
             const z3 = rhyper(
-                1,
+                100,
                 2**31-2,
                 2**31-2,
-                2**31-1
+                1E6
             );
             console.log(z3);
            /* expect(z3).toEqualFloatingPointBinary([
@@ -76,18 +76,6 @@ describe('rhyper', function () {
             RNGKind(IRNGTypeEnum.MERSENNE_TWISTER, IRNGNormalTypeEnum.INVERSION);
             globalUni().init(12345);
         });
-<<<<<<< HEAD
-        it('n=100', async () => {
-            rhyper(100,2**31-2,2**31-2,2**31-2);
-        });
-        it('n=100 , nr > MAX_INT', async () => {
-            // now one of the params is >= MAX_INT
-            rhyper(100,2**31-1,2**31-2,1E5);
-        });
-        it('n=100 , nr > MAX_INT', async () => {
-            console.log(rhyper(1,2**31-1,2**31-2, 2**31-3));
-            // the answer was: 
-=======
         xit('n=100', async () => {
             //rhyper(1, 23,45,10);
             //consorhyper(10,23,45,10));
@@ -97,9 +85,8 @@ describe('rhyper', function () {
         xit('n=100', async () => {
             //rhyper(1, 23,45,10);
             //consorhyper(10,23,45,10));
-            rhyper(100,2**31-2,2**31-2,2**31-2)
-            console.log(rhyper(1,2**31-2,2**31-2,2**31-1));
->>>>>>> 0b04fda114de97eb8236abeedff209b5dec3dbda
+            rhyper(100,2**31-2,2**31-2,1E6)
+            console.log(rhyper(1,2**31-2,2**31-2,1E6));
         });
     });
 });
