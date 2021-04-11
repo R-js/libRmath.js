@@ -1,8 +1,8 @@
 (module
  (type $f64_=>_f64 (func (param f64) (result f64)))
  (type $f64_f64_f64_f64_f64_f64_f64_f64_=>_f64 (func (param f64 f64 f64 f64 f64 f64 f64 f64) (result f64)))
- (import "log" (func $simple/log (param f64) (result f64)))
- (import "exp" (func $simple/exp (param f64) (result f64)))
+ (import "simple" "log" (func $simple/log (param f64) (result f64)))
+ (import "simple" "exp" (func $simple/exp (param f64) (result f64)))
  (memory $0 0)
  (export "calcTinyN" (func $simple/calcTinyN))
  (export "calcBigN" (func $simple/calcBigN))
@@ -27,13 +27,13 @@
     local.tee $3
     f64.div
     local.get $5
-    f64.mul
     local.get $6
     f64.const 1
     f64.add
     local.tee $6
     f64.div
     f64.mul
+    f64.add
     local.tee $1
     f64.add
     local.set $0
@@ -70,14 +70,14 @@
     local.tee $3
     f64.div
     local.get $5
-    f64.mul
     local.get $6
     f64.const 1
     f64.add
     local.tee $6
     f64.div
-    call $simple/log
     f64.mul
+    call $simple/log
+    f64.add
     local.tee $1
     call $simple/exp
     f64.add

@@ -26,12 +26,12 @@ const printer_qhyper = debug('qhyper');
 
 const io = {
     simple: {
-        log: (x: number) => Math.log(x),
-        exp: (x: number) => Math.exp(x)
+        log: Math.log,
+        exp: Math.exp
     }
 };
 
-const binary = readFileSync(resolve(__dirname, 'qhyper-test.wasm'), null);
+const binary = readFileSync(resolve(__dirname, 'qhyper.acc.wasm'), null);
 // streaming
 let wasmMod: WebAssembly.WebAssemblyInstantiatedSource;
 
@@ -130,6 +130,7 @@ export function qhyper(
     // for speed, removed if (small_N) out of the while loop
     if (small_N) {
         if (wasmMod && useWasm) {
+            console.log('wasm');
             _d[ixr] = (wasmMod.instance.exports.calcTinyN as calc)(
                 _d[isum],
                 _d[iterm],
@@ -154,6 +155,7 @@ export function qhyper(
     }
     else {
         if (wasmMod && useWasm) {
+            console.log('wasm');
             _d[ixr] = (wasmMod.instance.exports.calcBigN as calc)(
                 _d[isum],
                 _d[iterm],

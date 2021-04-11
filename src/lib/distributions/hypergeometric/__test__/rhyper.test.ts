@@ -67,7 +67,7 @@ describe('rhyper', function () {
                 1,
                 2**31-1,
                 2**31-1,
-                2**25,
+                2**31-1,
                 undefined,
                 false
             );
