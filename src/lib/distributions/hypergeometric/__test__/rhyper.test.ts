@@ -89,8 +89,8 @@ describe('rhyper', function () {
         xit('n=100', async () => {
             //rhyper(1, 23,45,10);
             //consorhyper(10,23,45,10));
-            rhyper(100,2**31-2,2**31-2,2**31-2)
-            console.log(rhyper(1,2**31-2,2**31-2,2**31-1));
+            rhyper(100,2**31-2,2**31-2,1E6)
+            console.log(rhyper(1,2**31-2,2**31-2,1E6));
         });
     });
 });

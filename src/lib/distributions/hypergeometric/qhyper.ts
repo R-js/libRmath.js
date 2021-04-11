@@ -129,4 +129,5 @@ export function qhyper(
 
 //    console.log({ lc, ec });
     return _d[ixr];
+   
 }
