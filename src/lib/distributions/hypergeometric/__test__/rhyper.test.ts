@@ -28,18 +28,18 @@ const rhyperDomainWarns = rhyperLogs("argument out of domain in '%s'");
 
 
 describe('rhyper', function () {
-    describe('invalid input', () => {
+    xdescribe('invalid input', () => {
         beforeEach(() => {
             cl.clear('rhyper');
         });
-        it('n=1, other params are NaNs or Infinity', () => {
+        it('n=1, other params are NaNs or Infinity',async  () => {
             const nan2 = rhyper(1, NaN, 0, 0);
             const nan3 = rhyper(1, 0, NaN, 0);
             const nan4 = rhyper(1, 0, 0, Infinity);
             expect([nan2[0], nan3[0], nan4[0]]).toEqualFloatingPointBinary(NaN);
             expect(rhyperDomainWarns()).toHaveLength(3);
         });
-        it('test inputs nr < 0, nb <0, n <0 n > (nb+nr)', () => {
+        it('test inputs nr < 0, nb <0, n <0 n > (nb+nr)', async () => {
             const nan1 = rhyper(1, -1, 0, 0);
             const nan2 = rhyper(1, 0, -1, 0);
             const nan3 = rhyper(1, 0, 0, -1);
@@ -50,7 +50,11 @@ describe('rhyper', function () {
     });
 
     describe('edge cases', () => {
-        it('test with m, n, k bigger then INT_MAX (2^31-1)', () => {
+        it('test with m, n, k bigger then INT_MAX (2^31-1)', async () => {
+
+            await new Promise(resolve => {
+                setTimeout(resolve, 3000);
+            });
             RNGKind(IRNGTypeEnum.MERSENNE_TWISTER, IRNGNormalTypeEnum.INVERSION);
             globalUni().init(1234);
             //const z = rhyper(10,2**31,2**31,1)
@@ -58,13 +62,17 @@ describe('rhyper', function () {
             //const z2 = rhyper(10,2**31-2,2**31,1)
             //expect(z2).toEqualFloatingPointBinary([ 1, 1, 0, 1, 0, 1, 0, 0, 0, 0]);
             globalUni().init(1234);
+            const d = Date.now();
             const z3 = rhyper(
                 1,
                 2**31-1,
                 2**31-1,
-                2**31-1
+                2**25,
+                undefined,
+                false
             );
-            console.log(z3);
+            const delay = Date.now()-d;
+            console.log(`r=${z3}, delay=${delay}ms`);
             /*for (let i=0; i < 0.5*2**31-1;i++){
                 Math.log(i);
                 Math.exp(-i)

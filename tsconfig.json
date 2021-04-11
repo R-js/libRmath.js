@@ -36,7 +36,9 @@
     "lib": [
       "es2017",
       "es2020",
-      "es2017.string"
+      "es2018",
+      "es2017.string",
+      "dom"
     ],
     "module": "es2020",
     "noEmit": true,

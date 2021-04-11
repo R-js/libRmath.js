@@ -22,6 +22,6 @@ import { globalUni } from '@rng/globalRNG';
 import { repeatedCall64 } from '$helper';
 
 //rhyper(nn, m, n, k)
-export function rhyper(N: number, nn1in: number, nn2in: number, kkin: number, rng = globalUni()): Float64Array {
-   return repeatedCall64(N, rhyperOne, nn1in, nn2in, kkin, rng);
+export function rhyper(N: number, nn1in: number, nn2in: number, kkin: number, rng = globalUni(), useWasm = false): Float64Array {
+   return repeatedCall64(N, rhyperOne, nn1in, nn2in, kkin, rng, useWasm);
 }

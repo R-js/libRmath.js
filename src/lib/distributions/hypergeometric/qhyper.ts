@@ -19,7 +19,28 @@ import { ML_ERR_return_NAN, R_Q_P01_boundaries } from '@common/logger';
 import { lfastchoose } from '@special/choose';
 import { R_DT_qIv } from '@distributions/exp/expm1';
 import { DBL_EPSILON } from '$constants';
+import { readFileSync } from 'fs';
+import { resolve } from 'path';
 const printer_qhyper = debug('qhyper');
+
+
+const io = {
+    simple: {
+        log: (x: number) => Math.log(x),
+        exp: (x: number) => Math.exp(x)
+    }
+};
+
+const binary = readFileSync(resolve(__dirname, 'qhyper-test.wasm'), null);
+// streaming
+let wasmMod: WebAssembly.WebAssemblyInstantiatedSource;
+
+WebAssembly.instantiate(binary, io).then(inst => {
+    wasmMod = inst;
+});
+
+type calc = (sum: number, term: number, p: number, xr: number, xend: number, xb: number, NB: number, NR: number ) => number;
+
 
 const _d = new Float64Array(7);
 const ixr = 0;
@@ -34,7 +55,8 @@ export function qhyper(
     nb: number,
     n: number,
     lowerTail = true,
-    logP = false
+    logP = false,
+    useWasm = false
 ): number {
     /* This is basically the same code as  ./phyper.c  *used* to be --> FIXME! */
     //let N;
@@ -92,42 +114,70 @@ export function qhyper(
     }
     p *= 1 - 1000 * DBL_EPSILON; /* was 64, but failed on FreeBSD sometimes */
     _d[isum] = small_N ? _d[iterm] : Math.exp(_d[iterm]);
-/*
-    let lc = 0;
-    const log = (x: number) => {
-        lc++;
-        return Math.log(x);
-    }
-
-    let ec = 0;
-    const exp = (x: number) => {
-        ec++;
-        return Math.exp(x);
-    }
-*/
+    /*
+        let lc = 0;
+        const log = (x: number) => {
+            lc++;
+            return Math.log(x);
+        }
+    
+        let ec = 0;
+        const exp = (x: number) => {
+            ec++;
+            return Math.exp(x);
+        }
+    */
     // for speed, removed if (small_N) out of the while loop
     if (small_N) {
-        while (_d[isum] < p && _d[ixr] < xend) {
-            _d[ixr]++;
-            _d[iNB]++;
-            _d[iterm] *= (_d[iNR] / _d[ixr]) * (_d[ixb] / _d[iNB]);
-            _d[isum] += _d[iterm];
-            _d[ixb]--;
-            _d[iNR]--;
+        if (wasmMod && useWasm) {
+            _d[ixr] = (wasmMod.instance.exports.calcTinyN as calc)(
+                _d[isum],
+                _d[iterm],
+                p,
+                _d[ixr],
+                xend,
+                _d[ixb],
+                _d[iNB],
+                _d[iNR]
+            );
+        }
+        else {
+            while (_d[isum] < p && _d[ixr] < xend) {
+                _d[ixr]++;
+                _d[iNB]++;
+                _d[iterm] *= (_d[iNR] / _d[ixr]) * (_d[ixb] / _d[iNB]);
+                _d[isum] += _d[iterm];
+                _d[ixb]--;
+                _d[iNR]--;
+            }
         }
     }
     else {
-        while (_d[isum] < p && _d[ixr] < xend) {
-            _d[ixr]++;
-            _d[iNB]++;
-            _d[iterm] += Math.log((_d[iNR] / _d[ixr]) * (_d[ixb] / _d[iNB]));
-            _d[isum] += Math.exp(_d[iterm]);
-            _d[ixb]--;
-            _d[iNR]--;
+        if (wasmMod && useWasm) {
+            _d[ixr] = (wasmMod.instance.exports.calcBigN as calc)(
+                _d[isum],
+                _d[iterm],
+                p,
+                _d[ixr],
+                xend,
+                _d[ixb],
+                _d[iNB],
+                _d[iNR]
+            );
+        }
+        else {
+            while (_d[isum] < p && _d[ixr] < xend) {
+                _d[ixr]++;
+                _d[iNB]++;
+                _d[iterm] += Math.log((_d[iNR] / _d[ixr]) * (_d[ixb] / _d[iNB]));
+                _d[isum] += Math.exp(_d[iterm]);
+                _d[ixb]--;
+                _d[iNR]--;
+            }
         }
     }
 
-//    console.log({ lc, ec });
+    //    console.log({ lc, ec });
     return _d[ixr];
-   
+
 }

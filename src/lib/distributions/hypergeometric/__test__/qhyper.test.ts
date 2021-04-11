@@ -7,6 +7,7 @@ import { qhyper } from '..';
 
 const cl = require('debug');
 
+
 function select(ns: string) {
     return function (filter: string) {
         return function () {
@@ -39,7 +40,7 @@ describe('qhyper(p,m,n,k,log)', function () {
             cl.clear('qhyper');
             cl.clear('R_Q_P01_boundaries');
         });
-        it('test inputs p, nr, ,b, n on NaN', () => {
+        it('test inputs p, nr, ,b, n on NaN', async () => {
             const nan1 = qhyper(NaN, 0, 0, 0);
             const nan2 = qhyper(0, NaN, 0, 0);
             const nan3 = qhyper(0, 0, NaN, 0);
@@ -47,7 +48,7 @@ describe('qhyper(p,m,n,k,log)', function () {
             expect([nan1, nan2, nan3, nan4]).toEqualFloatingPointBinary(NaN);
             expect(qhyperWarns()).toHaveLength(0);
         });
-        it('test inputs p,nr, nb, n on infinity', () => {
+        it('test inputs p,nr, nb, n on infinity', async () => {
             const I = Infinity;
             const nan1 = qhyper(I, 0, 0, 0);
             const nan2 = qhyper(0, I, 0, 0);
@@ -56,7 +57,7 @@ describe('qhyper(p,m,n,k,log)', function () {
             expect([nan1, nan2, nan3, nan4]).toEqualFloatingPointBinary(NaN);
             expect(qhyperWarns()).toHaveLength(4);
         });
-        it('test inputs nr < 0, nb <0, n <0 n > (nb+nr)', () => {
+        it('test inputs nr < 0, nb <0, n <0 n > (nb+nr)', async () => {
             const nan1 = qhyper(0.1, -1, 0, 0);
             const nan2 = qhyper(0.1, 0, -1, 0);
             const nan3 = qhyper(0.1, 0, 0, -1);
@@ -64,7 +65,7 @@ describe('qhyper(p,m,n,k,log)', function () {
             expect([nan1, nan2, nan3, nan4]).toEqualFloatingPointBinary(NaN);
             expect(qhyperWarns()).toHaveLength(4);
         });
-        it('p < 0 || p > 1', () => {
+        it('p < 0 || p > 1', async () => {
             const nan1 = qhyper(-1, 2, 3, 2);
             const nan2 = qhyper(1.21, 2, 3, 2);
             expect([nan1, nan2]).toEqualFloatingPointBinary(NaN);
@@ -72,7 +73,7 @@ describe('qhyper(p,m,n,k,log)', function () {
         });
     });
     describe('edge cases', () => {
-        it('(p=1 and p=1, m=300 n=150, k=400', () => {
+        it('(p=1 and p=1, m=300 n=150, k=400', async () => {
             // the minimum output is Max(0,  (nn-nb) )
             // the maximum output is min(nn, nr)
             // xstart = max(0, 400-150) = 250, so p=0 will output 250
@@ -102,6 +103,8 @@ describe('qhyper(p,m,n,k,log)', function () {
             expect(a4).toEqualFloatingPointBinary(y4, 45);
         });
         it('p ∈ [0,1], m=1300, n=150, k=1400 (k >= 1000, "big"), lower={true|false}, log={true|false}', async () => {
+            
+            
             const [p, y1, y2, y3, y4] = await loadData(
                 resolve(__dirname, 'fixture-generation', 'qhyper2.R'),
                 /\s+/,
