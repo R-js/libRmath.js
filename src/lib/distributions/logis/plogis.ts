@@ -35,9 +35,6 @@ export function plogis(x: number, location = 0, scale = 1, lower_tail = true, lo
     }
 
     x = (x - location) / scale;
-    if (isNaN(x)) {
-        return ML_ERR_return_NAN(printer_plogis);
-    }
     const rc = R_P_bounds_Inf_01(lower_tail, log_p, x);
     if (rc !== undefined) {
         return rc;

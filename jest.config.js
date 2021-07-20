@@ -1,23 +1,25 @@
-/* exslint-disable @typescript-eslint/no-var-requires */
 module.exports = {
     automock: false,
     collectCoverage: true,
+    maxWorkers: "50%",
     collectCoverageFrom: [
-        /*'src/lib/distributions/beta/*.ts',
+        'src/lib/distributions/beta/*.ts',
         'src/lib/distributions/binomial/*.ts',
         'src/lib/distributions/binomial-negative/*.ts',
         'src/lib/distributions/cauchy/*.ts',
         'src/lib/distributions/chi-2/*.ts',
         'src/lib/distributions/exp/*.ts',
         'src/lib/distributions/f-distro/*.ts',
-        'src/lib/distributions/gamma/*.ts',*/
-        //'src/lib/distributions/geometric/*.ts',
-        'src/lib/distributions/hypergeometric/*.ts'
-        //'src/lib/distributions/poisson/*.ts'
+        'src/lib/distributions/gamma/*.ts',
+        'src/lib/distributions/geometric/*.ts',
+        'src/lib/distributions/hypergeometric/*.ts',
+        'src/lib/distributions/logis/*.ts'
+        //'src/lib/distributions/poisson/*.ts'*/
     ],
     coveragePathIgnorePatterns: ['node_modules', 'test', 'doc.ts'],
     coverageDirectory: 'coverage',
-    coverageProvider: 'babel', //"v8" is still experimental, but use "v8" for walk through debugging
+    //coverageProvider: 'babel', //"v8" is still experimental, but use "v8" for walk through debugging
+    coverageProvider: 'v8', //"v8" is still experimental, but use "v8" for walk through debugging
     coverageReporters: ['json', 'lcov', 'text', 'clover'],
     preset: 'ts-jest',
     testEnvironment: 'node',
@@ -26,10 +28,8 @@ module.exports = {
     testPathIgnorePatterns: ['/es6/', '/commonjs/'],
     //testMatch: ['**/__tests__/**/*.[t]s?(x)', '**/?(*.)+(spec|test).[t]s?(x)'],
     testRegex: [
-       // beta
-       // ok
+       /* // beta
         '/distributions/beta/__test__/dbeta.test.ts$',
-        /*
         // ok 
         '/distributions/beta/__test__/dnbeta.test.ts$',
         // ok 
@@ -42,8 +42,6 @@ module.exports = {
         '/distributions/beta/__test__/qnbeta.test.ts$',
         // ok 
         '/distributions/beta/__test__/rbeta.test.ts$',
-
-
         // binom
         // ok 
         '/distributions/binomial/__test__/dbinom.test.ts$',
@@ -129,32 +127,39 @@ module.exports = {
         '/distributions/gamma/__test__/qgamma.test.ts$',
         //ok
         '/distributions/gamma/__test__/rgamma.test.ts$',
-        */
+        
 
         //geometric
         //ok
-        //'/distributions/geometric/__test__/dgeom.test.ts$',
+        '/distributions/geometric/__test__/dgeom.test.ts$',
         //ok
-        //'/distributions/geometric/__test__/pgeom.test.ts$',
+        '/distributions/geometric/__test__/pgeom.test.ts$',
         //ok
-        //'/distributions/geometric/__test__/qgeom.test.ts$',
+        '/distributions/geometric/__test__/qgeom.test.ts$',
         //ok
-        //'/distributions/geometric/__test__/rgeom.test.ts$',
+        '/distributions/geometric/__test__/rgeom.test.ts$',
 
         //hypergeometric
         //ok
-        //'/distributions/hypergeometric/__test__/dhyper.test.ts$',
+        '/distributions/hypergeometric/__test__/dhyper.test.ts$',
         //ok
-        //'/distributions/hypergeometric/__test__/phyper.test.ts$',
+        '/distributions/hypergeometric/__test__/phyper.test.ts$',
         //ok
-        //'/distributions/hypergeometric/__test__/qhyper.test.ts$',
+        '/distributions/hypergeometric/__test__/qhyper.test.ts$',
         
-        '/distributions/hypergeometric/__test__/rhyper.test.ts$',
-        
-        
+       // '/distributions/hypergeometric/__test__/rhyper.test.ts$',
+        */
+       //logis
+       '/distributions/logis/__test__/dlogis.test.ts$',
+       '/distributions/logis/__test__/plogis.test.ts$',
+       '/distributions/logis/__test__/qlogis.test.ts$',
+       '/distributions/logis/__test__/rlogis.test.ts$',
+
 
         // poisson
         //'/distributions/poisson/__test__/dpois.test.ts$',
+
+        // 
 
         /*'/special/bessel/besselJ/__test__/(.*?\\.)?test.ts$',
         '/special/gamma/__test__/(.*?\\.)?test.ts$',

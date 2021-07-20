@@ -25,6 +25,7 @@ describe('dexp', function () {
         cl.clear('dexp');
     })
     it('x=[-0.5, 3], rate=(1, 2, 45, 0.5)', async () => {
+        
         const [p, y1, y2, y3, y4] = await loadData(resolve(__dirname, 'fixture-generation', 'dexp.R'), /\s+/, 1, 2, 3, 4, 5);
 
         const a1 = p.map(_p => dexp(_p, 1));
