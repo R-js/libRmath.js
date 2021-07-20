@@ -17,7 +17,7 @@ module.exports = {
     ],
     coveragePathIgnorePatterns: ['node_modules', 'test', 'doc.ts'],
     coverageDirectory: 'coverage',
-    coverageProvider: 'babel', //"v8" is still experimental
+    coverageProvider: 'babel', //"v8" is still experimental, but use "v8" for walk through debugging
     coverageReporters: ['json', 'lcov', 'text', 'clover'],
     preset: 'ts-jest',
     testEnvironment: 'node',
@@ -26,9 +26,10 @@ module.exports = {
     testPathIgnorePatterns: ['/es6/', '/commonjs/'],
     //testMatch: ['**/__tests__/**/*.[t]s?(x)', '**/?(*.)+(spec|test).[t]s?(x)'],
     testRegex: [
-       /* // beta
+       // beta
        // ok
         '/distributions/beta/__test__/dbeta.test.ts$',
+        /*
         // ok 
         '/distributions/beta/__test__/dnbeta.test.ts$',
         // ok 

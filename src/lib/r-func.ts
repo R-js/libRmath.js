@@ -61,6 +61,43 @@ export interface ISummary {
     };
 }
 
+enum LogLevel {
+    ERROR,
+    WARN,
+    INFO,
+    DEBUG,
+  }
+
+type  ValueOf<T> = T[keyof T];
+
+export type LogLevelStrings = keyof typeof LogLevel;
+export type logLevelValues = ValueOf<LogLevel>; // shitty with enums
+
+
+class C {
+    x = 0;
+    y = 0;
+  }
+
+  
+export type xC = typeof C
+export type T0 = InstanceType<xC>;
+
+const xx: xC = Object.create(C.prototype);
+console.log(xx.name)
+
+const c:T0 = new C;
+
+export { c }
+
+
+
+export abstract class Sum implements ISummary {
+    abstract N: number;
+    abstract mu: number;
+
+}
+/*
 export function summary(x: number[]): ISummary {
     if (!Array.isArray(x)) {
         throw new Error(`Illigal argument, not an array`);
@@ -68,8 +105,8 @@ export function summary(x: number[]): ISummary {
     if (x.length === 0) {
         throw new Error(`argument Array is empty`);
     }
-    if (x.includes(NaN)) {
-        throw new Error(`argument Array has NaNs`);
+    if (Array.isArray(x) && x.includes(NaN)) {
+        throw new Error('argument Array has NaNs');
     }
 
     const N = x.length;
@@ -120,7 +157,7 @@ export function summary(x: number[]): ISummary {
         },
     };
 }
-
+*/
 // https://en.wikipedia.org/wiki/Welch%E2%80%93Satterthwaite_equation
 
 export function Welch_Satterthwaite(s: number[], n: number[]): number {

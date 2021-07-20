@@ -50,7 +50,7 @@ describe('rhyper', function () {
     });
 
     describe('edge cases', () => {
-        it('test with m, n, k bigger then INT_MAX (2^31-1)', async () => {
+        xit('test with m, n, k bigger then INT_MAX (2^31-1)', async () => {
 
             await new Promise(resolve => {
                 setTimeout(resolve, 3000);

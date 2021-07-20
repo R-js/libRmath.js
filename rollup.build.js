@@ -8,6 +8,7 @@ const { resolve, dirname } = require('path');
 builtin.splice(builtin.indexOf('crypto'), 1);
 
 function shims() {
+    // for browser, mimic with WebApi the nodejs "crypto" https://nodejs.org/api/crypto.html#crypto_crypto_randombytes_size_callback
     const cryptoStub = `export function randomBytes(n) {
         return {
             readUInt32BE(offset = 0) {
