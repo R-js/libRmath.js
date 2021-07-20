@@ -1,8 +1,8 @@
 import { createReadStream } from 'fs';
 import * as rtl from 'readline';
 
-const matchNaN = /^(\-|\+)?NaN$/i;
-const matchInf = /^(\-|\+)?Inf$/i;
+const matchNaN = /^(-|\+)?NaN$/i;
+const matchInf = /^(-|\+)?Inf$/i;
 
 export function loadData(fullPath: string, sep = /,/, ...columns: number[]): Promise<Float64Array[]> {
     let resolve: (value: Float64Array[] | PromiseLike<Float64Array[]>) => void
