@@ -3,15 +3,15 @@ module.exports = {
     automock: false,
     collectCoverage: true,
     collectCoverageFrom: [
-        /*'src/lib/distributions/beta/*.ts',
+        'src/lib/distributions/beta/*.ts',
         'src/lib/distributions/binomial/*.ts',
         'src/lib/distributions/binomial-negative/*.ts',
         'src/lib/distributions/cauchy/*.ts',
         'src/lib/distributions/chi-2/*.ts',
         'src/lib/distributions/exp/*.ts',
         'src/lib/distributions/f-distro/*.ts',
-        'src/lib/distributions/gamma/*.ts',*/
-        //'src/lib/distributions/geometric/*.ts',
+        'src/lib/distributions/gamma/*.ts',
+        'src/lib/distributions/geometric/*.ts',
         'src/lib/distributions/hypergeometric/*.ts'
         //'src/lib/distributions/poisson/*.ts'
     ],
@@ -26,7 +26,7 @@ module.exports = {
     testPathIgnorePatterns: ['/es6/', '/commonjs/'],
     //testMatch: ['**/__tests__/**/*.[t]s?(x)', '**/?(*.)+(spec|test).[t]s?(x)'],
     testRegex: [
-       /* // beta
+        // beta
        // ok
         '/distributions/beta/__test__/dbeta.test.ts$',
         // ok 
@@ -128,50 +128,47 @@ module.exports = {
         '/distributions/gamma/__test__/qgamma.test.ts$',
         //ok
         '/distributions/gamma/__test__/rgamma.test.ts$',
-        */
+    
 
         //geometric
         //ok
-        //'/distributions/geometric/__test__/dgeom.test.ts$',
+        '/distributions/geometric/__test__/dgeom.test.ts$',
         //ok
-        //'/distributions/geometric/__test__/pgeom.test.ts$',
+        '/distributions/geometric/__test__/pgeom.test.ts$',
         //ok
-        //'/distributions/geometric/__test__/qgeom.test.ts$',
+        '/distributions/geometric/__test__/qgeom.test.ts$',
         //ok
-        //'/distributions/geometric/__test__/rgeom.test.ts$',
+        '/distributions/geometric/__test__/rgeom.test.ts$',
 
         //hypergeometric
         //ok
         '/distributions/hypergeometric/__test__/dhyper.test.ts$',
         //ok
-        //'/distributions/geometric/__test__/pgeom.test.ts$',
+        '/distributions/geometric/__test__/pgeom.test.ts$',
         //ok
-        //'/distributions/geometric/__test__/qgeom.test.ts$',
+        '/distributions/geometric/__test__/qgeom.test.ts$',
         //ok
-        //'/distributions/geometric/__test__/rgeom.test.ts$',
+        '/distributions/geometric/__test__/rgeom.test.ts$',
         
 
         // poisson
         //'/distributions/poisson/__test__/dpois.test.ts$',
 
-        /*'/special/bessel/besselJ/__test__/(.*?\\.)?test.ts$',
+        '/special/bessel/besselJ/__test__/(.*?\\.)?test.ts$',
         '/special/gamma/__test__/(.*?\\.)?test.ts$',
         '/special/beta/__test__/(.*?\\.)?test.ts$',
         '/rng/knuth-taocp/__test__/(.*?\\.)?test.ts$',
         '/rng/knuth-taocp-2002/__test__/(.*?\\.)?test.ts$',
         '/rng/lecuyer-cmrg/__test__/(.*?\\.)?test.ts$',
-        '/rng/marsaglia-multicarry/__test__/(.*?\\.)?test.ts$',*/
-        // '/rng/mersenne-twister/__test__/(.*?\\.)?test.ts$',
-        /* '/rng/wichmann-hill/__test__/(.*?\\.)?test.ts$',
+        '/rng/marsaglia-multicarry/__test__/(.*?\\.)?test.ts$',
+        '/rng/mersenne-twister/__test__/(.*?\\.)?test.ts$',
+        '/rng/wichmann-hill/__test__/(.*?\\.)?test.ts$',
          '/rng/normal/ahrens-dieter/__test__/(.*?\\.)?test.ts$',
          '/rng/normal/box-muller/__test__/(.*?\\.)?test.ts$',
          '/rng/normal/buggy-kinderman-ramage/__test__/(.*?\\.)?test.ts$',
          '/rng/normal/inversion/__test__/(.*?\\.)?test.ts$',
          '/rng/normal/kinderman-ramage/__test__/(.*?\\.)?test.ts$',
-         '/rng/super-duper/__test__/(.*?\\.)?test.ts$',
-        
-   */
-
+         '/rng/super-duper/__test__/(.*?\\.)?test.ts$'
     ],
     globals: {
         'ts-jest': {
