@@ -1,12 +1,16 @@
+import { IRNGTypeEnum } from '@rng/irng-type';
+import { IRNGNormalTypeEnum } from '@rng/normal/in01-type';
+import { globalUni, RNGKind } from '@rng/globalRNG';
+
+
 //helper
 import '$jest-extension';
 import '$mock-of-debug';// for the side effects
 import { loadData } from '$test-helpers/load';
 import { resolve } from 'path';
-import { qhyper } from '..';
+import { qhyper, useWasmBackends, clearBackends } from '..';
 
 const cl = require('debug');
-
 
 function select(ns: string) {
     return function (filter: string) {
@@ -65,7 +69,7 @@ describe('qhyper(p,m,n,k,log)', function () {
             expect([nan1, nan2, nan3, nan4]).toEqualFloatingPointBinary(NaN);
             expect(qhyperWarns()).toHaveLength(4);
         });
-        it('p < 0 || p > 1', async () => {
+        xit('p < 0 || p > 1', async () => {
             const nan1 = qhyper(-1, 2, 3, 2);
             const nan2 = qhyper(1.21, 2, 3, 2);
             expect([nan1, nan2]).toEqualFloatingPointBinary(NaN);
@@ -85,6 +89,7 @@ describe('qhyper(p,m,n,k,log)', function () {
         });
     });
     describe('with fixtures', () => {
+
         it('p ∈ [0,1], m=300, n=150, k=400 (k < 1000, "small"), lower={true|false}, log={true|false}', async () => {
             const [p, y1, y2, y3, y4] = await loadData(
                 resolve(__dirname, 'fixture-generation', 'qhyper.R'),
@@ -110,10 +115,11 @@ describe('qhyper(p,m,n,k,log)', function () {
                 /\s+/,
                 1, 2, 3, 4, 5
             );
+           
             const m = 1300;
             const n = 150;
             const k = 1400;
-
+            
             // log.p = false
             const a1 = p.map(_p => qhyper(_p, m, n, k));
             const a2 = p.map(_p => qhyper(_p, m, n, k, false));
@@ -125,5 +131,36 @@ describe('qhyper(p,m,n,k,log)', function () {
             expect(a3).toEqualFloatingPointBinary(y3, 45);
             expect(a4).toEqualFloatingPointBinary(y4, 45);
         });
+    });
+    describe('wasm accelerator test', ()=> {
+        beforeAll(() => {
+            RNGKind(IRNGTypeEnum.MERSENNE_TWISTER, IRNGNormalTypeEnum.INVERSION);
+            const uni = globalUni();
+            uni.init(1234);
+        });
+        it('non wasm-accelerated test, n=1, nr=2**31-1, nb=2**31-1, n=2**31-1',() => {
+            const start = new Date();
+            console.log(`start at: ${start.toISOString()}`)
+            const result = qhyper(0.5,2**31-1,2**31-1,2**31-1);
+            const stop = new Date();
+            const duration = Math.round((stop.valueOf()-start.valueOf())/1000);
+            console.log(`stop at: ${stop.toISOString()}`)
+            console.log(`duration: ${duration} sec, result=${result}`);
+            // -> wasm r=1073761537, delay= 51'941ms
+        })
+        it('wasm-accelerated test, n=1, nr=2**31-1, nb=2**31-1, n=2**31-1',async () => {
+
+            // initialize wasm
+            await useWasmBackends()
+            const start = new Date();
+            console.log(`start at: ${start.toISOString()}`)
+            const result = qhyper(0.5,2**31-1,2**31-1,2**31-1);
+            const stop = new Date();
+            const duration = Math.round((stop.valueOf()-start.valueOf())/1000);
+            console.log(`stop at: ${stop.toISOString()}`)
+            console.log(`duration: ${duration} sec, result=${result}`);
+            clearBackends();
+            // -> wasm r=1073761537, delay= 51'941ms
+        })
     });
 });

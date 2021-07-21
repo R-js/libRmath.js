@@ -14,33 +14,16 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
 import { debug } from 'debug';
 import { ML_ERR_return_NAN, R_Q_P01_boundaries } from '@common/logger';
 import { lfastchoose } from '@special/choose';
 import { R_DT_qIv } from '@distributions/exp/expm1';
 import { DBL_EPSILON } from '$constants';
-import { readFileSync } from 'fs';
-import { resolve } from 'path';
+
+import type { QHyperFunctionMap, CalcQHyper } from './';
+
 const printer_qhyper = debug('qhyper');
-
-
-const io = {
-    simple: {
-        log: Math.log,
-        exp: Math.exp
-    }
-};
-
-const binary = readFileSync(resolve(__dirname, 'qhyper.acc.wasm'), null);
-// streaming
-let wasmMod: WebAssembly.WebAssemblyInstantiatedSource;
-
-WebAssembly.instantiate(binary, io).then(inst => {
-    wasmMod = inst;
-});
-
-type calc = (sum: number, term: number, p: number, xr: number, xend: number, xb: number, NB: number, NR: number ) => number;
-
 
 const _d = new Float64Array(7);
 const ixr = 0;
@@ -49,14 +32,31 @@ const ixb = 2;
 const iterm = 3;
 const iNR = 4;
 const iNB = 5;
+
+let accelerateTinyN: CalcQHyper | undefined;
+let accelerateBigN: CalcQHyper | undefined;
+
+export function registerBackend(fns: QHyperFunctionMap): void {
+    accelerateTinyN = fns.calcTinyN;
+    accelerateBigN = fns.calcBigN;
+}
+
+export function unRegisterBackend() : boolean {
+    const previous = !!accelerateTinyN && !!accelerateBigN;
+    
+    accelerateTinyN = undefined;
+    accelerateBigN = undefined;
+
+    return previous;
+}
+
 export function qhyper(
     p: number,
     nr: number,
     nb: number,
     n: number,
     lowerTail = true,
-    logP = false,
-    useWasm = false
+    logP = false
 ): number {
     /* This is basically the same code as  ./phyper.c  *used* to be --> FIXME! */
     //let N;
@@ -78,7 +78,9 @@ export function qhyper(
 
     _d[iNR] = Math.round(nr);
     _d[iNB] = Math.round(nb);
+
     const N = _d[iNR] + _d[iNB];
+
     n = Math.round(n);
     if (_d[iNR] < 0 || _d[iNB] < 0 || n < 0 || n > N) return ML_ERR_return_NAN(printer_qhyper);
 
@@ -129,9 +131,9 @@ export function qhyper(
     */
     // for speed, removed if (small_N) out of the while loop
     if (small_N) {
-        if (wasmMod && useWasm) {
-            console.log('wasm');
-            _d[ixr] = (wasmMod.instance.exports.calcTinyN as calc)(
+        if (accelerateTinyN) {
+            console.log('wasm'); // debug, flag its use
+            _d[ixr] = accelerateTinyN(
                 _d[isum],
                 _d[iterm],
                 p,
@@ -154,9 +156,9 @@ export function qhyper(
         }
     }
     else {
-        if (wasmMod && useWasm) {
+        if (accelerateBigN) {
             console.log('wasm');
-            _d[ixr] = (wasmMod.instance.exports.calcBigN as calc)(
+            _d[ixr] = accelerateBigN(
                 _d[isum],
                 _d[iterm],
                 p,

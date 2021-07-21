@@ -138,22 +138,23 @@ module.exports = {
         '/distributions/geometric/__test__/qgeom.test.ts$',
         //ok
         '/distributions/geometric/__test__/rgeom.test.ts$',
-
+*/
         //hypergeometric
         //ok
-        '/distributions/hypergeometric/__test__/dhyper.test.ts$',
+        //'/distributions/hypergeometric/__test__/dhyper.test.ts$',
         //ok
-        '/distributions/hypergeometric/__test__/phyper.test.ts$',
+        //'/distributions/hypergeometric/__test__/phyper.test.ts$',
         //ok
         '/distributions/hypergeometric/__test__/qhyper.test.ts$',
         
        // '/distributions/hypergeometric/__test__/rhyper.test.ts$',
-        */
+
        //logis
-       '/distributions/logis/__test__/dlogis.test.ts$',
+       /*'/distributions/logis/__test__/dlogis.test.ts$',
        '/distributions/logis/__test__/plogis.test.ts$',
        '/distributions/logis/__test__/qlogis.test.ts$',
        '/distributions/logis/__test__/rlogis.test.ts$',
+       */
 
 
         // poisson

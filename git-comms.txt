@@ -1,0 +1,14 @@
+https://stat.ethz.ch/R-manual/R-patched/library/base/html/Random.html
+
+sample.kind can be "Rounding" or "Rejection", or partial matches to these. The former was the default in versions prior to 3.6.0: it made sample noticeably non-uniform on large populations, and should only be used for reproduction of old results. See PR#17494 for a discussion.
+
+https://stat.ethz.ch/R-manual/R-patched/library/base/html/sample.html
+
+$git log --pretty="%h %cs %aN %s"|grep 17494
+
+$git log --before="2019-02-26" --pretty="%h %cs %aN %s"
+
+e4acfd1f24 2019-02-25
+
+1b3cc4d63c 2019-02-25
+

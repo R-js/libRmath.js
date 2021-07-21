@@ -79,7 +79,7 @@ const _m = 7;
 const _minjx = 8;
 const _maxjx = 9;
 
-export function rhyperOne(nn1in: number, nn2in: number, kkin: number, rng: IRNG, useWasm: boolean): number {
+export function rhyperOne(nn1in: number, nn2in: number, kkin: number, rng: IRNG): number {
     /* extern double afc(int); */
 
     //let nn1 = 0; this is now r_i[_nn1]
@@ -140,7 +140,7 @@ export function rhyperOne(nn1in: number, nn2in: number, kkin: number, rng: IRNG,
         //if (kkin > 1E6) {
         //    throw new TypeError(`Blocked, these input parameters takes (even in R) 2 min to run k=${kkin},nr=${nn1in},nb=${nn2in}`);
         //}
-        return qhyper(rng.random(), nn1in, nn2in, kkin, false, false, useWasm);
+        return qhyper(rng.random(), nn1in, nn2in, kkin, false, false);
     }
     //nn1 = nn1in;
     r_i[_nn1] = nn1in;
