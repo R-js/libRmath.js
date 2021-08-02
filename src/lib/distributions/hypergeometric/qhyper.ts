@@ -49,6 +49,7 @@ const ixb = 2;
 const iterm = 3;
 const iNR = 4;
 const iNB = 5;
+
 export function qhyper(
     p: number,
     nr: number,
@@ -131,7 +132,16 @@ export function qhyper(
     if (small_N) {
         if (wasmMod && useWasm) {
             console.log('wasm');
+            /*
+            const ixr = 0; // return
+const isum = 1;x
+const ixb = 2;x
+const iterm = 3;x
+const iNR = 4;x
+const iNB = 5;x
+*/
             _d[ixr] = (wasmMod.instance.exports.calcTinyN as calc)(
+
                 _d[isum],
                 _d[iterm],
                 p,
@@ -178,8 +188,6 @@ export function qhyper(
             }
         }
     }
-
     //    console.log({ lc, ec });
     return _d[ixr];
-
 }
