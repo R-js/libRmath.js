@@ -58,16 +58,7 @@ export function qhyper(
     lowerTail = true,
     logP = false
 ): number {
-    /* This is basically the same code as  ./phyper.c  *used* to be --> FIXME! */
-    //let N;
-    //let xstart;
-    //let xend;
-    //let xr;
-    //let xb;
-    //let sum;
-    //let term;
-    //let small_N;
-
+    
     if (isNaN(p) || isNaN(nr) || isNaN(nb) || isNaN(n)) {
         return NaN;
     }
@@ -182,9 +173,7 @@ export function qhyper(
             }
         }
     }
-
     //    console.log({ lc, ec });
     return _d[ixr];
-
 }
 
