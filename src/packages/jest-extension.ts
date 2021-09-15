@@ -1,14 +1,14 @@
 
 export {};
 
-declare global {
+/*declare global {
     // eslint-disable-next-line @typescript-eslint/no-namespace
     namespace jest {
         interface Matchers<R> {
-            toEqualFloatingPointBinary(expected: unknown, mantissa?: number, cylce?: boolean, hf?: boolean): R;
+            toEqualFloatingPointBinary(expected: unknown, mantissa?: number, cycle?: boolean, hf?: boolean): R;
         }
     }
-}
+}*/
 
 type NumberTypes = 'Float32Array' | 'Float64Array' | 'number' | 'number[]';
 
@@ -159,7 +159,7 @@ function compareFP(a: NumArray, b: NumArray, bpe: 4 | 8, mantissa: number) {
     const bfp = createFloatArray(bpe);
     const adv = decorateDataView(new DataView(afp.buffer), bpe);
     const bdv = decorateDataView(new DataView(bfp.buffer), bpe);
-    const maxL = Math.max(a.length, b.length);
+    const maxL = Math.max(a.length, b.length);  
     let minMantissa = 0;
     for (let i = 0; i < maxL; i++) {
         const aIdx = i % a.length;

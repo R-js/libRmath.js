@@ -9,7 +9,7 @@
         "outDir": "es6",
         "target": "ES2020",
         "removeComments": true,
-        "declaration": false, // generate decleration files, make sure they go into a declarationDir
+        "declaration": false, // generate declaration files, make sure they go into a declarationDir
         "declarationMap": false, // make map files for .d.ts files
     }
 }

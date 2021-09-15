@@ -207,4 +207,7 @@ module.exports = {
         '^\\$helper$': '<rootDir>/src/lib/r-func.ts',
         '^\\$mock-of-debug$': '<rootDir>/src/packages/test-helpers/mock-of-debug'
     },
+    // vscode will pick up the definition files of the extension
+    setupFiles:['<rootDir>/src/packages/jest-ext.d.ts'],
+    setupFilesAfterEnv: ['<rootDir>/src/packages/jest-extension.ts'],
 };

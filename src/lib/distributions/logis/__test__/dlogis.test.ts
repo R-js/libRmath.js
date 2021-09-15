@@ -1,5 +1,5 @@
 //helper
-import '$jest-extension';
+//import '$jest-extension';
 import '$mock-of-debug';// for the side effects
 import { loadData } from '$test-helpers/load';
 import { resolve } from 'path';

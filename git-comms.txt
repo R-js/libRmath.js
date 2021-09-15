@@ -12,3 +12,28 @@ e4acfd1f24 2019-02-25
 
 1b3cc4d63c 2019-02-25
 
+git diff 1b3cc4d63c e4acfd1f24 
+
+
+
+qhyp <- function(p, nr, nb, n) {
+   start_time <- Sys.time()
+   res <- qhyper(p, nr, nb, n);
+   end_time <- Sys.time()
+
+   duration <- end_time - start_time;
+   
+   print(paste0("duration:", duration));
+   res
+}
+
+
+
+
+
+convert wasm to base64
+
+
+
+
+
