@@ -133,7 +133,9 @@ export function rhyperOne(nn1in: number, nn2in: number, kkin: number, rng: IRNG)
         // Johnson, Kotz,.. p.258 (top) mention the *four* different binomial approximations
         if (kkin === 1) {
             // Bernoulli
-            return rbinomOne(kkin, nn1in / (nn1in + nn2in), rng);
+            const rinv = 1 + nn2in/nn1in;
+            const r = 1/rinv;
+            return rbinomOne(kkin, r, rng);
         }
         // Slow, but safe: return  F^{-1}(U)  where F(.) = phyper(.) and  U ~ U[0,1]
         // This will take crazy long time even in C native code, I throw an error

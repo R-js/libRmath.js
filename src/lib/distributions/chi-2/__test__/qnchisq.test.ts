@@ -76,15 +76,10 @@ describe('qnchisq', function () {
         const z1 = qchisq(1-Number.EPSILON/2, 42, 75, false);
         expect(z1).toBe(0);
     });
-    it.todo('p=0.8, df=4, ncp=99, lowerTail=false');/*, (done) => {
-        this set of parameters certainly gets deviation?
-        why R gives 85, we get 112
-        //qchisq(p=0.8, df=4, ncp=99, lower=F)
+    it('p=0.3, df=4, ncp=99, lowerTail=false', () => {
         const z = qchisq(0.3, 4, 99, false);
-        console.log(z);
-        done();
-        //expect(z).toEqualFloatingPointBinary(85.835418035816787);
-    });*/
+        expect(z).toEqualFloatingPointBinary( 112.79273936154311 );
+    });
     it('p [0,1], df=3, ncp=25, lower=false', async ()=>{
         const [p, y] = await loadData(resolve(__dirname, 'fixture-generation', 'qnchisq.R'), /\s+/, 1, 2);
         const actual = p.map(_p => qchisq(_p, 3, 25, false));

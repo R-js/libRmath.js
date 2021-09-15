@@ -18,8 +18,8 @@ module.exports = {
     ],
     coveragePathIgnorePatterns: ['node_modules', 'test', 'doc.ts'],
     coverageDirectory: 'coverage',
-    //coverageProvider: 'babel', //"v8" is still experimental, but use "v8" for walk through debugging
-    coverageProvider: 'v8', //"v8" is still experimental, but use "v8" for walk through debugging
+    coverageProvider: 'babel', //"v8" is still experimental, but use "v8" for walk through debugging
+    //coverageProvider: 'v8', //"v8" is still experimental, but use "v8" for walk through debugging
     coverageReporters: ['json', 'lcov', 'text', 'clover'],
     preset: 'ts-jest',
     testEnvironment: 'node',
@@ -28,7 +28,8 @@ module.exports = {
     testPathIgnorePatterns: ['/es6/', '/commonjs/'],
     //testMatch: ['**/__tests__/**/*.[t]s?(x)', '**/?(*.)+(spec|test).[t]s?(x)'],
     testRegex: [
-       /* // beta
+        /*
+        // beta
         '/distributions/beta/__test__/dbeta.test.ts$',
         // ok 
         '/distributions/beta/__test__/dnbeta.test.ts$',
@@ -141,21 +142,19 @@ module.exports = {
 */
         //hypergeometric
         //ok
-        //'/distributions/hypergeometric/__test__/dhyper.test.ts$',
+        '/distributions/hypergeometric/__test__/dhyper.test.ts$',
         //ok
-        //'/distributions/hypergeometric/__test__/phyper.test.ts$',
+        '/distributions/hypergeometric/__test__/phyper.test.ts$',
         //ok
-        '/distributions/hypergeometric/__test__/qhyper.test.ts$',
+        //'/distributions/hypergeometric/__test__/qhyper.test.ts$',
         
-       // '/distributions/hypergeometric/__test__/rhyper.test.ts$',
+        '/distributions/hypergeometric/__test__/rhyper.test.ts$',
 
        //logis
-       /*'/distributions/logis/__test__/dlogis.test.ts$',
+       '/distributions/logis/__test__/dlogis.test.ts$',
        '/distributions/logis/__test__/plogis.test.ts$',
        '/distributions/logis/__test__/qlogis.test.ts$',
        '/distributions/logis/__test__/rlogis.test.ts$',
-       */
-
 
         // poisson
         //'/distributions/poisson/__test__/dpois.test.ts$',
@@ -209,5 +208,9 @@ module.exports = {
     },
     // vscode will pick up the definition files of the extension
     setupFiles:['<rootDir>/src/packages/jest-ext.d.ts'],
-    setupFilesAfterEnv: ['<rootDir>/src/packages/jest-extension.ts'],
+    setupFilesAfterEnv: [
+        '<rootDir>/src/packages/jest-extension.ts',
+        '<rootDir>/src/packages/test-helpers/mock-of-debug.ts',
+        '<rootDir>/src/packages/test-helpers/load.ts'
+    ],
 };

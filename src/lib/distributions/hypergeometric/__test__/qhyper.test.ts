@@ -5,10 +5,6 @@ import { loadData } from '$test-helpers/load';
 
 import { resolve } from 'path';
 
-import { IRNGTypeEnum } from '@rng/irng-type';
-import { IRNGNormalTypeEnum } from '@rng/normal/in01-type';
-import { globalUni, RNGKind } from '@rng/globalRNG';
-
 import { qhyper, useWasmBackends, clearBackends } from '..';
 
 const cl = require('debug');
@@ -135,12 +131,7 @@ describe('qhyper(p,m,n,k,log)', function () {
         });
     });
     describe('wasm accelerator test', ()=> {
-        beforeAll(() => {
-            RNGKind(IRNGTypeEnum.MERSENNE_TWISTER, IRNGNormalTypeEnum.INVERSION);
-            const uni = globalUni();
-            uni.init(1234);
-        });
-        xit('(15 min) non wasm-accelerated test, n=1, nr=2**31-1, nb=2**31-1, n=2**31-1',() => {
+        it('(481 sec) non wasm-accelerated test, n=1, nr=2**31-1, nb=2**31-1, n=2**31-1',() => {
             const start = new Date();
             //console.log(`start at: ${start.toISOString()}`)
             const result = qhyper(0.5,2**31-1,2**31-1,2**31-1);
@@ -150,7 +141,7 @@ describe('qhyper(p,m,n,k,log)', function () {
             console.log(`duration: ${duration} sec, result=${result}`);
             expect(result).toBe(1073741806);
         })
-        it('wasm-accelerated test, p=0.5, nr=2**31-1, nb=2**31-1, n=2**31-1',async () => {
+        it('(28 sec) wasm-accelerated test, p=0.5, nr=2**31-1, nb=2**31-1, n=2**31-1',async () => {
             // initialize wasm
             await useWasmBackends();
             const start = new Date();
@@ -161,7 +152,7 @@ describe('qhyper(p,m,n,k,log)', function () {
             //console.log(`stop at: ${stop.toISOString()}`)
             console.log(`duration: ${duration} sec, result=${result}`);
             clearBackends();
-            expect(result).toBe(1073761537);
+            expect(result).toBe(1073741806);
         });
     });
 });

@@ -35,18 +35,18 @@ const iNB = 5;
 
 // init
 let backendTinyN: CalcQHyper = cpuBackendTinyN;
-let accelerateBigN: CalcQHyper = cpuBackendBigN;
+let backendBigN: CalcQHyper = cpuBackendBigN;
 
 export function registerBackend(fns: QHyperFunctionMap): void {
     backendTinyN = fns.calcTinyN;
-    accelerateBigN = fns.calcBigN;
+    backendBigN = fns.calcBigN;
 }
 
 export function unRegisterBackend(): boolean {
-    const previous = !!backendTinyN && !!accelerateBigN;
+    const previous = !!backendTinyN && !!backendBigN;
 
     backendTinyN = cpuBackendTinyN;
-    accelerateBigN = cpuBackendBigN;
+    backendBigN = cpuBackendBigN;
 
     return previous;
 }
@@ -145,7 +145,7 @@ export function qhyper(
         _d[ixb],
         _d[iNB],
         _d[iNR]
-    ) : cpuBackendBigN(
+    ) : backendBigN(
         _d[isum],
         _d[iterm],
         p,

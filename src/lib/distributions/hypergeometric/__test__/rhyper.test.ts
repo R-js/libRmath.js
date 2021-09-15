@@ -1,38 +1,22 @@
-//helper
-//import { emptyFloat32Array } from '$constants';
-import '$jest-extension';
-import '$mock-of-debug';// for the side effects
+
 import { IRNGNormalTypeEnum } from '@rng/normal/in01-type';
 import { globalUni, RNGKind } from '@rng/globalRNG';
 import { IRNGTypeEnum } from '@rng/irng-type';
-import { rhyper } from '..';
-//import { loadData } from '$test-helpers/load';
+import { rhyper, useWasmBackends, clearBackends } from '..';
+
 //import { resolve } from 'path';
+import { cl, select } from '$test-helpers/debug-select';
 
-const cl = require('debug');
-
-function select(ns: string) {
-    return function (filter: string) {
-        return function () {
-            const logs = cl.get(ns);// put it here and not in the function scope
-            if (!logs) return [];
-            return logs.filter((s: string[]) => s[0] === filter);
-        };
-    };
-}
-
-const rhyperLogs = select('rhyper');
-const rhyperDomainWarns = rhyperLogs("argument out of domain in '%s'");
-//const rhyperWarns = select('R_Q_P01_check')("argument out of domain in '%s'");
-
-
+const rhyperDomainWarns = select('rhyper')("argument out of domain in '%s'");
 
 describe('rhyper', function () {
-    xdescribe('invalid input', () => {
+    describe('invalid input', () => {
         beforeEach(() => {
             cl.clear('rhyper');
+            RNGKind(IRNGTypeEnum.MERSENNE_TWISTER, IRNGNormalTypeEnum.INVERSION);
+            globalUni().init(123456);
         });
-        it('n=1, other params are NaNs or Infinity',async  () => {
+        it('n=1, other params are NaNs or Infinity', async () => {
             const nan2 = rhyper(1, NaN, 0, 0);
             const nan3 = rhyper(1, 0, NaN, 0);
             const nan4 = rhyper(1, 0, 0, Infinity);
@@ -50,55 +34,63 @@ describe('rhyper', function () {
     });
 
     describe('edge cases', () => {
-        xit('test with m, n, k bigger then INT_MAX (2^31-1)', async () => {
-
-            await new Promise(resolve => {
-                setTimeout(resolve, 3000);
-            });
+        beforeEach(() => {
+            cl.clear('rhyper');
             RNGKind(IRNGTypeEnum.MERSENNE_TWISTER, IRNGNormalTypeEnum.INVERSION);
-            globalUni().init(1234);
-            //const z = rhyper(10,2**31,2**31,1)
-            //expect(z).toEqualFloatingPointBinary([0, 1, 1, 1, 1, 1, 0, 0, 1, 1]);
-            //const z2 = rhyper(10,2**31-2,2**31,1)
-            //expect(z2).toEqualFloatingPointBinary([ 1, 1, 0, 1, 0, 1, 0, 0, 0, 0]);
+            globalUni().init(123456);
+        });
+
+        it('test with m, n, k bigger then INT_MAX (2^31-1)', async () => {
+            const z = rhyper(10, 2 ** 31, 2 ** 31, 1);
+            expect(z).toEqualFloatingPointBinary([1, 1, 0, 0, 0, 0, 1, 0, 1, 0]);
+            const z2 = rhyper(10,2**31-2,2**31,1)
+            expect(z2).toEqualFloatingPointBinary([ 1, 1, 1, 1, 1, 1, 1, 0, 0, 1]);
             globalUni().init(1234);
             const d = Date.now();
+            await useWasmBackends();
             const z3 = rhyper(
-                1,
-                2**31-1,
-                2**31-1,
-                2**31-1,
-                undefined,
-                false
+                1, //N
+                2 ** 31 - 1, //nn1in
+                2 ** 31 - 1, //nn2in
+                2 ** 31 - 1, //kkin
+                undefined,   //rng
             );
-            const delay = Date.now()-d;
-            console.log(`r=${z3}, delay=${delay}ms`);
-            /*for (let i=0; i < 0.5*2**31-1;i++){
-                Math.log(i);
-                Math.exp(-i)
-            }
-           /* expect(z3).toEqualFloatingPointBinary([
-                500603, 499844, 499861, 499843, 499458, 499820, 501173, 500365, 499785, 499982
-            ]);*/
+            expect(z3).toEqualFloatingPointBinary(1073761537);
+            //jkf do here tomorrow
+            globalUni().init(1234); // important!
+            const z4 = rhyper(
+                1, //N
+                (2 ** 31)/2, //nn1in
+                (2 ** 31)/2, //nn2in
+                2 ** 31 - 1, //kkin
+                undefined,   //rng
+            );
+            expect(z4).toEqualFloatingPointBinary(1073741824);
+            clearBackends();
+            
+            //z3=1073761537, 459 sec
+            //1073761537, wasm backend 27sec (17 times faster)
+            const delay = Date.now() - d;
+            console.log(`r=${z4}, delay=${delay}ms`);
         });
     });
 
     xdescribe('with fixtures', () => {
-        beforeAll(()=>{
+        beforeAll(() => {
             RNGKind(IRNGTypeEnum.MERSENNE_TWISTER, IRNGNormalTypeEnum.INVERSION);
             globalUni().init(12345);
         });
         xit('n=100', async () => {
             //rhyper(1, 23,45,10);
             //rhyper(10,23,45,10));
-            rhyper(100,2**31-2,2**31-2,2**31-2)
-            console.log(rhyper(1,2**31-2,2**31-2,2**31-1));
+            rhyper(100, 2 ** 31 - 2, 2 ** 31 - 2, 2 ** 31 - 2)
+            console.log(rhyper(1, 2 ** 31 - 2, 2 ** 31 - 2, 2 ** 31 - 1));
         });
         xit('n=100', async () => {
             //rhyper(1, 23,45,10);
             //rhyper(10,23,45,10));
-            rhyper(100,2**31-2,2**31-2,1E6)
-            console.log(rhyper(1,2**31-2,2**31-2,1E6));
+            rhyper(100, 2 ** 31 - 2, 2 ** 31 - 2, 1E6)
+            console.log(rhyper(1, 2 ** 31 - 2, 2 ** 31 - 2, 1E6));
         });
     });
 });
