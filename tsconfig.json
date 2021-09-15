@@ -3,7 +3,13 @@
     "src/**/*.ts"
   ],
   "exclude": [
-    "test"
+    "test",
+    "node_modules",
+    "es6",
+    "commonjs",
+    "coverage",
+    ".vscode",
+    ".jest-cache"
   ],
   "typeAcquisition": {
     "enable": true

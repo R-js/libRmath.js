@@ -146,7 +146,9 @@ export function qhyper(
         }
         else {
             while (_d[isum] < p && _d[ixr] < xend) {
+                //xr++ 
                 _d[ixr]++;
+                
                 _d[iNB]++;
                 _d[iterm] *= (_d[iNR] / _d[ixr]) * (_d[ixb] / _d[iNB]);
                 _d[isum] += _d[iterm];

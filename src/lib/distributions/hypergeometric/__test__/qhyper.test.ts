@@ -138,7 +138,7 @@ describe('qhyper(p,m,n,k,log)', function () {
             const uni = globalUni();
             uni.init(1234);
         });
-        it('non wasm-accelerated test, n=1, nr=2**31-1, nb=2**31-1, n=2**31-1',() => {
+        xit('non wasm-accelerated test, n=1, nr=2**31-1, nb=2**31-1, n=2**31-1',() => {
             const start = new Date();
             console.log(`start at: ${start.toISOString()}`)
             const result = qhyper(0.5,2**31-1,2**31-1,2**31-1);
@@ -148,7 +148,7 @@ describe('qhyper(p,m,n,k,log)', function () {
             console.log(`duration: ${duration} sec, result=${result}`);
             // -> wasm r=1073761537, delay= 51'941ms
         })
-        it('wasm-accelerated test, n=1, nr=2**31-1, nb=2**31-1, n=2**31-1',async () => {
+        it('wasm-accelerated test, p=0.5, nr=2**31-1, nb=2**31-1, n=2**31-1',async () => {
 
             // initialize wasm
             await useWasmBackends()
