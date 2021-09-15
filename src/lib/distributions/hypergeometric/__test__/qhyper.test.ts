@@ -1,13 +1,14 @@
-import { IRNGTypeEnum } from '@rng/irng-type';
-import { IRNGNormalTypeEnum } from '@rng/normal/in01-type';
-import { globalUni, RNGKind } from '@rng/globalRNG';
-
-
 //helper
 import '$jest-extension';
 import '$mock-of-debug';// for the side effects
 import { loadData } from '$test-helpers/load';
+
 import { resolve } from 'path';
+
+import { IRNGTypeEnum } from '@rng/irng-type';
+import { IRNGNormalTypeEnum } from '@rng/normal/in01-type';
+import { globalUni, RNGKind } from '@rng/globalRNG';
+
 import { qhyper, useWasmBackends, clearBackends } from '..';
 
 const cl = require('debug');
@@ -25,6 +26,7 @@ function select(ns: string) {
 const qhyperLogs = select('qhyper');
 const qhyperWarns = qhyperLogs("argument out of domain in '%s'");
 const p01bounderies = select('R_Q_P01_boundaries')("argument out of domain in '%s'")
+                      
 
 /**
  * function qhyper(p, m, n, k, lower.tail = TRUE, log.p = FALSE)
@@ -39,7 +41,7 @@ const p01bounderies = select('R_Q_P01_boundaries')("argument out of domain in '%
  */
 
 describe('qhyper(p,m,n,k,log)', function () {
-    xdescribe('invalid input', () => {
+    describe('invalid input', () => {
         beforeEach(() => {
             cl.clear('qhyper');
             cl.clear('R_Q_P01_boundaries');
@@ -69,14 +71,14 @@ describe('qhyper(p,m,n,k,log)', function () {
             expect([nan1, nan2, nan3, nan4]).toEqualFloatingPointBinary(NaN);
             expect(qhyperWarns()).toHaveLength(4);
         });
-        xit('p < 0 || p > 1', async () => {
+        it('p < 0 || p > 1', async () => {
             const nan1 = qhyper(-1, 2, 3, 2);
             const nan2 = qhyper(1.21, 2, 3, 2);
             expect([nan1, nan2]).toEqualFloatingPointBinary(NaN);
             expect(p01bounderies()).toHaveLength(2);
         });
     });
-   xdescribe('edge cases', () => {
+   describe('edge cases', () => {
         it('(p=1 and p=1, m=300 n=150, k=400', async () => {
             // the minimum output is Max(0,  (nn-nb) )
             // the maximum output is min(nn, nr)
@@ -88,7 +90,7 @@ describe('qhyper(p,m,n,k,log)', function () {
             expect(z3).toBe(300);
         });
     });
-    xdescribe('with fixtures', () => {
+    describe('with fixtures', () => {
 
         it('p ∈ [0,1], m=300, n=150, k=400 (k < 1000, "small"), lower={true|false}, log={true|false}', async () => {
             const [p, y1, y2, y3, y4] = await loadData(
@@ -138,30 +140,28 @@ describe('qhyper(p,m,n,k,log)', function () {
             const uni = globalUni();
             uni.init(1234);
         });
-        xit('non wasm-accelerated test, n=1, nr=2**31-1, nb=2**31-1, n=2**31-1',() => {
+        xit('(15 min) non wasm-accelerated test, n=1, nr=2**31-1, nb=2**31-1, n=2**31-1',() => {
             const start = new Date();
-            console.log(`start at: ${start.toISOString()}`)
+            //console.log(`start at: ${start.toISOString()}`)
             const result = qhyper(0.5,2**31-1,2**31-1,2**31-1);
             const stop = new Date();
             const duration = Math.round((stop.valueOf()-start.valueOf())/1000);
-            console.log(`stop at: ${stop.toISOString()}`)
+            //console.log(`stop at: ${stop.toISOString()}`)
             console.log(`duration: ${duration} sec, result=${result}`);
-            // -> wasm r=1073761537, delay= 51'941ms
+            expect(result).toBe(1073741806);
         })
         it('wasm-accelerated test, p=0.5, nr=2**31-1, nb=2**31-1, n=2**31-1',async () => {
-
             // initialize wasm
-                      
-            await useWasmBackends()
+            await useWasmBackends();
             const start = new Date();
-            console.log(`start at: ${start.toISOString()}`)
+            //console.log(`start at: ${start.toISOString()}`)
             const result = qhyper(0.5,2**31-1,2**31-1,2**31-1);
             const stop = new Date();
             const duration = Math.round((stop.valueOf()-start.valueOf())/1000);
-            console.log(`stop at: ${stop.toISOString()}`)
+            //console.log(`stop at: ${stop.toISOString()}`)
             console.log(`duration: ${duration} sec, result=${result}`);
             clearBackends();
-            // -> wasm r=1073761537, delay= 51'941ms
+            expect(result).toBe(1073761537);
         });
     });
 });
