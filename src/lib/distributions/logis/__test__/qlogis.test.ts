@@ -1,6 +1,4 @@
 //helper
-import '$jest-extension';
-import '$mock-of-debug';// for the side effects
 import { qlogis } from '..';
 
 const cl = require('debug');
@@ -17,8 +15,6 @@ function select(ns: string) {
 
 const qLogisLogs = select('qlogis');
 const qLogisDomainWarns = qLogisLogs("argument out of domain in '%s'");
-
-qLogisDomainWarns;
 
 describe('qlogis', function () {
     describe('edge cases', () => {
