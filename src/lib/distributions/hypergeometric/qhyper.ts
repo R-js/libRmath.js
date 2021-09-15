@@ -33,21 +33,48 @@ const iterm = 3;
 const iNR = 4;
 const iNB = 5;
 
-let accelerateTinyN: CalcQHyper | undefined;
-let accelerateBigN: CalcQHyper | undefined;
+// init
+let backendTinyN: CalcQHyper = cpuBackendTinyN;
+let accelerateBigN: CalcQHyper = cpuBackendBigN;
 
 export function registerBackend(fns: QHyperFunctionMap): void {
-    accelerateTinyN = fns.calcTinyN;
+    backendTinyN = fns.calcTinyN;
     accelerateBigN = fns.calcBigN;
 }
 
-export function unRegisterBackend() : boolean {
-    const previous = !!accelerateTinyN && !!accelerateBigN;
-    
-    accelerateTinyN = undefined;
-    accelerateBigN = undefined;
+export function unRegisterBackend(): boolean {
+    const previous = !!backendTinyN && !!accelerateBigN;
+
+    backendTinyN = cpuBackendTinyN;
+    accelerateBigN = cpuBackendBigN;
 
     return previous;
+}
+
+function cpuBackendTinyN(sum: number, term: number, p: number, xr: number, end: number, xb: number, NB: number, NR: number): number {
+    while (sum < p && xr < end) {
+        //xr++ 
+        xr++;
+
+        NB++;
+        term *= (NR / xr) * (xb / NB);
+        sum += term;
+        xb--;
+        NR--;
+    }
+    return xr;
+}
+
+function cpuBackendBigN(sum: number, term: number, p: number, xr: number, end: number, xb: number, NB: number, NR: number): number {
+    while (sum < p && xr < end) {
+        xr++;
+        NB++;
+        term += Math.log((NR / xr) * (xb / NB));
+        sum += Math.exp(term);
+        xb--;
+        NR--;
+    }
+    return xr;
 }
 
 export function qhyper(
@@ -58,7 +85,7 @@ export function qhyper(
     lowerTail = true,
     logP = false
 ): number {
-    
+
     if (isNaN(p) || isNaN(nr) || isNaN(nb) || isNaN(n)) {
         return NaN;
     }
@@ -107,73 +134,26 @@ export function qhyper(
     }
     p *= 1 - 1000 * DBL_EPSILON; /* was 64, but failed on FreeBSD sometimes */
     _d[isum] = small_N ? _d[iterm] : Math.exp(_d[iterm]);
-    /*
-        let lc = 0;
-        const log = (x: number) => {
-            lc++;
-            return Math.log(x);
-        }
-    
-        let ec = 0;
-        const exp = (x: number) => {
-            ec++;
-            return Math.exp(x);
-        }
-    */
+
     // for speed, removed if (small_N) out of the while loop
-    if (small_N) {
-        if (accelerateTinyN) {
-            console.log('wasm'); // debug, flag its use
-            _d[ixr] = accelerateTinyN(
-                _d[isum],
-                _d[iterm],
-                p,
-                _d[ixr],
-                xend,
-                _d[ixb],
-                _d[iNB],
-                _d[iNR]
-            );
-        }
-        else {
-            while (_d[isum] < p && _d[ixr] < xend) {
-                //xr++ 
-                _d[ixr]++;
-                
-                _d[iNB]++;
-                _d[iterm] *= (_d[iNR] / _d[ixr]) * (_d[ixb] / _d[iNB]);
-                _d[isum] += _d[iterm];
-                _d[ixb]--;
-                _d[iNR]--;
-            }
-        }
-    }
-    else {
-        if (accelerateBigN) {
-            console.log('wasm');
-            _d[ixr] = accelerateBigN(
-                _d[isum],
-                _d[iterm],
-                p,
-                _d[ixr],
-                xend,
-                _d[ixb],
-                _d[iNB],
-                _d[iNR]
-            );
-        }
-        else {
-            while (_d[isum] < p && _d[ixr] < xend) {
-                _d[ixr]++;
-                _d[iNB]++;
-                _d[iterm] += Math.log((_d[iNR] / _d[ixr]) * (_d[ixb] / _d[iNB]));
-                _d[isum] += Math.exp(_d[iterm]);
-                _d[ixb]--;
-                _d[iNR]--;
-            }
-        }
-    }
-    //    console.log({ lc, ec });
-    return _d[ixr];
+    return (small_N) ? backendTinyN(
+        _d[isum],
+        _d[iterm],
+        p,
+        _d[ixr],
+        xend,
+        _d[ixb],
+        _d[iNB],
+        _d[iNR]
+    ) : cpuBackendBigN(
+        _d[isum],
+        _d[iterm],
+        p,
+        _d[ixr],
+        xend,
+        _d[ixb],
+        _d[iNB],
+        _d[iNR]
+    );
 }
 

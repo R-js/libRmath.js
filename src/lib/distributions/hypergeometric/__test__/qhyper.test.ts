@@ -39,7 +39,7 @@ const p01bounderies = select('R_Q_P01_boundaries')("argument out of domain in '%
  */
 
 describe('qhyper(p,m,n,k,log)', function () {
-    describe('invalid input', () => {
+    xdescribe('invalid input', () => {
         beforeEach(() => {
             cl.clear('qhyper');
             cl.clear('R_Q_P01_boundaries');
@@ -76,7 +76,7 @@ describe('qhyper(p,m,n,k,log)', function () {
             expect(p01bounderies()).toHaveLength(2);
         });
     });
-    describe('edge cases', () => {
+   xdescribe('edge cases', () => {
         it('(p=1 and p=1, m=300 n=150, k=400', async () => {
             // the minimum output is Max(0,  (nn-nb) )
             // the maximum output is min(nn, nr)
@@ -88,7 +88,7 @@ describe('qhyper(p,m,n,k,log)', function () {
             expect(z3).toBe(300);
         });
     });
-    describe('with fixtures', () => {
+    xdescribe('with fixtures', () => {
 
         it('p ∈ [0,1], m=300, n=150, k=400 (k < 1000, "small"), lower={true|false}, log={true|false}', async () => {
             const [p, y1, y2, y3, y4] = await loadData(
@@ -151,6 +151,7 @@ describe('qhyper(p,m,n,k,log)', function () {
         it('wasm-accelerated test, p=0.5, nr=2**31-1, nb=2**31-1, n=2**31-1',async () => {
 
             // initialize wasm
+                      
             await useWasmBackends()
             const start = new Date();
             console.log(`start at: ${start.toISOString()}`)
@@ -161,6 +162,6 @@ describe('qhyper(p,m,n,k,log)', function () {
             console.log(`duration: ${duration} sec, result=${result}`);
             clearBackends();
             // -> wasm r=1073761537, delay= 51'941ms
-        })
+        });
     });
 });
