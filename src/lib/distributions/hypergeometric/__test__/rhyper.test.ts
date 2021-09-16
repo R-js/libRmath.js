@@ -13,6 +13,8 @@ describe('rhyper', function () {
     describe('invalid input', () => {
         beforeEach(() => {
             cl.clear('rhyper');
+            RNGKind(IRNGTypeEnum.MERSENNE_TWISTER, IRNGNormalTypeEnum.INVERSION);
+            globalUni().init(123456);
         });
         it('n=1, other params are NaNs or Infinity', async () => {
             const nan2 = rhyper(1, NaN, 0, 0);
@@ -83,8 +85,8 @@ describe('rhyper', function () {
             const result = rhyper(50, 30, 15, 20);
             //R fidelity test
             expect(result).toEqualFloatingPointBinary([
-                  12, 12, 14, 14, 14, 15, 13, 15, 10, 15, 12, 13, 11
-                , 11, 9,  11, 11, 15, 14, 12, 15, 16, 15, 15, 13, 13
+                12, 12, 14, 14, 14, 15, 13, 15, 10, 15, 12, 13, 11
+                , 11, 9, 11, 11, 15, 14, 12, 15, 16, 15, 15, 13, 13
                 , 11, 12, 12, 15, 13, 12, 14, 15, 12, 16, 11, 12, 12
                 , 13, 15, 12, 11, 14, 13, 14, 13, 12, 13, 14]);
         });
