@@ -15,7 +15,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { debug } from 'debug';
+import debug from 'debug';
 
 import { 
     ML_ERR_return_NAN, 
@@ -25,7 +25,7 @@ import {
     M_1_SQRT_2PI, 
     M_LN_SQRT_2PI,
     R_D__0 
-} from '$constants'
+} from 'lib/common/constants'
 
 import { bd0 } from '$deviance';
 import { dnorm } from '@dist/normal';

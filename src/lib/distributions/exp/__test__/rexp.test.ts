@@ -2,7 +2,7 @@
 import '$jest-extension';
 import '$mock-of-debug';// for the side effects
 import { IRNGTypeEnum } from '@rng/irng-type';
-import { globalUni, RNGKind } from '@rng/globalRNG';
+import { globalUni, RNGKind } from '@lib/rng/global-rng';
 import { IRNGNormalTypeEnum } from '@rng/normal/in01-type';
 import { rexp } from '..';
 

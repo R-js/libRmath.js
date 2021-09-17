@@ -2,19 +2,17 @@
 import { resolve } from 'path';
 
 //helper
-import '$jest-extension';
-import { loadData } from '$test-helpers/load';
+import { loadData } from '@common/load';
+import { cl, select } from '@common/debug-select.js';
 
-jest.mock('@common/logger');
+const dnbetaDomainWarns = select('dnbeta')("argument out of domain in '%s'");
 
-import { ML_ERR_return_NAN } from '@common/logger';
-const ML_ERR_return_NANMocked = <jest.Mock<number, [debug.Debugger]>>(ML_ERR_return_NAN);
-ML_ERR_return_NANMocked;
-//const ML_ERRORMocked = <jest.Mock<typeof ML_ERROR>>(ML_ERROR as unknown);
-//app
-import { dbeta } from '..';
+import { dbeta } from '../index.js';
 
 describe('dbeta, ncp != undefined', () => {
+    beforeEach(()=>{
+        cl.clear('dnbeta');
+    });
     it('ranges x ∊ [0, 1], shape1=3, shape2=3, ncp=2', async () => {
         const [x, y] = await loadData(resolve(__dirname, 'fixture-generation', 'dnbeta.R'), /\s+/, 1, 2);
         const actual = x.map(_x => dbeta(_x, 3, 3, 2));
@@ -25,17 +23,13 @@ describe('dbeta, ncp != undefined', () => {
         expect(nan).toBeNaN();
     });
     it('ranges x = 0.5, shape1=3, shape2=3, ncp=-2', () => {
-        ML_ERR_return_NANMocked.mockReset();
-        ML_ERR_return_NANMocked.mockReturnValue(NaN);
         const nan = dbeta(0.5, 3, 3, -2);
-        expect(ML_ERR_return_NANMocked).toHaveBeenCalledTimes(1);
+        expect(dnbetaDomainWarns()).toHaveBeenCalledTimes(1);
         expect(nan).toBe(NaN);
     });
     it('ranges x = 0.5, shape1=3, shape2=3, ncp=-2', () => {
-        ML_ERR_return_NANMocked.mockReset();
-        ML_ERR_return_NANMocked.mockReturnValue(NaN);
         const nan = dbeta(0.5, 3, 3, Infinity);
-        expect(ML_ERR_return_NANMocked).toHaveBeenCalledTimes(1);
+        expect(dnbetaDomainWarns()).toHaveBeenCalledTimes(1);
         expect(nan).toBe(NaN);
     });
     it('ranges x = -1, shape1=3, shape2=3, ncp=2', () => {

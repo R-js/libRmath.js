@@ -15,9 +15,9 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { IRNG, MessageType } from '../irng';
-import { IRNGNormalTypeEnum } from './in01-type';
-import type { IRandom } from '../IRandom';
+import { IRNG, MessageType } from '@rng/irng.js';
+import { IRNGNormalTypeEnum } from './in01-type.js';
+import type { IRandom } from '@rng/IRandom.js';
 
 export class IRNGNormal implements IRandom {
     protected _rng: IRNG;

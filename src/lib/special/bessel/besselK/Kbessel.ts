@@ -14,11 +14,11 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { debug } from 'debug';
+import debug from 'debug';
 
-import { ME, ML_ERROR } from '@common/logger';
-import { sqxmin_BESS_K, xmax_BESS_K } from '../bessel-constants';
-import { IBesselRC } from '../IBesselRC';
+import { ME, ML_ERROR } from '@common/logger.js';
+import { sqxmin_BESS_K, xmax_BESS_K } from '../bessel-constants.js';
+import { IBesselRC } from '../IBesselRC.js';
 
 const M_SQRT_2dPI = 0.797884560802865355879892119869;
 const { min, log, exp, abs: fabs, sinh, trunc, sqrt, max } = Math;

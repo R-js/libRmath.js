@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { debug } from 'debug';
+import debug from 'debug';
 import { wprob } from './wprob';
 
 import {
@@ -28,7 +28,7 @@ import {
 import {
     R_DT_val, R_DT_0,
     R_DT_1,
-} from '$constants';
+} from 'lib/common/constants';
 import { lgammaOne } from '@special/gamma';
 
 const printer_ptukey = debug('_ptukey');

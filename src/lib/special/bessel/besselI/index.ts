@@ -15,19 +15,21 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { debug } from 'debug';
-import { ME, ML_ERROR } from '@common/logger';
-import { sinpi } from '@trig/sinpi';
-import { bessel_k } from '../besselK';
-import { I_bessel } from './IBessel';
+import debug from 'debug';
+import { ME, ML_ERROR } from '@common/logger.js';
+import { sinpi } from '@trig/sinpi.js';
+import { BesselK as bessel_k } from '../besselK/index.js';
+import { I_bessel } from './IBessel.js';
 
 const { isNaN: ISNAN } = Number;
 const { exp, trunc, floor, PI: M_PI } = Math;
 
 const printer = debug('bessel_i');
 
+// Modified Bessel function of the first kind
+
 /* .Internal(besselI(*)) : */
-export function bessel_i(x: number, alpha: number, expo = false): number {
+function bessel_i(x: number, alpha: number, expo = false): number {
     /* NaNs propagated correctly */
     if (ISNAN(x) || ISNAN(alpha)) return x + alpha;
     if (x < 0) {
@@ -60,3 +62,6 @@ export function bessel_i(x: number, alpha: number, expo = false): number {
 
     return x;
 }
+
+export default bessel_i;
+export { bessel_i as BesselI }

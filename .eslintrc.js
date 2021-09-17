@@ -15,6 +15,9 @@ module.exports = {
     rules: {
         'no-constant-condition': ["error", { "checkLoops": false }]
     },
+    globals: {
+        globalThis: false, // means it is not writeable
+    },
     overrides: [
         {
             files: ['**/*.ts'],

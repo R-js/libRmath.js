@@ -14,15 +14,16 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { debug } from 'debug';
-import { ML_ERR_return_NAN, ME, ML_ERROR } from '@common/logger';
-import { R_P_bounds_01 } from '$constants';
+import debug from 'debug';
+import { ML_ERR_return_NAN, ME, ML_ERROR } from '@common/logger.js';
+import { R_P_bounds_01 } from '@lib/r-func.js';
 
-import { lgammafn_sign } from '@special/gamma/lgammafn_sign';
+import { lgammafn_sign } from '@special/gamma/lgammafn_sign.js';
 
-import { NumberW, Toms708 } from '$toms708';
+import { NumberW, Toms708 } from '@common/toms708/index.js';
 
 const printer = debug('pnbeta_raw');
+const printer_pnbeta2 = debug('pnbeta2');
 
 /* change errmax and itrmax if desired;
    * original (AS 226, R84) had  (errmax; itrmax) = (1e-6; 100) */
@@ -87,7 +88,7 @@ function pnbeta_raw(x: number, o_x: number, a: number, b: number, ncp: number): 
     return ans;
 }
 
-const printer_pnbeta2 = debug('pnbeta2');
+
 
 export function pnbeta2(
     x: number,

@@ -15,25 +15,24 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-export { KnuthTAOCP } from './knuth-taocp';
-export { KnuthTAOCP2002 } from './knuth-taocp-2002';
-export { LecuyerCMRG } from './lecuyer-cmrg';
-export { MarsagliaMultiCarry } from './marsaglia-multicarry';
-export { MersenneTwister } from './mersenne-twister';
-export { SuperDuper } from './super-duper';
-export { seed as timeseed } from './timeseed';
-export { WichmannHill } from './wichmann-hill';
+export { KnuthTAOCP } from './knuth-taocp/index.js';
+export { KnuthTAOCP2002 } from './knuth-taocp-2002/index.js';
+export { LecuyerCMRG } from './lecuyer-cmrg/index.js';
+export { MarsagliaMultiCarry } from './marsaglia-multicarry/index.js';
+export { MersenneTwister } from './mersenne-twister/index.js';
+export { SuperDuper } from './super-duper/index.js';
+export { seed as timeseed } from './timeseed.js';
+export { WichmannHill } from './wichmann-hill/index.js';
 // normal
-export { AhrensDieter } from './normal/ahrens-dieter';
-export { Inversion } from './normal/inversion';
-export { BoxMuller } from './normal/box-muller';
-export { BuggyKindermanRamage } from './normal/buggy-kinderman-ramage';
-export { KindermanRamage } from './normal/kinderman-ramage';
+export { AhrensDieter } from './normal/ahrens-dieter/index.js';
+export { Inversion } from './normal/inversion/index.js';
+export { BoxMuller } from './normal/box-muller/index.js';
+export { BuggyKindermanRamage } from './normal/buggy-kinderman-ramage/index.js';
+export { KindermanRamage } from './normal/kinderman-ramage/index.js';
 // stubs
-export { IRNG } from './irng';
-export { MessageType } from './irng';
-export { IRNGNormal } from './normal/normal-rng';
-export { IRNGTypeEnum } from './irng-type';
-export { IRNGNormalTypeEnum } from './normal/in01-type';
+export { IRNG, MessageType } from './irng.js';
+export { IRNGNormal } from './normal/normal-rng.js';
+export { IRNGTypeEnum } from './irng-type.js';
+export { IRNGNormalTypeEnum } from './normal/in01-type.js';
 // globalRNG
-export { RNGKind } from './globalRNG';
+export { RNGKind } from './global-rng.js';

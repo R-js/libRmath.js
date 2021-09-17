@@ -15,16 +15,16 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { debug } from 'debug';
+import debug from 'debug';
 
-import { ML_ERR_return_NAN, R_Q_P01_boundaries } from '@common/logger';
-import { R_DT_0, R_DT_1  }  from '$constants';
+import { ML_ERR_return_NAN, R_Q_P01_boundaries } from '@common/logger.js';
+import { R_DT_0, R_DT_1  }  from '@lib/r-func.js';
 
-import { NumberW } from '$toms708';
+import { NumberW } from '@common/toms708/index.js';
 
-import { R_DT_qIv } from '@dist/exp/expm1';
-import { qnorm } from '@dist/normal/qnorm';
-import { pnbinom } from './pnbinom';
+import { R_DT_qIv } from '@dist/exp/expm1.js';
+import { qnorm } from '@dist/normal/qnorm.js';
+import { pnbinom } from './pnbinom.js';
 
 const printer_do_search = debug('do_search');
 

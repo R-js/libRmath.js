@@ -28,9 +28,9 @@ import { qt as _qt } from './qt';
 //
 import { rtOne } from './rt';
 
-import { repeatedCall64 } from '$helper';
-import { emptyFloat64Array } from '$constants';
-import { globalNorm } from '@rng/globalRNG';
+import { repeatedCall64 } from '$helper.js';
+import { emptyFloat64Array } from 'lib/common/constants';
+import { globalNorm } from '@lib/rng/global-rng';
 export { rtOne };
 
 

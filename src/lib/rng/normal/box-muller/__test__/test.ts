@@ -1,12 +1,12 @@
-import { BoxMuller } from '../../../';
-import { IRNGNormalTypeEnum } from '../../in01-type';
+import { BoxMuller } from '@rng/normal/box-muller/index.js';
+import { IRNGNormalTypeEnum } from '@rng/normal/in01-type.js';
 import {
     rnormAfterSeed123,
     rnormAfterUniformRNGBleed,
     rnormAfterUniformRNGBleed2,
     rnormAfterUniformRNGReset,
-} from './fixture';
-import '$jest-extension';
+} from './fixture.js';
+
 
 describe('rng box-muller', function () {
     it.only('compare 100 samples seed=0', () => {

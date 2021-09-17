@@ -63,19 +63,19 @@
             "email": "richarddmorey@gmail.com"
         }
     ],
-    "main": "commonjs/lib/index.js",
-    "module": "es6/lib/index.js",
+    "main": "es6/lib/index.js",
+    "type": "module",
     "browser": "browser/lib-r-math.min.js",
-    "types": "commonjs/types/lib/index.d.ts",
+    "types": "es6/types/lib/index.d.ts",
     "files": [
         "commonjs",
         "es6",
         "browser"
     ],
     "scripts": {
-        "prebuild": "rimraf *.tsbuildinfo es6 commonjs browser",
-        "build": "ttsc -p tsconfig-es6.json && ttsc -p tsconfig-commonjs.json",
-        "postbuild": "node rollup.build.js",
+        "prebuild": "rimraf *.tsbuildinfo es6 browser",
+        "build": "ttsc -p tsconfig-es6.json",
+        "xpostbuild": "node rollup.build.js",
         "lint": "eslint src/**/*.ts",
         "lint:fix": "eslint src/**/*.ts --fix",
         "pretest": "rimraf coverage .jest-cache",

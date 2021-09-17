@@ -1,4 +1,4 @@
-import { IRNGTypeEnum } from './irng-type';
+import { IRNGTypeEnum } from './irng-type.js';
 
 export function seedCheck(rngName: IRNGTypeEnum, seed: Uint32Array | Int32Array, length: number): void | never {
     if (!(seed instanceof Uint32Array || seed instanceof Int32Array)) {

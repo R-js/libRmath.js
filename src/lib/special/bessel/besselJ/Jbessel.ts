@@ -15,11 +15,11 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { debug } from 'debug';
-import { ME, ML_ERROR } from '@common/logger';
-import { Rf_gamma_cody } from '@special/bessel/gamma_cody';
-import { enmten_BESS, ensig_BESS, enten_BESS, xlrg_BESS_IJ } from '../bessel-constants';
-import { IBesselRC } from '../IBesselRC';
+import debug from 'debug';
+import { ME, ML_ERROR } from '@common/logger.js';
+import { Rf_gamma_cody } from '@special/bessel/gamma_cody.js';
+import { enmten_BESS, ensig_BESS, enten_BESS, xlrg_BESS_IJ } from '../bessel-constants.js';
+import { IBesselRC } from '../IBesselRC.js';
 
 const { min, trunc, pow, sqrt, sin, cos, max, abs } = Math;
 

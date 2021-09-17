@@ -1,39 +1,21 @@
-//helper
-import '$jest-extension';
-import { loadData } from '$test-helpers/load';
 import { resolve } from 'path';
 
-import { dbinom } from '..';
+//helper
+import { loadData } from '@common/load';
+import { cl, select } from '@common/debug-select.js';
 
+const dbinomDomainWarns = select('dbinom')("argument out of domain in '%s'");
+dbinomDomainWarns;
 
-jest.mock('@common/logger', () => {
-    // Require the original module to not be mocked...
-    const originalModule = jest.requireActual('@common/logger');
-    const { ML_ERROR, ML_ERR_return_NAN } = originalModule;
-    let array: unknown[];
-    function pr(...args: unknown[]): void {
-        array.push([...args]);
-    }
-
-    return {
-        __esModule: true, // Use it when dealing with esModules
-        ...originalModule,
-        ML_ERROR: jest.fn((x: unknown, s: unknown) => ML_ERROR(x, s, pr)),
-        ML_ERR_return_NAN: jest.fn(() => ML_ERR_return_NAN(pr)),
-        setDestination(arr: unknown[]=[]) {
-            array = arr;
-        },
-        getDestination() {
-            return array;
-        }
-    };
-});
 //app
-const cl = require('@common/logger');
-cl.setDestination();
+
+import { dbinom } from '../index.js';
 
 describe('dbinom', function () {
-   
+    beforeEach(()=>{
+        cl.clear('dbinom');
+    });
+    it.todo('check unhappy path with ME warnings');
     it('ranges x ∊ [0, 12] size=12, prob=0.01', async () => {
         const [x, y] = await loadData(resolve(__dirname, 'fixture-generation', 'dbinom1.R'), /\s+/, 1, 2);
         const actual = x.map(_x => dbinom(_x, 12, 0.01));
@@ -99,6 +81,4 @@ describe('dbinom', function () {
         const z1 = dbinom(4.4, 100, 0.5, true); // 100%, you always score "head", never "tail"
         expect(z1).toBe(-Infinity);
     });
-
- 
 });

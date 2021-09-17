@@ -1,6 +1,6 @@
-import { MersenneTwister } from '../../';
-import { samples100fromSeed1234, seedStateAfterSeed1234 } from './fixture';
-import '$jest-extension';
+import { MersenneTwister } from '../../index.js';
+import { samples100fromSeed1234, seedStateAfterSeed1234 } from './fixture.js';
+
 
 describe('rng mersenne-twister', function () {
     it('seed=12345, 2 samples',()=>{

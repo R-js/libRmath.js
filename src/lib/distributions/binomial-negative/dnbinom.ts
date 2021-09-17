@@ -14,12 +14,12 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { debug } from 'debug';
+import debug from 'debug';
 
-import { ML_ERR_return_NAN, } from '@common/logger';
-import { R_D__0, R_D__1, R_D_exp, R_D_nonint_check } from '$constants';
-import { dbinom_raw } from '@dist/binomial/dbinom';
-import { lgammafn_sign } from '@special/gamma/lgammafn_sign';
+import { ML_ERR_return_NAN, } from '@common/logger.js';
+import { R_D__0, R_D__1, R_D_exp, R_D_nonint_check } from 'lib/r-func.js';
+import { dbinom_raw } from '@dist/binomial/dbinom.js';
+import { lgammafn_sign } from '@special/gamma/lgammafn_sign.js';
 
 const printer = debug('dnbinom');
 /**

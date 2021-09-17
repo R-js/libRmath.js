@@ -15,25 +15,22 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 //3rd party
-import { debug } from 'debug';
+import debug from 'debug';
 
 //tooling
-import { ME, ML_ERROR } from '@common/logger';
-import { isArray, isEmptyArray, emptyFloat64Array } from '$constants';
+import { ME, ML_ERROR } from '@common/logger.js';
 
-import { cospi } from '@trig/cospi';
-import { sinpi } from '@trig/sinpi';
-import { bessel_y_scalar } from '../besselY';
-import { J_bessel } from './Jbessel';
-import type { NumArray } from '$constants';
-
+import { cospi } from '@trig/cospi.js';
+import { sinpi } from '@trig/sinpi.js';
+import bessel_y_scalar from '../besselY/index.js';
+import { J_bessel } from './Jbessel.js';
 
 const { isNaN: ISNAN } = Number;
 const { floor } = Math;
 
 const printer = debug('bessel_j');
 
- function bessel_j_scalar(x: number, alpha: number): number {
+function bessel_j_scalar(x: number, alpha: number): number {
     /* NaNs propagated correctly */
     if (ISNAN(x) || ISNAN(alpha)) return x + alpha;
     if (x < 0) {
@@ -46,13 +43,13 @@ const printer = debug('bessel_j');
         /* Using Abramowitz & Stegun  9.1.2
          * this may not be quite optimal (CPU and accuracy wise) */
         let rc;
-        if (alpha - na === 0.5){
+        if (alpha - na === 0.5) {
             rc = 0;
         }
-        else{
+        else {
             rc = bessel_j_scalar(x, -alpha) * cospi(alpha);
         }
-        if (alpha !== na){
+        if (alpha !== na) {
             rc += bessel_y_scalar(x, -alpha) * sinpi(alpha);
         }
         return rc;
@@ -67,7 +64,7 @@ const printer = debug('bessel_j');
 
     if (rc.ncalc !== nb) {
         /* error input */
-        if (rc.ncalc < 0){
+        if (rc.ncalc < 0) {
             printer('bessel_j(%d): ncalc (=%d) != nb (=%d); alpha=%d. Arg. out of range?', x, rc.ncalc, rc.nb, alpha);
         }
         else {
@@ -77,31 +74,5 @@ const printer = debug('bessel_j');
     return rc.x; // bj[nb - 1];
 }
 
-export default function besselJn(x: NumArray, nu: number): Float32Array | Float64Array  {
-    // in case no ts is used
-    if (typeof nu !== 'number'){
-        throw new TypeError(`argument "nu" is missing/not a number, Execution halted`);
-    }
-    if (typeof x === 'number') {
-        x = new Float64Array([x]);
-    }
-    if (isEmptyArray(x)) {
-        return emptyFloat64Array;
-    }
-    if (!isArray(x)) {
-        throw new TypeError(`argument not of number, number[], Float64Array, Float32Array`);
-    }
-    const rc =
-        x instanceof Float64Array
-            ? new Float64Array(x.length)
-            : x instanceof Float32Array
-            ? new Float32Array(x.length)
-            : new Float64Array(x);
-
-    for (let i = 0; i < x.length; i++) {
-        rc[i]= bessel_j_scalar(x[i], nu);
-    }
-    return rc;
-}
-
-export { bessel_j_scalar, besselJn };
+export default bessel_j_scalar;
+export { bessel_j_scalar as BesselJ };

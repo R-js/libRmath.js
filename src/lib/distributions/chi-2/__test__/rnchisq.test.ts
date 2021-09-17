@@ -1,7 +1,7 @@
 //helper
 import '$jest-extension';
 import '$mock-of-debug';// for the side effects
-import { globalUni, RNGKind } from '@rng/globalRNG';
+import { globalUni, RNGKind } from '@lib/rng/global-rng';
 
 import { rchisq } from '..';
 import { IRNGTypeEnum } from '@rng/irng-type';

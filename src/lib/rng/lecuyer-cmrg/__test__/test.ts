@@ -1,6 +1,6 @@
-import { LecuyerCMRG } from '../../';
-import { sample100, seedFixture } from './fixture';
-import '$jest-extension';
+import { LecuyerCMRG } from '../../index.js';
+import { sample100, seedFixture } from './fixture.js';
+
 
 describe('rng lecuyer-cmrg', function () {
     it('compare 100 samples seed=0', () => {

@@ -1,4 +1,4 @@
-import type { debug } from 'debug';
+import type debug from 'debug';
 
 jest.mock('debug', () => {
     // Require the original module to not be mocked...

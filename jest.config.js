@@ -28,7 +28,7 @@ module.exports = {
     testPathIgnorePatterns: ['/es6/', '/commonjs/'],
     //testMatch: ['**/__tests__/**/*.[t]s?(x)', '**/?(*.)+(spec|test).[t]s?(x)'],
     testRegex: [
-        /*
+        
         // beta
         '/distributions/beta/__test__/dbeta.test.ts$',
         // ok 
@@ -139,14 +139,14 @@ module.exports = {
         '/distributions/geometric/__test__/qgeom.test.ts$',
         //ok
         '/distributions/geometric/__test__/rgeom.test.ts$',
-*/
+
         //hypergeometric
         //ok
         '/distributions/hypergeometric/__test__/dhyper.test.ts$',
         //ok
         '/distributions/hypergeometric/__test__/phyper.test.ts$',
         //ok
-        //'/distributions/hypergeometric/__test__/qhyper.test.ts$',
+        '/distributions/hypergeometric/__test__/qhyper.test.ts$',
         
         '/distributions/hypergeometric/__test__/rhyper.test.ts$',
 
@@ -190,27 +190,23 @@ module.exports = {
         },
     },
     moduleNameMapper: {
-        '^\\$jest-extension$': '<rootDir>/src/packages/jest-extension.ts',
-        '^@distributions/(.*)$': '<rootDir>/src/lib/distributions/$1',
-        '^@dist/(.*)$': '<rootDir>/src/lib/distributions/$1',
-        '^@common/(.*)$': '<rootDir>/src/packages/common/$1',
-        '^\\$constants$': '<rootDir>/src/lib/common/_general.ts',
-        '^\\$chebyshev$': '<rootDir>/src/lib/chebyshev',
+        '^@common/(.*)$': [
+            '<rootDir>/src/lib/common/$1',
+            '<rootDir>/src/packages/common/$1',
+            '<rootDir>/src/packages/__test__/$1',
+        ],
+        '^@lib/(.*)$': '<rootDir>/src/lib/$1',
+        '^@rng/(.*)$': '<rootDir>/src/lib/rng/$1',
         '^@special/(.*)$': '<rootDir>/src/lib/special/$1',
         '^@trig/(.*)$': '<rootDir>/src/lib/trigonometry/$1',
-        '^\\$toms708$': '<rootDir>/src/lib/common/toms708',
-        '^\\$test-helpers/(.*)$': '<rootDir>/src/packages/test-helpers/$1',
-        '^\\$deviance$': '<rootDir>/src/lib/deviance/index.ts',
-        '^\\$stirling$': '<rootDir>/src/lib/stirling/index.ts',
-        '^@rng/(.*)$': '<rootDir>/src/lib/rng/$1',
-        '^\\$helper$': '<rootDir>/src/lib/r-func.ts',
-        '^\\$mock-of-debug$': '<rootDir>/src/packages/test-helpers/mock-of-debug'
+        '^@dist/(.*)$': '<rootDir>/src/lib/distributions/$1',
+                      
+        '^@test/(.*)$': '<rootDir>/src/packages/__test__/$1'
     },
     // vscode will pick up the definition files of the extension
-    setupFiles:['<rootDir>/src/packages/jest-ext.d.ts'],
+    setupFiles:['<rootDir>/src/packages/__test__/jest-ext.d.ts'],
     setupFilesAfterEnv: [
-        '<rootDir>/src/packages/jest-extension.ts',
-        '<rootDir>/src/packages/test-helpers/mock-of-debug.ts',
-        '<rootDir>/src/packages/test-helpers/load.ts'
+        '<rootDir>/src/packages/__test__/jest-extension.ts',
+        '<rootDir>/src/packages/__test__/mock-of-debug.ts'
     ],
 };

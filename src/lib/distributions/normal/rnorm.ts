@@ -16,11 +16,11 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { debug } from 'debug';
+import debug from 'debug';
 
 import { ML_ERR_return_NAN } from '@common/logger';
 import type { IRNGNormal } from '@rng/normal/normal-rng';
-import { globalNorm } from '@rng/globalRNG';
+import { globalNorm } from '@lib/rng/global-rng';
 
 const printer = debug('rnorm');
 

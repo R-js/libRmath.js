@@ -15,15 +15,15 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { debug } from 'debug';
+import debug from 'debug';
 
-import { ML_ERR_return_NAN } from '@common/logger';
+import { ML_ERR_return_NAN } from '@common/logger.js';
 
-import { R_D__0, R_D_exp, R_D_val } from '$constants';
+import { R_D__0, R_D_exp, R_D_val } from '@lib/r-func.js';
 
-import { dbinom_raw } from '@dist/binomial/dbinom';
+import { dbinom_raw } from '@dist/binomial/dbinom.js';
 
-import { lbeta_scalar } from '@special/beta';
+import { lbeta_scalar } from '@special/beta/index.js';
 
 const printer = debug('dbeta');
 

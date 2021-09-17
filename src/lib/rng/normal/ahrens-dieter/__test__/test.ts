@@ -1,13 +1,13 @@
-import { AhrensDieter } from '../../../';
-import { IRNGNormalTypeEnum } from '../../in01-type';
-import _1000Samples from './fixture-1000';
+import { AhrensDieter } from '../../../index.js';
+import { IRNGNormalTypeEnum } from '../../in01-type.js';
+import _1000Samples from './fixture-1000.js';
 import {
     rnormAfterSeed1234,
     rnormAfterUniformRNGBleed,
     rnormAfterUniformRNGBleed2,
     rnormAfterUniformRNGReset,
-} from './fixture';
-import '$jest-extension';
+} from './fixture.js';
+
 
 describe('rng ahrens-dieter', function () {
     it('compare 1000 samples seed=1234', () => {

@@ -1,7 +1,5 @@
 src
 dist
-!dist/src
-!dist/lib
 docs
 config
 coverage

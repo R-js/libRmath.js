@@ -7,7 +7,7 @@ import {
     M_SQRT_32,
     R_D__0,
     R_D__1
-  } from '$constants';
+  } from 'lib/common/constants';
 
 const {
     EPSILON: DBL_EPSILON,

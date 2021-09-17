@@ -1,10 +1,10 @@
-import { KindermanRamage } from '../../../';
-import { IRNGNormalTypeEnum } from '../../../';
-import { testData } from './fixture';
-import '$jest-extension';
+import { KindermanRamage } from '@rng/normal/kinderman-ramage/index.js';
+import { IRNGNormalTypeEnum } from '@rng/index.js';
+import { testData } from './fixture.js';
+import flushSample from './_1000flushSample.js';
 
 const { rnorm10, runif1, rnorm4, runif1_2, rnorm2, rnorm2AfterResetSeedTo0 } = testData;
-import flushSample from './_1000flushSample';
+
 
 describe('rng kinderman ramage', function () {
     it('compare 10 samples seed=1234', () => {

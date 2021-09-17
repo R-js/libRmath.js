@@ -1,9 +1,6 @@
 import { IRNG, MessageType } from '../';
 import { IRNGTypeEnum } from '../';
-import { fixup, i2_32m1 } from '../fixup';
-
-//import '../../../../../packages/jest-extension';
-import '$jest-extension';
+import { fixup, i2_32m1 } from '../fixup.js';
 
 class MyIRNG extends IRNG {
     private _seed: Uint32Array;

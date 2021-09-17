@@ -19,10 +19,10 @@ export { dwilcox } from './dwilcox';
 export { pwilcox } from './pwilcox';
 export { qwilcox } from './qwilcox';
 import { rwilcoxOne } from './rwilcox';
-import { repeatedCall } from '$helper';
+import { repeatedCall } from '$helper.js';
 
 import type { IRNG } from '@rng/irng';
-import { globalUni } from '@rng/globalRNG';
+import { globalUni } from '@lib/rng/global-rng';
 
 export { rwilcoxOne };
 export function rwilcox(N: number, m: number, n: number, rng:IRNG = globalUni()): Float32Array {

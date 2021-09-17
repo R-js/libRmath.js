@@ -20,9 +20,9 @@ import { pgamma as _pgamma } from './pgamma';
 import { qgamma as _qgamma } from './qgamma';
 import { rgammaOne as _rgammaOne } from './rgamma';
 import type { IRNGNormal } from '@rng/normal/normal-rng';
-import { globalNorm } from '@rng/globalRNG';
+import { globalNorm } from '@lib/rng/global-rng';
 
-import { repeatedCall64 } from '$helper';
+import { repeatedCall64 } from '$helper.js';
 
 function gammaNormalizeParams(rate?: number, scale?: number): number {
     // decision table

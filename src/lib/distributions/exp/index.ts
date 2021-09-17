@@ -16,12 +16,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { dexp as _dexp} from './dexp';
 import { pexp as _pexp} from './pexp';
-import { qexp as _qexp} from './qexp';
-import { rexpOne } from './rexp';
+import { qexp as _qexp} from './qexp.js';
+import { rexpOne } from './rexp.js';
 
-import { globalUni } from '@rng/globalRNG';
-import type { IRNG } from '@rng/irng';
-import { repeatedCall64 } from '$helper';
+import { globalUni } from '@lib/rng/global-rng.js';
+import type { IRNG } from '@rng/irng.js';
+import { repeatedCall64 } from '@lib/r-func.js';
 
 export function dexp(x: number, rate = 1, asLog = false): number{
   return _dexp(x, 1 / rate, asLog);

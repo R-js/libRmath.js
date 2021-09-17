@@ -1,6 +1,6 @@
 //helper
 import '$jest-extension';
-import { globalUni, RNGKind } from '@rng/globalRNG';
+import { globalUni, RNGKind } from '@lib/rng/global-rng';
 
 import { rcauchy } from '..';
 import { IRNGTypeEnum  } from '@rng/irng-type';

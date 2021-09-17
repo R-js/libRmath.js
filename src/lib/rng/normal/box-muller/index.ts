@@ -15,10 +15,10 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { IRNGNormalTypeEnum } from '../in01-type';
-import { IRNG } from '../../irng';
-import { MersenneTwister } from '../../mersenne-twister';
-import { IRNGNormal } from '../normal-rng';
+import { IRNGNormalTypeEnum } from '@rng/normal/in01-type.js';
+import { IRNG } from '@rng/irng.js';
+import { MersenneTwister } from '@rng/mersenne-twister/index.js';
+import { IRNGNormal } from '@rng/normal/normal-rng.js';
 
 const { log, sqrt, cos, sin } = Math;
 

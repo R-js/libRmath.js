@@ -15,11 +15,11 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { debug } from 'debug';
-import { cospi } from '@trig/cospi';
-import { sinpi } from '@trig/sinpi';
-import { M_eps_sinc, thresh_BESS_Y, xlrg_BESS_Y } from '../bessel-constants';
-import { IBesselRC } from '../IBesselRC';
+import debug from 'debug';
+import { cospi } from '@trig/cospi.js';
+import { sinpi } from '@trig/sinpi.js';
+import { M_eps_sinc, thresh_BESS_Y, xlrg_BESS_Y } from '../bessel-constants.js';
+import { IBesselRC } from '../IBesselRC.js';
 
 const M_SQRT_2dPI = 0.797884560802865355879892119869;
 const M_1_PI = 0.3183098861837907;

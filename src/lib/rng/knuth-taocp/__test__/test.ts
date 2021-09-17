@@ -1,7 +1,5 @@
-import { KnuthTAOCP } from '../../';
-import { fixture as getRFixture } from './fixture';
-//import '../../../../../packages/jest-extension';
-import '$jest-extension';
+import { KnuthTAOCP } from '../../index.js';
+import { fixture as getRFixture } from './fixture.js';
 
 const fixture = getRFixture();
 

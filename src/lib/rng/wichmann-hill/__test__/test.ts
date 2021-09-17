@@ -1,6 +1,5 @@
-import { WichmannHill } from '../../';
-import { samples25fromSeed1234, stateAfterSeed1234, samplesAfterCorrectedSeed } from './fixture';
-import '$jest-extension';
+import { WichmannHill } from '@rng/wichmann-hill/index.js';
+import { samples25fromSeed1234, stateAfterSeed1234, samplesAfterCorrectedSeed } from './fixture.js';
 
 describe('rng wichman-hill', function () {
     it('compare 25 samples seed=0', () => {

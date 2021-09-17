@@ -1,11 +1,14 @@
-const rollup = require('rollup');
-// builtinModules is frozen!!! (Object.freeze)
-const builtin = require('module').builtinModules.slice();
-const { terser } = require('rollup-plugin-terser');
-//const { nodeResolve } = require('@rollup/plugin-node-resolve');
-const { resolve, dirname } = require('path');
+import { rollup } from 'rollup';
+import { builtinModules } from 'module';
 
-builtin.splice(builtin.indexOf('crypto'), 1);
+import { terser } from 'rollup-plugin-terser';
+import { nodeResolve } from '@rollup/plugin-node-resolve';
+import commonjs from '@rollup/plugin-commonjs';
+import { resolve, } from 'path';
+
+const builtin = builtinModules.slice()
+builtin.splice(builtinModules.indexOf('crypto'), 1);
+
 
 function shims() {
     // for browser, mimic with WebApi the nodejs "crypto" https://nodejs.org/api/crypto.html#crypto_crypto_randombytes_size_callback
@@ -56,19 +59,10 @@ const inputOptions = {
     input: {
         'lib-r-math': 'es6/lib/index.js',
     },
-    external: (id, parentId, isResolved) => {
-        /* if (/logger/.test(id)) {
-            if (!isResolved) {
-                return resolve('es6/packages/common/logger') === resolve(dirname(parentId), id);
-            }
-            return resolve('es6/packages/common/logger.js') === id;
-        }*/
-        if (builtin.includes(id)) {
-            return true;
-        }
-        return false;
+    external: (id) => {
+        return builtin.includes(id);
     },
-   plugins: [shims()],
+   plugins: [shims(), commonjs(), nodeResolve()],
 };
 
 const outputOptions = {
@@ -76,71 +70,21 @@ const outputOptions = {
     dir: 'browser',
     sourcemap: true,
     name: 'R',
-    //preserveModules: true,
+    entryFileNames:'[name].js',
     globals: {
         [resolve('./es6/packages/common/logger')]: 'R.logger',
     },
     extend: true,
-    plugins:[
-       // terser()
-    ]
 };
 
+
+const outputOptionsMinimal = Object.assign({}, outputOptions, { compact: true, entryFileNames:'[name].min.js' ,plugins: [ terser() ] });
+
 async function build() {
-    // exclude nodejs buildins except the ones we are going to shim
-
-    //inputOptions.external = builtin;
-    const bundle = await rollup.rollup(inputOptions);
-    const { output } = await bundle.generate(outputOptions);
-    console.log('OutputGenerated');
-
-    for (const chunkOrAsset of output) {
-        if (chunkOrAsset.type === 'asset') {
-            // For assets, this contains
-            // {
-            //   fileName: string,              // the asset file name
-            //   source: string | Uint8Array    // the asset source
-            //   type: 'asset'                  // signifies that this is an asset
-            // }
-            //console.log('Asset', chunkOrAsset.fileName);
-        } else {
-            const { name, type, fileName, modules, code } = chunkOrAsset;
-            if (name === 'taocp-1997-init') {
-                //console.log(code)
-            }
-            //console.log(`${name}, ${type}, ${fileName}, ${JSON.stringify(modules)}`);
-            // For chunks, this contains
-            // {
-            //   code: string,                  // the generated JS code
-            //   dynamicImports: string[],      // external modules imported dynamically by the chunk
-            //   exports: string[],             // exported variable names
-            //   facadeModuleId: string | null, // the id of a module that this chunk corresponds to
-            //   fileName: string,              // the chunk file name
-            //   implicitlyLoadedBefore: string[]; // entries that should only be loaded after this chunk
-            //   imports: string[],             // external modules imported statically by the chunk
-            //   importedBindings: {[imported: string]: string[]} // imported bindings per dependency
-            //   isDynamicEntry: boolean,       // is this chunk a dynamic entry point
-            //   isEntry: boolean,              // is this chunk a static entry point
-            //   isImplicitEntry: boolean,      // should this chunk only be loaded after other chunks
-            //   map: string | null,            // sourcemaps if present
-            //   modules: {                     // information about the modules in this chunk
-            //     [id: string]: {
-            //       renderedExports: string[]; // exported variable names that were included
-            //       removedExports: string[];  // exported variable names that were removed
-            //       renderedLength: number;    // the length of the remaining code in this module
-            //       originalLength: number;    // the original length of the code in this module
-            //     };
-            //   },
-            //   name: string                   // the name of this chunk as used in naming patterns
-            //   referencedFiles: string[]      // files referenced via import.meta.ROLLUP_FILE_URL_<id>
-            //   type: 'chunk',                 // signifies that this is a chunk
-            // }
-            //console.log('Chunk', chunkOrAsset.fileName);
-        }
-    }
-
-    // or write the bundle to disk
+    const bundle = await rollup(inputOptions);
+    await bundle.generate(outputOptions);
     await bundle.write(outputOptions);
+    await bundle.write(outputOptionsMinimal);
 }
 
 build();

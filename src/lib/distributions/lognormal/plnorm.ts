@@ -14,9 +14,9 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { debug } from 'debug';
+import debug from 'debug';
 import { ML_ERR_return_NAN } from '@common/logger';
-import { R_DT_0 } from '$constants';
+import { R_DT_0 } from 'lib/common/constants';
 import { pnorm5 as pnorm } from '@dist/normal/pnorm';
 
 const { isNaN: ISNAN } = Number;

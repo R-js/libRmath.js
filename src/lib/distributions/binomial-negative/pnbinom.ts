@@ -15,13 +15,12 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { debug } from 'debug';
+import debug from 'debug';
 
-import { ML_ERR_return_NAN, } from '@common/logger';
-import { R_DT_0, R_DT_1 } from '$constants';
-
-import { pbeta } from '@dist/beta/pbeta';
-import { NumberW, Toms708 } from '$toms708';
+import { ML_ERR_return_NAN, } from '@common/logger.js';
+import { R_DT_0, R_DT_1 } from '@lib/r-func.js';
+import { pbeta } from '@dist/beta/pbeta.js';
+import { NumberW, Toms708 } from '@common/toms708/index.js';
 
 const printer = debug('pnbinom');
 
@@ -44,7 +43,7 @@ export function pnbinom(x: number, size: number, prob: number, lowerTail: boolea
     return pbeta(prob, size, x + 1, lowerTail, logP);
 }
 
-const printer_pnbinom_mu = debug('printer_pnbinom_mu');
+const printer_pnbinom_mu = debug('pnbinom_mu');
 
 export function pnbinom_mu(x: number, size: number, mu: number, lowerTail: boolean, logP: boolean): number {
 

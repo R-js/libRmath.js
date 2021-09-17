@@ -14,12 +14,14 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { debug } from 'debug';
-import { ML_ERR_return_NAN } from '@common/logger';
-import { R_pow_di } from '$constants';
+import debug from 'debug';
+import { ML_ERR_return_NAN } from '@common/logger.js';
+import { R_pow_di } from '@lib/r-func.js';
 
-import type { IRNG } from '@rng/irng';
-import { qbinom } from './qbinom';
+import type { IRNG } from '@rng/irng.js';
+import { qbinom } from './qbinom.js';
+
+
 const printer_rbinom = debug('_rbinom');
 
 export function rbinomOne(nin: number, pp: number, rng: IRNG): number {

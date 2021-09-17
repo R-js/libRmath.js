@@ -14,13 +14,12 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { IRNGTypeEnum } from './irng-type';
-import type { IRandom } from './IRandom';
+import { IRNGTypeEnum } from './irng-type.js';
+import type { IRandom } from './IRandom.js';
 
 export enum MessageType {
     INIT = '@@INIT@@',
 }
-
 
 export class IRNG implements IRandom {
     protected _name: string;

@@ -19,10 +19,10 @@ import { chebyshev_eval } from '$chebyshev';
 import { ME, ML_ERROR } from '@common/logger';
 import { stirlerr } from '$stirling';
 import { sinpi } from '@trig/sinpi';
-import type { NumArray } from '$constants';
-import { isArray, isEmptyArray, emptyFloat64Array } from '$constants';
+import type { NumArray } from 'lib/common/constants';
+import { isArray, isEmptyArray, emptyFloat64Array } from 'lib/common/constants';
 
-import { debug } from 'debug';
+import debug from 'debug';
 
 const printer = debug('gammafn');
 

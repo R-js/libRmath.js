@@ -15,11 +15,11 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { debug } from 'debug';
+import debug from 'debug';
 const printer = debug('punif');
 
 import { ML_ERR_return_NAN } from '@common/logger';
-import { R_D_val, R_DT_0, R_DT_1 } from '$constants';
+import { R_D_val, R_DT_0, R_DT_1 } from 'lib/common/constants';
 
 export function punif(q: number, min = 0, max = 1, lowerTail = true, logP = false): number {
     if (isNaN(q) || isNaN(min) || isNaN(max)) {

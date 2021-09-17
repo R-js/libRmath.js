@@ -1,9 +1,9 @@
 //helper
-import { emptyFloat64Array } from '$constants';
+import { emptyFloat64Array } from 'lib/common/constants';
 import '$jest-extension';
 import '$mock-of-debug';// for the side effects
 import { IRNGNormalTypeEnum } from '@rng/normal/in01-type';
-import { globalUni, RNGKind } from '@rng/globalRNG';
+import { globalUni, RNGKind } from '@lib/rng/global-rng';
 import { IRNGTypeEnum } from '@rng/irng-type';
 import { rgamma } from '..';
 import { loadData } from '$test-helpers/load';

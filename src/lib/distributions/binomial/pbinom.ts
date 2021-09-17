@@ -14,11 +14,11 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { debug } from 'debug';
+import debug from 'debug';
 
-import { pbeta } from '../beta/pbeta';
-import { ML_ERR_return_NAN,  } from '@common/logger';
-import { R_DT_0, R_DT_1, R_nonint } from '$constants';
+import { pbeta } from '../beta/pbeta.js';
+import { ML_ERR_return_NAN,  } from '@common/logger.js';
+import { R_DT_0, R_DT_1, R_nonint } from '@lib/r-func.js';
 
 const printer = debug('pbinom');
 

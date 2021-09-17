@@ -15,9 +15,10 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { debug } from 'debug';
+import debug from 'debug';
 
-import {ML_ERR_return_NAN} from '@common/logger';
+import {ML_ERR_return_NAN} from '@common/logger.js';
+
 import {
     M_LN_2PI,
     R_D__0,
@@ -25,15 +26,14 @@ import {
     R_D_exp,
     R_D_negInonint,
     R_D_nonint_check,
-} from '$constants';
+} from '@lib/r-func.js';
 
-import { bd0 } from '$deviance';
-
-import { stirlerr } from '$stirling';
+import bd0 from '@lib/deviance/index.js';
+import { stirlerr } from '@lib/stirling/index.js';
 
 const printer = debug('dbinom');
 
-export function dbinom_raw(x: number, n: number, p: number, q: number, give_log: boolean): number {
+ function dbinom_raw(x: number, n: number, p: number, q: number, give_log: boolean): number {
     let lc: number;
 
     if (p === 0) return x === 0 ? R_D__1(give_log) : R_D__0(give_log);
@@ -65,7 +65,7 @@ export function dbinom_raw(x: number, n: number, p: number, q: number, give_log:
     return R_D_exp(give_log, lc - 0.5 * lf);
 }
 
-export function dbinom(x: number, n: number, p: number, logX = false): number {
+function dbinom(x: number, n: number, p: number, logX = false): number {
     /* NaNs propagated correctly */
     if (isNaN(x) || isNaN(n) || isNaN(p)) return x + n + p;
 
@@ -82,3 +82,5 @@ export function dbinom(x: number, n: number, p: number, logX = false): number {
 
     return dbinom_raw(x, n, p, 1 - p, logX);
 }
+
+export { dbinom_raw , dbinom };

@@ -1,40 +1,17 @@
-//helper
-import '$jest-extension';
-import { loadData } from '$test-helpers/load';
 import { resolve } from 'path';
 
-import { dnbinom } from '..';
+//helper
+import { loadData } from '@common/load.js';
+import { cl, select } from '@common/debug-select.js';
+
+const dbinom_muDomainWarns = select('dnbinom_mu')("argument out of domain in '%s'");
+const dbinomDomainWarns = select('dnbinom')("argument out of domain in '%s'");
+dbinom_muDomainWarns;
+dbinomDomainWarns;
 
 
-jest.mock('@common/logger', () => {
-    // Require the original module to not be mocked...
-    const originalModule = jest.requireActual('@common/logger');
-    const { ML_ERROR, ML_ERR_return_NAN } = originalModule;
-    let array: unknown[];
-    function pr(...args: unknown[]): void {
-        array.push([...args]);
-    }
-
-    return {
-        __esModule: true, // Use it when dealing with esModules
-        ...originalModule,
-        ML_ERROR: jest.fn((x: unknown, s: unknown) => ML_ERROR(x, s, pr)),
-        ML_ERR_return_NAN: jest.fn(() => ML_ERR_return_NAN(pr)),
-        setDestination(arr: unknown[] = []) {
-            array = arr;
-        },
-        getDestination() {
-            return array;
-        }
-    };
-});
-//app
-const cl = require('@common/logger');
-cl.setDestination();
-const out = cl.getDestination();
-
-import { prob2mu } from './test-helpers';
-
+import { dnbinom } from '../index.js';
+import { prob2mu } from './test-helpers.js';
 
 describe('dnbinom', function () {
     describe('invalid input', () => {
@@ -43,22 +20,24 @@ describe('dnbinom', function () {
     });
     describe('using prob, not "mu" parameter', () => {
         beforeEach(()=>{
-            out.splice(0);//clear out
+            cl.clear('dnbinom_mu');
+            cl.clear('dnbinom');
         })
+        it.todo('check ME for dnbinom and prob2mu');
         it('ranges x ∊ [0, 200] size=34, prob=0.2', async () => {
             const [x, y] = await loadData(resolve(__dirname, 'fixture-generation', 'dnbinom1.R'), /\s+/, 1, 2);
             const actual = x.map(_x => dnbinom(_x, 34, 0.2));
             expect(actual).toEqualFloatingPointBinary(y, 43);
         });
-        it('x=NaN, prob=0.5, size=10', () => {
+        it.todo('x=NaN, prob=0.5, size=10', () => {
             const nan = dnbinom(NaN, 10, 0.5);
             expect(nan).toBeNaN();
-            expect(out.length).toBe(0);
+            
         });
-        it('x=10, prob=0, size=20', () => {
+        it.todo('x=10, prob=0, size=20', () => {
             const nan = dnbinom(10, 20, 0);
             expect(nan).toBeNaN();
-            expect(out.length).toBe(1);
+            
         });
         it('x=23.4 (non integer), prob=0.3, size=20', () => {
             const z = dnbinom(23.4, 20, 0.3);

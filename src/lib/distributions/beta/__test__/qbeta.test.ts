@@ -2,37 +2,24 @@
 import { resolve } from 'path';
 
 //helper
-import '$jest-extension';
-import { loadData } from '$test-helpers/load';
+import { loadData } from '@common/load';
+import { cl, select } from '@common/debug-select.js';
 
-jest.mock('@common/logger', () => {
-    // Require the original module to not be mocked...
-    const originalModule = jest.requireActual('@common/logger');
-    const { ML_ERROR, ML_ERR_return_NAN } = originalModule;
-    let array: unknown[];
-    function pr(...args: unknown[]): void {
-        array.push([...args]);
-    }
+const qbeta2DomainWarns = select('qbeta')("argument out of domain in '%s'");
+const qbetaRawDomainWarns = select('qbeta_raw')("argument out of domain in '%s'");
 
-    return {
-        __esModule: true, // Use it when dealing with esModules
-        ...originalModule,
-        ML_ERROR: jest.fn((x: unknown, s: unknown) => ML_ERROR(x, s, pr)),
-        ML_ERR_return_NAN: jest.fn(() => ML_ERR_return_NAN(pr)),
-        setDestination(arr: unknown[]) {
-            array = arr;
-        },
-        getDestination() {
-            return array;
-        }
-    };
-});
+qbeta2DomainWarns;
+qbetaRawDomainWarns;
 
-const cl = require('@common/logger');
 //app
 import { qbeta } from '..';
 
 describe('qbeta', function () {
+    beforeEach(()=>{
+        cl.clear('qbeta');
+        cl.clear('qbeta_raw');
+    });
+    it.todo('test unhappy path with ME warnings');
     it('ranges x ∊ [0, 1], shape1=1, shape2=2', async () => {
         /* load data from fixture */
         const [x, y] = await loadData(resolve(__dirname, 'fixture-generation', 'qbeta.R'), /\s+/, 1, 2);
@@ -110,6 +97,4 @@ describe('qbeta', function () {
         const z = qbeta(0.6, Infinity, Infinity, undefined, true, false);
         expect(z).toBe(0.5);
     });
-
-
 });

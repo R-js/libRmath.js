@@ -1,36 +1,22 @@
 //helper
-import '$jest-extension';
-import { loadData } from '$test-helpers/load';
 import { resolve } from 'path';
 
-jest.mock('@common/logger', () => {
-    // Require the original module to not be mocked...
-    const originalModule = jest.requireActual('@common/logger');
-    const { ML_ERROR, ML_ERR_return_NAN } = originalModule;
-    let array: unknown[];
-    function pr(...args: unknown[]): void {
-        array.push([...args]);
-    }
+import { loadData } from '@common/load.js';
+import { cl, select } from '@common/debug-select.js';
 
-    return {
-        __esModule: true, // Use it when dealing with esModules
-        ...originalModule,
-        ML_ERROR: jest.fn((x: unknown, s: unknown) => ML_ERROR(x, s, pr)),
-        ML_ERR_return_NAN: jest.fn(() => ML_ERR_return_NAN(pr)),
-        setDestination(arr: unknown[]) {
-            array = arr;
-        },
-        getDestination() {
-            return array;
-        }
-    };
-});
+const qbinomDomainWarns = select('_qbinom')("argument out of domain in '%s'");
+qbinomDomainWarns;
 
-const cl = require('@common/logger');
+const doSearchDomainWarns = select('do_search')("argument out of domain in '%s'");
+doSearchDomainWarns;
 //app
 import { qbinom } from '..';
 
 describe('qbinom', function () {
+    beforeEach(()=>{
+        cl.clear('_qbinom');
+        cl.clear('do_search');
+    });
     it('ranges p ∊ [0, 1, step 0.01] size=10, prob=0.5', async () => {
         const [x, y] = await loadData(resolve(__dirname, 'fixture-generation', 'qbinom1.R'), /\s+/, 1, 2);
         const actual = x.map(_x => qbinom(_x, 10, 0.5));

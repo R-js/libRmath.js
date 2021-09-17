@@ -131,7 +131,7 @@ describe('qhyper(p,m,n,k,log)', function () {
         });
     });
     describe('wasm accelerator test', ()=> {
-        it('(481 sec) non wasm-accelerated test, n=1, nr=2**31-1, nb=2**31-1, n=2**31-1',() => {
+        it.skip('(481 sec) non wasm-accelerated test, n=1, nr=2**31-1, nb=2**31-1, n=2**31-1',() => {
             const start = new Date();
             //console.log(`start at: ${start.toISOString()}`)
             const result = qhyper(0.5,2**31-1,2**31-1,2**31-1);

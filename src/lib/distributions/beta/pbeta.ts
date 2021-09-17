@@ -14,12 +14,13 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { debug } from 'debug';
-import { ML_ERR_return_NAN } from '@common/logger';
-import { R_DT_0, R_DT_1 } from '$constants';
-import { NumberW, Toms708 } from '$toms708';
+import debug from 'debug';
+import { ML_ERR_return_NAN } from '@common/logger.js';
+import { R_DT_0, R_DT_1 } from '@lib/r-func.js';
+import { NumberW, Toms708 } from '@common/toms708/index.js';
 
 const printer_pbeta_raw = debug('pbeta_raw');
+const printer_pbeta = debug('pbeta');
 
 export function pbeta_raw(x: number, a: number, b: number, lower_tail: boolean, log_p: boolean): number {
     // treat limit cases correctly here:
@@ -61,7 +62,7 @@ export function pbeta_raw(x: number, a: number, b: number, lower_tail: boolean, 
     return lower_tail ? w.val : wc.val;
 } /* pbeta_raw() */
 
-const printer_pbeta = debug('pbeta');
+
 
 export function pbeta(q: number, a: number, b: number, lowerTail = true, logP = false): number {
     printer_pbeta('pbeta(q=%d, a=%d, b=%d, l.t=%s, ln=%s)', q, a, b, lowerTail, logP);

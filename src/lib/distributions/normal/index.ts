@@ -19,7 +19,7 @@ export { dnorm4 as dnorm } from './dnorm';
 export { pnorm5 as pnorm } from './pnorm';
 export { qnorm } from './qnorm';
 import { rnormOne } from './rnorm';
-import { repeatedCall64 } from '$helper';
+import { repeatedCall64 } from '$helper.js';
 
 import type { IRNGNormal } from '@rng/normal/normal-rng';
 

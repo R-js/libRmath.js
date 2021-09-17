@@ -14,9 +14,9 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { debug } from 'debug';
+import debug from 'debug';
 import { lgammafn_sign } from '@special/gamma/lgammafn_sign';
-import { sumfp } from '$constants';
+import { sumfp } from 'lib/common/constants';
 import { checks } from './helper';
 
 const printer_dmultinom = debug('dmultinom');

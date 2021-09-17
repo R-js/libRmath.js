@@ -2,37 +2,20 @@
 import { resolve } from 'path';
 
 //helper
-import '$jest-extension';
-import { loadData } from '$test-helpers/load';
+import { loadData } from '@common/load';
+import { cl, select } from '@common/debug-select.js';
 
-jest.mock('@common/logger', () => {
-    // Require the original module to not be mocked...
-    const originalModule = jest.requireActual('@common/logger');
-    const { ML_ERROR, ML_ERR_return_NAN } = originalModule;
-    let array: unknown[];
-    function pr(...args: unknown[]): void {
-        array.push([...args]);
-    }
+const qnbetaDomainWarns = select('qnbeta')("argument out of domain in '%s'");
+qnbetaDomainWarns;
 
-    return {
-        __esModule: true, // Use it when dealing with esModules
-        ...originalModule,
-        ML_ERROR: jest.fn((x: unknown, s: unknown) => ML_ERROR(x, s, pr)),
-        ML_ERR_return_NAN: jest.fn(() => ML_ERR_return_NAN(pr)),
-        setDestination(arr: unknown[]=[]) {
-            array = arr;
-        },
-        getDestination() {
-            return array;
-        }
-    };
-});
-
-const cl = require('@common/logger');
 //app
-import { qbeta } from '..';
+import { qbeta } from '../index.js';
 
 describe('qbeta, ncp != undefined',  function () {
+    beforeEach(()=>{
+        cl.clear('qnbeta');
+    });
+    it.todo('check unhappy path with ME warnings');
     it('ranges x ∊ [0, 1], shape1=1, shape2=2, ncp=3', async () => {
         /* load data from fixture */
         const [x, y] = await loadData(resolve(__dirname, 'fixture-generation', 'qnbeta.R'), /\s+/, 1, 2);

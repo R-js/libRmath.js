@@ -14,10 +14,10 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { debug } from 'debug';
+import debug from 'debug';
 
 import { ML_ERR_return_NAN, R_Q_P01_boundaries, R_Q_P01_check } from '@common/logger';
-import { M_LN2, R_D__0, DBL_MIN } from '$constants';
+import { M_LN2, R_D__0, DBL_MIN } from 'lib/common/constants';
 import { R_DT_Clog, R_DT_log, R_DT_qIv } from '@dist/exp/expm1';
 import { dgamma } from './dgamma';
 import { lgammafn_sign as lgammafn } from '@special/gamma/lgammafn_sign';
