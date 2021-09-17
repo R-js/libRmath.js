@@ -106,7 +106,7 @@ export function R_DT_val(lower_tail: boolean, log_p: boolean, x: number): number
 
 //gamma
 export function imin2(x: number, y: number): number {
-    return Math.trunc(Math.min(x, y));
+    return Math.min(Math.trunc(x), Math.trunc(y));
 }
 
 /* Use 0.5 - p + 0.5 to perhaps gain 1 bit of accuracy */
@@ -164,7 +164,7 @@ export function fmod(x: number, y: number): number {
 }
 
 export function imax2(x: number, y: number): number {
-    return Math.trunc(Math.max(x, y));
+    return Math.max(Math.trunc(x), Math.trunc(y));
 }
 
 export function isOdd(k: number): boolean {

@@ -18,7 +18,7 @@ import { debug } from 'debug';
 //
 import { rbinomOne } from '@dist/binomial/rbinom';
 import { ML_ERR_return_NAN } from '@common/logger';
-import { INT_MAX, imax2, imin2, M_LN_SQRT_2PI } from '$constants';
+import { INT_MAX, M_LN_SQRT_2PI } from '$constants';
 import type { IRNG } from '@rng/irng';
 import { qhyper } from './qhyper';
 //
@@ -42,17 +42,10 @@ const al = new Float64Array([
 ]);
 
 
-const _r2_d = new Float64Array(4);
-const d_scale = 0;
-const d_con = 1;
-const d_deltal = 2;
-const d_deltau = 3;
-
-_r2_d[d_scale] = 1e25;
-_r2_d[d_con] = 57.5646273248511421;
-_r2_d[d_deltal] = 0.0078;
-_r2_d[d_deltau] = 0.0034;
-
+const scale = 1e25;
+const con = 57.5646273248511421;
+const deltal = 0.0078;
+const deltau = 0.0034;
 
 const rd = new Float64Array(23);
 // section 1
@@ -84,20 +77,20 @@ const d_alv = 22;
 
 // afc(i) :=  ln( i! )	[logarithm of the factorial i]
 // js is singlethreaded so can put the i outside
-const afc_i = new Int32Array(1);
 
-function afc(_i: number): number {
+
+function afc(i: number): number {
     // If (i > 7), use Stirling's approximation, otherwise use table lookup.
-    afc_i[0] = _i;
-    if (afc_i[0] < 0) {
-        printer_afc('rhyper.c: afc(i), i=%d < 0 -- SHOULD NOT HAPPEN!', afc_i[0]);
+    i = Math.trunc(i);
+    if (i < 0) {
+        printer_afc('rhyper.c: afc(i), i=%d < 0 -- SHOULD NOT HAPPEN!', i);
         return -1; // unreached
     }
-    if (afc_i[0] <= 7) {
-        return al[afc_i[0]];
+    if (i <= 7) {
+        return al[i];
     }
     // else i >= 8 :
-    const di = afc_i[0];
+    const di = i;
     const i2 = di * di;
     return (di + 0.5) * Math.log(di) - di + M_LN_SQRT_2PI + (0.0833333333333333 - 0.00277777777777778 / i2) / di;
 }
@@ -147,17 +140,20 @@ r_i[i_ks] = -1;
 r_i[i_n1s] = -1;
 r_i[i_n2s] = -1;
 
-function L_finis(i_kk: number, d_N: number, i_nn1: number, i_nn2: number): number {
+function L_finis(): number {
     /* return appropriate variate */
 
     if (r_i[i_kk] + r_i[i_kk] >= r_d[d_N]) {
         if (r_i[i_nn1] > r_i[i_nn2]) {
             r_i[i_ix] = r_i[i_kk] - r_i[i_nn2] + r_i[i_ix];
-        } else {
+        } 
+        else
+        {
             r_i[i_ix] = r_i[i_nn1] - r_i[i_ix];
         }
-    } else {
-        if (r_i[i_nn1] > r_i[i_nn2]) r_i[i_ix] = r_i[i_kk] - r_i[i_ix];
+    }
+    else if (r_i[i_nn1] > r_i[i_nn2]) {
+            r_i[i_ix] = r_i[i_kk] - r_i[i_ix];
     }
     return r_i[i_ix];
 }
@@ -173,7 +169,9 @@ export function rhyperOne(nn1in: number, nn2in: number, kkin: number, rng: IRNG)
     nn2in = Math.round(nn2in);
     kkin = Math.round(kkin);
 
-    if (nn1in < 0 || nn2in < 0 || kkin < 0 || kkin > nn1in + nn2in) return ML_ERR_return_NAN(printer_rhyper);
+    if (nn1in < 0 || nn2in < 0 || kkin < 0 || kkin > nn1in + nn2in) {
+        return ML_ERR_return_NAN(printer_rhyper);
+    }
     if (nn1in >= INT_MAX || nn2in >= INT_MAX || kkin >= INT_MAX) {
         /* large n -- evade integer overflow (and inappropriate algorithms)
            -------- */
@@ -204,10 +202,12 @@ export function rhyperOne(nn1in: number, nn2in: number, kkin: number, rng: IRNG)
     if (r_i[i_nn1] !== r_i[i_n1s] || r_i[i_nn2] !== r_i[i_n2s]) {
         setup1 = true;
         setup2 = true;
-    } else if (r_i[i_kk] !== r_i[i_ks]) {
+    }
+    else if (r_i[i_kk] !== r_i[i_ks]) {
         setup1 = false;
         setup2 = true;
-    } else {
+    }
+    else {
         setup1 = false;
         setup2 = false;
     }
@@ -217,7 +217,7 @@ export function rhyperOne(nn1in: number, nn2in: number, kkin: number, rng: IRNG)
         r_i[i_n2s] = r_i[i_nn2];
         r_d[d_N] = r_i[i_nn1]; // avoid overflow add in pieces
         r_d[d_N] += r_i[i_nn2] // avoid overflow add in pieces
-        if (r_i[i_nn1] <= r_i[i_nn1]) {
+        if (r_i[i_nn1] <= r_i[i_nn2]) {
             r_i[i_n1] = r_i[i_nn1];
             r_i[i_n2] = r_i[i_nn2];
         }
@@ -238,8 +238,13 @@ export function rhyperOne(nn1in: number, nn2in: number, kkin: number, rng: IRNG)
         }
     }
     if (setup1 || setup2) {
-        r_i[i_m] = ((r_i[i_k] + 1) * (r_i[i_n1] + 1) / (r_d[d_N] + 2)); // m := floor(adjusted mean E[.])
-        r_i[i_minjx] = Math.min(0, r_i[i_k] - r_i[i_n2]);
+        r_i[i_m] =
+            (
+                (r_i[i_k] + 1)
+                * (r_i[i_n1] + 1)
+                / (r_d[d_N] + 2)
+            ); // m := floor(adjusted mean E[.])
+        r_i[i_minjx] = Math.max(0, r_i[i_k] - r_i[i_n2]);
         r_i[i_maxjx] = Math.min(r_i[i_n1], r_i[i_k]);
         printer_rhyper('rhyper(n1=%d, n2=%d, k=%d), setup: floor(a.mean)=: m = %d, [min,maxjx]= [%d,%d]\n',
             r_i[i_nn1],
@@ -256,32 +261,38 @@ export function rhyperOne(nn1in: number, nn2in: number, kkin: number, rng: IRNG)
     if (r_i[i_minjx] === r_i[i_maxjx]) {
         /* I: degenerate distribution ---------------- */
         printer_rhyper("rhyper(), branch I (degenerate): ix := maxjx = %d\n", r_i[i_maxjx]);
+
         r_i[i_ix] = r_i[i_maxjx];
-        return L_finis(i_kk, d_N, i_nn1, i_nn2);
+
+        return L_finis();
     }
     else if (r_i[i_m] - r_i[i_minjx] < 10) {
-        //_r2_d[i_scale];
-        //_r2_d[i_con]
-
+        //const static double scale = 1e25; // scaling factor against (early) underflow
+        //const static double con = 57.5646273248511421;
+        // II: (Scaled) algorithm HIN (inverse transformation) ----
         if (setup1 || setup2) {
-            let lw; // log(w);  w = exp(lw) * scale = exp(lw + log(scale)) = exp(lw + con)
+            let lw = 0; // log(w);  w = exp(lw) * scale = exp(lw + log(scale)) = exp(lw + con)
             if (r_i[i_k] < r_i[i_n2]) {
-                lw = afc(r_i[i_n2]) + afc(r_i[i_n1] + r_i[i_n2] - r_i[i_k]) - afc(r_i[i_n2] - r_i[i_k]) - afc(r_i[i_n1] + r_i[i_n2]);
+                lw = afc(r_i[i_n2])
+                    + afc(r_i[i_n1] + r_i[i_n2] - r_i[i_k])
+                    - afc(r_i[i_n2] - r_i[i_k])
+                    - afc(r_i[i_n1] + r_i[i_n2]);
             }
             else {
-                lw = afc(r_i[i_n1]) + afc(r_i[i_k]) - afc(r_i[i_k] - r_i[i_n2]) - afc(r_i[i_n1] + r_i[i_n2]);
+                lw = afc(r_i[i_n1])
+                    + afc(r_i[i_k])
+                    - afc(r_i[i_k] - r_i[i_n2])
+                    - afc(r_i[i_n1] + r_i[i_n2]);
             }
-            r_d[d_w] = Math.exp(lw + _r2_d[d_con]);
+            r_d[d_w] = Math.exp(lw + con);
         }
-        let p: number;
-        let u: number;
         printer_rhyper('rhyper(), branch II; w = %d > 0', r_d[d_w]);
 
         L10:
-        for (; ;) {
-            p = r_d[d_w];
+        for (; ;) { // forever + break replaces "goto"
+            let p = r_d[d_w];
             r_i[i_ix] = r_i[i_minjx];
-            u = rng.random() * _r2_d[d_scale];
+            let u = rng.random() * scale;
 
             printer_rhyper('  _new_ u = %d', u);
 
@@ -290,216 +301,261 @@ export function rhyperOne(nn1in: number, nn2in: number, kkin: number, rng: IRNG)
                 p *= (r_i[i_n1] - r_i[i_ix]) * (r_i[i_k] - r_i[i_ix]);
                 r_i[i_ix]++;
                 p = p / r_i[i_ix] / (r_i[i_n2] - r_i[i_k] + r_i[i_ix]);
+
                 printer_rhyper('       ix=%d, u=%d, p=%d (u-p=%d)\n', r_i[i_ix], u, p, u - p);
+
                 if (r_i[i_ix] > r_i[i_maxjx]) {
                     continue L10;//goto L10;
                     // FIXME  if(p == 0.)  we also "have lost"  => goto L10
                 }
             }
-            return L_finis(i_kk, d_N, i_nn1, i_nn2);
-        }//for to fake the goto L10
+            return L_finis();
+        }//for
     }
     else {
         /* III : H2PE Algorithm --------------------------------------- */
-        // never used??
+
         let u = 0;
         let v = 0;
 
         if (setup1 || setup2) {
+            const val = 
+                (r_d[d_N] - r_i[i_k])
+                *r_i[i_k]
+                *r_i[i_n1]
+                *r_i[i_n2]
+                /(r_d[d_N] - 1)
+                /r_d[d_N]
+                /r_d[d_N];
 
-            const val = (r_d[d_N] - r_i[i_k]) * r_i[i_k] * r_i[i_n1] * r_i[i_n2] / (r_d[d_N] - 1) / r_d[d_N] / r_d[d_N];
             r_d[d_s] = Math.sqrt(val);
 
             /* remark: d is defined in reference without int. */
             /* the truncation centers the cell boundaries at 0.5 */
 
             r_d[d_d] = Math.trunc(1.5 * r_d[d_s]) + 0.5;
-            r_d[d_xl] = r_i[i_m] - r_d[d_s] + 0.5;
-            r_d[d_xr] = r_i[i_m] + r_d[d_s] + 0.5;
+            r_d[d_xl] = r_i[i_m] - r_d[d_d] + 0.5;
+            r_d[d_xr] = r_i[i_m] + r_d[d_d] + 0.5;
 
             r_d[d_a] = afc(r_i[i_m]) + afc(r_i[i_n1] - r_i[i_m]) + afc(r_i[i_k] - r_i[i_m]) + afc(r_i[i_n2] - r_i[i_k] + r_i[i_m]);
 
-            r_d[d_kl] = Math.exp(r_d[d_a] - afc(r_d[d_xl]) - afc(r_i[i_n1] - r_d[d_xl]) - afc(r_i[i_k] - r_d[d_xl]) - afc(r_i[i_n2] - r_i[i_k] + r_d[d_xl]));
-            r_d[d_kr] = Math.exp(r_d[d_a] - afc(r_d[d_xl] - 1) - afc(r_i[i_n1] - r_d[d_xr] + 1) - afc(r_i[i_k] - r_d[d_xr] + 1) - afc(r_i[i_n2] - r_i[i_k] + r_d[d_xr] - 1));
-
-            const val2 = (r_d[d_xl] * (r_i[i_n2] - r_i[i_k] + r_d[d_xl]))
+            r_d[d_kl] = Math.exp(
+                r_d[d_a]
+                -afc(r_d[d_xl])
+                -afc(r_i[i_n1] - r_d[d_xl])
+                -afc(r_i[i_k] - r_d[d_xl])
+                -afc(r_i[i_n2] - r_i[i_k] + r_d[d_xl])
+            );
+            r_d[d_kr] = Math.exp(
+                r_d[d_a]
+                -afc(r_d[d_xr] - 1)
+                -afc(r_i[i_n1] - r_d[d_xr] + 1)
+                -afc(r_i[i_k] - r_d[d_xr] + 1)
+                -afc(r_i[i_n2] - r_i[i_k] + r_d[d_xr] - 1)
+            );
+            
+            r_d[d_lamdl] = -Math.log(
+                r_d[d_xl]
+                * (r_i[i_n2] - r_i[i_k] + r_d[d_xl])
                 /
                 (r_i[i_n1] - r_d[d_xl] + 1)
                 /
-                (r_i[i_k] - r_d[d_xl] + 1);
-            r_d[d_lamdl] = -Math.log(val2);
+                (r_i[i_k] - r_d[d_xl] + 1)    
+            );
+            
+            r_d[d_lamdr] = -Math.log(
+                (r_i[i_n1] - r_d[d_xr] + 1)
+                * (r_i[i_k] - r_d[d_xr] + 1)
+                / r_d[d_xr]
+                / (r_i[i_n2] - r_i[i_k] + r_d[d_xr])
+            );
 
-            const val3 = (r_i[i_n1] - r_d[d_xr] + 1) * (r_i[i_k] - r_d[d_xr] + 1) / r_d[d_xr] / (r_i[i_n2] - r_i[i_k] + r_d[d_xr]);
-            r_d[d_lamdr] = -Math.log(val3);
-
-            // this is from 70's 80's when fmul opcode didnt exist + was cheaper then *2
             r_d[d_p1] = r_d[d_d] + r_d[d_d]; //
             r_d[d_p2] = r_d[d_p1] + r_d[d_kl] / r_d[d_lamdl];
             r_d[d_p3] = r_d[d_p2] + r_d[d_kr] / r_d[d_lamdr];
+        }
+        printer_rhyper(
+            'rhyper(), branch III {accept/reject}: (xl,xr)= (%d,%d); (lamdl,lamdr)= (%d,%d)\n',
+            r_d[d_xl],
+            r_d[d_xr],
+            r_d[d_lamdl],
+            r_d[d_lamdr],
+        );
+        printer_rhyper('-------- p123= c(%d,%d,%d)\n', r_d[d_p1], r_d[d_p2], r_d[d_p3]);
 
-            printer_rhyper(
-                'rhyper(), branch III {accept/reject}: (xl,xr)= (%d,%d); (lamdl,lamdr)= (%d,%d)\n',
-                r_d[d_xl],
-                r_d[d_xr],
-                r_d[d_lamdl],
-                r_d[d_lamdr],
-            );
-            printer_rhyper('-------- p123= c(%d,%d,%d)\n', r_d[d_p1], r_d[d_p2], r_d[d_p3]);
+        let n_uv = 0;
+        L30:
+        //let goto_L30 = false;
+        for (; ;) {
+            u = rng.random() * r_d[d_p3];
+            v = rng.random();
+            n_uv++;
+            if (n_uv >= 10000) {
+                printer_rhyper('rhyper() branch III: giving up after %d rejections',
+                    r_i[i_nn1],
+                    r_i[i_nn2],
+                    r_i[i_kk],
+                    n_uv
+                );
+                return ML_ERR_return_NAN(printer_rhyper);
+            }
 
-            let n_uv = 0;
-            L30:
-            //let goto_L30 = false;
-            for (; ;) {
-                u = rng.random() * r_d[d_p3];
-                v = rng.random();
-                n_uv++;
-                if (n_uv >= 10000) {
-                    printer_rhyper('rhyper() branch III: giving up after %d rejections',
-                        r_i[i_nn1],
-                        r_i[i_nn2],
-                        r_i[i_kk],
-                        n_uv
-                    );
-                    return ML_ERR_return_NAN(printer_rhyper);
+            printer_rhyper(' ... L30: new (u=%d, v ~ U[0,1])[%d]\n',
+                n_uv, u, v);
+
+            if (u < r_d[d_p1]) {
+                /* rectangular region */
+                r_i[i_ix] = (r_d[d_xl] + u);
+            }
+            else if (u <= r_d[d_p2]) {
+                /* left tail */
+                r_i[i_ix] = r_d[d_xl] + Math.log(v) / r_d[d_lamdl];
+                if (r_i[i_ix] < r_i[i_minjx]) {
+                    continue L30;
+                    //goto L30;
                 }
-
-                printer_rhyper(' ... L30: new (u=%d, v ~ U[0,1])[%d]\n',
-                    n_uv, u, v);
-
-                // here
-
-                if (u < r_d[d_p1]) {
-                    /* rectangular region */
-                    r_i[i_ix] = r_d[d_xl] + u;
-                } else if (u <= r_d[d_p2]) {
-                    /* left tail */
-                    r_i[i_ix] = r_d[d_xl] + Math.log(v) / r_d[d_lamdl];
-                    if (r_i[i_ix] < r_i[i_minjx]) {
-                        continue L30;
-                        //goto L30;
-                    }
-                    v = v * (u - r_d[d_p1]) * r_d[d_lamdl];
-                } else {
-                    /* right tail */
-                    r_i[i_ix] = r_d[d_xr] - Math.log(v) / r_d[d_lamdr];
-                    if (r_i[i_ix] > r_i[i_maxjx]) {
-                        continue L30;
-                        //goto L30;
-                    }
-                    v = v * (u - r_d[d_p2]) * r_d[d_lamdr];
+                v = v * (u - r_d[d_p1]) * r_d[d_lamdl];
+            }
+            else {
+                /* right tail */
+                r_i[i_ix] = r_d[d_xr] - Math.log(v) / r_d[d_lamdr];
+                if (r_i[i_ix] > r_i[i_maxjx]) {
+                    continue L30;
+                    //goto L30;
                 }
+                v = v * (u - r_d[d_p2]) * r_d[d_lamdr];
+            }
 
-                /* acceptance/rejection test */
-                let reject = true;
+            /* acceptance/rejection test */
+            let reject = true;
 
-                if (r_i[i_m] < 100 || r_i[i_ix] <= 50) {
-                    /* explicit evaluation */
-                    /* The original algorithm (and TOMS 668) have
-                       f = f * i * (n2 - k + i) / (n1 - i) / (k - i);
-                       in the (m > ix) case, but the definition of the
-                       recurrence relation on p134 shows that the +1 is
-                       needed. */
-                    let i;
-                    let f = 1.0;
-                    if (r_i[i_m] < r_i[i_ix]) {
-                        for (i = r_i[i_m] + 1; i <= r_i[i_ix]; i++) {
-                            f = f
-                                * (r_i[i_n1] - i + 1)
-                                * (r_i[i_k] - i + 1)
-                                / (r_i[i_n2] - r_i[i_k] + i)
-                                / i;
-                        }
+            if (r_i[i_m] < 100 || r_i[i_ix] <= 50) {
+                /* explicit evaluation */
+                /* The original algorithm (and TOMS 668) have
+                   f = f * i * (n2 - k + i) / (n1 - i) / (k - i);
+                   in the (m > ix) case, but the definition of the
+                   recurrence relation on p134 shows that the +1 is
+                   needed. */
+                let i = 0;
+                let f = 1;
+                if (r_i[i_m] < r_i[i_ix]) {
+                    for (i = r_i[i_m] + 1; i <= r_i[i_ix]; i++) {
+                        f = f
+                            * (r_i[i_n1] - i + 1)
+                            * (r_i[i_k] - i + 1)
+                            / (r_i[i_n2] - r_i[i_k] + i)
+                            / i;
                     }
-                    else if (r_i[i_m] > r_i[i_ix]) {
-                        for (i = r_i[i_ix] + 1; i <= r_i[i_m]; i++) {
-                            f = f
-                                * i
-                                * (r_i[i_n2] - r_i[i_k] + i)
-                                / (r_i[i_n1] - i + 1)
-                                / (r_i[i_k] - i + 1);
-                        }
+                }
+                else if (r_i[i_m] > r_i[i_ix]) {
+                    for (i = r_i[i_ix] + 1; i <= r_i[i_m]; i++) {
+                        f = f
+                            * i
+                            * (r_i[i_n2] - r_i[i_k] + i)
+                            / (r_i[i_n1] - i + 1)
+                            / (r_i[i_k] - i + 1);
                     }
-                    if (v <= f) {
-                        reject = false;
-                    }
+                }
+                if (v <= f) {
+                    reject = false;
+                }
+            }
+            else {
+                rd.fill(0); // clear everything
+
+                printer_rhyper(" ... accept/reject 'large' case v=%d", v);
+
+                /* squeeze using upper and lower bounds */
+                rd[d_y] = r_i[i_ix];
+                rd[d_y1] = rd[d_y] + 1;
+                rd[d_ym] = rd[d_y] - r_i[i_m];
+                rd[d_yn] = r_i[i_n1] - rd[d_y] + 1;
+                rd[d_yk] = r_i[i_k] - rd[d_y] + 1;
+                rd[d_nk] = r_i[i_n2] - r_i[i_k] + rd[d_y1];
+                rd[d_r] = -rd[d_ym] / rd[d_y1];
+                rd[d_s] = rd[d_ym] / rd[d_yn];
+                rd[d_t] = rd[d_ym] / rd[d_yk];
+                rd[d_e] = -rd[d_ym] / rd[d_nk];
+                rd[d_g] = rd[d_yn] * rd[d_yk] / (rd[d_y1] * rd[d_nk]) - 1;
+                rd[d_dg] = 1;
+                if (rd[d_g] < 0) {
+                    rd[d_dg] = 1 + rd[d_g];
+                }
+                rd[d_gu] =
+                    rd[d_g] * (1 + rd[d_g] * (-0.5 + rd[d_g] / 3.0));
+
+                rd[d_gl] = rd[d_gu]
+                    - (0.25 * (rd[d_g] * rd[d_g] * rd[d_g] * rd[d_g])) / rd[d_dg];
+                rd[d_xm] = r_i[i_m] + 0.5;
+                rd[d_xn] = r_i[i_n1] - r_i[i_m] + 0.5;
+                rd[d_xk] = r_i[i_k] - r_i[i_m] + 0.5;
+                rd[d_nm] = r_i[i_n2] - r_i[i_k] + rd[d_xm];
+
+                rd[d_ub] =
+                    rd[d_y] * rd[d_gu]
+                    - r_i[i_m] * rd[d_gl]
+                    + deltau
+                    + rd[d_xm] * rd[d_r] * (1 + rd[d_r] * (-0.5 + rd[d_r] / 3.0))
+                    + rd[d_xn] * rd[d_s] * (1 + rd[d_s] * (-0.5 + rd[d_s] / 3.0))
+                    + rd[d_xk] * rd[d_t] * (1 + rd[d_t] * (-0.5 + rd[d_t] / 3.0))
+                    + rd[d_nm] * rd[d_e] * (1 + rd[d_e] * (-0.5 + rd[d_e] / 3.0));
+                /* test against upper bound */
+                rd[d_alv] = Math.log(v);
+                if (rd[d_alv] > rd[d_ub]) {
+                    reject = true;
                 }
                 else {
-                    rd.fill(0); // clear everything
-
-                    printer_rhyper(" ... accept/reject 'large' case v=%d", v);
-
-                    /* squeeze using upper and lower bounds */
-                    rd[d_y] = r_i[i_ix];
-                    rd[d_y1] = rd[d_y] + 1;
-                    rd[d_ym] = rd[d_y] - r_i[i_m];
-                    rd[d_yn] = r_i[i_n1] - rd[d_y] + 1;
-                    rd[d_yk] = r_i[i_k] - rd[d_y] + 1;
-                    rd[d_nk] = r_i[i_n2] - r_i[i_k] + rd[d_y1];
-                    rd[d_r] = -rd[d_ym] / rd[d_y1];
-                    rd[d_s] = rd[d_ym] / rd[d_yn];
-                    rd[d_t] = rd[d_ym] / rd[d_yk];
-                    rd[d_e] = -rd[d_ym] / rd[d_nk];
-                    rd[d_g] = (rd[d_yn] * rd[d_yk]) / (rd[d_y1] * rd[d_nk]) - 1;
-                    rd[d_dg] = 1;
-                    if (rd[d_g] < 0) 
-                    {
-                        rd[d_dg] = 1 + rd[d_g];
+                    /* test against lower bound */
+                    rd[d_dr] = rd[d_xm] * rd[d_r] * rd[d_r] * rd[d_r] * rd[d_r];
+                    if (rd[d_r] < 0) {
+                        rd[d_dr] /= (1.0 + rd[d_r]);
                     }
-                    rd[d_gu] = rd[d_g] * (1 + rd[d_g] * (-0.5 + rd[d_g] / 3.0));
-                    rd[d_gl] = rd[d_gu] - (0.25 * (rd[d_g] * rd[d_g] * rd[d_g] * rd[d_g])) / rd[d_dg];
-                    rd[d_xm] = r_i[i_m] + 0.5;
-                    rd[d_xn] = r_i[i_n1] - r_i[i_m] + 0.5;
-                    rd[d_xk] = r_i[i_k] - r_i[i_m] + 0.5;
-                    rd[d_nm] = r_i[i_n2] - r_i[i_k] + rd[d_xm];
-                    rd[d_ub] = 
-                        rd[d_y] * rd[d_gu]
-                        - r_i[i_m] * rd[d_gl]
-                        + rd[d_deltau]
-                        + rd[d_xm] * rd[d_r] * (1 + rd[d_r] * (-0.5 + rd[d_r] / 3.0))
-                        + rd[d_xn] * rd[d_s] * (1 + rd[d_s] * (-0.5 + rd[d_s] / 3.0))
-                        + rd[d_xk] * rd[d_t] * (1 + rd[d_t] * (-0.5 + rd[d_t] / 3.0))
-                        + rd[d_nm] * rd[d_e] * (1 + rd[d_e] * (-0.5 + rd[d_e] / 3.0));
-                    /* test against upper bound */
-                    rd[d_alv] = Math.log(v);
-                    if (rd[d_alv] > rd[d_ub) {
-                        reject = true;
-                    } else {
-                        /* test against lower bound */
-                        dr = xm * (r * r * r * r);
-                        if (r < 0.0) dr /= 1.0 + r;
-                        ds = xn * (s * s * s * s);
-                        if (s < 0.0) ds /= 1.0 + s;
-                        dt = xk * (t * t * t * t);
-                        if (t < 0.0) dt /= 1.0 + t;
-                        de = nm * (e * e * e * e);
-                        if (e < 0.0) de /= 1.0 + e;
-                        if (alv < ub - 0.25 * (dr + ds + dt + de) + (y + r_i[_m]) * (gl - gu) - deltal) {
+                    rd[d_ds] = rd[d_xn] * rd[d_s] * rd[d_s] * rd[d_s] * rd[d_s];
+                    if (rd[d_s] < 0) {
+                        rd[d_ds] /= (1.0 + rd[d_s]);
+                    }
+                    rd[d_dt] = rd[d_xk] * rd[d_t] * rd[d_t] * rd[d_t] * rd[d_t];
+                    if (rd[d_t] < 0) {
+                        rd[d_dt] /= (1.0 + rd[d_t]);
+                    }
+                    rd[d_de] = rd[d_nm] * rd[d_e] * rd[d_e] * rd[d_e] * rd[d_e];
+                    if (rd[d_e] < 0) {
+                        rd[d_de] /= (1 + rd[d_e]);
+                    }
+                    if (rd[d_alv] <
+                        rd[d_ub]
+                        - 0.25 * (rd[d_dr] + rd[d_ds] + rd[d_dt] + rd[d_de])
+                        + (rd[d_y] + r_i[i_m]) * (rd[d_gl] - rd[d_gu])
+                        - deltal
+                    ) {
+                        reject = false;
+                    }
+                    else {
+                        /** Stirling's formula to machine accuracy
+                         */
+                        if (rd[d_alv]
+                            <=
+                            (
+                                rd[d_a]
+                                - afc(r_i[i_ix])
+                                - afc(r_i[i_n1] - r_i[i_ix])
+                                - afc(r_i[i_k] - r_i[i_ix])
+                                - afc(r_i[i_n2] - r_i[i_k] + r_i[i_ix])
+                            )
+                        ) {
                             reject = false;
-                        } else {
-                            /** Stirling's formula to machine accuracy
-                             */
-                            if (
-                                alv
-                                <=
-                                (
-                                    a - afc(r_i[_ix]) - afc(r_i[_n1] - r_i[_ix])
-                                    - afc(r_i[_k] - r_i[_ix]) - afc(r_i[_n2]
-                                        - r_i[_k] + r_i[_ix])
-                                )
-                            ) {
-                                reject = false;
-                            } else {
-                                reject = true;
-                            }
+                        }
+                        else {
+                            reject = true;
                         }
                     }
-                } // else
-                if (reject) {
-                    //goto_L30 = true;
-                    continue;
                 }
-                break;
-            } // for the goto_L30
-        }
-        return L_finis()
+            } // else
+            if (reject) {
+                continue L30;
+            }
+            break;
+        }//for
     }
+    return L_finis();
+}
