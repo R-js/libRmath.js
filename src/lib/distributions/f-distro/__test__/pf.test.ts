@@ -28,7 +28,7 @@ describe('pf', function () {
         const z = pf(2, 23, Infinity);
         expect(z).toEqualFloatingPointBinary(0.99700884518723809);
     });
-    it('x=2, df1=Infiniy, df2=Infinity', () => {
+    it('x=2, df1=Infinity, df2=Infinity', () => {
         const z = pf(2, Infinity, Infinity);
         expect(z).toBe(1);
     });
