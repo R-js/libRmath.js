@@ -3,13 +3,13 @@ import { resolve } from 'path';
 
 //helper
 import { loadData } from '@common/load';
-import { cl, select } from '@common/debug-select.js';
+import { cl, select } from '@common/debug-select';
 
 const qnbetaDomainWarns = select('qnbeta')("argument out of domain in '%s'");
 qnbetaDomainWarns;
 
 //app
-import { qbeta } from '../index.js';
+import { qbeta } from '..';
 
 describe('qbeta, ncp != undefined',  function () {
     beforeEach(()=>{

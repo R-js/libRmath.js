@@ -3,12 +3,12 @@ import { resolve } from 'path';
 
 //helper
 import { loadData } from '@common/load';
-import { cl, select } from '@common/debug-select.js';
+import { cl, select } from '@common/debug-select';
 
 const dbetaDomainWarns = select('dbeta')("argument out of domain in '%s'");
 
 
-import { dbeta } from '../index.js';
+import { dbeta } from '..';
 
 describe('dbeta', function () {
     beforeEach(()=>{

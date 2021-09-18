@@ -28,7 +28,7 @@ import {
     M_LN2,
     M_LN_SQRT_2PI,
     R_D__0
-} from 'lib/common/constants';
+} from '@lib/r-func';
 
 const printer = debug('dnorm4');
 

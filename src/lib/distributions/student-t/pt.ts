@@ -16,11 +16,11 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import debug from 'debug';
+import { debug } from 'debug';
 import { lbeta_scalar } from '@special/beta/lbeta';
 import { pbeta } from '@dist/beta/pbeta';
 import { ML_ERR_return_NAN  } from '@common/logger';
-import { M_LN2, R_D_Cval, R_DT_0, R_DT_1 } from 'lib/common/constants';
+import { M_LN2, R_D_Cval, R_DT_0, R_DT_1 } from '@lib/r-func';
 import { pnorm5 as pnorm } from '@dist/normal/pnorm';
 
 const printer = debug('pt');

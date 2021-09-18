@@ -15,15 +15,15 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 //3rd party
-import debug from 'debug';
+import { debug } from 'debug';
 
 //tooling
-import { ME, ML_ERROR } from '@common/logger.js';
+import { ME, ML_ERROR } from '@common/logger';
 
-import { cospi } from '@trig/cospi.js';
-import { sinpi } from '@trig/sinpi.js';
-import bessel_y_scalar from '../besselY/index.js';
-import { J_bessel } from './Jbessel.js';
+import { cospi } from '@trig/cospi';
+import { sinpi } from '@trig/sinpi';
+import bessel_y_scalar from '../besselY';
+import { J_bessel } from './Jbessel';
 
 const { isNaN: ISNAN } = Number;
 const { floor } = Math;

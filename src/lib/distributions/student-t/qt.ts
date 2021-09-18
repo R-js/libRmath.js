@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import debug from 'debug';
+import { debug } from 'debug';
 
 import {
     ME,
@@ -33,7 +33,7 @@ import {
     R_D_log,
     R_D_Lval,
     R_D_qIv
-} from 'lib/common/constants';
+} from '@lib/r-func';
 
 import { R_D_LExp, R_DT_qIv } from '@dist/exp/expm1';
 import { qnorm } from '@dist/normal/qnorm';

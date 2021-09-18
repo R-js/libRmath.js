@@ -20,7 +20,7 @@ export { dsignrank } from './dsign';
 export { psignrank } from './psign';
 export { qsignrank } from './qsign';
 import { rsignrankOne } from './rsign';
-import { repeatedCall } from '$helper.js';
+import { repeatedCall } from '@lib/r-func';
 import { globalUni } from '@lib/rng/global-rng';
 
 export function rsignrank(N: number, n: number, rng:IRNG=globalUni()): Float32Array {

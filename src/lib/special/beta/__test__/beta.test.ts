@@ -1,10 +1,10 @@
 //helpers
-import { cl, select } from '@common/debug-select.js';
+import { cl, select } from '@common/debug-select';
 
 const betaDomainWarns = select('beta')("argument out of domain in '%s'");
 
 //app
-import { beta } from '../index.js';
+import { beta } from '..';
 
 describe('beta(a,b)', function () {
     beforeEach(()=>{

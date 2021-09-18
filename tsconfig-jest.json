@@ -4,10 +4,7 @@
         "src/**/*.ts"
     ],
     "compilerOptions": {
-        "noImplicitAny": false,
-        "esModuleInterop": false,
-        "module": "CommonJS",
-        "outDir": "commonjs",
-        "target": "ES2019"
+        "noImplicitAny": true,
+        "esModuleInterop": true
     }
 }

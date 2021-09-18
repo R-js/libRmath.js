@@ -1,0 +1,1 @@
+{"version":3,"file":"index.d.ts","sourceRoot":"","sources":["../../../../../src/lib/rng/normal/box-muller/index.ts"],"names":[],"mappings":"AAkBA,OAAO,EAAE,IAAI,EAAE,mBAAkB;AAEjC,OAAO,EAAE,UAAU,EAAE,sBAA+B;AAOpD,qBAAa,SAAU,SAAQ,UAAU;IACrC,OAAO,CAAC,YAAY,CAAS;IAE7B,SAAS,CAAC,KAAK,IAAG,IAAI;gBAIV,IAAI,GAAE,IAA6B;IAKxC,MAAM,IAAI,MAAM;CAgB1B"}

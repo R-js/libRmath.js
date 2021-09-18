@@ -1,21 +1,9 @@
-//helper
-import '$jest-extension';
-import '$mock-of-debug';// for the side effects
-import { loadData } from '$test-helpers/load';
+import { loadData } from '@common/load';
 import { resolve } from 'path';
 import { df } from '..';
 
-const cl = require('debug');
+import { cl, select } from '@common/debug-select';
 
-function select(ns: string) {
-    return function (filter: string) {
-        return function () {
-            const logs = cl.get(ns);// put it here and not in the function scope
-            if (!logs) return [];
-            return logs.filter((s: string[]) => s[0] === filter);
-        };
-    };
-}
 
 const dfLogs = select('dnf');
 const dfDomainWarns = dfLogs("argument out of domain in '%s'");
@@ -65,9 +53,9 @@ describe('dnf (df with ncp is finite)', function () {
     it('x=5, df1=3, df2=5, ncp=24, log=true', () => {
         const z = df(5, 3, 5, 24, true);
         expect(z).toEqualFloatingPointBinary(-2.6178541411440345854);
-    });/*
-    it('x=1, df1=1, df2=1, log=true', () => {
+    });
+    it.todo('x=1, df1=1, df2=1, log=true', () => {
         const z = df(1, 1, 1, undefined, true);
         expect(z).toEqualFloatingPointBinary(-1.8378770664093455611);
-    });*/
+    });
 });

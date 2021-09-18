@@ -2,13 +2,13 @@ import { resolve } from 'path';
 
 //helper
 import { loadData } from '@common/load';
-import { cl, select } from '@common/debug-select.js';
+import { cl, select } from '@common/debug-select';
 
 const pbinomDomainWarns = select('pbinom')("argument out of domain in '%s'");
 pbinomDomainWarns;
 
 //app
-import { pbinom } from '../index.js';
+import { pbinom } from '..';
 
 describe('pbinom', function () {
     beforeEach(() => {

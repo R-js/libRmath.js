@@ -15,9 +15,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import debug from 'debug';
-import { ME, ML_ERROR } from '@common/logger.js';
-import { K_bessel } from './Kbessel.js';
+import { debug } from 'debug';
+import { ME, ML_ERROR } from '@common/logger';
+import { K_bessel } from './Kbessel';
 
 const { isNaN: ISNAN } = Number;
 const { floor } = Math;

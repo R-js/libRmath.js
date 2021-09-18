@@ -15,12 +15,12 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import debug from 'debug';
-import { ME, ML_ERROR } from '@common/logger.js';
-import { cospi } from '@trig/cospi.js';
-import { sinpi } from '@trig/sinpi.js';
-import { BesselJ as bessel_j_scalar } from '../besselJ/index.js';
-import { Y_bessel } from './Ybessel.js';
+import { debug } from 'debug';
+import { ME, ML_ERROR } from '@common/logger';
+import { cospi } from '@trig/cospi';
+import { sinpi } from '@trig/sinpi';
+import { BesselJ as bessel_j_scalar } from '../besselJ';
+import { Y_bessel } from './Ybessel';
 
 const { floor } = Math;
 const { isNaN: ISNAN, POSITIVE_INFINITY: ML_POSINF } = Number;

@@ -3,7 +3,7 @@ import { resolve } from 'path';
 
 //helper
 import { loadData } from '@common/load';
-import { cl, select } from '@common/debug-select.js';
+import { cl, select } from '@common/debug-select';
 
 const pnbeta2DomainWarns = select('pnbeta2')("argument out of domain in '%s'");
 const pnbetaRawDomainWarns = select('pnbeta_raw')("argument out of domain in '%s'");

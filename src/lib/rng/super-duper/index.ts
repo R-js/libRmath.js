@@ -16,11 +16,11 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { fixup, i2_32m1 } from '@rng/fixup.js';
-import { IRNG } from '@rng/irng.js';
-import { IRNGTypeEnum } from '@rng/irng-type.js';
-import { seed } from '@rng/timeseed.js';
-import { seedCheck } from '@rng/seedcheck.js';
+import { fixup, i2_32m1 } from '@rng/fixup';
+import { IRNG } from '@rng/irng';
+import { IRNGTypeEnum } from '@rng/irng-type';
+import { seed } from '@rng/timeseed';
+import { seedCheck } from '@rng/seedcheck';
 
 export const SEED_LEN = 2;
 

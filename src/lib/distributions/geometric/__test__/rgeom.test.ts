@@ -1,5 +1,5 @@
 //helper
-import { emptyFloat64Array } from 'lib/common/constants';
+import { emptyFloat64Array } from '@lib/r-func';
 import '$jest-extension';
 import '$mock-of-debug';// for the side effects
 import { IRNGNormalTypeEnum } from '@rng/normal/in01-type';

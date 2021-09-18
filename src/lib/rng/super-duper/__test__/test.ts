@@ -1,5 +1,5 @@
-import { SuperDuper } from '@rng/super-duper/index.js';
-import { samples25fromSeed1234, stateAfterSeed4568, samplesAfterCorrectedSeed } from './fixture.js';
+import { SuperDuper } from '@rng/super-duper';
+import { samples25fromSeed1234, stateAfterSeed4568, samplesAfterCorrectedSeed } from './fixture';
 
 describe('rng super-duper', function () {
     it('compare 25 samples seed=0', () => {

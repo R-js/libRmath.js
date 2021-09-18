@@ -21,7 +21,7 @@ export { qweibull } from './qweibull';
 import { rweibullOne } from './rweibull';
 
 import type { IRNG } from '@rng/irng';
-import { repeatedCall } from '$helper.js';
+import { repeatedCall } from '@lib/r-func';
 import { globalUni } from '@lib/rng/global-rng';
 
 export { rweibullOne };

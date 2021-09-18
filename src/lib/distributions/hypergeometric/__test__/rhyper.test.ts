@@ -5,7 +5,7 @@ import { IRNGTypeEnum } from '@rng/irng-type';
 import { rhyper, useWasmBackends, clearBackends } from '..';
 
 //import { resolve } from 'path';
-import { cl, select } from '@common/debug-select.js';
+import { cl, select } from '@common/debug-select';
 
 const rhyperDomainWarns = select('rhyper')("argument out of domain in '%s'");
 

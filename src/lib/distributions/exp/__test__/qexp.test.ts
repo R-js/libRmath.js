@@ -1,33 +1,12 @@
-//helper
-import '$jest-extension';
-import '$mock-of-debug';// for the side effects
-import { loadData } from '$test-helpers/load';
 import { resolve } from 'path';
 import { qexp } from '..';
 
-const cl = require('debug');
+import { loadData } from '@common/load';
+import { cl, select } from '@common/debug-select';
 
-function select(ns: string) {
-    return function (filter: string) {
-        return function () {
-            const logs = cl.get(ns);// put it here and not in the function scope
-            if (!logs) return [];
-            return logs.filter((s: string[]) => s[0] === filter);
-        };
-    };
-}
-
-const dexpLogs = select('qexp');
-const dexpDomainWarns = dexpLogs("argument out of domain in '%s'");
-dexpDomainWarns;
-/*
-#options(digits=18)
-#x=seq(0-0.125,1+0.125,0.125/2)
-#y1=qexp(x, rate=4, T, F)
-#y2=qexp(x, rate=32, F, F)
-#y3=qexp(log(x), rate=8, F, T)
-#data.frame(x,y1,y2,y3)
-*/
+const qexpLogs = select('qexp');
+const qexpDomainWarns = qexpLogs("argument out of domain in '%s'");
+qexpDomainWarns;
 
 describe('qexp', function () {
     beforeEach(() => {
@@ -52,6 +31,6 @@ describe('qexp', function () {
     it('rate = -3 (<0)', () => {
         const nan = qexp(0, -3);
         expect(nan).toBeNaN();
-        expect(dexpDomainWarns()).toHaveLength(1);
+        expect(qexpDomainWarns()).toHaveLength(1);
     });
 });

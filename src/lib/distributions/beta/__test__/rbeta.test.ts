@@ -1,17 +1,17 @@
 
 
 //helper
-import { cl, select } from '@common/debug-select.js';
+import { cl, select } from '@common/debug-select';
 
 const rbetaDomainWarns = select('rbeta')("argument out of domain in '%s'");
 rbetaDomainWarns;
 
 
 //app
-import { rbeta } from '../index.js';
-import { IRNGTypeEnum } from '@rng/irng-type.js';
-import { IRNGNormalTypeEnum } from '@rng/normal/in01-type.js';
-import { globalNorm, globalUni, RNGKind } from '@lib/rng/global-rng.js';
+import { rbeta } from '..';
+import { IRNGTypeEnum } from '@rng/irng-type';
+import { IRNGNormalTypeEnum } from '@rng/normal/in01-type';
+import { globalNorm, globalUni, RNGKind } from '@lib/rng/global-rng';
 
 
 describe('rbeta', function () {

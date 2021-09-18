@@ -15,9 +15,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import debug from 'debug';
+import { debug } from 'debug';
 
-import { R_D_qIv } from 'lib/common/constants';
+import { R_D_qIv } from '@lib/r-func';
 
 import { 
     ME, ML_ERROR,
@@ -26,7 +26,7 @@ import {
 import { qchisq } from './qchisq';
 import { pnchisq_raw } from './pnchisq';
 
-const printer = debug('_qnchisq');
+const printer = debug('qnchisq');
 
 const accu = 1e-13;
 const racc = 4 * Number.EPSILON;

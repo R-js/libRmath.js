@@ -14,8 +14,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-import debug from 'debug';
-import { NumberW } from './NumberW.js';
+import { debug } from 'debug';
+import { NumberW } from './NumberW';
 
 const { trunc, log, abs, min, pow } = Math;
 const printer_bratio = debug('Toms708.bratio');

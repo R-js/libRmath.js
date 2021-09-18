@@ -1,17 +1,17 @@
 import { resolve } from 'path';
 
-import { pnbinom } from '../index.js';
+import { pnbinom } from '..';
 
 //helper
 import { loadData } from '@common/load';
-import { cl, select } from '@common/debug-select.js';
+import { cl, select } from '@common/debug-select';
 
 const pnbinomDomainWarns = select('pnbinom')("argument out of domain in '%s'");
 const pnbinomMuDomainWarns = select('pnbinom_mu')("argument out of domain in '%s'");
 pnbinomDomainWarns;
 pnbinomMuDomainWarns;
 
-import { prob2mu } from './test-helpers.js';
+import { prob2mu } from './test-helpers';
 
 describe('pnbinom', function () {
     describe('invalid input', () => {

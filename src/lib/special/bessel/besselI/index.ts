@@ -15,11 +15,11 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import debug from 'debug';
-import { ME, ML_ERROR } from '@common/logger.js';
-import { sinpi } from '@trig/sinpi.js';
-import { BesselK as bessel_k } from '../besselK/index.js';
-import { I_bessel } from './IBessel.js';
+import { debug } from 'debug';
+import { ME, ML_ERROR } from '@common/logger';
+import { sinpi } from '@trig/sinpi';
+import { BesselK as bessel_k } from '../besselK';
+import { I_bessel } from './IBessel';
 
 const { isNaN: ISNAN } = Number;
 const { exp, trunc, floor, PI: M_PI } = Math;

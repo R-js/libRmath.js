@@ -1,5 +1,5 @@
-import { MarsagliaMultiCarry } from '../../index.js';
-import { samples100fromSeed1234, seedStateAfterSeed1234 } from './fixture.js';
+import { MarsagliaMultiCarry } from '../..';
+import { samples100fromSeed1234, seedStateAfterSeed1234 } from './fixture';
 
 describe('rng marsaglia-multicarry', function () {
     it('compare 100 samples seed=0', () => {

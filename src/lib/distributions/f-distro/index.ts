@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //needed for rf
 import { rchisqOne } from '../chi-2/rchisq';
 import { rnchisqOne } from '../chi-2/rnchisq';
-import { repeatedCall64 } from '$helper.js';
+import { repeatedCall64 } from '@lib/r-func';
 import type { IRNGNormal } from '@rng/normal/normal-rng';
 //
 import { df as _df } from './df';

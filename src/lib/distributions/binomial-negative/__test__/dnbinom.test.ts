@@ -1,8 +1,8 @@
 import { resolve } from 'path';
 
 //helper
-import { loadData } from '@common/load.js';
-import { cl, select } from '@common/debug-select.js';
+import { loadData } from '@common/load';
+import { cl, select } from '@common/debug-select';
 
 const dbinom_muDomainWarns = select('dnbinom_mu')("argument out of domain in '%s'");
 const dbinomDomainWarns = select('dnbinom')("argument out of domain in '%s'");
@@ -10,8 +10,8 @@ dbinom_muDomainWarns;
 dbinomDomainWarns;
 
 
-import { dnbinom } from '../index.js';
-import { prob2mu } from './test-helpers.js';
+import { dnbinom } from '..';
+import { prob2mu } from './test-helpers';
 
 describe('dnbinom', function () {
     describe('invalid input', () => {

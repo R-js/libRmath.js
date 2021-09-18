@@ -1,15 +1,15 @@
-import { BoxMuller } from '@rng/normal/box-muller/index.js';
-import { globalUni } from '@lib/rng/global-rng.js';
-import { SuperDuper } from '@rng/super-duper/index.js';
+import { BoxMuller } from '@rng/normal/box-muller';
+import { globalUni } from '@lib/rng/global-rng';
+import { SuperDuper } from '@rng/super-duper';
 
-import { cl, select } from '@common/debug-select.js';
+import { cl, select } from '@common/debug-select';
 
 const rnbinomDomainWarns = select('rnbinom')("argument out of domain in '%s'");
 const rnbinomMuDomainWarns = select('rnbinom_mu')("argument out of domain in '%s'");
 rnbinomDomainWarns;
 rnbinomMuDomainWarns;
 
-import { rnbinom } from '../index.js';
+import { rnbinom } from '..';
 
 describe('rnbinom', function () {
     describe('invalid input', () => {

@@ -20,7 +20,7 @@ export { dlogis } from './dlogis';
 export { plogis } from './plogis';
 export { qlogis } from './qlogis';
 import { rlogisOne } from './rlogis';
-import { repeatedCall64 } from '$helper.js';
+import { repeatedCall64 } from '@lib/r-func';
 import { globalUni } from '@lib/rng/global-rng';
 
 export { rlogisOne };

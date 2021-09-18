@@ -1,7 +1,7 @@
-import { KindermanRamage } from '@rng/normal/kinderman-ramage/index.js';
-import { IRNGNormalTypeEnum } from '@rng/index.js';
-import { testData } from './fixture.js';
-import flushSample from './_1000flushSample.js';
+import { KindermanRamage } from '@rng/normal/kinderman-ramage';
+import { IRNGNormalTypeEnum } from '@rng';
+import { testData } from './fixture';
+import flushSample from './_1000flushSample';
 
 const { rnorm10, runif1, rnorm4, runif1_2, rnorm2, rnorm2AfterResetSeedTo0 } = testData;
 

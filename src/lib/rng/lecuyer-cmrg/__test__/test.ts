@@ -1,5 +1,5 @@
-import { LecuyerCMRG } from '../../index.js';
-import { sample100, seedFixture } from './fixture.js';
+import { LecuyerCMRG } from '../..';
+import { sample100, seedFixture } from './fixture';
 
 
 describe('rng lecuyer-cmrg', function () {

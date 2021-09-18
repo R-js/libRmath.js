@@ -2,10 +2,10 @@
 import { resolve } from 'path';
 
 //helper
-import { loadData } from '@common/load.js';
+import { loadData } from '@common/load';
 
 //app
-import besselJ from '../index.js';
+import besselJ from '..';
 
 describe('bessel function of order 0', function () {
     it('ranges x ∊ [0, 10]', async () => {

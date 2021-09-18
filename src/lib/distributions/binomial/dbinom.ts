@@ -15,9 +15,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import debug from 'debug';
+import { debug } from 'debug';
 
-import {ML_ERR_return_NAN} from '@common/logger.js';
+import {ML_ERR_return_NAN} from '@common/logger';
 
 import {
     M_LN_2PI,
@@ -26,10 +26,10 @@ import {
     R_D_exp,
     R_D_negInonint,
     R_D_nonint_check,
-} from '@lib/r-func.js';
+} from '@lib/r-func';
 
-import bd0 from '@lib/deviance/index.js';
-import { stirlerr } from '@lib/stirling/index.js';
+import bd0 from '@lib/deviance';
+import { stirlerr } from '@lib/stirling';
 
 const printer = debug('dbinom');
 

@@ -1,4 +1,4 @@
-import { cl, select } from '@common/debug-select.js';
+import { cl, select } from '@common/debug-select';
 
 const qnbinomDomainWarns = select('qnbinom')("argument out of domain in '%s'");
 const do_searchDomainWarns = select('do_search')("argument out of domain in '%s'");
@@ -6,7 +6,7 @@ qnbinomDomainWarns;
 do_searchDomainWarns;
 
 
-import { qnbinom } from '../index.js';
+import { qnbinom } from '..';
 
 describe('qnbinom', function () {
     describe('invalid input', () => {

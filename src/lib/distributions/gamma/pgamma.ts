@@ -14,7 +14,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-import debug from 'debug';
+import { debug } from 'debug';
 
 import {
     ML_ERR_return_NAN
@@ -30,7 +30,7 @@ import {
     DBL_MAX_EXP,
     M_LN2,
     DBL_MIN
-} from 'lib/common/constants';
+} from '@lib/r-func';
 
 import { R_Log1_Exp } from '@dist/exp/expm1';
 import { dnorm4 as dnorm } from '@dist/normal/dnorm';

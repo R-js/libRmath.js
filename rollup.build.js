@@ -35,7 +35,7 @@ function shims() {
             if (!importer) {
                 return null; // skip entry files
             }
-            if (source === 'crypto') {
+            if (source.includes('crypto')) {
                 return source;
             }
             if (source === 'debug') {
@@ -44,7 +44,7 @@ function shims() {
             return null;
         },
         async load(id) {
-            if (id === 'crypto') {
+            if (id.includes('crypto')) {
                 return cryptoStub;
             }
             if (id === 'debug') {
@@ -66,7 +66,7 @@ const inputOptions = {
 };
 
 const outputOptions = {
-    format: 'iife',
+    format: 'es',
     dir: 'browser',
     sourcemap: true,
     name: 'R',

@@ -38,7 +38,7 @@ int main ()
 
 */
 
-import debug from 'debug';
+import { debug } from 'debug';
 // Note that the functions Gamma and LogGamma are mutually dependent.
 import { ME, ML_ERROR } from '@common/logger';
 

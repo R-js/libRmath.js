@@ -1,0 +1,1 @@
+{"version":3,"file":"index.d.ts","sourceRoot":"","sources":["../../../../src/lib/distributions/poisson/index.ts"],"names":[],"mappings":"AAiBA,OAAO,EAAE,KAAK,EAAE,gBAAgB;AAChC,OAAO,EAAE,KAAK,EAAE,gBAAgB;AAChC,OAAO,EAAE,KAAK,EAAE,gBAAgB;AAEhC,OAAO,KAAK,EAAE,UAAU,EAAE,oCAA+B;AAIzD,wBAAgB,KAAK,CAAC,CAAC,EAAE,MAAM,EAAE,KAAK,EAAE,MAAM,EAAE,GAAG,GAAE,UAAyB,GAAG,YAAY,CAE5F"}

@@ -1,6 +1,6 @@
 import { IRNG, MessageType } from '../';
 import { IRNGTypeEnum } from '../';
-import { fixup, i2_32m1 } from '../fixup.js';
+import { fixup, i2_32m1 } from '../fixup';
 
 class MyIRNG extends IRNG {
     private _seed: Uint32Array;

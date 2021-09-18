@@ -1,5 +1,5 @@
 
-import { NumberW } from '$toms708';
+import { NumberW } from '@common/toms708';
 import { do_del } from './do_del';
 
 import {
@@ -7,7 +7,7 @@ import {
     M_SQRT_32,
     R_D__0,
     R_D__1
-  } from 'lib/common/constants';
+  } from '@lib/r-func';
 
 const {
     EPSILON: DBL_EPSILON,

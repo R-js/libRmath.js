@@ -5,8 +5,8 @@ import { globalUni, RNGKind } from '@lib/rng/global-rng';
 import { IRNGTypeEnum } from '@rng/irng-type';
 import { resolve } from 'path';
 
-import { loadData } from '@common/load.js';
-import { cl, select } from '@common/debug-select.js';
+import { loadData } from '@common/load';
+import { cl, select } from '@common/debug-select';
 
 const rbinomDomainWarns = select('_rbinom')("argument out of domain in '%s'");
 rbinomDomainWarns;

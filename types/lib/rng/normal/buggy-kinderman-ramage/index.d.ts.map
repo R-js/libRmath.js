@@ -1,0 +1,1 @@
+{"version":3,"file":"index.d.ts","sourceRoot":"","sources":["../../../../../src/lib/rng/normal/buggy-kinderman-ramage/index.ts"],"names":[],"mappings":"AAiBA,OAAO,EAAE,IAAI,EAAe,mBAAkB;AAE9C,OAAO,EAAE,UAAU,EAAE,sBAA+B;AAKpD,qBAAa,oBAAqB,SAAQ,UAAU;gBACpC,IAAI,GAAE,IAA6B;IAKxC,MAAM,IAAI,MAAM;CA6D1B"}

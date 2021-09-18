@@ -14,7 +14,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-import debug from 'debug';
+import { debug } from 'debug';
 import { R_Q_P01_check, ML_ERR_return_NAN, R_Q_P01_boundaries } from '@common/logger';
 import { R_DT_Clog } from '@dist/exp/expm1';
 

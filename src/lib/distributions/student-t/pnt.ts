@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import debug from 'debug';
+import { debug } from 'debug';
 import { pbeta } from '@dist/beta/pbeta';
 import {
     ME,
@@ -29,7 +29,7 @@ import {
     R_DT_0,
     R_DT_1,
     R_DT_val,
-} from 'lib/common/constants';
+} from '@lib/r-func';
 import { lgammaOne } from '@special/gamma';
 import { pnorm5 as pnorm } from '../normal/pnorm';
 import { pt } from './pt';

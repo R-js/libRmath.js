@@ -19,7 +19,7 @@ export { dlnorm } from './dlnorm';
 export { plnorm } from './plnorm';
 export { qlnorm } from './qlnorm';
 import { rlnormOne } from './rlnorm';
-import { repeatedCall } from '$helper.js'
+import { repeatedCall } from '@lib/r-func';
 
 import type { IRNGNormal } from '@rng/normal/normal-rng';
 import { globalNorm } from '@lib/rng/global-rng';

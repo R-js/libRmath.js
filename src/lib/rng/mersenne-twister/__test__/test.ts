@@ -1,5 +1,5 @@
-import { MersenneTwister } from '../../index.js';
-import { samples100fromSeed1234, seedStateAfterSeed1234 } from './fixture.js';
+import { MersenneTwister } from '../..';
+import { samples100fromSeed1234, seedStateAfterSeed1234 } from './fixture';
 
 
 describe('rng mersenne-twister', function () {

@@ -22,7 +22,7 @@ import { rgammaOne as _rgammaOne } from './rgamma';
 import type { IRNGNormal } from '@rng/normal/normal-rng';
 import { globalNorm } from '@lib/rng/global-rng';
 
-import { repeatedCall64 } from '$helper.js';
+import { repeatedCall64 } from '@lib/r-func';
 
 function gammaNormalizeParams(rate?: number, scale?: number): number {
     // decision table

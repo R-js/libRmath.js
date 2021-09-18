@@ -14,9 +14,9 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-import debug from 'debug';
+import { debug } from 'debug';
 import { ML_ERR_return_NAN } from '@common/logger';
-import { R_P_bounds_Inf_01 } from 'lib/common/constants';
+import { R_P_bounds_Inf_01 } from '@lib/r-func';
 
 export function Rf_log1pexp(x: number): number {
     if (x <= 18) return Math.log1p(Math.exp(x));

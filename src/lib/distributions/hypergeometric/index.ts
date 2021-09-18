@@ -20,7 +20,7 @@ export { qhyper } from './qhyper';
 import { registerBackend as registerQHyperBackend, unRegisterBackend as unRegisterQHyperBackend } from './qhyper';
 import { rhyperOne } from './rhyper';
 import { globalUni } from '@lib/rng/global-rng';
-import { repeatedCall64 } from '$helper.js';
+import { repeatedCall64 } from '@lib/r-func';
 import { initWasm as initWasmQhyper } from './qhyper_wasm';
 import type { QHyperFunctionMap, CalcQHyper } from './qhyper_wasm'
 

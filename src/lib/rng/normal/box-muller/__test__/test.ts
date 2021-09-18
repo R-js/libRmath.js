@@ -1,11 +1,11 @@
-import { BoxMuller } from '@rng/normal/box-muller/index.js';
-import { IRNGNormalTypeEnum } from '@rng/normal/in01-type.js';
+import { BoxMuller } from '@rng/normal/box-muller';
+import { IRNGNormalTypeEnum } from '@rng/normal/in01-type';
 import {
     rnormAfterSeed123,
     rnormAfterUniformRNGBleed,
     rnormAfterUniformRNGBleed2,
     rnormAfterUniformRNGReset,
-} from './fixture.js';
+} from './fixture';
 
 
 describe('rng box-muller', function () {

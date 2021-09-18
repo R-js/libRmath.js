@@ -19,7 +19,7 @@ export { dwilcox } from './dwilcox';
 export { pwilcox } from './pwilcox';
 export { qwilcox } from './qwilcox';
 import { rwilcoxOne } from './rwilcox';
-import { repeatedCall } from '$helper.js';
+import { repeatedCall } from '@lib/r-func';
 
 import type { IRNG } from '@rng/irng';
 import { globalUni } from '@lib/rng/global-rng';

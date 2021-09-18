@@ -28,8 +28,8 @@ import { qt as _qt } from './qt';
 //
 import { rtOne } from './rt';
 
-import { repeatedCall64 } from '$helper.js';
-import { emptyFloat64Array } from 'lib/common/constants';
+import { repeatedCall64 } from '@lib/r-func';
+import { emptyFloat64Array } from '@lib/r-func';
 import { globalNorm } from '@lib/rng/global-rng';
 export { rtOne };
 

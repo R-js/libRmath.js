@@ -2,14 +2,14 @@ import { resolve } from 'path';
 
 //helper
 import { loadData } from '@common/load';
-import { cl, select } from '@common/debug-select.js';
+import { cl, select } from '@common/debug-select';
 
 const dbinomDomainWarns = select('dbinom')("argument out of domain in '%s'");
 dbinomDomainWarns;
 
 //app
 
-import { dbinom } from '../index.js';
+import { dbinom } from '..';
 
 describe('dbinom', function () {
     beforeEach(()=>{

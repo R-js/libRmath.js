@@ -1,9 +1,9 @@
-import { cl, select } from '@common/debug-select.js';
+import { cl, select } from '@common/debug-select';
 const lbetaDomainWarns = select('lbeta')("argument out of domain in '%s'");
 lbetaDomainWarns;
 
 //app
-import { lbeta } from '../index.js';
+import { lbeta } from '..';
 
 describe('lbeta(a,b)', function () {
     beforeEach(()=>{

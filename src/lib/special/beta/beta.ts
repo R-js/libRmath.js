@@ -15,11 +15,11 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import debug from 'debug';
+import { debug } from 'debug';
 
-import { ME, ML_ERR_return_NAN, ML_ERROR } from '@common/logger.js';
-import { gammaOne } from '@special/gamma/index.js';
-import { lbeta_scalar } from './lbeta.js';
+import { ME, ML_ERR_return_NAN, ML_ERROR } from '@common/logger';
+import { gammaOne } from '@special/gamma';
+import { lbeta_scalar } from './lbeta';
 
 // not used const xmin = -170.5674972726612;
 const xmax = 171.61447887182298;

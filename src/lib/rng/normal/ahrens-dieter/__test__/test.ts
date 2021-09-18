@@ -1,12 +1,12 @@
-import { AhrensDieter } from '../../../index.js';
-import { IRNGNormalTypeEnum } from '../../in01-type.js';
-import _1000Samples from './fixture-1000.js';
+import { AhrensDieter } from '../../..';
+import { IRNGNormalTypeEnum } from '../../in01-type';
+import _1000Samples from './fixture-1000';
 import {
     rnormAfterSeed1234,
     rnormAfterUniformRNGBleed,
     rnormAfterUniformRNGBleed2,
     rnormAfterUniformRNGReset,
-} from './fixture.js';
+} from './fixture';
 
 
 describe('rng ahrens-dieter', function () {

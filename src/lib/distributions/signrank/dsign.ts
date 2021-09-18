@@ -15,10 +15,10 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-import debug from 'debug';
+import { debug } from 'debug';
 import { ML_ERR_return_NAN, } from '@common/logger';
 import { csignrank } from './csignrank';
-import { R_D__0, R_D_exp } from 'lib/common/constants';
+import { R_D__0, R_D_exp } from '@lib/r-func';
 
 const { round, trunc, abs: fabs, log, LN2: M_LN2 } = Math;
 const { isNaN: ISNAN } = Number;

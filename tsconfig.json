@@ -1,7 +1,8 @@
 {
   "include": [
     "src/lib/**/*.ts",
-    "src/packages/**/*.ts"
+    "src/packages/**/*.ts",
+    "src/lib/distributions/beta/dbeta.ts"
   ],
   "exclude": [
     "test",
@@ -19,27 +20,25 @@
     "allowJs": true,
     "checkJs": true,
     "composite": false,
-    "declaration": true, 
+    "declaration": true,
     "declarationMap": true,
-    "downlevelIteration": false, 
+    "downlevelIteration": false,
     "importHelpers": false,
     "incremental": true,
     "lib": [
-      "es2017",
-      "es2020",
-      "es2018",
-      "es2017.string",
+      "es5",
+      "es6",
+      "es2021",
       "dom"
     ],
-    "module": "es2020",
-    "noEmit": true,
+    "module": "ESNext",
+    "noEmit": false,
     "plugins": [
       {
         "name": "typescript-eslint-language-service"
       },
       {
         "transform": "typescript-transform-paths"
-  
       },
       {
         "transform": "typescript-transform-paths",
@@ -49,7 +48,7 @@
     "removeComments": false,
     "rootDir": "./src",
     "sourceMap": true,
-    "target": "ES2020", 
+    "target": "ES2020",
     "strict": true,
     "alwaysStrict": true,
     "noImplicitAny": true,
@@ -61,7 +60,7 @@
     "allowSyntheticDefaultImports": false,
     "allowUmdGlobalAccess": false,
     "baseUrl": "./src",
-    "esModuleInterop": false,
+    "esModuleInterop": true,
     "moduleResolution": "node",
     "paths": {
       "@common/*": [
@@ -84,7 +83,7 @@
       "@dist/*": [
         "lib/distributions/*"
       ]
-    }, 
+    },
     "preserveSymlinks": true,
     "typeRoots": [
       "./node_modules/@types/"
@@ -103,7 +102,7 @@
     "disableSizeLimit": true,
     "disableSolutionSearching": false,
     "disableSourceOfProjectReferenceRedirect": false,
-    "emitBOM": false, 
+    "emitBOM": false,
     "emitDeclarationOnly": false,
     "extendedDiagnostics": true,
     "forceConsistentCasingInFileNames": true,

@@ -1,24 +1,9 @@
-import '$jest-extension';
-import { loadData } from '$test-helpers/load';
 import { resolve } from 'path';
-import '$mock-of-debug';// for the side effects
 
-//app
+import { loadData } from '@common/load';
+import { cl, select } from '@common/debug-select';
 
-const cl = require('debug');
-
-function select(ns:string){
-    return function(filter: string) {
-        return function(){
-            const logs = cl.get(ns);// put it here and not in the function scope
-            if (!logs) return [];
-            return logs.filter((s:string[])=> s[0]===filter);
-        };
-    };
-}
-
-
-const qnchisqLogs = select('_qnchisq');
+const qnchisqLogs = select('qnchisq');
 const gnchisqDomainWarns = qnchisqLogs("argument out of domain in '%s'");
 const R_Q_P01_boundaries = select("R_Q_P01_boundaries")("argument out of domain in '%s'");
 
@@ -26,7 +11,7 @@ import { qchisq } from '..';
 
 describe('qnchisq', function () {
     beforeEach(() => {
-        cl.clear('_qnchisq');
+        cl.clear('qnchisq');
     })
     it('p=NaN, df=2, ncp=80', () => {
         const nan = qchisq(NaN, 2, 80);

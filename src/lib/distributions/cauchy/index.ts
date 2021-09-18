@@ -19,7 +19,7 @@ export { pcauchy } from './pcauchy';
 export { qcauchy } from './qcauchy';
 import { rcauchyOne } from './rcauchy';
 
-import { repeatedCall } from '$helper.js';
+import { repeatedCall } from '@lib/r-func';
 import { globalUni } from '@lib/rng/global-rng';
 
 

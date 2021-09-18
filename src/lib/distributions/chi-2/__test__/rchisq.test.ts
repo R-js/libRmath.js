@@ -1,34 +1,21 @@
-//helper
-import '$jest-extension';
-import '$mock-of-debug';// for the side effects
-import { globalUni, RNGKind } from '@lib/rng/global-rng';
 
+import { globalUni, RNGKind } from '@lib/rng/global-rng';
 import { rchisq } from '..';
 import { IRNGTypeEnum  } from '@rng/irng-type';
 import { IRNGNormalTypeEnum } from '@rng/normal/in01-type';
 
 
-const cl = require('debug');
-
-function select(ns:string){
-    return function(filter: string) {
-        return function(){
-            const logs = cl.get(ns);// put it here and not in the function scope
-            if (!logs) return [];
-            return logs.filter((s:string[])=> s[0]===filter);
-        };
-    };
-}
-
+import { cl, select } from '@common/debug-select';
 
 const rchisqLogs = select('rchisq');
 const rchisqDomainWarns = rchisqLogs("argument out of domain in '%s'");
-//const R_Q_P01_boundaries = select("R_Q_P01_boundaries")("argument out of domain in '%s'");
+
 
 describe('rchisq', function () {
     beforeEach(() => {
         RNGKind(IRNGTypeEnum.MERSENNE_TWISTER, IRNGNormalTypeEnum.INVERSION);
         globalUni().init(98765);
+        cl.clear('rchisq');
     })
     it('n=10, df=34', () => {
         rchisq(10,45); // skip 10

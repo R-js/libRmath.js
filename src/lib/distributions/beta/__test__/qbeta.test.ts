@@ -3,7 +3,7 @@ import { resolve } from 'path';
 
 //helper
 import { loadData } from '@common/load';
-import { cl, select } from '@common/debug-select.js';
+import { cl, select } from '@common/debug-select';
 
 const qbeta2DomainWarns = select('qbeta')("argument out of domain in '%s'");
 const qbetaRawDomainWarns = select('qbeta_raw')("argument out of domain in '%s'");

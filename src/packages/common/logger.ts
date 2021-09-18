@@ -1,4 +1,4 @@
-import debug from 'debug';
+import { debug } from 'debug';
 
 const debug_R_Q_P01_boundaries = debug('R_Q_P01_boundaries');
 const debug_R_Q_P01_check = debug('R_Q_P01_check');

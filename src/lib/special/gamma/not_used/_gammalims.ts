@@ -37,7 +37,7 @@ DESCRIPTION
  *  
 */
 
-import debug from 'debug';
+import { debug } from 'debug';
 
 import { ME, ML_ERROR } from '@common/logger';
 

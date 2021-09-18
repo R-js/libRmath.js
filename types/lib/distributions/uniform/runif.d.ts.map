@@ -1,0 +1,1 @@
+{"version":3,"file":"runif.d.ts","sourceRoot":"","sources":["../../../../src/lib/distributions/uniform/runif.ts"],"names":[],"mappings":"AAoBA,OAAO,KAAK,EAAE,IAAI,EAAE,uBAAkB;AAMtC,wBAAgB,KAAK,CAAC,CAAC,EAAE,MAAM,EAAE,GAAG,SAAI,EAAE,GAAG,SAAI,EAAE,CAAC,GAAE,IAAkB,GAAG,YAAY,CAetF;AAED,wBAAgB,QAAQ,CAAC,GAAG,SAAI,EAAE,GAAG,SAAI,EAAE,CAAC,GAAE,IAAkB,GAAG,MAAM,CAMxE"}

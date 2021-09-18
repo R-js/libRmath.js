@@ -1,5 +1,5 @@
-import { KnuthTAOCP } from '../../index.js';
-import { fixture as getRFixture } from './fixture.js';
+import { KnuthTAOCP } from '../..';
+import { fixture as getRFixture } from './fixture';
 
 const fixture = getRFixture();
 
