@@ -34,12 +34,12 @@ describe('qnbinom', function () {
             const z = qnbinom(1, 0, 0);
             expect(z).toBe(0);
         });
-        it.todo('p=0.5, prob=-1(<0), size=0', () => {
+        it('p=0.5, prob=-1(<0), size=0', () => {
             const nan = qnbinom(0.5, 4, -1);
             expect(nan).toBeNaN();
             //expect(out.length).toBe(1);
         });
-        it.todo('p=1, prob=0.3, size=-4', () => {
+        it('p=1, prob=0.3, size=-4', () => {
             const nan = qnbinom(1, -4, 0.3);
             expect(nan).toBeNaN();
             //expect(out.length).toBe(1);

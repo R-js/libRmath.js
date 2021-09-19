@@ -1,7 +1,7 @@
 
 import { loadData } from '@common/load';
-import { cl, select } from '@common/debug-select';
-const dchisqDomainWarns = select('dchisq')("argument out of domain in '%s'");
+import { cl, /*select*/ } from '@common/debug-select';
+//const dchisqDomainWarns = select('dchisq')("argument out of domain in '%s'");
 
 import { resolve } from 'path';
 import { dchisq } from '..';

@@ -4,17 +4,19 @@ import { resolve } from 'path';
 import { loadData } from '@common/load';
 import { cl, select } from '@common/debug-select';
 
-const qbinomDomainWarns = select('_qbinom')("argument out of domain in '%s'");
-qbinomDomainWarns;
-
+const qbinomDomainWarns = select('qbinom')("argument out of domain in '%s'");
 const doSearchDomainWarns = select('do_search')("argument out of domain in '%s'");
+qbinomDomainWarns;
 doSearchDomainWarns;
+
+
+
 //app
 import { qbinom } from '..';
 
 describe('qbinom', function () {
     beforeEach(()=>{
-        cl.clear('_qbinom');
+        cl.clear('qbinom');
         cl.clear('do_search');
     });
     it('ranges p ∊ [0, 1, step 0.01] size=10, prob=0.5', async () => {
@@ -27,32 +29,24 @@ describe('qbinom', function () {
          expect(actual).toBeNaN();
     });
     it('p = Infinity, size=10, prob=0.5', () => {
-        const dest: string[] = [];
-        cl.setDestination(dest);
         const actual = qbinom(Infinity, 10, 0.5);
         expect(actual).toBeNaN();
-        expect(dest.length).toBe(1);
+        expect(qbinomDomainWarns()).toHaveLength(1);
     });
     it('p = 0.5, size=Infinity, prob=0.5', () => {
-        const dest: string[] = [];
-        cl.setDestination(dest);
         const actual = qbinom(0.5, Infinity, 0.5);
         expect(actual).toBeNaN();
-        expect(dest.length).toBe(1);
+        expect(qbinomDomainWarns()).toHaveLength(1);
     });
     it('p = 0.5, size=5.2 (non integer), prob=0.5', () => {
-        const dest: string[] = [];
-        cl.setDestination(dest);
         const actual = qbinom(0.5, 5.2, 0.5);
         expect(actual).toBeNaN();
-        expect(dest.length).toBe(1);
+        expect(qbinomDomainWarns()).toHaveLength(1);
     });
     it('p = 0.5, size=-5 (<0), prob=0.5', () => {
-        const dest: string[] = [];
-        cl.setDestination(dest);
         const actual = qbinom(0.5, -5, 0.5);
         expect(actual).toBeNaN();
-        expect(dest.length).toBe(1);
+        expect(qbinomDomainWarns()).toHaveLength(1)
     });
     it('p = 0.5, size=5 , prob=0', () => {
         const actual = qbinom(0.5, 5, 0);

@@ -24,12 +24,12 @@ describe('dbeta, ncp != undefined', () => {
     });
     it('ranges x = 0.5, shape1=3, shape2=3, ncp=-2', () => {
         const nan = dbeta(0.5, 3, 3, -2);
-        expect(dnbetaDomainWarns()).toHaveBeenCalledTimes(1);
+        expect(dnbetaDomainWarns()).toHaveLength(1);
         expect(nan).toBe(NaN);
     });
     it('ranges x = 0.5, shape1=3, shape2=3, ncp=-2', () => {
         const nan = dbeta(0.5, 3, 3, Infinity);
-        expect(dnbetaDomainWarns()).toHaveBeenCalledTimes(1);
+        expect(dnbetaDomainWarns()).toHaveLength(1);
         expect(nan).toBe(NaN);
     });
     it('ranges x = -1, shape1=3, shape2=3, ncp=2', () => {

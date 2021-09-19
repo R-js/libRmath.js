@@ -5,7 +5,7 @@ import { loadData } from '@common/load';
 import { cl, select } from '@common/debug-select';
 
 const dbinomDomainWarns = select('dbinom')("argument out of domain in '%s'");
-dbinomDomainWarns;
+
 
 //app
 
@@ -15,7 +15,6 @@ describe('dbinom', function () {
     beforeEach(()=>{
         cl.clear('dbinom');
     });
-    it.todo('check unhappy path with ME warnings');
     it('ranges x ∊ [0, 12] size=12, prob=0.01', async () => {
         const [x, y] = await loadData(resolve(__dirname, 'fixture-generation', 'dbinom1.R'), /\s+/, 1, 2);
         const actual = x.map(_x => dbinom(_x, 12, 0.01));
@@ -66,10 +65,10 @@ describe('dbinom', function () {
         expect(z2).toBe(0);
     });
     it('x=4, size=100, prob=3 (>1)', () => {
-        const dest = cl.getDestination();
         const z0 = dbinom(4, 100, 3); // 100%, you always score "head", never "tail"
         expect(z0).toBeNaN();
-        expect(dest.length).toBe(1);
+        expect(dbinomDomainWarns()).toHaveLength(1)
+        
     });
     it('x=4, size=NaN, prob=0.5', () => {
         const z0 = dbinom(4, NaN, 0.5); // 100%, you always score "head", never "tail"

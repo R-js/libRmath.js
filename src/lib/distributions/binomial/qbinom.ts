@@ -49,7 +49,7 @@ function do_search(y: number, z: NumberW, p: number, n: number, pr: number, incr
     }
 }
 
-const printer_qbinom = debug('_qbinom');
+const printer_qbinom = debug('qbinom');
 
 export function qbinom(p: number, size: number, pr: number, lower_tail = true, log_p = false): number {
 

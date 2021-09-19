@@ -1,2 +1,2 @@
-export * from './beta';
-export * from './lbeta';
+export { beta } from './beta';
+export { lbeta, lbeta_scalar } from './lbeta';

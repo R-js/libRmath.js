@@ -4,8 +4,6 @@ import { loadData } from '@common/load';
 import { cl, select } from '@common/debug-select';
 
 const qcauchyDomainWarns = select('qcauchy')("argument out of domain in '%s'");
-qcauchyDomainWarns;
-
 
 import { qcauchy } from '..';
 
@@ -38,10 +36,10 @@ describe('qcauchy', function () {
         const z3 = qcauchy(0, undefined, undefined, false);
         expect(z3).toBe(Infinity);
     });
-    it.todo('p=0.66, scale=-1(<0), defaults', () => {
+    it('p=0.66, scale=-1(<0), defaults', () => {
         const nan = qcauchy(0.66, undefined, -1);
         expect(nan).toBeNaN();
-        //expect(out.length).toBe(1);
+        expect(qcauchyDomainWarns()).toHaveLength(1);
     });
     it('p=0.66, scale=0, defaults', () => {
         const nan = qcauchy(0.66, undefined, 0);

@@ -3,10 +3,7 @@ import { resolve } from 'path';
 
 
 import { loadData } from '@common/load';
-import { cl, select } from '@common/debug-select';
-
-const dcauchyDomainWarns = select('dcauchy')("argument out of domain in '%s'");
-
+import { cl } from '@common/debug-select';
 
 import { dcauchy } from '..';
 

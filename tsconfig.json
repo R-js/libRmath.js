@@ -38,7 +38,8 @@
         "name": "typescript-eslint-language-service"
       },
       {
-        "transform": "typescript-transform-paths"
+        "transform": "typescript-transform-paths",
+        //"outputMode": "esm"
       },
       {
         "transform": "typescript-transform-paths",

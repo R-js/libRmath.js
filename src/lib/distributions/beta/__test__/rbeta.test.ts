@@ -4,8 +4,6 @@
 import { cl, select } from '@common/debug-select';
 
 const rbetaDomainWarns = select('rbeta')("argument out of domain in '%s'");
-rbetaDomainWarns;
-
 
 //app
 import { rbeta } from '..';
@@ -13,13 +11,12 @@ import { IRNGTypeEnum } from '@rng/irng-type';
 import { IRNGNormalTypeEnum } from '@rng/normal/in01-type';
 import { globalNorm, globalUni, RNGKind } from '@lib/rng/global-rng';
 
-
 describe('rbeta', function () {
 
     beforeAll(() => {
         RNGKind(IRNGTypeEnum.MERSENNE_TWISTER, IRNGNormalTypeEnum.INVERSION);
+        cl.clear('rbeta');
     });
-    it.todo('test unhappy path with ME Warnings');
     it('sample 5 numbers, n=5, scp1=2, scp2=2', () => {
         /*
         > set.seed(1234)
@@ -43,14 +40,11 @@ describe('rbeta', function () {
         ]);
     });
     it('scp1=-1, scp2=2', () => {
-        const dest: string[] = [];
-        cl.setDestination(dest);
         const actual = rbeta(1, -1, 2);
         expect(actual).toEqualFloatingPointBinary(NaN);
+        expect(rbetaDomainWarns()).toHaveLength(1);
     });
     it('scp1=NAN, scp2=2', () => {
-        const dest: string[] = [];
-        cl.setDestination(dest);
         const actual = rbeta(1, NaN, 2);
         expect(actual).toEqualFloatingPointBinary(NaN);
     });

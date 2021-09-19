@@ -14,6 +14,7 @@ describe('rnchisq', function () {
     beforeEach(() => {
         RNGKind(IRNGTypeEnum.MERSENNE_TWISTER, IRNGNormalTypeEnum.INVERSION);
         globalUni().init(98765);
+        cl.clear('rnchisq');
     })
     it('n=10, df=34, ncp=34', () => {
         const actual = rchisq(10, 45, 34);

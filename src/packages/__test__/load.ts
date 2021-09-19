@@ -1,5 +1,5 @@
 import { createReadStream } from 'fs';
-import * as rtl from 'readline';
+import { createInterface } from 'readline';
 
 const matchNaN = /^(-|\+)?NaN$/i;
 const matchInf = /^(-|\+)?Inf$/i;
@@ -7,7 +7,7 @@ const matchInf = /^(-|\+)?Inf$/i;
 export function loadData(fullPath: string, sep = /,/, ...columns: number[]): Promise<Float64Array[]> {
     let resolve: (value: Float64Array[] | PromiseLike<Float64Array[]>) => void
 
-    const reader = rtl.createInterface({
+    const reader = createInterface({
         input: createReadStream(fullPath, { encoding: 'utf8' }),
     });
     const lines: string[] = [];

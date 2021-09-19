@@ -5,11 +5,8 @@ import { resolve } from 'path';
 import { loadData } from '@common/load';
 import { cl, select } from '@common/debug-select';
 
-
-const pbetaRawDomainWarns = select('pbeta_raw')("argument out of domain in '%s'");
 const pbetaDomainWarns = select('pbeta')("argument out of domain in '%s'");
-pbetaRawDomainWarns;
-pbetaDomainWarns;
+
 
 //app
 import { pbeta } from '..';
@@ -17,7 +14,6 @@ import { pbeta } from '..';
 describe('pbeta, ncp = 0', function () {
     beforeEach(()=>{
         cl.clear('pbeta');
-        cl.clear('pbeta_raw');
     });
     it('ranges x ∊ [0, 1], shape1=3, shape2=3', async () => {
         /* load data from fixture */
@@ -30,11 +26,9 @@ describe('pbeta, ncp = 0', function () {
         expect(nan).toBeNaN();
     });
     it('x=0.5, shape1=3, shape2=3', () => {
-        const dest: unknown[] = [];
-        cl.setDestination(dest);
         const nan = pbeta(0.5, -3, 3);
         expect(nan).toBeNaN();
-        expect(dest.length).toBe(1);
+        expect(pbetaDomainWarns()).toHaveLength(1);
     });
     it('x=0.5, shape1=Infinity, shape2=3', () => {
         const z = pbeta(0.5, Infinity, 3);
@@ -66,5 +60,4 @@ describe('pbeta, ncp = 0', function () {
         const actual = x.map(_x => pbeta(_x, 1, 1, undefined, false, true));
         expect(actual).toEqualFloatingPointBinary(y, 43);
     });
-    it.todo('test unhappy path with logger warnings');
 });

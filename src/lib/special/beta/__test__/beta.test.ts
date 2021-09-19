@@ -1,7 +1,10 @@
 //helpers
-import { cl, select } from '@common/debug-select';
+import { 
+    cl, 
+    //select 
+} from '@common/debug-select';
 
-const betaDomainWarns = select('beta')("argument out of domain in '%s'");
+//const betaDomainWarns = select('beta')("argument out of domain in '%s'");
 
 //app
 import { beta } from '..';
@@ -18,6 +21,7 @@ describe('beta(a,b)', function () {
         expect(actual).toEqualFloatingPointBinary(Infinity);
     });
     it('a=undefined, b = undefined', () => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const empty = beta(undefined as any, undefined as any);
         expect(empty).toEqualFloatingPointBinary([]);
     });

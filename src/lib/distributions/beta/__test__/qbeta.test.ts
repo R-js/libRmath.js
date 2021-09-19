@@ -6,10 +6,6 @@ import { loadData } from '@common/load';
 import { cl, select } from '@common/debug-select';
 
 const qbeta2DomainWarns = select('qbeta')("argument out of domain in '%s'");
-const qbetaRawDomainWarns = select('qbeta_raw')("argument out of domain in '%s'");
-
-qbeta2DomainWarns;
-qbetaRawDomainWarns;
 
 //app
 import { qbeta } from '..';
@@ -17,34 +13,24 @@ import { qbeta } from '..';
 describe('qbeta', function () {
     beforeEach(()=>{
         cl.clear('qbeta');
-        cl.clear('qbeta_raw');
     });
-    it.todo('test unhappy path with ME warnings');
     it('ranges x ∊ [0, 1], shape1=1, shape2=2', async () => {
-        /* load data from fixture */
         const [x, y] = await loadData(resolve(__dirname, 'fixture-generation', 'qbeta.R'), /\s+/, 1, 2);
         const actual = x.map(_x => qbeta(_x, 2, 2, undefined, true, false));
         expect(actual).toEqualFloatingPointBinary(y, 9);
     });
     it('shape1 x ∊ [0, 10], x=0.5, shape2=2', async () => {
-        const dest: unknown[] = [];
-        cl.setDestination(dest);
-        /* load data from fixture */
         const [shape1, y] = await loadData(resolve(__dirname, 'fixture-generation', 'qbeta2.R'), /\s+/, 1, 2);
         const actual = shape1.map(_shape1 => qbeta(0.5, _shape1, 2, undefined, true, false));
         expect(actual).toEqualFloatingPointBinary(y, 9);
     });
     it('shape1 x ∊ [0, 10], x=0.5, shape2=2, tail=true, logp=true', async () => {
-        const dest: unknown[] = [];
-        cl.setDestination(dest);
         /* load data from fixture */
         const [x, y] = await loadData(resolve(__dirname, 'fixture-generation', 'qbeta.log.R'), /\s+/, 1, 2);
         const actual = x.map(_x => qbeta(_x, 2, 2, undefined, true, true));
         expect(actual).toEqualFloatingPointBinary(y, 9);
     });
     it('shape1 x ∊ [0, 10], x=0.5, shape2=2', async () => {
-        const dest: unknown[] = [];
-        cl.setDestination(dest);
         /* load data from fixture */
         const [shape1, shape2, y] = await loadData(resolve(__dirname, 'fixture-generation', 'qbeta3.R'), /\s+/, 1, 2, 3);
         const actual = shape1.map((s1, i) => qbeta(0.5, s1, shape2[i]));
@@ -55,11 +41,9 @@ describe('qbeta', function () {
         expect(nan).toEqualFloatingPointBinary(NaN);
     });
     it('shape1=-1, q=0.2, shape2=4, ncp=undefined', () => {
-        const dest: unknown[] = [];
-        cl.setDestination(dest);
         const nan = qbeta(0.2, -3, 4);
         expect(nan).toEqualFloatingPointBinary(NaN);
-        expect(dest.length).toBe(1);
+        expect(qbeta2DomainWarns()).toHaveLength(1);
     });
     it('shape1=3, q=0.2, shape2=4, ncp=undefined, log.p=TRUE', () => {
         const nan = qbeta(0.2, 3, 4, undefined, false, true);

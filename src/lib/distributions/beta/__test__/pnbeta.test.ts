@@ -3,21 +3,11 @@ import { resolve } from 'path';
 
 //helper
 import { loadData } from '@common/load';
-import { cl, select } from '@common/debug-select';
-
-const pnbeta2DomainWarns = select('pnbeta2')("argument out of domain in '%s'");
-const pnbetaRawDomainWarns = select('pnbeta_raw')("argument out of domain in '%s'");
-pnbeta2DomainWarns;
-pnbetaRawDomainWarns;
 
 //app
 import { pbeta } from '..';
 
 describe('pbeta, ncp != undefined', function () {
-    beforeEach(()=>{
-        cl.clear('pnbeta2');
-        cl.clear('pnbeta_raw');
-    });
     it('ranges x ∊ [0, 1], shape1=3, shape2=3, ncp=2', async () => {
         /* load data from fixture */
         const [x, y] = await loadData(resolve(__dirname, 'fixture-generation', 'pnbeta.R'), /\s+/, 1, 2);
@@ -44,11 +34,9 @@ describe('pbeta, ncp != undefined', function () {
         const actual = pbeta(1.5, 3, 3, 0.5, true, false);
         expect(actual).toEqualFloatingPointBinary(1);
     });
-    it.todo('ranges x = 0.5, shape1=3, shape2=3, ncp=-2, lowerTail=true, log=false',  () => {
+    it('ranges x = 0.5, shape1=3, shape2=3, ncp=-2, lowerTail=true, log=false',  () => {
         const actual = pbeta(0.5, 3, 3, -2, true, false);
         expect(actual).toBeNaN()
-        //expect(ml_err_return_nan.length).toBe(1);
-        //ml_err_return_nan.splice(0);
     });
     it('ranges x = 0, shape1=3, shape2=3, ncp=2, lowerTail=true, log=false',  () => {
         const actual = pbeta(0, 3, 3, 2, true, false);

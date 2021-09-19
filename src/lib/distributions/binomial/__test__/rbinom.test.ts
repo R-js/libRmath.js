@@ -1,15 +1,16 @@
 
-import '$jest-extension';
+import { resolve } from 'path';
+import { loadData } from '@common/load';
+import { cl /*, select*/ } from '@common/debug-select';
+
+
 import { IRNGNormalTypeEnum } from '@rng/normal/in01-type';
 import { globalUni, RNGKind } from '@lib/rng/global-rng';
 import { IRNGTypeEnum } from '@rng/irng-type';
-import { resolve } from 'path';
 
-import { loadData } from '@common/load';
-import { cl, select } from '@common/debug-select';
 
-const rbinomDomainWarns = select('_rbinom')("argument out of domain in '%s'");
-rbinomDomainWarns;
+//const rbinomDomainWarns = select('rbinom')("argument out of domain in '%s'");
+//rbinomDomainWarns;
 
 import { rbinom } from '..';
 
@@ -18,7 +19,7 @@ describe('rbinom', function () {
         RNGKind(IRNGTypeEnum.MERSENNE_TWISTER, IRNGNormalTypeEnum.INVERSION);
         cl.clear('_rbinom');
     });
-    it.todo('trigger ME warnings');
+    
     it('n=10, unifrom=Mersenne T, norm=Inversion, size=100, n=10, prob=0.2', () => {
         const uni = globalUni();
         uni.init(1234);

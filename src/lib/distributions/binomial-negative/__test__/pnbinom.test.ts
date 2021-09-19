@@ -8,8 +8,6 @@ import { cl, select } from '@common/debug-select';
 
 const pnbinomDomainWarns = select('pnbinom')("argument out of domain in '%s'");
 const pnbinomMuDomainWarns = select('pnbinom_mu')("argument out of domain in '%s'");
-pnbinomDomainWarns;
-pnbinomMuDomainWarns;
 
 import { prob2mu } from './test-helpers';
 
@@ -35,20 +33,20 @@ describe('pnbinom', function () {
             const nan = pnbinom(10, NaN, 0.3);
             expect(nan).toBeNaN();
         });
-        it.todo('x=10, prob=Infinity, size=30', () => {
+        it('x=10, prob=Infinity, size=30', () => {
             const nan = pnbinom(10, 30, Infinity);
             expect(nan).toBeNaN();
-            //expect(out.length).toBe(1);
+            expect(pnbinomDomainWarns()).toHaveLength(1);
         });
-        it.todo('x=10, prob=0, size=30', () => {
+        it('x=10, prob=0, size=30', () => {
             const nan = pnbinom(10, 30, 0);
             expect(nan).toBeNaN();
-            //expect(out.length).toBe(1);
+            expect(pnbinomDomainWarns()).toHaveLength(1);
         });
-        it.todo('x=10, prob=1.2, size=30', () => {
+        it('x=10, prob=1.2, size=30', () => {
             const nan = pnbinom(10, 30, 1.2);
             expect(nan).toBeNaN();
-            //expect(out.length).toBe(1);
+            expect(pnbinomDomainWarns()).toHaveLength(1);
         });
         it('x=10, prob=0.2, size=0', () => {
             const z = pnbinom(10, 0, 0.2);
@@ -96,29 +94,29 @@ describe('pnbinom', function () {
             const nan = pnbinom(4, 30, undefined, mu);
             expect(nan).toBeNaN();
         });
-        it.todo('x=4, size=Infinity, mu=f(size=30, prob=0.3)', () => {
+        it('x=4, size=Infinity, mu=f(size=30, prob=0.3)', () => {
             const mu = prob2mu(30, 0.3);
             const nan = pnbinom(4, Infinity, undefined, mu);
             expect(nan).toBeNaN();
-            //expect(out.length).toBe(1);
+            expect(pnbinomMuDomainWarns()).toHaveLength(1);
         });
-        it.todo('x=4, size=30, mu=Infinity', () => {
+        it('x=4, size=30, mu=Infinity', () => {
             const mu = Infinity;
             const nan = pnbinom(4, 30, undefined, mu);
             expect(nan).toBeNaN();
-            //expect(out.length).toBe(1);
+            expect(pnbinomMuDomainWarns()).toHaveLength(1);
         });
-        it.todo('x=4, size=-30, mu=f(size=30, prob=0.3)', () => {
+        it('x=4, size=-30, mu=f(size=30, prob=0.3)', () => {
             const mu = prob2mu(30, 0.3);
             const nan = pnbinom(4, -30, undefined, mu);
             expect(nan).toBeNaN();
-            //expect(out.length).toBe(1);
+            expect(pnbinomMuDomainWarns()).toHaveLength(1);
         });
-        it.todo('x=4, size=30, mu=-20 (<0)', () => {
+        it('x=4, size=30, mu=-20 (<0)', () => {
             const mu = -20;
             const nan = pnbinom(4, 30, undefined, mu);
             expect(nan).toBeNaN();
-            //expect(out.length).toBe(1);
+            expect(pnbinomMuDomainWarns()).toHaveLength(1);
         });
         it('x=4, size=0, mu=f(size=30, prob=0.3)', () => {
             const mu = prob2mu(30, 0.3);

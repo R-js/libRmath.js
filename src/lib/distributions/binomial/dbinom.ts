@@ -28,7 +28,7 @@ import {
     R_D_nonint_check,
 } from '@lib/r-func';
 
-import bd0 from '@lib/deviance';
+import { bd0 } from '@lib/deviance';
 import { stirlerr } from '@lib/stirling';
 
 const printer = debug('dbinom');

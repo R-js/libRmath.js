@@ -4,11 +4,9 @@ import { resolve } from 'path';
 import { loadData } from '@common/load';
 import { cl, select } from '@common/debug-select';
 
-const dbinom_muDomainWarns = select('dnbinom_mu')("argument out of domain in '%s'");
+//const dbinom_muDomainWarns = select('dnbinom_mu')("argument out of domain in '%s'");
 const dbinomDomainWarns = select('dnbinom')("argument out of domain in '%s'");
-dbinom_muDomainWarns;
-dbinomDomainWarns;
-
+//dbinom_muDomainWarns;
 
 import { dnbinom } from '..';
 import { prob2mu } from './test-helpers';
@@ -23,22 +21,21 @@ describe('dnbinom', function () {
             cl.clear('dnbinom_mu');
             cl.clear('dnbinom');
         })
-        it.todo('check ME for dnbinom and prob2mu');
+        
         it('ranges x ∊ [0, 200] size=34, prob=0.2', async () => {
             const [x, y] = await loadData(resolve(__dirname, 'fixture-generation', 'dnbinom1.R'), /\s+/, 1, 2);
             const actual = x.map(_x => dnbinom(_x, 34, 0.2));
             expect(actual).toEqualFloatingPointBinary(y, 43);
         });
-        it.todo('x=NaN, prob=0.5, size=10', () => {
+        it('x=NaN, prob=0.5, size=10', () => {
             const nan = dnbinom(NaN, 10, 0.5);
             expect(nan).toBeNaN();
-            
         });
-        it.todo('x=10, prob=0, size=20', () => {
+        it('x=10, prob=0, size=20', () => {
             const nan = dnbinom(10, 20, 0);
             expect(nan).toBeNaN();
-            
-        });
+            expect(dbinomDomainWarns()).toHaveLength(1);
+        }); 
         it('x=23.4 (non integer), prob=0.3, size=20', () => {
             const z = dnbinom(23.4, 20, 0.3);
             expect(z).toBe(0);

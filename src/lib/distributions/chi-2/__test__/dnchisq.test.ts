@@ -3,7 +3,6 @@ import { resolve } from 'path';
 import { loadData } from '@common/load';
 import { cl, select } from '@common/debug-select';
 const dnchisqDomainWarns = select('dnchisq')("argument out of domain in '%s'");
-dnchisqDomainWarns;
 
 import { dchisq } from '..';
 
@@ -25,10 +24,10 @@ describe('dnchisq', function () {
         const nan = dchisq(20, NaN, 8);
         expect(nan).toBeNaN();
     });
-    it.todo('x=20, df=-4 ncp=8', () => {
+    it('x=20, df=-4 ncp=8', () => {
         const nan = dchisq(20, -4, 8);
         expect(nan).toBeNaN();
-        //expect(out.length).toBe(1);
+        expect(dnchisqDomainWarns()).toHaveLength(1);
     });
     it('x=-2(<0), df=4 ncp=8', () => {
         const z = dchisq(-2, 4, 8);

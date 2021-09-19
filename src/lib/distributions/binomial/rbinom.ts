@@ -22,7 +22,7 @@ import type { IRNG } from '@rng/irng';
 import { qbinom } from './qbinom';
 
 
-const printer_rbinom = debug('_rbinom');
+const printer_rbinom = debug('rbinom');
 
 export function rbinomOne(nin: number, pp: number, rng: IRNG): number {
     // double

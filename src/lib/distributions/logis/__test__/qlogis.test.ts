@@ -1,17 +1,6 @@
-//helper
+import { cl, select } from '@common/debug-select';
+
 import { qlogis } from '..';
-
-const cl = require('debug');
-
-function select(ns: string) {
-    return function (filter: string) {
-        return function () {
-            const logs = cl.get(ns);// put it here and not in the function scope
-            if (!logs) return [];
-            return logs.filter((s: string[]) => s[0] === filter);
-        };
-    };
-}
 
 const qLogisLogs = select('qlogis');
 const qLogisDomainWarns = qLogisLogs("argument out of domain in '%s'");

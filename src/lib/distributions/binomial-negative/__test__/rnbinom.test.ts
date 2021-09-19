@@ -7,7 +7,7 @@ import { cl, select } from '@common/debug-select';
 const rnbinomDomainWarns = select('rnbinom')("argument out of domain in '%s'");
 const rnbinomMuDomainWarns = select('rnbinom_mu')("argument out of domain in '%s'");
 rnbinomDomainWarns;
-rnbinomMuDomainWarns;
+//rnbinomMuDomainWarns;
 
 import { rnbinom } from '..';
 
@@ -69,10 +69,10 @@ describe('rnbinom', function () {
             const z = rnbinom(10, 8, undefined, 12, bm);
             expect(z).toEqualFloatingPointBinary([10, 10, 17, 6, 9, 14, 10, 12, 3, 5]);
         });
-        it.todo('(check M.E.)n=1, size=8, mu=NaN', () => {
+        it('(check M.E.)n=1, size=8, mu=NaN', () => {
             const nan = rnbinom(1, 8, undefined, NaN);
             expect(nan).toEqualFloatingPointBinary(NaN);
-            //expect(out.length).toBe(1);
+            expect(rnbinomMuDomainWarns()).toHaveLength(1);
         });
         it('n=1, size=8, mu=0', () => {
             const z = rnbinom(1, 8, undefined, 0);
