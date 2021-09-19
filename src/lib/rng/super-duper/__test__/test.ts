@@ -1,6 +1,5 @@
-import { SuperDuper } from '../../';
+import { SuperDuper } from '@rng/super-duper';
 import { samples25fromSeed1234, stateAfterSeed4568, samplesAfterCorrectedSeed } from './fixture';
-import '$jest-extension';
 
 describe('rng super-duper', function () {
     it('compare 25 samples seed=0', () => {

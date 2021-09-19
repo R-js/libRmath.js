@@ -16,7 +16,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { debug } from 'debug';
 import { lgammafn_sign } from '@special/gamma/lgammafn_sign';
-import { sumfp } from '$constants';
+import { sumfp } from '@lib/r-func';
 import { checks } from './helper';
 
 const printer_dmultinom = debug('dmultinom');

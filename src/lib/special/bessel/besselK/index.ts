@@ -17,14 +17,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import { debug } from 'debug';
 import { ME, ML_ERROR } from '@common/logger';
-//import { boolVector, numVector } from '../../types';
 import { K_bessel } from './Kbessel';
 
 const { isNaN: ISNAN } = Number;
 const { floor } = Math;
 const printer = debug('bessel_k');
 
-export function bessel_k(x: number, alpha: number, expo = false): number {
+function bessel_k(x: number, alpha: number, expo = false): number {
     /* NaNs propagated correctly */
     if (ISNAN(x) || ISNAN(alpha)) return x + alpha;
 
@@ -53,3 +52,6 @@ export function bessel_k(x: number, alpha: number, expo = false): number {
     x = rc.x; // bk[nb - 1];
     return x;
 }
+
+export default bessel_k;
+export { bessel_k as BesselK }

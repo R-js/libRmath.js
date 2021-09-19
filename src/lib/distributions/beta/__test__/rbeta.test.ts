@@ -1,45 +1,21 @@
-// node
-//import { resolve } from 'path';
+
 
 //helper
-import '$jest-extension';
-//import { loadData } from '$test-helpers/load';
+import { cl, select } from '@common/debug-select';
 
-jest.mock('@common/logger', () => {
-    // Require the original module to not be mocked...
-    const originalModule = jest.requireActual('@common/logger');
-    const { ML_ERROR, ML_ERR_return_NAN } = originalModule;
-    let array: unknown[];
-    function pr(...args: unknown[]): void {
-        array.push([...args]);
-    }
+const rbetaDomainWarns = select('rbeta')("argument out of domain in '%s'");
 
-    return {
-        __esModule: true, // Use it when dealing with esModules
-        ...originalModule,
-        ML_ERROR: jest.fn((x: unknown, s: unknown) => ML_ERROR(x, s, pr)),
-        ML_ERR_return_NAN: jest.fn(() => ML_ERR_return_NAN(pr)),
-        setDestination(arr: unknown[]) {
-            array = arr;
-        },
-        getDestination() {
-            return array;
-        }
-    };
-});
-
-const cl = require('@common/logger');
 //app
 import { rbeta } from '..';
 import { IRNGTypeEnum } from '@rng/irng-type';
 import { IRNGNormalTypeEnum } from '@rng/normal/in01-type';
-import { globalNorm, globalUni, RNGKind } from '@rng/globalRNG';
-
+import { globalNorm, globalUni, RNGKind } from '@lib/rng/global-rng';
 
 describe('rbeta', function () {
 
     beforeAll(() => {
         RNGKind(IRNGTypeEnum.MERSENNE_TWISTER, IRNGNormalTypeEnum.INVERSION);
+        cl.clear('rbeta');
     });
     it('sample 5 numbers, n=5, scp1=2, scp2=2', () => {
         /*
@@ -64,14 +40,11 @@ describe('rbeta', function () {
         ]);
     });
     it('scp1=-1, scp2=2', () => {
-        const dest: string[] = [];
-        cl.setDestination(dest);
         const actual = rbeta(1, -1, 2);
         expect(actual).toEqualFloatingPointBinary(NaN);
+        expect(rbetaDomainWarns()).toHaveLength(1);
     });
     it('scp1=NAN, scp2=2', () => {
-        const dest: string[] = [];
-        cl.setDestination(dest);
         const actual = rbeta(1, NaN, 2);
         expect(actual).toEqualFloatingPointBinary(NaN);
     });
@@ -150,23 +123,4 @@ describe('rbeta', function () {
         ],
         22)
     });
-    /*
-    it('x=0.5, shape1=Infinite,shape2=3, ncp=3', () => {
-        const dest: unknown[] = [];
-        cl.setDestination(dest);
-        const nan = qbeta(0.5, Infinity, 2, 3);
-        expect(nan).toBeNaN();
-        expect(dest.length).toBe(1);
-    });
-    it('x=0.5, shape1=-2,shape2=3, ncp=3', () => {
-        const dest: unknown[] = [];
-        cl.setDestination(dest);
-        const nan = qbeta(0.5, -2, 2, 3);
-        expect(nan).toBeNaN();
-        expect(dest.length).toBe(1);
-    });
-    it('x=1-EPSILON/2, shape1=-2, shape2=2, ncp=4', () => {
-        const z = qbeta(1 - Number.EPSILON / 2, 2, 2, 4, true);
-        expect(z).toBe(1);
-    });*/
 });

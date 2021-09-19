@@ -28,7 +28,7 @@ import {
 import {
     R_DT_val, R_DT_0,
     R_DT_1,
-} from '$constants';
+} from '@lib/r-func';
 import { lgammaOne } from '@special/gamma';
 
 const printer_ptukey = debug('_ptukey');

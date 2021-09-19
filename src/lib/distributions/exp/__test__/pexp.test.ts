@@ -1,24 +1,10 @@
-//helper
-import '$jest-extension';
-import '$mock-of-debug';// for the side effects
-import { loadData } from '$test-helpers/load';
+
+import { loadData } from '@common/load';
 import { resolve } from 'path';
 import { pexp } from '..';
 
-const cl = require('debug');
-
-function select(ns: string) {
-    return function (filter: string) {
-        return function () {
-            const logs = cl.get(ns);// put it here and not in the function scope
-            if (!logs) return [];
-            return logs.filter((s: string[]) => s[0] === filter);
-        };
-    };
-}
-
-const dexpLogs = select('pexp');
-const dexpDomainWarns = dexpLogs("argument out of domain in '%s'");
+import { cl, select } from '@common/debug-select';
+const pexpDomainWarns = select('pexp')("argument out of domain in '%s'");
 
 describe('pexp', function () {
     beforeEach(() => {
@@ -47,7 +33,7 @@ describe('pexp', function () {
     it('rate = -3 (<0)', () => {
         const nan = pexp(0, -3);
         expect(nan).toBeNaN();
-        expect(dexpDomainWarns()).toHaveLength(1);
+        expect(pexpDomainWarns()).toHaveLength(1);
     });
     it('asLog = true, rate = 5, x=2', () => {
         const z = pexp(2, 5, undefined, true);

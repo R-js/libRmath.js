@@ -19,8 +19,8 @@ import { debug } from 'debug';
 
 import { rbinomOne } from '@dist/binomial/rbinom';
 import { IRNG } from '@rng/irng';
-import { globalUni } from '@rng/globalRNG';
-import { emptyFloat32Array } from '$constants';
+import { globalUni } from '@lib/rng/global-rng';
+import { emptyFloat32Array } from '@lib/r-func';
 import { checks } from './helper';
 
 const printer_rmultinom = debug('rmultinom');

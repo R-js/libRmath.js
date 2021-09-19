@@ -23,7 +23,7 @@ import {
     R_DT_0,
     R_DT_1,
     R_DT_val,
-} from '$constants';
+} from '@lib/r-func';
 
 import { R_Log1_Exp } from '@dist/exp/expm1';
 import { lgammafn_sign as lgammafn } from '@special/gamma/lgammafn_sign';

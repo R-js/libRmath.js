@@ -29,7 +29,7 @@ import {
     R_DT_0,
     R_DT_1,
     R_DT_val,
-} from '$constants';
+} from '@lib/r-func';
 import { lgammaOne } from '@special/gamma';
 import { pnorm5 as pnorm } from '../normal/pnorm';
 import { pt } from './pt';

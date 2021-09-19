@@ -1,7 +1,6 @@
-import { Inversion } from '../../../';
-import { IRNGNormalTypeEnum } from '../../in01-type';
+import { Inversion } from '@rng/normal/inversion';
+import { IRNGNormalTypeEnum } from '@rng/normal/in01-type';
 import { testData } from './fixture';
-import '$jest-extension';
 
 const { rnorm10, runif1, rnorm4, runif1_2, rnorm2, rnorm2AfterResetSeedTo0 } = testData;
 

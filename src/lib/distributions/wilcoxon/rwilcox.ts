@@ -23,12 +23,11 @@ import { IRNG } from '@rng/irng';
 
 const printer_rwilcox = debug('rwilcox');
 
-
 const MAXSIZE = 4294967296;
 
 export function rwilcoxOne(m: number, n: number, rng: IRNG): number {
     /* NaNs propagated correctly */
-    if (isNaN(m) || isNaN(n)) return m + n;
+    if (isNaN(m) || isNaN(n)) return NaN;
     m = Math.round(m);
     n = Math.round(n);
     if (m < 0 || n < 0) return ML_ERR_return_NAN(printer_rwilcox);

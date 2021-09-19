@@ -19,9 +19,9 @@ import { pexp as _pexp} from './pexp';
 import { qexp as _qexp} from './qexp';
 import { rexpOne } from './rexp';
 
-import { globalUni } from '@rng/globalRNG';
+import { globalUni } from '@lib/rng/global-rng';
 import type { IRNG } from '@rng/irng';
-import { repeatedCall64 } from '$helper';
+import { repeatedCall64 } from '@lib/r-func';
 
 export function dexp(x: number, rate = 1, asLog = false): number{
   return _dexp(x, 1 / rate, asLog);

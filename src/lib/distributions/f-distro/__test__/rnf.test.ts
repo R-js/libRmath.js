@@ -1,30 +1,11 @@
-//helper
-import '$jest-extension';
-import '$mock-of-debug';// for the side effects
 import { rf } from '..';
 import { IRNGTypeEnum } from '@rng/irng-type';
-import { globalUni, RNGKind } from '@rng/globalRNG';
+import { globalUni, RNGKind } from '@lib/rng/global-rng';
 import { IRNGNormalTypeEnum } from '@rng/normal/in01-type';
 
-const cl = require('debug');
-
-function select(ns: string) {
-    return function (filter: string) {
-        return function () {
-            const logs = cl.get(ns);// put it here and not in the function scope
-            if (!logs) return [];
-            return logs.filter((s: string[]) => s[0] === filter);
-        };
-    };
-}
-
-const rnfLogs = select('rnf');
-const rnfDomainWarns = rnfLogs("argument out of domain in '%s'");
-rnfDomainWarns;
 describe('rnf with ncp defined', function () {
     beforeEach(() => {
         RNGKind(IRNGTypeEnum.MERSENNE_TWISTER, IRNGNormalTypeEnum.INVERSION);
-        cl.clear('rnf');
         globalUni().init(123456);
     })
     it('n=2 df1=3, df2=55 ncp=NaN', () => {

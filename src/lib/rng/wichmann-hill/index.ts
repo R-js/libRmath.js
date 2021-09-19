@@ -19,11 +19,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 const { trunc } = Math;
 const frac = (x: number) => x - trunc(x);
 
-import { fixup } from '../fixup';
-import { IRNG } from '../irng';
-import { IRNGTypeEnum } from '../irng-type';
-import { seed } from '../timeseed';
-import { seedCheck } from '../seedcheck';
+import { fixup } from '@rng/fixup';
+import { IRNG } from '@rng/irng';
+import { IRNGTypeEnum } from '@rng/irng-type';
+import { seed } from '@rng/timeseed';
+import { seedCheck } from '@rng/seedcheck';
 
 export const SEED_LEN = 3;
 

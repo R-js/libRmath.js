@@ -19,11 +19,13 @@ export { dlnorm } from './dlnorm';
 export { plnorm } from './plnorm';
 export { qlnorm } from './qlnorm';
 import { rlnormOne } from './rlnorm';
-import { repeatedCall } from '$helper'
+import { repeatedCall } from '@lib/r-func';
 
 import type { IRNGNormal } from '@rng/normal/normal-rng';
-import { globalNorm } from '@rng/globalRNG';
+import { globalNorm } from '@lib/rng/global-rng';
+
 export { rlnormOne }
+
 export function rlnorm(n: number, meanlog = 0, sdlog = 1, rng: IRNGNormal = globalNorm()): Float32Array {
   return repeatedCall(n, rlnormOne, meanlog, sdlog, rng)
 }

@@ -21,12 +21,12 @@ import { pchisq as _pchisq } from './pchisq';
 import { pnchisq as _pnchisq } from './pnchisq';
 import { qchisq as _qchisq } from './qchisq';
 import { qnchisq as _qnchisq } from './qnchisq';
-import { globalNorm } from '@rng/globalRNG';
+import { globalNorm } from '@lib/rng/global-rng';
 import { rchisqOne } from './rchisq';
 import { rnchisqOne } from './rnchisq';
-import { repeatedCall64 } from '$helper';
+import { repeatedCall64 } from '@lib/r-func';
 
-export { rchisqOne };
+export { rchisqOne, rnchisqOne };
 
 export function rchisq(n: number, df: number, ncp?: number, rng = globalNorm()): Float64Array {
   return ncp === undefined

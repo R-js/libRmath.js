@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { debug } from 'debug';
 import { ML_ERR_return_NAN,  } from '@common/logger';
-import { M_LN_SQRT_PI, R_D__0 } from '$constants';
+import { M_LN_SQRT_PI, R_D__0 } from '@lib/r-func';
 import { lgammaOne } from '@special/gamma';
 import { dnorm } from '@dist/normal';
 import { dt } from './dt';

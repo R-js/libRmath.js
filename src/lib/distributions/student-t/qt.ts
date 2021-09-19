@@ -33,7 +33,7 @@ import {
     R_D_log,
     R_D_Lval,
     R_D_qIv
-} from '$constants';
+} from '@lib/r-func';
 
 import { R_D_LExp, R_DT_qIv } from '@dist/exp/expm1';
 import { qnorm } from '@dist/normal/qnorm';

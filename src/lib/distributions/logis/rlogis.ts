@@ -21,7 +21,7 @@ import type { IRNG } from '@rng/irng';
 
 const printer_rlogis = debug('rlogis');
 
-export function rlogisOne(location = 0, scale = 1, rng: IRNG): number {
+export function rlogisOne(location: number, scale: number, rng: IRNG): number {
     if (isNaN(location) || !isFinite(scale)) {
         return ML_ERR_return_NAN(printer_rlogis);
     }

@@ -20,13 +20,13 @@ import { debug } from 'debug';
 import { ML_ERR_return_NAN, R_Q_P01_boundaries } from '@common/logger';
 import { R_DT_CIv, R_DT_qIv } from '@dist/exp/expm1';
 
-const printer = debug('qnorm4');
+const printer = debug('qnorm');
 
 export function qnorm(p: number, mu = 0, sigma = 1, lower_tail = true, log_p = false): number {
     let r;
     let val;
 
-    if (isNaN(p) || isNaN(mu) || isNaN(sigma)) return p + mu + sigma;
+    if (isNaN(p) || isNaN(mu) || isNaN(sigma)) return NaN;
 
     const rc = R_Q_P01_boundaries(lower_tail, log_p, p, -Infinity, Infinity);
     if (rc !== undefined) {
@@ -79,8 +79,15 @@ export function qnorm(p: number, mu = 0, sigma = 1, lower_tail = true, log_p = f
         /* closer than 0.075 from {0,1} boundary */
 
         /* r = min(p, 1-p) < 0.075 */
-        if (q > 0) r = R_DT_CIv(lower_tail, log_p, p);
-        /* 1-p */ else r = p_; /* = R_DT_Iv(p) ^=  p */
+        if (q > 0)
+        {
+            r = R_DT_CIv(lower_tail, log_p, p);
+        }
+        /* 1-p */
+        else
+        {
+            r = p_; /* = R_DT_Iv(p) ^=  p */
+        }
 
         r = Math.sqrt(-(log_p && ((lower_tail && q <= 0) || (!lower_tail && q > 0)) ? p : /* else */ Math.log(r) ) );
         /* r = sqrt(-log(r))  <==>  min(p, 1-p) = exp( - r^2 ) */

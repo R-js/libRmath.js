@@ -18,4 +18,4 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 export { gammafn as gamma, _gammafn as gammaOne } from './gamma_fn';
 export { digamma, pentagamma, psigamma, tetragamma, trigamma } from './polygamma';
 export { lgammafn_sign as lgammaOne, lgammafn as lgamma } from './lgammafn_sign';
-export type { NumArray } from '$constants';
+export type { NumArray } from '@lib/r-func';

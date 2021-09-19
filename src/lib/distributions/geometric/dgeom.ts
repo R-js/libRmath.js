@@ -18,7 +18,7 @@ import { debug } from 'debug';
 import { dbinom_raw } from '@dist/binomial/dbinom';
 import { ML_ERR_return_NAN  } from '@common/logger';
 
-import { R_D__0, R_D_nonint_check } from '$constants';
+import { R_D__0, R_D_nonint_check } from '@lib/r-func';
 
 const printer = debug('dgeom');
 

@@ -18,7 +18,7 @@ import { debug } from 'debug';
 
 import { pbeta } from '../beta/pbeta';
 import { ML_ERR_return_NAN,  } from '@common/logger';
-import { R_DT_0, R_DT_1, R_nonint } from '$constants';
+import { R_DT_0, R_DT_1, R_nonint } from '@lib/r-func';
 
 const printer = debug('pbinom');
 

@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { debug } from 'debug'
+import { debug } from 'debug';
 
 import {
   ML_ERR_return_NAN
@@ -25,12 +25,12 @@ import {
 import {
   R_DT_0,
   R_DT_1
-} from '$constants';
+} from '@lib/r-func';
 
 import { pnorm_both } from './pnorm_both'
 
-const printer = debug('pnorm5');
-import { NumberW } from '$toms708';
+const printer = debug('pnorm');
+import { NumberW } from '@common/toms708';
 
 export function pnorm5(
   q: number,
@@ -40,14 +40,13 @@ export function pnorm5(
   logP = false
 ): number {
 
-  const p = new NumberW(0);
-  const cp = new NumberW(0);
+  
 
   /* Note: The structure of these checks has been carefully thought through.
    * For example, if x == mu and sigma == 0, we get the correct answer 1.
    */
 
-  if (isNaN(q) || isNaN(mu) || isNaN(sigma)) return q + mu + sigma;
+  if (isNaN(q) || isNaN(mu) || isNaN(sigma)) return NaN;
 
   if (!isFinite(q) && mu === q) return NaN; /* x-mu is NaN */
   if (sigma <= 0) {
@@ -55,6 +54,10 @@ export function pnorm5(
     /* sigma = 0 : */
     return q < mu ? R_DT_0(lowerTail, logP) : R_DT_1(lowerTail, logP);
   }
+
+  const p = new NumberW(0);
+  const cp = new NumberW(0);
+
   p.val = (q - mu) / sigma;
   if (!isFinite(p.val))
     return q < mu ? R_DT_0(lowerTail, logP) : R_DT_1(lowerTail, logP);

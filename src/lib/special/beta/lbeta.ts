@@ -18,14 +18,11 @@ import { debug } from 'debug';
 
 import { ML_ERR_return_NAN } from '@common/logger';
 
-import { M_LN_SQRT_2PI } from '$constants';
+import { M_LN_SQRT_2PI } from '@lib/r-func';
 
 import { gammaOne } from '@special/gamma';
 import { lgammafn_sign } from '@special/gamma/lgammafn_sign';
 import { lgammacor } from '@special/gamma/lgammacor';
-
-import type { NumArray } from '$constants';
-import { validateBetaArgs } from './helpers';
 
 const printer = debug('lbeta');
 
@@ -65,14 +62,5 @@ export function lbeta_scalar(a: number, b: number): number {
     }
 }
 
-export function lbeta(a: NumArray, b?: NumArray): Float64Array|Float32Array {
-    // check "a" (must always be there)
-    const { rc, onlyA } = validateBetaArgs('lbeta(a,b)', a, b);
-    if (rc.length === 0) {
-        return rc;
-    }
-    for (let i = 0, j = 0; i < a.length; i += onlyA ? 2 : 1, j += 1) {
-        rc[j] = lbeta_scalar(a[i], onlyA ? a[i + 1] : (b as NumArray)[i]);
-    }
-    return rc;
-}
+export default lbeta_scalar;
+export { lbeta_scalar as lbeta };

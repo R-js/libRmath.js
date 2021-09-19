@@ -16,20 +16,20 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { debug } from 'debug';
 
-import { isArray, isEmptyArray, emptyFloat64Array } from '$constants';
+import { isArray, isEmptyArray, emptyFloat64Array } from '@lib/r-func';
 
 import {
     fmod,
     M_LN_SQRT_2PI, // no math alias for this
     M_LN_SQRT_PId2,
-} from '$constants';
+} from '@lib/r-func';
 
 import { ME, ML_ERROR } from '@common/logger';
 
 import { sinpi } from '@trig/sinpi';
 import { lgammacor } from './lgammacor';
 import { _gammafn } from './gamma_fn';
-import type { NumArray } from '$constants';
+import type { NumArray } from '@lib/r-func';
 
 const { isNaN: ISNAN, POSITIVE_INFINITY: ML_POSINF } = Number;
 const { log, abs: fabs, floor, trunc } = Math;

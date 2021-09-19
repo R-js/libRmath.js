@@ -1,39 +1,20 @@
-//helper
-import '$jest-extension';
-import { loadData } from '$test-helpers/load';
 import { resolve } from 'path';
+
+//helper
+import { loadData } from '@common/load';
+import { cl, select } from '@common/debug-select';
+
+const dbinomDomainWarns = select('dbinom')("argument out of domain in '%s'");
+
+
+//app
 
 import { dbinom } from '..';
 
-
-jest.mock('@common/logger', () => {
-    // Require the original module to not be mocked...
-    const originalModule = jest.requireActual('@common/logger');
-    const { ML_ERROR, ML_ERR_return_NAN } = originalModule;
-    let array: unknown[];
-    function pr(...args: unknown[]): void {
-        array.push([...args]);
-    }
-
-    return {
-        __esModule: true, // Use it when dealing with esModules
-        ...originalModule,
-        ML_ERROR: jest.fn((x: unknown, s: unknown) => ML_ERROR(x, s, pr)),
-        ML_ERR_return_NAN: jest.fn(() => ML_ERR_return_NAN(pr)),
-        setDestination(arr: unknown[]=[]) {
-            array = arr;
-        },
-        getDestination() {
-            return array;
-        }
-    };
-});
-//app
-const cl = require('@common/logger');
-cl.setDestination();
-
 describe('dbinom', function () {
-   
+    beforeEach(()=>{
+        cl.clear('dbinom');
+    });
     it('ranges x ∊ [0, 12] size=12, prob=0.01', async () => {
         const [x, y] = await loadData(resolve(__dirname, 'fixture-generation', 'dbinom1.R'), /\s+/, 1, 2);
         const actual = x.map(_x => dbinom(_x, 12, 0.01));
@@ -84,10 +65,10 @@ describe('dbinom', function () {
         expect(z2).toBe(0);
     });
     it('x=4, size=100, prob=3 (>1)', () => {
-        const dest = cl.getDestination();
         const z0 = dbinom(4, 100, 3); // 100%, you always score "head", never "tail"
         expect(z0).toBeNaN();
-        expect(dest.length).toBe(1);
+        expect(dbinomDomainWarns()).toHaveLength(1)
+        
     });
     it('x=4, size=NaN, prob=0.5', () => {
         const z0 = dbinom(4, NaN, 0.5); // 100%, you always score "head", never "tail"
@@ -99,6 +80,4 @@ describe('dbinom', function () {
         const z1 = dbinom(4.4, 100, 0.5, true); // 100%, you always score "head", never "tail"
         expect(z1).toBe(-Infinity);
     });
-
- 
 });

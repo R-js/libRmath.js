@@ -14,8 +14,6 @@
       "Make I uppercase": "Warning"
     },
     "ignoreWordsList": [
-      "decl",
-      "BLAS",
-      "BLASjs"
+      
     ]
   }

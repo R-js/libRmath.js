@@ -1,6 +1,5 @@
-import { MarsagliaMultiCarry } from '../../';
+import { MarsagliaMultiCarry } from '../..';
 import { samples100fromSeed1234, seedStateAfterSeed1234 } from './fixture';
-import '$jest-extension';
 
 describe('rng marsaglia-multicarry', function () {
     it('compare 100 samples seed=0', () => {

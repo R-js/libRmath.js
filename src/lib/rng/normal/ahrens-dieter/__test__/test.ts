@@ -1,4 +1,4 @@
-import { AhrensDieter } from '../../../';
+import { AhrensDieter } from '../../..';
 import { IRNGNormalTypeEnum } from '../../in01-type';
 import _1000Samples from './fixture-1000';
 import {
@@ -7,7 +7,7 @@ import {
     rnormAfterUniformRNGBleed2,
     rnormAfterUniformRNGReset,
 } from './fixture';
-import '$jest-extension';
+
 
 describe('rng ahrens-dieter', function () {
     it('compare 1000 samples seed=1234', () => {
