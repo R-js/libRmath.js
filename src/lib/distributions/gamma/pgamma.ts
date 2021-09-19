@@ -30,7 +30,7 @@ import {
     DBL_MAX_EXP,
     M_LN2,
     DBL_MIN
-} from '$constants';
+} from '@lib/r-func';
 
 import { R_Log1_Exp } from '@dist/exp/expm1';
 import { dnorm4 as dnorm } from '@dist/normal/dnorm';

@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //needed for rf
 import { rchisqOne } from '../chi-2/rchisq';
 import { rnchisqOne } from '../chi-2/rnchisq';
-import { repeatedCall64 } from '$helper';
+import { repeatedCall64 } from '@lib/r-func';
 import type { IRNGNormal } from '@rng/normal/normal-rng';
 //
 import { df as _df } from './df';
@@ -29,7 +29,7 @@ import { pnf } from './pnf';
 import { qf as _qf } from './qf';
 import { qnf } from './qnf';
 import { rfOne as _rfOne } from './rf';
-import { globalNorm } from '@rng/globalRNG';
+import { globalNorm } from '@lib/rng/global-rng';
 
 export function df(x: number, df1: number, df2: number, ncp?: number, log = false): number {
     if (ncp === undefined) {

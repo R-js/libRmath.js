@@ -1,32 +1,16 @@
-//helper
-import { emptyFloat64Array } from '$constants';
-import '$jest-extension';
-import '$mock-of-debug';// for the side effects
+
+import { loadData } from '@common/load';
+import { resolve } from 'path';
+import { cl, select } from '@common/debug-select';
+
+import { emptyFloat64Array } from '@lib/r-func';
 import { IRNGNormalTypeEnum } from '@rng/normal/in01-type';
-import { globalUni, RNGKind } from '@rng/globalRNG';
+import { globalUni, RNGKind } from '@lib/rng/global-rng';
 import { IRNGTypeEnum } from '@rng/irng-type';
 import { rgeom } from '..';
-import { loadData } from '$test-helpers/load';
-import { resolve } from 'path';
-
-const cl = require('debug');
-
-function select(ns: string) {
-    return function (filter: string) {
-        return function () {
-            const logs = cl.get(ns);// put it here and not in the function scope
-            if (!logs) return [];
-            return logs.filter((s: string[]) => s[0] === filter);
-        };
-    };
-}
 
 const rgeomLogs = select('rgeom');
 const rgeomDomainWarns = rgeomLogs("argument out of domain in '%s'");
-const rgeomWarns = select('R_Q_P01_check')("argument out of domain in '%s'");
-
-rgeomDomainWarns;
-rgeomWarns;
 
 describe('rgeom', function () {
     describe('invalid input', () => {

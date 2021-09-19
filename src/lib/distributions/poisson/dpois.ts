@@ -19,10 +19,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import { debug } from 'debug';
 
 import { ML_ERR_return_NAN } from '@common/logger'
-import { R_D__0, R_D__1, R_D_exp, R_D_fexp, R_D_nonint_check, DBL_MIN } from '$constants';
-import { bd0 } from '$deviance';
+import { R_D__0, R_D__1, R_D_exp, R_D_fexp, R_D_nonint_check, DBL_MIN } from '@lib/r-func';
+import { bd0 } from '@lib/deviance';
 import { lgammafn_sign as lgammafn } from '@special/gamma/lgammafn_sign';
-import { stirlerr } from '$stirling';
+import { stirlerr } from '@lib/stirling';
 
 
 const M_2PI = 2 * Math.PI;

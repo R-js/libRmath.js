@@ -18,6 +18,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 /* want to compile log1p as Rlog1p if HAVE_LOG1P && !HAVE_WORKING_LOG1P */
 import { debug } from 'debug';
 
+import { chebyshev_eval } from '../../chebyshev';
+import { ME, ML_ERR_return_NAN, ML_ERROR } from '@common/logger';
+
+const { abs: fabs, max: fmax2, min: fmin2 } = Math;
+const printer = debug('log1p');
 const {
     NEGATIVE_INFINITY: ML_NEGINF,
     POSITIVE_INFINITY: ML_POSINF,
@@ -25,14 +30,6 @@ const {
     isNaN: ISNAN,
     isFinite: R_FINITE,
 } = Number;
-import { chebyshev_eval } from '../../chebyshev/index';
-import { ME, ML_ERR_return_NAN, ML_ERROR } from '@common/logger';
-
-//import { chebyshev_eval } from '../exp/expm1'chebyshev';
-
-//const { log1p } = Math;
-const { abs: fabs, max: fmax2, min: fmin2 } = Math;
-const printer = debug('log1p');
 
 export function log1p(x: number): number {
     // series for log1p on the interval -.375 to .375

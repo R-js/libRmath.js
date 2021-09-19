@@ -28,9 +28,9 @@ import { qt as _qt } from './qt';
 //
 import { rtOne } from './rt';
 
-import { repeatedCall } from '$helper';
-import { emptyFloat32Array } from '$constants';
-import { globalNorm } from '@rng/globalRNG';
+import { repeatedCall64 } from '@lib/r-func';
+import { emptyFloat64Array } from '@lib/r-func';
+import { globalNorm } from '@lib/rng/global-rng';
 export { rtOne };
 
 
@@ -57,11 +57,11 @@ export function qt(p: number, df: number, ncp?: number, lowerTail = true, logP =
     return qnt(p, df, ncp, lowerTail, logP);
 }
 
-export function rt(n: number, df: number, ncp?: number, rng = globalNorm()): Float32Array {
+export function rt(n: number, df: number, ncp?: number, rng = globalNorm()): Float64Array {
     if (ncp === undefined) {
-        return repeatedCall(n, rtOne, df, rng);
+        return repeatedCall64(n, rtOne, df, rng);
     } else if (isNaN(ncp)) {
-        return emptyFloat32Array;
+        return emptyFloat64Array;
     } else {
         const norm = rnorm(n, ncp, 1, rng); // bleed this first from rng
         const chisq = rchisq(n, df, undefined, rng);

@@ -15,12 +15,12 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 import type { IRNGNormal } from '@rng/normal/normal-rng';
-import { globalNorm } from '@rng/globalRNG';
+import { globalNorm } from '@lib/rng/global-rng';
 import { dnbinom as _dnb, dnbinom_mu } from './dnbinom';
 import { pnbinom as _pnb, pnbinom_mu } from './pnbinom';
 import { qnbinom as _qnb, qnbinom_mu } from './qnbinom';
 import { rnbinomOne, rnbinom_muOne } from './rnbinom';
-import { repeatedCall64 } from '$helper';
+import { repeatedCall64 } from '@lib/r-func';
 
 const probAndMuBoth = '"prob" and "mu" both specified';
 const probMis = 'argument "prob" is missing, with no default';

@@ -18,7 +18,7 @@ import { debug } from 'debug';
 
 import { ML_ERR_return_NAN, R_Q_P01_boundaries } from '@common/logger';
 
-import { NumberW } from '$toms708';
+import { NumberW } from '@common/toms708';
 import { R_DT_qIv } from '@dist/exp/expm1';
 import { qnorm } from '@dist/normal/qnorm';
 import { pbinom } from './pbinom';
@@ -49,7 +49,7 @@ function do_search(y: number, z: NumberW, p: number, n: number, pr: number, incr
     }
 }
 
-const printer_qbinom = debug('_qbinom');
+const printer_qbinom = debug('qbinom');
 
 export function qbinom(p: number, size: number, pr: number, lower_tail = true, log_p = false): number {
 

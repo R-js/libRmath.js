@@ -4,7 +4,7 @@
     "description": "Javascript Pure Implementation of Statistical R \"core\" numerical libRmath",
     "keywords": [
         "statistics",
-        "r statistics",
+        "R",
         "rstudio",
         "r studio",
         "r-studio",
@@ -16,36 +16,34 @@
         "trigamma",
         "polygamma",
         "beta",
-        "probability functions",
+        "probability",
         "densitity functions",
         "quantile functions",
-        "beta distribution",
-        "binomial distribution",
-        "negative binomial distribution",
-        "cauchy distribution",
+        "binomial",
+        "negative binomial",
         "cauchy",
         "chi square sistribution",
         "chi-square chisquare",
-        "exponential distribution",
-        "f distribution",
-        "snedecor's f distribution",
-        "fisher–snedecor distribution",
-        "gamma distribution",
-        "geometric distribution",
-        "hypergeometric distribution",
-        "hyper geometric distribution",
-        "logistic distribution",
-        "lognormal distribution",
-        "multinomial distribution",
-        "normal distribution",
-        "poisson distribution",
-        "wilcoxon signed rank statistic distribution",
-        "student t distribution",
-        "studentized range distribution",
+        "exponential",
+        "f",
+        "snedecor's f",
+        "fisher–snedecor",
+        "geometric",
+        "hypergeometric",
+        "hyper geometric",
+        "logistic",
+        "lognormal",
+        "multinomial",
+        "normal",
+        "gaussian",
+        "poisson",
+        "student t",
+        "studentized range",
         "tukey",
-        "uniform distribution",
-        "weibull distribution",
-        "wilcoxon rank sum statistic distribution"
+        "uniform",
+        "weibull",
+        "wilcox",
+        "wilcoxon rank sum"
     ],
     "homepage": "https://github.com/R-js/libRmath.js#readme",
     "bugs": {
@@ -63,23 +61,25 @@
             "email": "richarddmorey@gmail.com"
         }
     ],
-    "main": "commonjs/lib/index.js",
-    "module": "es6/lib/index.js",
+    "type": "module",
+    "main": "es6/lib/index.js",
     "browser": "browser/lib-r-math.min.js",
-    "types": "commonjs/types/lib/index.d.ts",
+    "types": "es6/types/lib/index.d.ts",
     "files": [
-        "commonjs",
         "es6",
-        "browser"
+        "browser",
+        "CHANGELOG.md",
+        "LICENSE",
+        "README.md"
     ],
     "scripts": {
-        "prebuild": "rimraf *.tsbuildinfo es6 commonjs browser",
-        "build": "ttsc -p tsconfig-es6.json && ttsc -p tsconfig-commonjs.json",
+        "prebuild": "rimraf *.tsbuildinfo es6 browser",
+        "build": "ttsc -p tsconfig-es6.json",
         "postbuild": "node rollup.build.js",
         "lint": "eslint src/**/*.ts",
         "lint:fix": "eslint src/**/*.ts --fix",
         "pretest": "rimraf coverage .jest-cache",
-        "test": "jest"
+        "test": "jest --verbose"
     },
     "contributes": {
         "typescriptServerPlugins": [
@@ -106,9 +106,10 @@
         "rollup": "^2.33.1",
         "rollup-plugin-terser": "^7.0.2",
         "ts-jest": "26.4.4",
+        "ts-node": "^10.2.1",
         "ttypescript": "^1.5.12",
         "typescript": "^4.1.2",
         "typescript-eslint-language-service": "^4.1.1",
-        "typescript-transform-paths": "^2.2.3"
+        "typescript-transform-paths": "^3.4.0-alpha"
     }
 }

@@ -17,12 +17,27 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 export { dhyper } from './dhyper';
 export { phyper } from './phyper';
 export { qhyper } from './qhyper';
+import { registerBackend as registerQHyperBackend, unRegisterBackend as unRegisterQHyperBackend } from './qhyper';
 import { rhyperOne } from './rhyper';
-import { globalUni } from '@rng/globalRNG';
-import { repeatedCall } from '$helper';
+import { globalUni } from '@lib/rng/global-rng';
+import { repeatedCall64 } from '@lib/r-func';
+import { initWasm as initWasmQhyper } from './qhyper_wasm';
+import type { QHyperFunctionMap, CalcQHyper } from './qhyper_wasm'
 
+export type { QHyperFunctionMap, CalcQHyper }
 
 //rhyper(nn, m, n, k)
-export function rhyper(N: number, nn1in: number, nn2in: number, kkin: number, rng = globalUni()): Float32Array {
-   return repeatedCall(N, rhyperOne, nn1in, nn2in, kkin, rng);
+export function rhyper(N: number, nn1in: number, nn2in: number, kkin: number, rng = globalUni()): Float64Array {
+   return repeatedCall64(N, rhyperOne, nn1in, nn2in, kkin, rng);
+}
+
+export async function useWasmBackends(): Promise<void> {
+   const fns: QHyperFunctionMap = await initWasmQhyper();
+   registerQHyperBackend(fns);
+   //  accellerate more functions
+   // .
+}
+
+export function clearBackends(): boolean {
+   return unRegisterQHyperBackend(); // && unRegisterPHyperBackend etc
 }

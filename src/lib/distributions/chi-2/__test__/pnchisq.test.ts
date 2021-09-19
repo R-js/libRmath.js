@@ -1,25 +1,13 @@
-import '$jest-extension';
-import { loadData } from '$test-helpers/load';
 import { resolve } from 'path';
-import '$mock-of-debug';// for the side effects
-
-//app
-const cl = require('debug');
-
-function get() {
-    return cl.get('pnchisq');
-}
-
-function getNaNWarns(filter: string) {
-    const logs = get();
-    if (logs) {
-        const answ = logs.filter((s: string[]) => s[0] === filter);
-        return answ;
-    }
-    return [];
-}
-
 import { pchisq } from '..';
+
+import { loadData } from '@common/load';
+import { cl, select } from '@common/debug-select';
+
+const prepared = select('pnchisq');
+const pnchisqDomainWarns = prepared("argument out of domain in '%s'");
+const pnchisqPrecisionWarns = prepared("full precision may not have been achieved in '%s'");
+
 
 describe('pnchisq', function () {
     beforeEach(() => {
@@ -47,12 +35,12 @@ describe('pnchisq', function () {
     it('x=80 df=Infinity, ncp=8, log=true', () => {
         const nan = pchisq(80, Infinity, 8, undefined, true);
         expect(nan).toBeNaN();
-        expect(getNaNWarns("argument out of domain in '%s'")).toHaveLength(1);
+        expect(pnchisqDomainWarns()).toHaveLength(1);
     });
     it('x=80 df=-3(<0), ncp=8, log=true', () => {
         const nan = pchisq(80, -3, 8, undefined, true);
         expect(nan).toBeNaN();
-        expect(getNaNWarns("argument out of domain in '%s'")).toHaveLength(1);
+        expect(pnchisqDomainWarns()).toHaveLength(1);
     });
     it('ranges x ∊ [80, 100], df=13, ncp=85(>80) log=true', async () => {
         const [x, y] = await loadData(resolve(__dirname, 'fixture-generation', 'pnchisq4.R'), /\s+/, 1, 2);
@@ -62,19 +50,19 @@ describe('pnchisq', function () {
     it('(precison warning): x = 490, df=13, ncp=85, lower=false, log=false', () => {
         const actual = pchisq(490, 13, 85, false, false);
         expect(actual).toBeLessThan(1e-10);
-        expect(getNaNWarns("full precision may not have been achieved in '%s'")).toHaveLength(1);
+        expect(pnchisqPrecisionWarns()).toHaveLength(1);
     });
     it('(precison warning): x = 490, df=13, ncp=85, lower=false, log=true', () => {
         const actual = pchisq(490, 13, 85, false, true);
         const expected = -31.643050368870338;
         expect(Math.abs(actual - expected)).toBeLessThan(0.02);
-        expect(getNaNWarns("full precision may not have been achieved in '%s'")).toHaveLength(1);
+        expect(pnchisqPrecisionWarns()).toHaveLength(1);
     });
     it('x = 200, df=13, ncp=85, lower=false, log=true', () => {
         const actual = pchisq(200, 13, 85, false, true);
         const expected = -12.131050756693373;
         expect(actual).toEqualFloatingPointBinary(expected, 34);
-        expect(getNaNWarns("argument out of domain in '%s'")).toHaveLength(0);
+        expect(pnchisqDomainWarns()).toHaveLength(0);
     });
     it('x = 0, df=0, ncp=85, lower=false, log=false', () => {
         const actual = pchisq(0, 0, 85, false, false);

@@ -21,7 +21,6 @@ export enum MessageType {
     INIT = '@@INIT@@',
 }
 
-
 export class IRNG implements IRandom {
     protected _name: string;
     protected _kind: IRNGTypeEnum;

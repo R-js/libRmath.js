@@ -1,30 +1,17 @@
-//helper
-import '$jest-extension';
-import '$mock-of-debug';// for the side effects
-import { loadData } from '$test-helpers/load';
+
+import { loadData } from '@common/load';
+import { cl, select } from '@common/debug-select';
+const dexpDomainWarns = select('dexp')("argument out of domain in '%s'");
+
 import { resolve } from 'path';
 import { dexp } from '..';
-
-const cl = require('debug');
-
-function select(ns: string) {
-    return function (filter: string) {
-        return function () {
-            const logs = cl.get(ns);// put it here and not in the function scope
-            if (!logs) return [];
-            return logs.filter((s: string[]) => s[0] === filter);
-        };
-    };
-}
-
-const dexpLogs = select('dexp');
-const dexpDomainWarns = dexpLogs("argument out of domain in '%s'");
 
 describe('dexp', function () {
     beforeEach(() => {
         cl.clear('dexp');
     })
     it('x=[-0.5, 3], rate=(1, 2, 45, 0.5)', async () => {
+        
         const [p, y1, y2, y3, y4] = await loadData(resolve(__dirname, 'fixture-generation', 'dexp.R'), /\s+/, 1, 2, 3, 4, 5);
 
         const a1 = p.map(_p => dexp(_p, 1));

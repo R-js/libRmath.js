@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import { debug } from 'debug';
 
 import { ML_ERR_return_NAN, } from '@common/logger';
-import { R_DT_0, R_DT_1, R_P_bounds_01 } from '$constants';
+import { R_DT_0, R_DT_1, R_P_bounds_01 } from '@lib/r-func';
 
 //import { INormal } from '../exp/expm1'normal';
 import { pbeta } from '@dist/beta/pbeta';

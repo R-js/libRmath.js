@@ -1,39 +1,15 @@
-//helper
-import '$jest-extension';
-import { loadData } from '$test-helpers/load';
 import { resolve } from 'path';
 
 import { pnbinom } from '..';
 
+//helper
+import { loadData } from '@common/load';
+import { cl, select } from '@common/debug-select';
 
-jest.mock('@common/logger', () => {
-    // Require the original module to not be mocked...
-    const originalModule = jest.requireActual('@common/logger');
-    const { ML_ERROR, ML_ERR_return_NAN } = originalModule;
-    let array: unknown[] = [];
-    function pr(...args: unknown[]): void {
-        array.push([...args]);
-    }
-
-    return {
-        __esModule: true, // Use it when dealing with esModules
-        ...originalModule,
-        ML_ERROR: jest.fn((x: unknown, s: unknown) => ML_ERROR(x, s, pr)),
-        ML_ERR_return_NAN: jest.fn(() => ML_ERR_return_NAN(pr)),
-        setDestination(arr: unknown[] = []) {
-            array = arr;
-        },
-        getDestination() {
-            return array;
-        }
-    };
-});
-//app
-const cl = require('@common/logger');
-const out = cl.getDestination();
+const pnbinomDomainWarns = select('pnbinom')("argument out of domain in '%s'");
+const pnbinomMuDomainWarns = select('pnbinom_mu')("argument out of domain in '%s'");
 
 import { prob2mu } from './test-helpers';
-
 
 describe('pnbinom', function () {
     describe('invalid input', () => {
@@ -42,7 +18,8 @@ describe('pnbinom', function () {
     });
     describe('using prob, not "mu" parameter', () => {
         beforeEach(() => {
-            out.splice(0);//clear out
+            cl.clear('pnbinom');
+            cl.clear('pnbinom_mu');
         });
         it('x=NaN, prob=0.5, size=10', () => {
             const nan = pnbinom(NaN, 10, 0.5);
@@ -59,17 +36,17 @@ describe('pnbinom', function () {
         it('x=10, prob=Infinity, size=30', () => {
             const nan = pnbinom(10, 30, Infinity);
             expect(nan).toBeNaN();
-            expect(out.length).toBe(1);
+            expect(pnbinomDomainWarns()).toHaveLength(1);
         });
         it('x=10, prob=0, size=30', () => {
             const nan = pnbinom(10, 30, 0);
             expect(nan).toBeNaN();
-            expect(out.length).toBe(1);
+            expect(pnbinomDomainWarns()).toHaveLength(1);
         });
         it('x=10, prob=1.2, size=30', () => {
             const nan = pnbinom(10, 30, 1.2);
             expect(nan).toBeNaN();
-            expect(out.length).toBe(1);
+            expect(pnbinomDomainWarns()).toHaveLength(1);
         });
         it('x=10, prob=0.2, size=0', () => {
             const z = pnbinom(10, 0, 0.2);
@@ -99,7 +76,8 @@ describe('pnbinom', function () {
     });
     describe('using mu, not "prob" parameter', () => {
         beforeEach(() => {
-            out.splice(0);//clear out
+            cl.clear('pnbinom');
+            cl.clear('pnbinom_mu');
         });
         it('x=NaN, size=30, mu=f(size=30,prob=0.3)', () => {
             const mu = prob2mu(30, 0.3);
@@ -120,25 +98,25 @@ describe('pnbinom', function () {
             const mu = prob2mu(30, 0.3);
             const nan = pnbinom(4, Infinity, undefined, mu);
             expect(nan).toBeNaN();
-            expect(out.length).toBe(1);
+            expect(pnbinomMuDomainWarns()).toHaveLength(1);
         });
         it('x=4, size=30, mu=Infinity', () => {
             const mu = Infinity;
             const nan = pnbinom(4, 30, undefined, mu);
             expect(nan).toBeNaN();
-            expect(out.length).toBe(1);
+            expect(pnbinomMuDomainWarns()).toHaveLength(1);
         });
         it('x=4, size=-30, mu=f(size=30, prob=0.3)', () => {
             const mu = prob2mu(30, 0.3);
             const nan = pnbinom(4, -30, undefined, mu);
             expect(nan).toBeNaN();
-            expect(out.length).toBe(1);
+            expect(pnbinomMuDomainWarns()).toHaveLength(1);
         });
         it('x=4, size=30, mu=-20 (<0)', () => {
             const mu = -20;
             const nan = pnbinom(4, 30, undefined, mu);
             expect(nan).toBeNaN();
-            expect(out.length).toBe(1);
+            expect(pnbinomMuDomainWarns()).toHaveLength(1);
         });
         it('x=4, size=0, mu=f(size=30, prob=0.3)', () => {
             const mu = prob2mu(30, 0.3);

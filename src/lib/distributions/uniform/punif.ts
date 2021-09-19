@@ -19,7 +19,7 @@ import { debug } from 'debug';
 const printer = debug('punif');
 
 import { ML_ERR_return_NAN } from '@common/logger';
-import { R_D_val, R_DT_0, R_DT_1 } from '$constants';
+import { R_D_val, R_DT_0, R_DT_1 } from '@lib/r-func';
 
 export function punif(q: number, min = 0, max = 1, lowerTail = true, logP = false): number {
     if (isNaN(q) || isNaN(min) || isNaN(max)) {

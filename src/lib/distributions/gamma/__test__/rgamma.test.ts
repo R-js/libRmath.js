@@ -1,35 +1,20 @@
-//helper
-import { emptyFloat64Array } from '$constants';
-import '$jest-extension';
-import '$mock-of-debug';// for the side effects
+import { loadData } from '@common/load';
+import { resolve } from 'path';
+import { cl, select } from '@common/debug-select';
+
+import { emptyFloat64Array } from '@lib/r-func';
 import { IRNGNormalTypeEnum } from '@rng/normal/in01-type';
-import { globalUni, RNGKind } from '@rng/globalRNG';
+import { globalUni, RNGKind } from '@lib/rng/global-rng';
 import { IRNGTypeEnum } from '@rng/irng-type';
 import { rgamma } from '..';
-import { loadData } from '$test-helpers/load';
-import { resolve } from 'path';
-
-const cl = require('debug');
-
-function select(ns: string) {
-    return function (filter: string) {
-        return function () {
-            const logs = cl.get(ns);// put it here and not in the function scope
-            if (!logs) return [];
-            return logs.filter((s: string[]) => s[0] === filter);
-        };
-    };
-}
 
 const rgammaLogs = select('rgammaOne');
 const rgammaDomainWarns = rgammaLogs("argument out of domain in '%s'");
-//const bounderiesWarns = select('R_Q_P01_boundaries')("argument out of domain in '%s'");
 
 describe('rgamma', function () {
     describe('invalid input', () => {
         beforeEach(() => {
             cl.clear('rgammaOne');
-            cl.clear('R_Q_P01_boundaries');
         });
         it('n=-1(<0)', () => {
             expect(() => rgamma(-1, 1.6)).toThrow();

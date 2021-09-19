@@ -1,22 +1,8 @@
-//helper
-import '$jest-extension';
-import '$mock-of-debug';// for the side effects
-import { loadData } from '$test-helpers/load';
 import { resolve } from 'path';
 import { df } from '..';
 
-const cl = require('debug');
-
-function select(ns: string) {
-    return function (filter: string) {
-        return function () {
-            const logs = cl.get(ns);// put it here and not in the function scope
-            if (!logs) return [];
-            return logs.filter((s: string[]) => s[0] === filter);
-        };
-    };
-}
-
+import { loadData } from '@common/load';
+import { cl, select } from '@common/debug-select';
 const dfLogs = select('df');
 const dfDomainWarns = dfLogs("argument out of domain in '%s'");
 

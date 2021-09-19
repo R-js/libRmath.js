@@ -15,7 +15,14 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-export { bessel_i as besselI } from './besselI';
-export * from './besselJ';
-export { bessel_k as besselK } from './besselK';
+// Bessel function of the first kind
+export * from './besselI';
+
+// Bessel function of the second kind
 export *  from './besselY';
+
+// Modified Bessel Function of the first kind
+export * from './besselJ';
+
+// Modified Bessel Function of the second kind
+export * from './besselK';

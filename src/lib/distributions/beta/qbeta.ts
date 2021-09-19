@@ -26,7 +26,7 @@ import {
     R_pow_di,
     NumArray,
     DBL_MIN_EXP
-} from '$constants';
+} from '@lib/r-func';
 
 import { R_DT_CIv, R_DT_Clog, R_DT_log, R_DT_qIv, R_Log1_Exp } from '@dist/exp/expm1';
 

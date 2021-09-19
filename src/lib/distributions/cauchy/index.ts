@@ -19,8 +19,8 @@ export { pcauchy } from './pcauchy';
 export { qcauchy } from './qcauchy';
 import { rcauchyOne } from './rcauchy';
 
-import { repeatedCall } from '$helper';
-import { globalUni } from '@rng/globalRNG';
+import { repeatedCall } from '@lib/r-func';
+import { globalUni } from '@lib/rng/global-rng';
 
 
 export function rcauchy(n: number, location = 0, scale = 1, rng = globalUni()): Float32Array {

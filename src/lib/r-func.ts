@@ -1,4 +1,3 @@
-import { emptyFloat32Array, emptyFloat64Array } from "$constants";
 
 /* This is a conversion from libRmath.so to Typescript/Javascript
 Copyright (C) 2018  Jacob K.F. Bogers  info@mail.jacob-bogers.com
@@ -35,10 +34,6 @@ export function sum(x: number[]): number {
     return rc;
 }
 
-export function sumfp(x: Float32Array): number {
-    return x.reduce((pv: number, v: number) => pv + v, 0);
-}
-
 export interface ISummary {
     N: number; // number of samples in "data"
     mu: number; // mean of "data"
@@ -61,6 +56,20 @@ export interface ISummary {
     };
 }
 
+export enum LogLevel {
+    ERROR,
+    WARN,
+    INFO,
+    DEBUG,
+  }
+
+
+/*export abstract class Sum implements ISummary {
+    abstract N: number;
+    abstract mu: number;
+
+}*/
+/*
 export function summary(x: number[]): ISummary {
     if (!Array.isArray(x)) {
         throw new Error(`Illigal argument, not an array`);
@@ -68,8 +77,8 @@ export function summary(x: number[]): ISummary {
     if (x.length === 0) {
         throw new Error(`argument Array is empty`);
     }
-    if (x.includes(NaN)) {
-        throw new Error(`argument Array has NaNs`);
+    if (Array.isArray(x) && x.includes(NaN)) {
+        throw new Error('argument Array has NaNs');
     }
 
     const N = x.length;
@@ -120,7 +129,7 @@ export function summary(x: number[]): ISummary {
         },
     };
 }
-
+*/
 // https://en.wikipedia.org/wiki/Welch%E2%80%93Satterthwaite_equation
 
 export function Welch_Satterthwaite(s: number[], n: number[]): number {
@@ -170,5 +179,333 @@ export type Sliced<T> = {
     key: keyof T;
     value: T[keyof T];
 };
+
+//gama
+//beta
+//ok
+export const emptyFloat32Array = new Float32Array(0);
+//gama
+//beta
+//ok
+export const emptyFloat64Array = new Float64Array(0);
+
+//ok
+export const nanFloat32Array =new Float32Array([NaN]);
+
+export type NumArray = number[] | Float32Array | Float64Array;
+//gamma
+//beta
+//ok
+export function isArray(x: unknown): boolean {
+    return Array.isArray(x) || x instanceof Float32Array || x instanceof Float64Array;
+}
+
+//beta
+//ok
+export function matchFloatType(n: number, ...a: (NumArray | undefined)[]): Float32Array | Float64Array {
+    let fp32 = true;
+    for (let i = 0; i < a.length; i++) {
+        if (a[i] === undefined) continue; // skip undefined
+        if (!(a[i] instanceof Float32Array)) {
+            fp32 = false;
+            break;
+        }
+    }
+    return fp32 ? new Float32Array(n) : new Float64Array(n);
+}
+
+//ok
+export function isEmptyArray(x: NumArray): boolean {
+    return isArray(x) && x.length === 0;
+}
+
+//ok
+export const M_SQRT2 = 1.41421356237309504880168872421; /* sqrt(2) */
+
+//ok
+export function frac(x: number): number { return x - Math.trunc(x) }
+
+//ok
+export const M_SQRT_32 = 5.656854249492380195206754896838; /* sqrt(32) */
+
+//gamma
+//ok
+export const DBL_EPSILON = 2.2204460492503131e-016;
+
+//ok
+export const DBL_MANT_DIG = 18;
+
+//ok
+export const DBL_MIN = 2.2250738585072014e-308; 
+
+//ok
+export const M_LN2 = 0.693147180559945309417232121458; /* ln(2) */
+
+//ok
+export const M_1_SQRT_2PI = 0.398942280401432677939946059934;
+
+//ok
+export const M_2PI = 6.283185307179586476925286766559;
+
+//ok
+export const M_LN_2PI = 1.837877066409345483560659472811;
+
+//ok
+export const M_1_PI = 1.0 / Math.PI;
+//ok
+export const M_PI_2 = Math.PI / 2;
+
+//ok
+export const M_LN_SQRT_PI = 0.57236494292470008; // log(sqrt(pi))
+
+//ok
+export const INT_MAX = 2**31-1;
+
+// gamma
+//ok
+export const M_LN_SQRT_2PI = 0.918938533204672741780329736406; // log(sqrt(2*pi))
+
+//gamma
+//ok
+export const M_LN_SQRT_PId2 = 0.225791352644727432363097614947; // log(sqrt(pi/2))
+//ok
+export const M_SQRT_2dPI = 0.797884560802865355879892119869; // sqrt(2/pi)
+
+//gamma
+//ok
+export const M_LOG10_2 = 0.301029995663981195213738894724; //Math.log10(2);
+
+// gamma
+//ok
+export const DBL_MAX_EXP = Math.log2(Number.MAX_VALUE);
+
+// gamma
+//ok
+export const DBL_MIN_EXP = Math.log2(Number.MIN_VALUE);
+
+//ok
+export function R_D__1(logP: boolean): number {
+    return logP ? 0 : 1.0;
+}
+
+//ok
+export const R_D__0 = (logP: boolean): number => {
+    return logP ? -Infinity : 0.0;
+};
+//ok
+export const R_DT_0 = (lower_tail: boolean, log_p: boolean): number => {
+    return lower_tail ? R_D__0(log_p) : R_D__1(log_p);
+};
+//ok
+export const R_DT_1 = (lower_tail: boolean, log_p: boolean): number => {
+    return lower_tail ? R_D__1(log_p) : R_D__0(log_p);
+};
+
+//ok
+export function R_D_val(log_p: boolean, x: number): number {
+    return log_p ? Math.log(x) : x;
+}
+
+//ok
+export function R_D_Clog(log_p: boolean, p: number): number {
+    return log_p ? Math.log1p(-p) : (0.5 - p + 0.5); /* [log](1-p) */
+}
+
+//ok
+export function R_DT_val(lower_tail: boolean, log_p: boolean, x: number): number {
+    return lower_tail ? R_D_val(log_p, x) : R_D_Clog(log_p, x);
+}
+
+//gamma
+//ok
+export function imin2(x: number, y: number): number {
+    return Math.min(Math.trunc(x), Math.trunc(y));
+}
+
+/* Use 0.5 - p + 0.5 to perhaps gain 1 bit of accuracy */
+//ok
+export function R_D_Lval(lowerTail: boolean, p: number): number {
+    return lowerTail ? p : 1 - p; /*  p  */
+}
+
+//ok
+export function R_D_Cval(lowerTail: boolean, p: number): number {
+    return lowerTail ? 1 - p : p; /*  1 - p */
+}
+
+//ok
+export function R_P_bounds_Inf_01(lowerTail: boolean, log_p: boolean, x: number): number | undefined {
+    if (!isFinite(x)) {
+        if (x > 0) {
+            return R_DT_1(lowerTail, log_p);
+        }
+        return R_DT_0(lowerTail, log_p);
+    }
+    return undefined;
+}
+
+//ok
+export function R_D_half(log_p: boolean): number {
+    return log_p ? -M_LN2 : 0.5; // 1/2 (lower- or upper tail)
+}
+
+//ok
+export function R_P_bounds_01(
+    lower_tail: boolean,
+    log_p: boolean,
+    x: number,
+    x_min: number,
+    x_max: number,
+): number | undefined {
+    if (x <= x_min) return R_DT_0(lower_tail, log_p);
+    if (x >= x_max) return R_DT_1(lower_tail, log_p);
+    return undefined;
+}
+
+//ok
+export const R_D_exp = (log_p: boolean, x: number): number => {
+    return log_p ? x : Math.exp(x);
+};
+
+//ok
+export function R_D_nonint_check(log: boolean, x: number, printer: debug.IDebugger): number|undefined {
+    if (R_nonint(x)) {
+        printer('non-integer x = %d', x);
+        return R_D__0(log);
+    }
+    return undefined;
+}
+
+//gamma
+//bessel
+//ok
+export function fmod(x: number, y: number): number {
+    return x % y;
+}
+//ok
+export function imax2(x: number, y: number): number {
+    return Math.max(Math.trunc(x), Math.trunc(y));
+}
+
+//ok
+export function isOdd(k: number): boolean {
+    return Math.floor(k) % 2 === 1;
+}
+
+//ok
+export function R_D_negInonint(x: number): boolean {
+    return x < 0.0 || R_nonint(x);
+}
+
+//ok
+export function R_nonint(x: number): boolean {
+    return !Number.isInteger(x); //Math.abs(x - Math.round(x)) > 1e-7 * Math.max(1, Math.abs(x));
+}
+
+export function R_D_fexp(give_log: boolean, f: number, x: number): number {
+    return give_log ? -0.5 * Math.log(f) + x : Math.exp(x) / Math.sqrt(f);
+}
+
+// gamma
+//pok
+export function R_pow_di(x: number, n: number): number {
+    let pow = 1.0;
+
+    if (isNaN(x)) return x;
+    if (n !== 0) {
+        if (!isFinite(x)) return R_pow(x, n);
+        if (n < 0) {
+            n = -n;
+            x = 1 / x;
+        }
+        while (true) {
+            if (n & 1) pow *= x;
+            if ((n >>= 1)) x *= x;
+            else break;
+        }
+    }
+    return pow;
+}
+
+// gamma
+export function R_pow(x: number, y: number): number {
+    /* = x ^ y */
+
+    /* squaring is the most common of the specially handled cases so
+       check for it first. */
+    if (y === 2.0) return x * x;
+    if (x === 1 || y === 0) return 1;
+    if (x === 0) {
+        if (y > 0) return 0;
+        else if (y < 0) return Infinity;
+        else return y; /* NA or NaN, we assert */
+    }
+    if (isFinite(x) && isFinite(y)) {
+        /* There was a special case for y == 0.5 here, but
+           gcc 4.3.0 -g -O2 mis-compiled it.  Showed up with
+           100^0.5 as 3.162278, example(pbirthday) failed. */
+        return Math.pow(x, y);
+    }
+    if (isNaN(x) || isNaN(y)) return x + y;
+    if (!isFinite(x)) {
+        if (x > 0)
+            /* Inf ^ y */
+            return y < 0 ? 0 : Infinity;
+        else {
+            /* (-Inf) ^ y */
+            if (isFinite(y) && y === Math.floor(y))
+                /* (-Inf) ^ n */
+                return y < 0 ? 0 : myfmod(y, 2) ? x : -x;
+        }
+    }
+    if (!isFinite(y)) {
+        if (x >= 0) {
+            if (y > 0)
+                /* y == +Inf */
+                return x >= 1 ? Infinity : 0;
+            /* y == -Inf */ else return x < 1 ? Infinity : 0;
+        }
+    }
+    return NaN; // all other cases: (-Inf)^{+-Inf, non-int}; (neg)^{+-Inf}
+}
+
+/* C++ math header undefines any isnan macro. This file
+   doesn't get C++ headers and so is safe. */
+export function R_isnancpp(x: number): boolean {
+    return Number.isNaN(x);
+}
+
+// gamma
+export function myfmod(x1: number, x2: number): number {
+    const q = x1 / x2;
+    return x1 - Math.floor(q) * x2;
+}
+
+
+//ok
+export function ldexp(x: number, y: number): number {
+    if (Number.isNaN(x) || Number.isNaN(y)) {
+        return x + y;
+    }
+    if (!Number.isFinite(x) || !Number.isFinite(y)) {
+        return Infinity;
+    }
+    return x * Math.pow(2, y);
+}
+
+//ok
+export function R_D_log(log_p: boolean, p: number): number {
+    return log_p ? p : Math.log(p); /* log(p) */
+}
+
+//ok 
+export function R_D_qIv(logP: boolean, p: number): number {
+    return logP ? Math.exp(p) : p;
+}
+
+//ok
+export function sumfp(x: Float32Array): number {
+    return x.reduce((pv, v) => pv + v, 0);
+}
 
 

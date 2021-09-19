@@ -19,7 +19,7 @@ import { debug } from 'debug';
 import { ME, ML_ERROR } from '@common/logger';
 import { cospi } from '@trig/cospi';
 import { sinpi } from '@trig/sinpi';
-import { bessel_j_scalar } from '../besselJ';
+import { BesselJ as bessel_j_scalar } from '../besselJ';
 import { Y_bessel } from './Ybessel';
 
 const { floor } = Math;
@@ -27,7 +27,7 @@ const { isNaN: ISNAN, POSITIVE_INFINITY: ML_POSINF } = Number;
 
 const printer = debug('bessel_y');
 
-export function bessel_y_scalar(x: number, alpha: number): number {
+function bessel_y_scalar(x: number, alpha: number): number {
     //double
 
     /* NaNs propagated correctly */
@@ -66,3 +66,6 @@ export function bessel_y_scalar(x: number, alpha: number): number {
     }
     return rc.x;
 }
+
+export default bessel_y_scalar;
+export { bessel_y_scalar as BesselY };

@@ -1,45 +1,14 @@
-//helper
-import '$jest-extension';
-import { loadData } from '$test-helpers/load';
 import { resolve } from 'path';
 
-
-
-
-jest.mock('@common/logger', () => {
-    // Require the original module to not be mocked...
-    const originalModule = jest.requireActual('@common/logger');
-    const { ML_ERROR, ML_ERR_return_NAN } = originalModule;
-    let array: unknown[];
-    function pr(...args: unknown[]): void {
-        array.push([...args]);
-    }
-
-    return {
-        __esModule: true, // Use it when dealing with esModules
-        ...originalModule,
-        ML_ERROR: jest.fn((x: unknown, s: unknown) => ML_ERROR(x, s, pr)),
-        ML_ERR_return_NAN: jest.fn(() => ML_ERR_return_NAN(pr)),
-        setDestination(arr: unknown[] = []) {
-            array = arr;
-        },
-        getDestination() {
-            return array;
-        }
-    };
-});
-
-//app
-const cl = require('@common/logger');
-cl.setDestination();
-const out = cl.getDestination();
+import { loadData } from '@common/load';
+import { cl, select } from '@common/debug-select';
+const dnchisqDomainWarns = select('dnchisq')("argument out of domain in '%s'");
 
 import { dchisq } from '..';
 
-
 describe('dnchisq', function () {
     beforeEach(() => {
-        out.splice(0);//clear out
+        cl.clear('dnchisq');
     })
     it('ranges x ∊ [0, 40, step 0.5] df=13, ncp=8', async () => {
         const [x, y] = await loadData(resolve(__dirname, 'fixture-generation', 'dnchisq.R'), /\s+/, 1, 2);
@@ -58,7 +27,7 @@ describe('dnchisq', function () {
     it('x=20, df=-4 ncp=8', () => {
         const nan = dchisq(20, -4, 8);
         expect(nan).toBeNaN();
-        expect(out.length).toBe(1);
+        expect(dnchisqDomainWarns()).toHaveLength(1);
     });
     it('x=-2(<0), df=4 ncp=8', () => {
         const z = dchisq(-2, 4, 8);

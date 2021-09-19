@@ -19,11 +19,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import { debug } from 'debug';
 
 import {  ML_ERR_return_NAN } from '@common/logger';
-import { imax2, imin2, M_1_SQRT_2PI,} from '$constants';
+import { imax2, imin2, M_1_SQRT_2PI,} from '@lib/r-func';
 import { exp_rand } from '@dist/exp/sexp';
 import type { IRNGNormal } from '@rng/normal/normal-rng';
 import { fsign } from './fsign';
-import { globalNorm } from '@rng/globalRNG';
+import { globalNorm } from '@lib/rng/global-rng';
 
 const { trunc, log, abs: fabs, pow, exp, floor, sqrt } = Math;
 const { isFinite: R_FINITE } = Number;

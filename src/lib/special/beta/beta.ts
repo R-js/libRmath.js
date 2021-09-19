@@ -20,8 +20,6 @@ import { debug } from 'debug';
 import { ME, ML_ERR_return_NAN, ML_ERROR } from '@common/logger';
 import { gammaOne } from '@special/gamma';
 import { lbeta_scalar } from './lbeta';
-import type { NumArray } from '$constants';
-import { validateBetaArgs } from './helpers';
 
 // not used const xmin = -170.5674972726612;
 const xmax = 171.61447887182298;
@@ -30,7 +28,7 @@ const lnsml = -708.39641853226412;
 
 const printer_beta = debug('beta');
 
-export function beta_scalar(a: number, b: number): number {
+function beta_scalar(a: number, b: number): number {
     if (isNaN(a) || isNaN(b)) return a + b;
 
     if (a < 0 || b < 0) return ML_ERR_return_NAN(printer_beta);
@@ -61,13 +59,4 @@ export function beta_scalar(a: number, b: number): number {
     }
 }
 
-export function beta(a: NumArray, b?: NumArray): Float32Array | Float64Array {
-    const { rc, onlyA } = validateBetaArgs('lbeta(a,b)', a, b);
-    if (rc.length === 0) {
-        return rc;
-    }
-    for (let i = 0, j = 0; i < a.length; i += onlyA ? 2 : 1, j += 1) {
-        rc[j] = beta_scalar(a[i], onlyA ? a[i + 1] : (b as NumArray)[i]);
-    }
-    return rc;
-}
+export { beta_scalar as beta };

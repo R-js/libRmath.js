@@ -1,7 +1,6 @@
-import { KnuthTAOCP2002 } from '../../';
+import { KnuthTAOCP2002 } from '../..';
 import { fixtureSeed0, seedStateAfter500FetchedInit1234, seedStateAfter20FetchesInit654321 } from './fixture';
 
-import '$jest-extension';
 
 describe('rng knuth-taocp-2002', function n() {
     it('for seed=0, n=100', () => {

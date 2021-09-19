@@ -1,4 +1,3 @@
-'use strict';
 /* This is a conversion from libRmath.so to Typescript/Javascript
 Copyright (C) 2018  Jacob K.F. Bogers  info@mail.jacob-bogers.com
 
@@ -17,7 +16,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { debug } from 'debug';
 
-import { fmod } from '$constants';
+import { fmod } from '@lib/r-func';
 
 import { ME, ML_ERROR } from '@common/logger';
 

@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 // distributions
-export { qbeta} from '@dist/beta';
+export * from '@dist/beta';
 export * from '@dist/binomial';
 export * from '@dist/binomial-negative';
 export * from '@dist/cauchy';
@@ -40,7 +40,7 @@ export * from '@dist/weibull';
 export * from '@dist/wilcoxon';
 
 //rng's
-export * from '@rng/index'
+export * from '@rng/index';
 //special
 export * from '@special/bessel';
 export * from '@special/gamma';
@@ -49,6 +49,6 @@ export * from '@special/choose';
 
 
 export { chebyshev_eval, chebyshev_init } from './chebyshev';
-export { hypot, log1p as log1pR } from './alt/log';
+export { hypot, log1p as log1pR } from './alt/log/index';
 
 

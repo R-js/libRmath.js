@@ -1,22 +1,8 @@
-//helper
-import '$jest-extension';
-import '$mock-of-debug';// for the side effects
-import { loadData } from '$test-helpers/load';
+import { loadData } from '@common/load';
 import { resolve } from 'path';
 import { pf } from '..';
 
-const cl = require('debug');
-
-function select(ns: string) {
-    return function (filter: string) {
-        return function () {
-            const logs = cl.get(ns);// put it here and not in the function scope
-            if (!logs) return [];
-            return logs.filter((s: string[]) => s[0] === filter);
-        };
-    };
-}
-
+import { cl, select } from '@common/debug-select';
 const pfLogs = select('pf');
 const pfDomainWarns = pfLogs("argument out of domain in '%s'");
 
@@ -42,7 +28,7 @@ describe('pf', function () {
         const z = pf(2, 23, Infinity);
         expect(z).toEqualFloatingPointBinary(0.99700884518723809);
     });
-    it('x=2, df1=Infiniy, df2=Infinity', () => {
+    it('x=2, df1=Infinity, df2=Infinity', () => {
         const z = pf(2, Infinity, Infinity);
         expect(z).toBe(1);
     });

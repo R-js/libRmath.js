@@ -34,8 +34,8 @@ import { rnchisqOne } from '@dist/chi-2/rnchisq';
 import { rbetaOne } from './rbeta';
 
 //helper
-import { repeatedCall } from '$helper'
-import { globalNorm } from '@rng/globalRNG';
+import { repeatedCall } from '@lib/r-func';
+import { globalNorm } from '@lib/rng/global-rng';
 
 export { rbetaOne };
 

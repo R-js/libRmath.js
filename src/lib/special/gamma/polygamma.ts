@@ -135,9 +135,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 import { debug } from 'debug';
-import { DBL_MANT_DIG, DBL_MAX_EXP, DBL_MIN_EXP, imin2, M_LOG10_2, R_pow_di } from '$constants';
-import type { NumArray } from '$constants';
-import { isArray, isEmptyArray, emptyFloat64Array } from '$constants';
+import { DBL_MANT_DIG, DBL_MAX_EXP, DBL_MIN_EXP, imin2, M_LOG10_2, R_pow_di } from '@lib/r-func';
+import type { NumArray } from '@lib/r-func';
+import { isArray, isEmptyArray, emptyFloat64Array } from '@lib/r-func';
 
 const printer = debug('dpsifn');
 
@@ -154,6 +154,33 @@ const r1m4 = Number.EPSILON * 0.5;
 const wdtol = fmax2(r1m4, 0.5e-18); /* 1.11e-16 */
 
 const lrg = 1 / (2 * DBL_EPSILON);
+
+const bvalues = new Float64Array([
+    /* Bernoulli Numbers */
+    1.0,
+    -5.0e-1,
+    1.66666666666666667e-1,
+    -3.33333333333333333e-2,
+    2.38095238095238095e-2,
+    -3.33333333333333333e-2,
+    7.57575757575757576e-2,
+    -2.53113553113553114e-1,
+    1.16666666666666667,
+    -7.09215686274509804,
+    5.49711779448621554e1,
+    -5.29124242424242424e2,
+    6.1921231884057971e3,
+    -8.65802531135531136e4,
+    1.42551716666666667e6,
+    -2.7298231067816092e7,
+    6.01580873900642368e8,
+    -1.51163157670921569e10,
+    4.29614643061166667e11,
+    -1.37116552050883328e13,
+    4.88332318973593167e14,
+    -1.92965793419400681e16,
+]);
+
 /* From R, currently only used for kode = 1, m = 1 : */
 function dpsifn(
     x: number,
@@ -164,31 +191,7 @@ function dpsifn(
     nz: Uint8Array,
     ierr: Uint8Array,
 ): void {
-    const bvalues = [
-        /* Bernoulli Numbers */
-        1.0,
-        -5.0e-1,
-        1.66666666666666667e-1,
-        -3.33333333333333333e-2,
-        2.38095238095238095e-2,
-        -3.33333333333333333e-2,
-        7.57575757575757576e-2,
-        -2.53113553113553114e-1,
-        1.16666666666666667,
-        -7.09215686274509804,
-        5.49711779448621554e1,
-        -5.29124242424242424e2,
-        6.1921231884057971e3,
-        -8.65802531135531136e4,
-        1.42551716666666667e6,
-        -2.7298231067816092e7,
-        6.01580873900642368e8,
-        -1.51163157670921569e10,
-        4.29614643061166667e11,
-        -1.37116552050883328e13,
-        4.88332318973593167e14,
-        -1.92965793419400681e16,
-    ];
+   
     //  ints
     let nx: number;
     let xinc = 0 as number;

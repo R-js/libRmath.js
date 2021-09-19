@@ -16,10 +16,10 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { IRNG, MessageType } from '../../irng';
-import { MersenneTwister } from '../../mersenne-twister';
-import { IRNGNormal } from '../normal-rng';
-import { IRNGNormalTypeEnum } from '../in01-type';
+import { IRNG, MessageType } from '@rng/irng';
+import { MersenneTwister } from '@rng/mersenne-twister';
+import { IRNGNormal } from '@rng/normal/normal-rng';
+import { IRNGNormalTypeEnum } from '@rng/normal/in01-type';
 
 const { exp, log, sqrt, max: fmax2, min: fmin2, abs: fabs } = Math;
 

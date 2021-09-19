@@ -16,7 +16,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { debug } from 'debug';
 import { ML_ERR_return_NAN } from '@common/logger';
-import { R_P_bounds_Inf_01 } from '$constants';
+import { R_P_bounds_Inf_01 } from '@lib/r-func';
 
 export function Rf_log1pexp(x: number): number {
     if (x <= 18) return Math.log1p(Math.exp(x));
@@ -28,16 +28,13 @@ export function Rf_log1pexp(x: number): number {
 const printer_plogis = debug('plogis');
 
 export function plogis(x: number, location = 0, scale = 1, lower_tail = true, log_p = false): number {
-    if (isNaN(x) || isNaN(location) || isNaN(scale)) return x + location + scale;
+    if (isNaN(x) || isNaN(location) || isNaN(scale)) return NaN;
 
     if (scale <= 0.0) {
         return ML_ERR_return_NAN(printer_plogis);
     }
 
     x = (x - location) / scale;
-    if (isNaN(x)) {
-        return ML_ERR_return_NAN(printer_plogis);
-    }
     const rc = R_P_bounds_Inf_01(lower_tail, log_p, x);
     if (rc !== undefined) {
         return rc;

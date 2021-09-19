@@ -15,7 +15,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { imin2 } from '$constants';
+import { imin2 } from '@lib/r-func';
 
 export function csignrank(k: number, n: number, u: number, c: number, w: Float32Array): number {
     if (k < 0 || k > u) return 0;
