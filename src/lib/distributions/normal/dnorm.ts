@@ -30,7 +30,9 @@ import {
     R_D__0
 } from '@lib/r-func';
 
-const printer = debug('dnorm4');
+const printer = debug('dnorm');
+
+const PRECISION_LIMIT = Math.sqrt(-2 * M_LN2 * (DBL_MIN_EXP + 1 - DBL_MANT_DIG));
 
 export function dnorm4(x: number, mu = 0, sigma = 1, give_log = false): number {
     if (isNaN(x) || isNaN(mu) || isNaN(sigma)) {
@@ -52,12 +54,15 @@ export function dnorm4(x: number, mu = 0, sigma = 1, give_log = false): number {
         /* sigma == 0 */
         return x === mu ? Infinity : R_D__0(give_log);
     }
+
     x = (x - mu) / sigma;
 
     if (!isFinite(x)) return R_D__0(give_log);
 
     x = Math.abs(x);
-    if (x >= 2 * Math.sqrt(Number.MAX_VALUE)) return R_D__0(give_log);
+    if (x >= 2 * Math.sqrt(Number.MAX_VALUE)) {
+        return R_D__0(give_log);
+    }
     if (give_log) {
         return -(M_LN_SQRT_2PI + 0.5 * x * x + Math.log(sigma));
     }
@@ -81,7 +86,7 @@ export function dnorm4(x: number, mu = 0, sigma = 1, give_log = false): number {
      *              =IEEE=  38.58601
      * [on one x86_64 platform, effective boundary a bit lower: 38.56804]
      */
-    if (x > Math.sqrt(-2 * M_LN2 * (DBL_MIN_EXP + 1 - DBL_MANT_DIG))) {
+    if (x > PRECISION_LIMIT) {
         return 0;
     }
 

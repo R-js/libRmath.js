@@ -8,16 +8,13 @@ import { globalUni, RNGKind } from '@lib/rng/global-rng';
 import { IRNGTypeEnum } from '@rng/irng-type';
 import { rgamma } from '..';
 
-
 const rgammaLogs = select('rgammaOne');
 const rgammaDomainWarns = rgammaLogs("argument out of domain in '%s'");
-//const bounderiesWarns = select('R_Q_P01_boundaries')("argument out of domain in '%s'");
 
 describe('rgamma', function () {
     describe('invalid input', () => {
         beforeEach(() => {
             cl.clear('rgammaOne');
-            cl.clear('R_Q_P01_boundaries');
         });
         it('n=-1(<0)', () => {
             expect(() => rgamma(-1, 1.6)).toThrow();

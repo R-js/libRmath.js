@@ -7,7 +7,7 @@ import { rhyper, useWasmBackends, clearBackends } from '..';
 
 const rhyperDomainWarns = select('rhyper')("argument out of domain in '%s'");
 
-describe.skip('rhyper', function () {
+describe('rhyper', function () {
     describe('invalid input', () => {
         beforeEach(() => {
             cl.clear('rhyper');
@@ -54,7 +54,7 @@ describe.skip('rhyper', function () {
                 undefined,   //rng
             );
             expect(z3).toEqualFloatingPointBinary(1073761537);
-            //jkf do here tomorrow
+            
             globalUni().init(1234); // important!
             const z4 = rhyper(
                 1, //N

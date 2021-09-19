@@ -10,7 +10,16 @@ const collectCoverageFrom = [
     'src/lib/distributions/gamma/*.ts',
     'src/lib/distributions/geometric/*.ts',
     'src/lib/distributions/hypergeometric/*.ts',
-    'src/lib/distributions/logis/*.ts'
+    'src/lib/distributions/logis/*.ts',
+    'src/lib/distributions/normal/*.ts',
+    'src/lib/r-func.ts',
+    'src/lib/index.ts',
+    'src/lib/trigonometry/*.ts',
+    'src/lib/stirling/index.ts',
+    'src/lib/special/**/*.ts',
+    'src/lib/rng/**.ts',
+    'src/packages/common/logger.ts'
+
     //'src/lib/distributions/poisson/*.ts'*/
 ];
 
@@ -102,6 +111,12 @@ const logisTest =[
   '/distributions/logis/__test__/rlogis.test.ts$',
 ]
 
+const normalTest = [
+    '/distributions/normal/__test__/dnorm.test.ts$',
+    '/distributions/normal/__test__/pnorm.test.ts$',
+    '/distributions/normal/__test__/qnorm.test.ts$',
+]
+
 const testRegex = [
     ...betaTest,
     ...binomTest,
@@ -109,11 +124,12 @@ const testRegex = [
     ...cauchyTest,
     ...chisqTest,
     ...expTest,
-    /*...pfTest,
+    ...pfTest,
     ...gammaDistributionTest,
     ...geoMetricTest,
     ...hyperGeometricTest,
     ...logisTest,
+    ...normalTest,
     
     // poisson
     //'/distributions/poisson/__test__/dpois.test.ts$',
@@ -138,7 +154,6 @@ const testRegex = [
     
 */
 ];
-
 
 module.exports = {
     automock: false,
@@ -185,3 +200,5 @@ module.exports = {
         '<rootDir>/src/packages/__test__/mock-of-debug.ts'
     ],
 };
+
+

@@ -21,7 +21,7 @@ const p01bounderies = select('R_Q_P01_boundaries')("argument out of domain in '%
  * return descrete quantile
  */
 
-describe.skip('qhyper(p,m,n,k,log)', function () {
+describe('qhyper(p,m,n,k,log)', function () {
     describe('invalid input', () => {
         beforeEach(() => {
             cl.clear('qhyper');

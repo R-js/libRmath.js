@@ -12,6 +12,7 @@ describe('qgeom', function () {
     describe('invalid input', () => {
         beforeEach(() => {
             cl.clear('qgeom');
+            cl.clear('R_Q_P01_check');
         });
         it('p=NaN, prop=0.2', () => {
             const nan = qgeom(NaN, 0.2);
