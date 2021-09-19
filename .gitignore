@@ -20,7 +20,7 @@ npm-debug.log*
 !/.nycrc
 !/.travis.yml
 !/.codecov.yml
-!.eslintrc.js
+!.eslintrc.cjs
 !.prettierrc.js
 
 *.pdf
