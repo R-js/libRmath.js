@@ -1,1 +1,0 @@
-{"version":3,"file":"index.d.ts","sourceRoot":"","sources":["../../../../src/lib/special/gamma/index.ts"],"names":[],"mappings":"AAiBA,OAAO,EAAE,OAAO,IAAI,KAAK,EAAE,QAAQ,IAAI,QAAQ,EAAE,mBAAmB;AACpE,OAAO,EAAE,OAAO,EAAE,UAAU,EAAE,QAAQ,EAAE,UAAU,EAAE,QAAQ,EAAE,oBAAoB;AAClF,OAAO,EAAE,aAAa,IAAI,SAAS,EAAE,QAAQ,IAAI,MAAM,EAAE,wBAAwB;AACjF,YAAY,EAAE,QAAQ,EAAE,qBAAoB"}

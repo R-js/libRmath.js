@@ -1,1 +1,0 @@
-{"version":3,"file":"dnbinom.d.ts","sourceRoot":"","sources":["../../../../src/lib/distributions/binomial-negative/dnbinom.ts"],"names":[],"mappings":"AAgCA,wBAAgB,OAAO,CAAC,CAAC,EAAE,MAAM,EAAE,IAAI,EAAE,MAAM,EAAE,IAAI,EAAE,MAAM,EAAE,QAAQ,EAAE,OAAO,GAAG,MAAM,CA8BxF;AAID,wBAAgB,UAAU,CAAC,CAAC,EAAE,MAAM,EAAE,IAAI,EAAE,MAAM,EAAE,EAAE,EAAE,MAAM,EAAE,QAAQ,EAAE,OAAO,GAAG,MAAM,CA6DzF"}

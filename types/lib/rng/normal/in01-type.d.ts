@@ -1,8 +1,0 @@
-export declare enum IRNGNormalTypeEnum {
-    AHRENS_DIETER = "AHRENS_DIETER",
-    BOX_MULLER = "BOX_MULLER",
-    BUGGY_KINDERMAN_RAMAGE = "BUGGY_KINDERMAN_RAMAGE",
-    INVERSION = "INVERSION",
-    KINDERMAN_RAMAGE = "KINDERMAN_RAMAGE"
-}
-//# sourceMappingURL=in01-type.d.ts.map
