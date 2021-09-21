@@ -35,4 +35,4 @@ export { IRNGNormal } from './normal/normal-rng';
 export { IRNGTypeEnum } from './irng-type';
 export { IRNGNormalTypeEnum } from './normal/in01-type';
 // globalRNG
-export * from './global-rng';
+export { globalUni, globalNorm, RNGKind } from './global-rng';

@@ -17,7 +17,7 @@ const collectCoverageFrom = [
     'src/lib/trigonometry/*.ts',
     'src/lib/stirling/index.ts',
     'src/lib/special/**/*.ts',
-    'src/lib/rng/**.ts',
+    'src/lib/rng/**/*.ts',
     'src/packages/common/logger.ts'
 
     //'src/lib/distributions/poisson/*.ts'*/
@@ -109,13 +109,32 @@ const logisTest =[
   '/distributions/logis/__test__/plogis.test.ts$',
   '/distributions/logis/__test__/qlogis.test.ts$',
   '/distributions/logis/__test__/rlogis.test.ts$',
-]
+];
 
 const normalTest = [
     '/distributions/normal/__test__/dnorm.test.ts$',
     '/distributions/normal/__test__/pnorm.test.ts$',
     '/distributions/normal/__test__/qnorm.test.ts$',
-]
+    '/distributions/normal/__test__/rnorm.test.ts$',
+];
+
+const uniformRNG = [
+    '/rng/knuth-taocp/__test__/(.*?\\.)?test.ts$',
+    '/rng/knuth-taocp-2002/__test__/(.*?\\.)?test.ts$',
+    '/rng/lecuyer-cmrg/__test__/(.*?\\.)?test.ts$',
+    '/rng/marsaglia-multicarry/__test__/(.*?\\.)?test.ts$',
+    '/rng/mersenne-twister/__test__/(.*?\\.)?test.ts$',
+    '/rng/wichmann-hill/__test__/(.*?\\.)?test.ts$',
+    '/rng/super-duper/__test__/(.*?\\.)?test.ts$'
+];
+
+const normalRNG = [
+    '/rng/normal/ahrens-dieter/__test__/(.*?\\.)?test.ts$',
+    '/rng/normal/box-muller/__test__/(.*?\\.)?test.ts$',
+    '/rng/normal/buggy-kinderman-ramage/__test__/(.*?\\.)?test.ts$',
+    '/rng/normal/inversion/__test__/(.*?\\.)?test.ts$',
+    '/rng/normal/kinderman-ramage/__test__/(.*?\\.)?test.ts$',
+];
 
 const testRegex = [
     ...betaTest,
@@ -130,6 +149,8 @@ const testRegex = [
     ...hyperGeometricTest,
     ...logisTest,
     ...normalTest,
+    ...uniformRNG,
+    ...normalRNG
     
     // poisson
     //'/distributions/poisson/__test__/dpois.test.ts$',
@@ -139,19 +160,6 @@ const testRegex = [
     /*'/special/bessel/besselJ/__test__/(.*?\\.)?test.ts$',
     '/special/gamma/__test__/(.*?\\.)?test.ts$',
     '/special/beta/__test__/(.*?\\.)?test.ts$',
-    '/rng/knuth-taocp/__test__/(.*?\\.)?test.ts$',
-    '/rng/knuth-taocp-2002/__test__/(.*?\\.)?test.ts$',
-    '/rng/lecuyer-cmrg/__test__/(.*?\\.)?test.ts$',
-    '/rng/marsaglia-multicarry/__test__/(.*?\\.)?test.ts$',*/
-    // '/rng/mersenne-twister/__test__/(.*?\\.)?test.ts$',
-    /* '/rng/wichmann-hill/__test__/(.*?\\.)?test.ts$',
-     '/rng/normal/ahrens-dieter/__test__/(.*?\\.)?test.ts$',
-     '/rng/normal/box-muller/__test__/(.*?\\.)?test.ts$',
-     '/rng/normal/buggy-kinderman-ramage/__test__/(.*?\\.)?test.ts$',
-     '/rng/normal/inversion/__test__/(.*?\\.)?test.ts$',
-     '/rng/normal/kinderman-ramage/__test__/(.*?\\.)?test.ts$',
-     '/rng/super-duper/__test__/(.*?\\.)?test.ts$',
-    
 */
 ];
 
@@ -162,8 +170,8 @@ module.exports = {
     collectCoverageFrom,
     coveragePathIgnorePatterns: ['node_modules', 'test', 'doc.ts'],
     coverageDirectory: 'coverage',
-    //coverageProvider: 'babel', //"v8" is still experimental, but use "v8" for walk through debugging
-    coverageProvider: 'v8', //"v8" is still experimental, but use "v8" for walk through debugging
+    coverageProvider: 'babel', //"v8" is still experimental, but use "v8" for walk through debugging
+    //coverageProvider: 'v8', //"v8" is still experimental, but use "v8" for walk through debugging
     coverageReporters: ['json', 'lcov', 'text', 'clover'],
     preset: 'ts-jest',
     testEnvironment: 'node',
