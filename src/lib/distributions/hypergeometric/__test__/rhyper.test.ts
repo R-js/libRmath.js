@@ -1,3 +1,5 @@
+import { loadData } from '@common/load';
+import { resolve } from 'path';
 import { cl, select } from '@common/debug-select';
 
 import { IRNGNormalTypeEnum } from '@rng/normal/in01-type';
@@ -123,21 +125,21 @@ describe('rhyper', function () {
             expect(result2).toEqualFloatingPointBinary(150);
         });
         it('solution III:  III : H2PE Algorithm', () => {
-            /*r_i[i_m] =
-            (
-                (r_i[i_k] + 1)
-                * (r_i[i_n1] + 1)
-                / (r_d[d_N] + 2)
-            );*/
-
-            //r_i[i_minjx] = Math.max(0, r_i[i_k] - r_i[i_n2]);
-            //r_i[i_m] - r_i[i_minjx] < 10
             const result = rhyper(50, 100, 200, 199);
             expect(result).toEqualFloatingPointBinary([
                 66, 67, 64, 67, 69, 70, 65, 72, 68, 79, 60, 68, 65, 64, 62, 67, 65,
                 72, 68, 69, 64, 70, 71, 70, 69, 58, 77, 76, 70, 70, 72, 64, 69, 64,
                 67, 69, 65, 72, 70, 67, 63, 53, 59, 67, 70, 71, 66, 68, 64, 69
             ]);
+        });
+        it('solution(2) III:  III : H2PE Algorithm', async () => {
+            const [expected] = await loadData(
+                resolve(__dirname, 'fixture-generation', 'rhyper.R'),
+                /\s+/,
+                1
+            );
+            const actual = rhyper(50, 1900, 2000, 599);
+            expect(actual).toEqualFloatingPointBinary(expected);
         });
     });
 });

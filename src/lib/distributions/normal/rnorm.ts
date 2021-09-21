@@ -24,7 +24,7 @@ import { globalNorm } from '@lib/rng/global-rng';
 
 const printer = debug('rnorm');
 
-export function rnormOne(mu: number, sigma: number, rng: IRNGNormal = globalNorm()): number {
+export function rnormOne(mu = 0, sigma = 1, rng: IRNGNormal = globalNorm()): number {
     if (isNaN(mu) || !isFinite(sigma) || sigma < 0) {
         return ML_ERR_return_NAN(printer);
     }

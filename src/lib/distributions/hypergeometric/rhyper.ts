@@ -47,33 +47,6 @@ const con = 57.5646273248511421;
 const deltal = 0.0078;
 const deltau = 0.0034;
 
-const rd = new Float64Array(23);
-// section 1
-const d_e = 0;
-const d_g = 1;
-const d_r = 2;
-const d_t = 3;
-const d_y = 4;
-// section 2
-const d_de = 5;
-const d_dg = 6;
-const d_dr = 7;
-const d_ds = 8;
-const d_dt = 9;
-const d_gl = 10;
-const d_gu = 11;
-const d_nk = 12;
-const d_nm = 13;
-const d_ub = 14;
-// section 3
-const d_xk = 15;
-const d_xm = 16;
-const d_xn = 17;
-const d_y1 = 18;
-const d_ym = 19;
-const d_yn = 20;
-const d_yk = 21;
-const d_alv = 22;
 
 // afc(i) :=  ln( i! )	[logarithm of the factorial i]
 // js is singlethreaded so can put the i outside
@@ -146,14 +119,13 @@ function L_finis(): number {
     if (r_i[i_kk] + r_i[i_kk] >= r_d[d_N]) {
         if (r_i[i_nn1] > r_i[i_nn2]) {
             r_i[i_ix] = r_i[i_kk] - r_i[i_nn2] + r_i[i_ix];
-        } 
-        else
-        {
+        }
+        else {
             r_i[i_ix] = r_i[i_nn1] - r_i[i_ix];
         }
     }
     else if (r_i[i_nn1] > r_i[i_nn2]) {
-            r_i[i_ix] = r_i[i_kk] - r_i[i_ix];
+        r_i[i_ix] = r_i[i_kk] - r_i[i_ix];
     }
     return r_i[i_ix];
 }
@@ -319,14 +291,14 @@ export function rhyperOne(nn1in: number, nn2in: number, kkin: number, rng: IRNG)
         let v = 0;
 
         if (setup1 || setup2) {
-            const val = 
+            const val =
                 (r_d[d_N] - r_i[i_k])
-                *r_i[i_k]
-                *r_i[i_n1]
-                *r_i[i_n2]
-                /(r_d[d_N] - 1)
-                /r_d[d_N]
-                /r_d[d_N];
+                * r_i[i_k]
+                * r_i[i_n1]
+                * r_i[i_n2]
+                / (r_d[d_N] - 1)
+                / r_d[d_N]
+                / r_d[d_N];
 
             r_d[d_s] = Math.sqrt(val);
 
@@ -341,28 +313,28 @@ export function rhyperOne(nn1in: number, nn2in: number, kkin: number, rng: IRNG)
 
             r_d[d_kl] = Math.exp(
                 r_d[d_a]
-                -afc(r_d[d_xl])
-                -afc(r_i[i_n1] - r_d[d_xl])
-                -afc(r_i[i_k] - r_d[d_xl])
-                -afc(r_i[i_n2] - r_i[i_k] + r_d[d_xl])
+                - afc(r_d[d_xl])
+                - afc(r_i[i_n1] - r_d[d_xl])
+                - afc(r_i[i_k] - r_d[d_xl])
+                - afc(r_i[i_n2] - r_i[i_k] + r_d[d_xl])
             );
             r_d[d_kr] = Math.exp(
                 r_d[d_a]
-                -afc(r_d[d_xr] - 1)
-                -afc(r_i[i_n1] - r_d[d_xr] + 1)
-                -afc(r_i[i_k] - r_d[d_xr] + 1)
-                -afc(r_i[i_n2] - r_i[i_k] + r_d[d_xr] - 1)
+                - afc(r_d[d_xr] - 1)
+                - afc(r_i[i_n1] - r_d[d_xr] + 1)
+                - afc(r_i[i_k] - r_d[d_xr] + 1)
+                - afc(r_i[i_n2] - r_i[i_k] + r_d[d_xr] - 1)
             );
-            
+
             r_d[d_lamdl] = -Math.log(
                 r_d[d_xl]
                 * (r_i[i_n2] - r_i[i_k] + r_d[d_xl])
                 /
                 (r_i[i_n1] - r_d[d_xl] + 1)
                 /
-                (r_i[i_k] - r_d[d_xl] + 1)    
+                (r_i[i_k] - r_d[d_xl] + 1)
             );
-            
+
             r_d[d_lamdr] = -Math.log(
                 (r_i[i_n1] - r_d[d_xr] + 1)
                 * (r_i[i_k] - r_d[d_xr] + 1)
@@ -461,91 +433,102 @@ export function rhyperOne(nn1in: number, nn2in: number, kkin: number, rng: IRNG)
                 }
             }
             else {
-                rd.fill(0); // clear everything
+
+                // 11: e,dg,dr,ds,dt,dt,gl,gu,nk,nm,ub
+                // 8 :xk, xm, xn, y1, ym, yn, yk, alv
+                // 5+11+8=24
+                let e = 0, g = 0, r = 0, t = 0, y = 0;
+                let de = 0, dg = 0, dr = 0, ds = 0, dt = 0, gl = 0, gu = 0, nk = 0, nm = 0, ub = 0;
+                let xk = 0, xm = 0, xn = 0, y1 = 0, ym = 0, yn = 0, yk = 0, alv = 0;
 
                 printer_rhyper(" ... accept/reject 'large' case v=%d", v);
 
                 /* squeeze using upper and lower bounds */
-                rd[d_y] = r_i[i_ix];
-                rd[d_y1] = rd[d_y] + 1;
-                rd[d_ym] = rd[d_y] - r_i[i_m];
-                rd[d_yn] = r_i[i_n1] - rd[d_y] + 1;
-                rd[d_yk] = r_i[i_k] - rd[d_y] + 1;
-                rd[d_nk] = r_i[i_n2] - r_i[i_k] + rd[d_y1];
-                rd[d_r] = -rd[d_ym] / rd[d_y1];
-                rd[d_s] = rd[d_ym] / rd[d_yn];
-                rd[d_t] = rd[d_ym] / rd[d_yk];
-                rd[d_e] = -rd[d_ym] / rd[d_nk];
-                rd[d_g] = rd[d_yn] * rd[d_yk] / (rd[d_y1] * rd[d_nk]) - 1;
-                rd[d_dg] = 1;
-                if (rd[d_g] < 0) {
-                    rd[d_dg] = 1 + rd[d_g];
+                y = r_i[i_ix];
+                y1 = y + 1.0;
+                ym = y - r_i[i_m];
+                yn = r_i[i_n1] - y + 1.0;
+                yk = r_i[i_k] - y + 1.0;
+                nk = r_i[i_n2] - r_i[i_k] + y1;
+                r = -ym / y1;
+                r_d[d_s] = ym / yn;
+                t = ym / yk;
+                e = -ym / nk;
+                g = yn * yk / (y1 * nk) - 1.0;
+                dg = 1.0;
+                if (g < 0) {
+                    dg = 1 + g;
                 }
-                rd[d_gu] =
-                    rd[d_g] * (1 + rd[d_g] * (-0.5 + rd[d_g] / 3.0));
+                gu = g * (1 + g * (-0.5 + g / 3.0));
 
-                rd[d_gl] = rd[d_gu]
-                    - (0.25 * (rd[d_g] * rd[d_g] * rd[d_g] * rd[d_g])) / rd[d_dg];
-                rd[d_xm] = r_i[i_m] + 0.5;
-                rd[d_xn] = r_i[i_n1] - r_i[i_m] + 0.5;
-                rd[d_xk] = r_i[i_k] - r_i[i_m] + 0.5;
-                rd[d_nm] = r_i[i_n2] - r_i[i_k] + rd[d_xm];
+                gl = gu
+                    - (0.25 * (g * g * g * g)) / dg;
+                xm = r_i[i_m] + 0.5;
+                xn = r_i[i_n1] - r_i[i_m] + 0.5;
+                xk = r_i[i_k] - r_i[i_m] + 0.5;
+                nm = r_i[i_n2] - r_i[i_k] + xm;
 
-                rd[d_ub] =
-                    rd[d_y] * rd[d_gu]
-                    - r_i[i_m] * rd[d_gl]
+                ub =
+                    y * gu
+                    - r_i[i_m] * gl
                     + deltau
-                    + rd[d_xm] * rd[d_r] * (1 + rd[d_r] * (-0.5 + rd[d_r] / 3.0))
-                    + rd[d_xn] * rd[d_s] * (1 + rd[d_s] * (-0.5 + rd[d_s] / 3.0))
-                    + rd[d_xk] * rd[d_t] * (1 + rd[d_t] * (-0.5 + rd[d_t] / 3.0))
-                    + rd[d_nm] * rd[d_e] * (1 + rd[d_e] * (-0.5 + rd[d_e] / 3.0));
+                    + xm * r * (1. + r * (-0.5 + r / 3.0))
+                    + xn * r_d[d_s] * (1. + r_d[d_s] * (-0.5 + r_d[d_s] / 3.0))
+                    + xk * t * (1. + t * (-0.5 + t / 3.0))
+                    + nm * e * (1. + e * (-0.5 + e / 3.0));
                 /* test against upper bound */
-                rd[d_alv] = Math.log(v);
-                if (rd[d_alv] > rd[d_ub]) {
+                alv = Math.log(v);
+                if (alv > ub) {
                     reject = true;
                 }
-                else {
+                else
+                {
                     /* test against lower bound */
-                    rd[d_dr] = rd[d_xm] * rd[d_r] * rd[d_r] * rd[d_r] * rd[d_r];
-                    if (rd[d_r] < 0) {
-                        rd[d_dr] /= (1.0 + rd[d_r]);
+                    dr = xm * (r * r * r * r);
+                    if (r < 0.0) {
+                        dr /= (1.0 + r);
                     }
-                    rd[d_ds] = rd[d_xn] * rd[d_s] * rd[d_s] * rd[d_s] * rd[d_s];
-                    if (rd[d_s] < 0) {
-                        rd[d_ds] /= (1.0 + rd[d_s]);
+                    ds = xn * (r_d[d_s]* r_d[d_s]* r_d[d_s]* r_d[d_s]);
+                    if (r_d[d_s]< 0.0) {
+                        ds /= (1.0 + r_d[d_s]);
                     }
-                    rd[d_dt] = rd[d_xk] * rd[d_t] * rd[d_t] * rd[d_t] * rd[d_t];
-                    if (rd[d_t] < 0) {
-                        rd[d_dt] /= (1.0 + rd[d_t]);
+                    dt = xk * (t * t * t * t);
+                    if (t < 0.0) {
+                        dt /= (1.0 + t);
                     }
-                    rd[d_de] = rd[d_nm] * rd[d_e] * rd[d_e] * rd[d_e] * rd[d_e];
-                    if (rd[d_e] < 0) {
-                        rd[d_de] /= (1 + rd[d_e]);
+                    de = nm * (e * e * e * e);
+                    if (e < 0.0) {
+                        de /= (1.0 + e);
                     }
-                    if (rd[d_alv] <
-                        rd[d_ub]
-                        - 0.25 * (rd[d_dr] + rd[d_ds] + rd[d_dt] + rd[d_de])
-                        + (rd[d_y] + r_i[i_m]) * (rd[d_gl] - rd[d_gu])
+                    if (alv <
+                        ub
+                        - 0.25 * (dr + ds + dt + de)
+                        + (y + r_i[i_m]) * (gl - gu)
                         - deltal
-                    ) {
+                        )
+                    {
                         reject = false;
                     }
-                    else {
+                    else 
+                    {
                         /** Stirling's formula to machine accuracy
                          */
-                        if (rd[d_alv]
+                         if (
+                            alv
                             <=
                             (
-                                rd[d_a]
+                                r_d[d_a]
                                 - afc(r_i[i_ix])
                                 - afc(r_i[i_n1] - r_i[i_ix])
                                 - afc(r_i[i_k] - r_i[i_ix])
                                 - afc(r_i[i_n2] - r_i[i_k] + r_i[i_ix])
+                                )
                             )
-                        ) {
+                        {
                             reject = false;
                         }
-                        else {
+                        else
+                        {
                             reject = true;
                         }
                     }

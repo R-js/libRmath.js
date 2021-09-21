@@ -1,7 +1,7 @@
 import { BuggyKindermanRamage } from '@rng/normal/buggy-kinderman-ramage';
 import { IRNGNormalTypeEnum } from '@rng/normal/in01-type';
 import { testData } from './fixture';
-import flushSample from './_1000flushSample';
+import { _1000Samples } from './_1000flushSample';
 
 const { rnorm10, runif1, rnorm4, runif1_2, rnorm2, rnorm2AfterResetSeedTo0 } = testData;
 
@@ -52,6 +52,6 @@ describe('rng buggy kinderman-ramage', function () {
         expect(bkm.name).toBe('Buggy-Kinderman-Ramage');
         expect(bkm.kind).toBe(IRNGNormalTypeEnum.BUGGY_KINDERMAN_RAMAGE);
         bkm.uniform_rng.init(1234);
-        expect(bkm.randoms(1e3)).toEqualFloatingPointBinary(flushSample, 22, false, false);
+        expect(bkm.randoms(1e3)).toEqualFloatingPointBinary(_1000Samples, 22, false, false);
     });
 });

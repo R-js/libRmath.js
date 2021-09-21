@@ -16,14 +16,13 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-const { trunc } = Math;
-const frac = (x: number) => x - trunc(x);
 
 import { fixup } from '@rng/fixup';
 import { IRNG } from '@rng/irng';
 import { IRNGTypeEnum } from '@rng/irng-type';
 import { seed } from '@rng/timeseed';
 import { seedCheck } from '@rng/seedcheck';
+import { frac } from '@lib/r-func';
 
 export const SEED_LEN = 3;
 

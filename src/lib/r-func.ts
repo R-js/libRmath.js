@@ -200,20 +200,6 @@ export function isArray(x: unknown): boolean {
     return Array.isArray(x) || x instanceof Float32Array || x instanceof Float64Array;
 }
 
-//beta
-//ok
-export function matchFloatType(n: number, ...a: (NumArray | undefined)[]): Float32Array | Float64Array {
-    let fp32 = true;
-    for (let i = 0; i < a.length; i++) {
-        if (a[i] === undefined) continue; // skip undefined
-        if (!(a[i] instanceof Float32Array)) {
-            fp32 = false;
-            break;
-        }
-    }
-    return fp32 ? new Float32Array(n) : new Float64Array(n);
-}
-
 //ok
 export function isEmptyArray(x: NumArray): boolean {
     return isArray(x) && x.length === 0;
@@ -224,6 +210,10 @@ export const M_SQRT2 = 1.41421356237309504880168872421; /* sqrt(2) */
 
 //ok
 export function frac(x: number): number { return x - Math.trunc(x) }
+
+const { trunc, PI, round } = Math;
+
+export { trunc, PI, round };
 
 //ok
 export const M_SQRT_32 = 5.656854249492380195206754896838; /* sqrt(32) */
@@ -251,9 +241,9 @@ export const M_2PI = 6.283185307179586476925286766559;
 export const M_LN_2PI = 1.837877066409345483560659472811;
 
 //ok
-export const M_1_PI = 1.0 / Math.PI;
+export const M_1_PI = 1.0 / PI;
 //ok
-export const M_PI_2 = Math.PI / 2;
+export const M_PI_2 = PI / 2;
 
 //ok
 export const M_LN_SQRT_PI = 0.57236494292470008; // log(sqrt(pi))

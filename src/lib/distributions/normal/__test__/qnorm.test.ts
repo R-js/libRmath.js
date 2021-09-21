@@ -74,26 +74,11 @@ describe('qnorm', function () {
             const result = x.map(_x => qnorm(_x, 0, 1, true, false));
             expect(result).toEqualFloatingPointBinary(y);
         });  
-        /*it('-10 < z < 10, mhu=0, sd=1, lower=F, aslog=F', async ()=>{
-            const [x, y] = await loadData(resolve(__dirname, 'fixture-generation', 'pnorm2.R'), /\s+/, 1, 2);
-            const result = x.map(_x => pnorm(_x, 0, 1, false, false));
-            expect(result).toEqualFloatingPointBinary(y, 45);
+        it('p is very close to zero or 1, p=1-EPSILON and p = EPSILON mhu=0, sd=1, lower=F, aslog=F', async ()=>{
+            const d1 = qnorm(1-Number.EPSILON, 0,1);
+            expect(d1).toEqualFloatingPointBinary(8.125890664701906);
+            const d2 = qnorm(Number.EPSILON, 0,1);
+            expect(d2).toEqualFloatingPointBinary(-8.125890664701906);
         });  
-        it('-10 < z < 10, mhu=0, sd=1, lower=T, aslog=T', async ()=>{
-            const [x, y] = await loadData(resolve(__dirname, 'fixture-generation', 'pnorm3.R'), /\s+/, 1, 2);
-            const result = x.map(_x => pnorm(_x, 0, 1, true, true));
-            expect(result).toEqualFloatingPointBinary(y, 45);
-        });  
-        it('-10 < z < 10, mhu=0, sd=1, lower=F, aslog=T', async ()=>{
-            const [x, y] = await loadData(resolve(__dirname, 'fixture-generation', 'pnorm4.R'), /\s+/, 1, 2);
-            const result = x.map(_x => pnorm(_x, 0, 1, false, true));
-            expect(result).toEqualFloatingPointBinary(y, 42);
-        });  
-        
-        /*it('z < -5 and z > 5', async ()=>{
-            const [x, y] = await loadData(resolve(__dirname, 'fixture-generation', 'pnorm2.R'), /\s+/, 1, 2);
-            const result = x.map(_x => pnorm(_x));
-            expect(result).toEqualFloatingPointBinary(y, );
-        });*/
     });
 });

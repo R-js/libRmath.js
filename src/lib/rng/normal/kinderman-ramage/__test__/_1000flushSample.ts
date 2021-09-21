@@ -255,4 +255,4 @@ const _1000Samples = raw
     .split(/\s+/)
     .filter((f) => !!f)
     .map(parseFloat);
-export { _1000Samples as default };
+export { _1000Samples };

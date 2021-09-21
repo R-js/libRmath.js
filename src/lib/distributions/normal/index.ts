@@ -23,6 +23,6 @@ import { repeatedCall64 } from '@lib/r-func';
 
 import type { IRNGNormal } from '@rng/normal/normal-rng';
 
-export function rnorm(n=1, mu=0, sigma=1, rng?:IRNGNormal): Float64Array {
+export function rnorm(n: number, mu?: number, sigma?: number, rng?:IRNGNormal): Float64Array {
     return repeatedCall64(n, rnormOne, mu, sigma, rng);
 }

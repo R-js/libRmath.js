@@ -21,7 +21,7 @@ export enum MessageType {
     INIT = '@@INIT@@',
 }
 
-export class IRNG implements IRandom {
+export abstract class IRNG implements IRandom {
     protected _name: string;
     protected _kind: IRNGTypeEnum;
     private notify: Map<MessageType, ((...args: unknown[]) => void)[]>;
@@ -91,12 +91,12 @@ export class IRNG implements IRandom {
         }
     }
 
-    public get seed(): Uint32Array | Int32Array {
-        throw new Error(`override property getter 'seed' in ${this.constructor.name}`)
-    }
-    public set seed(_seed: Uint32Array | Int32Array) {
+    public abstract  get seed(): Uint32Array | Int32Array; /* {
+        throw new (`override property getter 'seed' in ${this.constructor.name}`)
+    }*/
+    public abstract set seed(_seed: Uint32Array | Int32Array); /* {
         throw new Error(`override property setter 'seed' in ${this.constructor.name}`)
-    }
+    }*/
 
     public init(seed: number): void {
         this.emit(MessageType.INIT, seed);

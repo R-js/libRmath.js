@@ -1,15 +1,6 @@
 
 export {};
 
-/*declare global {
-    // eslint-disable-next-line @typescript-eslint/no-namespace
-    namespace jest {
-        interface Matchers<R> {
-            toEqualFloatingPointBinary(expected: unknown, mantissa?: number, cycle?: boolean, hf?: boolean): R;
-        }
-    }
-}*/
-
 type NumberTypes = 'Float32Array' | 'Float64Array' | 'number' | 'number[]';
 
 type ObjectTypes =
