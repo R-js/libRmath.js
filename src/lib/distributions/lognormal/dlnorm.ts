@@ -19,9 +19,10 @@ import { ML_ERR_return_NAN  } from '@common/logger';
 import { M_1_SQRT_2PI, M_LN_SQRT_2PI, R_D__0 } from '@lib/r-func';
 const printer = debug('dlnorm');
 
-export function dlnorm(fx: number, meanlog: number, sdlog: number, give_log: boolean): number {
+
+export function dlnorm(fx: number, meanlog = 0, sdlog = 1, give_log = false): number {
     if (isNaN(fx) || isNaN(meanlog) || isNaN(sdlog)) {
-        return fx + meanlog + sdlog;
+        return fx + meanlog + sdlog; // preserve NaN metatdata bits
     }
     if (sdlog <= 0) {
         if (sdlog < 0) {
@@ -33,9 +34,11 @@ export function dlnorm(fx: number, meanlog: number, sdlog: number, give_log: boo
     if (fx <= 0) {
         return R_D__0(give_log);
     }
+    // Z- transform
     const y = (Math.log(fx) - meanlog) / sdlog;
     return give_log
         ? -(M_LN_SQRT_2PI + 0.5 * y * y + Math.log(fx * sdlog))
         : (M_1_SQRT_2PI * Math.exp(-0.5 * y * y)) / (fx * sdlog);
-    /* M_1_SQRT_2PI = 1 / sqrt(2 * pi) */
+    // M_1_SQRT_2PI = 1 / sqrt( 2*pi )
+    // M_LN_SQRT_2PI = log( sqrt( 2*pi ) )
 }
