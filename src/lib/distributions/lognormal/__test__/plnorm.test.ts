@@ -13,7 +13,7 @@ describe('plnorm', () => {
         beforeEach(() => {
             cl.clear('plnorm');
         });
-        it('x=NaN | meanLog=NaN | sdLog=NaN, giveLog=false', () => {
+        it('x=NaN | meanLog=NaN | sdLog=NaN', () => {
             const nan1 = plnorm(NaN);
             expect(nan1).toBe(NaN);
             const nan2 = plnorm(1, NaN);
