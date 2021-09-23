@@ -21,7 +21,9 @@ import { qnorm } from '@dist/normal/qnorm';
 export function qlnorm(p: number, meanlog = 0, sdlog = 1, lower_tail = true, log_p = false): number {
     if (isNaN(p) || isNaN(meanlog) || isNaN(sdlog)) return p + meanlog + sdlog;
 
-    R_Q_P01_boundaries(lower_tail, log_p, p, 0, Infinity);
-
+    const rc = R_Q_P01_boundaries(lower_tail, log_p, p, 0, Infinity);
+    if (rc !== undefined) {
+        return rc;
+    }
     return Math.exp(qnorm(p, meanlog, sdlog, lower_tail, log_p));
 }

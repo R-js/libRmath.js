@@ -1,4 +1,3 @@
-
 const collectCoverageFrom = [
     'src/lib/distributions/beta/*.ts',
     'src/lib/distributions/binomial/*.ts',
@@ -11,6 +10,8 @@ const collectCoverageFrom = [
     'src/lib/distributions/geometric/*.ts',
     'src/lib/distributions/hypergeometric/*.ts',
     'src/lib/distributions/logis/*.ts',
+    'src/lib/distributions/lognormal/*.ts',
+    'src/lib/distributions/multinom/*.ts',
     'src/lib/distributions/normal/*.ts',
     'src/lib/r-func.ts',
     'src/lib/index.ts',
@@ -19,7 +20,6 @@ const collectCoverageFrom = [
     'src/lib/special/**/*.ts',
     'src/lib/rng/**/*.ts',
     'src/packages/common/logger.ts'
-
     //'src/lib/distributions/poisson/*.ts'*/
 ];
 
@@ -72,7 +72,7 @@ const expTest = [
     '/distributions/exp/__test__/rexp.test.ts$'
 ];
 
-const pfTest =[
+const pfTest = [
     '/distributions/f-distro/__test__/df.test.ts$',
     '/distributions/f-distro/__test__/dnf.test.ts$',
     '/distributions/f-distro/__test__/pf.test.ts$',
@@ -83,11 +83,11 @@ const pfTest =[
     '/distributions/f-distro/__test__/rnf.test.ts$',
 ];
 
-const gammaDistributionTest =[
-     '/distributions/gamma/__test__/dgamma.test.ts$',
-     '/distributions/gamma/__test__/pgamma.test.ts$',
-     '/distributions/gamma/__test__/qgamma.test.ts$',
-     '/distributions/gamma/__test__/rgamma.test.ts$'
+const gammaDistributionTest = [
+    '/distributions/gamma/__test__/dgamma.test.ts$',
+    '/distributions/gamma/__test__/pgamma.test.ts$',
+    '/distributions/gamma/__test__/qgamma.test.ts$',
+    '/distributions/gamma/__test__/rgamma.test.ts$'
 ];
 
 const geoMetricTest = [
@@ -104,11 +104,23 @@ const hyperGeometricTest = [
     '/distributions/hypergeometric/__test__/rhyper.test.ts$'
 ];
 
-const logisTest =[
-  '/distributions/logis/__test__/dlogis.test.ts$',
-  '/distributions/logis/__test__/plogis.test.ts$',
-  '/distributions/logis/__test__/qlogis.test.ts$',
-  '/distributions/logis/__test__/rlogis.test.ts$',
+const logisTest = [
+    '/distributions/logis/__test__/dlogis.test.ts$',
+    '/distributions/logis/__test__/plogis.test.ts$',
+    '/distributions/logis/__test__/qlogis.test.ts$',
+    '/distributions/logis/__test__/rlogis.test.ts$',
+];
+
+const lognormalTest = [
+    '/distributions/lognormal/__test__/dlnorm.test.ts$',
+    '/distributions/lognormal/__test__/plnorm.test.ts$',
+    '/distributions/lognormal/__test__/qlnorm.test.ts$',
+    '/distributions/lognormal/__test__/rlnorm.test.ts$'
+];
+
+const multinomTest = [
+    '/distributions/multinom/__test__/dmultinom.test.ts$',
+    '/distributions/multinom/__test__/rmultinom.test.ts$',
 ];
 
 const normalTest = [
@@ -136,6 +148,7 @@ const normalRNG = [
     '/rng/normal/kinderman-ramage/__test__/(.*?\\.)?test.ts$',
 ];
 
+
 const testRegex = [
     ...betaTest,
     ...binomTest,
@@ -148,10 +161,13 @@ const testRegex = [
     ...geoMetricTest,
     ...hyperGeometricTest,
     ...logisTest,
+    ...lognormalTest,
+    ...multinomTest,
     ...normalTest,
+    //
     ...uniformRNG,
     ...normalRNG
-    
+
     // poisson
     //'/distributions/poisson/__test__/dpois.test.ts$',
 
