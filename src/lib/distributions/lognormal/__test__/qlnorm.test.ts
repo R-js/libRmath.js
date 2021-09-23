@@ -11,7 +11,7 @@ const warnings = bounderies("argument out of domain in '%s'");
 describe('qlnorm', () => {
     describe('invalid input', () => {
         beforeEach(() => {
-            cl.clear('R_Q_P01_boundaries')
+            cl.clear('R_Q_P01_boundaries');
         });
         it('p=NaN | meanLog=NaN | sdLog=NaN', () => {
             const nan1 = qlnorm(NaN);

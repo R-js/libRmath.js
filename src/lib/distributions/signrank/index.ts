@@ -23,6 +23,6 @@ import { rsignrankOne } from './rsign';
 import { repeatedCall } from '@lib/r-func';
 import { globalUni } from '@lib/rng/global-rng';
 
-export function rsignrank(N: number, n: number, rng:IRNG=globalUni()): Float32Array {
+export function rsignrank(N: number, n: number, rng:IRNG = globalUni()): Float32Array {
    return repeatedCall(N, rsignrankOne,  n, rng);
 }
