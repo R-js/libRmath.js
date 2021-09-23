@@ -6,7 +6,7 @@ import { dlnorm } from '..';
 
 const dlnormLogs = select('dlnorm');
 const dlnormDomainWarns = dlnormLogs("argument out of domain in '%s'");
-dlnormDomainWarns;
+
 describe('dlnorm', () => {
     describe('invalid input', () => {
         beforeEach(() => {
