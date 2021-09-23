@@ -15,78 +15,64 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { debug } from 'debug';
-
 import { rbinomOne } from '@dist/binomial/rbinom';
-import { IRNG } from '@rng/irng';
 import { globalUni } from '@lib/rng/global-rng';
-import { emptyFloat32Array } from '@lib/r-func';
-import { checks } from './helper';
-
-const printer_rmultinom = debug('rmultinom');
+import { emptyFloat64Array, sumfp64 } from '@lib/r-func';
 
 
-export function rmultinom(n: number, size: number, prob: Float32Array, rng = globalUni()): Float32Array {
+export function rmultinom(n: number, size: number, prob: Float64Array, rng = globalUni()): Float64Array | never {
     // returns matrix n x prob
-    const sum = checks(prob, size, n, printer_rmultinom);
-    if (!sum) {
-        return emptyFloat32Array;
+    if (n < 0) {
+        throw new Error('invalid first argument "n"');
     }
-    const data = new Float32Array(n * prob.length);
-    for (let i = 0; i < n; i++) {
-        const offset = i * prob.length;
-        rmultinomOne(data, offset, size, prob, sum, rng);
+    if (size < 0) {
+        throw new Error('invalid second argument "size"');
     }
-    return data;
-}
+    if (prob.length === 0) {
+        throw new Error('no positive probabilities');
+    }
+    if (prob.every(_p => _p >= 0) === false
+    ) {
+        throw new Error('negative probability');
+    }
 
-//workhorse
-export function rmultinomOne(
-    data: Float32Array,
-    offset: number,
-    size: number,
-    prob: Float32Array,
-    sum: number,
-    rng: IRNG
-): void {
-    /* `Return' vector  rN[1:K] {K := length(prob)}
-     *  where rN[j] ~ Bin(n, prob[j]) ,  sum_j rN[j] == n,  sum_j prob[j] == 1,
-     */
-    const K = prob.length;
-    /* Generate the first K-1 obs. via binomials */
-    // context vars for the next loop
-    let _size = size;
-    let p_tot = sum;
-    printer_rmultinom('%o', { prob, p_tot, _size, K });
-    for (let k = 0; k < K - 1; k++) {
-        //can happen, protect against devide by zero
-        if (Math.abs(p_tot) < Number.EPSILON) {
-            data[offset + k] = _size;
-            _size = 0;
-            p_tot = 0;
-            continue;
-        }
-        const pp = prob[k] / p_tot;
+    const s = sumfp64(prob);
+    if (s === 0) {
+        throw new Error('no positive probabilities');
+    }
 
-        if (pp === 0) {
-            data[offset + k] = 0;
+    if (n === 0) {
+        return emptyFloat64Array;
+    }
+    if (size === 0) {
+        // fill it out with all zeros
+        const rc = new Float64Array(n);
+        rc.fill(0);
+        return rc;
+    }
+    // allocate matrix
+    const rc = new Float64Array(n * prob.length);
+    let K = size;
+    let pTotal = s;
+    for (let i = 0; i < n*prob.length; i++) {
+        const i2 = i % prob.length;
+        if (i2 === 0) {
+            K = size;
+            pTotal = s;
+        }
+        if (prob[i2] === 0) {
             continue;
         }
-        // nothing left, rest will be zero
-        if (_size === 0) {
-            data[offset + k] = 0;
-            continue;
-        }
-        if (pp === 1) {
-            data[offset + k] = _size;
+        if (prob[i2] === pTotal){
+            rc[i] = K;
         }
         else {
-            data[offset + k] = rbinomOne(_size, pp, rng);
+            const pp = prob[i2] / pTotal;
+            rc[i] = rbinomOne(K, pp, rng);
         }
-        _size -= data[offset + k];
-        //adjust probabilities
-        p_tot -= prob[k];
-        printer_rmultinom('%o', { p_tot, _size, k });
+        // adjust, because it is sampling without replacement
+        K -= rc[i];
+        pTotal -= prob[i2];
     }
-    data[offset + K - 1] = _size; //left over
+    return rc;
 }

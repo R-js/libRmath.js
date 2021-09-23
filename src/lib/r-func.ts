@@ -498,4 +498,8 @@ export function sumfp(x: Float32Array): number {
     return x.reduce((pv, v) => pv + v, 0);
 }
 
+export function sumfp64(x: Float64Array): number {
+    return x.reduce((pv, v) => pv + v, 0);
+}
+
 
