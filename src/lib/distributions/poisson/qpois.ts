@@ -28,8 +28,7 @@ import { qnorm } from '@dist/normal/qnorm';
 
 import { R_DT_qIv } from '@dist/exp/expm1';
 
-const { max: fmax2, sqrt, floor, round: nearbyint } = Math;
-const { isNaN: ISNAN, EPSILON: DBL_EPSILON, POSITIVE_INFINITY: ML_POSINF, isFinite: R_FINITE } = Number;
+import { max as fmax2, sqrt, floor, round as nearbyint, isNaN as ISNAN, DBL_EPSILON, isFinite as R_FINITE } from '@lib/r-func';
 
 function do_search(y: number, z: NumberW, p: number, lambda: number, incr: number): number {
     if (z.val >= p) {
@@ -68,7 +67,7 @@ export function qpois(
     if (lambda < 0) return ML_ERR_return_NAN(printer_qpois);
     if (lambda === 0) return 0;
 
-    const rc = R_Q_P01_boundaries(lower_tail, log_p, p, 0, ML_POSINF);
+    const rc = R_Q_P01_boundaries(lower_tail, log_p, p, 0, Infinity);
     if (rc !== undefined) {
         return rc;
     }
@@ -83,10 +82,10 @@ export function qpois(
     if (!lower_tail || log_p) {
         p = R_DT_qIv(lower_tail, log_p, p); /* need check again (cancellation!): */
         if (p === 0) return 0;
-        if (p === 1) return ML_POSINF;
+        if (p === 1) return Infinity;
     }
     /* temporary hack --- FIXME --- */
-    if (p + 1.01 * DBL_EPSILON >= 1) return ML_POSINF;
+    if (p + 1.01 * DBL_EPSILON >= 1) return Infinity;
 
     /* y := approx.value (Cornish-Fisher expansion) :  */
     z.val = qnorm(p, 0, 1, /*lower_tail*/ true, /*log_p*/ false);

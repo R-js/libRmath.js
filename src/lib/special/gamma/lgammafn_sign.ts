@@ -31,13 +31,13 @@ import { lgammacor } from './lgammacor';
 import { _gammafn } from './gamma_fn';
 import type { NumArray } from '@lib/r-func';
 
-const { isNaN: ISNAN, POSITIVE_INFINITY: ML_POSINF } = Number;
-const { log, abs: fabs, floor, trunc } = Math;
+import {  trunc, floor, abs as fabs, isNaN as ISNAN, log } from '@lib/r-func';
 
 const printer_sign = debug('lgammafn_sign');
 
 const xmax = 2.5327372760800758e305;
 const dxrel = 1.490116119384765625e-8;
+const ML_POSINF = Infinity;
 
 export function lgammafn(x: NumArray|number): Float64Array | Float32Array {
     if (typeof x === 'number') {
@@ -139,7 +139,7 @@ export function lgammafn_sign(x: number, sgn?: Int8Array): number {
 
     const ans = M_LN_SQRT_PId2 + (x - 0.5) * log(y) - x - log(sinpiy) - lgammacor(y);
 
-    if (fabs(((x - Math.trunc(x - 0.5)) * ans) / x) < dxrel) {
+    if (fabs(((x - trunc(x - 0.5)) * ans) / x) < dxrel) {
         // The answer is less than half precision because
         // the argument is too near a negative integer.
 

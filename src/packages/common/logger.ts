@@ -37,7 +37,7 @@ export function ML_ERROR(x: ME, s: unknown, printer: (...args: unknown[]) => voi
 
 export function ML_ERR_return_NAN(printer: debug.IDebugger): number {
     ML_ERROR(ME.ME_DOMAIN, '', printer);
-    return Number.NaN;
+    return NaN;
 }
 
 export function R_Q_P01_boundaries(

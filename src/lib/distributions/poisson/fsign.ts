@@ -17,9 +17,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 // needed by rpois
+
+import { abs} from '@lib/r-func';
+
 export function fsign(x: number, signal: boolean) : number{
     if (isNaN(x)) return x;
-    return signal ? Math.abs(x) : -Math.abs(x); 
+    return signal ? abs(x) : -abs(x); 
 }
 
 
