@@ -1,49 +1,47 @@
-import { loadData } from '@common/load';
-import { resolve } from 'path';
+//import { loadData } from '@common/load';
+//import { resolve } from 'path';
 
-import { cl, select } from '@common/debug-select';
-import { dpois } from '..';
-import { dpois_raw } from '../dpois';
+//import { cl /*, select*/ } from '@common/debug-select';
+import { ppois } from '..';
 
-import { DBL_MIN, MAX_SAFE_INTEGER, trunc } from '@lib/r-func';
+//import { DBL_MIN, MAX_SAFE_INTEGER, trunc } from '@lib/r-func';
 
-const dpoisLogs = select('dpois');
-const dpoisDomainWarns = dpoisLogs("argument out of domain in '%s'");
-const dpoisNonInt = dpoisLogs('non-integer x = %d');
+//const dpoisLogs = select('ppois');
+//const dpoisDomainWarns = dpoisLogs("argument out of domain in '%s'");
 
-describe('dpois', function () {
-    beforeEach(() => {
+describe('ppois', function () {
+    /*beforeEach(() => {
         cl.clear('dpois');
-    })
+    })*/
     describe('invalid input and edge cases', () => {
         it('x and lambda are NaN', () => {
-            const nan1 = dpois(NaN, 2);
+            const nan1 = ppois(NaN, 2);
             expect(nan1).toBeNaN();
-            const nan2 = dpois(0.1, NaN);
+            const nan2 = ppois(0.1, NaN);
             expect(nan2).toBeNaN();
         });
-        it('lamnda < 0', () => {
-            const nan1 = dpois(0.5, -1);
+        xit('lambda < 0', () => {
+            const nan1 = ppois(0.5, -1);
             expect(nan1).toBeNaN();
-            expect(dpoisDomainWarns()).toHaveLength(1);
+            //expect(dpoisDomainWarns()).toHaveLength(1);
         });
-        it('x is non integer', () => {
-            const zero = dpois(0.5, 1);
+        xit('x is non integer', () => {
+            const zero = ppois(0.5, 1);
             expect(zero).toBe(0);
-            expect(dpoisNonInt()).toHaveLength(1);
+            //expect(dpoisNonInt()).toHaveLength(1);
         });
-        it('x < 0 or x is Infinite', () => {
-            const zero1 = dpois(-2, 1);
+        xit('x < 0 or x is Infinite', () => {
+            const zero1 = ppois(-2, 1);
             expect(zero1).toBe(0);
-            const zero2 = dpois(Infinity, 1);
+            const zero2 = ppois(Infinity, 1);
             expect(zero2).toBe(0);
         });
         it('x = 1 lambda = Infinite', () => {
-            const zero1 = dpois(1, Infinity);
+            const zero1 = ppois(1, Infinity);
             expect(zero1).toBe(0);
         });
     });
-    describe('fidelity', () => {
+    /*describe('fidelity', () => {
         it('x > 0 lambda = 0', async () => {
             const [x, y] = await loadData(resolve(__dirname, 'fixture-generation', 'dpois1.R'), /\s+/, 1, 2);
             const result = x.map(_x => dpois(_x, 0));
@@ -85,5 +83,5 @@ describe('dpois', function () {
             expect(ans2).toBe(0);
         });
         it.todo('any reasonable value of "lambda < x * DBL_MIN" slaps result to zero investigate');
-    });
+    });*/
 });

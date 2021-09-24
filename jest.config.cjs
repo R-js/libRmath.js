@@ -13,6 +13,7 @@ const collectCoverageFrom = [
     'src/lib/distributions/lognormal/*.ts',
     'src/lib/distributions/multinom/*.ts',
     'src/lib/distributions/normal/*.ts',
+    'src/lib/distributions/poisson/*.ts',
     'src/lib/r-func.ts',
     'src/lib/index.ts',
     'src/lib/trigonometry/*.ts',
@@ -130,6 +131,12 @@ const normalTest = [
     '/distributions/normal/__test__/rnorm.test.ts$',
 ];
 
+const poissonTest = [
+    '/distributions/poisson/__test__/dpois.test.ts$',
+    '/distributions/poisson/__test__/ppois.test.ts$',
+];
+
+
 const uniformRNG = [
     '/rng/knuth-taocp/__test__/(.*?\\.)?test.ts$',
     '/rng/knuth-taocp-2002/__test__/(.*?\\.)?test.ts$',
@@ -164,14 +171,10 @@ const testRegex = [
     ...lognormalTest,
     ...multinomTest,
     ...normalTest,
+    ...poissonTest,
     //
     ...uniformRNG,
     ...normalRNG
-
-    // poisson
-    //'/distributions/poisson/__test__/dpois.test.ts$',
-
-    // 
 
     /*'/special/bessel/besselJ/__test__/(.*?\\.)?test.ts$',
     '/special/gamma/__test__/(.*?\\.)?test.ts$',
