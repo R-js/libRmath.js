@@ -18,15 +18,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import { debug } from 'debug';
 
-import {  ML_ERR_return_NAN } from '@common/logger';
-import { imax2, imin2, M_1_SQRT_2PI,} from '@lib/r-func';
+import { ML_ERR_return_NAN } from '@common/logger';
+
+import { imax2, imin2, M_1_SQRT_2PI, trunc, log, abs, pow, exp, floor, sqrt, isFinite } from '@lib/r-func';
+import { fsign } from './fsign';
+
 import { exp_rand } from '@dist/exp/sexp';
 import type { IRNGNormal } from '@rng/normal/normal-rng';
-import { fsign } from './fsign';
 import { globalNorm } from '@lib/rng/global-rng';
-
-const { trunc, log, abs: fabs, pow, exp, floor, sqrt } = Math;
-const { isFinite: R_FINITE } = Number;
 
 const a0 = -0.5;
 const a1 = 0.3333333;
@@ -43,12 +42,12 @@ const one_24 = 0.0416666666666666667;
 
 const printer_rpois = debug('rpois');
 
+/* Factorial Table (0:9)! */
+const fact = [1, 1, 2, 6, 24, 120, 720, 5040, 40320, 362880];
 
 export function rpoisOne(mu: number, rng: IRNGNormal = globalNorm()): number {
-    /* Factorial Table (0:9)! */
-    const fact = [1, 1, 2, 6, 24, 120, 720, 5040, 40320, 362880];
 
-    /* These are static --- persistent between calls for same mu : */
+    /* In Original C code these are static (why? perf improvement?) --- persistent between calls for same mu : */
     let l = 0;
     let m = 0;
     const pp = new Float32Array(36);
@@ -66,8 +65,7 @@ export function rpoisOne(mu: number, rng: IRNGNormal = globalNorm()): number {
     let d = 0;
     let omega = 0;
     let big_l = 0; /* integer "w/o overflow" */
-    let muprev = 0;
-    let muprev2 = 0; /*, muold	 = 0.*/
+  
 
     /* Local Vars  [initialize some for -Wall]: */
     let del;
@@ -86,76 +84,67 @@ export function rpoisOne(mu: number, rng: IRNGNormal = globalNorm()): number {
     let pois = -1;
     let k;
     let kflag = 0;
-    //let big_mu;
-    let new_big_mu = false;
-
-    if (!R_FINITE(mu) || mu < 0) {
+    
+    if (!isFinite(mu) || mu < 0) {
         return ML_ERR_return_NAN(printer_rpois);
     }
-    if (mu <= 0) return 0;
+    if (mu === 0) return 0;
 
     const big_mu = mu >= 10;
+   
     if (big_mu) {
-        new_big_mu = false;
-    }
+        /* Case A. (recalculation of s,d,l	because mu has changed):
+         * The poisson probabilities pk exceed the discrete normal
+         * probabilities fk whenever k >= m(mu).
+         */
+        //muprev = mu;
+        s = sqrt(mu);
+        d = 6 * mu * mu;
+        big_l = floor(mu - 1.1484);
+        /* = an upper bound to m(mu) for all mu >= 10.*/
+    } else {
+        /* Small mu ( < 10) -- not using normal approx. */
 
-    if (!(big_mu && mu === muprev)) {
-        /* maybe compute new persistent par.s */
+        /* Case B. (start new table and calculate p0 if necessary) */
 
-        if (big_mu) {
-            new_big_mu = true;
-            /* Case A. (recalculation of s,d,l	because mu has changed):
-             * The poisson probabilities pk exceed the discrete normal
-             * probabilities fk whenever k >= m(mu).
-             */
-            muprev = mu;
-            s = sqrt(mu);
-            d = 6 * mu * mu;
-            big_l = floor(mu - 1.1484);
-            /* = an upper bound to m(mu) for all mu >= 10.*/
-        } else {
-            /* Small mu ( < 10) -- not using normal approx. */
+        /*muprev = 0.;-* such that next time, mu != muprev ..*/
+        //if (mu !== muprev) {
+        //muprev = mu;
+        m = imax2(1, trunc(mu));
+        l = 0; /* pp[] is already ok up to pp[l] */
+        q = p0 = p = exp(-mu);
+        //}
 
-            /* Case B. (start new table and calculate p0 if necessary) */
+        while (true) {
+            /* Step U. uniform sample for inversion method */
+            u = rng.uniform_rng.random();
+            if (u <= p0) return 0;
 
-            /*muprev = 0.;-* such that next time, mu != muprev ..*/
-            if (mu !== muprev) {
-                muprev = mu;
-                m = imax2(1, trunc(mu));
-                l = 0; /* pp[] is already ok up to pp[l] */
-                q = p0 = p = exp(-mu);
+            /* Step T. table comparison until the end pp[l] of the
+               pp-table of cumulative poisson probabilities
+               (0.458 > ~= pp[9](= 0.45792971447) for mu=10 ) */
+            if (l !== 0) {
+                for (k = u <= 0.458 ? 1 : imin2(l, m); k <= l; k++) if (u <= pp[k]) return k;
+                if (l === 35)
+                    /* u > pp[35] */
+                    continue;
             }
-
-            while (true) {
-                /* Step U. uniform sample for inversion method */
-                u = rng.uniform_rng.random();
-                if (u <= p0) return 0;
-
-                /* Step T. table comparison until the end pp[l] of the
-                   pp-table of cumulative poisson probabilities
-                   (0.458 > ~= pp[9](= 0.45792971447) for mu=10 ) */
-                if (l !== 0) {
-                    for (k = u <= 0.458 ? 1 : imin2(l, m); k <= l; k++) if (u <= pp[k]) return k;
-                    if (l === 35)
-                        /* u > pp[35] */
-                        continue;
+            /* Step C. creation of new poisson
+               probabilities p[l..] and their cumulatives q =: pp[k] */
+            l++;
+            for (k = l; k <= 35; k++) {
+                p *= mu / k;
+                q += p;
+                pp[k] = q;
+                if (u <= q) {
+                    l = k;
+                    return k;
                 }
-                /* Step C. creation of new poisson
-                   probabilities p[l..] and their cumulatives q =: pp[k] */
-                l++;
-                for (k = l; k <= 35; k++) {
-                    p *= mu / k;
-                    q += p;
-                    pp[k] = q;
-                    if (u <= q) {
-                        l = k;
-                        return k;
-                    }
-                }
-                l = 35;
-            } /* end(repeat) */
-        } /* mu < 10 */
-    } /* end {initialize persistent vars} */
+            }
+            l = 35;
+        } /* end(repeat) */
+    } /* mu < 10 */
+    //} /* end {initialize persistent vars} */
 
     /* Only if mu >= 10 : ----------------------- */
 
@@ -176,11 +165,7 @@ export function rpoisOne(mu: number, rng: IRNGNormal = globalNorm()): number {
     /* Step P. preparations for steps Q and H.
        (recalculations of parameters if necessary) */
 
-    if (new_big_mu || mu !== muprev2) {
-        /* Careful! muprev2 is not always == muprev
-           because one might have exited in step I or S
-           */
-        muprev2 = mu;
+    if (big_mu) {
         omega = M_1_SQRT_2PI / s;
         /* The quantities b1, b2, c3, c2, c1, c0 are for the Hermite
          * approximations to the discrete normal probabilities fk. */
@@ -238,7 +223,7 @@ export function rpoisOne(mu: number, rng: IRNGNormal = globalNorm()): number {
                 del = one_12 / fk;
                 del = del * (1 - 4.8 * del * del);
                 v = difmuk / fk;
-                if (fabs(v) <= 0.25)
+                if (abs(v) <= 0.25)
                     px =
                         fk * v * v * (((((((a7 * v + a6) * v + a5) * v + a4) * v + a3) * v + a2) * v + a1) * v + a0) -
                         del;
@@ -251,7 +236,7 @@ export function rpoisOne(mu: number, rng: IRNGNormal = globalNorm()): number {
             fy = omega * (((c3 * x + c2) * x + c1) * x + c0);
             if (kflag > 0) {
                 /* Step H. Hat acceptance (E is repeated on rejection) */
-                if (c * fabs(u) <= py * exp(px + E) - fy * exp(fx + E)) {
+                if (c * abs(u) <= py * exp(px + E) - fy * exp(fx + E)) {
                     break;
                 }
             } else if (fy - u * fy <= py * exp(px - fx)) {

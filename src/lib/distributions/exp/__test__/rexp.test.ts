@@ -7,13 +7,12 @@ import { cl, select } from '@common/debug-select';
 
 const rexpLogs = select('rexp');
 const rexpDomainWarns = rexpLogs("argument out of domain in '%s'");
-rexpDomainWarns;
-
 
 describe('rexp', function () {
     beforeEach(() => {
-        RNGKind(IRNGTypeEnum.MERSENNE_TWISTER, IRNGNormalTypeEnum.INVERSION);
         cl.clear('rexp');
+        
+        RNGKind(IRNGTypeEnum.MERSENNE_TWISTER, IRNGNormalTypeEnum.INVERSION);
         globalUni().init(123456);
     })
 
