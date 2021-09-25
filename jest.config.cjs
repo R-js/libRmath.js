@@ -21,7 +21,6 @@ const collectCoverageFrom = [
     'src/lib/special/**/*.ts',
     'src/lib/rng/**/*.ts',
     'src/packages/common/logger.ts'
-    //'src/lib/distributions/poisson/*.ts'*/
 ];
 
 const betaTest = [
@@ -134,6 +133,7 @@ const normalTest = [
 const poissonTest = [
     '/distributions/poisson/__test__/dpois.test.ts$',
     '/distributions/poisson/__test__/ppois.test.ts$',
+    '/distributions/poisson/__test__/qpois.test.ts$',
 ];
 
 
