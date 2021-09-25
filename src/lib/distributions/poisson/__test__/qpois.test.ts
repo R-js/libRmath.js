@@ -6,8 +6,8 @@ import { qpois } from '..';
 import { EPSILON, log } from '@lib/r-func';
 
 
-const ppoisLogs = select('qpois');
-const ppoisDomainWarns = ppoisLogs("argument out of domain in '%s'");
+const qpoisLogs = select('qpois');
+const qpoisDomainWarns = qpoisLogs("argument out of domain in '%s'");
 
 describe('qpois', function () {
     beforeEach(() => {
@@ -23,12 +23,12 @@ describe('qpois', function () {
         it('lambda = Infinite', () => {
             const nan1 = qpois(0.5, Infinity);
             expect(nan1).toBeNaN();
-            expect(ppoisDomainWarns()).toHaveLength(1);
+            expect(qpoisDomainWarns()).toHaveLength(1);
         });
         it('lambda < 0', () => {
             const nan1 = qpois(0.5, -1);
             expect(nan1).toBeNaN();
-            expect(ppoisDomainWarns()).toHaveLength(1);
+            expect(qpoisDomainWarns()).toHaveLength(1);
         });
         it('lambda = 0', () => {
             const zero1 = qpois(0.5, 0);

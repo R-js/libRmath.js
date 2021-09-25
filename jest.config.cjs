@@ -134,6 +134,7 @@ const poissonTest = [
     '/distributions/poisson/__test__/dpois.test.ts$',
     '/distributions/poisson/__test__/ppois.test.ts$',
     '/distributions/poisson/__test__/qpois.test.ts$',
+    '/distributions/poisson/__test__/rpois.test.ts$',
 ];
 
 
