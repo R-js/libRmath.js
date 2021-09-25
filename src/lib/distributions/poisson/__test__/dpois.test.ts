@@ -76,7 +76,6 @@ describe('dpois', function () {
                 )
             );
             expect(ans1).toBe(0);
-
             const ans2 = dpois_raw(
                 Infinity, // x
                 DBL_MIN * (MAX_SAFE_INTEGER - 1), // lambda

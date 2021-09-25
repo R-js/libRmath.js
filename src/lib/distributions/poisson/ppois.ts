@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { ML_ERR_return_NAN, } from '@common/logger';
-import { R_DT_0, R_DT_1, isFinite as R_FINITE, floor } from '@lib/r-func';
+import { R_DT_0, R_DT_1, isFinite , floor } from '@lib/r-func';
 
 import { debug } from 'debug';
 import { pgamma } from '@dist/gamma/pgamma';
@@ -44,7 +44,7 @@ export function ppois(
     {
         return R_DT_1(lowerTail, logP);
     }
-    if (!R_FINITE(x))
+    if (!isFinite(x))
     {
         return R_DT_1(lowerTail, logP);
     }

@@ -1,18 +1,16 @@
-//import { loadData } from '@common/load';
-//import { resolve } from 'path';
+import { loadData } from '@common/load';
+import { resolve } from 'path';
 
-//import { cl /*, select*/ } from '@common/debug-select';
+import { cl , select } from '@common/debug-select';
 import { ppois } from '..';
 
-//import { DBL_MIN, MAX_SAFE_INTEGER, trunc } from '@lib/r-func';
-
-//const dpoisLogs = select('ppois');
-//const dpoisDomainWarns = dpoisLogs("argument out of domain in '%s'");
+const ppoisLogs = select('ppois');
+const ppoisDomainWarns = ppoisLogs("argument out of domain in '%s'");
 
 describe('ppois', function () {
-    /*beforeEach(() => {
-        cl.clear('dpois');
-    })*/
+    beforeEach(() => {
+        cl.clear('ppois');
+    });
     describe('invalid input and edge cases', () => {
         it('x and lambda are NaN', () => {
             const nan1 = ppois(NaN, 2);
@@ -20,68 +18,45 @@ describe('ppois', function () {
             const nan2 = ppois(0.1, NaN);
             expect(nan2).toBeNaN();
         });
-        xit('lambda < 0', () => {
+        it('lambda < 0', () => {
             const nan1 = ppois(0.5, -1);
             expect(nan1).toBeNaN();
-            //expect(dpoisDomainWarns()).toHaveLength(1);
+            expect(ppoisDomainWarns()).toHaveLength(1);
         });
-        xit('x is non integer', () => {
-            const zero = ppois(0.5, 1);
-            expect(zero).toBe(0);
-            //expect(dpoisNonInt()).toHaveLength(1);
-        });
-        xit('x < 0 or x is Infinite', () => {
-            const zero1 = ppois(-2, 1);
+        it('x < 0', () => {
+            const zero1 = ppois(-0.5, 1);
             expect(zero1).toBe(0);
-            const zero2 = ppois(Infinity, 1);
+            const zero2 = ppois(-0.5, 1, true, true);
+            expect(zero2).toBe(-Infinity);
+        });
+        it('lambda = 0', () => {
+            const zero1 = ppois(2, 0);
+            expect(zero1).toBe(1);
+            const zero2 = ppois(2, 0, true, true);
             expect(zero2).toBe(0);
         });
-        it('x = 1 lambda = Infinite', () => {
-            const zero1 = ppois(1, Infinity);
+        it('x = Infinity lambda = 4', () => {
+            const one1 = ppois(Infinity, 4);
+            expect(one1).toBe(1);
+            const zero1 = ppois(Infinity, 4, false);
             expect(zero1).toBe(0);
         });
     });
-    /*describe('fidelity', () => {
-        it('x > 0 lambda = 0', async () => {
-            const [x, y] = await loadData(resolve(__dirname, 'fixture-generation', 'dpois1.R'), /\s+/, 1, 2);
-            const result = x.map(_x => dpois(_x, 0));
-            expect(result).toEqualFloatingPointBinary(y);
-        });
-        it('x > 0 lambda = 1', async () => {
-            const [x, y] = await loadData(resolve(__dirname, 'fixture-generation', 'dpois2.R'), /\s+/, 1, 2);
-            const result = x.map(_x => dpois(_x, 1));
-            expect(result).toEqualFloatingPointBinary(y, 50);
-        });
-        it('x > 0 lambda = 2', async () => {
-            const [x, y] = await loadData(resolve(__dirname, 'fixture-generation', 'dpois3.R'), /\s+/, 1, 2);
-            const result = x.map(_x => dpois(_x, 2));
-            expect(result).toEqualFloatingPointBinary(y, 51);
-        });
-        it('x > 0 lambda = 4', async () => {
-            const [x, y] = await loadData(resolve(__dirname, 'fixture-generation', 'dpois4.R'), /\s+/, 1, 2);
-            const result = x.map(_x => dpois(_x, 4));
-            expect(result).toEqualFloatingPointBinary(y, 51);
-        });
+    describe('fidelity', () => {
         it('x > 0 lambda = 10', async () => {
-            const [x, y] = await loadData(resolve(__dirname, 'fixture-generation', 'dpois5.R'), /\s+/, 1, 2);
-            const result = x.map(_x => dpois(_x, 10));
-            expect(result).toEqualFloatingPointBinary(y, 46);
+            const [x, y] = await loadData(resolve(__dirname, 'fixture-generation', 'ppois1.R'), /\s+/, 1, 2);
+            const result = x.map(_x => ppois(_x, 10));
+            expect(result).toEqualFloatingPointBinary(y, 51);
         });
-        it('lambda < MAX_SAFE_INTEGER * DBL_MIN', async () => {
-            const ans1 = dpois(
-                MAX_SAFE_INTEGER, // x
-                DBL_MIN * (trunc(MAX_SAFE_INTEGER - 1) // lambda
-                )
-            );
-            expect(ans1).toBe(0);
-
-            const ans2 = dpois_raw(
-                Infinity, // x
-                DBL_MIN * (MAX_SAFE_INTEGER - 1), // lambda
-                false
-            );
-            expect(ans2).toBe(0);
+        it('x > 0 lambda = 5', async () => {
+            const [x, y] = await loadData(resolve(__dirname, 'fixture-generation', 'ppois2.R'), /\s+/, 1, 2);
+            const result = x.map(_x => ppois(_x, 5, false));
+            expect(result).toEqualFloatingPointBinary(y, 44);
         });
-        it.todo('any reasonable value of "lambda < x * DBL_MIN" slaps result to zero investigate');
-    });*/
+        it('x > 0 lambda = 20', async () => {
+            const [x, y] = await loadData(resolve(__dirname, 'fixture-generation', 'ppois3.R'), /\s+/, 1, 2);
+            const result = x.map(_x => ppois(_x, 20, false, true));
+            expect(result).toEqualFloatingPointBinary(y, 49);
+        });
+    });
 });

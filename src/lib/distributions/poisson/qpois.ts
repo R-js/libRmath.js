@@ -28,14 +28,14 @@ import { qnorm } from '@dist/normal/qnorm';
 
 import { R_DT_qIv } from '@dist/exp/expm1';
 
-import { max as fmax2, sqrt, floor, round as nearbyint, isNaN as ISNAN, DBL_EPSILON, isFinite as R_FINITE } from '@lib/r-func';
+import { max, sqrt, floor, round as nearbyint, isNaN, DBL_EPSILON, isFinite } from '@lib/r-func';
 
 function do_search(y: number, z: NumberW, p: number, lambda: number, incr: number): number {
     if (z.val >= p) {
         // search to the left
         while (true) {
             if (y === 0 || (z.val = ppois(y - incr, lambda, true, false)) < p) return y;
-            y = fmax2(0, y - incr);
+            y = max(0, y - incr);
         }
     } else {
         // search to the right
@@ -47,24 +47,23 @@ function do_search(y: number, z: NumberW, p: number, lambda: number, incr: numbe
     }
 }
 
-const printer_qpois = debug('_qpois');
+const printer = debug('qpois');
 
 export function qpois(
     p: number,
     lambda: number,
-    lower_tail: boolean,
-    log_p: boolean,
-    // normal: INormal
+    lower_tail = true,
+    log_p = false
 ): number {
     let y;
     const z = new NumberW(0);
 
-    if (ISNAN(p) || ISNAN(lambda)) return p + lambda;
+    if (isNaN(p) || isNaN(lambda)) return p + lambda;
 
-    if (!R_FINITE(lambda)) {
-        return ML_ERR_return_NAN(printer_qpois);
+    if (!isFinite(lambda)) {
+        return ML_ERR_return_NAN(printer);
     }
-    if (lambda < 0) return ML_ERR_return_NAN(printer_qpois);
+    if (lambda < 0) return ML_ERR_return_NAN(printer);
     if (lambda === 0) return 0;
 
     const rc = R_Q_P01_boundaries(lower_tail, log_p, p, 0, Infinity);
@@ -72,21 +71,24 @@ export function qpois(
         return rc;
     }
 
+    /* Note : "same" code in qpois.c, qbinom.c, qnbinom.c --
+     * FIXME: This is far from optimal [cancellation for p ~= 1, etc]: */
+    // normalize
+    if (!lower_tail || log_p) {
+        p = R_DT_qIv(lower_tail, log_p, p); /* need check again (cancellation!): */
+        // for example exp(p=-10_000) is 0 or 1 if it is flipped with lower_tail = false
+        if (p === 0) return 0;
+        if (p === 1) return Infinity;
+    }
+
+     /* temporary hack --- FIXME --- */
+    if (p + 1.01 * DBL_EPSILON >= 1) return Infinity;
+
     const mu = lambda;
     const sigma = sqrt(lambda);
     /* gamma = sigma; PR#8058 should be kurtosis which is mu^-0.5 */
     const gamma = 1.0 / sigma;
-
-    /* Note : "same" code in qpois.c, qbinom.c, qnbinom.c --
-     * FIXME: This is far from optimal [cancellation for p ~= 1, etc]: */
-    if (!lower_tail || log_p) {
-        p = R_DT_qIv(lower_tail, log_p, p); /* need check again (cancellation!): */
-        if (p === 0) return 0;
-        if (p === 1) return Infinity;
-    }
-    /* temporary hack --- FIXME --- */
-    if (p + 1.01 * DBL_EPSILON >= 1) return Infinity;
-
+    
     /* y := approx.value (Cornish-Fisher expansion) :  */
     z.val = qnorm(p, 0, 1, /*lower_tail*/ true, /*log_p*/ false);
 
@@ -106,7 +108,7 @@ export function qpois(
         do {
             oldincr = incr;
             y = do_search(y, z, p, lambda, incr);
-            incr = fmax2(1, floor(incr / 100));
+            incr = max(1, floor(incr / 100));
         } while (oldincr > 1 && incr > lambda * 1e-15);
         return y;
     }

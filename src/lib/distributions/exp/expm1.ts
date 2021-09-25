@@ -16,12 +16,22 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { M_LN2, R_D_Cval, R_D_log, R_D_Lval } from '@lib/r-func';
 
-//import { log1p } from '../exp/expm1'log';
-
 const { exp, expm1, log, log1p } = Math;
 
 function R_DT_qIv(lower_tail: boolean, log_p: boolean, p: number): number {
-    return log_p ? (lower_tail ? exp(p) : -expm1(p)) : R_D_Lval(lower_tail, p);
+    if (log_p) 
+    {
+        return lower_tail ? exp(p): -expm1(p);
+        
+    }
+    /*
+    if (lower_tail)
+    {
+        return p
+    }
+    return 1 - p;
+    */
+    return R_D_Lval(lower_tail, p);
 }
 
 function R_DT_CIv(lower_tail: boolean, log_p: boolean, p: number): number {
