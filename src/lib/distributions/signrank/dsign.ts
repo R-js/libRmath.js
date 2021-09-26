@@ -41,7 +41,7 @@ export function dsignrank(x: number, n: number, logX = false): number {
     // this means that it makes no sense that n or x are greater then 
     // MAX_INT (about 2.7 billion)    
 
-    n = round(n);
+    n = trunc(n);
     x = round(x);
 
     if (x < 0 || x > (n * (n + 1)) / 2) {

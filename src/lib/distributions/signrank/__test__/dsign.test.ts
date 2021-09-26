@@ -1,0 +1,72 @@
+import { loadData } from '@common/load';
+import { resolve } from 'path';
+
+import { cl, select } from '@common/debug-select';
+
+import { dsignrank } from '..';
+
+const dsignrankLogs = select('dsignrank');
+const dsignrankDomainWarns = dsignrankLogs("argument out of domain in '%s'");
+
+const range = (a: number, b: number) => Array.from({ length: (b - a + 1) }, (v, i) => i + a);
+
+describe('dsignrank (wilcox sign rank)', function () {
+    beforeEach(() => {
+        cl.clear('dsignrank');
+    })
+    describe('invalid input and edge cases', () => {
+        it('x = NaN | n = NaN', () => {
+            const nan1 = dsignrank(NaN, 2);
+            expect(nan1).toBeNaN();
+            const nan2 = dsignrank(3, NaN);
+            expect(nan2).toBeNaN();
+        });
+        it('n <= 0', () => {
+            const nan1 = dsignrank(6, -1);
+            expect(nan1).toBeNaN();
+            expect(dsignrankDomainWarns()).toHaveLength(1);
+        });
+        it('trunc(x)-x < 1e7 and trunc(x)-x > 1e7', () => {
+            const zero = dsignrank(3 + 2e-7, 4);
+            expect(zero).toBe(0);
+            const x = dsignrank(3 + 1e-7 / 2, 4);
+            expect(x).toEqualFloatingPointBinary(0.12500000000000003);
+        });
+        it('x < 0 or x > n*(n+1)/2', () => {
+            const zero1 = dsignrank(-1, 4);
+            expect(zero1).toBe(0);
+            const zero2 = dsignrank(4 * (4 + 1) / 2 + 1, 4);
+            expect(zero2).toBe(0);
+        });
+        it.todo('run over all W+ for n=1 and n=2');
+    });
+    describe('fidelity', () => {
+        it('for n = 3 calculate  0 < w < n*(n+1)/2 for n lambda = 0', () => {
+            const x = range(0, 6);
+            const result = x.map(_x => dsignrank(_x, 3));
+            expect(result).toEqualFloatingPointBinary([
+                0.12500000000000003,
+                0.12500000000000003,
+                0.12500000000000003,
+                0.25000000000000006,
+                0.12500000000000003,
+                0.12500000000000003,
+                0.12500000000000003
+            ]);
+        });
+        it('for n = 10 all W+', async () => {
+            const [x,y] = await loadData(resolve(__dirname, 'fixture-generation', 'dsign1.R'), /\s+/, 1, 2);
+            const result = x.map(_x => dsignrank(_x, 10));
+            //result;
+            expect(result).toEqualFloatingPointBinary(y, 22);
+            //expect(0.03710937).toEqualFloatingPointBinary(0.03710937499999999);
+        });
+        it('for n = 10 check for W=24 and W=31',()=>{
+            const res1 = dsignrank(24, 10);
+            const res2 = dsignrank(31, 10);
+            expect(res1).toEqualFloatingPointBinary(0.037109375);
+            expect(res2).toEqualFloatingPointBinary(0.037109375);
+        });
+        it.todo('check why [0.037109375] differs [0.037109374999999993] is only 3 mantissa bits, should be more')
+    });
+});
