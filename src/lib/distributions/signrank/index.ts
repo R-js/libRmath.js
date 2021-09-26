@@ -20,9 +20,9 @@ export { dsignrank } from './dsign';
 export { psignrank } from './psign';
 export { qsignrank } from './qsign';
 import { rsignrankOne } from './rsign';
-import { repeatedCall } from '@lib/r-func';
+import { repeatedCall64 } from '@lib/r-func';
 import { globalUni } from '@lib/rng/global-rng';
 
-export function rsignrank(N: number, n: number, rng:IRNG = globalUni()): Float32Array {
-   return repeatedCall(N, rsignrankOne,  n, rng);
+export function rsignrank(N: number, n: number, rng:IRNG = globalUni()): Float64Array {
+   return repeatedCall64(N, rsignrankOne,  n, rng);
 }

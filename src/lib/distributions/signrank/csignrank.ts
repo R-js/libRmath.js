@@ -17,7 +17,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { imin2 } from '@lib/r-func';
 
-export function csignrank(k: number, n: number, u: number, c: number, w: Float32Array): number {
+
+export function csignrank(k: number, n: number, u: number, c: number, w: Float64Array): number {
     if (k < 0 || k > u) return 0;
     if (k > c) k = u - k;
 
