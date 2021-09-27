@@ -32,7 +32,14 @@ export * from '@dist/lognormal';
 export * from '@dist/multinom';
 export * from '@dist/normal';
 export * from '@dist/poisson';
-export * from '@dist/signrank';
+export { 
+    useWasmBackend as useSignRankBackend, 
+    clearBackend as clearSignRankBackend,
+    dsignrank,
+    psignrank,
+    qsignrank,
+    rsignrank
+} from '@dist/signrank';
 export * from '@dist/student-t';
 export * from '@dist/tukey';
 export * from '@dist/uniform';

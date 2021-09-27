@@ -7,16 +7,17 @@
  (export "calcTinyN" (func $simple/calcTinyN))
  (export "calcBigN" (func $simple/calcBigN))
  (export "memory" (memory $0))
+ ;; cpuBackendTinyN(sum: number, term: number, p: number, xr: number, end: number, xb: number, NB: number, NR: number):
  (func $simple/calcTinyN (param $0 f64) (param $1 f64) (param $2 f64) (param $3 f64) (param $4 f64) (param $5 f64) (param $6 f64) (param $7 f64) (result f64)
   loop $while-continue|0
-   local.get $3
-   local.get $4
-   f64.lt
+   local.get $3   ;; xr
+   local.get $4   ;; end
+   f64.lt         ;; <
    i32.const 0
-   local.get $0
-   local.get $2
-   f64.lt
-   select
+   local.get $0   ;; sum
+   local.get $2   ;; p
+   f64.lt         ;; <
+   select         ;; while (sum < p && xr < end) {
    if
     local.get $0
     local.get $1

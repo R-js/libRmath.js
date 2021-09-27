@@ -17,8 +17,24 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { debug } from 'debug';
 import { ML_ERR_return_NAN, } from '@common/logger';
-import { csignrank } from './csignrank';
+import { cpu_csignrank } from './csignrank';
 import { R_D__0, R_D_exp, isNaN, trunc, abs, log, M_LN2, round } from '@lib/r-func';
+import { growMemory, memory } from './csignrank_wasm';
+
+import type { CSingRank, CSignRankMap } from './csignrank_wasm';
+
+let _csignrank: CSingRank  = cpu_csignrank; 
+
+function registerBackend(fns: CSignRankMap): void {
+    _csignrank = fns.csignrank;
+}
+
+function unRegisterBackend(): boolean {
+    _csignrank = cpu_csignrank
+    return _csignrank === cpu_csignrank ? false: true
+}
+
+export { _csignrank, unRegisterBackend, registerBackend };
 
 const printer = debug('dsignrank');
 
@@ -52,7 +68,11 @@ export function dsignrank(x: number, n: number, logX = false): number {
     const u = n * (n + 1) / 2;
     // int
     const c = Math.trunc(u / 2)
-    const w = new Float64Array(c+1);
-    const d = R_D_exp(logX, log(csignrank(trunc(x), n, u, c, w)) - n * M_LN2);
+    growMemory(c+1);
+    new Float64Array(memory.buffer).fill(0, 0, c+1);
+    
+    const d = R_D_exp(logX, log(_csignrank(trunc(x), n, u, c)) - n * M_LN2);
     return d;
 }
+
+

@@ -3,7 +3,7 @@ import { resolve } from 'path';
 
 import { cl, select } from '@common/debug-select';
 
-import { dsignrank } from '..';
+import { dsignrank, useWasmBackend, clearBackend } from '..';
 
 const dsignrankLogs = select('dsignrank');
 const dsignrankDomainWarns = dsignrankLogs("argument out of domain in '%s'");
@@ -55,17 +55,35 @@ describe('dsignrank (wilcox sign rank)', function () {
             ]);
         });
         it('for n = 10 all W+', async () => {
-            const [x,y] = await loadData(resolve(__dirname, 'fixture-generation', 'dsign1.R'), /\s+/, 1, 2);
+            const [x
+                  ,y
+            ] = await loadData(resolve(__dirname, 'fixture-generation', 'dsign1.R'), /\s+/, 1, 2);
             const result = x.map(_x => dsignrank(_x, 10));
-            //result;
-            expect(result).toEqualFloatingPointBinary(y, 22);
-            //expect(0.03710937).toEqualFloatingPointBinary(0.03710937499999999);
-        });
+            expect(result).toEqualFloatingPointBinary(y, 50);
+       });
         it('for n = 10 check for W=24 and W=31',()=>{
             const res1 = dsignrank(24, 10);
             const res2 = dsignrank(31, 10);
             expect(res1).toEqualFloatingPointBinary(0.037109375);
             expect(res2).toEqualFloatingPointBinary(0.037109375);
+        });
+        it('wasm acc test large inputnumbers n = 4000, W= 4025500', async ()=> {
+            // according to large sample approximation
+            //         W+ - 0.25*n*(n+1)
+            // Z(W,n)= -----------------
+            //         sqrt(n*(n+1)*(2*n+1)/24)
+            // Z(4025500, 4000)= 0 gives 0.2561791 pnorm(z) = 0.6010937 
+            // R gives Inf, so does this algo 
+            await useWasmBackend();
+            const start2 = Date.now();
+            const res2 = dsignrank(4025500, 4000);
+            expect(res2).toEqual(Infinity)
+            console.log(`(fast wasm) duration: ${Math.trunc((Date.now()-start2)/1000)} sec`);
+            clearBackend();
+            const start = Date.now();
+            const res1 = dsignrank(4025500, 4000);
+            expect(res1).toEqual(Infinity)
+            console.log(`(slow) duration: ${Math.trunc((Date.now()-start)/1000)} sec`);
         });
         it.todo('check why [0.037109375] differs [0.037109374999999993] is only 3 mantissa bits, should be more')
     });

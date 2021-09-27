@@ -18,9 +18,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import { debug } from 'debug';
 import { ML_ERR_return_NAN, R_Q_P01_check } from '@common/logger';
 import { R_DT_qIv } from '@dist/exp/expm1';
-import { csignrank } from './csignrank';
+import { cpu_csignrank as csignrank } from './csignrank';
 
 import { R_DT_0, R_DT_1, round, M_LN2, isNaN, isFinite, DBL_EPSILON, trunc, exp } from '@lib/r-func';
+import { growMemory } from './csignrank_wasm';
 
 const printer = debug('qsignrank');
 
@@ -58,7 +59,7 @@ export function qsignrank(x: number, n: number, lowerTail = true, logP = false):
         x = R_DT_qIv(lowerTail, logP, x); // lower_tail, non-log "p"
     }
 
-    const w = new Float64Array(c + 1);
+    growMemory(c+1);
     
     const f = exp(-n * M_LN2);
     let p = 0;
@@ -66,14 +67,14 @@ export function qsignrank(x: number, n: number, lowerTail = true, logP = false):
     if (x <= 0.5) {
         x = x - 10 * DBL_EPSILON;
         for (;;) {
-            p += csignrank(q, n, u, c, w) * f;
+            p += csignrank(q, n, u, c) * f;
             if (p >= x) break;
             q++;
         }
     } else {
         x = 1 - x + 10 * DBL_EPSILON;
         for (;;) {
-            p += csignrank(q, n, u, c, w) * f;
+            p += csignrank(q, n, u, c) * f;
             if (p > x) {
                 q = trunc(u - q);
                 break;
