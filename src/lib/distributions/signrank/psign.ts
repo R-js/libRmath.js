@@ -19,7 +19,7 @@ import { debug } from 'debug';
 import { ML_ERR_return_NAN, } from '@common/logger';
 import { R_DT_0, R_DT_1, R_DT_val, round, trunc, M_LN2, exp, isNaN, isFinite } from '@lib/r-func';
 import { cpu_csignrank as csignrank } from './csignrank';
-import { growMemory } from './csignrank_wasm';
+import { growMemory, memory } from './csignrank_wasm';
 
 const printer = debug('psignrank');
 
@@ -47,9 +47,13 @@ export function psignrank(x: number, n: number, lowerTail = true, logP = false):
     const c = trunc(u / 2);
 
     growMemory(c + 1);
+    new Float64Array(memory.buffer).fill(0, 0, c+1);
 
     const f = exp(-n * M_LN2);
     let p = 0;
+
+
+    
     if (x <= u / 2) {
         //smaller then mean
         for (let i = 0; i <= x; i++) {

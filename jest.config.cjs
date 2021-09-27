@@ -140,7 +140,7 @@ const poissonTest = [
 
 const dsignRankTest = [
     '/distributions/signrank/__test__/dsign.test.ts$',
-    //'/distributions/signrank/__test__/psign.test.ts$',
+    '/distributions/signrank/__test__/psign.test.ts$',
     //'/distributions/signrank/__test__/qsign.test.ts$',
     //'/distributions/signrank/__test__/rsign.test.ts$',
 ];

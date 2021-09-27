@@ -67,7 +67,7 @@ describe('dsignrank (wilcox sign rank)', function () {
             expect(res1).toEqualFloatingPointBinary(0.037109375);
             expect(res2).toEqualFloatingPointBinary(0.037109375);
         });
-        it('wasm acc test large inputnumbers n = 4000, W= 4025500', async ()=> {
+        xit('wasm acc test large inputnumbers n = 4000, W= 4025500', async ()=> {
             // according to large sample approximation
             //         W+ - 0.25*n*(n+1)
             // Z(W,n)= -----------------
