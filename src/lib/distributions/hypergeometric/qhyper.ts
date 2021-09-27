@@ -21,7 +21,7 @@ import { lfastchoose } from '@special/choose';
 import { R_DT_qIv } from '@dist/exp/expm1';
 import { DBL_EPSILON } from '@lib/r-func';
 
-import type { QHyperFunctionMap, CalcQHyper } from './';
+import type { QHyperFunctionMap, CalcQHyper } from './qhyper_wasm';
 
 const printer_qhyper = debug('qhyper');
 

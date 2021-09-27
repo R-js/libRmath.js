@@ -16,27 +16,21 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { debug } from 'debug';
-import { ML_ERR_return_NAN,  R_Q_P01_check } from '@common/logger';
-import { R_DT_0, R_DT_1,} from '@lib/r-func';
+import { ML_ERR_return_NAN, R_Q_P01_check } from '@common/logger';
 import { R_DT_qIv } from '@dist/exp/expm1';
-import { csignrank } from './csignrank';
+import { cpu_csignrank as csignrank } from './csignrank';
 
-const { round, trunc, LN2: M_LN2, exp } = Math;
-const { isNaN: ISNAN, isFinite: R_FINITE, EPSILON: DBL_EPSILON } = Number;
-const printer_qsignrank = debug('qsignrank');
+import { R_DT_0, R_DT_1, round, M_LN2, isNaN, isFinite, DBL_EPSILON, trunc, exp } from '@lib/r-func';
+import { growMemory } from './csignrank_wasm';
+
+const printer = debug('qsignrank');
 
 export function qsignrank(x: number, n: number, lowerTail = true, logP = false): number {
-    const roundN = round(n);
-    const u = (roundN * (roundN + 1)) / 2;
-    const c = trunc(u / 2);
-    const w =  new Float32Array(c + 1);
-
-    if (ISNAN(x) || ISNAN(n)) {
+    if (isNaN(x) || isNaN(n)) {
         return NaN;
     }
-
-    if (/*!R_FINITE(x) ||*/ !R_FINITE(n)) {
-        return ML_ERR_return_NAN(printer_qsignrank);
+    if (!isFinite(x) || !isFinite(n)) {
+        return ML_ERR_return_NAN(printer);
     }
 
     const rc = R_Q_P01_check(logP, x);
@@ -44,37 +38,43 @@ export function qsignrank(x: number, n: number, lowerTail = true, logP = false):
         return rc;
     }
 
-    if (roundN <= 0) {
-        return ML_ERR_return_NAN(printer_qsignrank);
+    if (n <= 0) {
+        return ML_ERR_return_NAN(printer);
     }
-
+   
     if (x === R_DT_0(lowerTail, logP)) {
         return 0;
     }
 
+    
+    n = round(n);
+    const u = n * (n + 1) / 2;
+    const c = trunc(u / 2);
+    
     if (x === R_DT_1(lowerTail, logP)) {
         return u;
     }
-
+   
     if (logP || !lowerTail) {
         x = R_DT_qIv(lowerTail, logP, x); // lower_tail, non-log "p"
     }
 
-    //this.w_init_maybe(n);
+    growMemory(c+1);
+    
     const f = exp(-n * M_LN2);
     let p = 0;
     let q = 0;
     if (x <= 0.5) {
         x = x - 10 * DBL_EPSILON;
-        while (true) {
-            p += csignrank(q, roundN, u, c, w) * f;
+        for (;;) {
+            p += csignrank(q, n, u, c) * f;
             if (p >= x) break;
             q++;
         }
     } else {
         x = 1 - x + 10 * DBL_EPSILON;
-        while (true) {
-            p += csignrank(q, roundN, u, c, w) * f;
+        for (;;) {
+            p += csignrank(q, n, u, c) * f;
             if (p > x) {
                 q = trunc(u - q);
                 break;

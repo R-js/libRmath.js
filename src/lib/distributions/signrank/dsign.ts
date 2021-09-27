@@ -17,31 +17,62 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { debug } from 'debug';
 import { ML_ERR_return_NAN, } from '@common/logger';
-import { csignrank } from './csignrank';
-import { R_D__0, R_D_exp } from '@lib/r-func';
+import { cpu_csignrank } from './csignrank';
+import { R_D__0, R_D_exp, isNaN, trunc, abs, log, M_LN2, round } from '@lib/r-func';
+import { growMemory, memory } from './csignrank_wasm';
 
-const { round, trunc, abs: fabs, log, LN2: M_LN2 } = Math;
-const { isNaN: ISNAN } = Number;
+import type { CSingRank, CSignRankMap } from './csignrank_wasm';
 
-const printer_dsignrank = debug('dsignrank');
+let _csignrank: CSingRank  = cpu_csignrank; 
+
+function registerBackend(fns: CSignRankMap): void {
+    _csignrank = fns.csignrank;
+}
+
+function unRegisterBackend(): boolean {
+    _csignrank = cpu_csignrank
+    return _csignrank === cpu_csignrank ? false: true
+}
+
+export { _csignrank, unRegisterBackend, registerBackend };
+
+const printer = debug('dsignrank');
 
 export function dsignrank(x: number, n: number, logX = false): number {
-    const rn = round(n);
-    const u = (rn * (rn + 1)) / 2;
-    const c = trunc(u / 2);
-    const w = new Float32Array(c + 1);
-    if (ISNAN(x) || ISNAN(n)) return x + n;
+
+    if (isNaN(x) || isNaN(n)) {
+        return x + n;
+    }
 
     if (n <= 0) {
-        return ML_ERR_return_NAN(printer_dsignrank);
+        return ML_ERR_return_NAN(printer);
     }
-    if (fabs(x - round(x)) > 1e-7) {
+
+    if (abs(x - round(x)) > 1e-7) {
         return R_D__0(logX);
     }
+
+    // both "n" and "x" are typecasted to (int) 32bit signed integer 
+    // so in original source they came into this function as doubles
+    // this means that it makes no sense that n or x are greater then 
+    // MAX_INT (about 2.7 billion)    
+
+    n = trunc(n);
     x = round(x);
+
     if (x < 0 || x > (n * (n + 1)) / 2) {
         return R_D__0(logX);
     }
-    const d = R_D_exp(logX, log(csignrank(trunc(x), n, u, c, w)) - n * M_LN2);
+
+    // int
+    const u = n * (n + 1) / 2;
+    // int
+    const c = Math.trunc(u / 2)
+    growMemory(c+1);
+    new Float64Array(memory.buffer).fill(0, 0, c+1);
+    
+    const d = R_D_exp(logX, log(_csignrank(trunc(x), n, u, c)) - n * M_LN2);
     return d;
 }
+
+

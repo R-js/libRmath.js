@@ -14,6 +14,7 @@ const collectCoverageFrom = [
     'src/lib/distributions/multinom/*.ts',
     'src/lib/distributions/normal/*.ts',
     'src/lib/distributions/poisson/*.ts',
+    'src/lib/distributions/signrank/*.ts',
     'src/lib/r-func.ts',
     'src/lib/index.ts',
     'src/lib/trigonometry/*.ts',
@@ -137,6 +138,13 @@ const poissonTest = [
     '/distributions/poisson/__test__/rpois.test.ts$',
 ];
 
+const dsignRankTest = [
+    '/distributions/signrank/__test__/dsign.test.ts$',
+    //'/distributions/signrank/__test__/psign.test.ts$',
+    //'/distributions/signrank/__test__/qsign.test.ts$',
+    //'/distributions/signrank/__test__/rsign.test.ts$',
+];
+
 
 const uniformRNG = [
     '/rng/knuth-taocp/__test__/(.*?\\.)?test.ts$',
@@ -156,7 +164,6 @@ const normalRNG = [
     '/rng/normal/kinderman-ramage/__test__/(.*?\\.)?test.ts$',
 ];
 
-
 const testRegex = [
     ...betaTest,
     ...binomTest,
@@ -173,6 +180,7 @@ const testRegex = [
     ...multinomTest,
     ...normalTest,
     ...poissonTest,
+    ...dsignRankTest,
     //
     ...uniformRNG,
     ...normalRNG
