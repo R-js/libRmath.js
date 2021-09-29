@@ -34,7 +34,7 @@ describe('rpois', function () {
         beforeEach(() => {
             RNGKind(IRNGTypeEnum.MERSENNE_TWISTER, IRNGNormalTypeEnum.INVERSION);
             globalUni().init(123456);
-        })
+        });
         it('mhu = 15', async () => {
             const [y] = await loadData(resolve(__dirname, 'fixture-generation', 'rpois1.R'), /\s+/, 1);
             const res1 = rpois(50, 15);

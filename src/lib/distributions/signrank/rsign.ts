@@ -19,22 +19,30 @@ import { debug } from 'debug';
 import { ML_ERR_return_NAN } from '@common/logger';
 import type { IRNG } from '@rng/irng';
 import { globalUni } from '@lib/rng/global-rng';
+import { floor, trunc, round, isNaN, INT_MAX } from '@lib/r-func';
 
-
-import { floor, trunc, round, isNaN,  } from '@lib/r-func';
 const printer = debug('rsignrank');
 
 export function rsignrankOne(n: number, rng: IRNG = globalUni()): number {
         /* NaNs propagated correctly */
-        if (isNaN(n)) return n;
+        if (isNaN(n)){
+            return n;
+        }
+        // added for C language fidelity
+        if (n > INT_MAX) return 0;
+        
         n = round(n);
-        if (n < 0) return ML_ERR_return_NAN(printer);
 
-        if (n === 0) return 0;
+        if (n < 0) {
+            return ML_ERR_return_NAN(printer);
+        }
+        if (n === 0) {
+            return 0;
+        }
         let r = 0.0;
         const k = trunc(n);
         for (let i = 0; i < k /**/; ) {
-            r += ++i * floor(rng.random() + 0.5);
+            r += (++i) * floor(rng.random() + 0.5);
         }
         return r;
 }

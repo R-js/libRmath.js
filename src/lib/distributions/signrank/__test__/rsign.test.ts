@@ -1,0 +1,55 @@
+import { loadData } from '@common/load';
+import { resolve } from 'path';
+
+loadData;
+resolve;
+
+
+import { IRNGTypeEnum } from '@rng/irng-type';
+import { globalUni, RNGKind } from '@lib/rng/global-rng';
+import { IRNGNormalTypeEnum } from '@rng/normal/in01-type';
+
+import { cl, select } from '@common/debug-select';
+
+import { rsignrank } from '..';
+
+import { INT_MAX } from '@lib/r-func';
+
+const rsignrankLogs = select('rsignrank');
+const rsignrankDomainWarns = rsignrankLogs("argument out of domain in '%s'");
+
+describe('rsignrank (wilcox sign rank)', function () {
+    beforeEach(() => {
+        cl.clear('rsignrank');
+    })
+    describe('invalid input and edge cases', () => {
+        it('n = NaN', () => {
+            const nan1 = rsignrank(1, NaN);
+            expect(nan1).toEqualFloatingPointBinary(NaN);
+        });
+        it('n > INT_MAX return 0', () => {
+            const zero = rsignrank(1, INT_MAX+1);
+            expect(zero).toEqualFloatingPointBinary(0);
+        });
+        it('n < 0', () => {
+            const nan1 = rsignrank(1, -1);
+            expect(nan1).toEqualFloatingPointBinary(NaN);
+            expect(rsignrankDomainWarns()).toHaveLength(1);
+        });
+        it('n == 0', () => {
+            const zero = rsignrank(1, 0);
+            expect(zero).toEqualFloatingPointBinary(0);
+        });
+    });
+    describe('fidelity', () => {
+        beforeEach(() => {
+            RNGKind(IRNGTypeEnum.MERSENNE_TWISTER, IRNGNormalTypeEnum.INVERSION);
+            globalUni().init(123456);
+        });
+        it('N = 50, n = 3000', async () => {
+            const [y] = await loadData(resolve(__dirname, 'fixture-generation', 'rsign1.R'), /\s+/, 1);
+            const actual = rsignrank(50, 3000);
+            expect(actual).toEqualFloatingPointBinary(y);
+        });
+    })
+});
