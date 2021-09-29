@@ -141,8 +141,8 @@ const poissonTest = [
 const dsignRankTest = [
     '/distributions/signrank/__test__/dsign.test.ts$',
     '/distributions/signrank/__test__/psign.test.ts$',
-    //'/distributions/signrank/__test__/qsign.test.ts$',
-    //'/distributions/signrank/__test__/rsign.test.ts$',
+    '/distributions/signrank/__test__/qsign.test.ts$',
+    '/distributions/signrank/__test__/rsign.test.ts$',
 ];
 
 
@@ -184,8 +184,8 @@ const testRegex = [
     //
     ...uniformRNG,
     ...normalRNG
-
-    /*'/special/bessel/besselJ/__test__/(.*?\\.)?test.ts$',
+/*
+    '/special/bessel/besselJ/__test__/(.*?\\.)?test.ts$',
     '/special/gamma/__test__/(.*?\\.)?test.ts$',
     '/special/beta/__test__/(.*?\\.)?test.ts$',
 */

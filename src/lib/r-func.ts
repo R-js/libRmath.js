@@ -279,7 +279,7 @@ export const DBL_MANT_DIG = 18;
 export const DBL_MIN = 2.2250738585072014e-308;
 
 //ok
-export const M_LN2 = 0.693147180559945309417232121458; /* ln(2) */
+export const M_LN2 = 0.693147180559945309417; /* ln(2) */
 
 //ok
 export const M_1_SQRT_2PI = 0.398942280401432677939946059934;
@@ -320,6 +320,9 @@ export const M_LOG10_2 = 0.301029995663981195213738894724; //Math.log10(2);
 // gamma
 //ok
 export const DBL_MAX_EXP = log2(MAX_VALUE);
+
+//qsignrank
+export const DBL_MIN_VALUE_LN = log(MIN_VALUE);
 
 // gamma
 //ok

@@ -8,8 +8,6 @@ import { psignrank, useWasmBackend, clearBackend } from '..';
 const psignrankLogs = select('psignrank');
 const psignrankDomainWarns = psignrankLogs("argument out of domain in '%s'");
 
-//const range = (a: number, b: number) => Array.from({ length: (b - a + 1) }, (v, i) => i + a);
-
 describe('psignrank (wilcox sign rank)', function () {
     beforeEach(() => {
         cl.clear('psignrank');
@@ -37,23 +35,21 @@ describe('psignrank (wilcox sign rank)', function () {
         it.todo('run over all W+ for n=1 and n=2');
     });
     describe('fidelity', () => {
-        it('n = 40, 0 < x < n*(n+1)/2 ', async () => {
+        it('(non wasm) n = 40, 0 < x < n*(n+1)/2 ', async () => {
             const [x
                 , y
             ] = await loadData(resolve(__dirname, 'fixture-generation', 'psign1.csv'), /,/, 1, 2);
             const actual = x.map((_x, i) => (Math.abs(psignrank(_x, 40) - y[i])));
-            //console.log("max",Math.max(...actual));
             actual.forEach((fy) => {
               expect(fy).toBeLessThan(5e-16)
             });
         });
-        it('wasm acc: n = 40, 0 < x < n*(n+1)/2 ', async () => {
-            const [x
-                , y
-            ] = await loadData(resolve(__dirname, 'fixture-generation', 'psign1.csv'), /,/, 1, 2);
+        it('(wasm acc) n = 40, 0 < x < n*(n+1)/2 ', async () => {
+            const [x, y] = await loadData(resolve(__dirname, 'fixture-generation', 'psign1.csv'), /,/, 1, 2);
             await useWasmBackend();
             const actual = x.map((_x, i) => (Math.abs(psignrank(_x, 40) - y[i])));
-            console.log("max(wasm)",Math.max(...actual));
+            // debug
+            // console.log("max(wasm)",Math.max(...actual));
             actual.forEach((fy) => {
               expect(fy).toBeLessThan(5e-16)
             });
