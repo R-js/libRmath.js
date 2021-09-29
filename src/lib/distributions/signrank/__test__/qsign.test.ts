@@ -11,7 +11,7 @@ const qsignrankLogs = select('qsignrank');
 const qsignrankDomainWarns = qsignrankLogs("argument out of domain in '%s'");
 const qsignrankBounderies = select('R_Q_P01_check')("argument out of domain in '%s'");
 
-describe.only('qsignrank (wilcox sign rank)', function () {
+describe('qsignrank (wilcox sign rank)', function () {
     beforeEach(() => {
         cl.clear('qsignrank');
         cl.clear('R_Q_P01_check');
@@ -50,7 +50,7 @@ describe.only('qsignrank (wilcox sign rank)', function () {
             const zero3 = qsignrank(log(0), 4, true, true);
             expect(zero3).toBe(0);
         });
-        it.only('p = 1 | p = 0 if lowerTail=false (with all combinations of pAsLog)', () => {
+        it('p = 1 | p = 0 if lowerTail=false (with all combinations of pAsLog)', () => {
             const res1 = qsignrank(1, 4, true, false);
             expect(res1).toBe(10);
             const res2 = qsignrank(log(1), 4, true, true);
