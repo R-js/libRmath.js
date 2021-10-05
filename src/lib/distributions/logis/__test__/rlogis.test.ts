@@ -2,7 +2,7 @@ import { cl, select } from '@common/debug-select';
 
 import { rlogis } from '..';
 import { IRNGTypeEnum } from '@rng/irng-type';
-import { globalUni, RNGKind } from '@lib/rng/global-rng';
+import { globalUni, RNGKind } from '@rng/global-rng';
 import { IRNGNormalTypeEnum } from '@rng/normal/in01-type';
 
 

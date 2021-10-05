@@ -1,8 +1,7 @@
 {
   "include": [
     "src/lib/**/*.ts",
-    "src/packages/**/*.ts",
-    "src/lib/distributions/beta/dbeta.ts"
+    "src/packages/**/*.ts"
   ],
   "exclude": [
     "test",
@@ -87,7 +86,7 @@
     },
     "preserveSymlinks": true,
     "typeRoots": [
-      "./node_modules/@types/"
+      "node_modules/@types"
     ],
     "inlineSourceMap": false,
     "inlineSources": false,

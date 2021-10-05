@@ -3,7 +3,7 @@ import { loadData } from '@common/load';
 import { resolve } from 'path';
 
 import { IRNGNormalTypeEnum } from '@rng/normal/in01-type';
-import { globalUni, RNGKind } from '@lib/rng/global-rng';
+import { globalUni, RNGKind } from '@rng/global-rng';
 import { IRNGTypeEnum } from '@rng/irng-type';
 
 import { rmultinom } from '..';

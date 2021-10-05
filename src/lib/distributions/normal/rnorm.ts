@@ -20,7 +20,7 @@ import { debug } from 'debug';
 
 import { ML_ERR_return_NAN } from '@common/logger';
 import type { IRNGNormal } from '@rng/normal/normal-rng';
-import { globalNorm } from '@lib/rng/global-rng';
+import { globalNorm } from '@rng/global-rng';
 
 const printer = debug('rnorm');
 

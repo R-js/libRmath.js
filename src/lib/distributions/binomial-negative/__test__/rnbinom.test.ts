@@ -1,5 +1,5 @@
 import { BoxMuller } from '@rng/normal/box-muller';
-import { globalUni } from '@lib/rng/global-rng';
+import { globalUni } from '@rng/global-rng';
 import { SuperDuper } from '@rng/super-duper';
 
 import { cl, select } from '@common/debug-select';

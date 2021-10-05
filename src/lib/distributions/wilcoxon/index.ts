@@ -22,7 +22,7 @@ import { rwilcoxOne } from './rwilcox';
 import { repeatedCall } from '@lib/r-func';
 
 import type { IRNG } from '@rng/irng';
-import { globalUni } from '@lib/rng/global-rng';
+import { globalUni } from '@rng/global-rng';
 
 export { rwilcoxOne };
 export function rwilcox(N: number, m: number, n: number, rng:IRNG = globalUni()): Float32Array {

@@ -22,7 +22,7 @@ export { psignrank } from './psign';
 export { qsignrank } from './qsign';
 import { rsignrankOne } from './rsign';
 import { repeatedCall64 } from '@lib/r-func';
-import { globalUni } from '@lib/rng/global-rng';
+import { globalUni } from '@rng/global-rng';
 import { initWasm as initSignRankBackend } from './csignrank_wasm';
 import type { CSignRankMap } from './csignrank_wasm';
 

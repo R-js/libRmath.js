@@ -19,7 +19,7 @@ export { phyper } from './phyper';
 export { qhyper } from './qhyper';
 import { registerBackend as registerQHyperBackend, unRegisterBackend as unRegisterQHyperBackend } from './qhyper';
 import { rhyperOne } from './rhyper';
-import { globalUni } from '@lib/rng/global-rng';
+import { globalUni } from '@rng/global-rng';
 import { repeatedCall64 } from '@lib/r-func';
 import { initWasm as initWasmQhyper } from './qhyper_wasm';
 import type { QHyperFunctionMap } from './qhyper_wasm'

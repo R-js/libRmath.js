@@ -30,7 +30,7 @@ import { rtOne } from './rt';
 
 import { repeatedCall64 } from '@lib/r-func';
 import { emptyFloat64Array } from '@lib/r-func';
-import { globalNorm } from '@lib/rng/global-rng';
+import { globalNorm } from '@rng/global-rng';
 export { rtOne };
 
 

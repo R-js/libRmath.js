@@ -21,8 +21,12 @@ module.exports = {
     overrides: [
         {
             files: ['**/*.ts'],
-            'env': { browser: true, es6: true, node: true },
-            'extends': [
+            env: { 
+                browser: true, 
+                es6: true, 
+                node: true 
+            },
+            extends: [
                 'plugin:@typescript-eslint/eslint-recommended',
                 'plugin:@typescript-eslint/recommended',
             ],
@@ -34,7 +38,7 @@ module.exports = {
             parserOptions: {
                 ecmaVersion: 2020, // Allows for the parsing of modern ECMAScript features
                 sourceType: 'module', // Allows for the use of imports
-                project: './tsconfig.json'
+                project: './tsconfig-jest.json'
             },
             plugins: ['@typescript-eslint'],
             rules: {

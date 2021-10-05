@@ -19,7 +19,7 @@ import { debug } from 'debug';
 import { ML_ERR_return_NAN } from '@common/logger';
 import { DBL_MAX_EXP } from '@lib/r-func';
 import { IRNG } from '@rng/irng';
-import { globalUni } from '@lib/rng/global-rng';
+import { globalUni } from '@rng/global-rng';
 
 const printer = debug('rbeta');
 

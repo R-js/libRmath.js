@@ -1,7 +1,7 @@
 
 
 
-import { globalUni, RNGKind } from '@lib/rng/global-rng';
+import { globalUni, RNGKind } from '@rng/global-rng';
 import { rcauchy } from '..';
 import { IRNGTypeEnum  } from '@rng/irng-type';
 import { IRNGNormalTypeEnum } from '@rng/normal/in01-type';
