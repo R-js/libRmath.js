@@ -41,7 +41,9 @@ const {
     sign,
     sqrt,
     PI,
-    trunc
+    trunc,
+    SQRT2,
+    LN2
 } = Math;
 
 export {  abs,
@@ -64,8 +66,9 @@ export {  abs,
     sign,
     sqrt,
     PI,
-    trunc
-
+    trunc,
+    SQRT2,
+    LN2
 };
 
 export type strTypes =

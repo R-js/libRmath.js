@@ -1,9 +1,6 @@
 import { loadData } from '@common/load';
 import { resolve } from 'path';
 
-loadData
-resolve
-
 import { cl, select } from '@common/debug-select';
 
 import { dt } from '../index';
@@ -11,20 +8,12 @@ import { dt } from '../index';
 const dntLogs = select('dnt');
 const dntDomainWarns = dntLogs("argument out of domain in '%s'");
 
-dntDomainWarns
-
-const pntLogs = select('pnt');
-const pntDomainWarns = pntLogs("argument out of domain in '%s'");
-
-pntDomainWarns
-
 describe('dt (n,df,ncp, giveLog)', function () {
 
     describe('invalid input and edge cases', () => {
         describe('ncp = undefined', () => {
             beforeEach(() => {
                 cl.clear('dnt');
-                cl.clear('dnorm');
             });
             it('x=Nan|df=NaN', () => {
                 const nan1 = dt(NaN, 4);
