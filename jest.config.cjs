@@ -15,6 +15,7 @@ const collectCoverageFrom = [
     'src/lib/distributions/normal/*.ts',
     'src/lib/distributions/poisson/*.ts',
     'src/lib/distributions/signrank/*.ts',
+    'src/lib/distributions/student-t/*.ts',
     'src/lib/r-func.ts',
     'src/lib/index.ts',
     'src/lib/trigonometry/*.ts',
@@ -138,13 +139,16 @@ const poissonTest = [
     '/distributions/poisson/__test__/rpois.test.ts$',
 ];
 
-const dsignRankTest = [
+const signRankTest = [
     '/distributions/signrank/__test__/dsign.test.ts$',
     '/distributions/signrank/__test__/psign.test.ts$',
     '/distributions/signrank/__test__/qsign.test.ts$',
     '/distributions/signrank/__test__/rsign.test.ts$',
 ];
 
+const studentT = [
+    '/distributions/student-t/__test__/rt.test.ts$',
+];
 
 const uniformRNG = [
     '/rng/knuth-taocp/__test__/(.*?\\.)?test.ts$',
@@ -180,7 +184,8 @@ const testRegex = [
     ...multinomTest,
     ...normalTest,
     ...poissonTest,
-    ...dsignRankTest,
+    ...signRankTest,
+    ...studentT,
     //
     ...uniformRNG,
     ...normalRNG
@@ -208,7 +213,7 @@ module.exports = {
     testPathIgnorePatterns: ['/es6/', '/commonjs/'],
     //testMatch: ['**/__tests__/**/*.[t]s?(x)', '**/?(*.)+(spec|test).[t]s?(x)'],
     testRegex,
-   /* globals: {
+   /*globals: {
         'ts-jest': {
             compiler: 'typescript',
             tsconfig: 'tsconfig-jest.json',
@@ -216,8 +221,8 @@ module.exports = {
                 ignoreCodes: [151001],
             },
         },
-    },
-    */
+    },*/
+   
     moduleNameMapper: {
         '^@dist/(.*)$': '<rootDir>/src/lib/distributions/$1',
         '^@common/(.*)$': [
@@ -228,7 +233,8 @@ module.exports = {
         '^@special/(.*)$': '<rootDir>/src/lib/special/$1',
         '^@trig/(.*)$': '<rootDir>/src/lib/trigonometry/$1',
         '^@rng/(.*)$': '<rootDir>/src/lib/rng/$1',
-        '^@lib/(.*)$': '<rootDir>/src/lib/$1'
+        '^@lib/(.*)$': '<rootDir>/src/lib/$1',
+        '^lib/(.*)$': '<rootDir>/src/lib/$1'
 
     },
     setupFiles: ['<rootDir>/src/packages/__test__/jest-ext.d.ts'],

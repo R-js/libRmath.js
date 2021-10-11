@@ -215,7 +215,7 @@ export function repeatedCall64<F extends (...args: any[]) => number>(n: number, 
     } else if (n > 0 && isFinite(n)) {
         result = new Float64Array(n);
     } else {
-        throw new TypeError(`"n=${n}" is not a postive finite number`);
+        throw new TypeError(`"n=${n}" is not a positive finite number`);
     }
     for (let i = 0; i < result.length; i++) {
         result[i] = fn(...args);
