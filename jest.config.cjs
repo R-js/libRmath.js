@@ -148,6 +148,7 @@ const signRankTest = [
 
 const studentT = [
     '/distributions/student-t/__test__/rt.test.ts$',
+    '/distributions/student-t/__test__/dt.test.ts$',
 ];
 
 const uniformRNG = [
@@ -203,8 +204,8 @@ module.exports = {
     collectCoverageFrom,
     coveragePathIgnorePatterns: ['node_modules', 'test', 'doc.ts'],
     coverageDirectory: 'coverage',
-    coverageProvider: 'babel', //"v8" is still experimental, but use "v8" for walk through debugging
-    //coverageProvider: 'v8', //"v8" is still experimental, but use "v8" for walk through debugging
+    //coverageProvider: 'babel', //"v8" is still experimental, but use "v8" for walk through debugging
+    coverageProvider: 'v8', //"v8" is still experimental, but use "v8" for walk through debugging
     coverageReporters: ['json', 'lcov', 'text', 'clover'],
     preset: 'ts-jest',
     testEnvironment: 'node',

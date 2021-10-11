@@ -20,7 +20,6 @@ import { debug } from 'debug';
 
 import {
     ME,
-    ML_ERR_return_NAN,
     ML_ERROR,
     R_Q_P01_boundaries,
 } from '@common/logger';
@@ -38,26 +37,26 @@ import {
 import { R_D_LExp, R_DT_qIv } from '@dist/exp/expm1';
 import { qnorm } from '@dist/normal/qnorm';
 import { tanpi } from '@trig/tanpi';
-import { dt } from './dt';
+import { _dt } from './dt';
 import { pt } from './pt';
 
 const printer_qt = debug('qt');
 
+const accu = 1e-13;
+const Eps = 1e-11; /* must be > accur */
+
+const eps = 1e-12;
+
 export function qt(p: number, ndf: number, lower_tail: boolean, log_p: boolean): number {
-    const eps = 1e-12;
+  
     let P;
     let q;
-
-    const accu = 1e-13;
-    const Eps = 1e-11; /* must be > accur */
-
-    if (isNaN(p) || isNaN(ndf)) return p + ndf;
+    
 
     const rc = R_Q_P01_boundaries(lower_tail, log_p, p, -Infinity, Infinity);
     if (rc !== undefined) {
         return rc;
     }
-    if (ndf <= 0) return ML_ERR_return_NAN(printer_qt);
 
     if (ndf < 1) {
         /* based on qnt */
@@ -206,7 +205,7 @@ export function qt(p: number, ndf: number, lower_tail: boolean, log_p: boolean):
             let it = 0;
             while (
                 it++ < 10 &&
-                (y = dt(q, ndf, false)) > 0 &&
+                (y = _dt(q, ndf, false)) > 0 &&
                 isFinite((x = (pt(q, ndf, false, false) - P / 2) / y)) &&
                 Math.abs(x) > 1e-14 * Math.abs(q)
             )

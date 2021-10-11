@@ -79,7 +79,7 @@
         "lint": "eslint src/**/*.ts",
         "lint:fix": "eslint src/**/*.ts --fix",
         "pretest": "rimraf coverage .jest-cache",
-        "test": "jest --verbose"
+        "test": "env DEBUG=\"dt,dnt,pt,pnt,qt,qnt,rt,dnorm,pnorm,qbeta,pbeta\" jest --verbose"
     },
     "contributes": {
         "typescriptServerPlugins": [

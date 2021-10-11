@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import { debug } from 'debug';
 import { ML_ERR_return_NAN, R_Q_P01_boundaries } from '@common/logger';
 import { R_DT_qIv } from '@dist/exp/expm1';
+import { EPSILON, min, max, abs, MAX_VALUE } from '@lib/r-func';
 import { qnorm } from '@dist/normal/qnorm';
 import { pnt } from './pnt';
 import { qt } from './qt';
@@ -56,18 +57,18 @@ export function qnt(p: number, df: number, ncp: number, lower_tail: boolean, log
 
     /* Invert pnt(.) :
      * 1. finding an upper and lower bound */
-    if (p > 1 - Number.EPSILON) return Infinity;
-    pp = Math.min(1 - Number.EPSILON, p * (1 + Eps));
-    for (ux = Math.max(1, ncp); ux < Number.MAX_VALUE && pnt(ux, df, ncp, true, false) < pp; ux *= 2);
+    if (p > 1 - EPSILON) return Infinity;
+    pp = min(1 - EPSILON, p * (1 + Eps));
+    for (ux = max(1, ncp); ux < MAX_VALUE && pnt(ux, df, ncp, true, false) < pp; ux *= 2);
     pp = p * (1 - Eps);
-    for (lx = Math.min(-1, -ncp); lx > -Number.MAX_VALUE && pnt(lx, df, ncp, true, false) > pp; lx *= 2);
+    for (lx = min(-1, -ncp); lx > -MAX_VALUE && pnt(lx, df, ncp, true, false) > pp; lx *= 2);
 
     /* 2. interval (lx,ux)  halving : */
     do {
         nx = 0.5 * (lx + ux); // could be zero
         if (pnt(nx, df, ncp, true, false) > p) ux = nx;
         else lx = nx;
-    } while (ux - lx > accu * Math.max(Math.abs(lx), Math.abs(ux)));
+    } while (ux - lx > accu * max(abs(lx), abs(ux)));
 
     return 0.5 * (lx + ux);
 }

@@ -29,18 +29,28 @@ import {
     R_DT_0,
     R_DT_1,
     R_DT_val,
+    isFinite,
+    DBL_EPSILON,
+    sqrt,
+    exp,
+    pow,
+    log,
+    expm1,
+    abs,
+    min,
+    M_LN2
 } from '@lib/r-func';
 import { lgammaOne } from '@special/gamma';
 import { pnorm5 as pnorm } from '../normal/pnorm';
 import { pt } from './pt';
 
-const { isFinite: R_FINITE, EPSILON: DBL_EPSILON } = Number;
-const { sqrt, exp, pow, log, expm1, abs: fabs, min: fmin2 } = Math;
 const printer_pnt = debug('pnt');
-const DBL_MIN_EXP = -1021;
-const M_LN2 = 0.693147180559945309417;
 
-export function pnt(_t: number, df: number, ncp: number, lower_tail = true, log_p = false): number {
+const DBL_MIN_EXP = -1021;
+const itrmax = 1000;
+const errmax = 1e-12;
+
+export function pnt(t: number, df: number, ncp: number, lower_tail = true, log_p = false): number {
     //double
     let errbd: number;
     let rxb: number;
@@ -60,33 +70,47 @@ export function pnt(_t: number, df: number, ncp: number, lower_tail = true, log_
     // int
 
     /* note - itrmax and errmax may be changed to suit one's needs. */
+    // TODO: added isNaN(ncp) check, apply to upstream
+    if (isNaN(t) || isNaN(df) ||isNaN(ncp))
+    {
+        return t + df + ncp;
+    }
 
-    const itrmax = 1000;
-    const errmax = 1e-12;
-
-    if (df <= 0.0) {
+    if (df <= 0.0)
+    {
         return ML_ERR_return_NAN(printer_pnt);
     }
 
+    if (!isFinite(t)) {
+        return t < 0 ? R_DT_0(lower_tail, log_p) : R_DT_1(lower_tail, log_p);
+    }
+
     if (ncp === 0.0) {
-        return pt(_t, df, lower_tail, log_p);
+        return pt(t, df, lower_tail, log_p);
     }
 
-    if (!R_FINITE(_t)) {
-        return _t < 0 ? R_DT_0(lower_tail, log_p) : R_DT_1(lower_tail, log_p);
+    let negdel: boolean;
+    let del: number;
+    let tt: number;
+
+    if (t >= 0)
+    {
+        negdel = false;
+        tt = t;
+        del = ncp;
     }
-
-    const negdel = _t < 0;
-    const tt = fabs(_t);
-    const del = _t >= 0 ? ncp : -ncp;
-
-    /* 
-      We deal quickly with left tail if extreme,
-        since pt(q, df, ncp) <= pt(0, df, ncp) = \Phi(-ncp) 
-    */
-    if (_t < 0 && ncp > 40 && (!log_p || !lower_tail)) {
-        printer_pnt('if x <=0 and solution for edge ncp > 40');
-        return R_DT_0(lower_tail, log_p);
+    else
+    {
+        /* We deal quickly with left tail if extreme,
+             since pt(q, df, ncp) <= pt(0, df, ncp) = \Phi(-ncp) */
+   
+        if (ncp > 40 && (!log_p || !lower_tail)) {
+            printer_pnt('if x <=0 and solution for edge ncp > 40');
+            return R_DT_0(lower_tail, log_p);
+        }
+        negdel = true;
+        tt = -t;
+        del = -ncp;
     }
 
     if (df > 4e5 || del * del > 2 * M_LN2 * -DBL_MIN_EXP) {
@@ -116,11 +140,11 @@ export function pnt(_t: number, df: number, ncp: number, lower_tail = true, log_
     /* initialize twin series */
     /* Guenther, J. (1978). Statist. Computn. Simuln. vol.6, 199. */
 
-    x = _t * _t; // always positive?
+    x = t * t; // always positive?
     rxb = df / (x + df); /* := (1 - x) {x below} -- but more accurately */
     x = x / (x + df); /* in [0,1) */
 
-    printer_pnt('pnt(t=%d, df=%d, ncp=%d, rxb=%d) ==> x= %d', _t, df, ncp, rxb, x);
+    printer_pnt('pnt(t=%d, df=%d, ncp=%d, rxb=%d) ==> x= %d', t, df, ncp, rxb, x);
 
     // x will be always >= 0
     // because df >0
@@ -198,7 +222,7 @@ export function pnt(_t: number, df: number, ncp: number, lower_tail = true, log_
 
             printer_pnt('%d %d %d|%d %d %d %d %d', it, 1e5 * godd, 1e5 * geven, p, q, s, tnc, errbd);
 
-            if (fabs(errbd) < errmax) {
+            if (abs(errbd) < errmax) {
                 printer_pnt('goto:true, errbd:%d < errmax:%d', errbd, errmax);
                 gotoFinis = true; /*convergence*/
                 break;
@@ -226,7 +250,7 @@ export function pnt(_t: number, df: number, ncp: number, lower_tail = true, log_
     if (tnc > 1 - 1e-10 && lower_tail) {
         ML_ERROR(ME.ME_PRECISION, 'pnt{final}', printer_pnt);
     }
-    const rc = R_DT_val(lower_tail, log_p, fmin2(tnc, 1) /* Precaution */);
+    const rc = R_DT_val(lower_tail, log_p, min(tnc, 1) /* Precaution */);
     printer_pnt('rc:%d, tnc:%d, log_p:%s, lower_tail:%s', rc, tnc, log_p, lower_tail);
 
     return rc;
