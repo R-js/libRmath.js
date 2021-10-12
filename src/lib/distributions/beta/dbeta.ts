@@ -19,7 +19,7 @@ import { debug } from 'debug';
 
 import { ML_ERR_return_NAN } from '@common/logger';
 
-import { R_D__0, R_D_exp, R_D_val } from 'lib/r-func';
+import { R_D__0, R_D_exp, R_D_val } from '@lib/r-func';
 
 import { dbinom_raw } from '@dist/binomial/dbinom';
 

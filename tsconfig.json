@@ -60,7 +60,7 @@
     "allowSyntheticDefaultImports": false,
     "allowUmdGlobalAccess": false,
     "baseUrl": "./src",
-    "esModuleInterop": true,
+    "esModuleInterop": false,
     "moduleResolution": "node",
     "paths": {
       "@common/*": [
