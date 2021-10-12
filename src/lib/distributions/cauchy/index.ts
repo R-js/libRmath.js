@@ -20,7 +20,7 @@ export { qcauchy } from './qcauchy';
 import { rcauchyOne } from './rcauchy';
 
 import { repeatedCall } from '@lib/r-func';
-import { globalUni } from '@lib/rng/global-rng';
+import { globalUni } from '@rng/global-rng';
 
 
 export function rcauchy(n: number, location = 0, scale = 1, rng = globalUni()): Float32Array {

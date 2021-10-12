@@ -4,7 +4,7 @@ import { cl, select } from '@common/debug-select';
 
 import { emptyFloat64Array } from '@lib/r-func';
 import { IRNGNormalTypeEnum } from '@rng/normal/in01-type';
-import { globalUni, RNGKind } from '@lib/rng/global-rng';
+import { globalUni, RNGKind } from '@rng/global-rng';
 import { IRNGTypeEnum } from '@rng/irng-type';
 import { rgamma } from '..';
 

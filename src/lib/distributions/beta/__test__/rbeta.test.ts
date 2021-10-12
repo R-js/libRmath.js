@@ -9,7 +9,7 @@ const rbetaDomainWarns = select('rbeta')("argument out of domain in '%s'");
 import { rbeta } from '..';
 import { IRNGTypeEnum } from '@rng/irng-type';
 import { IRNGNormalTypeEnum } from '@rng/normal/in01-type';
-import { globalNorm, globalUni, RNGKind } from '@lib/rng/global-rng';
+import { globalNorm, globalUni, RNGKind } from '@rng/global-rng';
 
 describe('rbeta', function () {
 

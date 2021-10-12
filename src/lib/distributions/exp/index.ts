@@ -19,7 +19,7 @@ import { pexp as _pexp} from './pexp';
 import { qexp as _qexp} from './qexp';
 import { rexpOne } from './rexp';
 
-import { globalUni } from '@lib/rng/global-rng';
+import { globalUni } from '@rng/global-rng';
 import type { IRNG } from '@rng/irng';
 import { repeatedCall64 } from '@lib/r-func';
 

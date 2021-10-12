@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import { debug } from 'debug';
 import { ML_ERR_return_NAN } from '@common/logger';
 import type { IRNG } from '@rng/irng';
-import { globalUni } from '@lib/rng/global-rng';
+import { globalUni } from '@rng/global-rng';
 import { emptyFloat32Array, nanFloat32Array } from '@lib/r-func';
 
 const printer = debug('runif');

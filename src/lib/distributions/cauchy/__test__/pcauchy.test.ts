@@ -24,12 +24,8 @@ describe('pcauchy', function () {
     it('x=0.2, scale=-2(<0), location=0', () => {
         const nan = pcauchy(0.2, 0, -2);
         expect(nan).toBeNaN();
-        //expect(out.length).toBe(1);
-        it.todo('check code path to hit DE Messages');
     });
-
-  
-
+    it.todo('check code path to hit DE Messages');
     it('x=0, scale=Infinity, location=Infinity', () => {
         const nan = pcauchy(0, Infinity, Infinity);
         expect(nan).toBeNaN();

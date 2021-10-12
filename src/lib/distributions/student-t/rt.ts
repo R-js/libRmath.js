@@ -21,20 +21,24 @@ import { debug } from 'debug';
 import { rchisqOne } from '@dist/chi-2/rchisq';
 import { ML_ERR_return_NAN } from '@common/logger';
 import type { IRNGNormal } from '@rng/normal/normal-rng';
-import { globalNorm } from '@lib/rng/global-rng';
+import { globalNorm } from '@rng/global-rng';
 
 const printer = debug('rt');
 
 export function rtOne(df: number, rng: IRNGNormal = globalNorm()): number {
-    if (isNaN(df) || df <= 0.0) {
+    if (isNaN(df) || df <= 0.0)
+    {
         return ML_ERR_return_NAN(printer);
     }
 
-    if (!isFinite(df)) return rng.random();
-
+    const num = rng.random();
+    if (!isFinite(df))
+    {
+         return num;
+    }
+    const chOne = rchisqOne(df, rng);
+    
     /* Some compilers (including MW6) evaluated this from right to left
         return norm_rand() / Math.sqrt((rchisq(df) / df); */
-
-    const num = rng.random();
-    return num / Math.sqrt(rchisqOne(df, rng) / df);
+    return (num / Math.sqrt(chOne/ df));
 }

@@ -25,7 +25,7 @@ import { fsign } from './fsign';
 
 import { exp_rand } from '@dist/exp/sexp';
 import type { IRNGNormal } from '@rng/normal/normal-rng';
-import { globalNorm } from '@lib/rng/global-rng';
+import { globalNorm } from '@rng/global-rng';
 
 const a0 = -0.5;
 const a1 = 0.3333333;

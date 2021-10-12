@@ -16,7 +16,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { rbinomOne } from '@dist/binomial/rbinom';
-import { globalUni } from '@lib/rng/global-rng';
+import { globalUni } from '@rng/global-rng';
 import { emptyFloat64Array, sumfp64 } from '@lib/r-func';
 
 

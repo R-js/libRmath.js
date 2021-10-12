@@ -9,7 +9,7 @@ const rnormDomainWarns = rnormLogs("argument out of domain in '%s'");
 
 //const boundaries = select('R_Q_P01_boundaries')("argument out of domain in '%s'");
 import { IRNGTypeEnum } from '@rng/irng-type';
-import { globalUni, RNGKind } from '@lib/rng/global-rng';
+import { globalUni, RNGKind } from '@rng/global-rng';
 import { IRNGNormalTypeEnum } from '@rng/normal/in01-type';
 
 describe('rnorm', function () {

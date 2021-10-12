@@ -22,7 +22,7 @@ import { rlnormOne } from './rlnorm';
 import { repeatedCall } from '@lib/r-func';
 
 import type { IRNGNormal } from '@rng/normal/normal-rng';
-import { globalNorm } from '@lib/rng/global-rng';
+import { globalNorm } from '@rng/global-rng';
 
 export { rlnormOne }
 

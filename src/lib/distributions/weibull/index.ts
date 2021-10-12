@@ -22,7 +22,7 @@ import { rweibullOne } from './rweibull';
 
 import type { IRNG } from '@rng/irng';
 import { repeatedCall } from '@lib/r-func';
-import { globalUni } from '@lib/rng/global-rng';
+import { globalUni } from '@rng/global-rng';
 
 export { rweibullOne };
 export function rweibull(n: number, shape: number, scale = 1, rng: IRNG = globalUni()): Float32Array {

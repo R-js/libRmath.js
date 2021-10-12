@@ -1,7 +1,7 @@
 
 
 
-import { globalUni, RNGKind } from '@lib/rng/global-rng';
+import { globalUni, RNGKind } from '@rng/global-rng';
 import { rcauchy } from '..';
 import { IRNGTypeEnum  } from '@rng/irng-type';
 import { IRNGNormalTypeEnum } from '@rng/normal/in01-type';
@@ -37,8 +37,8 @@ describe('rcauchy', function () {
     it('n=1, location=NaN, defaults', () => {
         const nan = rcauchy(1, NaN);
         expect(nan).toEqualFloatingPointBinary(NaN);
-        it.todo('expect(out.length).toBe(1)');
     });
+    it.todo('expect(out.length).toBe(1)');
     it('n=1, location=3, scale=0', () => {
         const z = rcauchy(1, 3, 0);
         expect(z).toEqualFloatingPointBinary(3);

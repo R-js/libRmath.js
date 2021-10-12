@@ -29,7 +29,7 @@ import { pnf } from './pnf';
 import { qf as _qf } from './qf';
 import { qnf } from './qnf';
 import { rfOne as _rfOne } from './rf';
-import { globalNorm } from '@lib/rng/global-rng';
+import { globalNorm } from '@rng/global-rng';
 
 export function df(x: number, df1: number, df2: number, ncp?: number, log = false): number {
     if (ncp === undefined) {

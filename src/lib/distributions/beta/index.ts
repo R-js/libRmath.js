@@ -35,7 +35,7 @@ import { rbetaOne } from './rbeta';
 
 //helper
 import { repeatedCall } from '@lib/r-func';
-import { globalNorm } from '@lib/rng/global-rng';
+import { globalNorm } from '@rng/global-rng';
 
 export { rbetaOne };
 

@@ -21,7 +21,7 @@ export { plogis } from './plogis';
 export { qlogis } from './qlogis';
 import { rlogisOne } from './rlogis';
 import { repeatedCall64 } from '@lib/r-func';
-import { globalUni } from '@lib/rng/global-rng';
+import { globalUni } from '@rng/global-rng';
 
 export { rlogisOne };
 

@@ -20,7 +20,7 @@ export { qgeom } from './qgeom';
 import { rgeomOne } from './rgeom';
 import type { IRNGNormal } from '@rng/normal/normal-rng';
 import { repeatedCall64 } from '@lib/r-func';
-import { globalNorm } from '@lib/rng/global-rng';
+import { globalNorm } from '@rng/global-rng';
 
 export function rgeom(n: number, prob: number, rng: IRNGNormal = globalNorm()): Float64Array {
   return repeatedCall64(n, rgeomOne, prob, rng);

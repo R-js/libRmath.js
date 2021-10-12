@@ -3,7 +3,6 @@
     "include": [
         "src/**/*.ts"
     ],
-    "outDir" :"jest-compile-test",
     "compilerOptions": {
         "noEmit": false,
         "module": "es2020",
