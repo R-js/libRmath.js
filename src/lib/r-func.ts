@@ -300,7 +300,7 @@ export const M_1_PI = 1.0 / PI;
 export const M_PI_2 = PI / 2;
 
 //ok
-export const M_LN_SQRT_PI = 0.57236494292470008; // log(sqrt(pi))
+export const M_LN_SQRT_PI = 0.572364942924700087071713675677; // log(sqrt(pi))
 
 //ok
 export const INT_MAX = 2 ** 31 - 1;
