@@ -18,10 +18,26 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import { debug } from 'debug';
 import { ML_ERR_return_NAN, } from '@common/logger';
 import { R_DT_0, R_DT_1, R_DT_val, round, trunc, M_LN2, exp, isNaN, isFinite } from '@lib/r-func';
-import { cpu_csignrank as csignrank } from './csignrank';
+import { cpu_csignrank } from './csignrank';
 import { growMemory, memory } from './csignrank_wasm';
 
+import type { CSingRank, CSignRankMap } from './csignrank_wasm';
+
 const printer = debug('psignrank');
+
+let _csignrank: CSingRank  = cpu_csignrank; 
+
+function registerBackend(fns: CSignRankMap): void {
+    _csignrank = fns.csignrank;
+}
+
+function unRegisterBackend(): boolean {
+    _csignrank = cpu_csignrank
+    return _csignrank === cpu_csignrank ? false: true
+}
+
+export { unRegisterBackend, registerBackend };
+
 
 export function psignrank(x: number, n: number, lowerTail = true, logP = false): number {
     if (isNaN(x) || isNaN(n)) {
@@ -57,12 +73,12 @@ export function psignrank(x: number, n: number, lowerTail = true, logP = false):
     if (x <= u / 2) {
         //smaller then mean
         for (let i = 0; i <= x; i++) {
-            p += csignrank(i, n, u, c) * f;
+            p += _csignrank(i, n, u, c) * f;
         }
     } else {
         x = (n * (n + 1)) / 2 - x;
         for (let i = 0; i < x; i++) {
-            p += csignrank(i, n, u, c) * f;
+            p += _csignrank(i, n, u, c) * f;
         }
         lowerTail = !lowerTail; /* p = 1 - p; */
     }

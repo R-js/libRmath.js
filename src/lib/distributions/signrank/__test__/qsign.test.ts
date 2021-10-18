@@ -2,10 +2,11 @@ import { loadData } from '@common/load';
 import { resolve } from 'path';
 
 import { cl, select } from '@common/debug-select';
+import { humanize } from '@common/humanize-time';
 
 import { qsignrank, useWasmBackend, clearBackend, psignrank } from '..';
 
-import { log, DBL_EPSILON} from '@lib/r-func';
+import { log, DBL_EPSILON } from '@lib/r-func';
 
 const qsignrankLogs = select('qsignrank');
 const qsignrankDomainWarns = qsignrankLogs("argument out of domain in '%s'");
@@ -61,20 +62,22 @@ describe('qsignrank (wilcox sign rank)', function () {
             expect(ten).toBe(10);
         });
         it('n > DBL_MIN_VALUE_LN/M_LN2 (=1074), should give NaN', () => {
-            const nan = qsignrank(DBL_EPSILON*10, 1075);
+            const nan = qsignrank(DBL_EPSILON * 10, 1075);
             expect(nan).toBeNaN();
         });
         it('n === DBL_MIN_VALUE_LN/M_LN2 (=1074), p=eps*12 should give 207584', () => {
-            const res = qsignrank(DBL_EPSILON*12, 1074);
+            const res = qsignrank(DBL_EPSILON * 12, 1074);
             expect(res).toEqualFloatingPointBinary(207584);
         });
         it.todo('(diverge from fedility) qsignrank((log(0), 4, lowerTail=true, pAsLog = TRUE) sould be 0 not a NaN')
         it.todo('n > 1074 should give NaN add to upstream');
     });
-    describe('fidelity', () => {
-        it.todo('upstream is broken: > qsignrank(psignrank(219, 40, F), 40) == 600');
-        it.todo('upstream is broken: > qsignrank(psignrank(261, 40, F), 40) == 558');
-        it.todo('upstream is broken: > qsignrank(psignrank(260, 40, F), 40) == 559');
+    describe.only('fidelity', () => {
+        it('qsignrank(psignrank(X, 40, T), 40) == X', () => {
+            expect(qsignrank(psignrank(219, 40, true), 40)).toBe(219);
+            expect(qsignrank(psignrank(261, 40, true), 40)).toBe(261);
+            expect(qsignrank(psignrank(260, 40, true), 40)).toBe(260);
+        });
         it('n = 40, check via qsignrank(psignrank(x, 40) === x, 40)', async () => {
             const [x] = await loadData(resolve(__dirname, 'fixture-generation', 'qsign1a.R'), /\s+/, 1);
             const p = x.map(_x => psignrank(_x, 40));
@@ -94,23 +97,22 @@ describe('qsignrank (wilcox sign rank)', function () {
         it.todo('upstream qsignrank(log(0), asLogP=true) should not return a NaN');
         it('(wasm) n = 1074', async () => {
             await useWasmBackend();
-            
-            const [x, xCalc] = await loadData(resolve(__dirname, 'fixture-generation', 'qsign1b.R'), /\s+/, 1,2);
+            const start0 = Date.now();
+            const [x, xCalc] = await loadData(resolve(__dirname, 'fixture-generation', 'qsign1b.R'), /\s+/, 1, 2);
             const p = x.map(_x => psignrank(_x, 1074));
-            const start = Date.now();
+            const start1 = Date.now();
             const xCalcActual = p.map(_p => qsignrank(_p, 1074));
-            const duration = Math.round((Date.now()-start)/1000);
-            console.log(`wasm acc lasted ${duration} sec`);
+            console.log(`wasm acc lasted ${humanize.humanize(Date.now() - start0)} and ${humanize.humanize(Date.now() - start1)}`);
             expect(xCalcActual).toEqualFloatingPointBinary(xCalc);
             clearBackend();
-        });
+        });   
         it('(no wasm) n = 1074', async () => {
-            const [x, xCalc] = await loadData(resolve(__dirname, 'fixture-generation', 'qsign1b.R'), /\s+/, 1,2);
+            const start0 = Date.now();
+            const [x, xCalc] = await loadData(resolve(__dirname, 'fixture-generation', 'qsign1b.R'), /\s+/, 1, 2);
             const p = x.map(_x => psignrank(_x, 1074));
-            const start = Date.now();
+            const start1 = Date.now();
             const xCalcActual = p.map(_p => qsignrank(_p, 1074));
-            const duration = Math.round((Date.now()-start)/1000);
-            console.log(`no wasm acc lasted ${duration} sec`);
+            console.log(`(no wasm) acc lasted ${humanize.humanize(Date.now() - start0)} and ${humanize.humanize(Date.now() - start1)}`);
             expect(xCalcActual).toEqualFloatingPointBinary(xCalc);
         });
     })

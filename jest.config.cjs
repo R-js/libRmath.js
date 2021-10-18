@@ -170,6 +170,10 @@ const normalRNG = [
     '/rng/normal/kinderman-ramage/__test__/(.*?\\.)?test.ts$',
 ];
 
+const specialFunctions = [
+    '/special/bessel/besselJ/__test__/test\\.ts'
+]
+
 const testRegex = [
     ...betaTest,
     ...binomTest,
@@ -190,7 +194,9 @@ const testRegex = [
     ...studentT,
     //
     ...uniformRNG,
-    ...normalRNG
+    ...normalRNG,
+    //
+    ...specialFunctions
 /*
     '/special/bessel/besselJ/__test__/(.*?\\.)?test.ts$',
     '/special/gamma/__test__/(.*?\\.)?test.ts$',

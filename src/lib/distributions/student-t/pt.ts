@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 
-import { lbeta_scalar } from '@special/beta/lbeta';
+import lbeta from '@special/beta/lbeta';
 import { pbeta } from '@dist/beta/pbeta';
 import { M_LN2, R_D_Cval, log, log1p, exp, sqrt, abs } from '@lib/r-func';
 import { pnorm5 as pnorm } from '@dist/normal/pnorm';
@@ -55,7 +55,7 @@ export function pt(x: number, n: number, lower_tail = true, log_p = false): numb
            with z = 1/nx,  a = n/2,  b= 1/2 :
         */
         //let lval;
-        const lval = -0.5 * n * (2 * log(abs(x)) - log(n)) - lbeta_scalar(0.5 * n, 0.5) - log(0.5 * n);
+        const lval = -0.5 * n * (2 * log(abs(x)) - log(n)) - lbeta(0.5 * n, 0.5) - log(0.5 * n);
         val = log_p ? lval : exp(lval);
     } else {
         val =

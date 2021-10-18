@@ -43,7 +43,10 @@ const {
     PI,
     trunc,
     SQRT2,
-    LN2
+    LN2,
+    sinh,
+    cos,
+    sin
 } = Math;
 
 export {  abs,
@@ -68,7 +71,10 @@ export {  abs,
     PI,
     trunc,
     SQRT2,
-    LN2
+    LN2,
+    sinh,
+    cos,
+    sin
 };
 
 export type strTypes =
@@ -280,6 +286,8 @@ export const DBL_MANT_DIG = 18;
 
 //ok
 export const DBL_MIN = 2.2250738585072014e-308;
+
+export const DBL_MAX = 1.7976931348623158e+308;
 
 //ok
 export const M_LN2 = 0.693147180559945309417; /* ln(2) */
