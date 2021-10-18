@@ -2,6 +2,8 @@ import { loadData } from '@common/load';
 import { resolve } from 'path';
 import { cl, select } from '@common/debug-select';
 
+import { humanize } from '@common/humanize-time';
+
 import { qhyper, useWasmBackends, clearBackends } from '..';
 
 const qhyperLogs = select('qhyper');
@@ -129,13 +131,12 @@ describe('qhyper(p,m,n,k,log)', function () {
         it('(28 sec) wasm-accelerated test, p=0.5, nr=2**31-1, nb=2**31-1, n=2**31-1',async () => {
             // initialize wasm
             await useWasmBackends();
-            const start = new Date();
+            const start = Date.now();
             //console.log(`start at: ${start.toISOString()}`)
             const result = qhyper(0.5,2**31-1,2**31-1,2**31-1);
-            const stop = new Date();
-            const duration = Math.round((stop.valueOf()-start.valueOf())/1000);
+            const stop = Date.now();
             //console.log(`stop at: ${stop.toISOString()}`)
-            console.log(`duration: ${duration} sec, result=${result}`);
+            console.log(`(wasm) duration: ${humanize.humanize(stop-start)}`);
             clearBackends();
             expect(result).toBe(1073741806);
         });
