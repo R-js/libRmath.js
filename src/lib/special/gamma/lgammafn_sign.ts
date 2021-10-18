@@ -22,6 +22,7 @@ import {
     fmod,
     M_LN_SQRT_2PI, // no math alias for this
     M_LN_SQRT_PId2,
+    trunc, floor, abs, log 
 } from '@lib/r-func';
 
 import { ME, ML_ERROR } from '@common/logger';
@@ -30,8 +31,6 @@ import { sinpi } from '@trig/sinpi';
 import { lgammacor } from './lgammacor';
 import { _gammafn } from './gamma_fn';
 import type { NumArray } from '@lib/r-func';
-
-import {  trunc, floor, abs as fabs, isNaN as ISNAN, log } from '@lib/r-func';
 
 const printer_sign = debug('lgammafn_sign');
 
@@ -94,7 +93,7 @@ export function lgammafn_sign(x: number, sgn?: Int8Array): number {
     if (sgn) sgn[0] = 1;
 
     //#ifdef IEEE_754
-    if (ISNAN(x)) return x;
+    if (isNaN(x)) return x;
     //#endif
 
     if (sgn && x < 0 && fmod(floor(-x), 2) === 0) {
@@ -107,10 +106,10 @@ export function lgammafn_sign(x: number, sgn?: Int8Array): number {
         return ML_POSINF; // +Inf, since lgamma(x) = log|gamma(x)|
     }
 
-    const y = fabs(x);
+    const y = abs(x);
 
     if (y < 1e-306) return -log(y); // denormalized range, R change
-    if (y <= 10) return log(fabs(_gammafn(x) as number));
+    if (y <= 10) return log(abs(_gammafn(x) as number));
 
     //  ELSE  y = |x| > 10 ----------------------
 
@@ -127,7 +126,7 @@ export function lgammafn_sign(x: number, sgn?: Int8Array): number {
         else return M_LN_SQRT_2PI + (x - 0.5) * log(x) - x + lgammacor(x);
     }
     // else: x < -10; y = -x
-    const sinpiy = fabs(sinpi(y));
+    const sinpiy = abs(sinpi(y));
 
     /* UPSTREAM remove this needless check
     if (sinpiy === 0) {
@@ -139,7 +138,7 @@ export function lgammafn_sign(x: number, sgn?: Int8Array): number {
 
     const ans = M_LN_SQRT_PId2 + (x - 0.5) * log(y) - x - log(sinpiy) - lgammacor(y);
 
-    if (fabs(((x - trunc(x - 0.5)) * ans) / x) < dxrel) {
+    if (abs(((x - trunc(x - 0.5)) * ans) / x) < dxrel) {
         // The answer is less than half precision because
         // the argument is too near a negative integer.
 

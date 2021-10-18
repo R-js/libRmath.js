@@ -22,19 +22,18 @@ import { ME, ML_ERROR } from '@common/logger';
 
 import { cospi } from '@trig/cospi';
 import { sinpi } from '@trig/sinpi';
-import bessel_y_scalar from '../besselY';
+import BesselY from '../besselY';
 import { J_bessel } from './Jbessel';
 
-const { isNaN: ISNAN } = Number;
-const { floor } = Math;
+import { floor } from '@lib/r-func'
 
-const printer = debug('bessel_j');
+const printer = debug('BesselJ');
 
-function bessel_j_scalar(x: number, alpha: number): number {
+function BesselJ(x: number, alpha: number): number {
     /* NaNs propagated correctly */
-    if (ISNAN(x) || ISNAN(alpha)) return x + alpha;
+    if (isNaN(x) || isNaN(alpha)) return x + alpha;
     if (x < 0) {
-        ML_ERROR(ME.ME_RANGE, 'bessel_j_scalar', printer);
+        ML_ERROR(ME.ME_RANGE, 'BesselJ', printer);
         return NaN;
     }
     // double
@@ -47,10 +46,10 @@ function bessel_j_scalar(x: number, alpha: number): number {
             rc = 0;
         }
         else {
-            rc = bessel_j_scalar(x, -alpha) * cospi(alpha);
+            rc = BesselJ(x, -alpha) * cospi(alpha);
         }
         if (alpha !== na) {
-            rc += bessel_y_scalar(x, -alpha) * sinpi(alpha);
+            rc += BesselY(x, -alpha) * sinpi(alpha);
         }
         return rc;
     } else if (alpha > 1e7) {
@@ -74,5 +73,4 @@ function bessel_j_scalar(x: number, alpha: number): number {
     return rc.x; // bj[nb - 1];
 }
 
-export default bessel_j_scalar;
-export { bessel_j_scalar as BesselJ };
+export default BesselJ;

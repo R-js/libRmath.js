@@ -21,10 +21,21 @@ import { sqxmin_BESS_K, xmax_BESS_K } from '../bessel-constants';
 import { IBesselRC } from '../IBesselRC';
 
 const M_SQRT_2dPI = 0.797884560802865355879892119869;
-const { min, log, exp, abs: fabs, sinh, trunc, sqrt, max } = Math;
-const { MAX_VALUE: DBL_MAX, EPSILON: DBL_EPSILON, MIN_VALUE: DBL_MIN } = Number;
+import {
+    min,
+    log,
+    exp,
+    abs,
+    sinh,
+    trunc,
+    sqrt,
+    max,
+    DBL_MAX,
+    DBL_EPSILON,
+    DBL_MIN
+} from '@lib/r-func';
+
 const printer = debug('K_bessel');
-const ML_POSINF = Infinity;
 
 export function K_bessel(x: number, alpha: number, nb: number, ize: number): IBesselRC {
     /*-------------------------------------------------------------------
@@ -215,7 +226,7 @@ export function K_bessel(x: number, alpha: number, nb: number, ize: number): IBe
                 if (ex <= 0) {
                     if (ex < 0) ML_ERROR(ME.ME_RANGE, 'K_bessel', printer);
                     // for (i = 0; i < nb; i++)
-                    bk[0] = ML_POSINF;
+                    bk[0] = Infinity;
                 } /* would only have underflow */
                 //for (i = 0; i < nb; i++)
                 else bk[0] = 0;
@@ -266,7 +277,7 @@ export function K_bessel(x: number, alpha: number, nb: number, ize: number): IBe
                 }
                 /* d2 := sinh(f1)/ nu = sinh(f1)/(f1/f0)
                  *	   = f0 * sinh(f1)/f1 */
-                if (fabs(f1) <= 0.5) {
+                if (abs(f1) <= 0.5) {
                     f1 *= f1;
                     d2 = 0;
                     for (i = 0; i < 6; ++i) {
@@ -344,7 +355,7 @@ export function K_bessel(x: number, alpha: number, nb: number, ize: number): IBe
                         t2 = c * (p0 - d2 * f0);
                         bk1 += t1;
                         bk2 += t2;
-                    } while (fabs(t1 / (f1 + bk1)) > DBL_EPSILON || fabs(t2 / (f2 + bk2)) > DBL_EPSILON);
+                    } while (abs(t1 / (f1 + bk1)) > DBL_EPSILON || abs(t2 / (f2 + bk2)) > DBL_EPSILON);
                     bk1 = f1 + bk1;
                     bk2 = (2 * (f2 + bk2)) / ex;
                     if (ize === 2) {
@@ -390,7 +401,7 @@ export function K_bessel(x: number, alpha: number, nb: number, ize: number): IBe
                        -----------------------------------------------------------*/
                     d2 = trunc(estm[2] * ex + estm[3]);
                     m = trunc(d2);
-                    c = fabs(nu);
+                    c = abs(nu);
                     d3 = c + c;
                     d1 = d3 - 1;
                     f1 = DBL_MIN;
@@ -436,7 +447,7 @@ export function K_bessel(x: number, alpha: number, nb: number, ize: number): IBe
                     }
                     bk1 = 1 / ((M_SQRT_2dPI + M_SQRT_2dPI * blpha) * sqrt(ex));
                     if (ize === 1) bk1 *= exp(-ex);
-                    wminf = estf[4] * (ex - fabs(ex - estf[6])) + estf[5];
+                    wminf = estf[4] * (ex - abs(ex - estf[6])) + estf[5];
                 }
                 /* ---------------------------------------------------------
                    Calculation of K(ALPHA+1,X)

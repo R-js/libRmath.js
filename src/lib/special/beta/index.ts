@@ -1,2 +1,5 @@
-export { beta } from './beta';
-export { lbeta, lbeta_scalar } from './lbeta';
+import beta from './beta';
+import lbeta from './lbeta';
+
+
+export { beta, lbeta };
