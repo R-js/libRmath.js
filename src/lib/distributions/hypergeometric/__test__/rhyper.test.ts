@@ -6,6 +6,7 @@ import { IRNGNormalTypeEnum } from '@rng/normal/in01-type';
 import { globalUni, RNGKind } from '@rng/global-rng';
 import { IRNGTypeEnum } from '@rng/irng-type';
 import { rhyper, useWasmBackends, clearBackends } from '..';
+import { humanize } from '@common/humanize-time';
 
 const rhyperDomainWarns = select('rhyper')("argument out of domain in '%s'");
 
@@ -40,14 +41,16 @@ describe('rhyper', function () {
             globalUni().init(123456);
         });
 
-        it('test with m, n, k bigger then INT_MAX (2^31-1)', async () => {
+        it('test with k=1 AND m, n, bigger then INT_MAX (2^31-1)', () => {
             const z = rhyper(10, 2 ** 31, 2 ** 31, 1);
             expect(z).toEqualFloatingPointBinary([1, 1, 0, 0, 0, 0, 1, 0, 1, 0]);
             const z2 = rhyper(10, 2 ** 31 - 2, 2 ** 31, 1)
             expect(z2).toEqualFloatingPointBinary([1, 1, 1, 1, 1, 1, 1, 0, 0, 1]);
+        });
+        it('(wasm) with k=2^31-1 AND m, n, bigger then INT_MAX (2^31-1', async () => { 
             globalUni().init(1234);
-            const d = Date.now();
             await useWasmBackends();
+            const t0 = Date.now();
             const z3 = rhyper(
                 1, //N
                 2 ** 31 - 1, //nn1in
@@ -56,7 +59,7 @@ describe('rhyper', function () {
                 undefined,   //rng
             );
             expect(z3).toEqualFloatingPointBinary(1073761537);
-            
+            const t1 = Date.now();
             globalUni().init(1234); // important!
             const z4 = rhyper(
                 1, //N
@@ -65,13 +68,11 @@ describe('rhyper', function () {
                 2 ** 31 - 1, //kkin
                 undefined,   //rng
             );
+            const t2 = Date.now();
             expect(z4).toEqualFloatingPointBinary(1073741824);
             clearBackends();
-
-            //z3=1073761537, 459 sec
-            //1073761537, wasm backend 27sec (17 times faster)
-            const delay = Date.now() - d;
-            console.log(`r=${z4}, delay=${delay}ms`);
+            console.log(`rhyper: (wasm) ${humanize.humanize(t1-t0)}`);
+            console.log(`rhyper: (wasm) ${humanize.humanize(t2-t1)}`);
         });
     });
 

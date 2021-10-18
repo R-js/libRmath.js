@@ -17,9 +17,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 import type { IRNG } from '@rng/irng';
 export { dsignrank } from './dsign';
-import {  unRegisterBackend as unregister_dsign_backend, registerBackend as register_dsign_backend  } from './dsign';
+
 export { psignrank } from './psign';
 export { qsignrank } from './qsign';
+import {  unRegisterBackend as unregister_dsign_backend, registerBackend as register_dsign_backend  } from './dsign';
+import {  unRegisterBackend as unregister_qsign_backend, registerBackend as register_qsign_backend  } from './qsign';
+import {  unRegisterBackend as unregister_psign_backend, registerBackend as register_psign_backend  } from './psign';
 import { rsignrankOne } from './rsign';
 import { repeatedCall64 } from '@lib/r-func';
 import { globalUni } from '@rng/global-rng';
@@ -33,10 +36,22 @@ export function rsignrank(N: number, n: number, rng:IRNG = globalUni()): Float64
 async function useWasmBackend(): Promise<void> {
    const fns: CSignRankMap = await initSignRankBackend();
    register_dsign_backend(fns);
+   register_qsign_backend(fns);
+   register_psign_backend(fns);
 }
 
 function clearBackend(): boolean {
-   return unregister_dsign_backend(); // && unRegisterPHyperBackend etc
+   let rc =0;
+   if (unregister_dsign_backend()){
+      rc++;
+   }
+   if (unregister_qsign_backend()){
+      rc++;
+   }
+   if (unregister_psign_backend()){
+      rc++;
+   }
+   return (rc === 3) ? true: false;
 }
 
 export { useWasmBackend, clearBackend }

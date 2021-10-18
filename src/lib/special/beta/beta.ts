@@ -19,7 +19,8 @@ import { debug } from 'debug';
 
 import { ME, ML_ERR_return_NAN, ML_ERROR } from '@common/logger';
 import { gammaOne } from '@special/gamma';
-import { lbeta_scalar } from './lbeta';
+import lbeta from './lbeta';
+import { exp } from '@lib/r-func';
 
 // not used const xmin = -170.5674972726612;
 const xmax = 171.61447887182298;
@@ -28,7 +29,7 @@ const lnsml = -708.39641853226412;
 
 const printer_beta = debug('beta');
 
-function beta_scalar(a: number, b: number): number {
+function beta(a: number, b: number): number {
     if (isNaN(a) || isNaN(b)) return a + b;
 
     if (a < 0 || b < 0) return ML_ERR_return_NAN(printer_beta);
@@ -46,7 +47,7 @@ function beta_scalar(a: number, b: number): number {
         //
         return (1 / gammaOne(a + b)) * gammaOne(a) * gammaOne(b);
     } else {
-        const val: number = lbeta_scalar(a, b);
+        const val: number = lbeta(a, b);
         // underflow to 0 is not harmful per se;  exp(-999) also gives no warning
         //#ifndef IEEE_754
         if (val < lnsml) {
@@ -55,8 +56,8 @@ function beta_scalar(a: number, b: number): number {
             // return ML_UNDERFLOW; pointless giving incorrect value
         }
         //#endif
-        return Math.exp(val);
+        return exp(val);
     }
 }
 
-export { beta_scalar as beta };
+export default beta;

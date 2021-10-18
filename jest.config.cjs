@@ -149,6 +149,7 @@ const signRankTest = [
 const studentT = [
     '/distributions/student-t/__test__/rt.test.ts$',
     '/distributions/student-t/__test__/dt.test.ts$',
+    '/distributions/student-t/__test__/pt.test.ts$',
 ];
 
 const uniformRNG = [
@@ -168,6 +169,10 @@ const normalRNG = [
     '/rng/normal/inversion/__test__/(.*?\\.)?test.ts$',
     '/rng/normal/kinderman-ramage/__test__/(.*?\\.)?test.ts$',
 ];
+
+const specialFunctions = [
+    '/special/bessel/besselJ/__test__/test\\.ts'
+]
 
 const testRegex = [
     ...betaTest,
@@ -189,7 +194,9 @@ const testRegex = [
     ...studentT,
     //
     ...uniformRNG,
-    ...normalRNG
+    ...normalRNG,
+    //
+    ...specialFunctions
 /*
     '/special/bessel/besselJ/__test__/(.*?\\.)?test.ts$',
     '/special/gamma/__test__/(.*?\\.)?test.ts$',
@@ -204,8 +211,8 @@ module.exports = {
     collectCoverageFrom,
     coveragePathIgnorePatterns: ['node_modules', 'test', 'doc.ts'],
     coverageDirectory: 'coverage',
-    //coverageProvider: 'babel', //"v8" is still experimental, but use "v8" for walk through debugging
-    coverageProvider: 'v8', //"v8" is still experimental, but use "v8" for walk through debugging
+    coverageProvider: 'babel', //"v8" is still experimental, but use "v8" for walk through debugging
+    //coverageProvider: 'v8', //"v8" is still experimental, but use "v8" for walk through debugging
     coverageReporters: ['json', 'lcov', 'text', 'clover'],
     preset: 'ts-jest',
     testEnvironment: 'node',

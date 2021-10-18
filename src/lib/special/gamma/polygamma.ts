@@ -135,23 +135,39 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 import { debug } from 'debug';
-import { DBL_MANT_DIG, DBL_MAX_EXP, DBL_MIN_EXP, imin2, M_LOG10_2, R_pow_di } from '@lib/r-func';
+import { 
+    DBL_MANT_DIG,
+    DBL_MAX_EXP,
+    DBL_MIN_EXP,
+    imin2,
+    M_LOG10_2,
+    R_pow_di, 
+    DBL_EPSILON,
+    pow, 
+    abs, 
+    max,
+    min,
+    exp,
+    log,
+    sin,
+    cos,
+    PI,
+    round 
+ } from '@lib/r-func';
 import type { NumArray } from '@lib/r-func';
 import { isArray, isEmptyArray, emptyFloat64Array } from '@lib/r-func';
 
 const printer = debug('dpsifn');
 
-const { NaN: ML_NAN, POSITIVE_INFINITY: ML_POSINF, isNaN: ISNAN, EPSILON: DBL_EPSILON } = Number;
+
 
 const n_max = 100;
-
-const { pow, abs: fabs, max: fmax2, min: fmin2, exp, log, sin, cos, PI: M_PI, round, round: R_forceint } = Math;
 
 const trm = new Float64Array(23);
 const trmr = new Float64Array(n_max + 1);
 const r1m5 = M_LOG10_2;
-const r1m4 = Number.EPSILON * 0.5;
-const wdtol = fmax2(r1m4, 0.5e-18); /* 1.11e-16 */
+const r1m4 = DBL_EPSILON * 0.5;
+const wdtol = max(r1m4, 0.5e-18); /* 1.11e-16 */
 
 const lrg = 1 / (2 * DBL_EPSILON);
 
@@ -249,7 +265,7 @@ function dpsifn(
          */
         if (x === round(x)) {
             /* non-positive integer : +Inf or NaN depends on n */
-            for (j = 0; j < m; j++ /* k = j + n : */) ans[j] = (j + n) % 2 ? ML_POSINF : ML_NAN;
+            for (j = 0; j < m; j++ /* k = j + n : */) ans[j] = (j + n) % 2 ? Infinity : NaN;
             return;
         }
         /* This could cancel badly */
@@ -265,12 +281,12 @@ function dpsifn(
             ierr[0] = 4;
             return;
         }
-        x *= M_PI; /* pi * x */
+        x *= PI; /* pi * x */
         if (n === 0) tt = cos(x) / sin(x);
         else if (n === 1) tt = -1 / R_pow_di(sin(x), 2);
         else if (n === 2) tt = (2 * cos(x)) / R_pow_di(sin(x), 3);
         else if (n === 3) tt = (-2 * (2 * R_pow_di(cos(x), 2) + 1)) / R_pow_di(sin(x), 4);
-        /* can not happen! */ else tt = ML_NAN;
+        /* can not happen! */ else tt = NaN;
         /* end cheat */
 
         s = n % 2 ? -1 : 1; /* s = (-1)^n */
@@ -279,7 +295,7 @@ function dpsifn(
         t1 = t2 = s = 1;
         for (k = 0, j = k - n; j < m; k++, j++, s = -s) {
             /* k === n+j , s = (-1)^k */
-            t1 *= M_PI; /* t1 === pi^(k+1) */
+            t1 *= PI; /* t1 === pi^(k+1) */
             if (k >= 2) t2 *= k; /* t2 === k! === gamma(k+1) */
             if (j >= 0)
                 /* by cheat above,  tt === d_k(x) */
@@ -320,7 +336,7 @@ function dpsifn(
 
         /* overflow and underflow test for small and large x */
 
-        if (fabs(t) > elim) {
+        if (abs(t) > elim) {
             if (t <= 0.0) {
                 nz[0] = 0;
                 ierr[0] = 2;
@@ -339,8 +355,8 @@ function dpsifn(
             /* compute xmin and the number of terms of the series,  fln+1 */
 
             rln = r1m5 * DBL_MANT_DIG;
-            rln = fmin2(rln, 18.06);
-            fln = fmax2(rln, 3.0) - 3.0;
+            rln = min(rln, 18.06);
+            fln = max(rln, 3.0) - 3.0;
             yint = 3.5 + 0.4 * fln;
             slope = 0.21 + fln * (0.0006038 * fln + 0.008677);
             xm = yint + slope * fn;
@@ -348,12 +364,12 @@ function dpsifn(
             xmin = mx;
             //
             if (n !== 0) {
-                xm = -2.302 * rln - fmin2(0.0, xln);
+                xm = -2.302 * rln - min(0.0, xln);
                 arg = xm / n;
-                arg = fmin2(0.0, arg);
+                arg = min(0.0, arg);
                 eps = exp(arg);
                 xm = 1.0 - eps;
-                if (fabs(arg) < 1.0e-3) xm = -arg;
+                if (abs(arg) < 1.0e-3) xm = -arg;
                 fln = (x * xm) / eps;
                 xm = xmin - x;
                 if (xm > 7.0 && fln < 15.0) break;
@@ -373,7 +389,7 @@ function dpsifn(
             t = fn * xdmln;
             t1 = xdmln + xdmln;
             t2 = t + xdmln;
-            tk = fmax2(fabs(t), fmax2(fabs(t1), fabs(t2)));
+            tk = max(abs(t), max(abs(t1), abs(t2)));
             if (tk <= elim) {
                 /* for all but large x */
                 L10 = true;
@@ -434,12 +450,12 @@ function dpsifn(
     s = t * bvalues[2];
     //
 
-    if (fabs(s) >= tst) {
+    if (abs(s) >= tst) {
         tk = 2.0;
         for (k = 4; k <= 22; k++) {
             t = t * ((tk + fn + 1) / (tk + 1.0)) * ((tk + fn) / (tk + 2.0)) * rxsq;
             trm[k] = t * bvalues[k - 1];
-            if (fabs(trm[k]) < tst) break;
+            if (abs(trm[k]) < tst) break;
             s += trm[k];
             tk += 2;
         } //for
@@ -487,11 +503,11 @@ function dpsifn(
             if (fn !== 0) t1 = tt + 1.0 / fn;
             t = (fn + 1) * ta;
             s = t * bvalues[2];
-            if (fabs(s) >= tst) {
+            if (abs(s) >= tst) {
                 tk = 4 + fn;
                 for (k = 4; k <= 22; k++) {
                     trm[k] = (trm[k] * (fn + 1)) / tk;
-                    if (fabs(trm[k]) < tst) break;
+                    if (abs(trm[k]) < tst) break;
                     s += trm[k];
                     tk += 2;
                 }
@@ -545,12 +561,12 @@ function dpsifn(
 # define ML_TREAT_psigam(_IERR_)	\
     if(_IERR_ !== 0) {			\
     errno = EDOM;			\
-    return ML_NAN;			\
+    return NaN;			\
     }
 #else
 # define ML_TREAT_psigam(_IERR_)	\
     if(_IERR_ !== 0)			\
-    return ML_NAN
+    return NaN
 #endif
 */
 const print_psigamma = debug('psigamma');
@@ -584,7 +600,7 @@ function _render(
         ans[0] = 0;
         nz[0] = 0;
         ierr[0] = 0;
-        if (ISNAN(x[i])) {
+        if (isNaN(x[i])) {
             rc[i] = x[i];
             continue;
         }
@@ -599,7 +615,7 @@ function _render(
 }
 
 export function psigamma(x: NumArray | number, deriv: number): Float32Array | Float64Array {
-    deriv = R_forceint(deriv);
+    deriv = round(deriv);
     const n = deriv >> 0;
     if (n > n_max) {
         print_psigamma('"deriv = %d > %d (= n_max)', n, n_max);
@@ -608,7 +624,7 @@ export function psigamma(x: NumArray | number, deriv: number): Float32Array | Fl
         x,
         (x0: number, ans: Float64Array, nz: Uint8Array, ierr: Uint8Array) => {
             if (n > n_max) {
-                ans[0] = ML_NAN;
+                ans[0] = NaN;
                 return;
             }
             dpsifn(x0, n, 1, 1, ans, nz, ierr);

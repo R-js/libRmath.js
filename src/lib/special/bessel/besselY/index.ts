@@ -19,22 +19,24 @@ import { debug } from 'debug';
 import { ME, ML_ERROR } from '@common/logger';
 import { cospi } from '@trig/cospi';
 import { sinpi } from '@trig/sinpi';
-import { BesselJ as bessel_j_scalar } from '../besselJ';
+import BesselJ from '../besselJ';
 import { Y_bessel } from './Ybessel';
 
-const { floor } = Math;
-const { isNaN: ISNAN, POSITIVE_INFINITY: ML_POSINF } = Number;
+import {
+    floor,
+} from '@lib/r-func';
 
-const printer = debug('bessel_y');
 
-function bessel_y_scalar(x: number, alpha: number): number {
+const printer = debug('BesselY');
+
+function BesselY(x: number, alpha: number): number {
     //double
 
     /* NaNs propagated correctly */
-    if (ISNAN(x) || ISNAN(alpha)) return x + alpha;
+    if (isNaN(x) || isNaN(alpha)) return x + alpha;
 
     if (x < 0) {
-        ML_ERROR(ME.ME_RANGE, 'bessel_y', printer);
+        ML_ERROR(ME.ME_RANGE, 'BesselY', printer);
         return NaN;
     }
     const na = floor(alpha);
@@ -42,8 +44,8 @@ function bessel_y_scalar(x: number, alpha: number): number {
         /* Using Abramowitz & Stegun  9.1.2
          * this may not be quite optimal (CPU and accuracy wise) */
         return (
-            (alpha - na === 0.5 ? 0 : bessel_y_scalar(x, -alpha) * cospi(alpha)) -
-            (alpha === na ? 0 : bessel_j_scalar(x, -alpha) * sinpi(alpha))
+            (alpha - na === 0.5 ? 0 : BesselY(x, -alpha) * cospi(alpha)) -
+            (alpha === na ? 0 : BesselJ(x, -alpha) * sinpi(alpha))
         );
     } else if (alpha > 1e7) {
         printer('besselY(x, nu): nu=%d too large for bessel_y() algorithm', alpha);
@@ -56,7 +58,7 @@ function bessel_y_scalar(x: number, alpha: number): number {
     if (rc.ncalc !== nb) {
         /* error input */
         if (rc.ncalc === -1) {
-            return ML_POSINF;
+            return Infinity;
         } else if (rc.ncalc < -1) {
             printer('bessel_y(%d): ncalc (=%d) != nb (=%d); alpha=%d. Arg. out of range?\n', rc.x, rc.ncalc, nb, alpha);
         }
@@ -67,5 +69,4 @@ function bessel_y_scalar(x: number, alpha: number): number {
     return rc.x;
 }
 
-export default bessel_y_scalar;
-export { bessel_y_scalar as BesselY };
+export default BesselY;

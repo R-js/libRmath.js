@@ -3,6 +3,8 @@ import { resolve } from 'path';
 
 import { cl, select } from '@common/debug-select';
 
+import { humanize } from '@common/humanize-time';
+
 import { dsignrank, useWasmBackend, clearBackend } from '..';
 
 const dsignrankLogs = select('dsignrank');
@@ -67,7 +69,7 @@ describe('dsignrank (wilcox sign rank)', function () {
             expect(res1).toEqualFloatingPointBinary(0.037109375);
             expect(res2).toEqualFloatingPointBinary(0.037109375);
         });
-        xit('wasm acc test large inputnumbers n = 4000, W= 4025500', async ()=> {
+        it('wasm acc test large inputnumbers n = 4000, W= 4025500', async ()=> {
             // according to large sample approximation
             //         W+ - 0.25*n*(n+1)
             // Z(W,n)= -----------------
@@ -75,15 +77,17 @@ describe('dsignrank (wilcox sign rank)', function () {
             // Z(4025500, 4000)= 0 gives 0.2561791 pnorm(z) = 0.6010937 
             // R gives Inf, so does this algo 
             await useWasmBackend();
-            const start2 = Date.now();
-            const res2 = dsignrank(4025500, 4000);
-            expect(res2).toEqual(Infinity)
-            console.log(`(fast wasm) duration: ${Math.trunc((Date.now()-start2)/1000)} sec`);
-            clearBackend();
             const start = Date.now();
-            const res1 = dsignrank(4025500, 4000);
-            expect(res1).toEqual(Infinity)
-            console.log(`(slow) duration: ${Math.trunc((Date.now()-start)/1000)} sec`);
+            const res = dsignrank(4025500, 4000);
+            expect(res).toEqual(Infinity)
+            console.log(`dsign (wasm) duration: ${humanize.humanize(Date.now()-start)}`);
+            clearBackend();
+        });
+        it('(no wasm) test large inputnumbers n = 4000, W= 4025500', () => {
+            const start = Date.now();
+            const res = dsignrank(4025500, 4000);
+            expect(res).toEqual(Infinity)
+            console.log(`dsign: (no wasm) duration: ${humanize.humanize(Date.now()-start)}`);
         });
         it.todo('check why [0.037109375] differs [0.037109374999999993] is only 3 mantissa bits, should be more')
     });

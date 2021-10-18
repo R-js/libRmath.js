@@ -17,9 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import { sinpi } from '@trig/sinpi';
 
-const { PI: M_PI, log, exp, trunc } = Math;
-
-const { EPSILON: DBL_EPSILON, MIN_VALUE: DBL_MIN, POSITIVE_INFINITY: ML_POSINF } = Number;
+import { PI, log, exp, trunc, DBL_EPSILON, DBL_MIN } from '@lib/r-func';
 
 export function Rf_gamma_cody(x: number): number {
     /*
@@ -193,10 +191,10 @@ export function Rf_gamma_cody(x: number): number {
             if (yi !== trunc(yi * 0.5) * 2) {
                 parity = 1;
             }
-            fact = -M_PI / sinpi(res);
+            fact = -PI / sinpi(res);
             y += 1;
         } else {
-            return ML_POSINF;
+            return Infinity;
         }
     }
     /* -----------------------------------------------------------------
@@ -209,7 +207,7 @@ export function Rf_gamma_cody(x: number): number {
         if (y >= DBL_MIN) {
             res = 1 / y;
         } else {
-            return ML_POSINF;
+            return Infinity;
         }
     } else if (y < 12) {
         yi = y;
@@ -265,7 +263,7 @@ export function Rf_gamma_cody(x: number): number {
             sum += (y - 0.5) * log(y);
             res = exp(sum);
         } else {
-            return ML_POSINF;
+            return Infinity;
         }
     }
     /* ----------------------------------------------------------------------

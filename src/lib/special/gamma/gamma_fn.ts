@@ -20,17 +20,11 @@ import { ME, ML_ERROR } from '@common/logger';
 import { stirlerr } from '@lib/stirling';
 import { sinpi } from '@trig/sinpi';
 import type { NumArray } from '@lib/r-func';
-import { isArray, isEmptyArray, emptyFloat64Array } from '@lib/r-func';
+import { isArray, isEmptyArray, emptyFloat64Array, PI,  abs, round, trunc, exp, log, M_LN_SQRT_2PI } from '@lib/r-func';
 
 import { debug } from 'debug';
 
 const printer = debug('gammafn');
-
-const { isNaN: ISNAN, NaN: ML_NAN, POSITIVE_INFINITY: ML_POSINF } = Number;
-
-const { PI: M_PI, abs: fabs, round, trunc, exp, log } = Math;
-
-const M_LN_SQRT_2PI = Math.log(Math.sqrt(2 * Math.PI));
 
 const gamcs: number[] = [
     +0.8571195590989331421920062399942e-2,
@@ -142,16 +136,16 @@ export function _gammafn(x: number): number {
     const xsml = 2.2474362225598545e-308;
     const dxrel = 1.490116119384765696e-8;
 
-    if (ISNAN(x)) return x;
+    if (isNaN(x)) return x;
 
     //If the argument is exactly zero or a negative integer
     //then return NaN.
     if (x === 0 || (x < 0 && x === round(x))) {
         ML_ERROR(ME.ME_DOMAIN, 'gammafn', printer);
-        return ML_NAN;
+        return NaN;
     }
 
-    y = fabs(x);
+    y = abs(x);
 
     if (y <= 10) {
         // Compute gamma(x) for -10 <= x <= 10
@@ -190,7 +184,7 @@ export function _gammafn(x: number): number {
         /*if (x < -0.5 && fabs(x - trunc(x - 0.5) / x) < dxrel) {
             ML_ERROR(ME.ME_PRECISION, 'gammafn', printer);
         }*/
-        if (x < -0.5 && fabs((x - trunc(x - 0.5)) / x) < dxrel) {
+        if (x < -0.5 && abs((x - trunc(x - 0.5)) / x) < dxrel) {
             ML_ERROR(ME.ME_PRECISION, 'gammafn', printer);
         }
         // The argument is so close to 0 that the result would overflow.
@@ -199,7 +193,7 @@ export function _gammafn(x: number): number {
             ML_ERROR(ME.ME_RANGE, 'gammafn', printer);
             /* UPSTREAM if (x > 0) return ML_POSINF;
                 return ML_NEGINF;*/
-            return ML_POSINF;
+            return Infinity;
         }
 
         n = -n;
@@ -214,7 +208,7 @@ export function _gammafn(x: number): number {
         if (x > xmax) {
             // Overflow
             ML_ERROR(ME.ME_RANGE, 'gammafn', printer);
-            return ML_POSINF;
+            return Infinity;
         }
 
         if (x < xmin) {
@@ -236,7 +230,7 @@ export function _gammafn(x: number): number {
         }
         if (x > 0) return value;
 
-        if (fabs((x - trunc(x - 0.5)) / x) < dxrel) {
+        if (abs((x - trunc(x - 0.5)) / x) < dxrel) {
             // The answer is less than half precision because
             // the argument is too near a negative integer.
 
@@ -250,6 +244,6 @@ export function _gammafn(x: number): number {
             ML_ERROR(ME.ME_RANGE, 'gammafn', printer);
             return ML_POSINF;
         }*/
-        return -M_PI / (y * sinpiy * value);
+        return -PI / (y * sinpiy * value);
     }
 }

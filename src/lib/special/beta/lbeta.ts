@@ -26,7 +26,7 @@ import { lgammacor } from '@special/gamma/lgammacor';
 
 const printer = debug('lbeta');
 
-export function lbeta_scalar(a: number, b: number): number {
+function lbeta(a: number, b: number): number {
     let corr: number;
     let p: number;
     let q: number;
@@ -62,5 +62,4 @@ export function lbeta_scalar(a: number, b: number): number {
     }
 }
 
-export default lbeta_scalar;
-export { lbeta_scalar as lbeta };
+export default lbeta;

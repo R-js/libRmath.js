@@ -18,10 +18,7 @@ describe('bessel function of order 0', function () {
         const actual = besselJ(4 as never, 0);
         expect(actual).toEqualFloatingPointBinary(-0.3971498098638474028);
     });
-    it('missing nu', async () => {
-        expect(() => besselJ(undefined as never, undefined as never)).toThrow('argument "nu" is missing/not a number, Execution halted');
-    });
-    it.todo('x = {4, 5, 6}', async () => {
+    it('x = {4, 5, 6}', async () => {
         const actual = [4, 5, 6].map(x => besselJ(x, 0));
         actual;
     });

@@ -34,7 +34,7 @@ function unRegisterBackend(): boolean {
     return _csignrank === cpu_csignrank ? false: true
 }
 
-export { _csignrank, unRegisterBackend, registerBackend };
+export { unRegisterBackend, registerBackend };
 
 const printer = debug('dsignrank');
 

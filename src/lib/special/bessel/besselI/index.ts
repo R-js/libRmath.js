@@ -18,20 +18,20 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import { debug } from 'debug';
 import { ME, ML_ERROR } from '@common/logger';
 import { sinpi } from '@trig/sinpi';
-import { BesselK as bessel_k } from '../besselK';
+import BesselK from '../besselK';
 import { I_bessel } from './IBessel';
 
-const { isNaN: ISNAN } = Number;
-const { exp, trunc, floor, PI: M_PI } = Math;
 
-const printer = debug('bessel_i');
+import { exp, trunc, floor, PI } from '@lib/r-func';
+
+const printer = debug('besselI');
 
 // Modified Bessel function of the first kind
 
 /* .Internal(besselI(*)) : */
-function bessel_i(x: number, alpha: number, expo = false): number {
+function BesselI(x: number, alpha: number, expo = false): number {
     /* NaNs propagated correctly */
-    if (ISNAN(x) || ISNAN(alpha)) return x + alpha;
+    if (isNaN(x) || isNaN(alpha)) return x + alpha;
     if (x < 0) {
         ML_ERROR(ME.ME_RANGE, 'bessel_i', printer);
         return NaN;
@@ -42,10 +42,10 @@ function bessel_i(x: number, alpha: number, expo = false): number {
         /* Using Abramowitz & Stegun  9.6.2 & 9.6.6
          * this may not be quite optimal (CPU and accuracy wise) */
         return (
-            bessel_i(x, -alpha, expo) +
+            BesselI(x, -alpha, expo) +
             (alpha === na
                 ? /* sin(pi * alpha) = 0 */ 0
-                : ((bessel_k(x, -alpha, expo) * (ize === 1 ? 2 : 2 * exp(-2 * x))) / M_PI) * sinpi(-alpha))
+                : ((BesselK(x, -alpha, expo) * (ize === 1 ? 2 : 2 * exp(-2 * x))) / PI) * sinpi(-alpha))
         );
     }
     const nb = 1 + trunc(na); /* nb-1 <= alpha < nb */
@@ -63,5 +63,4 @@ function bessel_i(x: number, alpha: number, expo = false): number {
     return x;
 }
 
-export default bessel_i;
-export { bessel_i as BesselI }
+export default BesselI;

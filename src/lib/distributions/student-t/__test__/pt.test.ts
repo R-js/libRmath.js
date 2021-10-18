@@ -1,8 +1,6 @@
 import { loadData } from '@common/load';
 import { resolve } from 'path';
 
-loadData
-resolve
 
 import { cl, select } from '@common/debug-select';
 
@@ -11,55 +9,59 @@ import { pt } from '../index';
 const pntLogs = select('pnt');
 const pntDomainWarns = pntLogs("argument out of domain in '%s'");
 
-pntDomainWarns
-
-describe('pt (n,df,ncp, giveLog)', function () {
-    describe('invalid input and edge cases', () => {
-        describe('ncp = undefined or not relevant', () => {
-            beforeEach(() => {
-                cl.clear('pnt');
-            });
-            it('x=Nan|df=NaN', () => {
-               //
-               pt(NaN, 0);
-            });
-            it('df <= 0', () => {
-                //
-            });
-            it('x = Infinite', () => {
-                //
-            });
+describe('pt(x,df, ncp, log.p)', function () {
+    describe('ncp is defined', () => {
+        beforeEach(() => {
+            cl.clear('pnt');
         });
-        describe('ncp defined', () => {
-            it('ncp=Nan', () => {
-                //
-            });
+        it('x=Nan|df=NaN|ncp=NaN', () => {
+            //
+            const nan1 = pt(NaN, 45, 0);
+            const nan2 = pt(0, NaN, 0);
+            const nan3 = pt(0, 45, NaN);
+            expect([nan1, nan2, nan3]).toEqualFloatingPointBinary(NaN);
+        });
+        it('df <= 0', () => {
+            const nan1 = pt(0, 0, 0);
+            expect(nan1).toBeNaN();
+            expect(pntDomainWarns()).toHaveLength(1);
+        });
+        it('x = -Infinity| x= Infinity', () => {
+            const zero = pt(-Infinity, 45);
+            expect(zero).toBe(0);
+            const one = pt(+Infinity, 45);
+            expect(one).toBe(1);
+        });
+        it('ncp=x = -Infinity| x= Infinity', () => {
+            const zero = pt(-Infinity, 45);
+            expect(zero).toBe(0);
+            const one = pt(+Infinity, 45);
+            expect(one).toBe(1);
+        });
+        it('df > 4e5', async () => {
+            const [x, y] = await loadData(resolve(__dirname, 'fixture-generation', 'pt1.R'), /\s+/, 1, 2);
+            const actual = x.map(_x => pt(_x, 10 + 4e5, 45));
+            expect(actual).toEqualFloatingPointBinary(y, 40);
+        });
+        it('df < 4e5 && ncp >  SQRT(2 * M_LN2 * -(DBL_MIN_EXP = -1024))', async () => {
+            const [x, y] = await loadData(resolve(__dirname, 'fixture-generation', 'pt2.R'), /\s+/, 1, 2);
+            const actual = x.map(_x => pt(_x, 1000, 47));
+            expect(actual).toEqualFloatingPointBinary(y, 39);
+        });
+        it.todo('check why pt(-2, 15, 8) returns 8.804068585277491e-14 instead of 8.3266726846886741e-15 (10x smaller)');
+        it('x <= 0 && ncp < 45 & df < 4e5', () => {
+            expect(pt(9, 15, 8)).toEqualFloatingPointBinary(0.66588304904945461, 49);
+            expect(pt(0, 15, 8)).toEqualFloatingPointBinary(6.2209605742717849e-16);
+        });
+        it('x <= 0 && ncp > 40 && (logp=false | lowerTail = false)', () => {
+            expect(pt(-6, 15, 41)).toBe(0);
+            expect(pt(-6, 15, 41, false, true)).toBe(0);
+            expect(pt(-6, 15, 41, false, false)).toBe(1);
+            expect(pt(-6,15,41, true, true)).toEqualFloatingPointBinary(-504.28508885350828);
         });
     });
-    describe('fidelity', () => {
-        describe('ncp = undefined', () => {
-            it('x=seq(-2,2), df=5', async () => {
-                //
-            });
-            it('df = Infinite x=(-4,4)', async () => {
-                //
-            });
-            it('(x*x)/df > (1 / DBL_EPSILON);', () => {
-               //
-            });
-        });
-        describe('ncp defined', () => {
-            it('ncp=42.2 , x=seq(0,90), df=5', async () => {
-               //
-            });
-            
-            it('x close to zero, ncp=100 and df=1000 (abs(x) <= sqrt(df * DBL_EPSILON)', () => {
-                //
-            });
-            it('df >= 1e8 (1e9) it will become dnorm with mu=ncp variance=1', async () => {
-                //
-            });
-        });
-    });
+    describe('ncp = 0',()=>{
+        //
+    })
 });
 

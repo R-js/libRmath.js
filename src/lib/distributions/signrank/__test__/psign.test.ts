@@ -4,6 +4,7 @@ import { resolve } from 'path';
 import { cl, select } from '@common/debug-select';
 
 import { psignrank, useWasmBackend, clearBackend } from '..';
+import { humanize } from '@common/humanize-time';
 
 const psignrankLogs = select('psignrank');
 const psignrankDomainWarns = psignrankLogs("argument out of domain in '%s'");
@@ -39,19 +40,23 @@ describe('psignrank (wilcox sign rank)', function () {
             const [x
                 , y
             ] = await loadData(resolve(__dirname, 'fixture-generation', 'psign1.csv'), /,/, 1, 2);
+            const start = Date.now();
             const actual = x.map((_x, i) => (Math.abs(psignrank(_x, 40) - y[i])));
+            console.log(`(no wasm) duration=${humanize.humanize(Date.now() - start)}`);
             actual.forEach((fy) => {
-              expect(fy).toBeLessThan(5e-16)
+                expect(fy).toBeLessThan(5e-16)
             });
         });
         it('(wasm acc) n = 40, 0 < x < n*(n+1)/2 ', async () => {
             const [x, y] = await loadData(resolve(__dirname, 'fixture-generation', 'psign1.csv'), /,/, 1, 2);
             await useWasmBackend();
+            const start = Date.now();
             const actual = x.map((_x, i) => (Math.abs(psignrank(_x, 40) - y[i])));
+            console.log(`(wasm acc) duration=${humanize.humanize(Date.now() - start)}`);
             // debug
             // console.log("max(wasm)",Math.max(...actual));
             actual.forEach((fy) => {
-              expect(fy).toBeLessThan(5e-16)
+                expect(fy).toBeLessThan(5e-16)
             });
             clearBackend();
         });

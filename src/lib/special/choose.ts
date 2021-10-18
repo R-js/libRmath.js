@@ -15,17 +15,15 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { debug } from 'debug';
-import { isOdd } from '@lib/r-func';
+import { isOdd, abs, log, exp, round, isInteger, } from '@lib/r-func';
 
-const { abs: fabs, log, exp, round } = Math;
-const { isInteger, NEGATIVE_INFINITY: ML_NEGINF, isNaN: ISNAN } = Number;
 
-import { lbeta_scalar } from '@special/beta/lbeta';
+import lbeta from '@special/beta/lbeta';
 import { lgammafn_sign } from '@special/gamma/lgammafn_sign';
 
 // used by "qhyper"
 function lfastchoose(n: number, k: number): number {
-    return -log(n + 1) - lbeta_scalar(n - k + 1, k + 1);
+    return -log(n + 1) - lbeta(n - k + 1, k + 1);
 }
 /* mathematically the same:
    less stable typically, but useful if n-k+1 < 0 : */
@@ -41,20 +39,20 @@ function lchoose(n: number, k: number): number {
     const k0 = k;
     k = Math.round(k);
     /* NaNs propagated correctly */
-    if (ISNAN(n) || ISNAN(k)) return n + k;
-    if (fabs(k - k0) > 1e-7) printer_lchoose('"k" (%d) must be integer, rounded to %d', k0, k);
+    if (isNaN(n) || isNaN(k)) return n + k;
+    if (abs(k - k0) > 1e-7) printer_lchoose('"k" (%d) must be integer, rounded to %d', k0, k);
     if (k < 2) {
-        if (k < 0) return ML_NEGINF;
+        if (k < 0) return -Infinity;
         if (k === 0) return 0;
         /* else: k == 1 */
-        return log(fabs(n));
+        return log(abs(n));
     }
     /* else: k >= 2 */
     if (n < 0) {
         return lchoose(-n + k - 1, k);
     } else if (isInteger(n)) {
         n = round(n);
-        if (n < k) return ML_NEGINF;
+        if (n < k) return -Infinity;
         /* k <= n :*/
         if (n - k < 2) return lchoose(n, n - k); /* <- Symmetry */
         /* else: n >= k+2 */
@@ -79,8 +77,8 @@ function choose(n: number, k: number): number {
     const k0 = k;
     k = round(k);
     /* NaNs propagated correctly */
-    if (ISNAN(n) || ISNAN(k)) return n + k;
-    if (fabs(k - k0) > 1e-7) printer_choose('k (%d) must be integer, rounded to %d', k0, k);
+    if (isNaN(n) || isNaN(k)) return n + k;
+    if (abs(k - k0) > 1e-7) printer_choose('k (%d) must be integer, rounded to %d', k0, k);
     if (k < k_small_max) {
         let j: number;
         if (n - k < k && n >= 0 && isInteger(n)) k = n - k; /* <- Symmetry */

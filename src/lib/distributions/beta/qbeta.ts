@@ -30,7 +30,7 @@ import {
 
 import { R_DT_CIv, R_DT_Clog, R_DT_log, R_DT_qIv, R_Log1_Exp } from '@dist/exp/expm1';
 
-import { lbeta_scalar } from '@special/beta/lbeta';
+import { lbeta } from '@special/beta';
 import { pbeta_raw } from './pbeta';
 
 const USE_LOG_X_CUTOFF = -5;
@@ -48,6 +48,8 @@ const MLOGICAL_NA = -1;
 */
 
 const printer_qbeta = debug('qbeta');
+
+
 export function qbeta(p: number, shape1: number, shape2: number, lower_tail: boolean, log_p: boolean): number {
     /* test for admissibility of parameters */
 
@@ -244,7 +246,7 @@ function qbeta_raw(
     /* initialize */
     const p_ = R_DT_qIv(lower_tail, log_p, alpha); /* lower_tail prob (in any case) */
     // Conceptually,  0 < p_ < 1  (but can be 0 or 1 because of cancellation!)
-    const logbeta = lbeta_scalar(p, q);
+    const logbeta = lbeta(p, q);
 
     swap_tail = swap_choose ? p_ > 0.5 : !!swap_01;
     // change tail; default (swap_01 = NA): afterwards 0 < a <= 1/2

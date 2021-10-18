@@ -19,11 +19,11 @@ import { debug } from 'debug';
 
 import { ML_ERR_return_NAN } from '@common/logger';
 
-import { R_D__0, R_D_exp, R_D_val } from '@lib/r-func';
+import { R_D__0, R_D_exp, R_D_val, log, log1p } from '@lib/r-func';
 
 import { dbinom_raw } from '@dist/binomial/dbinom';
 
-import { lbeta_scalar } from '@special/beta';
+import { lbeta } from '@special/beta';
 
 const printer = debug('dbeta');
 
@@ -68,9 +68,9 @@ export function dbeta_scalar(x: number, a: number, b: number, asLog: boolean): n
     }
 
     let lval: number;
-    if (a <= 2 || b <= 2) lval = (a - 1) * Math.log(x) + (b - 1) * Math.log1p(-x) - lbeta_scalar(a, b);
+    if (a <= 2 || b <= 2) lval = (a - 1) * log(x) + (b - 1) * log1p(-x) - lbeta(a, b);
     else {
-        lval = Math.log(a + b - 1) + dbinom_raw(a - 1, a + b - 2, x, 1 - x, true);
+        lval = log(a + b - 1) + dbinom_raw(a - 1, a + b - 2, x, 1 - x, true);
     }
     return R_D_exp(asLog, lval);
 }

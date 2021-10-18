@@ -43,7 +43,10 @@ const {
     PI,
     trunc,
     SQRT2,
-    LN2
+    LN2,
+    sinh,
+    cos,
+    sin
 } = Math;
 
 export {  abs,
@@ -68,7 +71,10 @@ export {  abs,
     PI,
     trunc,
     SQRT2,
-    LN2
+    LN2,
+    sinh,
+    cos,
+    sin
 };
 
 export type strTypes =
@@ -281,6 +287,8 @@ export const DBL_MANT_DIG = 18;
 //ok
 export const DBL_MIN = 2.2250738585072014e-308;
 
+export const DBL_MAX = 1.7976931348623158e+308;
+
 //ok
 export const M_LN2 = 0.693147180559945309417; /* ln(2) */
 
@@ -300,7 +308,7 @@ export const M_1_PI = 1.0 / PI;
 export const M_PI_2 = PI / 2;
 
 //ok
-export const M_LN_SQRT_PI = 0.57236494292470008; // log(sqrt(pi))
+export const M_LN_SQRT_PI = 0.572364942924700087071713675677; // log(sqrt(pi))
 
 //ok
 export const INT_MAX = 2 ** 31 - 1;

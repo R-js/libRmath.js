@@ -1,9 +1,6 @@
-// node
 import { resolve } from 'path';
+import { loadData } from '@common/load';
 
-//helper
-import '$jest-extension';
-import { loadData } from '$test-helpers/load';
 
 //app
 import { digamma } from '..';

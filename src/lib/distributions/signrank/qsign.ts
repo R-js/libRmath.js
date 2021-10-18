@@ -18,14 +18,31 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import { debug } from 'debug';
 import { ML_ERR_return_NAN, R_Q_P01_check, ML_ERROR, ME } from '@common/logger';
 import { R_DT_qIv } from '@dist/exp/expm1';
-import { cpu_csignrank as csignrank } from './csignrank';
+import { cpu_csignrank } from './csignrank';
 
 import { R_DT_0, R_DT_1, round, DBL_MIN_VALUE_LN, M_LN2, isNaN, isFinite, DBL_EPSILON, trunc, exp } from '@lib/r-func';
 import { growMemory } from './csignrank_wasm';
 
+import type { CSingRank, CSignRankMap } from './csignrank_wasm';
+
 const printer = debug('qsignrank');
 
 const PRECISION_LOWER_LIMIT = -DBL_MIN_VALUE_LN/M_LN2;
+
+
+let _csignrank: CSingRank  = cpu_csignrank; 
+
+function registerBackend(fns: CSignRankMap): void {
+    _csignrank = fns.csignrank;
+}
+
+function unRegisterBackend(): boolean {
+    _csignrank = cpu_csignrank
+    return _csignrank === cpu_csignrank ? false: true
+}
+
+export { unRegisterBackend, registerBackend };
+
 
 export function qsignrank(p: number, n: number, lowerTail = true, logP = false): number {
     
@@ -90,14 +107,14 @@ export function qsignrank(p: number, n: number, lowerTail = true, logP = false):
     if (p <= 0.5) {
         p = p - 10 * DBL_EPSILON;
         for (;;) {
-            _p += csignrank(q, n, u, c) * f;
+            _p += _csignrank(q, n, u, c) * f;
             if (_p >= p) break;
             q++;
         }
     } else {
         p = 1 - p + 10 * DBL_EPSILON;
         for (;;) {
-            _p += csignrank(q, n, u, c) * f;
+            _p += _csignrank(q, n, u, c) * f;
             if (_p > p) {
                 q = trunc(u - q);
                 break;

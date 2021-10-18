@@ -1,9 +1,6 @@
-// node
 import { resolve } from 'path';
+import { loadData } from '@common/load';
 
-//helpers
-import '$jest-extension';
-import { loadData } from '$test-helpers/load';
 
 //app
 import { trigamma } from '@special/gamma';
