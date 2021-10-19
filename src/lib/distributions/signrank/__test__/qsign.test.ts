@@ -72,7 +72,7 @@ describe('qsignrank (wilcox sign rank)', function () {
         it.todo('(diverge from fedility) qsignrank((log(0), 4, lowerTail=true, pAsLog = TRUE) sould be 0 not a NaN')
         it.todo('n > 1074 should give NaN add to upstream');
     });
-    describe.only('fidelity', () => {
+    describe('fidelity', () => {
         it('qsignrank(psignrank(X, 40, T), 40) == X', () => {
             expect(qsignrank(psignrank(219, 40, true), 40)).toBe(219);
             expect(qsignrank(psignrank(261, 40, true), 40)).toBe(261);

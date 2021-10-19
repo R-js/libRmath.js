@@ -150,6 +150,7 @@ const studentT = [
     '/distributions/student-t/__test__/rt.test.ts$',
     '/distributions/student-t/__test__/dt.test.ts$',
     '/distributions/student-t/__test__/pt.test.ts$',
+    '/distributions/student-t/__test__/qt.test.ts$',
 ];
 
 const uniformRNG = [
