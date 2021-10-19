@@ -302,7 +302,7 @@ export const M_2PI = 6.283185307179586476925286766559;
 export const M_LN_2PI = 1.837877066409345483560659472811;
 
 //ok
-export const M_1_PI = 1.0 / PI;
+export const M_1_PI = 0.318309886183790671538; // 1/pi
 
 //ok
 export const M_PI_2 = PI / 2;

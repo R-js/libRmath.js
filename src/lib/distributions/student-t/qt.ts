@@ -33,11 +33,9 @@ import {
     R_D_log,
     R_D_Lval,
     R_D_qIv,
-    EPSILON,
-    MAX_VALUE,
+    DBL_EPSILON,
     min,
     abs,
-    MIN_VALUE,
     expm1,
     sqrt,
     exp,
@@ -45,7 +43,9 @@ import {
     SQRT2,
     pow,
     PI,
-    log
+    log,
+    DBL_MAX,
+    DBL_MIN
 } from '@lib/r-func';
 
 import { R_D_LExp, R_DT_qIv } from '@dist/exp/expm1';
@@ -83,27 +83,29 @@ export function qt(p: number, ndf: number, lower_tail: boolean, log_p: boolean):
     {
         /* based on qnt */
 
+        // double
         let ux;
         let lx;
         let nx;
         let pp;
 
+        // int
         let iter = 0;
 
         p = R_DT_qIv(lower_tail, log_p, p);
 
         /* Invert pt(.) :
          * 1. finding an upper and lower bound */
-        if (p > 1 - EPSILON)
+        if (p > 1 - DBL_EPSILON)
         {
              return Infinity;
         }
 
-        pp = min(1 - EPSILON, p * (1 + Eps));
+        pp = min(1 - DBL_EPSILON, p * (1 + Eps));
 
         for (
             ux = 1;
-            ux < MAX_VALUE && pt(ux, ndf, true, false) < pp;
+            ux < DBL_MAX && pt(ux, ndf, true, false) < pp;
             ux *= 2
         );
         
@@ -111,7 +113,7 @@ export function qt(p: number, ndf: number, lower_tail: boolean, log_p: boolean):
         
         for (
             lx = -1;
-            lx > -MAX_VALUE && pt(lx, ndf, true, false) > pp;
+            lx > -DBL_MAX && pt(lx, ndf, true, false) > pp;
             lx *= 2
         );
 
@@ -157,23 +159,50 @@ export function qt(p: number, ndf: number, lower_tail: boolean, log_p: boolean):
 
     const neg = (!lower_tail || P < 0.5) && (lower_tail || P > 0.5);
     const is_neg_lower = lower_tail === neg; /* both TRUE or FALSE == !xor */
-    
     if (neg)
     {
-        P = 2 * (log_p ? (lower_tail ? P : -expm1(p)) : R_D_Lval(lower_tail, p));
+        if (log_p)
+        {
+            if (lower_tail)
+            {
+                P=2*P;
+            }
+            else
+            {
+                P=2*-expm1(p)
+            }
+        }
+        else
+        {
+            P=2*R_D_Lval(lower_tail,p)
+
+        }
     }
     else 
     {
-        P = 2 * (log_p ? (lower_tail ? -expm1(p) : P) : R_D_Cval(lower_tail, p));
+        if (log_p)
+        {
+            if(lower_tail)
+            {
+                P=2*-expm1(p);
+            }
+            else
+            {
+                P=2*P;
+            }
+        }
+        else
+        {
+            P=2*R_D_Cval(lower_tail, p);
+        }
     }
     /* 0 <= P <= 1 ; P = 2*min(P', 1 - P')  in all cases */
-
     if (abs(ndf - 2) < eps)
     {
         /* df ~= 2 */
-        if (P > MIN_VALUE)
+        if (P > DBL_MIN)
         {
-            if (3 * P < EPSILON)
+            if (3 * P < DBL_EPSILON)
             {
                 /* P ~= 0 */
                 q = 1 / sqrt(P);
@@ -188,7 +217,9 @@ export function qt(p: number, ndf: number, lower_tail: boolean, log_p: boolean):
             {
                 q = sqrt(2 / (P * (2 - P)) - 2);
             }
-        } else {
+        } 
+        else 
+        {
             /* P << 1, q = 1/sqrt(P) = ... */
             if (log_p)
             {
@@ -199,25 +230,27 @@ export function qt(p: number, ndf: number, lower_tail: boolean, log_p: boolean):
                 q = Infinity;
             }
         }
-    } else if (ndf < 1 + eps) {
+    } 
+    else if (ndf < 1 + eps)
+    {
         /* df ~= 1  (df < 1 excluded above): Cauchy */
         if (P === 1)
         {
             q = 0;
         }
-        else if (P > 0)
+        else if (P > DBL_EPSILON/2)
         {
             // some versions of tanpi give Inf, some NaN
             q = 1 / tanpi(P / 2);
         }
         else
         {
-            /* == - tan((P+1) * M_PI_2) -- suffers for P ~= 0 */
+            // == - tan((P+1) * M_PI_2) -- suffers for P ~= 0 
 
-            /* P = 0, but maybe = 2*exp(p) ! */
+            //P = 0, but maybe = 2*exp(p) !
             if (log_p)
             {
-                /* 1/tan(e) ~ 1/e */
+                // 1/tan(e) ~ 1/e
                 q = is_neg_lower ? M_1_PI * exp(-p) : -1 / (PI * expm1(p));
             }
             else
@@ -229,6 +262,7 @@ export function qt(p: number, ndf: number, lower_tail: boolean, log_p: boolean):
     else
     {
         /*-- usual case;  including, e.g.,  df = 1.1 */
+        // double
         let x = 0;
         let y = 0;
         let log_P2 = 0; /* -Wall */
@@ -237,28 +271,48 @@ export function qt(p: number, ndf: number, lower_tail: boolean, log_p: boolean):
         let c = (((20700 * a) / b - 98) * a - 16) * a + 96.36;
         const d = ((94.5 / (b + c) - 3) / b + 1) * sqrt(a * M_PI_2) * ndf;
 
-        const P_ok1 = P > MIN_VALUE || !log_p;
+        // boolean
+        const P_ok1 = P > DBL_MIN || !log_p;
         let P_ok = P_ok1;
 
-        if (P_ok1) {
+        if (P_ok1)
+        {
             y = pow(d * P, 2.0 / ndf);
-            P_ok = y >= EPSILON;
+            P_ok = y >= DBL_EPSILON;
         }
-        if (!P_ok) {
+        if (!P_ok)
+        {
             // log.p && P very.small  ||  (d*P)^(2/df) =: y < eps_c
-            log_P2 = is_neg_lower ? R_D_log(log_p, p) : R_D_LExp(log_p, p); /* == log(P / 2) */
+            /* == log(P / 2) */
+            if (is_neg_lower){
+                log_P2 =  R_D_log(log_p, p);
+            }
+            else {
+                log_P2 = R_D_LExp(log_p, p);
+            }
             x = (log(d) + LN2 + log_P2) / ndf;
             y = exp(2 * x);
         }
 
-        if ((ndf < 2.1 && P > 0.5) || y > 0.05 + a) {
+        if ((ndf < 2.1 && P > 0.5) || y > 0.05 + a)
+        {
             /* P > P0(df) */
             /* Asymptotic inverse expansion about normal */
-            if (P_ok) x = qnorm(0.5 * P, 0, 1, /*lower_tail*/ false, /*log_p*/ false);
-            /* log_p && P underflowed */ else x = qnorm(log_P2, 0, 1, lower_tail, /*log_p*/ true);
+            if (P_ok)
+            {
+                x = qnorm(0.5 * P, 0, 1, /*lower_tail*/ false, /*log_p*/ false);
+            }
+            /* log_p && P underflowed */
+            else 
+            {
+                x = qnorm(log_P2, 0, 1, lower_tail, /*log_p*/ true);
+            }
 
             y = x * x;
-            if (ndf < 5) c += 0.3 * (ndf - 4.5) * (x + 0.6);
+            if (ndf < 5)
+            {
+                c += 0.3 * (ndf - 4.5) * (x + 0.6);
+            }
             c = (((0.05 * d * x - 5) * x - 7) * x - 2) * x + b + c;
             y = (((((0.4 * y + 6.3) * y + 36) * y + 94.5) / c - y - 3) / b + 1) * x;
             y = expm1(a * y * y);
