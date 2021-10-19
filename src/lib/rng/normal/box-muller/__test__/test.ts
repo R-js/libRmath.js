@@ -9,7 +9,7 @@ import {
 
 
 describe('rng box-muller', function () {
-    it.only('compare 100 samples seed=0', () => {
+    it('compare 100 samples seed=0', () => {
         const bm = new BoxMuller(); // by default will use Mersenne-Twister like in R
         bm.uniform_rng.init(1234);
         const result1 = bm.randoms(10);

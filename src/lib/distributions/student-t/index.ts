@@ -40,10 +40,7 @@ export function pt(q: number, df: number, ncp = 0, lowerTail = true, logP = fals
 }
 
 export function qt(p: number, df: number, ncp?: number, lowerTail = true, logP = false): number {
-    if (ncp === undefined) {
-        return _qt(p, df, lowerTail, logP);
-    }
-    return qnt(p, df, ncp, lowerTail, logP);
+    return ncp === undefined ? _qt(p, df, lowerTail, logP) : qnt(p, df, ncp, lowerTail, logP);
 }
 
 export function rt(n: number, df: number, ncp?: number, rng = globalNorm()): Float64Array {

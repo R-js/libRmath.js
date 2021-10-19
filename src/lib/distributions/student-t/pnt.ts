@@ -75,7 +75,7 @@ function finis(tnc: number, del: number, lower_tail: boolean, negdel: boolean, l
     return rc;
 }
 
-export function pnt(t: number, df: number, ncp: number, lower_tail = true, log_p = false): number {
+export function pnt(t: number, df: number, ncp: number, lower_tail: boolean, log_p: boolean): number {
     //double
     let errbd: number;
     let rxb: number;

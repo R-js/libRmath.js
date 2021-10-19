@@ -60,8 +60,30 @@ describe('pt(x,df, ncp, log.p)', function () {
             expect(pt(-6,15,41, true, true)).toEqualFloatingPointBinary(-504.28508885350828);
         });
     });
-    describe('ncp = 0',()=>{
-        //
+    describe('ncp = 0 or undefined',()=>{
+        it('df = Infinite', ()=>{
+            expect(pt(0,Infinity)).toBe(0.5);
+        });
+        it('df > 4e5', ()=>{
+            expect(pt(-2,4e5+10)).toEqualFloatingPointBinary(0.022750469383684711, 50);
+            expect(pt(2,4e5+10)).toEqualFloatingPointBinary(0.97724953061631536, 49);
+        });
+        it('x*x >= df',()=>{
+            const df = 15
+            const x = Math.sqrt(15)*1.2;
+            const ans = pt(x,df, 0);
+            expect(ans).toEqualFloatingPointBinary(0.9998421100704078, 34);
+        });
+        it('1+(x/df)*x > 1e100, lower.tail = True|False and Log.p=True|False',()=>{
+            const df = 15
+            const x1 = Math.sqrt((1e100-1)*(df+1));
+            const ans1 = pt(x1,df, 0, true, true);
+            expect(ans1).toEqualFloatingPointBinary(0);
+            const ans2 = pt(x1,df, 0, true, false);
+            expect(ans2).toEqualFloatingPointBinary(1);
+            const ans3 = pt(x1,df, 0, false, true);
+            expect(ans3).toEqualFloatingPointBinary(-1729.7124766737861);
+        });
     })
 });
 

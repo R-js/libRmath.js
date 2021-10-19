@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import { debug } from 'debug';
 import { ML_ERR_return_NAN, R_Q_P01_boundaries } from '@common/logger';
 import { R_DT_qIv } from '@dist/exp/expm1';
-import { EPSILON, min, max, abs, MAX_VALUE } from '@lib/r-func';
+import { DBL_EPSILON, min, max, abs, DBL_MAX } from '@lib/r-func';
 import { qnorm } from '@dist/normal/qnorm';
 import { pnt } from './pnt';
 import { qt } from './qt';
@@ -41,13 +41,14 @@ export function qnt(p: number, df: number, ncp: number, lower_tail: boolean, log
         return p + df + ncp;
     }
 
-    /* Was
-     * df = floor(df + 0.5);
-     * if (df < 1 || ncp < 0) ML_ERR_return_NAN;
-     */
-    if (df <= 0.0)
+    if (df <= 0)
     {
         return ML_ERR_return_NAN(printer);
+    }
+
+    if (ncp === 0 && df >= 1)
+    {
+        return qt(p, df, lower_tail, log_p);
     }
 
     const rc = R_Q_P01_boundaries(lower_tail, log_p, p, -Infinity, Infinity);
@@ -55,7 +56,7 @@ export function qnt(p: number, df: number, ncp: number, lower_tail: boolean, log
         return rc;
     }
 
-    if (ncp === 0.0 && df >= 1.0) return qt(p, df, lower_tail, log_p);
+    
 
     if (!isFinite(df))
     {
@@ -67,16 +68,16 @@ export function qnt(p: number, df: number, ncp: number, lower_tail: boolean, log
 
     /* Invert pnt(.) :
      * 1. finding an upper and lower bound */
-    if (p > 1 - EPSILON)
+    if (p > 1 - DBL_EPSILON)
     {
         return Infinity;
     }
 
-    pp = min(1 - EPSILON, p * (1 + Eps));
+    pp = min(1 - DBL_EPSILON, p * (1 + Eps));
 
     for (
         ux = max(1, ncp);
-        ux < MAX_VALUE && pnt(ux, df, ncp, true, false) < pp;
+        ux < DBL_MAX && pnt(ux, df, ncp, true, false) < pp;
         ux *= 2
     );
 
@@ -84,7 +85,7 @@ export function qnt(p: number, df: number, ncp: number, lower_tail: boolean, log
 
     for (
         lx = min(-1, -ncp);
-        lx > -MAX_VALUE && pnt(lx, df, ncp, true, false) > pp;
+        lx > -DBL_MAX && pnt(lx, df, ncp, true, false) > pp;
         lx *= 2
     );
 

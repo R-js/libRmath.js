@@ -80,7 +80,7 @@ function isNAN(dv1: DataView, bpe: 4 | 8) {
 function isZeroOrNegativeZero(dv1: DataView, bpe: number) {
     if ((dv1.getUint8(0) & 0x7f) === 0) {
         for (let i = 1; i < bpe; i++) {
-            if (dv1.getUint8(0) !== 0) {
+            if (dv1.getUint8(i) !== 0) {
                 return false;
             }
         }
