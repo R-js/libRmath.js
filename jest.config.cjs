@@ -16,6 +16,8 @@ const collectCoverageFrom = [
     'src/lib/distributions/poisson/*.ts',
     'src/lib/distributions/signrank/*.ts',
     'src/lib/distributions/student-t/*.ts',
+    'src/lib/distributions/tukey/*.ts',
+    'src/lib/distributions/uniform/*.ts',
     'src/lib/r-func.ts',
     'src/lib/index.ts',
     'src/lib/trigonometry/*.ts',
@@ -154,6 +156,18 @@ const studentT = [
     '/distributions/student-t/__test__/qnt.test.ts$',
 ];
 
+const tukeyHSD = [
+    '/distributions/tukey/__test__/qtukey.test.ts$',
+    '/distributions/tukey/__test__/ptukey.test.ts$',
+];
+
+const uniform = [
+    '/distributions/uniform/__test__/dunif.test.ts$',
+    '/distributions/uniform/__test__/punif.test.ts$',
+    '/distributions/uniform/__test__/qunif.test.ts$',
+    '/distributions/uniform/__test__/runif.test.ts$',
+]
+
 const uniformRNG = [
     '/rng/knuth-taocp/__test__/(.*?\\.)?test.ts$',
     '/rng/knuth-taocp-2002/__test__/(.*?\\.)?test.ts$',
@@ -194,6 +208,8 @@ const testRegex = [
     ...poissonTest,
     ...signRankTest,
     ...studentT,
+    ...tukeyHSD,
+    ...uniform,
     //
     ...uniformRNG,
     ...normalRNG,

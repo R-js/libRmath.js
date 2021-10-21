@@ -28,32 +28,57 @@ import {
 import {
     R_DT_val, R_DT_0,
     R_DT_1,
+    log,
+    M_LN2,
+    sqrt,
+    exp,
+    min
 } from '@lib/r-func';
+
 import { lgammaOne } from '@special/gamma';
 
-const printer_ptukey = debug('_ptukey');
+const printer_ptukey = debug('ptukey');
+const nlegq = 16;
+const ihalfq = 8;
 
-/*
-> ptukey
-function (q, nmeans, df, nranges = 1, lower.tail = TRUE, log.p = FALSE)
-.Call(C_ptukey, q, nranges, nmeans, df, lower.tail, log.p)
-<bytecode: 0x000000001cde3048>
-<environment: namespace:stats>
+/*  const double eps = 1.0; not used if = 1 */
+const eps1 = -30.0;
+const eps2 = 1.0e-14;
+const dhaf = 100.0;
+const dquar = 800.0;
+const deigh = 5000.0;
+const dlarg = 25000.0;
+const ulen1 = 1.0;
+const ulen2 = 0.5;
+const ulen3 = 0.25;
+const ulen4 = 0.125;
+const xlegq = [
+    0.98940093499164993259615417345,
+    0.944575023073232576077988415535,
+    0.865631202387831743880467897712,
+    0.755404408355003033895101194847,
+    0.617876244402643748446671764049,
+    0.458016777657227386342419442984,
+    0.28160355077925891323046050146,
+    0.95012509837637440185319335425e-1,
+];
+const alegq = [
+    0.27152459411754094851780572456e-1,
+    0.622535239386478928628438369944e-1,
+    0.951585116824927848099251076022e-1,
+    0.124628971255533872052476282192,
+    0.149595988816576732081501730547,
+    0.16915651939500253818931207903,
+    0.182603415044923588866763667969,
+    0.189450610455068496285396723208,
+];
 
-double ptukey(
-    double q, // q
-    double rr, // nranges
-    double cc, // nmeans
-    double df, // df
-  int lower_tail, // lowertail
-    int log_p //logp
-*/
-export function ptukey(q: number, rr: number, cc: number, df: number, lower_tail = true, log_p = false): number {
+export function ptukey(q: number, nmeans: number, df: number, nrnages =1, lower_tail = true, log_p = false): number {
+    const inp = `q=${q},means=${nmeans},df=${df}`;
     /*  function ptukey() [was qprob() ]:
-    
         q = value of studentized range
-        rr = no. of rows or groups
-        cc = no. of columns or treatments
+        nrnages = no. of rows or groups
+        nmeans = no. of columns or treatments
         df = degrees of freedom of error term
         ir[0] = error flag = 1 if wprob probability > 1
         ir[1] = error flag = 1 if qprob probability > 1
@@ -85,7 +110,7 @@ export function ptukey(q: number, rr: number, cc: number, df: number, lower_tail
     
         d.f. > dlarg:	the range is used to calculate integral.
     
-        M_LN2 = Math.log(2)
+        M_LN2 = log(2)
     
         xlegq = legendre 16-point nodes
         alegq = legendre 16-point coefficients
@@ -101,49 +126,16 @@ export function ptukey(q: number, rr: number, cc: number, df: number, lower_tail
         All values matched the tables (provided in same reference)
         to 30 significant digits.
     
-        f(x) = .5 + erf(x / Math.sqrt((2)) / 2      for x > 0
+        f(x) = .5 + erf(x / sqrt((2)) / 2      for x > 0
     
-        f(x) = erfc( -x / Math.sqrt((2)) / 2	      for x < 0
+        f(x) = erfc( -x / sqrt((2)) / 2	      for x < 0
     
         where f(x) is standard normal c. d. f.
     
         if degrees of freedom large, approximate integral
         with range distribution.
      */
-    const nlegq = 16;
-    const ihalfq = 8;
-
-    /*  const double eps = 1.0; not used if = 1 */
-    const eps1 = -30.0;
-    const eps2 = 1.0e-14;
-    const dhaf = 100.0;
-    const dquar = 800.0;
-    const deigh = 5000.0;
-    const dlarg = 25000.0;
-    const ulen1 = 1.0;
-    const ulen2 = 0.5;
-    const ulen3 = 0.25;
-    const ulen4 = 0.125;
-    const xlegq = [
-        0.98940093499164993259615417345,
-        0.944575023073232576077988415535,
-        0.865631202387831743880467897712,
-        0.755404408355003033895101194847,
-        0.617876244402643748446671764049,
-        0.458016777657227386342419442984,
-        0.28160355077925891323046050146,
-        0.95012509837637440185319335425e-1,
-    ];
-    const alegq = [
-        0.27152459411754094851780572456e-1,
-        0.622535239386478928628438369944e-1,
-        0.951585116824927848099251076022e-1,
-        0.124628971255533872052476282192,
-        0.149595988816576732081501730547,
-        0.16915651939500253818931207903,
-        0.182603415044923588866763667969,
-        0.189450610455068496285396723208,
-    ];
+   
     //double
     let ans: number;
     //let f2: number;
@@ -159,28 +151,39 @@ export function ptukey(q: number, rr: number, cc: number, df: number, lower_tail
     let wprb: number;
     //let j: number;
 
-    if (isNaN(q) || isNaN(rr) || isNaN(cc) || isNaN(df)) {
+    if (isNaN(q) || isNaN(nrnages) || isNaN(nmeans) || isNaN(df))
+    {
         return ML_ERR_return_NAN(printer_ptukey);
     }
 
-    if (q <= 0) {
+    if (q <= 0)
+    {
         return R_DT_0(lower_tail, log_p);
     }
 
     /* df must be > 1 */
     /* there must be at least two values */
 
-    if (df < 2 || rr < 1 || cc < 2) return ML_ERR_return_NAN(printer_ptukey);
+    if (df < 2 || nrnages < 1 || nmeans < 2)
+    {
+        return ML_ERR_return_NAN(printer_ptukey);
+    }
 
-    if (!isFinite(q)) return R_DT_1(lower_tail, log_p);
+    if (!isFinite(q))
+    {
+        return R_DT_1(lower_tail, log_p);
+    }
 
-    if (df > dlarg) return R_DT_val(lower_tail, log_p, wprob(q, rr, cc));
+    if (df > dlarg)
+    {
+        return R_DT_val(lower_tail, log_p, wprob(q, nrnages, nmeans, inp));
+    }
 
     /* calculate leading constant */
 
     const f2 = df * 0.5;
-    /* lgammafn(u) = Math.log(gamma(u)) */
-    f2lf = f2 * Math.log(df) - df * Math.LN2 - lgammaOne(f2);
+    /* lgammafn(u) = log(gamma(u)) */
+    f2lf = f2 * log(df) - df * M_LN2 - lgammaOne(f2);
     const f21 = f2 - 1.0;
 
     /* integral is divided into unit, half-unit, quarter-unit, or */
@@ -188,18 +191,31 @@ export function ptukey(q: number, rr: number, cc: number, df: number, lower_tail
     /* degrees of freedom. */
 
     const ff4 = df * 0.25;
-    if (df <= dhaf) ulen = ulen1;
-    else if (df <= dquar) ulen = ulen2;
-    else if (df <= deigh) ulen = ulen3;
-    else ulen = ulen4;
+    if (df <= dhaf) // 100.0
+    { 
+        ulen = ulen1;
+    }
+    else if (df <= dquar)// 800.0
+    {
+        ulen = ulen2;
+    }
+    else if (df <= deigh)// 5000.0
+    {
+        ulen = ulen3;
+    }
+    else
+    {
+        ulen = ulen4;
+    }
 
-    f2lf += Math.log(ulen);
+    f2lf += log(ulen);
 
     /* integrate over each subinterval */
 
     ans = 0.0;
     otsum = 0.0; // to let typscript linting know it is used , it is within the for loop
-    for (let i = 1; i <= 50; i++) {
+    for (let i = 1; i <= 50; i++)
+    {
         otsum = 0.0;
 
         /* legendre quadrature with order = nlegq */
@@ -207,25 +223,30 @@ export function ptukey(q: number, rr: number, cc: number, df: number, lower_tail
 
         twa1 = (2 * i - 1) * ulen;
 
-        for (let jj = 1; jj <= nlegq; jj++) {
+        for (let jj = 1; jj <= nlegq; jj++)
+        {
             const j = ihalfq < jj ? jj - ihalfq - 1 : jj - 1;
             const t1 =
                 ihalfq < jj
-                    ? f2lf + f21 * Math.log(twa1 + xlegq[j] * ulen) - (xlegq[j] * ulen + twa1) * ff4
-                    : f2lf + f21 * Math.log(twa1 - xlegq[j] * ulen) + (xlegq[j] * ulen - twa1) * ff4;
+                    ? f2lf + f21 * log(twa1 + xlegq[j] * ulen) - (xlegq[j] * ulen + twa1) * ff4
+                    : f2lf + f21 * log(twa1 - xlegq[j] * ulen) + (xlegq[j] * ulen - twa1) * ff4;
 
-            /* if Math.exp(t1) < 9e-14, then doesn't contribute to integral */
-            if (t1 >= eps1) {
-                if (ihalfq < jj) {
-                    qsqz = q * Math.sqrt((xlegq[j] * ulen + twa1) * 0.5);
-                } else {
-                    qsqz = q * Math.sqrt((-(xlegq[j] * ulen) + twa1) * 0.5);
+            /* if exp(t1) < 9e-14, then doesn't contribute to integral */
+            if (t1 >= eps1)
+            {
+                if (ihalfq < jj)
+                {
+                    qsqz = q * sqrt((xlegq[j] * ulen + twa1) * 0.5);
+                }
+                else
+                {
+                    qsqz = q * sqrt((-(xlegq[j] * ulen) + twa1) * 0.5);
                 }
 
                 /* call wprob to find integral of range portion */
 
-                wprb = wprob(qsqz, rr, cc);
-                rotsum = wprb * alegq[j] * Math.exp(t1);
+                wprb = wprob(qsqz, nrnages, nmeans, inp);
+                rotsum = wprb * alegq[j] * exp(t1);
                 otsum += rotsum;
             }
             /* end legendre integral for interval i */
@@ -236,7 +257,10 @@ export function ptukey(q: number, rr: number, cc: number, df: number, lower_tail
          * However, in order to avoid small area under left tail,
          * at least  1 / ulen  intervals are calculated.
          */
-        if (i * ulen >= 1.0 && otsum <= eps2) break;
+        if (i * ulen >= 1.0 && otsum <= eps2)
+        {
+            break;
+        }
 
         /* end of interval i */
         /* L330: */
@@ -244,10 +268,11 @@ export function ptukey(q: number, rr: number, cc: number, df: number, lower_tail
         ans += otsum;
     } //for
 
-    if (otsum > eps2) {
-        /* not converged */
+    if (otsum > eps2)
+    {
+       
         ML_ERROR(ME.ME_PRECISION, 'ptukey', printer_ptukey);
     }
-    if (ans > 1) ans = 1;
+    ans = min(1, ans);
     return R_DT_val(lower_tail, log_p, ans);
 }

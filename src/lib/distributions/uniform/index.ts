@@ -19,4 +19,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 export { dunif } from './dunif';
 export { punif } from './punif';
 export { qunif } from './qunif';
-export { runif, runifOne } from './runif';
+import { runifOne } from './runif';
+import { repeatedCall64 } from '@lib/r-func';
+
+import { IRNG } from '@rng/irng';
+
+export function runif(n: number, min?: number, max?: number, rng?:IRNG): Float64Array {
+    return repeatedCall64(n, runifOne, min, max, rng);
+}
+

@@ -16,36 +16,61 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-function qinv(p: number, c: number, v: number): number {
-    const p0 = 0.322232421088;
-    const q0 = 0.99348462606e-1;
-    const p1 = -1.0;
-    const q1 = 0.588581570495;
-    const p2 = -0.342242088547;
-    const q2 = 0.531103462366;
-    const p3 = -0.204231210125;
-    const q3 = 0.10353775285;
-    const p4 = -0.453642210148e-4;
-    const q4 = 0.38560700634e-2;
-    const c1 = 0.8832;
-    const c2 = 0.2368;
-    const c3 = 1.214;
-    const c4 = 1.208;
-    const c5 = 1.4142;
-    const vmax = 120.0;
+import { debug } from 'debug';
 
+import { ME, ML_ERR_return_NAN, ML_ERROR, R_Q_P01_boundaries } from '@common/logger';
+import { R_DT_qIv } from '@dist/exp/expm1';
+import { ptukey } from './ptukey';
+
+import {
+    abs,
+    max,
+    sqrt,
+    log
+
+} from '@lib/r-func';
+
+const p0 = 0.322232421088;
+const q0 = 0.99348462606e-1;
+const p1 = -1.0;
+const q1 = 0.588581570495;
+const p2 = -0.342242088547;
+const q2 = 0.531103462366;
+const p3 = -0.204231210125;
+const q3 = 0.10353775285;
+const p4 = -0.453642210148e-4;
+const q4 = 0.38560700634e-2;
+const c1 = 0.8832;
+const c2 = 0.2368;
+const c3 = 1.214;
+const c4 = 1.208;
+const c5 = 1.4142;
+const vmax = 120.0;
+
+
+const printer = debug('qtukey');
+
+function qinv(p: number, c: number, v: number): number {
+  
     //let ps;
     let q;
     let t;
     //let yi;
 
     const ps = 0.5 - 0.5 * p;
-    const yi = Math.sqrt(Math.log(1.0 / (ps * ps)));
+    const yi = sqrt(log(1.0 / (ps * ps)));
     t = yi + ((((yi * p4 + p3) * yi + p2) * yi + p1) * yi + p0) / ((((yi * q4 + q3) * yi + q2) * yi + q1) * yi + q0);
-    if (v < vmax) t += (t * t * t + t) / v / 4.0;
+    if (v < vmax)
+    {
+        t += (t * t * t + t) / v / 4.0;
+       
+    }
     q = c1 - c2 * t;
-    if (v < vmax) q += -c3 / v + (c4 * t) / v;
-    return t * (q * Math.log(c - 1.0) + c5);
+    if (v < vmax)
+    {
+        q += -c3 / v + (c4 * t) / v;
+    }
+    return t * (q * log(c - 1.0) + c5);
 }
 
 /*
@@ -58,8 +83,8 @@ function qinv(p: number, c: number, v: number): number {
  *  Uses the secant method to find critical values.
  *
  *  p = confidence level (1 - alpha)
- *  rr = no. of rows or groups
- *  cc = no. of columns or treatments
+ *  nranges = no. of rows or groups
+ *  nmeans = no. of columns or treatments
  *  df = degrees of freedom of error term
  *
  *  ir(1) = error flag = 1 if wprob probability > 1
@@ -73,15 +98,8 @@ function qinv(p: number, c: number, v: number): number {
  *  the search is terminated
  */
 
-import { debug } from 'debug';
 
-import { ME, ML_ERR_return_NAN, ML_ERROR, R_Q_P01_boundaries } from '@common/logger';
-import { R_DT_qIv } from '@dist/exp/expm1';
-import { ptukey } from './ptukey';
 
-const { isNaN: isNaN, POSITIVE_INFINITY: ML_POSINF } = Number;
-const { abs: fabs, max: fmax2 } = Math;
-const printer = debug('qtukey');
 /**
 > qtukey
 function (p, nmeans, df, nranges = 1, lower.tail = TRUE, log.p = FALSE)
@@ -91,11 +109,12 @@ function (p, nmeans, df, nranges = 1, lower.tail = TRUE, log.p = FALSE)
 
 */
 
+
 export function qtukey(
     p: number, //p
-    rr: number, //ranges
-    cc: number, //nmeans
+    nmeans: number, //nmeans
     df: number, //df
+    nranges = 1, //ranges
     lower_tail = true, //lower.tail
     log_p = false, //log.p
 ): number {
@@ -110,16 +129,21 @@ export function qtukey(
     let xabs;
     let iter;
 
-    if (isNaN(p) || isNaN(rr) || isNaN(cc) || isNaN(df)) {
+    if (isNaN(p) || isNaN(nranges) || isNaN(nmeans) || isNaN(df))
+    {
         ML_ERROR(ME.ME_DOMAIN, 'qtukey', printer);
         return NaN;
     }
 
     /* df must be > 1 ; there must be at least two values */
-    if (df < 2 || rr < 1 || cc < 2) return ML_ERR_return_NAN(printer);
+    if (df < 2 || nranges < 1 || nmeans < 2)
+    {
+        return ML_ERR_return_NAN(printer);
+    }
 
-    const rc = R_Q_P01_boundaries(lower_tail, log_p, p, 0, ML_POSINF);
-    if (rc !== undefined) {
+    const rc = R_Q_P01_boundaries(lower_tail, log_p, p, 0, Infinity);
+    if (rc !== undefined)
+    {
         return rc;
     }
 
@@ -127,20 +151,29 @@ export function qtukey(
 
     /* Initial value */
 
-    x0 = qinv(p, cc, df);
+    x0 = qinv(p, nmeans, df);
 
     /* Find prob(value < x0) */
 
-    valx0 = ptukey(x0, rr, cc, df, /*LOWER*/ true, /*LOG_P*/ false) - p;
+    valx0 = ptukey(x0, nmeans, df, nranges,  /*LOWER*/ true, /*LOG_P*/ false) - p;
 
     /* Find the second iterate and prob(value < x1). */
     /* If the first iterate has probability value */
     /* exceeding p then second iterate is 1 less than */
     /* first iterate; otherwise it is 1 greater. */
 
-    if (valx0 > 0.0) x1 = fmax2(0.0, x0 - 1.0);
-    else x1 = x0 + 1.0;
-    valx1 = ptukey(x1, rr, cc, df, /*LOWER*/ true, /*LOG_P*/ false) - p;
+    if (valx0 > 0.0)
+    {
+        x1 = max(0.0, x0 - 1.0);
+       
+    }
+    else
+    {
+         x1 = x0 + 1.0;
+         
+    }
+    
+    valx1 = ptukey(x1, nmeans, df, nranges, /*LOWER*/ true, /*LOG_P*/ false) - p;
 
     /* Find new iterate */
 
@@ -157,17 +190,21 @@ export function qtukey(
         }
         /* Find prob(value < new iterate) */
 
-        valx1 = ptukey(ans, rr, cc, df, /*LOWER*/ true, /*LOG_P*/ false) - p;
+        valx1 = ptukey(ans, nmeans, df, nranges, /*LOWER*/ true, /*LOG_P*/ false) - p;
         x1 = ans;
 
         /* If the difference between two successive */
         /* iterates is less than eps, stop */
 
-        xabs = fabs(x1 - x0);
-        if (xabs < eps) return ans;
+        xabs = abs(x1 - x0);
+        if (xabs < eps) 
+        {   
+            return ans;
+        }
     }
 
     /* The process did not converge in 'maxiter' iterations */
+    
     ML_ERROR(ME.ME_NOCONV, 'qtukey', printer);
-    return ans;
+    return ans;   
 }

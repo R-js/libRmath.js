@@ -16,12 +16,25 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-export function dunif(x: number, min = 0, max = 1, logP = false): number {
-    if (isNaN(x) || isNaN(min) || isNaN(max)) {
-        return x + min + max;
+import { debug } from 'debug';
+import { ML_ERR_return_NAN } from '@common/logger';
+import { log, R_D__0 } from '@lib/r-func';
+
+const printer = debug('dunif');
+
+
+export function dunif(x: number, a = 0, b = 1, give_log = false): number {
+    if (isNaN(x) || isNaN(a) || isNaN(b)) {
+        return x + a + b;
     }
-    if (min <= x && x <= max) {
-        return logP ? -Math.log(max - min) : 1 / (max - min);
+    if (b <= a) 
+    {
+        return ML_ERR_return_NAN(printer);
     }
-    return logP ? -Infinity : 0.0;
+
+    if (a <= x && x <= b)
+    {
+        return give_log ? -log(b - a) : 1. / (b - a);
+    }
+    return R_D__0(give_log);
 }

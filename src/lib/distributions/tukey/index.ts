@@ -15,52 +15,6 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { ptukey as _pt } from './ptukey';
-import { qtukey as _qt } from './qtukey';
+export { ptukey } from './ptukey';
+export { qtukey } from './qtukey';
 
-
-/*
-> ptukey
-function (q, nmeans, df, nranges = 1, lower.tail = TRUE, log.p = FALSE)
-.Call(C_ptukey, q, nranges, nmeans, df, lower.tail, log.p)
-<bytecode: 0x000000001cde3048>
-<environment: namespace:stats>
- 
-double ptukey(
-  double q,  // q
-  double rr, // nranges
-  double cc, // nmeans
-  double df, // df
-  int lower_tail, // lowertail
-  int log_p       // logp
-*/
-
-export function ptukey(
-  q: number,
-  nmeans: number,
-  df: number,
-  nranges = 1,
-  lowerTail = true,
-  logP = false
-): number {
-  return _pt(q, nranges, nmeans, df, lowerTail, logP);
-}
-//
-/*
-/**
-> qtukey
-function (p, nmeans, df, nranges = 1, lower.tail = TRUE, log.p = FALSE)
-.Call(C_qtukey, p, nranges, nmeans, df, lower.tail, log.p)
-<bytecode: 0x000000001cde4a80>
-<environment: namespace:stats>
-*/
-export function qtukey(
-  q: number,
-  nmeans: number,
-  df: number,
-  nranges = 1,
-  lowerTail = true,
-  logP = false
-): number {
-  return _qt(q, nranges, nmeans, df, lowerTail, logP);
-}
