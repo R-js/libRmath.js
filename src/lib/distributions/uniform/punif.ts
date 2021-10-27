@@ -21,32 +21,38 @@ const printer = debug('punif');
 import { ML_ERR_return_NAN } from '@common/logger';
 import { R_D_val, R_DT_0, R_DT_1 } from '@lib/r-func';
 
-export function punif(q: number, min = 0, max = 1, lowerTail = true, logP = false): number {
-    if (isNaN(q) || isNaN(min) || isNaN(max)) {
-        return q + min + max;
+export function punif(x: number, a = 0, b = 1, lowerTail = true, logP = false): number {
+    if (isNaN(x) || isNaN(a) || isNaN(b))
+    {
+        return x + a + b;
     }
 
-    if (max < min) {
+    if (b < a)
+    {
         return ML_ERR_return_NAN(printer);
     }
 
-    if (!isFinite(min) || !isFinite(max)) {
+    if (!isFinite(a) || !isFinite(b))
+    {
         return ML_ERR_return_NAN(printer);
     }
 
-    if (q >= max) {
+    if (x >= b)
+    {
         return R_DT_1(lowerTail, logP);
     }
 
-    if (q <= min) {
+    if (x <= a)
+    {
         return R_DT_0(lowerTail, logP);
     }
 
-    const dnom = 1 / (max - min);
+    const dnom = 1 / (b - a);
 
-    if (lowerTail) {
-        return R_D_val(logP, q * dnom - min * dnom)
+    if (lowerTail)
+    {
+        return R_D_val(logP, x * dnom - a * dnom)
     }
 
-    return R_D_val(logP, max * dnom - q * dnom);
+    return R_D_val(logP, b * dnom - x * dnom);
 }

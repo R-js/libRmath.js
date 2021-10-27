@@ -15,7 +15,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { M_1_SQRT_2PI } from '@lib/r-func';
+import { M_1_SQRT_2PI, pow, exp } from '@lib/r-func';
 import { pnorm5 as pnorm } from '@dist/normal/pnorm';
 
 const bb = 8;
@@ -113,7 +113,8 @@ export function wprob(w: number, rr: number, cc: number): number {
     /* if w >= 16 then the integral lower bound (occurs for c=20) */
     /* is 0.99999999999995 so return a value of 1. */
 
-    if (qsqz >= bb) {
+    if (qsqz >= bb)
+    {
         return 1.0;
     }
 
@@ -122,14 +123,26 @@ export function wprob(w: number, rr: number, cc: number): number {
 
     pr_w = 2 * pnorm(qsqz, 0, 1, true, false) - 1; /* erf(qsqz / M_SQRT2) */
     /* if pr_w ^ cc < 2e-22 then set pr_w = 0 */
-    if (pr_w >= Math.exp(C2 / cc)) pr_w = Math.pow(pr_w, cc);
-    else pr_w = 0.0;
+    if (pr_w >= exp(C2 / cc))
+    {
+        pr_w = pow(pr_w, cc);
+    }
+    else
+    {
+        pr_w = 0.0;
+    }
 
     /* if w is large then the second component of the */
     /* integral is small, so fewer intervals are needed. */
 
-    if (w > wlar) wincr = wincr1;
-    else wincr = wincr2;
+    if (w > wlar)
+    {
+        wincr = wincr1;
+    }
+    else
+    {
+        wincr = wincr2;
+    }
 
     /* find the integral of second term of hartley's form */
     /* for the integral of the range for equal-length */
@@ -147,7 +160,8 @@ export function wprob(w: number, rr: number, cc: number): number {
     /* integrate over each interval */
 
     const cc1 = cc - 1.0;
-    for (wi = 1; wi <= wincr; wi++) {
+    for (wi = 1; wi <= wincr; wi++)
+    {
         elsum = 0.0;
         a = 0.5 * (bub + blb);
 
@@ -155,11 +169,15 @@ export function wprob(w: number, rr: number, cc: number): number {
 
         b = 0.5 * (bub - blb);
 
-        for (let jj = 1; jj <= nleg; jj++) {
-            if (ihalf < jj) {
+        for (let jj = 1; jj <= nleg; jj++)
+        {
+            if (ihalf < jj)
+            {
                 j = nleg - jj + 1;
                 xx = xleg[j - 1];
-            } else {
+            }
+            else
+            {
                 j = jj;
                 xx = -xleg[j - 1];
             }
@@ -170,7 +188,10 @@ export function wprob(w: number, rr: number, cc: number): number {
             /* then doesn't contribute to integral */
 
             qexpo = ac * ac;
-            if (qexpo > C3) break;
+            if (qexpo > C3)
+            {
+                break;
+            }
 
             pplus = 2 * pnorm(ac, 0, 1, true, false);
             pminus = 2 * pnorm(ac, w, 1, true, false);
@@ -179,8 +200,9 @@ export function wprob(w: number, rr: number, cc: number): number {
             /* then doesn't contribute to integral */
 
             rinsum = pplus * 0.5 - pminus * 0.5;
-            if (rinsum >= Math.exp(C1 / cc1)) {
-                rinsum = aleg[j - 1] * Math.exp(-(0.5 * qexpo)) * Math.pow(rinsum, cc1);
+            if (rinsum >= exp(C1 / cc1))
+            {
+                rinsum = aleg[j - 1] * exp(-(0.5 * qexpo)) * pow(rinsum, cc1);
                 elsum += rinsum;
             }
         }
@@ -192,11 +214,16 @@ export function wprob(w: number, rr: number, cc: number): number {
 
     /* if pr_w ^ rr < 9e-14, then return 0 */
     pr_w += einsum;
-    if (pr_w <= Math.exp(C1 / rr)) return 0;
+    if (pr_w <= exp(C1 / rr))
+    {
+        return 0;
+    }
 
-    pr_w = Math.pow(pr_w, rr);
+    pr_w = pow(pr_w, rr);
     if (pr_w >= 1)
+    {
         /* 1 was iMax was eps */
         return 1;
+    }
     return pr_w;
 } /* wprob() */
