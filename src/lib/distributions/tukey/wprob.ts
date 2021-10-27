@@ -47,7 +47,7 @@ const aleg = [
 const C3 = 60;
 const C1 = -30;
 
-export function wprob(w: number, rr: number, cc: number, doc: string): number {
+export function wprob(w: number, rr: number, cc: number): number {
     /*  wprob() :
       
           This function calculates probability integral of Hartley's

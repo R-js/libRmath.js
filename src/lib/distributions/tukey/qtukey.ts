@@ -50,6 +50,8 @@ const vmax = 120.0;
 
 const printer = debug('qtukey');
 
+
+
 function qinv(p: number, c: number, v: number): number {
   
     //let ps;

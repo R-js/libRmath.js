@@ -1,5 +1,4 @@
 
-
 import { cl, select } from '@common/debug-select';
 
 import { qtukey } from '../index';
@@ -73,5 +72,9 @@ describe('qtukey', function () {
             expect(nan).toBe(NaN);
         });
        
+        it('p=0.9 means=3, df=2', ()=>{
+            const ans = qtukey(0.9, 3, 2);
+            expect(ans).toEqualFloatingPointBinary(5.732649, 24);
+        });
     });
 });

@@ -74,7 +74,6 @@ const alegq = [
 ];
 
 export function ptukey(q: number, nmeans: number, df: number, nrnages =1, lower_tail = true, log_p = false): number {
-    const inp = `q=${q},means=${nmeans},df=${df}`;
     /*  function ptukey() [was qprob() ]:
         q = value of studentized range
         nrnages = no. of rows or groups
@@ -176,7 +175,7 @@ export function ptukey(q: number, nmeans: number, df: number, nrnages =1, lower_
 
     if (df > dlarg)
     {
-        return R_DT_val(lower_tail, log_p, wprob(q, nrnages, nmeans, inp));
+        return R_DT_val(lower_tail, log_p, wprob(q, nrnages, nmeans));
     }
 
     /* calculate leading constant */
@@ -245,7 +244,7 @@ export function ptukey(q: number, nmeans: number, df: number, nrnages =1, lower_
 
                 /* call wprob to find integral of range portion */
 
-                wprb = wprob(qsqz, nrnages, nmeans, inp);
+                wprb = wprob(qsqz, nrnages, nmeans);
                 rotsum = wprb * alegq[j] * exp(t1);
                 otsum += rotsum;
             }
