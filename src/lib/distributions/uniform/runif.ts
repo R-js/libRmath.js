@@ -18,11 +18,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import { debug } from 'debug';
 import { ML_ERR_return_NAN } from '@common/logger';
-import { globalUni } from '@rng/global-rng';
+import type { IRNG } from '@rng/irng';
 
 const printer = debug('runif');
 
-export function runifOne(min = 0, max = 1, u = globalUni()): number {
+export function runifOne(min: number, max: number, u: IRNG): number {
     if (!(isFinite(min) && isFinite(max) && max > min))
     {
         return ML_ERR_return_NAN(printer);

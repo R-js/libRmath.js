@@ -18,16 +18,21 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import { debug } from 'debug';
 
 import { ML_ERR_return_NAN } from '@common/logger';
-import { IRNG } from '@rng/irng';
+import type { IRNG } from '@rng/irng';
+import { pow, log } from '@lib/r-func';
 
 const printer = debug('rweibull');
 
 export function rweibullOne(shape: number, scale: number, rng: IRNG): number {
-    if (!isFinite(shape) || !isFinite(scale) || shape <= 0 || scale <= 0) {
-        if (scale === 0) return 0;
+    if (!isFinite(shape) || !isFinite(scale) || shape <= 0 || scale <= 0)
+    {
+        if (scale === 0)
+        {
+            return 0;
+        }
         /* else */
         return ML_ERR_return_NAN(printer);
     }
 
-    return scale * Math.pow(-Math.log(rng.random()), 1.0 / shape);
+    return scale * pow(-log(rng.random()), 1.0 / shape);
 }

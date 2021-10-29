@@ -18,6 +18,7 @@ const collectCoverageFrom = [
     'src/lib/distributions/student-t/*.ts',
     'src/lib/distributions/tukey/*.ts',
     'src/lib/distributions/uniform/*.ts',
+    'src/lib/distributions/weibull/*.ts',
     'src/lib/r-func.ts',
     'src/lib/index.ts',
     'src/lib/trigonometry/*.ts',
@@ -161,6 +162,13 @@ const tukeyHSD = [
     '/distributions/tukey/__test__/ptukey.test.ts$',
 ];
 
+const weibull = [
+    '/distributions/weibull/__test__/dweibull.test.ts$',
+    '/distributions/weibull/__test__/pweibull.test.ts$',
+    '/distributions/weibull/__test__/qweibull.test.ts$',
+    '/distributions/weibull/__test__/rweibull.test.ts$',
+];
+
 const uniform = [
     '/distributions/uniform/__test__/dunif.test.ts$',
     '/distributions/uniform/__test__/punif.test.ts$',
@@ -210,6 +218,7 @@ const testRegex = [
     ...studentT,
     ...tukeyHSD,
     ...uniform,
+    ...weibull,
     //
     ...uniformRNG,
     ...normalRNG,
