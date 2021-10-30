@@ -17,6 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { WilcoxonCache } from './WilcoxonCache';
+import { trunc } from '@lib/r-func';
 
 export function cwilcox(
   k: number,
@@ -28,7 +29,7 @@ export function cwilcox(
   let j;
 
   const u = m * n;
-  const c = Math.trunc(u / 2);
+  const c = trunc(u / 2);
 
   if (k < 0 || k > u) {
     return 0;

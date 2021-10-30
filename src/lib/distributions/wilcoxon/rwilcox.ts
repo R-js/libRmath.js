@@ -20,20 +20,33 @@ import { debug } from 'debug';
 
 import { ML_ERR_return_NAN } from '@common/logger';
 import { IRNG } from '@rng/irng';
+import { round, trunc, floor } from '@lib/r-func';
+import { R_unif_index } from '@rng/utils';
+import { IRNGSampleKindTypeEnum } from '@rng/sample-kind-type'
 
 const printer_rwilcox = debug('rwilcox');
 
 const MAXSIZE = 4294967296;
 
-export function rwilcoxOne(m: number, n: number, rng: IRNG): number {
+export function rwilcoxOne(m: number, n: number, rng: IRNG, sampleKind: IRNGSampleKindTypeEnum): number 
+{
     /* NaNs propagated correctly */
-    if (isNaN(m) || isNaN(n)) return NaN;
-    m = Math.round(m);
-    n = Math.round(n);
-    if (m < 0 || n < 0) return ML_ERR_return_NAN(printer_rwilcox);
-    if (m === 0 || n === 0) return 0;
+    if (isNaN(m) || isNaN(n))
+    {   
+        return m + n;
+    }
+    m = round(m);
+    n = round(n);
+    if (m < 0 || n < 0)
+    {
+        return ML_ERR_return_NAN(printer_rwilcox);
+    }
+    if (m === 0 || n === 0)
+    {
+        return 0;
+    }
 
-    let k = Math.trunc(m + n);
+    let k = trunc(m + n);
 
     let x;
     if (k <= 65536) {
@@ -52,7 +65,7 @@ export function rwilcoxOne(m: number, n: number, rng: IRNG): number {
     let r = 0.0;
     printer_rwilcox(`------v`);
     for (let i = 0; i < n; i++) {
-        const j = Math.floor(k * rng.random());
+        const j = floor(R_unif_index(k, rng, sampleKind));
         r += x[j];
         x[j] = x[--k];
         printer_rwilcox('i:%d,\tn:%d\tj:%d\tk:%d\tr:%d\tx:%o', i, n, j, k, x);
