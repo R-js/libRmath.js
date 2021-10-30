@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-
+import { INT_MAX } from '@lib/r-func';
 import { fixup } from '@rng/fixup';
 import { IRNG } from '@rng/irng';
 import { IRNGTypeEnum } from '@rng/irng-type';
@@ -28,6 +28,8 @@ export const SEED_LEN = 3;
 
 export class WichmannHill extends IRNG {
     private m_seed: Uint32Array;
+
+    public static kind = IRNGTypeEnum.WICHMANN_HILL;
 
     public random(): number {
         const s = this.m_seed;
@@ -41,7 +43,7 @@ export class WichmannHill extends IRNG {
     }
 
     constructor(_seed: number = seed()) {
-        super('Wichmann-Hill', IRNGTypeEnum.WICHMANN_HILL);
+        super('Wichmann-Hill', );
         this.m_seed = new Uint32Array(SEED_LEN);
         this.init(_seed);
     }
@@ -74,12 +76,16 @@ export class WichmannHill extends IRNG {
     }
 
     public set seed(_seed: Uint32Array) {
-        seedCheck(this._kind, _seed, SEED_LEN);
+        seedCheck(this.name, _seed, SEED_LEN);
         this.m_seed.set(_seed);
         this.fixupSeeds();
     }
 
     public get seed(): Uint32Array {
         return this.m_seed.slice();
+    }
+
+    public get cut(): number {
+        return INT_MAX;
     }
 }

@@ -1,5 +1,4 @@
 import { AhrensDieter } from '../../..';
-import { IRNGNormalTypeEnum } from '../../in01-type';
 import { _1000Samples } from './fixture-1000';
 import {
     rnormAfterSeed1234,
@@ -61,6 +60,5 @@ describe('rng ahrens-dieter', function () {
     it('identity', () => {
         const ad = new AhrensDieter();
         expect(ad.name).toBe('Ahrens-Dieter');
-        expect(ad.kind).toBe(IRNGNormalTypeEnum.AHRENS_DIETER);
     });
 });

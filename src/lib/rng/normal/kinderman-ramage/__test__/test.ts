@@ -1,5 +1,4 @@
 import { KindermanRamage } from '@rng/normal/kinderman-ramage';
-import { IRNGNormalTypeEnum } from '@rng/normal/in01-type';
 import { testData } from './fixture';
 import  { _1000Samples } from './_1000flushSample';
 
@@ -52,7 +51,6 @@ describe('rng kinderman ramage', function () {
         const inv = new KindermanRamage();
         inv.uniform_rng.init(1234);
         expect(inv.name).toBe('KinderMan Ramage');
-        expect(inv.kind).toBe(IRNGNormalTypeEnum.KINDERMAN_RAMAGE);
         expect(inv.randoms(1e3)).toEqualFloatingPointBinary(_1000Samples, 22, false, false);
     });
 });

@@ -20,6 +20,7 @@ import { IRNG } from '../irng';
 import { IRNGTypeEnum } from '../irng-type';
 import { seed } from '../timeseed';
 import { seedCheck } from '../seedcheck';
+import { INT_MAX } from '@lib/r-func';
 
 export const SEED_LEN = 6;
 
@@ -32,10 +33,13 @@ const a21 = 527612;
 const a23n = 1370589;
 
 export class LecuyerCMRG extends IRNG {
+
+    public static kind = IRNGTypeEnum.LECUYER_CMRG;
+
     private m_seed: Int32Array;
 
     constructor(_seed = seed()) {
-        super("L'Ecuyer-CMRG", IRNGTypeEnum.LECUYER_CMRG);
+        super("L'Ecuyer-CMRG");
         this.m_seed = new Int32Array(SEED_LEN);
         this.init(_seed);
     }
@@ -96,11 +100,15 @@ export class LecuyerCMRG extends IRNG {
     }
 
     public set seed(_seed: Int32Array) {
-        seedCheck(this._kind, _seed, SEED_LEN);
+        seedCheck(this.name, _seed, SEED_LEN);
         this.m_seed.set(_seed);
     }
 
     public get seed(): Int32Array {
         return this.m_seed.slice();
+    }
+
+    public get cut(): number {
+        return INT_MAX;
     }
 }

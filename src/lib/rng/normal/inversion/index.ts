@@ -24,8 +24,11 @@ import { IRNGNormalTypeEnum } from '@rng/normal/in01-type';
 const BIG = 134217728; /* 2^27 */
 
 export class Inversion extends IRNGNormal {
+
+    public static kind = IRNGNormalTypeEnum.INVERSION;
+
     constructor(_rng: IRNG = new MersenneTwister(0)) {
-        super(_rng, 'Inversion', IRNGNormalTypeEnum.INVERSION);
+        super(_rng, 'Inversion');
         this._rng.unregister(MessageType.INIT, this.reset);
     }
 

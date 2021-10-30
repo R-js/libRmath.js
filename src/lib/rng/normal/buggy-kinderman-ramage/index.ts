@@ -23,8 +23,11 @@ import { IRNGNormalTypeEnum } from '@rng/normal/in01-type';
 const { log, sqrt, min: fmin2, max: fmax2, abs: fabs, exp } = Math;
 
 export class BuggyKindermanRamage extends IRNGNormal {
+    
+    public static kind = IRNGNormalTypeEnum.BUGGY_KINDERMAN_RAMAGE;
+
     constructor(_rng: IRNG = new MersenneTwister(0)) {
-        super(_rng, 'Buggy-Kinderman-Ramage', IRNGNormalTypeEnum.BUGGY_KINDERMAN_RAMAGE);
+        super(_rng, 'Buggy-Kinderman-Ramage');
         this._rng.unregister(MessageType.INIT, this.reset);
     }
 

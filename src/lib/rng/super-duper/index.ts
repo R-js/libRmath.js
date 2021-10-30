@@ -21,14 +21,18 @@ import { IRNG } from '@rng/irng';
 import { IRNGTypeEnum } from '@rng/irng-type';
 import { seed } from '@rng/timeseed';
 import { seedCheck } from '@rng/seedcheck';
+import { INT_MAX } from '@lib/r-func';
 
 export const SEED_LEN = 2;
 
 export class SuperDuper extends IRNG {
+
+    public static kind = IRNGTypeEnum.SUPER_DUPER;
+
     private m_seed: Int32Array;
 
     constructor(_seed: number = seed()) {
-        super('Super-Duper', IRNGTypeEnum.SUPER_DUPER);
+        super('Super-Duper');
         this.m_seed = new Int32Array(SEED_LEN);
         this.init(_seed);
     }
@@ -72,12 +76,16 @@ export class SuperDuper extends IRNG {
     }
 
     public set seed(_seed: Int32Array | Uint32Array) {
-        seedCheck(this._kind, _seed, SEED_LEN);
+        seedCheck(this.name, _seed, SEED_LEN);
         this.m_seed.set(_seed);
         this.fixupSeeds();
     }
 
     public get seed(): Int32Array|Uint32Array {
         return this.m_seed.slice();
+    }
+
+    public get cut(): number {
+        return INT_MAX;
     }
 }

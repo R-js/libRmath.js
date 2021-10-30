@@ -1,5 +1,4 @@
 import { BoxMuller } from '@rng/normal/box-muller';
-import { IRNGNormalTypeEnum } from '@rng/normal/in01-type';
 import {
     rnormAfterSeed123,
     rnormAfterUniformRNGBleed,
@@ -36,8 +35,7 @@ describe('rng box-muller', function () {
         expect(normVar1).toEqualFloatingPointBinary(0.735828171633, 22, false, false);
 
         expect(bm.name).toBe('Box-Muller');
-        expect(bm.kind).toBe(IRNGNormalTypeEnum.BOX_MULLER);
-
+        
         bm.uniform_rng.init(1234);
         const normVar2 = bm.randoms(-1);
         expect(normVar2).toEqualFloatingPointBinary(0.735828171633, 22, false, false);

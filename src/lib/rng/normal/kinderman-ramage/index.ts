@@ -35,8 +35,10 @@ const C2 = 0.180025191068563;
  *    JASA 71, 893-896.
  */
 export class KindermanRamage extends IRNGNormal {
+    public static kind = IRNGNormalTypeEnum.KINDERMAN_RAMAGE;
+
     constructor(_rng: IRNG = new MersenneTwister(0)) {
-        super(_rng, 'KinderMan Ramage', IRNGNormalTypeEnum.KINDERMAN_RAMAGE);
+        super(_rng, 'KinderMan Ramage');
         this._rng.unregister(MessageType.INIT, this.reset);
     }
 

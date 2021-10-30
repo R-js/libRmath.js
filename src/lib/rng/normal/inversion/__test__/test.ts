@@ -1,5 +1,4 @@
 import { Inversion } from '@rng/normal/inversion';
-import { IRNGNormalTypeEnum } from '@rng/normal/in01-type';
 import { testData } from './fixture';
 
 const { rnorm10, runif1, rnorm4, runif1_2, rnorm2, rnorm2AfterResetSeedTo0 } = testData;
@@ -49,6 +48,5 @@ describe('rng inversion', function () {
     it('identity', () => {
         const inv = new Inversion();
         expect(inv.name).toBe('Inversion');
-        expect(inv.kind).toBe(IRNGNormalTypeEnum.INVERSION);
     });
 });

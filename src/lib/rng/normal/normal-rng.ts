@@ -20,21 +20,23 @@ import { IRNGNormalTypeEnum } from './in01-type';
 import type { IRandom } from '@rng/IRandom';
 
 export class IRNGNormal implements IRandom {
+
+    public static kind: IRNGNormalTypeEnum;
+
     protected _rng: IRNG;
     protected _name: string;
-    protected _kind: IRNGNormalTypeEnum;
-
+    
     protected reset(): void {
         /* dud */
     }
 
-    constructor(_rng: IRNG, name: string, kind: IRNGNormalTypeEnum) {
+    constructor(_rng: IRNG, name: string)
+    {
         if (this.constructor.name === 'IRNGNormal'){
             throw new TypeError(`Cannot instantiante class "IRNGNormal" directly`);
         }
         this._rng = _rng;
         this._name = name;
-        this._kind = kind;
         this.random = this.random.bind(this);
         this.randoms = this.randoms.bind(this);
         this.reset = this.reset.bind(this);
@@ -56,10 +58,6 @@ export class IRNGNormal implements IRandom {
 
     public get name(): string {
         return this._name;
-    }
-
-    public get kind(): IRNGNormalTypeEnum  {
-        return this._kind;
     }
 
     public get uniform_rng(): IRNG {

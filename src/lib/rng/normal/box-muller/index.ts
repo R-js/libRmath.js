@@ -26,6 +26,9 @@ const DBL_MIN = 2.22507e-308;
 const M_PI = 3.14159265358979323846264338327950288;
 
 export class BoxMuller extends IRNGNormal {
+
+    public static kind = IRNGNormalTypeEnum.BOX_MULLER;
+
     private BM_norm_keep: number;
 
     protected reset():void {
@@ -33,7 +36,7 @@ export class BoxMuller extends IRNGNormal {
     }
 
     constructor(_rng: IRNG = new MersenneTwister(0)) {
-        super(_rng, 'Box-Muller', IRNGNormalTypeEnum.BOX_MULLER);
+        super(_rng, 'Box-Muller');
         this.BM_norm_keep = 0; // not needed but tsc will give problems
     }
 

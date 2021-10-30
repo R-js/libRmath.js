@@ -17,11 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 type WCache = {
-  [index: number]: WCache
-}
-|
-{
-  [index: number]: number
+  [index: number]: WCache | number
 }
 
 export class WilcoxonCache {

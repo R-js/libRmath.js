@@ -16,6 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+import { INT_MAX } from '@lib/r-func';
 import { fixup, i2_32m1 } from '../fixup';
 import { IRNG } from '../irng';
 import { IRNGTypeEnum } from '../irng-type';
@@ -25,6 +26,8 @@ import { seedCheck } from '../seedcheck';
 export const SEED_LEN = 2;
 
 export class MarsagliaMultiCarry extends IRNG {
+
+    public static kind = IRNGTypeEnum.MARSAGLIA_MULTICARRY;
     private m_seed: Int32Array;
 
     private fixupSeeds(): void {
@@ -35,7 +38,7 @@ export class MarsagliaMultiCarry extends IRNG {
     }
 
     public constructor(_seed: number = seed()) {
-        super('Marsaglia-MultiCarry', IRNGTypeEnum.MARSAGLIA_MULTICARRY);
+        super('Marsaglia-MultiCarry');
         this.m_seed = new Int32Array(SEED_LEN);
         this.init(_seed);
     }
@@ -70,12 +73,16 @@ export class MarsagliaMultiCarry extends IRNG {
     }
 
     public set seed(_seed: Int32Array) {
-        seedCheck(this._kind, _seed, SEED_LEN);
+        seedCheck(this.name, _seed, SEED_LEN);
         this.m_seed.set(_seed);
         this.fixupSeeds();
     }
 
     public get seed(): Int32Array {
         return this.m_seed.slice();
+    }
+
+    public get cut(): number {
+        return INT_MAX;
     }
 }

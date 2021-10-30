@@ -36,3 +36,5 @@ export { IRNGTypeEnum } from './irng-type';
 export { IRNGNormalTypeEnum } from './normal/in01-type';
 // globalRNG
 export { globalUni, globalNorm, RNGKind } from './global-rng';
+export { IRNGSampleKindTypeEnum } from './sample-kind-type';
+
