@@ -25,9 +25,8 @@ describe('rng wichman-hill', function () {
     it('check state vars', () => {
         const wh = new WichmannHill(7895);
         expect(wh.name).toBe('Wichmann-Hill');
-        expect(wh.kind).toBe('WICHMANN_HILL');
         expect(() => (wh.seed = new Uint32Array(6))).toThrow(
-            'the seed is not an array of proper size for rng WICHMANN_HILL',
+            'the seed is not an array of proper size for rng Wichmann-Hill',
         );
         // set seed to all zeros , will trigger internal correction
         expect(() => (wh.seed = new Uint32Array(3))).not.toThrow();

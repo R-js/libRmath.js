@@ -28,8 +28,8 @@ describe('rbeta', function () {
         const uni = globalUni();
         const no = globalNorm();
         uni.init(1234);
-        expect(uni.kind).toBe('MERSENNE_TWISTER');
-        expect(no.kind).toBe('INVERSION');
+        expect(uni.name).toBe('Mersenne-Twister');
+        expect(no.name).toBe('Inversion');
         const actual = rbeta(5, 2, 2);
         expect(actual).toEqualFloatingPointBinary([
             0.189691764891692205,
@@ -56,8 +56,8 @@ describe('rbeta', function () {
         const uni = globalUni();
         const no = globalNorm();
         uni.init(1234);
-        expect(uni.kind).toBe('MERSENNE_TWISTER');
-        expect(no.kind).toBe('INVERSION');
+        expect(uni.name).toBe('Mersenne-Twister');
+        expect(no.name).toBe('Inversion');
         //> set.seed(1234)
         //> rbeta(40,0,0)
         // [1] 0 1 1 1 1 1 0 0 1 1 1 1 0 1 0 1 0 0 0 0 0 0 0 0 0 1 1 1 1 0 0 0 0 1 0 1 0 0
@@ -84,8 +84,8 @@ describe('rbeta', function () {
         const uni = globalUni();
         const no = globalNorm();
         uni.init(1234);
-        expect(uni.kind).toBe('MERSENNE_TWISTER');
-        expect(no.kind).toBe('INVERSION');
+        expect(uni.name).toBe('Mersenne-Twister');
+        expect(no.name).toBe('Inversion');
 
         const actual = rbeta(10, .2, 8.2);
         expect(actual).toEqualFloatingPointBinary([
@@ -104,8 +104,8 @@ describe('rbeta', function () {
         const uni = globalUni();
         const no = globalNorm();
         uni.init(12345);
-        expect(uni.kind).toBe('MERSENNE_TWISTER');
-        expect(no.kind).toBe('INVERSION');
+        expect(uni.name).toBe('Mersenne-Twister');
+        expect(no.name).toBe('Inversion');
         const actual = rbeta(12, 2, 5, 4);
         expect(actual).toEqualFloatingPointBinary([
             0.588099435516149627,

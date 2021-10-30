@@ -158,8 +158,11 @@ const h = [
 ];
 
 export class AhrensDieter extends IRNGNormal {
+   
+    public static kind = IRNGNormalTypeEnum.AHRENS_DIETER;
+
     constructor(_rng: IRNG = new MersenneTwister(0)) {
-        super(_rng, 'Ahrens-Dieter', IRNGNormalTypeEnum.AHRENS_DIETER);
+        super(_rng, 'Ahrens-Dieter');
         this._rng.unregister(MessageType.INIT, this.reset);
     }
 

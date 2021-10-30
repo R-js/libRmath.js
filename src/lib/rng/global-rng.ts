@@ -18,6 +18,7 @@ import { KindermanRamage } from '@rng/normal/kinderman-ramage';
 //enums
 import { IRNGTypeEnum } from './irng-type';
 import { IRNGNormalTypeEnum } from './normal/in01-type';
+import { IRNGSampleKindTypeEnum } from './sample-kind-type';
 
 
 const uniformMap = {
@@ -42,14 +43,16 @@ const normalMap = {
     [IRNGNormalTypeEnum.KINDERMAN_RAMAGE]: KindermanRamage
 }
 
-//type normalMapKey = keyof (typeof normalMap);
+type NormalMapKey = keyof (typeof normalMap);
 
 const symRNG = Symbol.for('rngUNIFORM');
 const symRNGNormal = Symbol.for('rngNORMAL');
+const symSampleKind = Symbol.for('sample.kind');
 
 type EgT = typeof globalThis & {
     [symRNG]: IRNG,
-    [symRNGNormal]: IRNGNormal
+    [symRNGNormal]: IRNGNormal,
+    [symSampleKind]: IRNGSampleKindTypeEnum
 };
 
 export function globalUni(d?: IRNG): IRNG {
@@ -66,56 +69,127 @@ export function globalNorm(d?: IRNGNormal): IRNGNormal {
     return (globalThis as EgT)[symRNGNormal];
 }
 
-export function RNGKind(
-    uniform?: IRNGTypeEnum | IRNGNormalTypeEnum,
-    normal?: IRNGNormalTypeEnum
-): { uniform: IRNG, normal: IRNGNormal } {
-
-    const gu = globalUni();
-    const no = globalNorm();
-
-    if (uniform && !normal) {
-        normal = uniform as IRNGNormalTypeEnum;
-        uniform = no ? no.kind : IRNGTypeEnum.MERSENNE_TWISTER;
+export function globalSampleKind(d?: IRNGSampleKindTypeEnum): IRNGSampleKindTypeEnum {
+    if (d) {
+        (globalThis as EgT)[symSampleKind] = d;
     }
-
-    if (!uniform) {
-        uniform = (gu && gu.kind) || IRNGTypeEnum.MERSENNE_TWISTER;
-    }
-
-    if (!normal) {
-        normal = (no && no.kind) || IRNGNormalTypeEnum.INVERSION;
-    }
-
-    //check if normal exist
-    const errors: string[] = [];
-    const uni = uniformMap[uniform as UniformMapKey];
-    if (!uni) {
-        errors.push(`Uknown uniform type ${uniform}`);
-    }
-    else {
-        if (!(gu && gu.kind === uniform)) {
-            globalUni(new uni());
-        }
-    }
-    const norm = normalMap[normal as IRNGNormalTypeEnum];
-    if (!norm) {
-        errors.push(`Uknown normal type ${normal}`);
-    }
-    else {
-        if (!(no && no.kind !== normal)) {
-            globalNorm(new norm(globalUni()));
-        }
-    }
-
-    return {
-        uniform: globalUni(),
-        normal: globalNorm(),
-    };
+    return (globalThis as EgT)[symSampleKind];
 }
 
-//init
-RNGKind();
 
+export function RNGKind(
+    uniform?: IRNGTypeEnum | IRNGNormalTypeEnum | IRNGSampleKindTypeEnum,
+    normal?: IRNGNormalTypeEnum| IRNGSampleKindTypeEnum ,
+    sampleKind?: IRNGSampleKindTypeEnum 
+): { uniform: IRNG, normal: IRNGNormal, sampleKind: IRNGSampleKindTypeEnum }
+{
+    let gu = globalUni();
+    let no = globalNorm();
+    let sk = globalSampleKind();
+
+    function testAndSetUniform(u: UniformMapKey): boolean
+    {
+        const tu =  uniformMap[u];
+        if (tu) 
+        {
+            // do nothing if it is the same type
+            if (tu.kind !== (gu.constructor as unknown as typeof IRNG).kind){
+                gu = globalUni(new tu());
+            }
+            return true;
+        }
+        return false;
+    }
+
+    function testAndSetNormal(n: NormalMapKey): boolean
+    {
+
+        const tn = normalMap[n];
+        if (tn)
+        {
+            if (tn.kind !== (no.constructor as unknown as typeof IRNGNormal).kind)
+            // do nothing if it is the same type
+            {
+                no = globalNorm(new tn());
+            }
+            return true;
+        }
+        return false;
+    }
+
+    function testAndSetSampleKind(s: IRNGSampleKindTypeEnum): boolean
+    {
+        if (
+            s === IRNGSampleKindTypeEnum.REJECTION
+            ||
+            s === IRNGSampleKindTypeEnum.ROUNDING)
+        {
+            if (s !== sk)
+            {
+                sk = globalSampleKind(s);
+            }
+            return true;
+        }
+        return false;
+    }
+
+
+    // 0 arguments,  dud
+    //if (!uniform && !normal && !sampleKind){
+    //    return { uniform: gu, normal: no, sampleKind: sk };
+    //}
+
+    // 1 argument
+    // Is it?:
+    // 1. uniform
+    // 2. normal
+    // 3. sample kind
+    if (uniform && !normal && !sampleKind)
+    {
+        if (testAndSetUniform(uniform as UniformMapKey) === false)
+        {
+            if (testAndSetNormal(uniform as NormalMapKey) === false)
+            {
+                testAndSetSampleKind(uniform as IRNGSampleKindTypeEnum)
+            }
+        }
+    }
+    //there are 2 arguments
+    // possibilities:
+    // 1. uniform & normal
+    // 2. normal & samplekind
+    // 3. uniform & samplekind
+    if (uniform && normal && !sampleKind)
+    {
+        // 1
+        if (false === (testAndSetUniform(uniform as UniformMapKey) && testAndSetNormal(normal as NormalMapKey)))
+        {
+            //2
+            if (false === (testAndSetNormal(uniform as NormalMapKey) && testAndSetSampleKind(normal as IRNGSampleKindTypeEnum)))
+            {
+                //3
+                testAndSetUniform(uniform as UniformMapKey) &&  testAndSetSampleKind(normal as IRNGSampleKindTypeEnum)
+            }
+        }
+        //
+    }
+
+    // there are 3 arguments, just as easy as 1
+    if (uniform && normal && sampleKind)
+    {
+        testAndSetUniform(uniform as UniformMapKey);
+        testAndSetNormal(normal as NormalMapKey);
+        testAndSetSampleKind(sampleKind);
+    }
+
+    return { uniform: gu, normal: no, sampleKind: sk };
+
+}
+
+
+//init
+(globalThis as EgT)[symRNG] = new MersenneTwister;
+(globalThis as EgT)[symRNGNormal] = new Inversion((globalThis as EgT)[symRNG]);
+(globalThis as EgT)[symSampleKind] = IRNGSampleKindTypeEnum.ROUNDING;
 
 

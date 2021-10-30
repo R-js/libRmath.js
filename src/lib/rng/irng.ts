@@ -23,17 +23,16 @@ export enum MessageType {
 
 export abstract class IRNG implements IRandom {
     protected _name: string;
-    protected _kind: IRNGTypeEnum;
+    static readonly kind: IRNGTypeEnum;
     private notify: Map<MessageType, ((...args: unknown[]) => void)[]>;
 
     //protected abstract random(): number;
 
-    constructor(name: string, kind: IRNGTypeEnum) {
+    constructor(name: string) {
         if (this.constructor.name === 'IRNG') {
             throw new TypeError('IRNG should be subclassed not directly instantiated');
         }
         this._name = name;
-        this._kind = kind;
         this.notify = new Map();
         this.emit = this.emit.bind(this);
 
@@ -41,10 +40,6 @@ export abstract class IRNG implements IRandom {
 
     public get name(): string {
         return this._name;
-    }
-
-    public get kind(): IRNGTypeEnum {
-        return this._kind;
     }
 
     public randoms(n: number): Float32Array {
@@ -101,4 +96,6 @@ export abstract class IRNG implements IRandom {
     public init(seed: number): void {
         this.emit(MessageType.INIT, seed);
     }
+
+    public abstract get cut(): number;
 }

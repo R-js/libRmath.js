@@ -44,9 +44,8 @@ describe('rng mersenne-twister', function () {
     it('check state vars', () => {
         const mt = new MersenneTwister(7895);
         expect(mt.name).toBe('Mersenne-Twister');
-        expect(mt.kind).toBe('MERSENNE_TWISTER');
         expect(() => (mt.seed = new Int32Array(6))).toThrow(
-            'the seed is not an array of proper size for rng MERSENNE_TWISTER',
+            'the seed is not an array of proper size for rng Mersenne-Twister',
         );
         expect(() => (mt.seed = new Int32Array(625))).not.toThrow();
     });

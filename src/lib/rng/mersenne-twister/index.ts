@@ -20,6 +20,7 @@ import { IRNG } from '../irng';
 import { IRNGTypeEnum } from '../irng-type';
 import { seed } from '../timeseed';
 import { seedCheck } from '../seedcheck';
+import { INT_MAX } from '@lib/r-func';
 
 const N = 624;
 const M = 397;
@@ -43,7 +44,7 @@ export class MersenneTwister extends IRNG {
     private mt: Int32Array;
     private mti: number;
 
-
+    public static kind = IRNGTypeEnum.MERSENNE_TWISTER;
 
     private MT_sgenrand(_seed: number) {
         for (let i = 0; i < N; i++) {
@@ -118,7 +119,7 @@ export class MersenneTwister extends IRNG {
     }
 
     constructor(_seed: number = seed()) {
-        super('Mersenne-Twister', IRNGTypeEnum.MERSENNE_TWISTER);
+        super('Mersenne-Twister');
         const buf = new ArrayBuffer(SEED_LEN * 4);
         this.m_seed = new Int32Array(buf);
         this.mt = new Int32Array(buf, 4); // skip first i32? ok
@@ -145,12 +146,16 @@ export class MersenneTwister extends IRNG {
     }
 
     public set seed(_seed: Int32Array) {
-        seedCheck(this._kind, _seed, SEED_LEN);
+        seedCheck(this.name, _seed, SEED_LEN);
         this.m_seed.set(_seed);
         this.fixupSeeds();
     }
 
     public get seed(): Int32Array {
         return this.m_seed.slice();
+    }
+
+    public get cut(): number {
+        return INT_MAX;
     }
 }

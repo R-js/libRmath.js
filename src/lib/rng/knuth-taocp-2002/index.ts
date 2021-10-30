@@ -43,6 +43,8 @@ function is_odd(x: number): boolean {
 }
 
 export class KnuthTAOCP2002 extends IRNG {
+
+    public static kind = IRNGTypeEnum.KNUTH_TAOCP2002
     //
     //
     private qualityBuffer: ArrayBuffer;
@@ -158,7 +160,7 @@ export class KnuthTAOCP2002 extends IRNG {
     }
 
     constructor(_seed = seed()) {
-        super('Knuth-TAOCP-2002', IRNGTypeEnum.KNUTH_TAOCP2002);
+        super('Knuth-TAOCP-2002');
         this.qualityBuffer = new ArrayBuffer(QUALITY * 4);
         this.ran_arr_buf = new Uint32Array(this.qualityBuffer);
         this.m_seed = new Uint32Array(SEED_LEN);
@@ -184,11 +186,15 @@ export class KnuthTAOCP2002 extends IRNG {
     }
 
     public set seed(_seed: Uint32Array) {
-        seedCheck(this._kind, _seed, SEED_LEN);
+        seedCheck(this.name, _seed, SEED_LEN);
         this.m_seed.set(_seed);
     }
 
     public get seed(): Uint32Array {
         return this.m_seed.slice();
+    }
+
+    public get cut(): number {
+        return 2^25-1;
     }
 }

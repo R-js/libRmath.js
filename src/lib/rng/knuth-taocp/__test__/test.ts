@@ -27,17 +27,16 @@ describe('rng knuth-taocp', function n() {
         const knuth1997 = new KnuthTAOCP();
         knuth1997.init();
         const fnThrow1 = () => (knuth1997.seed = new Uint32Array([1, 2, 3]));
-        expect(fnThrow1).toThrow('the seed is not an array of proper size for rng KNUTH_TAOCP');
+        expect(fnThrow1).toThrow('the seed is not an array of proper size for rng Knuth-TAOCP');
         expect(knuth1997.name).toEqual('Knuth-TAOCP');
-        expect(knuth1997.kind).toEqual('KNUTH_TAOCP');
         knuth1997.init(0);
         expect(knuth1997.randoms(0)).toEqualFloatingPointBinary(0.6274007670581344);
         const data = ['hello', 'world'];
         expect(() => (knuth1997.seed = data as never)).toThrow(
-            'the seed is not of type Array for rng:KNUTH_TAOCP'
+            'the seed is not of type Array for rng:Knuth-TAOCP'
         );
         expect(() => (knuth1997.seed = new Uint32Array(0))).toThrow(
-            'the seed is not an array of proper size for rng KNUTH_TAOCP',
+            'the seed is not an array of proper size for rng Knuth-TAOCP',
         );
     });
 });
