@@ -19,6 +19,7 @@ const collectCoverageFrom = [
     'src/lib/distributions/tukey/*.ts',
     'src/lib/distributions/uniform/*.ts',
     'src/lib/distributions/weibull/*.ts',
+    'src/lib/distributions/wilcoxon/*.ts',
     'src/lib/r-func.ts',
     'src/lib/index.ts',
     'src/lib/trigonometry/*.ts',
@@ -162,19 +163,27 @@ const tukeyHSD = [
     '/distributions/tukey/__test__/ptukey.test.ts$',
 ];
 
-const weibull = [
+const weibullTest = [
     '/distributions/weibull/__test__/dweibull.test.ts$',
     '/distributions/weibull/__test__/pweibull.test.ts$',
     '/distributions/weibull/__test__/qweibull.test.ts$',
     '/distributions/weibull/__test__/rweibull.test.ts$',
 ];
 
-const uniform = [
+const uniformTest = [
     '/distributions/uniform/__test__/dunif.test.ts$',
     '/distributions/uniform/__test__/punif.test.ts$',
     '/distributions/uniform/__test__/qunif.test.ts$',
     '/distributions/uniform/__test__/runif.test.ts$',
 ]
+
+const wilcoxTest = [
+    'distributions/wilcoxon/__test__/dwilcox.test.ts$',
+    '/distributions/wilcoxon/__test__/pwilcox.test.ts$',
+    '/distributions/wilcoxon/__test__/qwilcox.test.ts$',
+    '/distributions/wilcoxon/__test__/rwilcox.test.ts$'
+];
+
 
 const uniformRNG = [
     '/rng/knuth-taocp/__test__/(.*?\\.)?test.ts$',
@@ -217,8 +226,9 @@ const testRegex = [
     ...signRankTest,
     ...studentT,
     ...tukeyHSD,
-    ...uniform,
-    ...weibull,
+    ...uniformTest,
+    ...weibullTest,
+    ...wilcoxTest,
     //
     ...uniformRNG,
     ...normalRNG,
@@ -239,7 +249,7 @@ module.exports = {
     coveragePathIgnorePatterns: ['node_modules', 'test', 'doc.ts'],
     coverageDirectory: 'coverage',
     coverageProvider: 'babel', //"v8" is still experimental, but use "v8" for walk through debugging
-    //coverageProvider: 'v8', //"v8" is still experimental, but use "v8" for walk through debugging
+   // coverageProvider: 'v8', //"v8" is still experimental, but use "v8" for walk through debugging
     coverageReporters: ['json', 'lcov', 'text', 'clover'],
     preset: 'ts-jest',
     testEnvironment: 'node',

@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import { debug } from 'debug';
 
 import { ML_ERR_return_NAN, R_Q_P01_check } from '@common/logger';
-import { R_DT_0, R_DT_1 } from '@lib/r-func';
+import { R_DT_0, R_DT_1, DBL_EPSILON } from '@lib/r-func';
 
 import { R_DT_qIv } from '@dist/exp/expm1';
 import { cwilcox } from './cwilcox';
@@ -33,32 +33,57 @@ export function qwilcox(x: number, m: number, n: number, lowerTail = true, logP 
     n = Math.round(n);
     const w = new WilcoxonCache();
 
-    if (isNaN(x) || isNaN(m) || isNaN(n)) return x + m + n;
-    if (!isFinite(x) || !isFinite(m) || !isFinite(n)) return ML_ERR_return_NAN(printer_qwilcox);
-    R_Q_P01_check(logP, x);
+    if (isNaN(x) || isNaN(m) || isNaN(n))
+    {
+        return x + m + n;
+    }
+    if (!isFinite(x) || !isFinite(m) || !isFinite(n))
+    {
+        return ML_ERR_return_NAN(printer_qwilcox);
+    }
 
-    if (m <= 0 || n <= 0) return ML_ERR_return_NAN(printer_qwilcox);
+    const rc = R_Q_P01_check(logP, x);
+    if (rc !== undefined) {
+        return rc;
+    }
 
-    if (x === R_DT_0(lowerTail, logP)) return 0;
-    if (x === R_DT_1(lowerTail, logP)) return m * n;
+    if (m <= 0 || n <= 0)
+    {
+        return ML_ERR_return_NAN(printer_qwilcox);
+    }
 
-    if (logP || !lowerTail) x = R_DT_qIv(lowerTail, logP, x); /* lower_tail,non-log "p" */
+    if (x === R_DT_0(lowerTail, logP))
+    {
+        return 0;
+    }
+    if (x === R_DT_1(lowerTail, logP))
+    {
+        return m * n;
+    }
+
+    x = R_DT_qIv(lowerTail, logP, x); /* lower_tail,non-log "p" */
 
     const c = choose(m + n, n);
     let p = 0;
     let q = 0;
-    if (x <= 0.5) {
-        x = x - 10 * Number.EPSILON;
-        while (true) {
+    if (x <= 0.5)
+    {
+        x = x - 10 * DBL_EPSILON;
+        while (true)
+        {
             p += cwilcox(q, m, n, w) / c;
             if (p >= x) break;
             q++;
         }
-    } else {
-        x = 1 - x + 10 * Number.EPSILON;
-        while (true) {
+    }
+    else
+    {
+        x = 1 - x + 10 * DBL_EPSILON;
+        while (true)
+        {
             p += cwilcox(q, m, n, w) / c;
-            if (p > x) {
+            if (p > x)
+            {
                 q = Math.trunc(m * n - q);
                 break;
             }

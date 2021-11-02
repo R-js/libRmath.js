@@ -94,7 +94,7 @@ export abstract class IRNG implements IRandom {
     }*/
 
     public init(seed: number): void {
-        this.emit(MessageType.INIT, seed);
+        this.emit(MessageType.INIT, this, seed);
     }
 
     public abstract get cut(): number;

@@ -31,7 +31,8 @@ export class BoxMuller extends IRNGNormal {
 
     private BM_norm_keep: number;
 
-    protected reset():void {
+    public reset(rng :IRNG):void {
+        super.reset(rng);
         this.BM_norm_keep = 0;
     }
 

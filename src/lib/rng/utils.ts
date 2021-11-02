@@ -1,13 +1,13 @@
 import { floor, ceil, log2, trunc } from '@lib/r-func';
 import type { IRNG } from '.';
-import { globalUni, IRNGSampleKindTypeEnum } from '.';
-import { globalSampleKind } from './global-rng';
+import { IRNGSampleKindTypeEnum } from '.';
+
 
 /* Our PRNGs have at most 32 bit of precision. All generators except
    Knuth-TAOCP, Knuth-TAOCP-2002, and possibly the user-supplied ones
    have 31 or 32 bits of precision; the others are assumed to
    have at least 25. */
-const U = 2 ** 25 - 1;
+const U = 2 ** 25;
 
 function ru(unif_rand: IRNG): number {
 
@@ -32,8 +32,9 @@ function rbits(bits: number, unif_rand: IRNG)
     {
         // FIXME:  should this not be "*65535" ?, its ok, 65534 would be an error!!! (as some part of the range would not be reachable)
         //    but 65536 not matter so much
-        const v1 = floor(unif_rand.random() * 65536); 
-        v = 65536n * v + BigInt(v1); // 
+        const ran = unif_rand.random();
+        const v1 = new Int32Array([trunc(ran * 65536)]); 
+        v = 65536n * v + BigInt(v1[0]); // 
         
     }
     // mask out the bits in the result that are not needed
@@ -45,12 +46,13 @@ function R_unif_index_0(dn: number, unif_rand: IRNG): number {
     const cut = unif_rand.cut;
     // makes absolute sense
     const u = dn > cut ? ru(unif_rand) : unif_rand.random();
-    return floor(dn * u); // scale it
+    return trunc(dn * u); // scale it
 }
 
 //external to the module, 
 // this is to get an value between 0 and dn?
-export function R_unif_index(dn: number, unif_rand = globalUni(), sampleKind = globalSampleKind()): number {
+export function R_unif_index(dn: number, unif_rand: IRNG, sampleKind:IRNGSampleKindTypeEnum): number {
+    
     if (sampleKind === IRNGSampleKindTypeEnum.ROUNDING) {
         return R_unif_index_0(dn, unif_rand);
     }
@@ -58,9 +60,12 @@ export function R_unif_index(dn: number, unif_rand = globalUni(), sampleKind = g
     // rejection sampling from integers below the next larger power of two
     // Q: rejection sampling does not work for negative integers?
     // a log2 is used to determine bitlength, so negative is not used, why not make log2(abs(dn))
+    
+    /* not needed n+m is never < 0, we check for this
+    
     if (dn <= 0) {
         return 0.0;
-    }
+    }*/
 
     //Q: why not make log2(abs(dn)) so you can handle negative "dn"?
     const bits = trunc(ceil(log2(dn))); // how many bits is dn, note, this can be larger then 2**32 but not larger then 2**64

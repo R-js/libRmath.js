@@ -19,21 +19,17 @@ import { IRNG, MessageType } from '@rng/irng';
 import { IRNGNormalTypeEnum } from './in01-type';
 import type { IRandom } from '@rng/IRandom';
 
-export class IRNGNormal implements IRandom {
+export abstract class IRNGNormal implements IRandom {
 
     public static kind: IRNGNormalTypeEnum;
 
     protected _rng: IRNG;
     protected _name: string;
     
-    protected reset(): void {
-        /* dud */
-    }
-
     constructor(_rng: IRNG, name: string)
     {
         if (this.constructor.name === 'IRNGNormal'){
-            throw new TypeError(`Cannot instantiante class "IRNGNormal" directly`);
+            throw new TypeError(`Cannot instantiate class "IRNGNormal" directly`);
         }
         this._rng = _rng;
         this._name = name;
@@ -41,6 +37,14 @@ export class IRNGNormal implements IRandom {
         this.randoms = this.randoms.bind(this);
         this.reset = this.reset.bind(this);
         this._rng.register(MessageType.INIT, this.reset);
+    }
+
+    public reset(rng: IRNG, seed: number): void
+    {
+        seed; // for eslint, treeshaking will remove it
+        if (this._rng.name !== rng.name){
+            this._rng = rng;
+        }
     }
 
     public randoms(n: number): Float32Array {
