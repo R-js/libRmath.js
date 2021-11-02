@@ -9,7 +9,7 @@ import { exp } from '@lib/r-func';
 
 const dwilcoxDomainWarns = select('dwilcox')("argument out of domain in '%s'");
 
-describe('dweibull', function () {
+describe('dwilcox', function () {
     describe('invalid input and edge cases', () => {
         beforeEach(() => {
             cl.clear('dwilcox');

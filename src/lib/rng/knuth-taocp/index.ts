@@ -124,6 +124,6 @@ export class KnuthTAOCP extends IRNG implements IRandom {
     }
 
     public get cut(): number {
-        return 2^25-1;
+        return 2**25-1;
     }
 }

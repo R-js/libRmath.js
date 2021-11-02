@@ -17,8 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { debug } from 'debug';
-
-import { ML_ERR_return_NAN } from '@common/logger';
+import { ML_ERR_return_NAN, ML_ERROR, ME } from '@common/logger';
 import { IRNG } from '@rng/irng';
 import { round, trunc, floor } from '@lib/r-func';
 import { R_unif_index } from '@rng/utils';
@@ -26,7 +25,7 @@ import { IRNGSampleKindTypeEnum } from '@rng/sample-kind-type'
 
 const printer_rwilcox = debug('rwilcox');
 
-const MAXSIZE = 4294967296;
+const MAXSIZE = 800_000_000;
 
 export function rwilcoxOne(m: number, n: number, rng: IRNG, sampleKind: IRNGSampleKindTypeEnum): number 
 {
@@ -37,10 +36,12 @@ export function rwilcoxOne(m: number, n: number, rng: IRNG, sampleKind: IRNGSamp
     }
     m = round(m);
     n = round(n);
+    
     if (m < 0 || n < 0)
     {
         return ML_ERR_return_NAN(printer_rwilcox);
     }
+
     if (m === 0 || n === 0)
     {
         return 0;
@@ -48,27 +49,30 @@ export function rwilcoxOne(m: number, n: number, rng: IRNG, sampleKind: IRNGSamp
 
     let k = trunc(m + n);
 
-    let x;
-    if (k <= 65536) {
-        x = new Uint16Array(k);
-    }
-    else if (k <= MAXSIZE) {
-        x = new Uint32Array(k);
-    }
-    else {
+    if ( k >= MAXSIZE)
+    {
+        ML_ERROR(ME.ME_DOMAIN, 'k > MAXSIZE(=2**32)', printer_rwilcox);
         return ML_ERR_return_NAN(printer_rwilcox);
     }
-
-    for (let i = 0; i < k; i++) {
-        x[i] = i+1;
+    
+    const x =  new Uint32Array(k);
+    //const s1 = Date.now();
+    for (let i = 0; i < k; i++)
+    {
+        x[i] = i;
     }
+    //const s2 = Date.now();
+    //console.log((s2-s1)+" millisec");
+    
     let r = 0.0;
     printer_rwilcox(`------v`);
-    for (let i = 0; i < n; i++) {
+    for (let i = 0; i < n; i++)
+    {
+        //console.log(i);
         const j = floor(R_unif_index(k, rng, sampleKind));
         r += x[j];
         x[j] = x[--k];
         printer_rwilcox('i:%d,\tn:%d\tj:%d\tk:%d\tr:%d\tx:%o', i, n, j, k, x);
     }
-    return r - (n * (n - 1)) / 2;
+    return r - n * (n - 1) / 2;
 }

@@ -1,4 +1,4 @@
-import { IRNG } from '@rng/irng';
+import { IRNG, MessageType } from '@rng/irng';
 import { KnuthTAOCP } from './knuth-taocp';
 import { KnuthTAOCP2002 } from '@rng/knuth-taocp-2002';
 import { LecuyerCMRG } from '@rng/lecuyer-cmrg';
@@ -94,7 +94,9 @@ export function RNGKind(
         {
             // do nothing if it is the same type
             if (tu.kind !== (gu.constructor as unknown as typeof IRNG).kind){
+                gu.unregister(MessageType.INIT, no.reset);
                 gu = globalUni(new tu());
+                no.reset(gu);
             }
             return true;
         }
@@ -110,7 +112,9 @@ export function RNGKind(
             if (tn.kind !== (no.constructor as unknown as typeof IRNGNormal).kind)
             // do nothing if it is the same type
             {
+                gu.unregister(MessageType.INIT, no.reset);
                 no = globalNorm(new tn());
+                no.reset(gu);
             }
             return true;
         }
@@ -168,7 +172,8 @@ export function RNGKind(
             if (false === (testAndSetNormal(uniform as NormalMapKey) && testAndSetSampleKind(normal as IRNGSampleKindTypeEnum)))
             {
                 //3
-                testAndSetUniform(uniform as UniformMapKey) &&  testAndSetSampleKind(normal as IRNGSampleKindTypeEnum)
+                testAndSetUniform(uniform as UniformMapKey);
+                testAndSetSampleKind(normal as IRNGSampleKindTypeEnum);
             }
         }
         //

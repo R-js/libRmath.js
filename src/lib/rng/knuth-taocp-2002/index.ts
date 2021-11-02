@@ -195,6 +195,6 @@ export class KnuthTAOCP2002 extends IRNG {
     }
 
     public get cut(): number {
-        return 2^25-1;
+        return 2**25-1;
     }
 }
