@@ -20,7 +20,7 @@ import { ML_ERR_return_NAN } from '@common/logger';
 
 import { M_LN_SQRT_2PI } from '@lib/r-func';
 
-import { gammaOne } from '@special/gamma';
+import { gamma } from '@special/gamma';
 import { lgammafn_sign } from '@special/gamma/lgammafn_sign';
 import { lgammacor } from '@special/gamma/lgammacor';
 
@@ -58,7 +58,7 @@ function lbeta(a: number, b: number): number {
         // R change for very small args
         // removed 
         if (p < 1e-306) return lgammafn_sign(p) + (lgammafn_sign(q) - lgammafn_sign(p+q))
-        else return Math.log(gammaOne(p) * (gammaOne(q) / gammaOne(p + q)));
+        else return Math.log(gamma(p) * (gamma(q) / gamma(p + q)));
     }
 }
 

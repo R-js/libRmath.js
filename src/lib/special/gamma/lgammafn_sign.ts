@@ -16,8 +16,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { debug } from 'debug';
 
-import { isArray, isEmptyArray, emptyFloat64Array } from '@lib/r-func';
-
 import {
     fmod,
     M_LN_SQRT_2PI, // no math alias for this
@@ -29,8 +27,8 @@ import { ME, ML_ERROR } from '@common/logger';
 
 import { sinpi } from '@trig/sinpi';
 import { lgammacor } from './lgammacor';
-import { _gammafn } from './gamma_fn';
-import type { NumArray } from '@lib/r-func';
+import { gammafn } from './gamma_fn';
+
 
 const printer_sign = debug('lgammafn_sign');
 
@@ -38,39 +36,8 @@ const xmax = 2.5327372760800758e305;
 const dxrel = 1.490116119384765625e-8;
 const ML_POSINF = Infinity;
 
-export function lgammafn(x: NumArray|number): Float64Array | Float32Array {
-    if (typeof x === 'number') {
-        return new Float64Array([lgammafn_sign(x)]);
-    }
-    if (isEmptyArray(x)) {
-        return emptyFloat64Array;
-    }
-    if (isArray(x)) {
-        if (x instanceof Float64Array) {
-            const rc = new Float64Array(x.length);
-            for (let i = 0; i < x.length; i++) {
-                rc[i] = lgammafn_sign(x[i]);
-            }
-            return rc;
-        }
-        if (x instanceof Float32Array) {
-            const rc = new Float32Array(x.length);
-            for (let i = 0; i < x.length; i++) {
-                rc[i] = lgammafn_sign(x[i]);
-            }
-            return rc;
-        }
-        // array with numbers
-        const rc = new Float64Array(x.length);
-        for (let i = 0; i < x.length; i++) {
-            rc[i] = lgammafn_sign(x[i]);
-        }
-        return rc;
-    }
-    throw new TypeError(`lgammafn: argument not of number, number[], Float64Array, Float32Array`);
-}
 
-export function lgammafn_sign(x: number, sgn?: Int8Array): number {
+export function lgammafn_sign(x: number, sgn?: Int32Array): number {
     //let ans: number;
     //let y: number;
     //let sinpiy: number;
@@ -109,7 +76,7 @@ export function lgammafn_sign(x: number, sgn?: Int8Array): number {
     const y = abs(x);
 
     if (y < 1e-306) return -log(y); // denormalized range, R change
-    if (y <= 10) return log(abs(_gammafn(x) as number));
+    if (y <= 10) return log(abs(gammafn(x)));
 
     //  ELSE  y = |x| > 10 ----------------------
 

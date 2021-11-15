@@ -40,7 +40,7 @@ import {
     min,
     M_LN2
 } from '@lib/r-func';
-import { lgammaOne } from '@special/gamma';
+import { lgamma } from '@special/gamma';
 import { pnorm5 as pnorm } from '../normal/pnorm';
 import { pt } from './pt';
 
@@ -213,9 +213,9 @@ export function pnt(t: number, df: number, ncp: number, lower_tail: boolean, log
          *       where '(1 - x)' =: rxb {accurately!} above */
         rxb = pow(rxb, b);
         
-        const albeta = M_LN_SQRT_PI + lgammaOne(b) - lgammaOne(0.5 + b);
+        const albeta = M_LN_SQRT_PI + lgamma(b) - lgamma(0.5 + b);
         
-        printer_pnt('%d = lgammaOne(%d)-lgammaOne(0.5+%d)+0.572364942924700087071713675677',albeta, b,b);
+        printer_pnt('%d = lgamma(%d)-lgamma(0.5+%d)+0.572364942924700087071713675677',albeta, b,b);
 
         xodd = pbeta(x, a, b, /*lower*/ true, /*log_p*/ false);
         

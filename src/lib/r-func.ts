@@ -446,8 +446,11 @@ export function imax2(x: number, y: number): number {
 }
 
 //ok
+// original source
+// #define ODD(_K_) ((_K_) != 2 * floor((_K_) / 2.))
+// odd is everything that is not precisely even
 export function isOdd(k: number): boolean {
-    return floor(k) % 2 === 1;
+    return floor(k/2)*2 !== k;
 }
 
 //ok

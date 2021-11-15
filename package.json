@@ -67,6 +67,7 @@
     "types": "es6/types/lib/index.d.ts",
     "files": [
         "es6",
+        "types",
         "browser",
         "CHANGELOG.md",
         "LICENSE",

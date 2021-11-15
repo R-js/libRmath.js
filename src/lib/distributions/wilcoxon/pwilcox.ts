@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import { debug } from 'debug';
 import { ML_ERR_return_NAN } from '@common/logger';
 import { R_DT_0, R_DT_1, R_DT_val } from '@lib/r-func';
-import { choose } from '@special/choose';
+import { choose } from '@lib/special/choose';
 
 import { WilcoxonCache } from './WilcoxonCache';
 

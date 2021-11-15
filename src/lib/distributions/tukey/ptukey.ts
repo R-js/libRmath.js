@@ -35,7 +35,7 @@ import {
     min
 } from '@lib/r-func';
 
-import { lgammaOne } from '@special/gamma';
+import { lgamma } from '@special/gamma';
 
 const printer_ptukey = debug('ptukey');
 const nlegq = 16;
@@ -182,7 +182,7 @@ export function ptukey(q: number, nmeans: number, df: number, nrnages =1, lower_
 
     const f2 = df * 0.5;
     /* lgammafn(u) = log(gamma(u)) */
-    f2lf = f2 * log(df) - df * M_LN2 - lgammaOne(f2);
+    f2lf = f2 * log(df) - df * M_LN2 - lgamma(f2);
     const f21 = f2 - 1.0;
 
     /* integral is divided into unit, half-unit, quarter-unit, or */

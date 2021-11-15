@@ -19,8 +19,7 @@ import { chebyshev_eval } from '@lib/chebyshev';
 import { ME, ML_ERROR } from '@common/logger';
 import { stirlerr } from '@lib/stirling';
 import { sinpi } from '@trig/sinpi';
-import type { NumArray } from '@lib/r-func';
-import { isArray, isEmptyArray, emptyFloat64Array, PI,  abs, round, trunc, exp, log, M_LN_SQRT_2PI } from '@lib/r-func';
+import { PI, abs, round, trunc, exp, log, M_LN_SQRT_2PI } from '@lib/r-func';
 
 import { debug } from 'debug';
 
@@ -71,39 +70,13 @@ const gamcs: number[] = [
     -0.5793070335782135784625493333333e-31,
 ];
 
-export function gammafn(x: NumArray|number): Float64Array | Float32Array {
-    if (typeof x === 'number') {
-        return new Float64Array([_gammafn(x)]);
-    }
-    if (isEmptyArray(x)) {
-        return emptyFloat64Array;
-    }
-    if (isArray(x)) {
-        if (x instanceof Float64Array) {
-            const rc = new Float64Array(x.length);
-            for (let i = 0; i < x.length; i++) {
-                rc[i] = _gammafn(x[i]);
-            }
-            return rc;
-        }
-        if (x instanceof Float32Array) {
-            const rc = new Float32Array(x.length);
-            for (let i = 0; i < x.length; i++) {
-                rc[i] = _gammafn(x[i]);
-            }
-            return rc;
-        }
-        // array with numbers
-        const rc = new Float64Array(x.length);
-        for (let i = 0; i < x.length; i++) {
-            rc[i] = _gammafn(x[i]);
-        }
-        return rc;
-    }
-    throw new TypeError(`gammafn: argument not of number, number[], Float64Array, Float32Array`);
-}
+const ngam = 22;
+const xmin = -170.5674972726612;
+const xmax = 171.61447887182298;
+const xsml = 2.2474362225598545e-308;
+const dxrel = 1.490116119384765696e-8;
 
-export function _gammafn(x: number): number {
+export function gammafn(x: number): number {
     let i: number;
     let n: number;
     let y: number;
@@ -130,11 +103,11 @@ export function _gammafn(x: number): number {
     // xsml = exp(.01)*DBL_MIN
     // dxrel = sqrt(DBL_EPSILON) = 2 ^ -26
     //
-    const ngam = 22;
+    /*const ngam = 22;
     const xmin = -170.5674972726612;
     const xmax = 171.61447887182298;
     const xsml = 2.2474362225598545e-308;
-    const dxrel = 1.490116119384765696e-8;
+    const dxrel = 1.490116119384765696e-8;*/
 
     if (isNaN(x)) return x;
 
@@ -176,8 +149,8 @@ export function _gammafn(x: number): number {
 
         /** original C snippet
              *  if (x < -0.5 && fabs(x - (int)(x - 0.5) / x) < dxrel) {
-		            ML_ERROR(ME_PRECISION, "gammafn");
-	            }
+                    ML_ERROR(ME_PRECISION, "gammafn");
+                }
              */
         // this can never occur, maybe this was old code
         // UPSTREAM: this was r

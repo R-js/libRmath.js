@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import { debug } from 'debug';
 import { ML_ERR_return_NAN } from '@common/logger';
-import { rgammaOne } from '@dist/gamma/rgamma';
+import { rgamma } from '@dist/gamma/rgamma';
 import type { IRNGNormal } from '@rng/normal/normal-rng';
 
 const printer = debug('rchisq');
@@ -26,5 +26,5 @@ export function rchisqOne(df: number, rng: IRNGNormal): number {
     if (!isFinite(df) || df < 0.0) {
         return ML_ERR_return_NAN(printer);
     }
-    return rgammaOne(df / 2.0, 2.0, rng);
+    return rgamma(df / 2.0, 2.0, rng);
 }
