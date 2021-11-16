@@ -135,16 +135,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 import { debug } from 'debug';
-import { 
+import {
     DBL_MANT_DIG,
     DBL_MAX_EXP,
     DBL_MIN_EXP,
     imin2,
     M_LOG10_2,
-    R_pow_di, 
+    R_pow_di,
     DBL_EPSILON,
-    pow, 
-    abs, 
+    pow,
+    abs,
     max,
     min,
     exp,
@@ -152,10 +152,8 @@ import {
     sin,
     cos,
     PI,
-    round 
- } from '@lib/r-func';
-import type { NumArray } from '@lib/r-func';
-import { isArray, isEmptyArray, emptyFloat64Array } from '@lib/r-func';
+    round
+} from '@lib/r-func';
 
 const printer = debug('dpsifn');
 
@@ -207,7 +205,7 @@ function dpsifn(
     nz: Uint8Array,
     ierr: Uint8Array,
 ): void {
-   
+
     //  ints
     let nx: number;
     let xinc = 0 as number;
@@ -572,49 +570,31 @@ function dpsifn(
 const print_psigamma = debug('psigamma');
 
 function _render(
-    x: NumArray | number,
+    x: number,
     calculate: (x: number, ans: Float64Array, nz: Uint8Array, ierr: Uint8Array) => void,
     final: (_ans: number) => number,
 ) {
-    if (typeof x === 'number') {
-        x = new Float64Array([x]);
-    }
-    if (isEmptyArray(x)) {
-        return emptyFloat64Array;
-    }
-    if (!isArray(x)) {
-        throw new TypeError(`argument not of number, number[], Float64Array, Float32Array`);
-    }
-    const rc =
-        x instanceof Float64Array
-            ? new Float64Array(x.length)
-            : x instanceof Float32Array
-                ? new Float32Array(x.length)
-                : new Float64Array(x);
 
     const ans = new Float64Array(1);
     const nz = new Uint8Array();
     const ierr = new Uint8Array(1);
 
-    for (let i = 0; i < x.length; i++) {
-        ans[0] = 0;
-        nz[0] = 0;
-        ierr[0] = 0;
-        if (isNaN(x[i])) {
-            rc[i] = x[i];
-            continue;
-        }
-        calculate(x[i], ans, nz, ierr);
-        if (ierr[0] !== 0) {
-            rc[i] = NaN;
-            continue;
-        }
-        rc[i] = final(ans[0]);
+
+    ans[0] = 0;
+    nz[0] = 0;
+    ierr[0] = 0;
+    if (isNaN(x)) {
+        return NaN;
     }
-    return rc;
+    calculate(x, ans, nz, ierr);
+    if (ierr[0] !== 0) {
+        return NaN
+    }
+    return final(ans[0]);
+
 }
 
-export function psigamma(x: NumArray | number, deriv: number): Float32Array | Float64Array {
+export function psigamma(x: number, deriv: number): number {
     deriv = round(deriv);
     const n = deriv >> 0;
     if (n > n_max) {
@@ -638,7 +618,7 @@ export function psigamma(x: NumArray | number, deriv: number): Float32Array | Fl
 }
 
 // https://ru.wikipedia.org/wiki/%D0%A4%D0%B0%D0%B9%D0%BB:Pentagamma_function_plot.png
-export function pentagamma(x: NumArray | number): Float32Array | Float64Array {
+export function pentagamma(x: number): number {
     return _render(
         x,
         (x0: number, ans: Float64Array, nz: Uint8Array, ierr: Uint8Array) => dpsifn(x0, 3, 1, 1, ans, nz, ierr),
@@ -647,7 +627,7 @@ export function pentagamma(x: NumArray | number): Float32Array | Float64Array {
 }
 
 //https://commons.wikimedia.org/wiki/Category:Polygamma_function#/media/File:Tetragamma_function_plot.png
-export function tetragamma(x: NumArray | number): Float32Array | Float64Array {
+export function tetragamma(x: number): number {
     return _render(
         x,
         (x0: number, ans: Float64Array, nz: Uint8Array, ierr: Uint8Array) => dpsifn(x0, 2, 1, 1, ans, nz, ierr),
@@ -657,7 +637,7 @@ export function tetragamma(x: NumArray | number): Float32Array | Float64Array {
 
 //https://commons.wikimedia.org/wiki/Category:Polygamma_function#/media/File:Trigamma_function_plot.png
 
-export function trigamma(x: NumArray | number): Float32Array | Float64Array {
+export function trigamma(x: number): number {
     return _render(
         x,
         (x0: number, ans: Float64Array, nz: Uint8Array, ierr: Uint8Array) => dpsifn(x0, 1, 1, 1, ans, nz, ierr),
@@ -666,7 +646,7 @@ export function trigamma(x: NumArray | number): Float32Array | Float64Array {
 }
 
 //https://commons.wikimedia.org/wiki/File:Digamma_function_plot.png
-export function digamma(x: NumArray | number): Float32Array | Float64Array {
+export function digamma(x: number): number {
     return _render(
         x,
         (x0: number, ans: Float64Array, nz: Uint8Array, ierr: Uint8Array) => dpsifn(x0, 0, 1, 1, ans, nz, ierr),

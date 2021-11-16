@@ -25,6 +25,7 @@ const collectCoverageFrom = [
     'src/lib/trigonometry/*.ts',
     'src/lib/stirling/index.ts',
     'src/lib/special/**/*.ts',
+    //
     'src/lib/rng/**/*.ts',
     'src/packages/common/logger.ts'
 ];
@@ -204,7 +205,10 @@ const normalRNG = [
 ];
 
 const specialFunctions = [
-    '/special/bessel/besselJ/__test__/test\\.ts'
+    '/special/bessel/besselJ/__test__/(.*?\\.)?test.ts$',
+    '/special/gamma/__test__/(.*?\\.)?test.ts$',
+    '/special/choose/__test__/(.*?\\.)?test.ts$',
+    '/special/beta/__test__/(.*?\\.)?test.ts$'
 ]
 
 const testRegex = [
@@ -234,11 +238,6 @@ const testRegex = [
     ...normalRNG,
     //
     ...specialFunctions
-/*
-    '/special/bessel/besselJ/__test__/(.*?\\.)?test.ts$',
-    '/special/gamma/__test__/(.*?\\.)?test.ts$',
-    '/special/beta/__test__/(.*?\\.)?test.ts$',
-*/
 ];
 
 module.exports = {

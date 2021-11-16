@@ -45,7 +45,7 @@ function gammaNormalizeParams(rate?: number, scale?: number): number {
     throw new TypeError("specify 'rate' or 'scale' but not both");
 }
 
-export { rgamma } from './rgamma';
+export { rgamma as rgammaOne } 
 
 export function dgamma(x: number, shape: number, rate?: number, scale?: number, asLog = false): number {
     const _scale = gammaNormalizeParams(rate, scale);

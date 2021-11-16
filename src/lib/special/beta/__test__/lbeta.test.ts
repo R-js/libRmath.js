@@ -24,7 +24,7 @@ describe('lbeta(a,b)', function () {
         const rc = lbeta(NaN, NaN);
         expect(rc).toEqualFloatingPointBinary(NaN);
     });
-    it.todo('(check ME) a < 0, b > 0 should return NaN', () => {
+    it('(check ME) a < 0, b > 0 should return NaN', () => {
         /* eslint-disable-line  @typescript-eslint/no-explicit-any */
         const rc = lbeta(-1,0.5);
          /* eslint-disable-line  @typescript-eslint/no-explicit-any */

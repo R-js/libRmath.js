@@ -32,13 +32,7 @@ describe('gamma', function () {
     });
     it('process float32Array', () => {
         const neg1 = [-4.1, -5.1].map(gamma);
-        expect(neg1 instanceof Float32Array).toBe(true);
         expect(neg1).toEqualFloatingPointBinary([-0.363973113892433530747, 0.071367277233810505477], 18);
-    });
-    it('invalid argument should throw', () => {
-        expect(() => {
-            gamma('hello' as never);
-        }).toThrow('gammafn: argument not of number, number[], Float64Array, Float32Array');
     });
     it('1E-308 should become Infinity', () => {
         expect(gamma(1e-308)).toEqualFloatingPointBinary(Infinity);

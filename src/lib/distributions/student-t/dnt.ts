@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import { debug } from 'debug';
 import { ML_ERR_return_NAN, } from '@common/logger';
 import { M_LN_SQRT_PI, R_D__0, sqrt, abs, DBL_EPSILON, exp, log } from '@lib/r-func';
-import { lgamma } from '@special/gamma';
+import { lgammafn_sign as lgamma } from '@special/gamma';
 import { dnorm } from '@dist/normal';
 import { _dt } from './dt';
 import { pnt } from './pnt';
