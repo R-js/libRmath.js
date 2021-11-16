@@ -20,7 +20,7 @@ import { debug } from 'debug';
 
 import { ML_ERR_return_NAN } from '@common/logger';
 import { R_D__0 } from '@lib/r-func';
-import { choose, lchoose } from '@special/choose';
+import { choose, lchoose } from '@lib/special/choose';
 import { cwilcox } from './cwilcox';
 import { WilcoxonCache } from './WilcoxonCache';
 

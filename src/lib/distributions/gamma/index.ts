@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import { dgamma as _dgamma } from './dgamma';
 import { pgamma as _pgamma } from './pgamma';
 import { qgamma as _qgamma } from './qgamma';
-import { rgammaOne as _rgammaOne } from './rgamma';
+import { rgamma as _rgamma } from './rgamma';
 import type { IRNGNormal } from '@rng/normal/normal-rng';
 import { globalNorm } from '@rng/global-rng';
 
@@ -45,7 +45,7 @@ function gammaNormalizeParams(rate?: number, scale?: number): number {
     throw new TypeError("specify 'rate' or 'scale' but not both");
 }
 
-export { rgammaOne } from './rgamma';
+export { rgamma as rgammaOne } 
 
 export function dgamma(x: number, shape: number, rate?: number, scale?: number, asLog = false): number {
     const _scale = gammaNormalizeParams(rate, scale);
@@ -70,7 +70,7 @@ export function rgamma(
     rng: IRNGNormal = globalNorm()
     ): Float64Array {
     const _scale = gammaNormalizeParams(rate, scale);
-    return repeatedCall64(n, _rgammaOne, shape, _scale, rng);
+    return repeatedCall64(n, _rgamma, shape, _scale, rng);
 }
 
 

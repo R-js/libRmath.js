@@ -67,6 +67,7 @@
     "types": "es6/types/lib/index.d.ts",
     "files": [
         "es6",
+        "types",
         "browser",
         "CHANGELOG.md",
         "LICENSE",
@@ -91,27 +92,27 @@
         ]
     },
     "dependencies": {
-        "debug": "^4.3.1"
+        "debug": "^4.3.2"
     },
     "devDependencies": {
         "@rollup/plugin-commonjs": "^16.0.0",
         "@rollup/plugin-node-resolve": "^10.0.0",
-        "@types/debug": "^4.1.5",
+        "@types/debug": "^4.1.7",
         "@types/jest": "^27.0.2",
-        "@types/node": "^6.0.96",
-        "@typescript-eslint/eslint-plugin": "^4.8.1",
-        "@typescript-eslint/parser": "^4.8.1",
+        "@types/node": "^6.14.13",
+        "@typescript-eslint/eslint-plugin": "^4.33.0",
+        "@typescript-eslint/parser": "^4.33.0",
         "cross-env": "^7.0.3",
-        "eslint": "^7.14.0",
+        "eslint": "^7.32.0",
         "humanize-duration-ts": "^2.1.1",
-        "jest": "^27.2.5",
+        "jest": "^27.3.1",
         "rimraf": "^3.0.2",
-        "rollup": "^2.33.1",
+        "rollup": "^2.59.0",
         "rollup-plugin-terser": "^7.0.2",
-        "ts-jest": "^27.0.5",
-        "ts-patch": "^1.4.4",
-        "typescript": "^4.1.2",
-        "typescript-eslint-language-service": "^4.1.1",
+        "ts-jest": "^27.0.7",
+        "ts-patch": "^1.4.5",
+        "typescript": "^4.4.4",
+        "typescript-eslint-language-service": "^4.1.5",
         "typescript-transform-paths": "^3.3.1"
     }
 }

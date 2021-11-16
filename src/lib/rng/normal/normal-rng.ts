@@ -39,12 +39,13 @@ export abstract class IRNGNormal implements IRandom {
         this._rng.register(MessageType.INIT, this.reset);
     }
 
-    public reset(rng: IRNG, seed: number): void
+    public reset(rng?: IRNG, seed?: number): void
     {
-        seed; // for eslint, treeshaking will remove it
-        if (this._rng.name !== rng.name){
+        
+        if (rng && rng.name !== this._rng.name){
             this._rng = rng;
         }
+        seed;
     }
 
     public randoms(n: number): Float32Array {

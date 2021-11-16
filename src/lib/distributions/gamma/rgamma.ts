@@ -20,7 +20,7 @@ import { ML_ERR_return_NAN } from '@common/logger';
 import { exp_rand } from '@dist/exp/sexp';
 import { IRNGNormal } from '@rng/normal/normal-rng';
 
-const printer_rgammaOne = debug('rgammaOne');
+const printer_rgamma = debug('rgamma');
 
 /* Constants : */
 const sqrt32 = 5.656854;
@@ -46,7 +46,7 @@ const a5 = 0.1423657;
 const a6 = -0.1367177;
 const a7 = 0.1233795;
 
-export function rgammaOne(a: number, scale: number, rng: IRNGNormal): number {
+export function rgamma(a: number, scale: number, rng: IRNGNormal): number {
     /* State variables [FIXME for threading!] :*/
 
     //let aa = 0;
@@ -74,7 +74,7 @@ export function rgammaOne(a: number, scale: number, rng: IRNGNormal): number {
     if (a === 0) return 0;
 
     if (!isFinite(a) || !isFinite(scale) || a < 0.0 || scale < 0.0) {
-        return ML_ERR_return_NAN(printer_rgammaOne);
+        return ML_ERR_return_NAN(printer_rgamma);
     }
     // a > 0
     if (a < 1) {

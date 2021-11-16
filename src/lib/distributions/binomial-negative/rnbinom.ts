@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import { debug } from 'debug';
 import { ML_ERR_return_NAN } from '@common/logger';
 
-import { rgammaOne } from '@dist/gamma/rgamma';
+import { rgamma } from '@dist/gamma/rgamma';
 import { rpoisOne } from '@dist/poisson/rpois';
 import type { IRNGNormal } from '@rng/normal/normal-rng';
 
@@ -29,7 +29,7 @@ export function rnbinomOne(size: number, prob: number, rng: IRNGNormal): number 
         /* prob = 1 is ok, PR#1218 */
         return ML_ERR_return_NAN(printer_rnbinom);
     }
-    return prob === 1 ? 0 : rpoisOne(rgammaOne(size, (1 - prob) / prob, rng), rng);
+    return prob === 1 ? 0 : rpoisOne(rgamma(size, (1 - prob) / prob, rng), rng);
 }
 
 const printer_rnbinom_mu = debug('rnbinom_mu');
@@ -38,5 +38,5 @@ export function rnbinom_muOne(size: number, mu: number, rng: IRNGNormal): number
     if (!isFinite(size) || !isFinite(mu) || size <= 0 || mu < 0) {
         return ML_ERR_return_NAN(printer_rnbinom_mu);
     }
-    return mu === 0 ? 0 : rpoisOne(rgammaOne(size, mu / size, rng), rng);
+    return mu === 0 ? 0 : rpoisOne(rgamma(size, mu / size, rng), rng);
 }

@@ -1,47 +1,41 @@
 //helpers
-import { 
-    cl, 
-    //select 
+import {
+    cl,
+    select
 } from '@common/debug-select';
 
-//const betaDomainWarns = select('beta')("argument out of domain in '%s'");
+const betaDomainWarns = select('beta')("argument out of domain in '%s'");
 
 //app
 import { beta } from '..';
 
 describe('beta(a,b)', function () {
-    beforeEach(()=>{
+    beforeEach(() => {
         cl.clear('beta');
     });
     it('a = 0, b > 0', async () => {
         /* load data from fixture */
         const a = 0;
         const b = 0.5;
-        const actual = beta(a,b);
+        const actual = beta(a, b);
         expect(actual).toEqualFloatingPointBinary(Infinity);
-    });
-    it('a=undefined, b = undefined', () => {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const empty = beta(undefined as any, undefined as any);
-        expect(empty).toEqualFloatingPointBinary([]);
     });
     it('a=1, b=2 to be 0.5', () => {
         expect(beta(1, 2)).toEqualFloatingPointBinary(0.5);
     });
 
-    it('a=Nan, b=Nan', () => {
-        const nan = beta(NaN, NaN);
-        expect(nan).toEqualFloatingPointBinary(NaN);
+    it('a=Nan | b=Nan', () => {
+        const nan1 = beta(NaN, 5);
+        const nan2 = beta(4, NaN);
+        expect([nan1, nan2]).toEqualFloatingPointBinary(NaN);
     });
-    it('a=Nan, b=Nan', () => {
-        const nan = beta(NaN, NaN);
-        expect(nan).toEqualFloatingPointBinary(NaN);
+    it('a<0 or b < 0 returns NaN', () => {
+        const nan1 = beta(-1, 4);
+        const nan2 = beta(4, -1);
+        expect([nan1, nan2]).toEqualFloatingPointBinary(NaN);
+        expect(betaDomainWarns()).toHaveLength(2);
     });
-    it('a<0 or b >=0 returns NaN', () => {
-        const nan = beta(-1, 0);
-        expect(nan).toEqualFloatingPointBinary(NaN);
-    });
-    it.todo('a=Infinity returns 0 and ME warnings', () => {
+    it('a=Infinity returns 0 and ME warnings', () => {
         const inf = beta(Infinity, 1);
         expect(inf).toEqualFloatingPointBinary(0);
     });
@@ -57,7 +51,7 @@ describe('beta(a,b)', function () {
         const ans = beta(87, 87);
         expect(ans).toEqualFloatingPointBinary(1.589462e-53, 18, false, true);
     });
-    it.todo('domain: (a + b) >>>> 171.61447887182298, and ME warnings', () => {
+    it('domain: (a + b) >>>> 171.61447887182298', () => {
         const ans = beta(520, 520);
         expect(ans).toEqualFloatingPointBinary(1.319812e-314, 18, false, true);
     });
