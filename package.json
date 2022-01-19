@@ -76,7 +76,10 @@
         "README.md"
     ],
     "scripts": {
-        "build": "npm run build.mjs",
+        "prepare": "ts-patch install -s",
+        "prebuild": "rimraf *.tsbuildinfo es6 browser types",
+        "build": "tsc -p tsconfig-es6.json",
+        "postbuild": "node rollup.build.js",
         "lint": "eslint src/**/*.ts",
         "lint:fix": "eslint src/**/*.ts --fix",
         "prepare": "ts-patch install -s",
