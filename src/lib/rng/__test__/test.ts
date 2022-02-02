@@ -3,9 +3,13 @@ import { IRNGTypeEnum } from '../';
 import { fixup, i2_32m1 } from '../fixup';
 
 class MyIRNG extends IRNG {
+    public static kind = IRNGTypeEnum.USER_DEFINED;
+    public get cut(): number {
+        return 2**25-1;
+    }
     private _seed: Uint32Array;
     constructor() {
-        super('my-irng', IRNGTypeEnum.USER_DEFINED);
+        super('my-irng');
         this._seed = new Uint32Array(0);
     }
     random(): number {
@@ -26,8 +30,10 @@ describe('irng', function n() {
         const mockCallback = jest.fn(fn);
         usr.register(MessageType.INIT, mockCallback as typeof fn);
         usr.init(1234);
-        expect(mockCallback.mock.calls[0][0]).toBe(1234);
+        expect(mockCallback).toHaveBeenCalledTimes(1);
+        expect(mockCallback).toHaveBeenCalledWith(usr, 1234);
     });
+    
     it('test unregister specific callback', () => {
         const usr = new MyIRNG();
         const fn = (seed: number) => seed;
@@ -37,6 +43,7 @@ describe('irng', function n() {
         usr.init(1234);
         expect(mockCallback).not.toHaveBeenCalled();
     });
+
     it('test unregister all callbacks', () => {
         const usr = new MyIRNG();
         const fn = (seed: number) => seed;
@@ -56,8 +63,8 @@ describe('irng', function n() {
         usr.init(1234); // both callbacks are called
         usr.unregister(MessageType.INIT, mockCallback1);
         usr.init(5678); // only 1 callback called
-        expect(mockCallback1.mock.calls.length).toBe(1);
-        expect(mockCallback2.mock.calls.length).toBe(2);
+        expect(mockCallback1).toHaveBeenCalledTimes(1);
+        expect(mockCallback2).toHaveBeenCalledTimes(2);
     });
     it('unregister nonexisting callback', () => {
         const usr = new MyIRNG();
@@ -65,7 +72,7 @@ describe('irng', function n() {
         const mockCallback1 = jest.fn(fn);
         usr.unregister(MessageType.INIT, mockCallback1);
         usr.init(5678); // only 1 callback called
-        expect(mockCallback1.mock.calls.length).toBe(0);
+        expect(mockCallback1).not.toHaveBeenCalled();
     });
 });
 

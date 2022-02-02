@@ -29,13 +29,9 @@ export abstract class IRNG implements IRandom {
     //protected abstract random(): number;
 
     constructor(name: string) {
-        if (this.constructor.name === 'IRNG') {
-            throw new TypeError('IRNG should be subclassed not directly instantiated');
-        }
         this._name = name;
         this.notify = new Map();
         this.emit = this.emit.bind(this);
-
     }
 
     public get name(): string {
@@ -86,12 +82,8 @@ export abstract class IRNG implements IRandom {
         }
     }
 
-    public abstract  get seed(): Uint32Array | Int32Array; /* {
-        throw new (`override property getter 'seed' in ${this.constructor.name}`)
-    }*/
-    public abstract set seed(_seed: Uint32Array | Int32Array); /* {
-        throw new Error(`override property setter 'seed' in ${this.constructor.name}`)
-    }*/
+    public abstract  get seed(): Uint32Array | Int32Array; 
+    public abstract set seed(_seed: Uint32Array | Int32Array);
 
     public init(seed: number): void {
         this.emit(MessageType.INIT, this, seed);

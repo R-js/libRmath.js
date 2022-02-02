@@ -193,7 +193,8 @@ const uniformRNG = [
     '/rng/marsaglia-multicarry/__test__/(.*?\\.)?test.ts$',
     '/rng/mersenne-twister/__test__/(.*?\\.)?test.ts$',
     '/rng/wichmann-hill/__test__/(.*?\\.)?test.ts$',
-    '/rng/super-duper/__test__/(.*?\\.)?test.ts$'
+    '/rng/super-duper/__test__/(.*?\\.)?test.ts$',
+    '/rng/__test__/test.ts$'
 ];
 
 const normalRNG = [
@@ -245,10 +246,10 @@ module.exports = {
     collectCoverage: true,
     maxWorkers: "50%",
     collectCoverageFrom,
-    coveragePathIgnorePatterns: ['node_modules', 'test', 'doc.ts'],
+    coveragePathIgnorePatterns: ['node_modules', 'test', 'doc.ts', 'IRandom.ts', 'IBesselRC.ts'],
     coverageDirectory: 'coverage',
-    coverageProvider: 'babel', //"v8" is still experimental, but use "v8" for walk through debugging
-   // coverageProvider: 'v8', //"v8" is still experimental, but use "v8" for walk through debugging
+    //coverageProvider: 'babel', //"v8" is still experimental, but use "v8" for walk through debugging
+    coverageProvider: 'v8', //"v8" is still experimental, but use "v8" for walk through debugging
     coverageReporters: ['json', 'lcov', 'text', 'clover'],
     preset: 'ts-jest',
     testEnvironment: 'node',
