@@ -75,7 +75,7 @@
     ],
     "scripts": {
         "prepare": "ts-patch install -s",
-        "prebuild": "rimraf *.tsbuildinfo es6 browser",
+        "prebuild": "rimraf *.tsbuildinfo es6 browser commonjs types",
         "build": "tsc -p tsconfig-es6.json",
         "postbuild": "node rollup.build.js",
         "lint": "eslint src/**/*.ts",
