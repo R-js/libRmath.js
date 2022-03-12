@@ -193,7 +193,8 @@ const uniformRNG = [
     '/rng/marsaglia-multicarry/__test__/(.*?\\.)?test.ts$',
     '/rng/mersenne-twister/__test__/(.*?\\.)?test.ts$',
     '/rng/wichmann-hill/__test__/(.*?\\.)?test.ts$',
-    '/rng/super-duper/__test__/(.*?\\.)?test.ts$'
+    '/rng/super-duper/__test__/(.*?\\.)?test.ts$',
+    '/rng/__test__/test.ts$'
 ];
 
 const normalRNG = [
@@ -212,7 +213,7 @@ const specialFunctions = [
 ]
 
 const testRegex = [
-    ...betaTest,
+   /* ...betaTest,
     ...binomTest,
     ...binonNegativeTest,
     ...cauchyTest,
@@ -232,18 +233,18 @@ const testRegex = [
     ...tukeyHSD,
     ...uniformTest,
     ...weibullTest,
-    ...wilcoxTest,
+    ...wilcoxTest,*/
     //
     ...uniformRNG,
-    ...normalRNG,
+    //...normalRNG,
     //
-    ...specialFunctions
+    //...specialFunctions
 ];
 
 module.exports = {
     automock: false,
     collectCoverage: true,
-    maxWorkers: "50%",
+    maxWorkers: "1",
     collectCoverageFrom,
     coveragePathIgnorePatterns: ['node_modules', 'test', 'doc.ts'],
     coverageDirectory: 'coverage',
@@ -257,16 +258,7 @@ module.exports = {
     testPathIgnorePatterns: ['/es6/', '/commonjs/'],
     //testMatch: ['**/__tests__/**/*.[t]s?(x)', '**/?(*.)+(spec|test).[t]s?(x)'],
     testRegex,
-   /*globals: {
-        'ts-jest': {
-            compiler: 'typescript',
-            tsconfig: 'tsconfig-jest.json',
-            diagnostics: {
-                ignoreCodes: [151001],
-            },
-        },
-    },*/
-   
+ 
     moduleNameMapper: {
         '^@dist/(.*)$': '<rootDir>/src/lib/distributions/$1',
         '^@common/(.*)$': [
