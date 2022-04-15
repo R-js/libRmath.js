@@ -1,0 +1,17 @@
+name: Octo Organization CI
+
+on:
+  push:
+    branches: [ lts-libr-v1 ]
+  pull_request:
+    branches: [ lts-libr-v1 ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Run a one-line script
+        run: echo Hello from Octo Organization
