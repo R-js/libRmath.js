@@ -150,7 +150,7 @@
         "tslint-loader": "^3.5.3",
         "typescript": "^2.8.3",
         "uglifyjs-webpack-plugin": "^1.2.5",
-        "webpack": "^2.7.0",
+        "webpack": "^4.46.0",
         "webpack-node-externals": "^1.7.2"
     },
     "module:disabled": "",
