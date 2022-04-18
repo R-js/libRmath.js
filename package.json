@@ -145,7 +145,7 @@
         "schema-utils": "^0.4.5",
         "shx": "^0.2.2",
         "source-map-support": "^0.5.5",
-        "ts-node": "^4.1.0",
+        "ts-node": "^10.7.0",
         "tslint": "^5.10.0",
         "tslint-loader": "^3.5.3",
         "typescript": "^2.8.3",
