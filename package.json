@@ -106,7 +106,7 @@
         "version:tslint": "tslint --version"
     },
     "dependencies": {
-        "debug": "^3.1.0"
+        "debug": "^4.3.4"
     },
     "devDependencies": {
         "@types/chai": "^4.3.1",
