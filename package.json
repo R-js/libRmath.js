@@ -117,7 +117,7 @@
         "@types/lodash.xor": "^4.5.3",
         "@types/mocha": "^2.2.48",
         "@types/node": "^6.0.109",
-        "ajv": "^6.5.0",
+        "ajv": "^6.12.3",
         "awesome-typescript-loader": "^3.4.1",
         "babel-core": "^6.26.3",
         "babel-preset-env": "^1.7.0",
