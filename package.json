@@ -115,7 +115,7 @@
         "@types/lodash.clonedeep": "^4.5.3",
         "@types/lodash.includes": "^4.3.3",
         "@types/lodash.xor": "^4.5.3",
-        "@types/mocha": "^2.2.48",
+        "@types/mocha": "^9.1.0",
         "@types/node": "^6.0.109",
         "ajv": "^6.12.6",
         "awesome-typescript-loader": "^3.4.1",
