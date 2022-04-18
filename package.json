@@ -151,7 +151,7 @@
         "typescript": "^2.8.3",
         "uglifyjs-webpack-plugin": "^2.2.0",
         "webpack": "^4.46.0",
-        "webpack-node-externals": "^1.7.2"
+        "webpack-node-externals": "^3.0.0"
     },
     "module:disabled": "",
     "module:doc": "https://github.com/dherman/defense-of-dot-js/blob/master/proposal.md"
