@@ -125,7 +125,7 @@
         "babel-register": "^6.26.0",
         "chai": "^3.5.0",
         "clean-webpack-plugin": "^0.1.18",
-        "codecov": "^3.7.1",
+        "codecov": "^3.8.3",
         "cross-env": "^7.0.3",
         "github-markdown-css": "^2.10.0",
         "istanbul": "^0.4.5",
