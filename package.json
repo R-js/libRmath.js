@@ -123,7 +123,7 @@
         "babel-preset-env": "^1.7.0",
         "babel-preset-stage-0": "^6.24.1",
         "babel-register": "^6.26.0",
-        "chai": "^3.5.0",
+        "chai": "^4.3.6",
         "clean-webpack-plugin": "^0.1.18",
         "codecov": "^3.7.1",
         "cross-env": "^7.0.3",
