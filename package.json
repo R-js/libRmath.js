@@ -110,7 +110,7 @@
     },
     "devDependencies": {
         "@types/chai": "^3.5.2",
-        "@types/clone": "^0.1.30",
+        "@types/clone": "^2.1.1",
         "@types/debug": "0.0.30",
         "@types/lodash.clonedeep": "^4.5.3",
         "@types/lodash.includes": "^4.3.3",
