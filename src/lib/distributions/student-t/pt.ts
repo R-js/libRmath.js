@@ -17,10 +17,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 
-import lbeta from '@special/beta/lbeta';
-import { pbeta } from '@dist/beta/pbeta';
-import { M_LN2, R_D_Cval, log, log1p, exp, abs } from '@lib/r-func';
-import { pnorm5 as pnorm } from '@dist/normal/pnorm';
+import lbeta from '@special/beta/lbeta.js';
+import { pbeta } from '@dist/beta/pbeta.js';
+import { M_LN2, R_D_Cval, log, log1p, exp, abs } from '@lib/r-func.js';
+import { pnorm5 as pnorm } from '@dist/normal/pnorm.js';
 
 
 export function pt(x: number, n: number, lower_tail: boolean, log_p: boolean): number {

@@ -21,13 +21,13 @@ import {
     M_LN_SQRT_2PI, // no math alias for this
     M_LN_SQRT_PId2,
     trunc, floor, abs, log 
-} from '@lib/r-func';
+} from '@lib/r-func.js';
 
-import { ME, ML_ERROR } from '@common/logger';
+import { ME, ML_ERROR } from '@common/logger.js';
 
-import { sinpi } from '@trig/sinpi';
-import { lgammacor } from './lgammacor';
-import { gammafn } from './gamma_fn';
+import { sinpi } from '@trig/sinpi.js';
+import { lgammacor } from './lgammacor.js';
+import { gammafn } from './gamma_fn.js';
 
 
 const printer_sign = debug('lgammafn_sign');

@@ -15,14 +15,14 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-export { dlnorm } from './dlnorm';
-export { plnorm } from './plnorm';
-export { qlnorm } from './qlnorm';
-import { rlnormOne } from './rlnorm';
-import { repeatedCall } from '@lib/r-func';
+export { dlnorm } from './dlnorm.js';
+export { plnorm } from './plnorm.js';
+export { qlnorm } from './qlnorm.js';
+import { rlnormOne } from './rlnorm.js';
+import { repeatedCall } from '@lib/r-func.js';
 
-import type { IRNGNormal } from '@rng/normal/normal-rng';
-import { globalNorm } from '@rng/global-rng';
+import type { IRNGNormal } from '@rng/normal/normal-rng.js';
+import { globalNorm } from '@rng/global-rng.js';
 
 export { rlnormOne }
 

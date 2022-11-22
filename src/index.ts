@@ -55,7 +55,7 @@ export * from '@special/beta';
 export * from '@special/choose';
 
 
-export { chebyshev_eval, chebyshev_init } from './chebyshev';
-export { hypot, log1p as log1pR } from './alt/log/index';
+export { chebyshev_eval, chebyshev_init } from './lib/chebyshev/index.js';
+export { hypot, log1p as log1pR } from './lib/alt/log/index.js';
 
 

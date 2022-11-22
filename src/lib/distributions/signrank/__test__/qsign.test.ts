@@ -102,7 +102,7 @@ describe('qsignrank (wilcox sign rank)', function () {
             const p = x.map(_x => psignrank(_x, 1074));
             const start1 = Date.now();
             const xCalcActual = p.map(_p => qsignrank(_p, 1074));
-            console.log(`wasm acc lasted ${humanize.humanize(Date.now() - start0)} and ${humanize.humanize(Date.now() - start1)}`);
+            console.log(`(wasm) psignrank lasted ${humanize.humanize(Date.now() - start0)} and qsignrank lasted ${humanize.humanize(Date.now() - start1)}`);
             expect(xCalcActual).toEqualFloatingPointBinary(xCalc);
             clearBackend();
         });   
@@ -112,7 +112,7 @@ describe('qsignrank (wilcox sign rank)', function () {
             const p = x.map(_x => psignrank(_x, 1074));
             const start1 = Date.now();
             const xCalcActual = p.map(_p => qsignrank(_p, 1074));
-            console.log(`(no wasm) acc lasted ${humanize.humanize(Date.now() - start0)} and ${humanize.humanize(Date.now() - start1)}`);
+            console.log(`(no wasm) psignrank lasted ${humanize.humanize(Date.now() - start0)} and qsignrank lasted ${humanize.humanize(Date.now() - start1)}`);
             expect(xCalcActual).toEqualFloatingPointBinary(xCalc);
         });
     })

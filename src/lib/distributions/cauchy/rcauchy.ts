@@ -16,10 +16,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { debug } from 'debug';
-import { ML_ERR_return_NAN } from '@common/logger';
+import { ML_ERR_return_NAN } from '@common/logger.js';
 
 const printer = debug('rcauchy');
-import type { IRNG } from '@rng/irng';
+import type { IRNG } from '@rng/irng.js';
 
 export function rcauchyOne(location: number, scale: number, rng: IRNG): number {
     if (isNaN(location) || !isFinite(scale) || scale < 0) {

@@ -20,17 +20,17 @@ import { debug } from 'debug';
 
 import {
   ML_ERR_return_NAN
-} from '@common/logger';
+} from '@common/logger.js';
 
 import {
   R_DT_0,
   R_DT_1
-} from '@lib/r-func';
+} from '@lib/r-func.js';
 
-import { pnorm_both } from './pnorm_both'
+import { pnorm_both } from './pnorm_both.js'
 
 const printer = debug('pnorm');
-import { NumberW } from '@common/toms708';
+import { NumberW } from '@common/toms708/index.js';
 
 export function pnorm5(
   q: number,

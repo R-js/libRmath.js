@@ -15,21 +15,21 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 //needed for rf
-import { rchisqOne } from '../chi-2/rchisq';
-import { rnchisqOne } from '../chi-2/rnchisq';
-import { repeatedCall64 } from '@lib/r-func';
-import type { IRNGNormal } from '@rng/normal/normal-rng';
+import { rchisqOne } from '../chi-2/rchisq.js';
+import { rnchisqOne } from '../chi-2/rnchisq.js';
+import { repeatedCall64 } from '@lib/r-func.js';
+import type { IRNGNormal } from '@rng/normal/normal-rng.js';
 //
-import { df as _df } from './df';
-import { dnf } from './dnf';
+import { df as _df } from './df.js';
+import { dnf } from './dnf.js';
 //
-import { pf as _pf } from './pf';
-import { pnf } from './pnf';
+import { pf as _pf } from './pf.js';
+import { pnf } from './pnf.js';
 //
-import { qf as _qf } from './qf';
-import { qnf } from './qnf';
-import { rfOne as _rfOne } from './rf';
-import { globalNorm } from '@rng/global-rng';
+import { qf as _qf } from './qf.js';
+import { qnf } from './qnf.js';
+import { rfOne as _rfOne } from './rf.js';
+import { globalNorm } from '@rng/global-rng.js';
 
 export function df(x: number, df1: number, df2: number, ncp?: number, log = false): number {
     if (ncp === undefined) {

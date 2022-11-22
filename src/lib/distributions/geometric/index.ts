@@ -14,13 +14,13 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-export { dgeom } from './dgeom';
-export { pgeom } from './pgeom';
-export { qgeom } from './qgeom';
-import { rgeomOne } from './rgeom';
-import type { IRNGNormal } from '@rng/normal/normal-rng';
-import { repeatedCall64 } from '@lib/r-func';
-import { globalNorm } from '@rng/global-rng';
+export { dgeom } from './dgeom.js';
+export { pgeom } from './pgeom.js';
+export { qgeom } from './qgeom.js';
+import { rgeomOne } from './rgeom.js';
+import type { IRNGNormal } from '@rng/normal/normal-rng.js';
+import { repeatedCall64 } from '@lib/r-func.js';
+import { globalNorm } from '@rng/global-rng.js';
 
 export function rgeom(n: number, prob: number, rng: IRNGNormal = globalNorm()): Float64Array {
   return repeatedCall64(n, rgeomOne, prob, rng);

@@ -15,14 +15,14 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-export { dweibull } from './dweibull';
-export { pweibull } from './pweibull';
-export { qweibull } from './qweibull';
-import { rweibullOne } from './rweibull';
+export { dweibull } from './dweibull.js';
+export { pweibull } from './pweibull.js';
+export { qweibull } from './qweibull.js';
+import { rweibullOne } from './rweibull.js';
 
-import type { IRNG } from '@rng/irng';
-import { repeatedCall64 } from '@lib/r-func';
-import { globalUni } from '@rng/global-rng';
+import type { IRNG } from '@rng/irng.js';
+import { repeatedCall64 } from '@lib/r-func.js';
+import { globalUni } from '@rng/global-rng.js';
 
 export { rweibullOne };
 

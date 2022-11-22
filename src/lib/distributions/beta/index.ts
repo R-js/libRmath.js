@@ -17,25 +17,25 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //distros
 //dbeta
-import { dbeta_scalar } from './dbeta';
-import { dnbeta_scalar } from './dnbeta';
+import { dbeta_scalar } from './dbeta.js';
+import { dnbeta_scalar } from './dnbeta.js';
 
 //pbeta
-import { pbeta as _pbeta } from './pbeta';
-import { pnbeta as _pnbeta } from './pnbeta';
+import { pbeta as _pbeta } from './pbeta.js';
+import { pnbeta as _pnbeta } from './pnbeta.js';
 
 //qbeta
-import { qbeta as _qbeta } from './qbeta';
-import { qnbeta as _qnbeta } from './qnbeta';
+import { qbeta as _qbeta } from './qbeta.js';
+import { qnbeta as _qnbeta } from './qnbeta.js';
 
 //rbeta
-import { rchisqOne } from '@dist/chi-2/rchisq';
-import { rnchisqOne } from '@dist/chi-2/rnchisq';
-import { rbetaOne } from './rbeta';
+import { rchisqOne } from '@dist/chi-2/rchisq.js';
+import { rnchisqOne } from '@dist/chi-2/rnchisq.js';
+import { rbetaOne } from './rbeta.js';
 
 //helper
-import { repeatedCall } from '@lib/r-func';
-import { globalNorm } from '@rng/global-rng';
+import { repeatedCall } from '@lib/r-func.js';
+import { globalNorm } from '@rng/global-rng.js';
 
 export { rbetaOne };
 

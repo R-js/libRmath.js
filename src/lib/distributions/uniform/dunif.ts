@@ -17,8 +17,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { debug } from 'debug';
-import { ML_ERR_return_NAN } from '@common/logger';
-import { log, R_D__0 } from '@lib/r-func';
+import { ML_ERR_return_NAN } from '@common/logger.js';
+import { log, R_D__0 } from '@lib/r-func.js';
 
 const printer = debug('dunif');
 

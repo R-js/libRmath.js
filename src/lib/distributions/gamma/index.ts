@@ -15,14 +15,14 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { dgamma as _dgamma } from './dgamma';
-import { pgamma as _pgamma } from './pgamma';
-import { qgamma as _qgamma } from './qgamma';
-import { rgamma as _rgamma } from './rgamma';
-import type { IRNGNormal } from '@rng/normal/normal-rng';
-import { globalNorm } from '@rng/global-rng';
+import { dgamma as _dgamma } from './dgamma.js';
+import { pgamma as _pgamma } from './pgamma.js';
+import { qgamma as _qgamma } from './qgamma.js';
+import { rgamma as _rgamma } from './rgamma.js';
+import type { IRNGNormal } from '@rng/normal/normal-rng.js';
+import { globalNorm } from '@rng/global-rng.js';
 
-import { repeatedCall64 } from '@lib/r-func';
+import { repeatedCall64 } from '@lib/r-func.js';
 
 function gammaNormalizeParams(rate?: number, scale?: number): number {
     // decision table

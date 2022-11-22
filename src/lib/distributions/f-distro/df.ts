@@ -16,10 +16,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { debug } from 'debug';
 
-import { ML_ERR_return_NAN } from '@common/logger';
-import { R_D__0, R_D__1 } from '@lib/r-func';
-import { dbinom_raw } from '@dist/binomial/dbinom';
-import { dgamma } from '@dist/gamma/dgamma';
+import { ML_ERR_return_NAN } from '@common/logger.js';
+import { R_D__0, R_D__1 } from '@lib/r-func.js';
+import { dbinom_raw } from '@dist/binomial/dbinom.js';
+import { dgamma } from '@dist/gamma/dgamma.js';
 
 const printer_df = debug('df');
 

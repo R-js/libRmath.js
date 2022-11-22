@@ -15,11 +15,11 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { chebyshev_eval } from '@lib/chebyshev';
-import { ME, ML_ERROR } from '@common/logger';
-import { stirlerr } from '@lib/stirling';
-import { sinpi } from '@trig/sinpi';
-import { PI, abs, round, trunc, exp, log, M_LN_SQRT_2PI } from '@lib/r-func';
+import { chebyshev_eval } from '@lib/chebyshev/index.js';
+import { ME, ML_ERROR } from '@common/logger.js';
+import { stirlerr } from '@lib/stirling/index.js';
+import { sinpi } from '@trig/sinpi.js';
+import { PI, abs, round, trunc, exp, log, M_LN_SQRT_2PI } from '@lib/r-func.js';
 
 import { debug } from 'debug';
 

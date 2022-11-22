@@ -212,7 +212,7 @@ export function J_bessel(x: number, alpha: number, nb: number): IBesselRC {
 
     ncalc = nb;
     if (x > xlrg_BESS_IJ) {
-        ML_ERROR(ME.ME_RANGE, 'J_bessel', printer);
+        ML_ERROR(ME.ME_RANGE, 'J_bessel_err_nr=1000', printer);
         /* indeed, the limit is 0,
          * but the cutoff happens too early */
         return { x: 0, nb, ncalc };
@@ -269,9 +269,15 @@ export function J_bessel(x: number, alpha: number, nb: number): IBesselRC {
            ------------------------------------------------------------ */
         xc = sqrt(pi2 / x);
         const xin = 1 / (64 * x * x);
-        if (x >= 130) i_m = 4;
-        else if (x >= 35) i_m = 8;
-        else i_m = 11;
+        if (x >= 130) {
+            i_m = 4;
+        }
+        else if (x >= 35) {
+            i_m = 8;
+        }
+        else {
+            i_m = 11;
+        }
         xm = 4 * i_m;
         /* ------------------------------------------------
            Argument reduction for SIN and COS routines.

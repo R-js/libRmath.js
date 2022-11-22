@@ -17,14 +17,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import { debug } from 'debug';
 
-import { R_D_qIv } from '@lib/r-func';
+import { R_D_qIv } from '@lib/r-func.js';
 
 import { 
     ME, ML_ERROR,
-     ML_ERR_return_NAN, R_Q_P01_boundaries,  } from '@common/logger';
+     ML_ERR_return_NAN, R_Q_P01_boundaries,  } from '@common/logger.js';
 
-import { qchisq } from './qchisq';
-import { pnchisq_raw } from './pnchisq';
+import { qchisq } from './qchisq.js';
+import { pnchisq_raw } from './pnchisq.js';
 
 const printer = debug('qnchisq');
 

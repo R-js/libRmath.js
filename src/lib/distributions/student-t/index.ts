@@ -17,19 +17,19 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 // needed for random
-import { rchisq } from '@dist/chi-2';
-import { rnorm } from '@dist/normal';
-import { rtOne } from './rt';
+import { rchisq } from '@dist/chi-2/index.js';
+import { rnorm } from '@dist/normal/index.js';
+import { rtOne } from './rt.js';
 
 //export { rtOne };
 //
-import { dnt } from './dnt';
-import { pnt } from './pnt';
-import { qnt } from './qnt';
-import { qt as _qt } from './qt';
+import { dnt } from './dnt.js';
+import { pnt } from './pnt.js';
+import { qnt } from './qnt.js';
+import { qt as _qt } from './qt.js';
 //
-import { repeatedCall64 } from '@lib/r-func';
-import { globalNorm } from '@rng/global-rng';
+import { repeatedCall64 } from '@lib/r-func.js';
+import { globalNorm } from '@rng/global-rng.js';
 
 export function dt(x: number, df: number, ncp = 0, asLog = false): number {
     return dnt(x, df, ncp, asLog);

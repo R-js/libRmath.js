@@ -17,13 +17,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { debug } from 'debug';
-import { ML_ERR_return_NAN } from '@common/logger';
-import { R_DT_0, R_DT_1, R_DT_val } from '@lib/r-func';
-import { choose } from '@lib/special/choose';
+import { ML_ERR_return_NAN } from '@common/logger.js';
+import { R_DT_0, R_DT_1, R_DT_val } from '@lib/r-func.js';
+import { choose } from '@lib/special/choose/index.js';
 
-import { WilcoxonCache } from './WilcoxonCache';
+import { WilcoxonCache } from './WilcoxonCache.js';
 
-import { cwilcox } from './cwilcox';
+import { cwilcox } from './cwilcox.js';
 
 const { round: R_forceint, floor } = Math;
 const { isNaN: ISNAN, isFinite: R_FINITE } = Number;

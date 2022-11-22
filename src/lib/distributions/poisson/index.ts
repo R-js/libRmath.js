@@ -15,13 +15,13 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-export { dpois } from './dpois';
-export { ppois } from './ppois';
-export { qpois } from './qpois';
-import { rpoisOne } from './rpois';
-import type { IRNGNormal } from '@rng/normal/normal-rng';
-import { repeatedCall } from '@lib/r-func';
-import { globalNorm } from '@rng/global-rng';
+export { dpois } from './dpois.js';
+export { ppois } from './ppois.js';
+export { qpois } from './qpois.js';
+import { rpoisOne } from './rpois.js';
+import type { IRNGNormal } from '@rng/normal/normal-rng.js';
+import { repeatedCall } from '@lib/r-func.js';
+import { globalNorm } from '@rng/global-rng.js';
 
 export function rpois(n: number, lamda: number, rng: IRNGNormal = globalNorm()): Float32Array {
   return repeatedCall(n, rpoisOne, lamda, rng);

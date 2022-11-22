@@ -18,10 +18,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import { debug } from 'debug';
 
-import { rchisqOne } from '@dist/chi-2/rchisq';
-import { ML_ERR_return_NAN } from '@common/logger';
-import type { IRNGNormal } from '@rng/normal/normal-rng';
-import { globalNorm } from '@rng/global-rng';
+import { rchisqOne } from '@dist/chi-2/rchisq.js';
+import { ML_ERR_return_NAN } from '@common/logger.js';
+import type { IRNGNormal } from '@rng/normal/normal-rng.js';
+import { globalNorm } from '@rng/global-rng.js';
 
 const printer = debug('rt');
 

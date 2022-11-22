@@ -14,7 +14,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { M_LN2, R_D_Cval, R_D_log, R_D_Lval } from '@lib/r-func';
+import { M_LN2, R_D_Cval, R_D_log, R_D_Lval } from '@lib/r-func.js';
 
 const { exp, expm1, log, log1p } = Math;
 

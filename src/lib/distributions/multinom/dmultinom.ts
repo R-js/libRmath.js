@@ -69,8 +69,8 @@ function (x, size = NULL , prob, log = FALSE)
 <environment: namespace:stats>
 */
 import { debug } from 'debug';
-import { lgammafn_sign } from '@special/gamma/lgammafn_sign';
-import { sumfp } from '@lib/r-func';
+import { lgammafn_sign } from '@special/gamma/lgammafn_sign.js';
+import { sumfp } from '@lib/r-func.js';
 
 const printer = debug('dmultinom');
 

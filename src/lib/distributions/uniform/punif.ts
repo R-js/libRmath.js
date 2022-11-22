@@ -18,8 +18,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import { debug } from 'debug';
 const printer = debug('punif');
 
-import { ML_ERR_return_NAN } from '@common/logger';
-import { R_D_val, R_DT_0, R_DT_1 } from '@lib/r-func';
+import { ML_ERR_return_NAN } from '@common/logger.js';
+import { R_D_val, R_DT_0, R_DT_1 } from '@lib/r-func.js';
 
 export function punif(x: number, a = 0, b = 1, lowerTail = true, logP = false): number {
     if (isNaN(x) || isNaN(a) || isNaN(b))

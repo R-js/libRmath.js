@@ -42,12 +42,15 @@ function BesselJ(x: number, alpha: number): number {
         /* Using Abramowitz & Stegun  9.1.2
          * this may not be quite optimal (CPU and accuracy wise) */
         let rc;
+        // happens when (alpha < 0) = -0.5, -1.5, -2.5, -3.5, etc
         if (alpha - na === 0.5) {
             rc = 0;
         }
         else {
+            // alpha not equal to -0.5, -1.5, -2.5 etc
             rc = BesselJ(x, -alpha) * cospi(alpha);
         }
+        // note it is not an assignment but a "rc +=" addition
         if (alpha !== na) {
             rc += BesselY(x, -alpha) * sinpi(alpha);
         }
@@ -56,11 +59,13 @@ function BesselJ(x: number, alpha: number): number {
         printer('besselJ(x, nu): nu=%d too large for bessel_j() algorithm', alpha);
         return NaN;
     }
-    //int
+    // nb = 1 + Math.floor(alpha);
     const nb = 1 + na; /* nb-1 <= alpha < nb */
-    alpha -= na; // ==> alpha' in [0, 1)
+    // alpha = -na 
+    alpha -= na; // ==> alpha' in [0, 1) because na = Math.floor(alpha)
     const rc = J_bessel(x, alpha, nb);
-
+    console.log(`debug (alpha=${alpha}, na=${na}, nb=${nb}, rc=${JSON.stringify(rc)})`);
+    
     if (rc.ncalc !== nb) {
         /* error input */
         if (rc.ncalc < 0) {

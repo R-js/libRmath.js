@@ -17,9 +17,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { debug } from 'debug';
 
-import { ML_ERR_return_NAN } from '@common/logger';
-import {  R_D_exp, R_DT_0, pow, expm1 } from '@lib/r-func'; 
-import { R_Log1_Exp } from '@dist/exp/expm1';
+import { ML_ERR_return_NAN } from '@common/logger.js';
+import {  R_D_exp, R_DT_0, pow, expm1 } from '@lib/r-func.js'; 
+import { R_Log1_Exp } from '@dist/exp/expm1.js';
 
 const printer = debug('pweibull');
 

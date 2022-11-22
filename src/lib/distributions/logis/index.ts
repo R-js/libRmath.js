@@ -14,14 +14,14 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { IRNG } from '../../rng/irng';
+import { IRNG } from '../../rng/irng.js';
 
-export { dlogis } from './dlogis';
-export { plogis } from './plogis';
-export { qlogis } from './qlogis';
-import { rlogisOne } from './rlogis';
-import { repeatedCall64 } from '@lib/r-func';
-import { globalUni } from '@rng/global-rng';
+export { dlogis } from './dlogis.js';
+export { plogis } from './plogis.js';
+export { qlogis } from './qlogis.js';
+import { rlogisOne } from './rlogis.js';
+import { repeatedCall64 } from '@lib/r-func.js';
+import { globalUni } from '@rng/global-rng.js';
 
 export { rlogisOne };
 

@@ -14,13 +14,13 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-export { dcauchy } from './dcauchy';
-export { pcauchy } from './pcauchy';
-export { qcauchy } from './qcauchy';
-import { rcauchyOne } from './rcauchy';
+export { dcauchy } from './dcauchy.js';
+export { pcauchy } from './pcauchy.js';
+export { qcauchy } from './qcauchy.js';
+import { rcauchyOne } from './rcauchy.js';
 
-import { repeatedCall } from '@lib/r-func';
-import { globalUni } from '@rng/global-rng';
+import { repeatedCall } from '@lib/r-func.js';
+import { globalUni } from '@rng/global-rng.js';
 
 
 export function rcauchy(n: number, location = 0, scale = 1, rng = globalUni()): Float32Array {

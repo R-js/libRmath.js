@@ -15,8 +15,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { debug } from 'debug';
-import { chebyshev_eval } from '@lib/chebyshev';
-import { ME, ML_ERR_return_NAN, ML_ERROR } from '@common/logger';
+import { chebyshev_eval } from '@lib/chebyshev/index.js';
+import { ME, ML_ERR_return_NAN, ML_ERROR } from '@common/logger.js';
 const printer = debug('lgammacor');
 
 const algmcs: number[] = [

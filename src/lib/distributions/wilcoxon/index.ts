@@ -15,14 +15,14 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-export { dwilcox } from './dwilcox';
-export { pwilcox } from './pwilcox';
-export { qwilcox } from './qwilcox';
-import { rwilcoxOne } from './rwilcox';
-import { repeatedCall } from '@lib/r-func';
+export { dwilcox } from './dwilcox.js';
+export { pwilcox } from './pwilcox.js';
+export { qwilcox } from './qwilcox.js';
+import { rwilcoxOne } from './rwilcox.js';
+import { repeatedCall } from '@lib/r-func.js';
 
-import type { IRNG } from '@rng/irng';
-import { globalUni, globalSampleKind } from '@rng/global-rng';
+import type { IRNG } from '@rng/irng.js';
+import { globalUni, globalSampleKind } from '@rng/global-rng.js';
 
 export { rwilcoxOne };
 export function rwilcox(N: number, m: number, n: number, rng:IRNG = globalUni(), kind = globalSampleKind()): Float32Array {
