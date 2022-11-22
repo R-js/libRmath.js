@@ -23,7 +23,7 @@ import {
     ML_ERROR,
     R_Q_P01_boundaries,
     ML_ERR_return_NAN
-} from '@common/logger';
+} from '@common/logger.js';
 
 import {
     DBL_MANT_DIG,
@@ -46,13 +46,13 @@ import {
     log,
     DBL_MAX,
     DBL_MIN
-} from '@lib/r-func';
+} from '@lib/r-func.js';
 
-import { R_D_LExp, R_DT_qIv } from '@dist/exp/expm1';
-import { qnorm } from '@dist/normal/qnorm';
-import { tanpi } from '@trig/tanpi';
-import { _dt } from './dt';
-import { pt } from './pt';
+import { R_D_LExp, R_DT_qIv } from '@dist/exp/expm1.js';
+import { qnorm } from '@dist/normal/qnorm.js';
+import { tanpi } from '@trig/tanpi.js';
+import { _dt } from './dt.js';
+import { pt } from './pt.js';
 
 const printer = debug('qt');
 

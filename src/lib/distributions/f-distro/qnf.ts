@@ -16,10 +16,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { debug } from 'debug';
 
-import { ML_ERR_return_NAN, R_Q_P01_boundaries } from '@common/logger';
+import { ML_ERR_return_NAN, R_Q_P01_boundaries } from '@common/logger.js';
 
-import { qnbeta } from '@dist/beta/qnbeta';
-import { qnchisq } from '@dist/chi-2/qnchisq';
+import { qnbeta } from '@dist/beta/qnbeta.js';
+import { qnchisq } from '@dist/chi-2/qnchisq.js';
 
 const printer = debug('qnf');
 

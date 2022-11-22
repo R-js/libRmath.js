@@ -16,11 +16,11 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { ML_ERR_return_NAN, } from '@common/logger';
-import { R_DT_0, R_DT_1, isFinite , floor } from '@lib/r-func';
+import { ML_ERR_return_NAN, } from '@common/logger.js';
+import { R_DT_0, R_DT_1, isFinite , floor } from '@lib/r-func.js';
 
 import { debug } from 'debug';
-import { pgamma } from '@dist/gamma/pgamma';
+import { pgamma } from '@dist/gamma/pgamma.js';
 
 const printer = debug('ppois');
 

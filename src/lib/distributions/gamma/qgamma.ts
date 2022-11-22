@@ -16,13 +16,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { debug } from 'debug';
 
-import { ML_ERR_return_NAN, R_Q_P01_boundaries, R_Q_P01_check } from '@common/logger';
-import { M_LN2, R_D__0, DBL_MIN } from '@lib/r-func';
-import { R_DT_Clog, R_DT_log, R_DT_qIv } from '@dist/exp/expm1';
-import { dgamma } from './dgamma';
-import { lgammafn_sign as lgammafn } from '@special/gamma/lgammafn_sign';
-import { pgamma, pgamma_raw, lgamma1p } from './pgamma';
-import { qnorm } from '@dist/normal/qnorm';
+import { ML_ERR_return_NAN, R_Q_P01_boundaries, R_Q_P01_check } from '@common/logger.js';
+import { M_LN2, R_D__0, DBL_MIN } from '@lib/r-func.js';
+import { R_DT_Clog, R_DT_log, R_DT_qIv } from '@dist/exp/expm1.js';
+import { dgamma } from './dgamma.js';
+import { lgammafn_sign as lgammafn } from '@special/gamma/lgammafn_sign.js';
+import { pgamma, pgamma_raw, lgamma1p } from './pgamma.js';
+import { qnorm } from '@dist/normal/qnorm.js';
 
 const printer_qchisq_appr = debug('qchisq_appr');
 

@@ -16,12 +16,12 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { debug } from 'debug';
-import { ML_ERR_return_NAN, } from '@common/logger';
-import { R_DT_0, R_DT_1, R_DT_val, round, trunc, M_LN2, exp, isNaN, isFinite } from '@lib/r-func';
-import { cpu_csignrank } from './csignrank';
-import { growMemory, memory } from './csignrank_wasm';
+import { ML_ERR_return_NAN, } from '@common/logger.js';
+import { R_DT_0, R_DT_1, R_DT_val, round, trunc, M_LN2, exp, isNaN, isFinite } from '@lib/r-func.js';
+import { cpu_csignrank } from './csignrank.js';
+import { growMemory, memory } from './csignrank_wasm.js';
 
-import type { CSingRank, CSignRankMap } from './csignrank_wasm';
+import type { CSingRank, CSignRankMap } from './csignrank_wasm.js';
 
 const printer = debug('psignrank');
 

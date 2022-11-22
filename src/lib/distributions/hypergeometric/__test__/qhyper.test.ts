@@ -132,10 +132,8 @@ describe('qhyper(p,m,n,k,log)', function () {
             // initialize wasm
             await useWasmBackends();
             const start = Date.now();
-            //console.log(`start at: ${start.toISOString()}`)
             const result = qhyper(0.5,2**31-1,2**31-1,2**31-1);
             const stop = Date.now();
-            //console.log(`stop at: ${stop.toISOString()}`)
             console.log(`(wasm) duration: ${humanize.humanize(stop-start)}`);
             clearBackends();
             expect(result).toBe(1073741806);

@@ -15,16 +15,16 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { dchisq as _dchisq } from './dchisq';
-import { dnchisq as _dnchisq } from './dnchisq';
-import { pchisq as _pchisq } from './pchisq';
-import { pnchisq as _pnchisq } from './pnchisq';
-import { qchisq as _qchisq } from './qchisq';
-import { qnchisq as _qnchisq } from './qnchisq';
-import { globalNorm } from '@rng/global-rng';
-import { rchisqOne } from './rchisq';
-import { rnchisqOne } from './rnchisq';
-import { repeatedCall64 } from '@lib/r-func';
+import { dchisq as _dchisq } from './dchisq.js';
+import { dnchisq as _dnchisq } from './dnchisq.js';
+import { pchisq as _pchisq } from './pchisq.js';
+import { pnchisq as _pnchisq } from './pnchisq.js';
+import { qchisq as _qchisq } from './qchisq.js';
+import { qnchisq as _qnchisq } from './qnchisq.js';
+import { globalNorm } from '@rng/global-rng.js';
+import { rchisqOne } from './rchisq.js';
+import { rnchisqOne } from './rnchisq.js';
+import { repeatedCall64 } from '@lib/r-func.js';
 
 export { rchisqOne, rnchisqOne };
 

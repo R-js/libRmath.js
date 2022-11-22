@@ -15,7 +15,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { pgamma } from '@dist/gamma/pgamma';
+import { pgamma } from '@dist/gamma/pgamma.js';
 
 export function pchisq(x: number, df: number, lowerTail: boolean, logP: boolean): number {
     return pgamma(x, df / 2, 2, lowerTail, logP);

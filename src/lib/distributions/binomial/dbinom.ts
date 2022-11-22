@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import { debug } from 'debug';
 
-import {ML_ERR_return_NAN} from '@common/logger';
+import {ML_ERR_return_NAN} from '@common/logger.js';
 
 import {
     M_LN_2PI,
@@ -26,10 +26,10 @@ import {
     R_D_exp,
     R_D_negInonint,
     R_D_nonint_check,
-} from '@lib/r-func';
+} from '@lib/r-func.js';
 
-import { bd0 } from '@lib/deviance';
-import { stirlerr } from '@lib/stirling';
+import { bd0 } from '@lib/deviance/index.js';
+import { stirlerr } from '@lib/stirling/index.js';
 
 const printer = debug('dbinom');
 

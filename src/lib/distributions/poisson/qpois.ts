@@ -18,17 +18,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import { debug } from 'debug';
 
-import { ML_ERR_return_NAN, R_Q_P01_boundaries } from '@common/logger';
+import { ML_ERR_return_NAN, R_Q_P01_boundaries } from '@common/logger.js';
 
-import { NumberW } from '@common/toms708';
+import { NumberW } from '@common/toms708/index.js';
 
-import { ppois } from './ppois';
+import { ppois } from './ppois.js';
 
-import { qnorm } from '@dist/normal/qnorm';
+import { qnorm } from '@dist/normal/qnorm.js';
 
-import { R_DT_qIv } from '@dist/exp/expm1';
+import { R_DT_qIv } from '@dist/exp/expm1.js';
 
-import { max, sqrt, floor, round as nearbyint, isNaN, DBL_EPSILON, isFinite } from '@lib/r-func';
+import { max, sqrt, floor, round as nearbyint, isNaN, DBL_EPSILON, isFinite } from '@lib/r-func.js';
 
 function do_search(y: number, z: NumberW, p: number, lambda: number, incr: number): number {
     if (z.val >= p) {

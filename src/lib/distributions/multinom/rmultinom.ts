@@ -15,9 +15,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { rbinomOne } from '@dist/binomial/rbinom';
-import { globalUni } from '@rng/global-rng';
-import { emptyFloat64Array, sumfp64 } from '@lib/r-func';
+import { rbinomOne } from '@dist/binomial/rbinom.js';
+import { globalUni } from '@rng/global-rng.js';
+import { emptyFloat64Array, sumfp64 } from '@lib/r-func.js';
 
 
 export function rmultinom(n: number, size: number, prob: Float64Array, rng = globalUni()): Float64Array | never {

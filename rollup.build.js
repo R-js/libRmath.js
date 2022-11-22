@@ -57,7 +57,7 @@ function shims() {
 // see below for details on the options
 const inputOptions = {
     input: {
-        'lib-r-math': 'es6/lib/index.js',
+        'lib-r-math': 'es6/index.js',
     },
     external: (id) => {
         return builtin.includes(id);

@@ -16,12 +16,12 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-export { dunif } from './dunif';
-export { punif } from './punif';
-export { qunif } from './qunif';
-import { runifOne } from './runif';
-import { repeatedCall64 } from '@lib/r-func';
-import { globalUni } from '@rng/global-rng';
+export { dunif } from './dunif.js';
+export { punif } from './punif.js';
+export { qunif } from './qunif.js';
+import { runifOne } from './runif.js';
+import { repeatedCall64 } from '@lib/r-func.js';
+import { globalUni } from '@rng/global-rng.js';
 
 export function runif(n: number, min = 0, max = 1, rng = globalUni()): Float64Array {
     return repeatedCall64(n, runifOne, min, max, rng);

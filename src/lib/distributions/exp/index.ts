@@ -14,14 +14,14 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { dexp as _dexp} from './dexp';
-import { pexp as _pexp} from './pexp';
-import { qexp as _qexp} from './qexp';
-import { rexpOne } from './rexp';
+import { dexp as _dexp} from './dexp.js';
+import { pexp as _pexp} from './pexp.js';
+import { qexp as _qexp} from './qexp.js';
+import { rexpOne } from './rexp.js';
 
-import { globalUni } from '@rng/global-rng';
-import type { IRNG } from '@rng/irng';
-import { repeatedCall64 } from '@lib/r-func';
+import { globalUni } from '@rng/global-rng.js';
+import type { IRNG } from '@rng/irng.js';
+import { repeatedCall64 } from '@lib/r-func.js';
 
 export function dexp(x: number, rate = 1, asLog = false): number{
   return _dexp(x, 1 / rate, asLog);

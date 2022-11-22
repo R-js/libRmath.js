@@ -1,6 +1,6 @@
 
-import { NumberW } from '@common/toms708';
-import { do_del } from './do_del';
+import { NumberW } from '@common/toms708/index.js';
+import { do_del } from './do_del.js';
 
 import {
     M_1_SQRT_2PI,

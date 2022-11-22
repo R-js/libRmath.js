@@ -16,9 +16,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { debug } from 'debug';
 
-import { ML_ERR_return_NAN, R_Q_P01_boundaries } from '@common/logger';
+import { ML_ERR_return_NAN, R_Q_P01_boundaries } from '@common/logger.js';
 
-import { R_Log1_Exp } from '@dist/exp/expm1';
+import { R_Log1_Exp } from '@dist/exp/expm1.js';
 
 const printer_qlogis = debug('qlogis');
 

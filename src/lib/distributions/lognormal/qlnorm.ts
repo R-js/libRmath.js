@@ -14,9 +14,9 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { R_Q_P01_boundaries } from '@common/logger';
+import { R_Q_P01_boundaries } from '@common/logger.js';
 
-import { qnorm } from '@dist/normal/qnorm';
+import { qnorm } from '@dist/normal/qnorm.js';
 
 export function qlnorm(p: number, meanlog = 0, sdlog = 1, lower_tail = true, log_p = false): number {
     if (isNaN(p) || isNaN(meanlog) || isNaN(sdlog)) return p + meanlog + sdlog;

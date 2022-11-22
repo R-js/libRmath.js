@@ -16,14 +16,14 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { debug } from 'debug';
-import { ML_ERR_return_NAN, R_Q_P01_check, ML_ERROR, ME } from '@common/logger';
-import { R_DT_qIv } from '@dist/exp/expm1';
-import { cpu_csignrank } from './csignrank';
+import { ML_ERR_return_NAN, R_Q_P01_check, ML_ERROR, ME } from '@common/logger.js';
+import { R_DT_qIv } from '@dist/exp/expm1.js';
+import { cpu_csignrank } from './csignrank.js';
 
-import { R_DT_0, R_DT_1, round, DBL_MIN_VALUE_LN, M_LN2, isNaN, isFinite, DBL_EPSILON, trunc, exp } from '@lib/r-func';
-import { growMemory } from './csignrank_wasm';
+import { R_DT_0, R_DT_1, round, DBL_MIN_VALUE_LN, M_LN2, isNaN, isFinite, DBL_EPSILON, trunc, exp } from '@lib/r-func.js';
+import { growMemory } from './csignrank_wasm.js';
 
-import type { CSingRank, CSignRankMap } from './csignrank_wasm';
+import type { CSingRank, CSignRankMap } from './csignrank_wasm.js';
 
 const printer = debug('qsignrank');
 

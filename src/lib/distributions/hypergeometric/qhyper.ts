@@ -16,12 +16,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { debug } from 'debug';
-import { ML_ERR_return_NAN, R_Q_P01_boundaries } from '@common/logger';
-import { lfastchoose } from '@lib/special/choose';
-import { R_DT_qIv } from '@dist/exp/expm1';
-import { DBL_EPSILON } from '@lib/r-func';
+import { ML_ERR_return_NAN, R_Q_P01_boundaries } from '@common/logger.js';
+import { lfastchoose } from '@lib/special/choose/index.js';
+import { R_DT_qIv } from '@dist/exp/expm1.js';
+import { DBL_EPSILON } from '@lib/r-func.js';
 
-import type { QHyperFunctionMap, CalcQHyper } from './qhyper_wasm';
+import type { QHyperFunctionMap, CalcQHyper } from './qhyper_wasm.js';
 
 const printer_qhyper = debug('qhyper');
 

@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 // needed by rpois
 
-import { abs} from '@lib/r-func';
+import { abs} from '@lib/r-func.js';
 
 export function fsign(x: number, signal: boolean) : number{
     if (isNaN(x)) return x;

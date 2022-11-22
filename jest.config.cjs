@@ -205,11 +205,12 @@ const normalRNG = [
     '/rng/normal/kinderman-ramage/__test__/(.*?\\.)?test.ts$',
 ];
 
+
 const specialFunctions = [
-    '/special/bessel/besselJ/__test__/(.*?\\.)?test.ts$',
-    '/special/gamma/__test__/(.*?\\.)?test.ts$',
-    '/special/choose/__test__/(.*?\\.)?test.ts$',
-    '/special/beta/__test__/(.*?\\.)?test.ts$'
+   '/special/bessel/besselJ/__test__/test.ts$',
+   // '/special/gamma/__test__/(.*?\\.)?test.ts$',
+   // '/special/choose/__test__/(.*?\\.)?test.ts$',
+   // '/special/beta/__test__/(.*?\\.)?test.ts$'
 ]
 
 const testRegex = [
@@ -234,10 +235,8 @@ const testRegex = [
     ...uniformTest,
     ...weibullTest,
     ...wilcoxTest,
-    //
     ...uniformRNG,
     ...normalRNG,
-    //
     ...specialFunctions
 ];
 
@@ -258,7 +257,7 @@ module.exports = {
     testPathIgnorePatterns: ['/es6/', '/commonjs/'],
     //testMatch: ['**/__tests__/**/*.[t]s?(x)', '**/?(*.)+(spec|test).[t]s?(x)'],
     testRegex,
-   /*globals: {
+    /*globals: {
         'ts-jest': {
             compiler: 'typescript',
             tsconfig: 'tsconfig-jest.json',
@@ -267,7 +266,7 @@ module.exports = {
             },
         },
     },*/
-   
+    resolver: "ts-jest-resolver",
     moduleNameMapper: {
         '^@dist/(.*)$': '<rootDir>/src/lib/distributions/$1',
         '^@common/(.*)$': [

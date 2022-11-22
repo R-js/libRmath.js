@@ -15,8 +15,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-export { gammafn as gamma } from './gamma_fn';
-export { digamma, pentagamma, psigamma, tetragamma, trigamma } from './polygamma';
-export { lgammafn_sign, lgammafn_sign as lgamma  } from './lgammafn_sign';
+export { gammafn as gamma } from './gamma_fn.js';
+export { digamma, pentagamma, psigamma, tetragamma, trigamma } from './polygamma.js';
+export { lgammafn_sign, lgammafn_sign as lgamma  } from './lgammafn_sign.js';
  
 

@@ -53,8 +53,6 @@ describe('psignrank (wilcox sign rank)', function () {
             const start = Date.now();
             const actual = x.map((_x, i) => (Math.abs(psignrank(_x, 40) - y[i])));
             console.log(`(wasm acc) duration=${humanize.humanize(Date.now() - start)}`);
-            // debug
-            // console.log("max(wasm)",Math.max(...actual));
             actual.forEach((fy) => {
                 expect(fy).toBeLessThan(5e-16)
             });

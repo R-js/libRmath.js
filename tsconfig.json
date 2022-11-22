@@ -1,7 +1,8 @@
 {
   "include": [
     "src/lib/**/*.ts",
-    "src/packages/**/*.ts"
+    "src/packages/**/*.ts",
+    "src/index.ts"
   ],
   "exclude": [
     "test",

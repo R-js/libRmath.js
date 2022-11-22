@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import { debug  } from 'debug';
 import {
     ML_ERR_return_NAN
-} from '@common/logger';
+} from '@common/logger.js';
 
 import {
     DBL_MANT_DIG,
@@ -28,7 +28,7 @@ import {
     M_LN2,
     M_LN_SQRT_2PI,
     R_D__0
-} from '@lib/r-func';
+} from '@lib/r-func.js';
 
 const printer = debug('dnorm');
 

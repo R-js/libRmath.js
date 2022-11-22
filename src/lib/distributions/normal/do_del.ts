@@ -1,4 +1,4 @@
-import { NumberW } from '@common/toms708';
+import { NumberW } from '@common/toms708/index.js';
 const SIXTEN = 16; /* Cutoff allowing exact "*" and "/" */
       
 export function do_del(

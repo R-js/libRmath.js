@@ -18,9 +18,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import { debug } from 'debug';
 
-import { ML_ERR_return_NAN } from '@common/logger';
-import type { IRNGNormal } from '@rng/normal/normal-rng';
-import { globalNorm } from '@rng/global-rng';
+import { ML_ERR_return_NAN } from '@common/logger.js';
+import type { IRNGNormal } from '@rng/normal/normal-rng.js';
+import { globalNorm } from '@rng/global-rng.js';
 
 const printer = debug('rnorm');
 
