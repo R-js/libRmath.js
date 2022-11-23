@@ -23,7 +23,7 @@ import { R_D__0, R_D_exp, R_D_val, log, log1p } from '@lib/r-func.js';
 
 import { dbinom_raw } from '@dist/binomial/dbinom.js';
 
-import { lbeta } from '@special/beta/index';
+import { lbeta } from '@special/beta/index.js';
 
 const printer = debug('dbeta');
 

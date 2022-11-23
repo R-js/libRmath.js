@@ -25,7 +25,7 @@ import { fsign } from './fsign.js';
 
 import { exp_rand } from '@dist/exp/sexp.js';
 import type { IRNGNormal } from '@rng/normal/normal-rng.js';
-import { globalNorm } from '@rng/global-rng';
+import { globalNorm } from '@rng/global-rng.js';
 
 const a0 = -0.5;
 const a1 = 0.3333333;

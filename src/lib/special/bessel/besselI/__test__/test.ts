@@ -1,5 +1,5 @@
 /* This is a conversion from LIB-R-MATH to Typescript/Javascript
-Copyright (C) 2018  Jacob K.F. Bogers  info@mail.jacob-bogers.com
+Copyright (C) 2022  Jacob K.F. Bogers  info@mail.jacob-bogers.com
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -15,16 +15,33 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-// Bessel function of the first kind
-//export * from './besselI/index.js';
+// node
+//import { resolve } from 'path';
 
-// Bessel function of the second kind
-//export *  from './besselY/index.js';
+//helper
+//import { loadData } from '@common/load';
+import { cl, select } from '@common/debug-select'
 
-// Modified Bessel Function of the first kind
-import BesselJ from './besselJ/index.js';
+const regexpAll = /^.*$/
+const msgBesselI = select('besselI')(regexpAll);
+const msgBesselIInternal = select('I_bessel')(regexpAll);
 
-export  { BesselJ };
+//app
+msgBesselI
+msgBesselIInternal
 
-// Modified Bessel Function of the second kind
-//export * from './besselK/index.js';
+import besselI from '..';
+
+describe('bessel function of first kind (besselJ)', function () {
+    beforeEach(() => {
+        cl.clear('BesselJ');
+        cl.clear('J_bessel');
+    });
+    describe('invalid input and edge cases', () => {
+
+    });
+    describe('fidelity', () => {
+
+        
+    });
+});

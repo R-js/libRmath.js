@@ -23,12 +23,12 @@ import {
     R_DT_0,
     R_DT_1,
     R_DT_val,
-} from '@lib/r-func';
+} from '@lib/r-func.js';
 
-import { R_Log1_Exp } from '@dist/exp/expm1';
-import { lgammafn_sign as lgammafn } from '@special/gamma/lgammafn_sign';
-import { logspace_add } from '@dist/gamma/logspace-add';
-import { pchisq } from './pchisq';
+import { R_Log1_Exp } from '@dist/exp/expm1.js';
+import { lgammafn_sign as lgammafn } from '@special/gamma/lgammafn_sign.js';
+import { logspace_add } from '@dist/gamma/logspace-add.js';
+import { pchisq } from './pchisq.js';
 
 export const DBL_MAX_EXP = Math.log2(Number.MAX_VALUE);
 export const DBL_MIN_EXP = Math.log2(Number.MIN_VALUE);

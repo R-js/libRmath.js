@@ -17,10 +17,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import { debug } from 'debug';
 
-import { ME, ML_ERR_return_NAN, ML_ERROR } from '@common/logger';
-import { gamma } from '@special/gamma';
-import lbeta from './lbeta';
-import { exp } from '@lib/r-func';
+import { ME, ML_ERR_return_NAN, ML_ERROR } from '@common/logger.js';
+import { gamma } from '@special/gamma/index.js';
+import lbeta from './lbeta.js';
+import { exp } from '@lib/r-func.js';
 
 // not used const xmin = -170.5674972726612;
 const xmax = 171.61447887182298;
