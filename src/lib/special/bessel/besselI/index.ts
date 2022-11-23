@@ -16,13 +16,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { debug } from 'debug';
-import { ME, ML_ERROR } from '@common/logger';
-import { sinpi } from '@trig/sinpi';
-import BesselK from '../besselK';
-import { I_bessel } from './IBessel';
+import { ME, ML_ERROR } from '@common/logger.js';
+import { sinpi } from '@trig/sinpi.js';
+import BesselK from '../besselK/index.js';
+import { I_bessel } from './IBessel.js';
 
 
-import { exp, trunc, floor, PI } from '@lib/r-func';
+import { exp, trunc, floor, PI } from '@lib/r-func.js';
 
 const printer = debug('besselI');
 

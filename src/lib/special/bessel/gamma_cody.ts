@@ -15,9 +15,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { sinpi } from '@trig/sinpi';
+import { sinpi } from '@trig/sinpi.js';
 
-import { PI, log, exp, trunc, DBL_EPSILON, DBL_MIN } from '@lib/r-func';
+import { PI, log, exp, trunc, DBL_EPSILON, DBL_MIN } from '@lib/r-func.js';
 
 export function Rf_gamma_cody(x: number): number {
     /*

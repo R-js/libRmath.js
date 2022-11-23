@@ -15,12 +15,12 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { fixup } from '../fixup';
-import { IRNG } from '../irng';
-import { IRNGTypeEnum } from '../irng-type';
-import { seed } from '../timeseed';
-import { seedCheck } from '../seedcheck';
-import { INT_MAX } from '@lib/r-func';
+import { fixup } from '../fixup.js';
+import { IRNG } from '../irng.js';
+import { IRNGTypeEnum } from '../irng-type.js';
+import { seed } from '../timeseed.js';
+import { seedCheck } from '../seedcheck.js';
+import { INT_MAX } from '@lib/r-func.js';
 
 const N = 624;
 const M = 397;

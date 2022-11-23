@@ -1,6 +1,6 @@
-import { floor, ceil, log2, trunc } from '@lib/r-func';
-import type { IRNG } from '.';
-import { IRNGSampleKindTypeEnum } from '.';
+import { floor, ceil, log2, trunc } from '@lib/r-func.js';
+import type { IRNG } from './index.js';
+import { IRNGSampleKindTypeEnum } from './index.js';
 
 
 /* Our PRNGs have at most 32 bit of precision. All generators except

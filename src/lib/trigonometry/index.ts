@@ -1,3 +1,3 @@
-export { cospi } from './cospi'
-export { sinpi } from './sinpi';
-export { tanpi, atanpi } from './tanpi';
+export { cospi } from './cospi.js'
+export { sinpi } from './sinpi.js';
+export { tanpi, atanpi } from './tanpi.js';

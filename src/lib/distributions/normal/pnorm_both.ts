@@ -7,7 +7,7 @@ import {
     M_SQRT_32,
     R_D__0,
     R_D__1
-  } from '@lib/r-func';
+  } from '@lib/r-func.js';
 
 const {
     EPSILON: DBL_EPSILON,

@@ -17,21 +17,21 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 // distributions
-export * from '@dist/beta';
-export * from '@dist/binomial';
-export * from '@dist/binomial-negative';
-export * from '@dist/cauchy';
-export * from '@dist/chi-2';
-export * from '@dist/exp';
-export * from '@dist/f-distro';
-export * from '@dist/gamma';
-export * from '@dist/geometric';
-export * from '@dist/hypergeometric';
-export * from '@dist/logis';
-export * from '@dist/lognormal';
-export * from '@dist/multinom';
-export * from '@dist/normal';
-export * from '@dist/poisson';
+export * from '@dist/beta/index.js';
+export * from '@dist/binomial/index.js';
+export * from '@dist/binomial-negative/index.js';
+export * from '@dist/cauchy/index.js';
+export * from '@dist/chi-2/index.js';
+export * from '@dist/exp/index.js';
+export * from '@dist/f-distro/index.js';
+export * from '@dist/gamma/index.js';
+export * from '@dist/geometric/index.js';
+export * from '@dist/hypergeometric/index.js';
+export * from '@dist/logis/index.js';
+export * from '@dist/lognormal/index.js';
+export * from '@dist/multinom/index.js';
+export * from '@dist/normal/index.js';
+export * from '@dist/poisson/index.js';
 export { 
     useWasmBackend as useSignRankBackend, 
     clearBackend as clearSignRankBackend,
@@ -39,20 +39,20 @@ export {
     psignrank,
     qsignrank,
     rsignrank
-} from '@dist/signrank';
-export * from '@dist/student-t';
-export * from '@dist/tukey';
-export * from '@dist/uniform';
-export * from '@dist/weibull';
-export * from '@dist/wilcoxon';
+} from '@dist/signrank/index.js';
+export * from '@dist/student-t/index.js';
+export * from '@dist/tukey/index.js';
+export * from '@dist/uniform/index.js';
+export * from '@dist/weibull/index.js';
+export * from '@dist/wilcoxon/index.js';
 
 //rng's
-export * from '@rng/index';
+export * from '@rng/index.js';
 //special
-export * from '@special/bessel';
-export * from '@special/gamma';
-export * from '@special/beta';
-export * from '@special/choose';
+export * from '@special/bessel/index.js';
+export * from '@special/gamma/index.js';
+export * from '@special/beta/index.js';
+export * from '@special/choose/index.js';
 
 
 export { chebyshev_eval, chebyshev_init } from './lib/chebyshev/index.js';

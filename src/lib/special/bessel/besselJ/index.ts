@@ -18,14 +18,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import { debug } from 'debug';
 
 //tooling
-import { ME, ML_ERROR } from '@common/logger';
+import { ME, ML_ERROR } from '@common/logger.js';
 
-import { cospi } from '@trig/cospi';
-import { sinpi } from '@trig/sinpi';
-import BesselY from '../besselY';
-import { J_bessel } from './Jbessel';
+import { cospi } from '@trig/cospi.js';
+import { sinpi } from '@trig/sinpi.js';
+import BesselY from '../besselY/index.js';
+import { J_bessel } from './Jbessel.js';
 
-import { floor } from '@lib/r-func'
+import { floor } from '@lib/r-func.js'
 
 const printer = debug('BesselJ');
 

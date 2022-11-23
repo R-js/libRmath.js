@@ -16,13 +16,13 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { INT_MAX } from '@lib/r-func';
-import { fixup } from '@rng/fixup';
-import { IRNG } from '@rng/irng';
-import { IRNGTypeEnum } from '@rng/irng-type';
-import { seed } from '@rng/timeseed';
-import { seedCheck } from '@rng/seedcheck';
-import { frac } from '@lib/r-func';
+import { INT_MAX } from '@lib/r-func.js';
+import { fixup } from '@rng/fixup.js';
+import { IRNG } from '@rng/irng.js';
+import { IRNGTypeEnum } from '@rng/irng-type.js';
+import { seed } from '@rng/timeseed.js';
+import { seedCheck } from '@rng/seedcheck.js';
+import { frac } from '@lib/r-func.js';
 
 export const SEED_LEN = 3;
 
