@@ -1,4 +1,5 @@
-import { debug } from 'debug'
+import { debug } from 'debug';
+import type { Debugger } from 'debug';
 
 
 const debug_R_Q_P01_boundaries = debug('R_Q_P01_boundaries');
@@ -36,7 +37,7 @@ export function ML_ERROR(x: ME, s: unknown, printer: (...args: unknown[]) => voi
     }
 }
 
-export function ML_ERR_return_NAN(printer: debug.IDebugger): number {
+export function ML_ERR_return_NAN(printer: Debugger): number {
     ML_ERROR(ME.ME_DOMAIN, '', printer);
     return NaN;
 }
