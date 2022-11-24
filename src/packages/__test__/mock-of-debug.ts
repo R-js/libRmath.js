@@ -1,11 +1,11 @@
-import type debug from 'debug';
+//import type debug from 'debug';
 
 jest.setTimeout(100000);
 
 jest.mock('debug', () => {
     // Require the original module to not be mocked...
     const originalModule = jest.requireActual('debug');
-    const createDebugger = originalModule.debug as typeof debug;
+    const createDebugger = originalModule.debug;
     const map = new Map<string, string[][]>();
 
     return {

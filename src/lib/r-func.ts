@@ -425,8 +425,9 @@ export const R_D_exp = (log_p: boolean, x: number): number => {
     return log_p ? x : exp(x);
 };
 
+import type { Debugger } from 'debug';
 //ok
-export function R_D_nonint_check(log: boolean, x: number, printer: debug.IDebugger): number | undefined {
+export function R_D_nonint_check(log: boolean, x: number, printer: Debugger): number | undefined {
     if (R_nonint(x)) {
         printer('non-integer x = %d', x);
         return R_D__0(log);

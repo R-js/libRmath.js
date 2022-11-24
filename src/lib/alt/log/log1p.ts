@@ -16,7 +16,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 /* want to compile log1p as Rlog1p if HAVE_LOG1P && !HAVE_WORKING_LOG1P */
-import { debug } from 'debug';
+import  { debug } from 'debug';
 
 import { chebyshev_eval } from '../../chebyshev/index.js';
 import { ME, ML_ERR_return_NAN, ML_ERROR } from '@common/logger.js';

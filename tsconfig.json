@@ -38,8 +38,7 @@
         "name": "typescript-eslint-language-service"
       },
       {
-        "transform": "typescript-transform-paths",
-        "outputMode": "esm"
+        "transform": "typescript-transform-paths"
       },
       {
         "transform": "typescript-transform-paths",
@@ -83,11 +82,13 @@
       ],
       "@dist/*": [
         "lib/distributions/*"
-      ]
+      ],
+      "*" : ["src/typedefs/*"]
     },
     "preserveSymlinks": true,
     "typeRoots": [
-      "node_modules/@types"
+      "node_modules/@types",
+      "src/typedefs"
     ],
     "inlineSourceMap": false,
     "inlineSources": false,
