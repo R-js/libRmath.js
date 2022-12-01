@@ -2,7 +2,7 @@ import { loadData } from '@common/load';
 import { resolve } from 'path';
 
 import { cl, select } from '@common/debug-select';
-import { qwilcox } from '../index';
+import { qwilcox } from '..';
 
 const qwilcoxDomainWarns = select('qwilcox')("argument out of domain in '%s'");
 const qwilcoxCheck = select('R_Q_P01_check')("argument out of domain in '%s'");

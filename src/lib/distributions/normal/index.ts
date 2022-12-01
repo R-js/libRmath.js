@@ -15,13 +15,13 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 'use strict';
-export { dnorm4 as dnorm } from './dnorm.js';
-export { pnorm5 as pnorm } from './pnorm.js';
-export { qnorm } from './qnorm.js';
-import { rnormOne } from './rnorm.js';
-import { repeatedCall64 } from '@lib/r-func.js';
+export { dnorm4 as dnorm } from './dnorm';
+export { pnorm5 as pnorm } from './pnorm';
+export { qnorm } from './qnorm';
+import { rnormOne } from './rnorm';
+import { repeatedCall64 } from '@lib/r-func';
 
-import type { IRNGNormal } from '@rng/normal/normal-rng.js';
+import type { IRNGNormal } from '@rng/normal/normal-rng';
 
 export function rnorm(n: number, mu?: number, sigma?: number, rng?:IRNGNormal): Float64Array {
     return repeatedCall64(n, rnormOne, mu, sigma, rng);

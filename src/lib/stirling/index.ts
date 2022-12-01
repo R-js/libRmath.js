@@ -16,8 +16,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { M_LN_SQRT_2PI } from '@lib/r-func.js';
-import { lgammafn_sign } from '@special/gamma/lgammafn_sign.js';
+import { M_LN_SQRT_2PI } from '@lib/r-func';
+import { lgammafn_sign } from '@special/gamma/lgammafn_sign';
 
 const { trunc, log } = Math;
 

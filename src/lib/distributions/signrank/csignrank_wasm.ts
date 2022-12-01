@@ -1,5 +1,5 @@
 
-import { ceil } from '@lib/r-func.js';
+import { ceil } from '@lib/r-func';
 
 const memory: WebAssembly.Memory = new WebAssembly.Memory({
     initial: 1 //  one 64k block

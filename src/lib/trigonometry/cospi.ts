@@ -18,9 +18,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import { debug } from 'debug';
 
-import { fmod } from '@lib/r-func.js';
+import { fmod } from '@lib/r-func';
 
-import { ME, ML_ERROR } from '@common/logger.js';
+import { ME, ML_ERROR } from '@common/logger';
 
 /* HAVE_COSPI etc will not be defined in standalone-use: the
    intention is to make the versions here available in that case.

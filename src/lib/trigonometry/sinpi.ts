@@ -16,9 +16,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { debug } from 'debug';
 
-import { fmod } from '@lib/r-func.js';
+import { fmod } from '@lib/r-func';
 
-import { ME, ML_ERROR } from '@common/logger.js';
+import { ME, ML_ERROR } from '@common/logger';
 
 // sin(pi * x)  -- exact when x = k/2  for all integer k
 const printer_sinpi = debug('sinpi');

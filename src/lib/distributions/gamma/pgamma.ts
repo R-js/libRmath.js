@@ -18,7 +18,7 @@ import { debug } from 'debug';
 
 import {
     ML_ERR_return_NAN
-} from '@common/logger.js';
+} from '@common/logger';
 
 import {
     R_D__0,
@@ -30,13 +30,13 @@ import {
     DBL_MAX_EXP,
     M_LN2,
     DBL_MIN
-} from '@lib/r-func.js';
+} from '@lib/r-func';
 
-import { R_Log1_Exp } from '@dist/exp/expm1.js';
-import { dnorm4 as dnorm } from '@dist/normal/dnorm.js';
-import { pnorm5 as pnorm } from '@dist/normal/pnorm.js';
-import { dpois_raw } from '@dist/poisson/dpois.js';
-import { lgammafn_sign as lgammafn } from '@special/gamma/lgammafn_sign.js';
+import { R_Log1_Exp } from '@dist/exp/expm1';
+import { dnorm4 as dnorm } from '@dist/normal/dnorm';
+import { pnorm5 as pnorm } from '@dist/normal/pnorm';
+import { dpois_raw } from '@dist/poisson/dpois';
+import { lgammafn_sign as lgammafn } from '@special/gamma/lgammafn_sign';
 
 
 const scalefactor = 4294967296.0 ** 8;

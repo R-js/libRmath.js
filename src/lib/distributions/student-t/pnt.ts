@@ -17,12 +17,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { debug } from 'debug';
-import { pbeta } from '@dist/beta/pbeta.js';
+import { pbeta } from '@dist/beta/pbeta';
 import {
     ME,
     ML_ERR_return_NAN,
     ML_ERROR
-} from '@common/logger.js';
+} from '@common/logger';
 import {
     M_LN_SQRT_PI,
     M_SQRT_2dPI,
@@ -39,10 +39,10 @@ import {
     abs,
     min,
     M_LN2
-} from '@lib/r-func.js';
-import { lgamma } from '@special/gamma/index.js';
-import { pnorm5 as pnorm } from '../normal/pnorm.js';
-import { pt } from './pt.js';
+} from '@lib/r-func';
+import { lgamma } from '@special/gamma';
+import { pnorm5 as pnorm } from '../normal/pnorm';
+import { pt } from './pt';
 
 const printer_pnt = debug('pnt');
 

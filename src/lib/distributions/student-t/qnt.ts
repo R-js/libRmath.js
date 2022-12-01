@@ -17,12 +17,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { debug } from 'debug';
-import { ML_ERR_return_NAN, R_Q_P01_boundaries } from '@common/logger.js';
-import { R_DT_qIv } from '@dist/exp/expm1.js';
-import { DBL_EPSILON, min, max, abs, DBL_MAX } from '@lib/r-func.js';
-import { qnorm } from '@dist/normal/qnorm.js';
-import { pnt } from './pnt.js';
-import { qt } from './qt.js';
+import { ML_ERR_return_NAN, R_Q_P01_boundaries } from '@common/logger';
+import { R_DT_qIv } from '@dist/exp/expm1';
+import { DBL_EPSILON, min, max, abs, DBL_MAX } from '@lib/r-func';
+import { qnorm } from '@dist/normal/qnorm';
+import { pnt } from './pnt';
+import { qt } from './qt';
 
 const printer = debug('qnt');
 

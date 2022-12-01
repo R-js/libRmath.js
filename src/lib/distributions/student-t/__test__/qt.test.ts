@@ -4,7 +4,7 @@ import { resolve } from 'path';
 import { cl, select } from '@common/debug-select';
 import { DBL_EPSILON, DBL_MIN } from '@lib/r-func';
 
-import { qt } from '../index';
+import { qt } from '..';
 
 const qtDomainWarns = select('qt')("argument out of domain in '%s'");
 const qtboundaryWarns = select('R_Q_P01_boundaries')("argument out of domain in '%s'");

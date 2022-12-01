@@ -16,11 +16,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { debug } from 'debug';
 //
-import { rbinomOne } from '@dist/binomial/rbinom.js';
-import { ML_ERR_return_NAN } from '@common/logger.js';
-import { INT_MAX, M_LN_SQRT_2PI } from '@lib/r-func.js';
-import type { IRNG } from '@rng/irng.js';
-import { qhyper } from './qhyper.js';
+import { rbinomOne } from '@dist/binomial/rbinom';
+import { ML_ERR_return_NAN } from '@common/logger';
+import { INT_MAX, M_LN_SQRT_2PI } from '@lib/r-func';
+import type { IRNG } from '@rng/irng';
+import { qhyper } from './qhyper';
 //
 const printer_afc = debug('afc');
 

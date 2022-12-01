@@ -16,15 +16,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 // Bessel function of the first kind
-//export * from './besselI/index.js';
+//export * from './besselI';
 
 // Bessel function of the second kind
-//export *  from './besselY/index.js';
+//export *  from './besselY';
 
 // Modified Bessel Function of the first kind
-import BesselJ from './besselJ/index.js';
+import BesselJ from './besselJ';
 
 export  { BesselJ };
 
 // Modified Bessel Function of the second kind
-//export * from './besselK/index.js';
+//export * from './besselK';

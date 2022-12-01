@@ -15,12 +15,12 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-export { dbinom } from './dbinom.js';
-export { pbinom } from './pbinom.js';
-export { qbinom } from './qbinom.js';
-import { rbinomOne } from './rbinom.js';
-import { globalUni } from '@rng/global-rng.js';
-import { repeatedCall64 } from '@lib/r-func.js';
+export { dbinom } from './dbinom';
+export { pbinom } from './pbinom';
+export { qbinom } from './qbinom';
+import { rbinomOne } from './rbinom';
+import { globalUni } from '@rng/global-rng';
+import { repeatedCall64 } from '@lib/r-func';
 
 export function rbinom(
   n: number,

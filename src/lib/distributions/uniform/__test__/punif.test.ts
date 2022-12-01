@@ -1,6 +1,6 @@
 import { cl, select } from '@common/debug-select';
 
-import { punif } from '../index';
+import { punif } from '..';
 
 
 const punifDomainWarns = select('punif')("argument out of domain in '%s'");

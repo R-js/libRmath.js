@@ -2,7 +2,7 @@ import { cl, select } from '@common/debug-select';
 
 import { trunc } from '@lib/r-func';
 
-import { pwilcox } from '../index';
+import { pwilcox } from '..';
 
 const pwilcoxDomainWarns = select('pwilcox')("argument out of domain in '%s'");
 

@@ -15,10 +15,10 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { IRNG, MessageType } from '../../irng.js';
-import { MersenneTwister } from '../../mersenne-twister/index.js';
-import { IRNGNormal } from '../normal-rng.js';
-import { IRNGNormalTypeEnum } from '../in01-type.js';
+import { IRNG, MessageType } from '../../irng';
+import { MersenneTwister } from '../../mersenne-twister';
+import { IRNGNormal } from '../normal-rng';
+import { IRNGNormalTypeEnum } from '../in01-type';
 
 const a = [
     0.0,

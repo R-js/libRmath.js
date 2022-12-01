@@ -2,7 +2,7 @@ import { loadData } from '@common/load';
 import { resolve } from 'path';
 
 import { cl, select } from '@common/debug-select';
-import { rwilcoxOne, rwilcox } from '../index';
+import { rwilcoxOne, rwilcox } from '..';
 
 import { globalUni, globalSampleKind } from '@rng/global-rng';
 

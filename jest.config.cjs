@@ -257,16 +257,16 @@ module.exports = {
     testPathIgnorePatterns: ['/es6/', '/commonjs/'],
     //testMatch: ['**/__tests__/**/*.[t]s?(x)', '**/?(*.)+(spec|test).[t]s?(x)'],
     testRegex,
-    /*globals: {
+    globals: {
         'ts-jest': {
             compiler: 'typescript',
-            tsconfig: 'tsconfig-jest.json',
+            tsconfig: 'tsconfig.test.json',
             diagnostics: {
                 ignoreCodes: [151001],
             },
         },
-    },*/
-    resolver: "ts-jest-resolver",
+    },
+    //resolver: "ts-jest-resolver",
     moduleNameMapper: {
         '^@dist/(.*)$': '<rootDir>/src/lib/distributions/$1',
         '^@common/(.*)$': [

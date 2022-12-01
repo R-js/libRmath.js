@@ -1,6 +1,6 @@
 import { cl, select } from '@common/debug-select';
 
-import { qunif } from '../index';
+import { qunif } from '..';
 
 
 const qunifDomainWarns = select('qunif')("argument out of domain in '%s'");

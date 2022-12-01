@@ -16,7 +16,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { debug } from 'debug';
-import { Rf_gamma_cody } from '@special/bessel/gamma_cody.js';
+import { Rf_gamma_cody } from '@special/bessel/gamma_cody';
 import {
     enmten_BESS,
     ensig_BESS,
@@ -25,8 +25,8 @@ import {
     nsig_BESS,
     rtnsig_BESS,
     xlrg_BESS_IJ,
-} from '../bessel-constants.js';
-import type { IBesselRC } from '../IBesselRC.js';
+} from '../bessel-constants';
+import type { IBesselRC } from '../IBesselRC';
 
 const { sqrt, pow, min, max: fmax, exp, trunc } = Math;
 const { POSITIVE_INFINITY: ML_POSINF } = Number;

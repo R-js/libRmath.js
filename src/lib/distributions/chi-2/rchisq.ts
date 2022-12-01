@@ -16,9 +16,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { debug } from 'debug';
-import { ML_ERR_return_NAN } from '@common/logger.js';
-import { rgamma } from '@dist/gamma/rgamma.js';
-import type { IRNGNormal } from '@rng/normal/normal-rng.js';
+import { ML_ERR_return_NAN } from '@common/logger';
+import { rgamma } from '@dist/gamma/rgamma';
+import type { IRNGNormal } from '@rng/normal/normal-rng';
 
 const printer = debug('rchisq');
 

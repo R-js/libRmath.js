@@ -3,7 +3,7 @@ import { resolve } from 'path';
 
 import { cl, select } from '@common/debug-select';
 
-import { runif } from '../index';
+import { runif } from '..';
 
 
 import { IRNGTypeEnum } from '@rng/irng-type';

@@ -6,9 +6,8 @@
   ],
   "exclude": [
     "test",
-    "node_modules/",
-    "es6",
-    "commonjs",
+    "node_modules",
+    "dist",
     "coverage",
     ".vscode",
     ".jest-cache"

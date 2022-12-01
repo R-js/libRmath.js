@@ -15,8 +15,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { M_1_SQRT_2PI, pow, exp } from '@lib/r-func.js';
-import { pnorm5 as pnorm } from '@dist/normal/pnorm.js';
+import { M_1_SQRT_2PI, pow, exp } from '@lib/r-func';
+import { pnorm5 as pnorm } from '@dist/normal/pnorm';
 
 const bb = 8;
 const C2 = -50;

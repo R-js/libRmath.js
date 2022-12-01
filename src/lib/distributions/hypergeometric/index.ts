@@ -14,15 +14,15 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-export { dhyper } from './dhyper.js';
-export { phyper } from './phyper.js';
-export { qhyper } from './qhyper.js';
-import { registerBackend as registerQHyperBackend, unRegisterBackend as unRegisterQHyperBackend } from './qhyper.js';
-import { rhyperOne } from './rhyper.js';
-import { globalUni } from '@rng/global-rng.js';
-import { repeatedCall64 } from '@lib/r-func.js';
-import { initWasm as initWasmQhyper } from './qhyper_wasm.js';
-import type { QHyperFunctionMap } from './qhyper_wasm.js'
+export { dhyper } from './dhyper';
+export { phyper } from './phyper';
+export { qhyper } from './qhyper';
+import { registerBackend as registerQHyperBackend, unRegisterBackend as unRegisterQHyperBackend } from './qhyper';
+import { rhyperOne } from './rhyper';
+import { globalUni } from '@rng/global-rng';
+import { repeatedCall64 } from '@lib/r-func';
+import { initWasm as initWasmQhyper } from './qhyper_wasm';
+import type { QHyperFunctionMap } from './qhyper_wasm'
 
 //rhyper(nn, m, n, k)
 export function rhyper(N: number, nn1in: number, nn2in: number, kkin: number, rng = globalUni()): Float64Array {

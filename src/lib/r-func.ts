@@ -16,9 +16,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-const { isInteger, parseFloat, parseInt, MIN_VALUE, MAX_VALUE, isNaN, isFinite, EPSILON, MAX_SAFE_INTEGER } = Number;
+const { isInteger, parseFloat, parseInt, MIN_VALUE, MAX_VALUE, isNaN, isFinite, EPSILON, MAX_SAFE_INTEGER, NEGATIVE_INFINITY, POSITIVE_INFINITY } = Number;
 
-export { isInteger, parseFloat, parseInt, MIN_VALUE, MAX_VALUE, isNaN, isFinite, EPSILON, MAX_SAFE_INTEGER };
+export { isInteger, parseFloat, parseInt, MIN_VALUE, MAX_VALUE, isNaN, isFinite, EPSILON, MAX_SAFE_INTEGER, NEGATIVE_INFINITY, POSITIVE_INFINITY };
 
 const {
     abs,
@@ -123,7 +123,6 @@ export enum LogLevel {
     INFO,
     DEBUG,
 }
-
 
 /*export abstract class Sum implements ISummary {
     abstract N: number;

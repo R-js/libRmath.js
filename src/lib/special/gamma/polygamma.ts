@@ -153,7 +153,7 @@ import {
     cos,
     PI,
     round
-} from '@lib/r-func.js';
+} from '@lib/r-func';
 
 const printer = debug('dpsifn');
 

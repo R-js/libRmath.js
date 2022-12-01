@@ -15,11 +15,11 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { ML_ERR_return_NAN, } from '@common/logger.js';
-import { R_D_exp, R_DT_0  } from '@lib/r-func.js';
+import { ML_ERR_return_NAN, } from '@common/logger';
+import { R_D_exp, R_DT_0  } from '@lib/r-func';
 
 import { debug } from 'debug';
-import { R_Log1_Exp } from './expm1.js';
+import { R_Log1_Exp } from './expm1';
 
 const printer = debug('pexp');
 

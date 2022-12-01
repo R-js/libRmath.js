@@ -15,9 +15,9 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { imin2 } from '@lib/r-func.js';
+import { imin2 } from '@lib/r-func';
 
-import { memory } from './csignrank_wasm.js';
+import { memory } from './csignrank_wasm';
 
 // create dataView of the memory
 

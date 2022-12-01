@@ -14,13 +14,10 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-
 import { debug } from 'debug';
+import { ML_ERR_return_NAN } from '@common/logger';
+import { abs } from '@lib/r-func';
 
-import { ML_ERR_return_NAN } from '@common/logger.js';
-
-
-const { abs: fabs } = Math;
 const printer = debug('chebyshev_eval');
 
 export function chebyshev_init(dos: number[], nos: number, eta: number): number {
@@ -34,7 +31,7 @@ export function chebyshev_init(dos: number[], nos: number, eta: number): number 
 
     for (let ii = 1; ii <= nos; ii++) {
         retCode = nos - ii;
-        err += fabs(dos[retCode]);
+        err += abs(dos[retCode]);
         if (err > eta) {
             return retCode;
         }

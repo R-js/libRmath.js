@@ -16,13 +16,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { debug } from 'debug';
 
-import { ML_ERR_return_NAN } from '@common/logger.js';
+import { ML_ERR_return_NAN } from '@common/logger';
 
-import { M_LN_SQRT_2PI } from '@lib/r-func.js';
+import { M_LN_SQRT_2PI } from '@lib/r-func';
 
-import { gamma } from '@special/gamma/index.js';
-import { lgammafn_sign } from '@special/gamma/lgammafn_sign.js';
-import { lgammacor } from '@special/gamma/lgammacor.js';
+import { gamma } from '@special/gamma';
+import { lgammafn_sign } from '@special/gamma/lgammafn_sign';
+import { lgammacor } from '@special/gamma/lgammacor';
 
 const printer = debug('lbeta');
 

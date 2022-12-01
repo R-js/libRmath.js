@@ -1,5 +1,5 @@
 import { cl, select } from '@common/debug-select';
-import { ptukey } from '../index';
+import { ptukey } from '..';
 
 const ptukeyDomainWarns = select('ptukey')("argument out of domain in '%s'");
 

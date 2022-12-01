@@ -15,7 +15,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { debug } from 'debug';
-import { ML_ERR_return_NAN, ML_ERROR, ME } from '@common/logger.js'
+import { ML_ERR_return_NAN, ML_ERROR, ME } from '@common/logger'
 import {
     M_LN_SQRT_2PI,
     R_D__1,
@@ -23,12 +23,12 @@ import {
     R_DT_0,
     R_DT_1,
     R_DT_val,
-} from '@lib/r-func.js';
+} from '@lib/r-func';
 
-import { R_Log1_Exp } from '@dist/exp/expm1.js';
-import { lgammafn_sign as lgammafn } from '@special/gamma/lgammafn_sign.js';
-import { logspace_add } from '@dist/gamma/logspace-add.js';
-import { pchisq } from './pchisq.js';
+import { R_Log1_Exp } from '@dist/exp/expm1';
+import { lgammafn_sign as lgammafn } from '@special/gamma/lgammafn_sign';
+import { logspace_add } from '@dist/gamma/logspace-add';
+import { pchisq } from './pchisq';
 
 export const DBL_MAX_EXP = Math.log2(Number.MAX_VALUE);
 export const DBL_MIN_EXP = Math.log2(Number.MIN_VALUE);

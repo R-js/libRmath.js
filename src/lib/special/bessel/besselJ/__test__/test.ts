@@ -27,8 +27,7 @@ const msgBesselJ = select('BesselJ')(regexpAll);
 const msgBesselJInternal = select('J_bessel')(regexpAll);
 
 //app
-msgBesselJ
-msgBesselJInternal
+
 import besselJ from '..';
 
 describe('bessel function of first kind (besselJ)', function () {

@@ -1,13 +1,13 @@
 
-import { NumberW } from '@common/toms708/index.js';
-import { do_del } from './do_del.js';
+import { NumberW } from '@common/toms708';
+import { do_del } from './do_del';
 
 import {
     M_1_SQRT_2PI,
     M_SQRT_32,
     R_D__0,
     R_D__1
-  } from '@lib/r-func.js';
+  } from '@lib/r-func';
 
 const {
     EPSILON: DBL_EPSILON,

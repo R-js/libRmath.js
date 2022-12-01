@@ -15,7 +15,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { debug } from 'debug';
-import { ML_ERR_return_NAN } from '@common/logger.js';
+import { ML_ERR_return_NAN } from '@common/logger';
 const printer_dlogis = debug('dlogis');
 
 export function dlogis(x: number, location = 0, scale = 1, give_log = false): number {
