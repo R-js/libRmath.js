@@ -1,6 +1,6 @@
 import { cl, select } from '@common/debug-select';
 
-import { dunif } from '../index';
+import { dunif } from '..';
 
 
 const dunifDomainWarns = select('dunif')("argument out of domain in '%s'");

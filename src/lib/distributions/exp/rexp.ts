@@ -15,11 +15,11 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { ML_ERR_return_NAN } from '@common/logger.js';
+import { ML_ERR_return_NAN } from '@common/logger';
 
 import { debug } from 'debug';
-import { IRNG } from '@rng/irng.js';
-import { exp_rand } from './sexp.js';
+import { IRNG } from '@rng/irng';
+import { exp_rand } from './sexp';
 
 const printer = debug('rexp');
 

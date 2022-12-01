@@ -1,9 +1,19 @@
 import { debug } from 'debug';
 import type { Debugger } from 'debug';
 
+import type { Printer } from '@mangos/debug';
+import { getLineInfo } from '@mangos/debug';
 
 const debug_R_Q_P01_boundaries = debug('R_Q_P01_boundaries');
 const debug_R_Q_P01_check = debug('R_Q_P01_check');
+
+
+export function createLineInfo(n: number){
+    return function () {
+     const info = getLineInfo(n);
+     return info.fnName + ':' + info.line + ':' + info.column;
+    }
+ }
 
 export enum ME {
     ME_NONE = 0, // no error
@@ -39,6 +49,26 @@ export function ML_ERROR(x: ME, s: unknown, printer: (...args: unknown[]) => voi
 
 export function ML_ERR_return_NAN(printer: Debugger): number {
     ML_ERROR(ME.ME_DOMAIN, '', printer);
+    return NaN;
+}
+
+export function ML_ERROR2(x: ME, s: any, printer: Printer): void {
+    if (printer.enabled === false) {
+        return;
+    }
+    const str = mapErr.get(x);
+    if (typeof s === 'function'){
+        s = s();
+    }
+    if (str) {
+        printer(str, s);
+    }
+}
+
+export function ML_ERR_return_NAN2(printer: Printer, getExtraInfo: () => any): number {
+    if (printer.enabled) {
+      ML_ERROR2(ME.ME_DOMAIN, getExtraInfo(), printer);
+    }
     return NaN;
 }
 

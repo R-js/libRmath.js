@@ -1,6 +1,6 @@
 import { cl, select } from '@common/debug-select';
 
-import { qweibull } from '../index';
+import { qweibull } from '..';
 
 const qweibullDomainWarns = select('qweibull')("argument out of domain in '%s'");
 const qweibullBounderyWarns = select('R_Q_P01_boundaries')("argument out of domain in '%s'");

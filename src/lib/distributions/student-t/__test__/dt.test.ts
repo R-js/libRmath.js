@@ -3,7 +3,7 @@ import { resolve } from 'path';
 
 import { cl, select } from '@common/debug-select';
 
-import { dt } from '../index';
+import { dt } from '..';
 
 const dntLogs = select('dnt');
 const dntDomainWarns = dntLogs("argument out of domain in '%s'");

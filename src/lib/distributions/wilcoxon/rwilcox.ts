@@ -17,11 +17,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { debug } from 'debug';
-import { ML_ERR_return_NAN, ML_ERROR, ME } from '@common/logger.js';
-import { IRNG } from '@rng/irng.js';
-import { round, trunc, floor } from '@lib/r-func.js';
-import { R_unif_index } from '@rng/utils.js';
-import { IRNGSampleKindTypeEnum } from '@rng/sample-kind-type.js'
+import { ML_ERR_return_NAN, ML_ERROR, ME } from '@common/logger';
+import { IRNG } from '@rng/irng';
+import { round, trunc, floor } from '@lib/r-func';
+import { R_unif_index } from '@rng/utils';
+import { IRNGSampleKindTypeEnum } from '@rng/sample-kind-type'
 
 const printer_rwilcox = debug('rwilcox');
 

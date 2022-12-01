@@ -17,13 +17,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { debug } from 'debug';
-import { wprob } from './wprob.js';
+import { wprob } from './wprob';
 
 import {
     ME,
     ML_ERR_return_NAN,
     ML_ERROR,
-} from '@common/logger.js';
+} from '@common/logger';
 
 import {
     R_DT_val, R_DT_0,
@@ -33,9 +33,9 @@ import {
     sqrt,
     exp,
     min
-} from '@lib/r-func.js';
+} from '@lib/r-func';
 
-import { lgammafn_sign } from '@special/gamma/index.js';
+import { lgammafn_sign } from '@special/gamma';
 
 const printer_ptukey = debug('ptukey');
 const nlegq = 16;

@@ -4,7 +4,7 @@ import { resolve } from 'path';
 
 import { cl, select } from '@common/debug-select';
 
-import { pt } from '../index';
+import { pt } from '..';
 
 const pntLogs = select('pnt');
 const pntDomainWarns = pntLogs("argument out of domain in '%s'");

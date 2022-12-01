@@ -16,8 +16,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { WilcoxonCache } from './WilcoxonCache.js';
-import { trunc } from '@lib/r-func.js';
+import { WilcoxonCache } from './WilcoxonCache';
+import { trunc } from '@lib/r-func';
 
 export function cwilcox(
   k: number,

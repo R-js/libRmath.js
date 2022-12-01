@@ -25,11 +25,11 @@ import {
     sqrt,
     exp,
     DBL_EPSILON,
-} from '@lib/r-func.js';
+} from '@lib/r-func';
 
-import { bd0 } from '@lib/deviance/index.js';
-import { dnorm } from '@dist/normal/index.js';
-import { stirlerr } from '@lib/stirling/index.js';
+import { bd0 } from '@lib/deviance';
+import { dnorm } from '@dist/normal';
+import { stirlerr } from '@lib/stirling';
 
 
 export function _dt(x: number, n: number, giveLog = false): number {

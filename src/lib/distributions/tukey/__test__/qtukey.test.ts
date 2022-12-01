@@ -1,7 +1,7 @@
 
 import { cl, select } from '@common/debug-select';
 
-import { qtukey } from '../index';
+import { qtukey } from '..';
 
 
 const qtukeyDomainWarns = select('qtukey')("argument out of domain in '%s'");

@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import { debug } from 'debug';
 
-import { ML_ERR_return_NAN } from '@common/logger.js';
+import { ML_ERR_return_NAN } from '@common/logger';
 import {
     R_D__0,
     R_D__1,
@@ -29,10 +29,10 @@ import {
     DBL_MIN,
     M_2PI,
     log
-} from '@lib/r-func.js';
-import { bd0 } from '@lib/deviance/index.js';
-import { lgammafn_sign as lgammafn } from '@special/gamma/lgammafn_sign.js';
-import { stirlerr } from '@lib/stirling/index.js';
+} from '@lib/r-func';
+import { bd0 } from '@lib/deviance';
+import { lgammafn_sign as lgammafn } from '@special/gamma/lgammafn_sign';
+import { stirlerr } from '@lib/stirling';
 
 const printer = debug('dpois');
 

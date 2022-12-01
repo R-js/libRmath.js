@@ -3,7 +3,7 @@ import { resolve } from 'path';
 
 import { cl, select } from '@common/debug-select';
 
-import { dwilcox } from '../index';
+import { dwilcox } from '..';
 
 import { exp } from '@lib/r-func';
 

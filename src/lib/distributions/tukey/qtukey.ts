@@ -18,9 +18,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import { debug } from 'debug';
 
-import { ME, ML_ERR_return_NAN, ML_ERROR, R_Q_P01_boundaries } from '@common/logger.js';
-import { R_DT_qIv } from '@dist/exp/expm1.js';
-import { ptukey } from './ptukey.js';
+import { ME, ML_ERR_return_NAN, ML_ERROR, R_Q_P01_boundaries } from '@common/logger';
+import { R_DT_qIv } from '@dist/exp/expm1';
+import { ptukey } from './ptukey';
 
 import {
     abs,
@@ -28,7 +28,7 @@ import {
     sqrt,
     log
 
-} from '@lib/r-func.js';
+} from '@lib/r-func';
 
 const p0 = 0.322232421088;
 const q0 = 0.99348462606e-1;

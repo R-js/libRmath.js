@@ -16,9 +16,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { debug } from 'debug';
-import { ME, ML_ERROR } from '@common/logger.js';
-import { isNaN, floor } from '@lib/r-func.js';
-import { K_bessel } from './Kbessel.js';
+import { ME, ML_ERROR } from '@common/logger';
+import { isNaN, floor } from '@lib/r-func';
+import { K_bessel } from './Kbessel';
 
 const printer = debug('BesselK');
 

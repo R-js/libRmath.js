@@ -17,9 +17,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import { debug } from 'debug';
 
-import { ML_ERR_return_NAN,  } from '@common/logger.js';
-import { R_D__0, R_D__1, R_D_negInonint, R_D_nonint_check } from '@lib/r-func.js';
-import { dbinom_raw } from '@dist/binomial/dbinom.js';
+import { ML_ERR_return_NAN,  } from '@common/logger';
+import { R_D__0, R_D__1, R_D_negInonint, R_D_nonint_check } from '@lib/r-func';
+import { dbinom_raw } from '@dist/binomial/dbinom';
 
 const printer = debug('dhyper');
 

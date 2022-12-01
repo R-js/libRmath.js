@@ -1,24 +1,24 @@
-import { IRNG, MessageType } from '@rng/irng.js';
-import { KnuthTAOCP } from './knuth-taocp/index.js';
-import { KnuthTAOCP2002 } from '@rng/knuth-taocp-2002/index.js';
-import { LecuyerCMRG } from '@rng/lecuyer-cmrg/index.js';
-import { MarsagliaMultiCarry } from '@rng/marsaglia-multicarry/index.js';
-import { MersenneTwister } from '@rng/mersenne-twister/index.js';
-import { SuperDuper } from '@rng/super-duper/index.js';
-import { WichmannHill } from '@rng/wichmann-hill/index.js';
+import { IRNG, MessageType } from '@rng/irng';
+import { KnuthTAOCP } from './knuth-taocp';
+import { KnuthTAOCP2002 } from '@rng/knuth-taocp-2002';
+import { LecuyerCMRG } from '@rng/lecuyer-cmrg';
+import { MarsagliaMultiCarry } from '@rng/marsaglia-multicarry';
+import { MersenneTwister } from '@rng/mersenne-twister';
+import { SuperDuper } from '@rng/super-duper';
+import { WichmannHill } from '@rng/wichmann-hill';
 
 // normal
-import { IRNGNormal } from '@rng/normal/normal-rng.js';
-import { AhrensDieter } from '@rng/normal/ahrens-dieter/index.js';
-import { BoxMuller } from '@rng/normal/box-muller/index.js';
-import { BuggyKindermanRamage } from '@rng/normal/buggy-kinderman-ramage/index.js';
-import { Inversion } from '@rng/normal/inversion/index.js';
-import { KindermanRamage } from '@rng/normal/kinderman-ramage/index.js';
+import { IRNGNormal } from '@rng/normal/normal-rng';
+import { AhrensDieter } from '@rng/normal/ahrens-dieter';
+import { BoxMuller } from '@rng/normal/box-muller';
+import { BuggyKindermanRamage } from '@rng/normal/buggy-kinderman-ramage';
+import { Inversion } from '@rng/normal/inversion';
+import { KindermanRamage } from '@rng/normal/kinderman-ramage';
 
 //enums
-import { IRNGTypeEnum } from './irng-type.js';
-import { IRNGNormalTypeEnum } from './normal/in01-type.js';
-import { IRNGSampleKindTypeEnum } from './sample-kind-type.js';
+import { IRNGTypeEnum } from './irng-type';
+import { IRNGNormalTypeEnum } from './normal/in01-type';
+import { IRNGSampleKindTypeEnum } from './sample-kind-type';
 
 
 const uniformMap = {

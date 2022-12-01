@@ -15,7 +15,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { debug } from 'debug';
-import { ML_ERR_return_NAN, ME, ML_ERROR } from '@common/logger.js';
+import { ML_ERR_return_NAN, ME, ML_ERROR } from '@common/logger';
 
 import {
     DBL_MANT_DIG,
@@ -26,12 +26,12 @@ import {
     R_pow_di,
     NumArray,
     DBL_MIN_EXP
-} from '@lib/r-func.js';
+} from '@lib/r-func';
 
-import { R_DT_CIv, R_DT_Clog, R_DT_log, R_DT_qIv, R_Log1_Exp } from '@dist/exp/expm1.js';
+import { R_DT_CIv, R_DT_Clog, R_DT_log, R_DT_qIv, R_Log1_Exp } from '@dist/exp/expm1';
 
-import { lbeta } from '@special/beta/index.js';
-import { pbeta_raw } from './pbeta.js';
+import { lbeta } from '@special/beta';
+import { pbeta_raw } from './pbeta';
 
 const USE_LOG_X_CUTOFF = -5;
 //                       --- based on some testing; had = -10

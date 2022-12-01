@@ -15,12 +15,12 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { debug } from 'debug';
-import { ML_ERR_return_NAN, ME, ML_ERROR } from '@common/logger.js';
-import { R_P_bounds_01 } from '@lib/r-func.js';
+import { ML_ERR_return_NAN, ME, ML_ERROR } from '@common/logger';
+import { R_P_bounds_01 } from '@lib/r-func';
 
-import { lgammafn_sign } from '@special/gamma/lgammafn_sign.js';
+import { lgammafn_sign } from '@special/gamma/lgammafn_sign';
 
-import { NumberW, Toms708 } from '@common/toms708/index.js';
+import { NumberW, Toms708 } from '@common/toms708';
 
 const printer = debug('pnbeta_raw');
 const printer_pnbeta2 = debug('pnbeta2');

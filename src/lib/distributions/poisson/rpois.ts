@@ -18,14 +18,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import { debug } from 'debug';
 
-import { ML_ERR_return_NAN } from '@common/logger.js';
+import { ML_ERR_return_NAN } from '@common/logger';
 
-import { imax2, imin2, M_1_SQRT_2PI, trunc, log, abs, pow, exp, floor, sqrt, isFinite } from '@lib/r-func.js';
-import { fsign } from './fsign.js';
+import { imax2, imin2, M_1_SQRT_2PI, trunc, log, abs, pow, exp, floor, sqrt, isFinite } from '@lib/r-func';
+import { fsign } from './fsign';
 
-import { exp_rand } from '@dist/exp/sexp.js';
-import type { IRNGNormal } from '@rng/normal/normal-rng.js';
-import { globalNorm } from '@rng/global-rng.js';
+import { exp_rand } from '@dist/exp/sexp';
+import type { IRNGNormal } from '@rng/normal/normal-rng';
+import { globalNorm } from '@rng/global-rng';
 
 const a0 = -0.5;
 const a1 = 0.3333333;

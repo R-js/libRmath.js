@@ -16,11 +16,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { debug } from 'debug';
 
-import { isOdd, abs, log, exp, round, isInteger, } from '@lib/r-func.js';
+import { isOdd, abs, log, exp, round, isInteger, } from '@lib/r-func';
 
 
-import lbeta from '@special/beta/lbeta.js';
-import { lgammafn_sign } from '@special/gamma/lgammafn_sign.js';
+import lbeta from '@special/beta/lbeta';
+import { lgammafn_sign } from '@special/gamma/lgammafn_sign';
 
 // used by "qhyper"
 function lfastchoose(n: number, k: number): number {

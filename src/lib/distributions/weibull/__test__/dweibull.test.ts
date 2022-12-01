@@ -1,6 +1,6 @@
 import { cl, select } from '@common/debug-select';
 
-import { dweibull } from '../index';
+import { dweibull } from '..';
 
 const dweibullDomainWarns = select('dweibull')("argument out of domain in '%s'");
 

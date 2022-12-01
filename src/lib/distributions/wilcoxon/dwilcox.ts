@@ -18,11 +18,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import { debug } from 'debug';
 
-import { ML_ERR_return_NAN } from '@common/logger.js';
-import { R_D__0 } from '@lib/r-func.js';
-import { choose, lchoose } from '@lib/special/choose/index.js';
-import { cwilcox } from './cwilcox.js';
-import { WilcoxonCache } from './WilcoxonCache.js';
+import { ML_ERR_return_NAN } from '@common/logger';
+import { R_D__0 } from '@lib/r-func';
+import { choose, lchoose } from '@lib/special/choose';
+import { cwilcox } from './cwilcox';
+import { WilcoxonCache } from './WilcoxonCache';
 
 const printer_dwilcox = debug('dwilcox');
 
