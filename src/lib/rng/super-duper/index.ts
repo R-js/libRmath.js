@@ -23,7 +23,7 @@ import { seed } from '@rng/timeseed';
 import { seedCheck } from '@rng/seedcheck';
 import { INT_MAX } from '@lib/r-func';
 
-export const SEED_LEN = 2;
+const SEED_LEN = 2;
 
 export class SuperDuper extends IRNG {
 

@@ -22,7 +22,7 @@ import { seed } from '../timeseed';
 import { seedCheck } from '../seedcheck';
 import { INT_MAX } from '@lib/r-func';
 
-export const SEED_LEN = 6;
+const SEED_LEN = 6;
 
 const a12 = 1403580; //least 64 bits
 const a13n = 810728;

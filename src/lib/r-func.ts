@@ -46,7 +46,9 @@ const {
     LN2,
     sinh,
     cos,
-    sin
+    sin,
+    tan,
+    atan
 } = Math;
 
 export {  abs,
@@ -74,7 +76,9 @@ export {  abs,
     LN2,
     sinh,
     cos,
-    sin
+    sin,
+    tan,
+    atan
 };
 
 export type strTypes =

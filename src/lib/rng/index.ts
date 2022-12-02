@@ -14,8 +14,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-
-export { KnuthTAOCP } from './knuth-taocp';
+import { KnuthTAOCP } from './knuth-taocp';
+export { KnuthTAOCP };
 export { KnuthTAOCP2002 } from './knuth-taocp-2002';
 export { LecuyerCMRG } from './lecuyer-cmrg';
 export { MarsagliaMultiCarry } from './marsaglia-multicarry';

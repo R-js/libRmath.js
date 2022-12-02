@@ -9,12 +9,12 @@ import {
   rmSync,
 } from "node:fs";
 import { writeFile } from "node:fs/promises";
+import { writeFileSync } from "node:fs";
 import { join, relative, dirname, extname, resolve } from "node:path";
 import ts from "typescript";
 import { parse } from "acorn";
 import jxpath from "@mangos/jxpath";
 import { generate } from "escodegen";
-
 
 const DIR = "./dist";
 const DIR_COMMONJS = "./dist/commonjs";
@@ -33,11 +33,12 @@ const { config } = ts.readConfigFile("tsconfig-vercel.json", (fileName) =>
   readFileSync(fileName).toString()
 );
 
-
-
 const sourceDir = join("src");
-let sourceFiles = [
-  '/lib/alt/log/index.ts',
+
+function getAllRootSourceFiles() {
+  let sourceFiles = [
+    /*  
+  '/lib/alt/log/log1p.ts',
   '/lib/common/toms708/index.ts',
   '/lib/deviance/index.ts',
   '/lib/rng/index.ts',
@@ -47,24 +48,22 @@ let sourceFiles = [
   '/lib/special/choose/index.ts',
   '/lib/special/stirling/index.ts',
   '/lib/special/trigonometry/index.ts',
-  '/lib/r-func.ts',
-  'index.ts'
+  '/lib/r-func.ts',*/
+    "./index.ts",
+  ];
+  // add distributions
 
-];
+  /*
+    const entries = readdirSync("src/lib/distributions");
+    for (const entry of entries) {
+      sourceFiles.push("lib/distributions/" + entry + "/index.ts");
+    }
+*/
 
-// add distributions
-
-(function (){
-  const entries = readdirSync('src/lib/distributions');
-  for (const entry of entries){
-    sourceFiles.push('lib/distributions/' + entry+'/index.ts');
-  }
-})()
-
-sourceFiles = sourceFiles.map( f => join('src', f));
-
+  return sourceFiles.map((f) => join("src", f));
+}
 // Build CommonJS module.
-/*compile(sourceFiles, DIR_COMMONJS, {
+compile(getAllRootSourceFiles(), DIR_COMMONJS, {
   module: ts.ModuleKind.CommonJS,
   moduleResolution: ts.ModuleResolutionKind.NodeJs,
   declaration: false,
@@ -73,18 +72,19 @@ sourceFiles = sourceFiles.map( f => join('src', f));
   removeComments: true,
   sourceMap: false,
   importHelpers: false, // commonjs sometimes needs some extra code to create analogs for esm constructs (example export * from 'xyz)
-});*/
+});
 
 // Build an ES2015 module and type declarations.
 
-compile(sourceFiles, DIR_ESM, {
+compile(getAllRootSourceFiles(), DIR_ESM, {
   module: ts.ModuleKind.ES2020,
-  declaration: false,
-  declarationDir: './types', // this becomes ./dist/types
+  moduleResolution: ts.ModuleResolutionKind.NodeJs,
+  declaration: true,
+  declarationDir: "./types", // this becomes ./dist/types
   declarationMap: false,
   removeComments: true,
   sourceMap: false,
-  importHelpers: false
+  importHelpers: false,
 });
 
 /**
@@ -96,17 +96,22 @@ compile(sourceFiles, DIR_ESM, {
 function compile(files, targetDIR, options) {
   const compilerOptions = { ...config.compilerOptions, ...options };
   const host = ts.createCompilerHost(compilerOptions);
-  
+
   // monkeypatch host
   //  export type WriteFileCallback = (
-  //    1 fileName: string, 
+  //    1 fileName: string,
   //    2 data: string,
-  //    3 writeByteOrderMark: boolean, 
-  //    4 onError?: (message: string) => void, 
+  //    3 writeByteOrderMark: boolean,
+  //    4 onError?: (message: string) => void,
   //    5 sourceFiles?: readonly SourceFile[]
   //    ) => void;
-  host.writeFile = function (fileName, contents, writeByteOrderMark, onError, sourceFiles) {
-   
+  host.writeFile = function (
+    fileName,
+    contents,
+    writeByteOrderMark,
+    onError,
+    sourceFiles
+  ) {
     const isDts = fileName.endsWith(".d.ts");
 
     const relativeToSourceDir = relative(sourceDir, fileName);
@@ -126,15 +131,16 @@ function compile(files, targetDIR, options) {
 
       switch (compilerOptions.module) {
         case ts.ModuleKind.CommonJS: {
-          const selectedNodes = jxpath(
+          const requireStatements = jxpath(
             "/**/[type=CallExpression]/callee/[type=Identifier]/[name=require]/../arguments/[type=Literal]/",
             astTree
           );
           // loop over all .js and change then
 
-          for (const node of selectedNodes) {
+          for (const node of requireStatements) {
             node.value = resolveToFullPath(fileName, node.value, ".cjs");
           }
+
           contents = generate(astTree);
           path =
             extname(path) === ""
@@ -143,13 +149,33 @@ function compile(files, targetDIR, options) {
           break;
         }
         case ts.ModuleKind.ES2020: {
-          const selectedNodes = jxpath(
-            "/**/[type=ImportDeclaration]/source/",
-            astTree
+          const importStatements = Array.from(
+            jxpath(
+              "/**/[type=ImportDeclaration]/source/",
+              astTree
+            )
           );
-          for (const node of selectedNodes) {
-            node.value = resolveToFullPath(fileName, node.value, ".mjs");
+          for (const node of importStatements) {
+            if (node !== null && node !== undefined) {
+              node.value = resolveToFullPath(fileName, node.value, ".mjs");
+            }
           }
+          const exportStatements = Array.from(
+            jxpath(
+              "/**/[type=/ExportAllDeclaration|ExportNamedDeclaration/]/source",
+              astTree
+            )
+          );
+          try {
+            for (const node of exportStatements) {
+              if (node !== null && node !== undefined) {
+                node.value = resolveToFullPath(fileName, node.value, ".mjs");
+              }
+            }
+          } catch (err) {
+            console.log(err);
+          }
+          console.log("waypoint1");
           contents = generate(astTree);
           path =
             extname(path) === ""
@@ -161,36 +187,43 @@ function compile(files, targetDIR, options) {
           throw Error("Unhandled module type");
       }
     }
-   
-   
-    writeFile(path, contents)
+
+    try {
+      writeFileSync(path, contents, "utf-8");
+      // eslint-disable-next-line no-console
+      console.log("Built", path);
+    } catch (err) {
+      onError && onError(err.message);
+      // eslint-disable-next-line no-console
+      console.log("Fail", path);
+    }
+    /* writeFile(path, contents)
       .then(() => {
         // eslint-disable-next-line no-console
         console.log("Built", path);
       })
       .catch((error) => {
         // eslint-disable-next-line no-console
-        onError && onError(error.message)
+        onError && onError(error.message);
         console.error(error);
-      });
+      });*/
   }; // host.writeFile function definition end
 
   const program = ts.createProgram(files, compilerOptions, host);
   const result = program.emit();
   // wait for next marco-task
   console.log(result);
-  console.log('Done');
+  console.log("Done");
 }
-
 
 // note: this is *.ts source code so...
 function resolveToFullPath(module, importStatement, forceExt) {
-  const node_m = 'node_modules';
+  const node_m = "node_modules";
   if (!importStatement.startsWith("./") && !importStatement.startsWith("../")) {
     // dont change, this is a npm module import
     return importStatement;
   }
-  if (importStatement.includes(node_m)){
+  if (importStatement.includes(node_m)) {
     const pos = importStatement.lastIndexOf(node_m);
     return importStatement.slice(pos + node_m.length + 1);
   }
@@ -223,7 +256,7 @@ function resolveToFullPath(module, importStatement, forceExt) {
         packageJSONExists = dirEntry;
         continue;
       }
-      if (dirEntry === 'index'+forceExt) {
+      if (dirEntry === "index" + forceExt) {
         indexFileExists = dirEntry;
         continue;
       }
@@ -232,7 +265,11 @@ function resolveToFullPath(module, importStatement, forceExt) {
       return importStatement + "/index" + forceExt;
     }
     if (!indexFileExists && !packageJSONExists) {
-      throw new Error(`directory import does not contain index.(js/mjs/cjs) file or package.json file ${join(importStatement)}`);
+      throw new Error(
+        `directory import does not contain index.(js/mjs/cjs) file or package.json file ${join(
+          importStatement
+        )}`
+      );
     }
     if (packageJSONExists) {
       // let "export" or "main" property handle it

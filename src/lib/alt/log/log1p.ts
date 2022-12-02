@@ -17,8 +17,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 /* want to compile log1p as Rlog1p if HAVE_LOG1P && !HAVE_WORKING_LOG1P */
 import { debug } from '@mangos/debug';
-import { chebyshev_eval } from '../../chebyshev';
-import { ME, ML_ERR_return_NAN2, ML_ERROR2, createLineInfo } from '@common/logger';
+import { chebyshev_eval } from '../../chebyshev/chebyshev';
+import { ME, ML_ERR_return_NAN2, ML_ERROR2, lineInfo4 } from '@common/logger';
 import { abs as fabs, max as fmax2, min as fmin2, log } from '@lib/r-func';
 
 const printer = debug('log1p');
@@ -32,8 +32,8 @@ import {
 } from '@lib/r-func';
 
 
-const lineInfo3 = createLineInfo(3);
-const lineInfo4 = createLineInfo(4);
+//const lineInfo3 = createLineInfo(3);
+
 
 // series for log1p on the interval -.375 to .375
 //				     with weighted error   6.35e-32
@@ -93,7 +93,7 @@ export function log1p(x: number): number {
 
     if (x === 0) return 0; // speed
     if (x === -1) return NEGATIVE_INFINITY;
-    if (x < -1) return ML_ERR_return_NAN2(printer, lineInfo3);
+    if (x < -1) return ML_ERR_return_NAN2(printer, lineInfo4);
 
     if (fabs(x) <= 0.375) {
         // Improve on speed (only);

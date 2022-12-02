@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { debug } from 'debug';
 
-import { fmod } from '@lib/r-func';
+import { fmod, atan, tan } from '@lib/r-func';
 
 import { ME, ML_ERROR } from '@common/logger';
 // tan(pi * x)  -- exact when x = k/2  for all integer k
@@ -36,9 +36,9 @@ export function tanpi(x: number): number {
     } else if (x > 0.5) {
         x--;
     }
-    return x === 0 ? 0 : x === 0.5 ? NaN : Math.tan(Math.PI * x);
+    return x === 0 ? 0 : x === 0.5 ? NaN : tan(Math.PI * x);
 }
 
 export function atanpi(x: number): number {
-    return Math.atan(x) / Math.PI;
+    return atan(x) / Math.PI;
 }

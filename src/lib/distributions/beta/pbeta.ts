@@ -16,8 +16,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { debug } from 'debug';
 import { ML_ERR_return_NAN } from '@common/logger';
-import { R_DT_0, R_DT_1 } from '@lib/r-func';
-import { NumberW, Toms708 } from '@common/toms708';
+import { R_DT_0, R_DT_1, log } from '@lib/r-func';
+import { Toms708 } from '@common/toms708/toms708';
+import { NumberW } from '@common/toms708/NumberW';
 
 const printer_pbeta_raw = debug('pbeta_raw');
 const printer_pbeta = debug('pbeta');
@@ -56,8 +57,8 @@ export function pbeta_raw(x: number, a: number, b: number, lower_tail: boolean, 
     if (ierr.val && ierr.val !== 11 && ierr.val !== 14)
         printer_pbeta_raw('pbeta_raw(%d, a=%d, b=%d, ..) -> bratio() gave error code %d', x, a, b, ierr);
     if (log_p) {
-        w.val = Math.log(w.val);
-        wc.val = Math.log(wc.val);
+        w.val = log(w.val);
+        wc.val = log(wc.val);
     }
     return lower_tail ? w.val : wc.val;
 } /* pbeta_raw() */

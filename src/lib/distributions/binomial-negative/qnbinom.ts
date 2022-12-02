@@ -20,7 +20,7 @@ import { debug } from 'debug';
 import { ML_ERR_return_NAN, R_Q_P01_boundaries } from '@common/logger';
 import { R_DT_0, R_DT_1  }  from '@lib/r-func';
 
-import { NumberW } from '@common/toms708';
+import { NumberW } from '@common/toms708/NumberW';
 
 import { R_DT_qIv } from '@dist/exp/expm1';
 import { qnorm } from '@dist/normal/qnorm';
