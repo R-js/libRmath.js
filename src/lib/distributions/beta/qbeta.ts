@@ -25,7 +25,9 @@ import {
     R_DT_1,
     R_pow_di,
     NumArray,
-    DBL_MIN_EXP
+    DBL_MIN_EXP,
+    abs as fabs,
+    log
 } from '@lib/r-func';
 
 import { R_DT_CIv, R_DT_Clog, R_DT_log, R_DT_qIv, R_Log1_Exp } from '@dist/exp/expm1';
@@ -127,8 +129,6 @@ function return_q_half(give_log_q: boolean, qb: NumArray): void {
     //}
     return;
 }
-
-const { abs: fabs, log } = Math;
 
 const printer_qbeta_raw = debug('qbeta_raw');
 const R_ifDEBUG_printf = printer_qbeta_raw;

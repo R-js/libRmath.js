@@ -23,7 +23,7 @@ import { IRNGTypeEnum } from '../irng-type';
 import { seed } from '../timeseed';
 import { seedCheck } from '../seedcheck';
 
-export const SEED_LEN = 2;
+const SEED_LEN = 2;
 
 export class MarsagliaMultiCarry extends IRNG {
 

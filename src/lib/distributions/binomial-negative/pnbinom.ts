@@ -20,7 +20,8 @@ import { debug } from 'debug';
 import { ML_ERR_return_NAN, } from '@common/logger';
 import { R_DT_0, R_DT_1 } from '@lib/r-func';
 import { pbeta } from '@dist/beta/pbeta';
-import { NumberW, Toms708 } from '@common/toms708';
+import { Toms708 } from '@common/toms708/toms708';
+import { NumberW } from '@common/toms708/NumberW';
 
 const printer = debug('pnbinom');
 

@@ -37,7 +37,7 @@ const TEMPERING_MASK_C = 0xefc60000;
 //const TEMPERING_SHIFT_T = (y: number) => y << 15;
 //const TEMPERING_SHIFT_L = (y: number) => y >>> 18;
 
-export const SEED_LEN = 625;
+const SEED_LEN = 625;
 
 export class MersenneTwister extends IRNG {
     private m_seed: Int32Array;

@@ -16,11 +16,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { debug } from 'debug';
 import { ML_ERR_return_NAN, ME, ML_ERROR } from '@common/logger';
-import { R_P_bounds_01 } from '@lib/r-func';
+import { R_P_bounds_01, floor, exp, sqrt, log, log1p, max } from '@lib/r-func';
 
 import { lgammafn_sign } from '@special/gamma/lgammafn_sign';
 
-import { NumberW, Toms708 } from '@common/toms708';
+import { Toms708 } from '@common/toms708/toms708';
+import { NumberW } from '@common/toms708/NumberW';
 
 const printer = debug('pnbeta_raw');
 const printer_pnbeta2 = debug('pnbeta2');
@@ -56,21 +57,21 @@ function pnbeta_raw(x: number, o_x: number, a: number, b: number, ncp: number): 
 
     /* initialize the series */
 
-    const x0 = Math.floor(Math.max(c - 7 * Math.sqrt(c), 0));
+    const x0 = floor(max(c - 7 * sqrt(c), 0));
     const a0 = a + x0;
     const lbeta = lgammafn_sign(a0) + lgammafn_sign(b) - lgammafn_sign(a0 + b);
     /* temp = pbeta_raw(x, a0, b, TRUE, FALSE), but using (x, o_x): */
     Toms708.bratio(a0, b, x, o_x, temp, tmp_c, ierr);
 
-    gx = Math.exp(a0 * Math.log(x) + b * (x < 0.5 ? Math.log1p(-x) : Math.log(o_x)) - lbeta - Math.log(a0));
-    if (a0 > a) q = Math.exp(-c + x0 * Math.log(c) - lgammafn_sign(x0 + 1));
-    else q = Math.exp(-c);
+    gx = exp(a0 * log(x) + b * (x < 0.5 ? log1p(-x) : log(o_x)) - lbeta - log(a0));
+    if (a0 > a) q = exp(-c + x0 * log(c) - lgammafn_sign(x0 + 1));
+    else q = exp(-c);
 
     sumq = 1 - q;
     ans = ax = q * temp.val;
 
     /* recurse over subsequent terms until convergence is achieved */
-    let j = Math.floor(x0); // x0 could be billions, and is in package EnvStats
+    let j = floor(x0); // x0 could be billions, and is in package EnvStats
     do {
         j++;
         temp.val -= gx;
@@ -103,12 +104,12 @@ export function pnbeta2(
     if (isNaN(ans)) return NaN;
     /* return R_DT_val(ans), but we want to warn about cancellation here */
     if (lower_tail) {
-        return log_p ? Math.log(ans) : ans;
+        return log_p ? log(ans) : ans;
     } else {
         if (ans > 1 - 1e-10) ML_ERROR(ME.ME_PRECISION, 'pnbeta', printer_pnbeta2);
         if (ans > 1.0) ans = 1.0; /* Precaution */
         /* include standalone case */
-        return log_p ? Math.log1p(-ans) : 1 - ans;
+        return log_p ? log1p(-ans) : 1 - ans;
     }
 }
 

@@ -24,7 +24,7 @@ import { seed } from '@rng/timeseed';
 import { seedCheck } from '@rng/seedcheck';
 import { frac } from '@lib/r-func';
 
-export const SEED_LEN = 3;
+const SEED_LEN = 3;
 
 export class WichmannHill extends IRNG {
     private m_seed: Uint32Array;

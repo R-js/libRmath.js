@@ -20,7 +20,7 @@ import { debug } from 'debug';
 
 import { ML_ERR_return_NAN, R_Q_P01_boundaries } from '@common/logger';
 
-import { NumberW } from '@common/toms708';
+import { NumberW } from '@common/toms708/NumberW';
 
 import { ppois } from './ppois';
 

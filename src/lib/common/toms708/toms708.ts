@@ -16,8 +16,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { debug } from 'debug';
 import { NumberW } from './NumberW';
-
-const { trunc, log, abs, min, pow } = Math;
+import { trunc, log, abs, min, pow } from '@lib/r-func';
 const printer_bratio = debug('Toms708.bratio');
 /**
  * Computes the incomplete beta function

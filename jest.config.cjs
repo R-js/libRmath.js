@@ -1,4 +1,6 @@
 const collectCoverageFrom = [
+    'src/lib/alt/log/*.ts',
+
     'src/lib/distributions/beta/*.ts',
     'src/lib/distributions/binomial/*.ts',
     'src/lib/distributions/binomial-negative/*.ts',
@@ -214,7 +216,8 @@ const specialFunctions = [
 ]
 
 const testRegex = [
-    ...betaTest,
+    'src/lib/alt/log/__test__/test.ts',
+   /* ...betaTest,
     ...binomTest,
     ...binonNegativeTest,
     ...cauchyTest,
@@ -237,7 +240,7 @@ const testRegex = [
     ...wilcoxTest,
     ...uniformRNG,
     ...normalRNG,
-    ...specialFunctions
+    ...specialFunctions*/
 ];
 
 module.exports = {

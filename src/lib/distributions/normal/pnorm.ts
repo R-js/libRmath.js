@@ -30,7 +30,8 @@ import {
 import { pnorm_both } from './pnorm_both'
 
 const printer = debug('pnorm');
-import { NumberW } from '@common/toms708';
+
+import { NumberW } from '@common/toms708/NumberW';
 
 export function pnorm5(
   q: number,

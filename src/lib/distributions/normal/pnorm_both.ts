@@ -1,5 +1,5 @@
 
-import { NumberW } from '@common/toms708';
+import { NumberW } from '@common/toms708/NumberW';
 import { do_del } from './do_del';
 
 import {

@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import { debug } from 'debug';
 import { ML_ERR_return_NAN } from '@common/logger';
-import { R_D__0, R_D_exp } from '@lib/r-func';
+import { R_D__0, R_D_exp, ceil, sqrt } from '@lib/r-func';
 import { dpois_raw } from '@dist/poisson/dpois';
 import { dbeta_scalar } from './dbeta';
 
@@ -61,7 +61,7 @@ export function dnbeta_scalar(x: number, a: number, b: number, ncp: number, give
     if (D <= 0) {
         kMax = 0;
     } else {
-        D = Math.ceil(d + Math.sqrt(D));
+        D = ceil(d + sqrt(D));
         kMax = D > 0 ? D : 0;
     }
 

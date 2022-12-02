@@ -11,9 +11,12 @@ const debug_R_Q_P01_check = debug('R_Q_P01_check');
 export function createLineInfo(n: number){
     return function () {
      const info = getLineInfo(n);
-     return info.fnName + ':' + info.line + ':' + info.column;
+     return info.fnName + ', line:' + info.line + ', col:' + info.column;
     }
- }
+}
+
+const lineInfo4 = createLineInfo(4);
+export { lineInfo4 };
 
 export enum ME {
     ME_NONE = 0, // no error

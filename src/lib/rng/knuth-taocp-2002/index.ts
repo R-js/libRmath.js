@@ -23,7 +23,7 @@ import { seed } from '../timeseed';
 import { seedCheck } from '../seedcheck';
 
 const QUALITY = 1009; /* recommended quality level for high-res use */
-export const SEED_LEN = 101;
+const SEED_LEN = 101;
 const LL = 37; /* the short lag */
 const KK = 100; /* the long lag */
 const TT = 70; /* guaranteed separation between streams */
