@@ -1,4 +1,4 @@
-import { cl, select } from '@common/debug-select';
+import { cl, select } from '@common/debug-mangos-select';
 
 const qnbinomDomainWarns = select('qnbinom')("argument out of domain in '%s'");
 const do_searchDomainWarns = select('do_search')("argument out of domain in '%s'");

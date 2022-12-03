@@ -14,8 +14,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { debug } from 'debug';
-import { ML_ERR_return_NAN } from '@common/logger';
+import { debug } from '@mangos/debug';
+import { ML_ERR_return_NAN2, lineInfo4 } from '@common/logger';
 
 const { isNaN: ISNAN } = Number;
 const { PI: M_PI, log } = Math;
@@ -28,7 +28,7 @@ export function dcauchy(x: number, location = 0, scale = 1, giveLog = false): nu
     }
 
     if (scale <= 0) {
-        return ML_ERR_return_NAN(printer);
+        return ML_ERR_return_NAN2(printer, lineInfo4);
     }
 
     const y = (x - location) / scale;

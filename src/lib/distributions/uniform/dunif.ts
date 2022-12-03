@@ -16,8 +16,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { debug } from 'debug';
-import { ML_ERR_return_NAN } from '@common/logger';
+import { debug } from '@mangos/debug';
+import { ML_ERR_return_NAN2, lineInfo4 } from '@common/logger';
 import { log, R_D__0 } from '@lib/r-func';
 
 const printer = debug('dunif');
@@ -29,7 +29,7 @@ export function dunif(x: number, a = 0, b = 1, give_log = false): number {
     }
     if (b <= a) 
     {
-        return ML_ERR_return_NAN(printer);
+        return ML_ERR_return_NAN2(printer, lineInfo4);
     }
 
     if (a <= x && x <= b)

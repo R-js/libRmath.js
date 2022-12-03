@@ -1,5 +1,4 @@
-import { debug } from 'debug';
-import type { Debugger } from 'debug';
+import { debug } from '@mangos/debug';
 
 import type { Printer } from '@mangos/debug';
 import { getLineInfo } from '@mangos/debug';
@@ -9,7 +8,7 @@ const debug_R_Q_P01_check = debug('R_Q_P01_check');
 
 
 export function createLineInfo(n: number){
-    return function () {
+    return function () : string {
      const info = getLineInfo(n);
      return info.fnName + ', line:' + info.line + ', col:' + info.column;
     }
@@ -43,32 +42,18 @@ export const mapErr = new Map([
     [ME.ME_UNDERFLOW, "underflow occurred in '%s'"],
 ]);
 
-export function ML_ERROR(x: ME, s: unknown, printer: (...args: unknown[]) => void): void {
-    const str = mapErr.get(x);
-    if (str) {
-        printer(str, s);
-    }
-}
-
-export function ML_ERR_return_NAN(printer: Debugger): number {
-    ML_ERROR(ME.ME_DOMAIN, '', printer);
-    return NaN;
-}
-
-export function ML_ERROR2(x: ME, s: any, printer: Printer): void {
+export function ML_ERROR2<T extends string | Record<string, unknown> | (() => string)>(x: ME, s: T, printer: Printer): void {
     if (!printer.enabled) {
         return;
     }
     const str = mapErr.get(x);
-    if (typeof s === 'function'){
-        s = s();
-    }
+    const val = (typeof s === 'function') ? s() : s;
     if (str) {
-        printer(str, s);
+        printer(str, val);
     }
 }
 
-export function ML_ERR_return_NAN2(printer: Printer, getExtraInfo: () => any): number {
+export function ML_ERR_return_NAN2(printer: Printer, getExtraInfo: () => string): number {
     if (printer.enabled) {
       ML_ERROR2(ME.ME_DOMAIN, getExtraInfo(), printer);
     }
@@ -84,7 +69,7 @@ export function R_Q_P01_boundaries(
 ): number | undefined {
     if (log_p) {
         if (p > 0) {
-            return ML_ERR_return_NAN(debug_R_Q_P01_boundaries);
+            return ML_ERR_return_NAN2(debug_R_Q_P01_boundaries, lineInfo4);
         }
         if (p === 0)
             /* upper bound*/
@@ -93,7 +78,7 @@ export function R_Q_P01_boundaries(
     } else {
         /* !log_p */
         if (p < 0 || p > 1) {
-            return ML_ERR_return_NAN(debug_R_Q_P01_boundaries);
+            return ML_ERR_return_NAN2(debug_R_Q_P01_boundaries, lineInfo4);
         }
         if (p === 0) return lower_tail ? _LEFT_ : _RIGHT_;
         if (p === 1) return lower_tail ? _RIGHT_ : _LEFT_;
@@ -106,7 +91,7 @@ export function R_Q_P01_check(logP: boolean, p: number): number | undefined {
         (logP && p > 0) 
         || 
         (!logP && (p < 0 || p > 1))) {
-        return ML_ERR_return_NAN(debug_R_Q_P01_check);
+        return ML_ERR_return_NAN2(debug_R_Q_P01_check, lineInfo4);
     }
     return undefined;
 }

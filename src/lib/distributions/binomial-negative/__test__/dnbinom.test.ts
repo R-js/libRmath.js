@@ -2,7 +2,7 @@ import { resolve } from 'path';
 
 //helper
 import { loadData } from '@common/load';
-import { cl, select } from '@common/debug-select';
+import { cl, select } from '@common/debug-mangos-select';
 
 //const dbinom_muDomainWarns = select('dnbinom_mu')("argument out of domain in '%s'");
 const dbinomDomainWarns = select('dnbinom')("argument out of domain in '%s'");

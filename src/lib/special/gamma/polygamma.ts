@@ -134,7 +134,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *    Routines called: Rf_d1mach, Rf_i1mach.
  */
 
-import { debug } from 'debug';
+import { debug } from '@mangos/debug';
 import {
     DBL_MANT_DIG,
     DBL_MAX_EXP,

@@ -1,4 +1,4 @@
-import { cl, select } from '@common/debug-select';
+import { cl, select } from '@common/debug-mangos-select';
 const lbetaDomainWarns = select('lbeta')("argument out of domain in '%s'");
 lbetaDomainWarns;
 

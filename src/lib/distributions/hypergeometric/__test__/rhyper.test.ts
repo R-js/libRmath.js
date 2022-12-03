@@ -1,12 +1,15 @@
-import { loadData } from '@common/load';
 import { resolve } from 'path';
-import { cl, select } from '@common/debug-select';
+import ms from "ms";
+
+
+import { loadData } from '@common/load';
+import { cl, select } from '@common/debug-mangos-select';
 
 import { IRNGNormalTypeEnum } from '@rng/normal/in01-type';
 import { globalUni, RNGKind } from '@rng/global-rng';
 import { IRNGTypeEnum } from '@rng/irng-type';
 import { rhyper, useWasmBackends, clearBackends } from '..';
-import { humanize } from '@common/humanize-time';
+
 
 const rhyperDomainWarns = select('rhyper')("argument out of domain in '%s'");
 
@@ -71,8 +74,8 @@ describe('rhyper', function () {
             const t2 = Date.now();
             expect(z4).toEqualFloatingPointBinary(1073741824);
             clearBackends();
-            console.log(`rhyper: (wasm) ${humanize.humanize(t1-t0)}`);
-            console.log(`rhyper: (wasm) ${humanize.humanize(t2-t1)}`);
+            console.log(`rhyper: (wasm) ${ms(t1-t0)}`);
+            console.log(`rhyper: (wasm) ${ms(t2-t1)}`);
         });
     });
 

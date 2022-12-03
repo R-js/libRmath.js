@@ -14,8 +14,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { debug } from 'debug';
-import { ML_ERR_return_NAN } from '@common/logger';
+import { debug } from '@mangos/debug';
+import { ML_ERR_return_NAN2, lineInfo4 } from '@common/logger';
 import { R_pow_di } from '@lib/r-func';
 
 import type { IRNG } from '@rng/irng';
@@ -71,9 +71,9 @@ export function rbinomOne(nin: number, pp: number, rng: IRNG): number {
     let k;
 
 
-    if (!isFinite(nin)) return ML_ERR_return_NAN(printer_rbinom);
+    if (!isFinite(nin)) return ML_ERR_return_NAN2(printer_rbinom, lineInfo4);
     r = Math.round(nin);
-    if (r !== nin) return ML_ERR_return_NAN(printer_rbinom);
+    if (r !== nin) return ML_ERR_return_NAN2(printer_rbinom, lineInfo4);
     if (
         !isFinite(pp) ||
         /* n=0, p=0, p=1 are not errors <TSL>*/
@@ -81,7 +81,7 @@ export function rbinomOne(nin: number, pp: number, rng: IRNG): number {
         pp < 0 ||
         pp > 1
     ) {
-        return ML_ERR_return_NAN(printer_rbinom);
+        return ML_ERR_return_NAN2(printer_rbinom, lineInfo4);
     }
     if (r === 0 || pp === 0) return 0;
     if (pp === 1) return r;

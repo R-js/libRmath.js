@@ -14,9 +14,9 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { debug } from 'debug';
+import { debug } from '@mangos/debug';
 
-import { ML_ERR_return_NAN } from '@common/logger';
+import { ML_ERR_return_NAN2, lineInfo4 } from '@common/logger';
 import { R_D__0, R_D__1 } from '@lib/r-func';
 import { dbinom_raw } from '@dist/binomial/dbinom';
 import { dgamma } from '@dist/gamma/dgamma';
@@ -31,7 +31,7 @@ export function df(x: number, m: number, n: number, giveLog: boolean): number {
         return x + m + n;
     }
     if (m <= 0 || n <= 0) {
-        return ML_ERR_return_NAN(printer_df);
+        return ML_ERR_return_NAN2(printer_df, lineInfo4);
     }
     if (x < 0) {
         return R_D__0(giveLog);

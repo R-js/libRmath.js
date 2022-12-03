@@ -14,9 +14,9 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { debug } from 'debug';
+import { debug } from '@mangos/debug';
 
-import { ML_ERR_return_NAN, } from '@common/logger';
+import { ML_ERR_return_NAN2, lineInfo4 } from '@common/logger';
 import { R_DT_0, R_DT_1, R_P_bounds_01 } from '@lib/r-func';
 
 //import { INormal } from '../exp/expm1'normal';
@@ -29,7 +29,7 @@ export function pf(q: number, df1: number, df2: number, lowerTail: boolean, logP
     if (isNaN(q) || isNaN(df1) || isNaN(df2)) return q + df2 + df1;
 
     if (df1 <= 0 || df2 <= 0) {
-        return ML_ERR_return_NAN(printer_pf);
+        return ML_ERR_return_NAN2(printer_pf, lineInfo4);
     }
 
     const rc = R_P_bounds_01(lowerTail, logP, q, 0, Infinity);

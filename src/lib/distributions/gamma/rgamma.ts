@@ -15,8 +15,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { debug } from 'debug';
-import { ML_ERR_return_NAN } from '@common/logger';
+import { debug } from '@mangos/debug';
+import { ML_ERR_return_NAN2, lineInfo4 } from '@common/logger';
 import { exp_rand } from '@dist/exp/sexp';
 import { IRNGNormal } from '@rng/normal/normal-rng';
 
@@ -74,7 +74,7 @@ export function rgamma(a: number, scale: number, rng: IRNGNormal): number {
     if (a === 0) return 0;
 
     if (!isFinite(a) || !isFinite(scale) || a < 0.0 || scale < 0.0) {
-        return ML_ERR_return_NAN(printer_rgamma);
+        return ML_ERR_return_NAN2(printer_rgamma, lineInfo4);
     }
     // a > 0
     if (a < 1) {

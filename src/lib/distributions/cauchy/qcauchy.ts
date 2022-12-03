@@ -15,8 +15,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { debug } from 'debug';
-import { ML_ERR_return_NAN, R_Q_P01_check } from '@common/logger';
+import { debug } from '@mangos/debug';
+import { ML_ERR_return_NAN2, lineInfo4, R_Q_P01_check } from '@common/logger';
 
 import { tanpi } from '@trig/tanpi';
 
@@ -33,7 +33,7 @@ export function qcauchy(p: number, location = 0, scale = 1, lowerTail = true, lo
 
     if (scale <= 0 || !isFinite(scale)) {
         if (scale === 0) return location;
-        /* else */ return ML_ERR_return_NAN(printer);
+        /* else */ return ML_ERR_return_NAN2(printer, lineInfo4);
     }
 
     //const my_INF = location + (lower_tail ? scale : -scale) * +Infinity;

@@ -2,7 +2,7 @@ import { loadData } from '@common/load';
 import { resolve } from 'path';
 import { pf } from '..';
 
-import { cl, select } from '@common/debug-select';
+import { cl, select } from '@common/debug-mangos-select';
 const pfLogs = select('pf');
 const pfDomainWarns = pfLogs("argument out of domain in '%s'");
 

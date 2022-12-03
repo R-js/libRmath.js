@@ -4,7 +4,7 @@ import { pnbinom } from '..';
 
 //helper
 import { loadData } from '@common/load';
-import { cl, select } from '@common/debug-select';
+import { cl, select } from '@common/debug-mangos-select';
 
 const pnbinomDomainWarns = select('pnbinom')("argument out of domain in '%s'");
 const pnbinomMuDomainWarns = select('pnbinom_mu')("argument out of domain in '%s'");

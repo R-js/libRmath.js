@@ -2,7 +2,7 @@
 import { resolve } from 'path';
 
 import { loadData } from '@common/load';
-import { cl, select } from '@common/debug-select';
+import { cl, select } from '@common/debug-mangos-select';
 
 const qbinomDomainWarns = select('qbinom')("argument out of domain in '%s'");
 const doSearchDomainWarns = select('do_search')("argument out of domain in '%s'");

@@ -16,9 +16,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { debug } from 'debug';
+import { debug } from '@mangos/debug';
 
-import { ML_ERR_return_NAN } from '@common/logger';
+import { ML_ERR_return_NAN2, lineInfo4 } from '@common/logger';
 import type { IRNGNormal } from '@rng/normal/normal-rng';
 import { globalNorm } from '@rng/global-rng';
 
@@ -26,7 +26,7 @@ const printer = debug('rnorm');
 
 export function rnormOne(mu = 0, sigma = 1, rng: IRNGNormal = globalNorm()): number {
     if (isNaN(mu) || !isFinite(sigma) || sigma < 0) {
-        return ML_ERR_return_NAN(printer);
+        return ML_ERR_return_NAN2(printer, lineInfo4);
     }
     if (sigma === 0 || !isFinite(mu)) {
         return mu; /* includes mu = +/- Inf with finite sigma */

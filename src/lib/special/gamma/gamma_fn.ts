@@ -16,12 +16,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { chebyshev_eval } from '@lib/chebyshev/chebyshev';
-import { ME, ML_ERROR } from '@common/logger';
+import { ME, ML_ERROR2 } from '@common/logger';
 import { stirlerr } from '@lib/stirling';
 import { sinpi } from '@trig/sinpi';
 import { PI, abs, round, trunc, exp, log, M_LN_SQRT_2PI } from '@lib/r-func';
 
-import { debug } from 'debug';
+import { debug } from '@mangos/debug';
 
 const printer = debug('gammafn');
 
@@ -114,7 +114,7 @@ export function gammafn(x: number): number {
     //If the argument is exactly zero or a negative integer
     //then return NaN.
     if (x === 0 || (x < 0 && x === round(x))) {
-        ML_ERROR(ME.ME_DOMAIN, 'gammafn', printer);
+        ML_ERROR2(ME.ME_DOMAIN, 'gammafn', printer);
         return NaN;
     }
 
@@ -149,21 +149,21 @@ export function gammafn(x: number): number {
 
         /** original C snippet
              *  if (x < -0.5 && fabs(x - (int)(x - 0.5) / x) < dxrel) {
-                    ML_ERROR(ME_PRECISION, "gammafn");
+                    ML_ERROR2(ME_PRECISION, "gammafn");
                 }
              */
         // this can never occur, maybe this was old code
         // UPSTREAM: this was r
         /*if (x < -0.5 && fabs(x - trunc(x - 0.5) / x) < dxrel) {
-            ML_ERROR(ME.ME_PRECISION, 'gammafn', printer);
+            ML_ERROR2(ME.ME_PRECISION, 'gammafn', printer);
         }*/
         if (x < -0.5 && abs((x - trunc(x - 0.5)) / x) < dxrel) {
-            ML_ERROR(ME.ME_PRECISION, 'gammafn', printer);
+            ML_ERROR2(ME.ME_PRECISION, 'gammafn', printer);
         }
         // The argument is so close to 0 that the result would overflow.
 
         if (y < xsml) {
-            ML_ERROR(ME.ME_RANGE, 'gammafn', printer);
+            ML_ERROR2(ME.ME_RANGE, 'gammafn', printer);
             /* UPSTREAM if (x > 0) return ML_POSINF;
                 return ML_NEGINF;*/
             return Infinity;
@@ -180,13 +180,13 @@ export function gammafn(x: number): number {
 
         if (x > xmax) {
             // Overflow
-            ML_ERROR(ME.ME_RANGE, 'gammafn', printer);
+            ML_ERROR2(ME.ME_RANGE, 'gammafn', printer);
             return Infinity;
         }
 
         if (x < xmin) {
             // Underflow
-            ML_ERROR(ME.ME_UNDERFLOW, 'gammafn', printer);
+            ML_ERROR2(ME.ME_UNDERFLOW, 'gammafn', printer);
             return 0;
         }
 
@@ -207,14 +207,14 @@ export function gammafn(x: number): number {
             // The answer is less than half precision because
             // the argument is too near a negative integer.
 
-            ML_ERROR(ME.ME_PRECISION, 'gammafn', printer);
+            ML_ERROR2(ME.ME_PRECISION, 'gammafn', printer);
         }
 
         sinpiy = sinpi(y);
         // UPSTREAM: already checked, never done
         /*if (sinpiy === 0) {
             // Negative integer arg - overflow
-            ML_ERROR(ME.ME_RANGE, 'gammafn', printer);
+            ML_ERROR2(ME.ME_RANGE, 'gammafn', printer);
             return ML_POSINF;
         }*/
         return -PI / (y * sinpiy * value);

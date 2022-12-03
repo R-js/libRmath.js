@@ -15,9 +15,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { debug } from 'debug';
+import { debug } from '@mangos/debug';
 
-import { ML_ERR_return_NAN, } from '@common/logger';
+import { ML_ERR_return_NAN2, lineInfo4 } from '@common/logger';
 import { R_DT_0, R_DT_1 } from '@lib/r-func';
 import { pbeta } from '@dist/beta/pbeta';
 import { Toms708 } from '@common/toms708/toms708';
@@ -28,11 +28,11 @@ const printer = debug('pnbinom');
 export function pnbinom(x: number, size: number, prob: number, lowerTail: boolean, logP: boolean): number {
     if (isNaN(x) || isNaN(size) || isNaN(prob)) return x + size + prob;
     if (!isFinite(size) || !isFinite(prob)) {
-        return ML_ERR_return_NAN(printer);
+        return ML_ERR_return_NAN2(printer, lineInfo4);
     }
 
     if (size < 0 || prob <= 0 || prob > 1) {
-        return ML_ERR_return_NAN(printer);
+        return ML_ERR_return_NAN2(printer, lineInfo4);
     }
 
     /* limiting case: point mass at zero */
@@ -49,9 +49,9 @@ const printer_pnbinom_mu = debug('pnbinom_mu');
 export function pnbinom_mu(x: number, size: number, mu: number, lowerTail: boolean, logP: boolean): number {
 
     if (isNaN(x) || isNaN(size) || isNaN(mu)) return x + size + mu;
-    if (!isFinite(size) || !isFinite(mu)) return ML_ERR_return_NAN(printer_pnbinom_mu);
+    if (!isFinite(size) || !isFinite(mu)) return ML_ERR_return_NAN2(printer_pnbinom_mu, lineInfo4);
 
-    if (size < 0 || mu < 0) return ML_ERR_return_NAN(printer_pnbinom_mu);
+    if (size < 0 || mu < 0) return ML_ERR_return_NAN2(printer_pnbinom_mu, lineInfo4);
 
     /* limiting case: point mass at zero */
     if (size === 0) return x >= 0 ? R_DT_1(lowerTail, logP) : R_DT_0(lowerTail, logP);

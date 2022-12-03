@@ -2,7 +2,7 @@ import { BoxMuller } from '@rng/normal/box-muller';
 import { globalUni } from '@rng/global-rng';
 import { SuperDuper } from '@rng/super-duper';
 
-import { cl, select } from '@common/debug-select';
+import { cl, select } from '@common/debug-mangos-select';
 
 const rnbinomDomainWarns = select('rnbinom')("argument out of domain in '%s'");
 const rnbinomMuDomainWarns = select('rnbinom_mu')("argument out of domain in '%s'");

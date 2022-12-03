@@ -68,7 +68,7 @@ function (x, size = NULL , prob, log = FALSE)
 <bytecode: 0x0000023af74d4ee8>
 <environment: namespace:stats>
 */
-import { debug } from 'debug';
+import { debug } from '@mangos/debug';
 import { lgammafn_sign } from '@special/gamma/lgammafn_sign';
 import { sumfp } from '@lib/r-func';
 

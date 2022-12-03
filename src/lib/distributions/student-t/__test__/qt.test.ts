@@ -1,7 +1,7 @@
 import { loadData } from '@common/load';
 import { resolve } from 'path';
 
-import { cl, select } from '@common/debug-select';
+import { cl, select } from '@common/debug-mangos-select';
 import { DBL_EPSILON, DBL_MIN } from '@lib/r-func';
 
 import { qt } from '..';

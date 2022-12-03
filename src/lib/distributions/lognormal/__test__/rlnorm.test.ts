@@ -1,6 +1,6 @@
 import { loadData } from '@common/load';
 import { resolve } from 'path';
-import { cl, select } from '@common/debug-select';
+import { cl, select } from '@common/debug-mangos-select';
 
 const logs = select('rlnorm');
 const logDomainWanrs = logs("argument out of domain in '%s'");

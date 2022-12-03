@@ -1,5 +1,5 @@
 import { loadData } from '@common/load';
-import { cl, select } from '@common/debug-select';
+import { cl, select } from '@common/debug-mangos-select';
 import { resolve } from 'path';
 import { qf } from '..';
 

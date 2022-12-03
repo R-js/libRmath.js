@@ -14,9 +14,9 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { debug } from 'debug';
+import { debug } from '@mangos/debug';
 import { dbinom_raw } from '@dist/binomial/dbinom';
-import { ML_ERR_return_NAN  } from '@common/logger';
+import { ML_ERR_return_NAN2, lineInfo4 } from '@common/logger';
 
 import { R_D__0, R_D_nonint_check } from '@lib/r-func';
 
@@ -27,7 +27,7 @@ export function dgeom(x: number, p: number, giveLog = false): number {
     if (isNaN(x) || isNaN(p)) return x + p;
 
     if (p <= 0 || p > 1) {
-        return ML_ERR_return_NAN(printer);
+        return ML_ERR_return_NAN2(printer, lineInfo4);
     }
 
     const rc = R_D_nonint_check(giveLog, x, printer);

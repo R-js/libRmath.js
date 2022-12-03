@@ -14,8 +14,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { debug } from 'debug';
-import { ML_ERR_return_NAN,  } from '@common/logger';
+import { debug } from '@mangos/debug';
+import { ML_ERR_return_NAN2, lineInfo4 } from '@common/logger';
 import { R_D__0 } from '@lib/r-func';
 
 import { dnbeta_scalar } from '@dist/beta/dnbeta';
@@ -38,14 +38,14 @@ export function dnf(x: number, df1: number, df2: number, ncp: number, giveLog: b
      *   return df(x, df1, df2, give_log); */
 
     if (df1 <= 0 || df2 <= 0 || ncp < 0) {
-        return ML_ERR_return_NAN(printer);
+        return ML_ERR_return_NAN2(printer, lineInfo4);
     }
     if (x < 0) {
         return R_D__0(giveLog);
     }
     if (!isFinite(ncp)) {
         /* ncp = +Inf -- FIXME?: in some cases, limit exists */
-        return ML_ERR_return_NAN(printer);
+        return ML_ERR_return_NAN2(printer, lineInfo4);
     }
 
     /* This is not correct for  df1 == 2, ncp > 0 - and seems unneeded:

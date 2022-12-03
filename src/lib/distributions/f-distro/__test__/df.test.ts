@@ -2,7 +2,7 @@ import { resolve } from 'path';
 import { df } from '..';
 
 import { loadData } from '@common/load';
-import { cl, select } from '@common/debug-select';
+import { cl, select } from '@common/debug-mangos-select';
 const dfLogs = select('df');
 const dfDomainWarns = dfLogs("argument out of domain in '%s'");
 

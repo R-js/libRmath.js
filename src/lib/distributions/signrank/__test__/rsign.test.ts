@@ -5,7 +5,7 @@ import { IRNGTypeEnum } from '@rng/irng-type';
 import { globalUni, RNGKind } from '@rng/global-rng';
 import { IRNGNormalTypeEnum } from '@rng/normal/in01-type';
 
-import { cl, select } from '@common/debug-select';
+import { cl, select } from '@common/debug-mangos-select';
 
 import { rsignrank } from '..';
 

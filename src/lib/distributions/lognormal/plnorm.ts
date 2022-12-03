@@ -14,8 +14,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { debug } from 'debug';
-import { ML_ERR_return_NAN } from '@common/logger';
+import { debug } from '@mangos/debug';
+import { ML_ERR_return_NAN2, lineInfo4 } from '@common/logger';
 import { R_DT_0 } from '@lib/r-func';
 import { pnorm5 as pnorm } from '@dist/normal/pnorm';
 
@@ -27,7 +27,7 @@ const printer = debug('plnorm');
 export function plnorm(x: number, meanlog = 0, sdlog = 1, lower_tail = true, log_p = false): number {
     if (ISNAN(x) || ISNAN(meanlog) || ISNAN(sdlog)) return x + meanlog + sdlog;
 
-    if (sdlog < 0) return ML_ERR_return_NAN(printer);
+    if (sdlog < 0) return ML_ERR_return_NAN2(printer, lineInfo4);
 
     if (x > 0) return pnorm(log(x), meanlog, sdlog, lower_tail, log_p);
     return R_DT_0(lower_tail, log_p);

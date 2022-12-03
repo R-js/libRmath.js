@@ -15,8 +15,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { debug } from 'debug';
-import { ML_ERR_return_NAN } from '@common/logger';
+import { debug } from '@mangos/debug';
+import { ML_ERR_return_NAN2, lineInfo4 } from '@common/logger';
 import { R_P_bounds_01} from '@lib/r-func';
 import { pnbeta2 } from '@dist/beta/pnbeta';
 import { pnchisq } from '@dist/chi-2/pnchisq';
@@ -26,11 +26,11 @@ export function pnf(x: number, df1: number, df2: number, ncp: number, lowerTail:
 
     if (isNaN(x) || isNaN(df1) || isNaN(df2) || isNaN(ncp)) return x + df2 + df1 + ncp;
 
-    if (df1 <= 0 || df2 <= 0 || ncp < 0) return ML_ERR_return_NAN(printer_pnf);
-    if (!isFinite(ncp)) return ML_ERR_return_NAN(printer_pnf);
+    if (df1 <= 0 || df2 <= 0 || ncp < 0) return ML_ERR_return_NAN2(printer_pnf, lineInfo4);
+    if (!isFinite(ncp)) return ML_ERR_return_NAN2(printer_pnf, lineInfo4);
     if (!isFinite(df1) && !isFinite(df2))
         /* both +Inf */
-        return ML_ERR_return_NAN(printer_pnf);
+        return ML_ERR_return_NAN2(printer_pnf, lineInfo4);
 
     const rc = R_P_bounds_01(lowerTail, logP, x, 0, Infinity);
     if (rc !== undefined) {

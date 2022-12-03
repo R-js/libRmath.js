@@ -16,12 +16,13 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { debug } from 'debug';
+import { debug } from '@mangos/debug';
 import { pbeta } from '@dist/beta/pbeta';
 import {
     ME,
-    ML_ERR_return_NAN,
-    ML_ERROR
+    ML_ERR_return_NAN2,
+    lineInfo4,
+    ML_ERROR2
 } from '@common/logger';
 import {
     M_LN_SQRT_PI,
@@ -67,7 +68,7 @@ function finis(tnc: number, del: number, lower_tail: boolean, negdel: boolean, l
 
     */
     if (tnc > 1 - 1e-10 && lower_tail) {
-        ML_ERROR(ME.ME_PRECISION, 'pnt{final}', printer_pnt);
+        ML_ERROR2(ME.ME_PRECISION, 'pnt{final}', printer_pnt);
     }
     const rc = R_DT_val(lower_tail, log_p, min(tnc, 1) /* Precaution */);
     printer_pnt('rc:%d, tnc:%d, log_p:%s, lower_tail:%s', rc, tnc, log_p, lower_tail);
@@ -102,7 +103,7 @@ export function pnt(t: number, df: number, ncp: number, lower_tail: boolean, log
 
     if (df <= 0.0)
     {
-        return ML_ERR_return_NAN(printer_pnt);
+        return ML_ERR_return_NAN2(printer_pnt, lineInfo4);
     }
 
     if (!isFinite(t)) {
@@ -187,8 +188,8 @@ export function pnt(t: number, df: number, ncp: number, lower_tail: boolean, log
             /* underflow! */
             printer_pnt('p=%d, underflow protection', p);
             /*========== really use an other algorithm for this case !!! */
-            ML_ERROR(ME.ME_UNDERFLOW, 'pnt', printer_pnt);
-            ML_ERROR(ME.ME_RANGE, 'pnt', printer_pnt); /* |ncp| too large */
+            ML_ERROR2(ME.ME_UNDERFLOW, 'pnt', printer_pnt);
+            ML_ERROR2(ME.ME_RANGE, 'pnt', printer_pnt); /* |ncp| too large */
             return R_DT_0(lower_tail, log_p);
         }
 
@@ -247,7 +248,7 @@ export function pnt(t: number, df: number, ncp: number, lower_tail: boolean, log
             if (s < -1e-10)
             {
                 /* happens e.g. for (t,df,ncp)=(40,10,38.5), after 799 it.*/
-                ML_ERROR(ME.ME_PRECISION, 'pnt', printer_pnt);
+                ML_ERROR2(ME.ME_PRECISION, 'pnt', printer_pnt);
                 printer_pnt('goto:true, s = %d < 0 !!! ---> non-convergence!!', s);
                 return finis(tnc, del, lower_tail, negdel, log_p);
             }
@@ -267,7 +268,7 @@ export function pnt(t: number, df: number, ncp: number, lower_tail: boolean, log
             }
         } //for (it = 1; it <= itrmax; it++)
         /* non-convergence:*/
-        ML_ERROR(ME.ME_NOCONV, 'pnt', printer_pnt);
+        ML_ERROR2(ME.ME_NOCONV, 'pnt', printer_pnt);
     }
     else {
         tnc = 0;

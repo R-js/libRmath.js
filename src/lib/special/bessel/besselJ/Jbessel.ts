@@ -15,8 +15,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { debug } from 'debug';
-import { ME, ML_ERROR } from '@common/logger';
+import { debug } from '@mangos/debug';
+import { ME, ML_ERROR2 } from '@common/logger';
 import { Rf_gamma_cody } from '@special/bessel/gamma_cody';
 import { enmten_BESS, ensig_BESS, enten_BESS, xlrg_BESS_IJ } from '../bessel-constants';
 import { IBesselRC } from '../IBesselRC';
@@ -212,7 +212,7 @@ export function J_bessel(x: number, alpha: number, nb: number): IBesselRC {
 
     ncalc = nb;
     if (x > xlrg_BESS_IJ) {
-        ML_ERROR(ME.ME_RANGE, 'J_bessel_err_nr=1000', printer);
+        ML_ERROR2(ME.ME_RANGE, 'J_bessel_err_nr=1000', printer);
         /* indeed, the limit is 0,
          * but the cutoff happens too early */
         return { x: 0, nb, ncalc };

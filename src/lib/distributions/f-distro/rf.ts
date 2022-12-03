@@ -15,17 +15,17 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { debug } from 'debug';
+import { debug } from '@mangos/debug';
 
 import { rchisqOne } from '../chi-2/rchisq';
-import { ML_ERR_return_NAN } from '@common/logger';
+import { ML_ERR_return_NAN2, lineInfo4 } from '@common/logger';
 import { IRNGNormal } from '@rng/normal/normal-rng';
 
 const printer = debug('rf');
 
 export function rfOne(n1: number, n2: number, rng: IRNGNormal): number {
     if (isNaN(n1) || isNaN(n2) || n1 <= 0 || n2 <= 0) {
-        return ML_ERR_return_NAN(printer);
+        return ML_ERR_return_NAN2(printer, lineInfo4);
     }
 
     const v1 = isFinite(n1) ? rchisqOne(n1, rng) / n1 : 1;

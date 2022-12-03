@@ -49,7 +49,7 @@ jest.mock('@mangos/debug', () => {
             lines.push(args);
             const [fmt, ...rest] = args;
             printer(fmt, ...rest);
-        };
+        }
         debug_printer.enabled = true;
         return debug_printer;
     }

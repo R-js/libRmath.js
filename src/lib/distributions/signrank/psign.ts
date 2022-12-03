@@ -15,8 +15,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { debug } from 'debug';
-import { ML_ERR_return_NAN, } from '@common/logger';
+import { debug } from '@mangos/debug';
+import { ML_ERR_return_NAN2, lineInfo4, } from '@common/logger';
 import { R_DT_0, R_DT_1, R_DT_val, round, trunc, M_LN2, exp, isNaN, isFinite } from '@lib/r-func';
 import { cpu_csignrank } from './csignrank';
 import { growMemory, memory } from './csignrank_wasm';
@@ -44,7 +44,7 @@ export function psignrank(x: number, n: number, lowerTail = true, logP = false):
         return NaN;
     }
     if (!isFinite(n) || n <= 0) {
-        return ML_ERR_return_NAN(printer);
+        return ML_ERR_return_NAN2(printer, lineInfo4);
     }
 
     x = round(x + 1e-7);

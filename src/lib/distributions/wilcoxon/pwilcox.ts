@@ -16,8 +16,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { debug } from 'debug';
-import { ML_ERR_return_NAN } from '@common/logger';
+import { debug } from '@mangos/debug';
+import { ML_ERR_return_NAN2, lineInfo4 } from '@common/logger';
 import { R_DT_0, R_DT_1, R_DT_val } from '@lib/r-func';
 import { choose } from '@lib/special/choose';
 
@@ -42,12 +42,12 @@ export function pwilcox(q: number, m: number, n: number, lowerTail = true, logP 
     }
     if (!R_FINITE(m) || !R_FINITE(n))
     {
-        return ML_ERR_return_NAN(printer_pwilcox);
+        return ML_ERR_return_NAN2(printer_pwilcox, lineInfo4);
     }
 
     if (m <= 0 || n <= 0)
     {
-        return ML_ERR_return_NAN(printer_pwilcox);
+        return ML_ERR_return_NAN2(printer_pwilcox, lineInfo4);
     }
 
     q = floor(q + 1e-7);

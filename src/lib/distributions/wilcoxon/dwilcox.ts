@@ -16,9 +16,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { debug } from 'debug';
+import { debug } from '@mangos/debug';
 
-import { ML_ERR_return_NAN } from '@common/logger';
+import { ML_ERR_return_NAN2, lineInfo4 } from '@common/logger';
 import { R_D__0 } from '@lib/r-func';
 import { choose, lchoose } from '@lib/special/choose';
 import { cwilcox } from './cwilcox';
@@ -46,7 +46,7 @@ export function dwilcox(x: number, m: number, n: number, giveLog = false): numbe
 
     if (m <= 0 || n <= 0) {
         // console.log(`2. x:${x}, m:${m}, n:${n}`);
-        return ML_ERR_return_NAN(printer_dwilcox);
+        return ML_ERR_return_NAN2(printer_dwilcox, lineInfo4);
     }
 
     if (Math.abs(x - Math.round(x)) > 1e-7) {

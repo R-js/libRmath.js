@@ -1,9 +1,8 @@
+import ms from 'ms';
+
 import { loadData } from '@common/load';
 import { resolve } from 'path';
-import { cl, select } from '@common/debug-select';
-
-import { humanize } from '@common/humanize-time';
-
+import { cl, select } from '@common/debug-mangos-select';
 import { qhyper, useWasmBackends, clearBackends } from '..';
 
 const qhyperLogs = select('qhyper');
@@ -134,7 +133,7 @@ describe('qhyper(p,m,n,k,log)', function () {
             const start = Date.now();
             const result = qhyper(0.5,2**31-1,2**31-1,2**31-1);
             const stop = Date.now();
-            console.log(`(wasm) duration: ${humanize.humanize(stop-start)}`);
+            console.log(`(wasm) duration: ${ms(stop-start)}`);
             clearBackends();
             expect(result).toBe(1073741806);
         });

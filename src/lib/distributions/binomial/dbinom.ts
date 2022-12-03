@@ -15,9 +15,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { debug } from 'debug';
+import { debug } from '@mangos/debug';
 
-import {ML_ERR_return_NAN} from '@common/logger';
+import { ML_ERR_return_NAN2, lineInfo4 } from '@common/logger';
 
 import {
     M_LN_2PI,
@@ -69,7 +69,7 @@ function dbinom(x: number, n: number, p: number, logX = false): number {
     /* NaNs propagated correctly */
     if (isNaN(x) || isNaN(n) || isNaN(p)) return x + n + p;
 
-    if (p < 0 || p > 1 || R_D_negInonint(n)) return ML_ERR_return_NAN(printer);
+    if (p < 0 || p > 1 || R_D_negInonint(n)) return ML_ERR_return_NAN2(printer, lineInfo4);
 
     const ch = R_D_nonint_check(logX, x, printer);
     if (ch !== undefined){

@@ -6,7 +6,7 @@ import { IRNGTypeEnum } from '@rng/irng-type';
 import { IRNGNormalTypeEnum } from '@rng/normal/in01-type';
 
 
-import { cl, select } from '@common/debug-select';
+import { cl, select } from '@common/debug-mangos-select';
 const rchisqLogs = select('rnchisq');
 const rchisqDomainWarns = rchisqLogs("argument out of domain in '%s'");
 

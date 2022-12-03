@@ -1,9 +1,11 @@
+import ms from 'ms';
+
 import { loadData } from '@common/load';
 import { resolve } from 'path';
 
-import { cl, select } from '@common/debug-select';
+import { cl, select } from '@common/debug-mangos-select';
 
-import { humanize } from '@common/humanize-time';
+
 
 import { dsignrank, useWasmBackend, clearBackend } from '..';
 
@@ -80,14 +82,14 @@ describe('dsignrank (wilcox sign rank)', function () {
             const start = Date.now();
             const res = dsignrank(4025500, 4000);
             expect(res).toEqual(Infinity)
-            console.log(`dsign (wasm) duration: ${humanize.humanize(Date.now()-start)}`);
+            console.log(`dsign (wasm) duration: ${ms(Date.now()-start)}`);
             clearBackend();
         });
         it('(no wasm) test large inputnumbers n = 4000, W= 4025500', () => {
             const start = Date.now();
             const res = dsignrank(4025500, 4000);
             expect(res).toEqual(Infinity)
-            console.log(`dsign: (no wasm) duration: ${humanize.humanize(Date.now()-start)}`);
+            console.log(`dsign: (no wasm) duration: ${ms(Date.now()-start)}`);
         });
         it.todo('check why [0.037109375] differs [0.037109374999999993] is only 3 mantissa bits, should be more')
     });

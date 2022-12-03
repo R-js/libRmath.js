@@ -1,4 +1,4 @@
-import { cl, select } from '@common/debug-select';
+import { cl, select } from '@common/debug-mangos-select';
 
 import { rlogis } from '..';
 import { IRNGTypeEnum } from '@rng/irng-type';
@@ -40,11 +40,11 @@ describe('rlogis', function () {
         const nans = rlogis(5, NaN);
         expect(nans).toEqualFloatingPointBinary([NaN, NaN, NaN, NaN, NaN]);
         expect(rLogisDomainWarns()).toEqual([
-            ["argument out of domain in '%s'", ''],
-            ["argument out of domain in '%s'", ''],
-            ["argument out of domain in '%s'", ''],
-            ["argument out of domain in '%s'", ''],
-            ["argument out of domain in '%s'", '']
+            ["argument out of domain in '%s'", 'rlogisOne, line:26, col:34'],
+            ["argument out of domain in '%s'", 'rlogisOne, line:26, col:34'],
+            ["argument out of domain in '%s'", 'rlogisOne, line:26, col:34'],
+            ["argument out of domain in '%s'", 'rlogisOne, line:26, col:34'],
+            ["argument out of domain in '%s'", 'rlogisOne, line:26, col:34']
         ]);
     });
 

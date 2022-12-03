@@ -15,10 +15,10 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { debug } from 'debug';
+import { debug } from '@mangos/debug';
 const printer = debug('punif');
 
-import { ML_ERR_return_NAN } from '@common/logger';
+import { ML_ERR_return_NAN2, lineInfo4 } from '@common/logger';
 import { R_D_val, R_DT_0, R_DT_1 } from '@lib/r-func';
 
 export function punif(x: number, a = 0, b = 1, lowerTail = true, logP = false): number {
@@ -29,12 +29,12 @@ export function punif(x: number, a = 0, b = 1, lowerTail = true, logP = false): 
 
     if (b < a)
     {
-        return ML_ERR_return_NAN(printer);
+        return ML_ERR_return_NAN2(printer, lineInfo4);
     }
 
     if (!isFinite(a) || !isFinite(b))
     {
-        return ML_ERR_return_NAN(printer);
+        return ML_ERR_return_NAN2(printer, lineInfo4);
     }
 
     if (x >= b)

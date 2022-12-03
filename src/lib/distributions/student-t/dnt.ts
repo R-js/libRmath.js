@@ -16,8 +16,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { debug } from 'debug';
-import { ML_ERR_return_NAN, } from '@common/logger';
+import { debug } from '@mangos/debug';
+import { ML_ERR_return_NAN2, lineInfo4, } from '@common/logger';
 import { M_LN_SQRT_PI, R_D__0, sqrt, abs, DBL_EPSILON, exp, log } from '@lib/r-func';
 import { lgammafn_sign as lgamma } from '@special/gamma';
 import { dnorm } from '@dist/normal';
@@ -34,7 +34,7 @@ export function dnt(x: number, df: number, ncp = 0, giveLog = false): number {
 
     /* If non-positive df then error */
     if (df <= 0.0) {
-        return ML_ERR_return_NAN(printer_dnt);
+        return ML_ERR_return_NAN2(printer_dnt, lineInfo4);
     }
 
     /* If x is infinite then return 0 */

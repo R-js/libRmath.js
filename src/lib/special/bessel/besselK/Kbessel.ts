@@ -14,9 +14,9 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { debug } from 'debug';
+import { debug } from '@mangos/debug';
 
-import { ME, ML_ERROR } from '@common/logger';
+import { ME, ML_ERROR2 } from '@common/logger';
 import { sqxmin_BESS_K, xmax_BESS_K } from '../bessel-constants';
 import { IBesselRC } from '../IBesselRC';
 
@@ -224,7 +224,7 @@ export function K_bessel(x: number, alpha: number, nb: number, ize: number): IBe
         for (let cnt = 0; cnt < 1; cnt++) {
             if (ex <= 0 || (ize === 1 && ex > xmax_BESS_K)) {
                 if (ex <= 0) {
-                    if (ex < 0) ML_ERROR(ME.ME_RANGE, 'K_bessel', printer);
+                    if (ex < 0) ML_ERROR2(ME.ME_RANGE, 'K_bessel', printer);
                     // for (i = 0; i < nb; i++)
                     bk[0] = Infinity;
                 } /* would only have underflow */

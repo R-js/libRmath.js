@@ -1,6 +1,6 @@
 import { loadData } from '@common/load';
 import { resolve } from 'path';
-import { cl, select } from '@common/debug-select';
+import { cl, select } from '@common/debug-mangos-select';
 
 
 import { dlogis } from '..';
@@ -28,7 +28,7 @@ describe('dlogis', function () {
         it('scale <= 0', () => {
             const nan = dlogis(0,undefined, -0.5);
             expect(nan).toBeNaN();
-            expect(dLogisDomainWarns()).toEqual([ [ "argument out of domain in '%s'", '' ] ]);
+            expect(dLogisDomainWarns()).toEqual([ [ "argument out of domain in '%s'", 'dlogis, line:24, col:34' ] ]);
         });
     });
     describe('fidelity', () => {
