@@ -14,8 +14,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { debug } from 'debug';
-import { ML_ERR_return_NAN } from '@common/logger';
+import { debug } from '@mangos/debug';
+import {ML_ERR_return_NAN2, lineInfo4  } from '@common/logger';
 import { abs } from '@lib/r-func';
 
 const printer = debug('chebyshev_eval');
@@ -46,11 +46,11 @@ export function chebyshev_eval(x: number, a: number[], n: number): number {
     let i: number;
 
     if (n < 1 || n > 1000) {
-        return ML_ERR_return_NAN(printer);
+        return ML_ERR_return_NAN2(printer, lineInfo4);
     }
 
     if (x < -1.1 || x > 1.1) {
-        return ML_ERR_return_NAN(printer);
+        return ML_ERR_return_NAN2(printer, lineInfo4);
     }
 
     const twox = x * 2;

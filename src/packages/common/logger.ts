@@ -56,7 +56,7 @@ export function ML_ERR_return_NAN(printer: Debugger): number {
 }
 
 export function ML_ERROR2(x: ME, s: any, printer: Printer): void {
-    if (printer.enabled === false) {
+    if (!printer.enabled) {
         return;
     }
     const str = mapErr.get(x);
