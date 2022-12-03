@@ -1,7 +1,7 @@
 
 
 //helper
-import { cl, select } from '@common/debug-select';
+import { cl, select } from '@common/debug-mangos-select';
 
 const rbetaDomainWarns = select('rbeta')("argument out of domain in '%s'");
 

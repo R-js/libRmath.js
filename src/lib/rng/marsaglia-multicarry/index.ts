@@ -20,7 +20,7 @@ import { INT_MAX } from '@lib/r-func';
 import { fixup, i2_32m1 } from '../fixup';
 import { IRNG } from '../irng';
 import { IRNGTypeEnum } from '../irng-type';
-import { seed } from '../timeseed';
+import seed from '../seed';
 import { seedCheck } from '../seedcheck';
 
 const SEED_LEN = 2;

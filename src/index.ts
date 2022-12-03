@@ -17,8 +17,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 export { chebyshev_eval, chebyshev_init } from './lib/chebyshev/chebyshev';
-export { hypot, log1p as log1pR } from './lib/alt/log/log1p';
 
+// R versions of log1p and hypot
+export { default as log1p } from '././lib/alt/log/log1p';
+export { default as hypot } from './lib/alt/hypot/hypot';
+
+// trigonometry
+export * from './lib/trigonometry/cospi';
+export * from './lib/trigonometry/sinpi';
+export * from './lib/trigonometry/tanpi';
+
+// Stirling's approximation
+export * from './lib/stirling';
 
 // distributions
 export * from './lib/distributions/beta';
@@ -67,7 +77,9 @@ export * from './lib/rng/normal/box-muller';
 export * from './lib/rng/normal/buggy-kinderman-ramage';
 export * from './lib/rng/normal/kinderman-ramage';
 
-export { seed } from './lib/rng/timeseed';
+
+// generate seed from "crypto" node module or WebApi
+export { seed } from './lib/rng/seed';
 // stubs
 export { IRNG, MessageType } from './lib/rng/irng';
 export { IRNGNormal } from './lib/rng/normal/normal-rng';
@@ -84,8 +96,4 @@ export * from './lib/special/beta';
 export * from './lib/special/choose';
 export * from './lib/special/gamma';
 
-// trigonometry
-export * from './lib/stirling';
-export * from './lib/trigonometry/cospi';
-export * from './lib/trigonometry/sinpi';
-export * from './lib/trigonometry/tanpi';
+

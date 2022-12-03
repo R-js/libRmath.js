@@ -20,7 +20,7 @@ import { INT_MAX } from '@lib/r-func';
 import { fixup } from '@rng/fixup';
 import { IRNG } from '@rng/irng';
 import { IRNGTypeEnum } from '@rng/irng-type';
-import { seed } from '@rng/timeseed';
+import seed from '@lib/rng/seed';
 import { seedCheck } from '@rng/seedcheck';
 import { frac } from '@lib/r-func';
 

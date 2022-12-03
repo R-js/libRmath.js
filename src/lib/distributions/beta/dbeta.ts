@@ -15,9 +15,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { debug } from 'debug';
+import { debug } from '@mangos/debug';
 
-import { ML_ERR_return_NAN } from '@common/logger';
+import { ML_ERR_return_NAN2, lineInfo4 } from '@common/logger';
 
 import { R_D__0, R_D_exp, R_D_val, log, log1p } from '@lib/r-func';
 
@@ -30,7 +30,7 @@ const printer = debug('dbeta');
 export function dbeta_scalar(x: number, a: number, b: number, asLog: boolean): number {
     if (isNaN(x) || isNaN(a) || isNaN(b)) return x + a + b;
 
-    if (a < 0 || b < 0) return ML_ERR_return_NAN(printer);
+    if (a < 0 || b < 0) return ML_ERR_return_NAN2(printer, lineInfo4);
     if (x < 0 || x > 1) return  asLog ? 0 : 1.0;
 
     // limit cases for (a,b), leading to point masses

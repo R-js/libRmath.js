@@ -14,8 +14,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { debug } from 'debug';
-import { ML_ERR_return_NAN, ME, ML_ERROR } from '@common/logger';
+import { debug } from '@mangos/debug';
+import { ML_ERR_return_NAN2, lineInfo4, ME, ML_ERROR2 } from '@common/logger';
 
 import {
     DBL_MANT_DIG,
@@ -58,7 +58,7 @@ export function qbeta(p: number, shape1: number, shape2: number, lower_tail: boo
     if (isNaN(shape1) || isNaN(shape2) || isNaN(p)) return shape1 + shape2 + p;
 
     if (shape1 < 0 || shape2 < 0) {
-        return ML_ERR_return_NAN(printer_qbeta);
+        return ML_ERR_return_NAN2(printer_qbeta, lineInfo4);
     }
     // allowing p==0 and q==0  <==> treat as one- or two-point mass
 
@@ -203,7 +203,7 @@ function qbeta_raw(
             log_p ? '[-Inf, 0]' : '[0,1]',
         );
         // ML_ERR_return_NAN :
-        ML_ERROR(ME.ME_DOMAIN, '', printer_qbeta_raw);
+        ML_ERROR2(ME.ME_DOMAIN, lineInfo4, printer_qbeta_raw);
         qb[0] = qb[1] = NaN;
         return;
     }
@@ -476,7 +476,7 @@ function qbeta_raw(
                 if (!isFinite(y) && !(log_p && y === -Infinity)) {
                     // y = -Inf  is ok if(log_p)
                     // ML_ERR_return_NAN :
-                    ML_ERROR(ME.ME_DOMAIN, '', printer_qbeta_raw);
+                    ML_ERROR2(ME.ME_DOMAIN, lineInfo4, printer_qbeta_raw);
                     qb[0] = qb[1] = NaN;
                     return;
                 }
@@ -529,7 +529,7 @@ function qbeta_raw(
 
         /*-- NOT converged: Iteration count --*/
         warned = true;
-        ML_ERROR(ME.ME_PRECISION, 'qbeta', printer_qbeta_raw);
+        ML_ERROR2(ME.ME_PRECISION, 'qbeta', printer_qbeta_raw);
     }
 
 
