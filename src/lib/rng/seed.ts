@@ -34,6 +34,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { randomBytes } from 'crypto';
 
-export function seed(): number {
+export default function seed(): number {
     return randomBytes(4).readUInt32BE(0);
 }

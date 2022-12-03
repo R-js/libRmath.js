@@ -15,7 +15,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { chebyshev_eval } from '@lib/chebyshev';
+import { chebyshev_eval } from '@lib/chebyshev/chebyshev';
 import { ME, ML_ERROR } from '@common/logger';
 import { stirlerr } from '@lib/stirling';
 import { sinpi } from '@trig/sinpi';

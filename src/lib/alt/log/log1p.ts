@@ -19,18 +19,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import { debug } from '@mangos/debug';
 import { chebyshev_eval } from '../../chebyshev/chebyshev';
 import { ME, ML_ERR_return_NAN2, ML_ERROR2, lineInfo4 } from '@common/logger';
-import { abs as fabs, max as fmax2, min as fmin2, log } from '@lib/r-func';
+import { abs as fabs, log } from '@lib/r-func';
 
 const printer = debug('log1p');
 
 import {
     NEGATIVE_INFINITY,
-    POSITIVE_INFINITY,
     EPSILON,
-    isNaN,
-    isFinite,
 } from '@lib/r-func';
-
 
 // series for log1p on the interval -.375 to .375
 //				     with weighted error   6.35e-32
@@ -84,7 +80,7 @@ const alnrcs = [
     +0.63533936180236187354180266666666e-31,
 ];
 
-export function log1p(x: number): number {
+export default function log1p(x: number): number {
     const nlnrel = 22;
     const xmin = -0.999999985;
 
@@ -107,48 +103,4 @@ export function log1p(x: number): number {
         ML_ERROR2(ME.ME_PRECISION, lineInfo4, printer);
     }
     return log(1 + x);
-}
-
-/* Used as a substitute for the C99 function hypot, which all currently
-   known platforms have */
-
-/* hypot(a,b)	finds sqrt(a^2 + b^2)
- *		without overflow or destructive underflow.
- */
-
-export function hypot(a: number, b: number): number {
-    let p: number;
-    let r: number;
-    let s: number;
-    let t: number;
-    let tmp: number;
-    let u: number;
-
-    if (isNaN(a) || isNaN(b)) {
-        //* propagate Na(N)s:
-        return a + b;
-    }
-    if (!isFinite(a) || !isFinite(b)) {
-        return POSITIVE_INFINITY;
-    }
-    p = fmax2(fabs(a), fabs(b));
-    if (p !== 0.0) {
-        // r = (min(|a|,|b|) / p) ^2
-        tmp = fmin2(fabs(a), fabs(b)) / p;
-        r = tmp * tmp;
-        while (true) {
-            t = 4.0 + r;
-            // This was a test of 4.0 + r == 4.0, but optimizing
-            //      compilers nowadays infinite loop on that.
-            if (fabs(r) < 2 * EPSILON) break;
-            s = r / t;
-            u = 1 + 2 * s;
-            p *= u;
-
-            // r = (s / u)^2 * r
-            tmp = s / u;
-            r *= tmp * tmp;
-        }
-    }
-    return p;
 }

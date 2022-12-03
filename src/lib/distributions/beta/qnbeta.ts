@@ -15,8 +15,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { debug } from 'debug';
-import { ML_ERR_return_NAN, R_Q_P01_boundaries } from '@common/logger';
+import { debug } from '@mangos/debug';
+import { ML_ERR_return_NAN2, lineInfo4, R_Q_P01_boundaries } from '@common/logger';
 import { R_DT_qIv } from '@dist/exp/expm1';
 import { pnbeta } from './pnbeta';
 
@@ -36,9 +36,9 @@ export function qnbeta(p: number, a: number, b: number, ncp: number, lower_tail:
 
     if (isNaN(p) || isNaN(a) || isNaN(b) || isNaN(ncp)) return p + a + b + ncp;
 
-    if (!isFinite(a)) return ML_ERR_return_NAN(printer_qnbeta);
+    if (!isFinite(a)) return ML_ERR_return_NAN2(printer_qnbeta, lineInfo4);
 
-    if (ncp < 0 || a <= 0 || b <= 0) return ML_ERR_return_NAN(printer_qnbeta);
+    if (ncp < 0 || a <= 0 || b <= 0) return ML_ERR_return_NAN2(printer_qnbeta, lineInfo4);
 
     const rc = R_Q_P01_boundaries(lower_tail, log_p, p, 0, 1);
     if (rc !== undefined) {

@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import { fixup, i2_32m1 } from '@rng/fixup';
 import { IRNG } from '@rng/irng';
 import { IRNGTypeEnum } from '@rng/irng-type';
-import { seed } from '@rng/timeseed';
+import seed from '@lib/rng/seed';
 import { seedCheck } from '@rng/seedcheck';
 import { INT_MAX } from '@lib/r-func';
 

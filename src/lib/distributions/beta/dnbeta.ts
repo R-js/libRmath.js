@@ -15,8 +15,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { debug } from 'debug';
-import { ML_ERR_return_NAN } from '@common/logger';
+import { debug } from '@mangos/debug';
+import { ML_ERR_return_NAN2, lineInfo4 } from '@common/logger';
 import { R_D__0, R_D_exp, ceil, sqrt } from '@lib/r-func';
 import { dpois_raw } from '@dist/poisson/dpois';
 import { dbeta_scalar } from './dbeta';
@@ -40,11 +40,11 @@ export function dnbeta_scalar(x: number, a: number, b: number, ncp: number, give
 
     if (isNaN(x) || isNaN(a) || isNaN(b) || isNaN(ncp)) return x + a + b + ncp;
     if (ncp < 0 || a <= 0 || b <= 0) {
-        return ML_ERR_return_NAN(printer);
+        return ML_ERR_return_NAN2(printer, lineInfo4);
     }
 
     if (!isFinite(a) || !isFinite(b) || !isFinite(ncp)) {
-        return ML_ERR_return_NAN(printer);
+        return ML_ERR_return_NAN2(printer, lineInfo4);
     }
 
     if (x < 0 || x > 1) {

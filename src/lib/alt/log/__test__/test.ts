@@ -1,4 +1,4 @@
-import { log1p } from '../log1p';
+import log1p from '../log1p';
 import { cl, select } from '@common/debug-mangos-select';
 const dlog1pDomain = select('log1p')(/.*/)
 
@@ -10,29 +10,26 @@ describe('log1p', function () {
     });
     describe('invalid input and edge cases', () => {
         it('x < -1 should be a NaN', () => {
-            /* load data from fixture */
             const l = log1p(-1.5);
             expect(l).toEqualFloatingPointBinary(NaN);
             expect(dlog1pDomain()).toEqual([
                 [
                     "argument out of domain in '%s'",
-                    'log1p, line:96, col:42'
+                    'log1p, line:89, col:42'
                 ]
             ]);
         });
         it('x = -1 should be a -Infinity', () => {
-            /* load data from fixture */
             const l = log1p(-1);
             expect(l).toEqualFloatingPointBinary(-Infinity);
         });
         it('x < -0.999999985 causes precision failure warning', () => {
             const l = log1p(-0.999999999);
-            // check for debug printing with mock
             expect(l).toEqualFloatingPointBinary(-20.723265865228342);
             expect(dlog1pDomain()).toEqual([
                 [
                     "full precision may not have been achieved in '%s'",
-                    'log1p, line:110, col:18'
+                    'log1p, line:103, col:18'
                 ]
             ]);
         })
@@ -46,6 +43,18 @@ describe('log1p', function () {
         });
         it('log1p(10000)', () => {
             expect(log1p(10000)).toEqualFloatingPointBinary(9.210440366976517);
-        })
+        });
+        it('log1p(x < 0.375, x = 0.2)', () => {
+            expect(log1p(0.2)).toEqualFloatingPointBinary(0.18232155679395462, 51);
+        });
+        it('fabs(x) < 0.5 EPSILON)', () => {
+            expect(log1p(0.4*Number.EPSILON)).toEqualFloatingPointBinary(8.881784197001253e-17);
+        });
+        it('fabs(x) < 0.5 EPSILON)', () => {
+            expect(log1p(0.4*Number.EPSILON)).toEqualFloatingPointBinary(8.881784197001253e-17);
+        });
+        it('0 < x < 1e-8)', () => {
+            expect(log1p(0.5e-8)).toEqualFloatingPointBinary(4.9999999875e-9);
+        });
     });
 });

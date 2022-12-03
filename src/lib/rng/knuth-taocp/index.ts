@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import { fixup } from '../fixup';
 import { IRNG } from '../irng';
 import { IRNGTypeEnum } from '../irng-type';
-import { seed } from '../timeseed';
+import seed from '../seed';
 import { TAOCP1997init } from './taocp-1997-init';
 import { seedCheck } from '../seedcheck';
 import { IRandom } from '@rng/IRandom';

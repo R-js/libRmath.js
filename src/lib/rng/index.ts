@@ -10,7 +10,7 @@ This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
-
+seed
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
@@ -21,7 +21,7 @@ export { LecuyerCMRG } from './lecuyer-cmrg';
 export { MarsagliaMultiCarry } from './marsaglia-multicarry';
 export { MersenneTwister } from './mersenne-twister';
 export { SuperDuper } from './super-duper';
-export { seed as timeseed } from './timeseed';
+export { default as seed } from './seed';
 export { WichmannHill } from './wichmann-hill';
 // normal
 export { AhrensDieter } from './normal/ahrens-dieter';
