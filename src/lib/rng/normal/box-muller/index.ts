@@ -27,11 +27,11 @@ const M_PI = 3.14159265358979323846264338327950288;
 
 export class BoxMuller extends IRNGNormal {
 
-    public static kind = IRNGNormalTypeEnum.BOX_MULLER;
+    public static override kind = IRNGNormalTypeEnum.BOX_MULLER;
 
     private BM_norm_keep: number;
 
-    public reset(rng :IRNG):void {
+    public override reset(rng :IRNG):void {
         super.reset(rng);
         this.BM_norm_keep = 0;
     }
@@ -41,7 +41,7 @@ export class BoxMuller extends IRNGNormal {
         this.BM_norm_keep = 0; // not needed but tsc will give problems
     }
 
-    public random(): number {
+    public override random(): number {
         let s = 0.0;
         let theta = 0;
 

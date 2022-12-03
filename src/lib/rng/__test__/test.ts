@@ -3,7 +3,7 @@ import { IRNGTypeEnum } from '../';
 import { fixup, i2_32m1 } from '../fixup';
 
 class MyIRNG extends IRNG {
-    public static kind = IRNGTypeEnum.USER_DEFINED;
+    public static override kind = IRNGTypeEnum.USER_DEFINED;
     public get cut(): number {
         return 2**25-1;
     }
@@ -12,7 +12,7 @@ class MyIRNG extends IRNG {
         super('my-irng');
         this._seed = new Uint32Array(0);
     }
-    random(): number {
+    override random(): number {
         return Math.random();
     }
     get seed() {

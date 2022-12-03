@@ -44,7 +44,7 @@ function is_odd(x: number): boolean {
 
 export class KnuthTAOCP2002 extends IRNG {
 
-    public static kind = IRNGTypeEnum.KNUTH_TAOCP2002
+    public static override kind = IRNGTypeEnum.KNUTH_TAOCP2002
     //
     //
     private qualityBuffer: ArrayBuffer;
@@ -169,12 +169,12 @@ export class KnuthTAOCP2002 extends IRNG {
     }
 
     // called by super.random()
-    random(): number {
+    override random(): number {
         const KT = 9.31322574615479e-10;
         return fixup(this.KT_next() * KT);
     }
 
-    public init(_seed: number = seed()): void {
+    public override init(_seed: number = seed()): void {
         /* Initial scrambling */
         const s = new Uint32Array([0]);
         s[0] = _seed;

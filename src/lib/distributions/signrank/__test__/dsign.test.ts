@@ -12,7 +12,7 @@ import { dsignrank, useWasmBackend, clearBackend } from '..';
 const dsignrankLogs = select('dsignrank');
 const dsignrankDomainWarns = dsignrankLogs("argument out of domain in '%s'");
 
-const range = (a: number, b: number) => Array.from({ length: (b - a + 1) }, (v, i) => i + a);
+const range = (a: number, b: number) => Array.from({ length: (b - a + 1) }, (_v, i) => i + a);
 
 describe('dsignrank (wilcox sign rank)', function () {
     beforeEach(() => {

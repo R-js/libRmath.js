@@ -34,7 +34,7 @@ const a23n = 1370589;
 
 export class LecuyerCMRG extends IRNG {
 
-    public static kind = IRNGTypeEnum.LECUYER_CMRG;
+    public static override kind = IRNGTypeEnum.LECUYER_CMRG;
 
     private m_seed: Int32Array;
 
@@ -44,7 +44,7 @@ export class LecuyerCMRG extends IRNG {
         this.init(_seed);
     }
 
-    public init(_seed: number = seed()): void {
+    public override init(_seed: number = seed()): void {
         /* Initial scrambling */
         const s = new Int32Array([0]);
 
@@ -63,7 +63,7 @@ export class LecuyerCMRG extends IRNG {
         super.init(_seed); // emit event
     }
 
-    random(): number {
+    override random(): number {
         const II = this.m_seed;
 
         //const pp2 = pow.bind(pow, 2);

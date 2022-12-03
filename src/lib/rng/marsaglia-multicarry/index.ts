@@ -27,7 +27,7 @@ const SEED_LEN = 2;
 
 export class MarsagliaMultiCarry extends IRNG {
 
-    public static kind = IRNGTypeEnum.MARSAGLIA_MULTICARRY;
+    public static override kind = IRNGTypeEnum.MARSAGLIA_MULTICARRY;
     private m_seed: Int32Array;
 
     private fixupSeeds(): void {
@@ -43,7 +43,7 @@ export class MarsagliaMultiCarry extends IRNG {
         this.init(_seed);
     }
 
-    public init(_seed: number = seed()):void {
+    public override init(_seed: number = seed()):void {
         /* Initial scrambling */
         const s = new Int32Array([_seed]);
         for (let j = 0; j < 50; j++) {
@@ -57,7 +57,7 @@ export class MarsagliaMultiCarry extends IRNG {
         super.init(_seed);
     }
 
-    random(): number {
+    override random(): number {
         const s = this.m_seed;
         s[0] = 36969 * (s[0] & 65535) + (s[0] >>> 16);
         s[1] = 18000 * (s[1] & 65535) + (s[1] >>> 16);

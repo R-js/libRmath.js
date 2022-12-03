@@ -41,7 +41,7 @@ const SEED_LEN = 101;
 
 export class KnuthTAOCP extends IRNG implements IRandom {
 
-    public static kind =  IRNGTypeEnum.KNUTH_TAOCP;
+    public static override kind =  IRNGTypeEnum.KNUTH_TAOCP;
     //private buf: ArrayBuffer;
 
     private m_seed: Uint32Array;
@@ -99,7 +99,7 @@ export class KnuthTAOCP extends IRNG implements IRandom {
         this.init(_seed);
     }
 
-    public init(_seed: number = seed()): void {
+    public override init(_seed: number = seed()): void {
         /* Initial scrambling */
         const s = new Uint32Array([0]);
         s[0] = _seed;
@@ -119,7 +119,7 @@ export class KnuthTAOCP extends IRNG implements IRandom {
         return this.m_seed.slice();
     }
 
-    random(): number {
+    override random(): number {
         return fixup(this.KT_next() * KT);
     }
 

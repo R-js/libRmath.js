@@ -27,7 +27,7 @@ const SEED_LEN = 2;
 
 export class SuperDuper extends IRNG {
 
-    public static kind = IRNGTypeEnum.SUPER_DUPER;
+    public static override kind = IRNGTypeEnum.SUPER_DUPER;
 
     private m_seed: Int32Array;
 
@@ -37,7 +37,7 @@ export class SuperDuper extends IRNG {
         this.init(_seed);
     }
 
-    random(): number {
+    override random(): number {
         const s = this.m_seed;
         /* This is Reeds et al (1984) implementation;
          * modified using __unsigned__	seeds instead of signed ones
@@ -61,7 +61,7 @@ export class SuperDuper extends IRNG {
         return;
     }
 
-    public init(_seed: number = seed()):void {
+    public override init(_seed: number = seed()):void {
         /* Initial scrambling */
         const s = new Uint32Array([_seed]);
         for (let j = 0; j < 50; j++) {

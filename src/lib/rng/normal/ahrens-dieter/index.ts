@@ -159,7 +159,7 @@ const h = [
 
 export class AhrensDieter extends IRNGNormal {
    
-    public static kind = IRNGNormalTypeEnum.AHRENS_DIETER;
+    public static override kind = IRNGNormalTypeEnum.AHRENS_DIETER;
 
     constructor(_rng: IRNG = new MersenneTwister(0)) {
         super(_rng, 'Ahrens-Dieter');
@@ -168,7 +168,7 @@ export class AhrensDieter extends IRNGNormal {
     }
 
     // shaper
-    public random(): number {
+    public override random(): number {
         let u1: number = this._rng.random();
         let s = 0.0;
         let w: number;

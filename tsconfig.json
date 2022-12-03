@@ -1,37 +1,55 @@
 {
-  "include": [
-    "src/lib/**/*.ts",
-    "src/packages/**/*.ts",
-    "src/index.ts"
-  ],
-  "exclude": [
-    "test",
-    "node_modules",
-    "dist",
-    "coverage",
-    ".vscode",
-    ".jest-cache"
-  ],
+  "include": ["src/lib/**/*.ts", "src/packages/**/*.ts", "src/index.ts"],
+  "exclude": ["**/__test__/**"],
+  "files": ["src/index.ts"],
   "typeAcquisition": {
     "enable": true
   },
   "compilerOptions": {
-    "allowJs": true,
-    "checkJs": true,
-    "composite": false,
-    "declaration": true,
-    "declarationMap": true,
-    "downlevelIteration": false,
-    "importHelpers": false,
-    "incremental": true,
-    "lib": [
-      "es5",
-      "es6",
-      "es2021",
-      "dom"
-    ],
+    // part: type checks
+
+    "allowUnreachableCode": true,
+    "allowUnusedLabels": true,
+    "exactOptionalPropertyTypes": true,
+    "noImplicitAny": true, // true if strict is true
+    "noImplicitOverride": true,
+    "noImplicitThis": false,
+    "noPropertyAccessFromIndexSignature": false,
+    "noUncheckedIndexedAccess": false,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+
+    "strict": true,
+
+    // part: modules
+    "allowUmdGlobalAccess": false,
+    "baseUrl": "./src",
     "module": "ESNext",
-    "noEmit": false,
+    "moduleResolution": "node",
+    "paths": {
+      "@common/*": ["lib/common/*", "packages/common/*", "packages/__test__/*"],
+      "@lib/*": ["lib/*"],
+      "@rng/*": ["lib/rng/*"],
+      "@special/*": ["lib/special/*"],
+      "@trig/*": ["lib/trigonometry/*"],
+      "@dist/*": ["lib/distributions/*"]
+    },
+    "resolveJsonModule": true,
+    "types": ["node"],
+
+    // part: Emit
+
+    "declaration": false,
+    "outDir": "dist/tsc",
+    "preserveConstEnums": true,
+    "stripInternal": true,
+
+    // JavaScript Support
+
+    "checkJs": true,
+
+    // Editor Support
+
     "plugins": [
       {
         "name": "typescript-eslint-language-service"
@@ -44,85 +62,48 @@
         "afterDeclarations": true
       }
     ],
-    "removeComments": false,
-    "rootDir": "./src",
-    "sourceMap": true,
+
+    // here
+
+    "composite": false,
+
+    "incremental": true,
+    "lib": ["es5", "es6", "es2021", "dom"],
+
+    "noEmit": false,
+
     "target": "ES2020",
-    "strict": true,
-    "alwaysStrict": true,
-    "noImplicitAny": true,
-    "noImplicitThis": true,
-    "strictBindCallApply": true,
-    "strictFunctionTypes": true,
-    "strictNullChecks": true,
-    "strictPropertyInitialization": true,
+
     "allowSyntheticDefaultImports": false,
-    "allowUmdGlobalAccess": false,
-    "baseUrl": "./src",
+
     "esModuleInterop": false,
-    "moduleResolution": "node",
-    "paths": {
-      "@common/*": [
-        "lib/common/*",
-        "packages/common/*",
-        "packages/__test__/*"
-      ],
-      "@lib/*": [
-        "lib/*"
-      ],
-      "@rng/*": [
-        "lib/rng/*"
-      ],
-      "@special/*": [
-        "lib/special/*"
-      ],
-      "@trig/*": [
-        "lib/trigonometry/*"
-      ],
-      "@dist/*": [
-        "lib/distributions/*"
-      ],
-      "*" : ["src/typedefs/*"]
-    },
+
     "preserveSymlinks": true,
-    "typeRoots": [
-      "node_modules/@types",
-      "src/typedefs"
-    ],
-    "inlineSourceMap": false,
-    "inlineSources": false,
-    "noImplicitReturns": false,
-    "noUnusedLocals": true,
-    "noUnusedParameters": false,
+
     "emitDecoratorMetadata": false,
     "experimentalDecorators": true,
-    "allowUnreachableCode": false,
-    "allowUnusedLabels": false,
+
     "assumeChangesOnlyAffectDirectDependencies": false,
     "noFallthroughCasesInSwitch": false,
     "disableSizeLimit": true,
     "disableSolutionSearching": false,
     "disableSourceOfProjectReferenceRedirect": false,
-    "emitBOM": false,
-    "emitDeclarationOnly": false,
+
     "extendedDiagnostics": true,
     "forceConsistentCasingInFileNames": true,
-    "importsNotUsedAsValues": "remove",
+
     "listEmittedFiles": true,
     "listFiles": true,
     "maxNodeModuleJsDepth": 0,
-    "newLine": "LF",
-    "noEmitHelpers": true,
     "noErrorTruncation": false,
     "noImplicitUseStrict": false,
     "noLib": false,
     "noResolve": false,
     "noStrictGenericChecks": false,
-    "preserveConstEnums": false,
-    "resolveJsonModule": true,
+
     "skipDefaultLibCheck": false,
     "skipLibCheck": true,
-    "stripInternal": true,
+
     "suppressExcessPropertyErrors": false,
     "suppressImplicitAnyIndexErrors": false,
     "traceResolution": false,
