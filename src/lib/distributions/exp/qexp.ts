@@ -14,8 +14,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { debug } from 'debug';
-import { ML_ERR_return_NAN, R_Q_P01_check } from '@common/logger';
+import { debug } from '@mangos/debug';
+import { ML_ERR_return_NAN2, lineInfo4, R_Q_P01_check } from '@common/logger';
 import { R_DT_0 } from '@lib/r-func';
 import { R_DT_Clog } from './expm1';
 
@@ -24,7 +24,7 @@ const printer = debug('qexp');
 export function qexp(p: number, scale: number, lower_tail: boolean, log_p: boolean): number {
     if (isNaN(p) || isNaN(scale)) return p + scale;
 
-    if (scale < 0) return ML_ERR_return_NAN(printer);
+    if (scale < 0) return ML_ERR_return_NAN2(printer, lineInfo4);
 
     const rc = R_Q_P01_check(log_p, p);
     if (rc !== undefined) {

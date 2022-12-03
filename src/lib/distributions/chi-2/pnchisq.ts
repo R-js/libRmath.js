@@ -14,8 +14,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { debug } from 'debug';
-import { ML_ERR_return_NAN, ML_ERROR, ME } from '@common/logger'
+import { debug } from '@mangos/debug';
+import { ML_ERR_return_NAN2, lineInfo4, ML_ERROR2, ME } from '@common/logger'
 import {
     M_LN_SQRT_2PI,
     R_D__1,
@@ -45,11 +45,11 @@ export function pnchisq(x: number, df: number, ncp: number, lower_tail: boolean,
         return NaN;
     }
     if (!isFinite(df) || !isFinite(ncp)) {
-        return ML_ERR_return_NAN(printer);
+        return ML_ERR_return_NAN2(printer, lineInfo4);
     }
 
     if (df < 0 || ncp < 0) {
-        return ML_ERR_return_NAN(printer);
+        return ML_ERR_return_NAN2(printer, lineInfo4);
     }
 
     ans = pnchisq_raw(x, df, ncp, 1e-12, 8 * Number.EPSILON, 1000000, lower_tail, log_p);
@@ -59,7 +59,7 @@ export function pnchisq(x: number, df: number, ncp: number, lower_tail: boolean,
         } else {
             /* !lower_tail */
             /* since we computed the other tail cancellation is likely */
-            if (ans < (log_p ? -10 * Math.LN10 : 1e-10)) ML_ERROR(ME.ME_PRECISION, 'pnchisq', printer);
+            if (ans < (log_p ? -10 * Math.LN10 : 1e-10)) ML_ERROR2(ME.ME_PRECISION, 'pnchisq', printer);
             if (!log_p) ans = Math.max(ans, 0.0); /* Precaution PR#7099 */
         }
     }

@@ -3,7 +3,7 @@ import { loadData } from '@common/load';
 import { resolve } from 'path';
 import { pexp } from '..';
 
-import { cl, select } from '@common/debug-select';
+import { cl, select } from '@common/debug-mangos-select';
 const pexpDomainWarns = select('pexp')("argument out of domain in '%s'");
 
 describe('pexp', function () {

@@ -14,9 +14,9 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { debug } from 'debug';
+import { debug } from '@mangos/debug';
 
-import { ML_ERR_return_NAN, } from '@common/logger';
+import { ML_ERR_return_NAN2, lineInfo4} from '@common/logger';
 import { R_D__0, R_D__1, R_D_exp, R_D_nonint_check } from '@lib/r-func';
 import { dbinom_raw } from '@dist/binomial/dbinom';
 import { lgammafn_sign } from '@special/gamma/lgammafn_sign';
@@ -37,7 +37,7 @@ export function dnbinom(x: number, size: number, prob: number, give_log: boolean
     }
 
     if (prob <= 0 || prob > 1 || size < 0) {
-        return ML_ERR_return_NAN(printer);
+        return ML_ERR_return_NAN2(printer, lineInfo4);
     }
 
     const rc = R_D_nonint_check(give_log, x, printer);
@@ -77,7 +77,7 @@ export function dnbinom_mu(x: number, size: number, mu: number, give_log: boolea
     }
 
     if (mu < 0 || size < 0) {
-        return ML_ERR_return_NAN(printer_dnbinom_mu);
+        return ML_ERR_return_NAN2(printer_dnbinom_mu, lineInfo4);
     }
 
     const rc = R_D_nonint_check(give_log, x, printer_dnbinom_mu);

@@ -15,9 +15,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { debug } from 'debug';
+import { debug } from '@mangos/debug';
 
-import { ML_ERR_return_NAN,  } from '@common/logger';
+import { ML_ERR_return_NAN2, lineInfo4,  } from '@common/logger';
 import { R_D__0, R_D__1, R_D_negInonint, R_D_nonint_check } from '@lib/r-func';
 import { dbinom_raw } from '@dist/binomial/dbinom';
 
@@ -28,7 +28,7 @@ export function dhyper(x: number, r: number, b: number, n: number, give_log = fa
     if (isNaN(x) || isNaN(r) || isNaN(b) || isNaN(n)) return NaN;
 
     if (R_D_negInonint(r) || R_D_negInonint(b) || R_D_negInonint(n) || n > r + b) {
-        return ML_ERR_return_NAN(printer);
+        return ML_ERR_return_NAN2(printer, lineInfo4);
     }
     if (x < 0) { 
         return R_D__0(give_log);

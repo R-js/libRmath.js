@@ -16,6 +16,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+import type { Printer } from '@mangos/debug';
+
 const { isInteger, parseFloat, parseInt, MIN_VALUE, MAX_VALUE, isNaN, isFinite, EPSILON, MAX_SAFE_INTEGER, NEGATIVE_INFINITY, POSITIVE_INFINITY } = Number;
 
 export { isInteger, parseFloat, parseInt, MIN_VALUE, MAX_VALUE, isNaN, isFinite, EPSILON, MAX_SAFE_INTEGER, NEGATIVE_INFINITY, POSITIVE_INFINITY };
@@ -428,9 +430,9 @@ export const R_D_exp = (log_p: boolean, x: number): number => {
     return log_p ? x : exp(x);
 };
 
-import type { Debugger } from 'debug';
+
 //ok
-export function R_D_nonint_check(log: boolean, x: number, printer: Debugger): number | undefined {
+export function R_D_nonint_check(log: boolean, x: number, printer: Printer): number | undefined {
     if (R_nonint(x)) {
         printer('non-integer x = %d', x);
         return R_D__0(log);

@@ -14,9 +14,9 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { debug } from 'debug';
+import { debug } from '@mangos/debug';
 
-import { ML_ERR_return_NAN, R_Q_P01_boundaries } from '@common/logger';
+import { ML_ERR_return_NAN2, lineInfo4, R_Q_P01_boundaries } from '@common/logger';
 
 import { R_Log1_Exp } from '@dist/exp/expm1';
 
@@ -31,7 +31,7 @@ export function qlogis(p: number, location = 0, scale = 1, lower_tail = true, lo
     }
 
     if (scale < 0) {
-        return ML_ERR_return_NAN(printer_qlogis);
+        return ML_ERR_return_NAN2(printer_qlogis, lineInfo4);
     }
     if (scale === 0) return location;
 

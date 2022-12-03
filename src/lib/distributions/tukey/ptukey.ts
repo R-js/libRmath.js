@@ -16,13 +16,13 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { debug } from 'debug';
+import { debug } from '@mangos/debug';
 import { wprob } from './wprob';
 
 import {
     ME,
-    ML_ERR_return_NAN,
-    ML_ERROR,
+    ML_ERR_return_NAN2, lineInfo4,
+    ML_ERROR2,
 } from '@common/logger';
 
 import {
@@ -152,7 +152,7 @@ export function ptukey(q: number, nmeans: number, df: number, nrnages =1, lower_
 
     if (isNaN(q) || isNaN(nrnages) || isNaN(nmeans) || isNaN(df))
     {
-        return ML_ERR_return_NAN(printer_ptukey);
+        return ML_ERR_return_NAN2(printer_ptukey, lineInfo4);
     }
 
     if (q <= 0)
@@ -165,7 +165,7 @@ export function ptukey(q: number, nmeans: number, df: number, nrnages =1, lower_
 
     if (df < 2 || nrnages < 1 || nmeans < 2)
     {
-        return ML_ERR_return_NAN(printer_ptukey);
+        return ML_ERR_return_NAN2(printer_ptukey, lineInfo4);
     }
 
     if (!isFinite(q))
@@ -270,7 +270,7 @@ export function ptukey(q: number, nmeans: number, df: number, nrnages =1, lower_
     if (otsum > eps2)
     {
        
-        ML_ERROR(ME.ME_PRECISION, 'ptukey', printer_ptukey);
+        ML_ERROR2(ME.ME_PRECISION, 'ptukey', printer_ptukey);
     }
     ans = min(1, ans);
     return R_DT_val(lower_tail, log_p, ans);

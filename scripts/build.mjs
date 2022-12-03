@@ -37,18 +37,17 @@ const sourceDir = join("src");
 
 function getAllRootSourceFiles() {
   let sourceFiles = [
-    /*  
-  '/lib/alt/log/log1p.ts',
-  '/lib/common/toms708/index.ts',
-  '/lib/deviance/index.ts',
-  '/lib/rng/index.ts',
-  '/lib/special/bessel/index.ts',
-  '/lib/special/beta/index.ts',
-  '/lib/special/gamma/index.ts',
-  '/lib/special/choose/index.ts',
-  '/lib/special/stirling/index.ts',
-  '/lib/special/trigonometry/index.ts',
-  '/lib/r-func.ts',*/
+    /*"/lib/alt/log/log1p.ts",
+    "/lib/common/toms708/index.ts",
+    "/lib/deviance/index.ts",
+    "/lib/rng/index.ts",
+    "/lib/special/bessel/index.ts",
+    "/lib/special/beta/index.ts",
+    "/lib/special/gamma/index.ts",
+    "/lib/special/choose/index.ts",
+    "/lib/special/stirling/index.ts",
+    "/lib/special/trigonometry/index.ts",
+    "/lib/r-func.ts",*/
     "./index.ts",
   ];
   // add distributions
@@ -150,10 +149,7 @@ function compile(files, targetDIR, options) {
         }
         case ts.ModuleKind.ES2020: {
           const importStatements = Array.from(
-            jxpath(
-              "/**/[type=ImportDeclaration]/source/",
-              astTree
-            )
+            jxpath("/**/[type=ImportDeclaration]/source/", astTree)
           );
           for (const node of importStatements) {
             if (node !== null && node !== undefined) {
@@ -175,7 +171,6 @@ function compile(files, targetDIR, options) {
           } catch (err) {
             console.log(err);
           }
-          console.log("waypoint1");
           contents = generate(astTree);
           path =
             extname(path) === ""
@@ -197,23 +192,10 @@ function compile(files, targetDIR, options) {
       // eslint-disable-next-line no-console
       console.log("Fail", path);
     }
-    /* writeFile(path, contents)
-      .then(() => {
-        // eslint-disable-next-line no-console
-        console.log("Built", path);
-      })
-      .catch((error) => {
-        // eslint-disable-next-line no-console
-        onError && onError(error.message);
-        console.error(error);
-      });*/
   }; // host.writeFile function definition end
 
   const program = ts.createProgram(files, compilerOptions, host);
-  const result = program.emit();
-  // wait for next marco-task
-  console.log(result);
-  console.log("Done");
+  program.emit();
 }
 
 // note: this is *.ts source code so...

@@ -15,7 +15,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { debug } from 'debug';
+import { debug } from '@mangos/debug';
 import { cospi } from '@trig/cospi';
 import { sinpi } from '@trig/sinpi';
 import { M_eps_sinc, thresh_BESS_Y, xlrg_BESS_Y } from '../bessel-constants';
@@ -206,7 +206,7 @@ export function Y_bessel(x: number, alpha: number, nb: number): IBesselRC {
     if (ex < DBL_MIN || ex > xlrg_BESS_Y) {
         /* Warning is not really appropriate, give
          * proper limit:
-         * ML_ERROR(ME_RANGE, "Y_bessel"); */
+         * ML_ERROR2(ME_RANGE, "Y_bessel"); */
         printer('range issue: x < DBL_MIN but still bigger then 1e8 x=(%d)', ex);
         ncalc = nb;
         if (ex > xlrg_BESS_Y) by[0] = 0;

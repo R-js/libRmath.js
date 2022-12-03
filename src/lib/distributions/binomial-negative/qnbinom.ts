@@ -15,9 +15,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { debug } from 'debug';
+import { debug } from '@mangos/debug';
 
-import { ML_ERR_return_NAN, R_Q_P01_boundaries } from '@common/logger';
+import { ML_ERR_return_NAN2, lineInfo4, R_Q_P01_boundaries } from '@common/logger';
 import { R_DT_0, R_DT_1  }  from '@lib/r-func';
 
 import { NumberW } from '@common/toms708/NumberW';
@@ -87,7 +87,7 @@ export function qnbinom(p: number, size: number, prob: number, lower_tail: boole
     if (prob === 0 && size === 0) return 0;
 
     if (prob <= 0 || prob > 1 || size < 0) {
-        return ML_ERR_return_NAN(printer_qnbinom);
+        return ML_ERR_return_NAN2(printer_qnbinom, lineInfo4);
     }
 
     if (prob === 1 || size === 0) return 0;

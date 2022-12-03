@@ -1,7 +1,7 @@
 import {
     cl,
     select
-} from '@common/debug-select';
+} from '@common/debug-mangos-select';
 
 const chooseDomainWarns = select('choose')("argument out of domain in '%s'");
 chooseDomainWarns;

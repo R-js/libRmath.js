@@ -14,9 +14,9 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { debug } from 'debug';
+import { debug } from '@mangos/debug';
 import { chebyshev_eval } from '@lib/chebyshev/chebyshev';
-import { ME, ML_ERR_return_NAN, ML_ERROR } from '@common/logger';
+import { ME, ML_ERR_return_NAN2, lineInfo4, ML_ERROR2 } from '@common/logger';
 const printer = debug('lgammacor');
 
 const algmcs: number[] = [
@@ -48,9 +48,9 @@ export function lgammacor(x: number): number {
     //   xbig = 2 ^ 26.5
     //   xmax = DBL_MAX / 48 =  2^1020 / 3
 
-    if (x < 10) return ML_ERR_return_NAN(printer);
+    if (x < 10) return ML_ERR_return_NAN2(printer, lineInfo4);
     else if (x >= xmax) {
-        ML_ERROR(ME.ME_UNDERFLOW, 'lgammacor', printer);
+        ML_ERROR2(ME.ME_UNDERFLOW, 'lgammacor', printer);
         // allow to underflow below
     } else if (x < xbig) {
         tmp = 10 / x;

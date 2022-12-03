@@ -14,14 +14,14 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { debug } from 'debug';
-import { ML_ERR_return_NAN } from '@common/logger';
+import { debug } from '@mangos/debug';
+import { ML_ERR_return_NAN2, lineInfo4 } from '@common/logger';
 const printer_dlogis = debug('dlogis');
 
 export function dlogis(x: number, location = 0, scale = 1, give_log = false): number {
     if (isNaN(x) || isNaN(location) || isNaN(scale)) return NaN;
     if (scale <= 0.0) {
-        return ML_ERR_return_NAN(printer_dlogis);
+        return ML_ERR_return_NAN2(printer_dlogis, lineInfo4);
     }
 
     x = Math.abs((x - location) / scale);

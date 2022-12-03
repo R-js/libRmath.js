@@ -16,8 +16,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { debug } from 'debug';
-import { ML_ERR_return_NAN } from '@common/logger';
+import { debug } from '@mangos/debug';
+import { ML_ERR_return_NAN2, lineInfo4 } from '@common/logger';
 import type { IRNG } from '@rng/irng';
 
 const printer = debug('runif');
@@ -25,7 +25,7 @@ const printer = debug('runif');
 export function runifOne(min: number, max: number, u: IRNG): number {
     if (!(isFinite(min) && isFinite(max) && max > min))
     {
-        return ML_ERR_return_NAN(printer);
+        return ML_ERR_return_NAN2(printer, lineInfo4);
     }
     const s = u.random();
     return (max - min) * s + min;

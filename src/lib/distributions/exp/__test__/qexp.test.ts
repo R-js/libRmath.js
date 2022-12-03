@@ -2,7 +2,7 @@ import { resolve } from 'path';
 import { qexp } from '..';
 
 import { loadData } from '@common/load';
-import { cl, select } from '@common/debug-select';
+import { cl, select } from '@common/debug-mangos-select';
 
 const qexpLogs = select('qexp');
 const qexpDomainWarns = qexpLogs("argument out of domain in '%s'");

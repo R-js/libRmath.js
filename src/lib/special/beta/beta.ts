@@ -15,9 +15,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { debug } from 'debug';
+import { debug } from '@mangos/debug';
 
-import { ME, ML_ERR_return_NAN, ML_ERROR } from '@common/logger';
+import { ME, ML_ERR_return_NAN2, lineInfo4, ML_ERROR2 } from '@common/logger';
 import { gamma } from '@special/gamma';
 import lbeta from './lbeta';
 import { exp } from '@lib/r-func';
@@ -32,7 +32,7 @@ const printer_beta = debug('beta');
 function beta(a: number, b: number): number {
     if (isNaN(a) || isNaN(b)) return a + b;
 
-    if (a < 0 || b < 0) return ML_ERR_return_NAN(printer_beta);
+    if (a < 0 || b < 0) return ML_ERR_return_NAN2(printer_beta, lineInfo4);
     else if (a === 0 || b === 0) return Infinity;
     else if (!isFinite(a) || !isFinite(b)) return 0;
 
@@ -52,7 +52,7 @@ function beta(a: number, b: number): number {
         //#ifndef IEEE_754
         if (val < lnsml) {
             // a and/or b so big that beta underflows
-            ML_ERROR(ME.ME_UNDERFLOW, 'beta', printer_beta);
+            ML_ERROR2(ME.ME_UNDERFLOW, 'beta', printer_beta);
             // return ML_UNDERFLOW; pointless giving incorrect value
         }
         //#endif

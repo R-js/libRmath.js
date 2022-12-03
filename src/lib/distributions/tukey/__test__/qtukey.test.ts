@@ -1,5 +1,5 @@
 
-import { cl, select } from '@common/debug-select';
+import { cl, select } from '@common/debug-mangos-select';
 
 import { qtukey } from '..';
 

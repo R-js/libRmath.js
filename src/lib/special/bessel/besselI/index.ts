@@ -15,8 +15,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { debug } from 'debug';
-import { ME, ML_ERROR } from '@common/logger';
+import { debug } from '@mangos/debug';
+import { ME, ML_ERROR2 } from '@common/logger';
 import { sinpi } from '@trig/sinpi';
 import BesselK from '../besselK';
 import { I_bessel } from './IBessel';
@@ -33,7 +33,7 @@ function BesselI(x: number, alpha: number, expo = false): number {
     /* NaNs propagated correctly */
     if (isNaN(x) || isNaN(alpha)) return x + alpha;
     if (x < 0) {
-        ML_ERROR(ME.ME_RANGE, 'bessel_i', printer);
+        ML_ERROR2(ME.ME_RANGE, 'bessel_i', printer);
         return NaN;
     }
     const ize = expo ? 2 : 1;

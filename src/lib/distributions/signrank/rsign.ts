@@ -15,8 +15,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { debug } from 'debug';
-import { ML_ERR_return_NAN } from '@common/logger';
+import { debug } from '@mangos/debug';
+import { ML_ERR_return_NAN2, lineInfo4 } from '@common/logger';
 import type { IRNG } from '@rng/irng';
 import { globalUni } from '@rng/global-rng';
 import { floor, trunc, round, isNaN, INT_MAX } from '@lib/r-func';
@@ -34,7 +34,7 @@ export function rsignrankOne(n: number, rng: IRNG = globalUni()): number {
         n = round(n);
 
         if (n < 0) {
-            return ML_ERR_return_NAN(printer);
+            return ML_ERR_return_NAN2(printer, lineInfo4);
         }
         if (n === 0) {
             return 0;

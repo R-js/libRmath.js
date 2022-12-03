@@ -14,7 +14,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { debug } from 'debug';
+import { debug } from '@mangos/debug';
 
 import {
     fmod,
@@ -23,7 +23,7 @@ import {
     trunc, floor, abs, log 
 } from '@lib/r-func';
 
-import { ME, ML_ERROR } from '@common/logger';
+import { ME, ML_ERROR2 } from '@common/logger';
 
 import { sinpi } from '@trig/sinpi';
 import { lgammacor } from './lgammacor';
@@ -69,7 +69,7 @@ export function lgammafn_sign(x: number, sgn?: Int32Array): number {
 
     if (x <= 0 && x === trunc(x)) {
         /// Negative integer argument
-        ML_ERROR(ME.ME_RANGE, 'lgamma', printer_sign);
+        ML_ERROR2(ME.ME_RANGE, 'lgamma', printer_sign);
         return ML_POSINF; // +Inf, since lgamma(x) = log|gamma(x)|
     }
 
@@ -81,7 +81,7 @@ export function lgammafn_sign(x: number, sgn?: Int32Array): number {
     //  ELSE  y = |x| > 10 ----------------------
 
     if (y > xmax) {
-        ML_ERROR(ME.ME_RANGE, 'lgamma', printer_sign);
+        ML_ERROR2(ME.ME_RANGE, 'lgamma', printer_sign);
         return ML_POSINF;
     }
 
@@ -100,7 +100,7 @@ export function lgammafn_sign(x: number, sgn?: Int32Array): number {
         // Negative integer argument ===
         //Now UNNECESSARY: caught above
         printer_sign(' ** should NEVER happen! *** [lgamma.c: Neg.int, y=%d]', y);
-        return ML_ERR_return_NAN(printer_sign);
+        return ML_ERR_return_NAN2(printer_sign, lineInfo4);
     }*/
 
     const ans = M_LN_SQRT_PId2 + (x - 0.5) * log(y) - x - log(sinpiy) - lgammacor(y);
@@ -109,7 +109,7 @@ export function lgammafn_sign(x: number, sgn?: Int32Array): number {
         // The answer is less than half precision because
         // the argument is too near a negative integer.
 
-        ML_ERROR(ME.ME_PRECISION, 'lgamma', printer_sign);
+        ML_ERROR2(ME.ME_PRECISION, 'lgamma', printer_sign);
     }
     return ans;
 }

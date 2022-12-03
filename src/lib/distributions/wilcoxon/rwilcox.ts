@@ -16,8 +16,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { debug } from 'debug';
-import { ML_ERR_return_NAN, ML_ERROR, ME } from '@common/logger';
+import { debug } from '@mangos/debug';
+import { ML_ERR_return_NAN2, lineInfo4, ML_ERROR2, ME } from '@common/logger';
 import { IRNG } from '@rng/irng';
 import { round, trunc, floor } from '@lib/r-func';
 import { R_unif_index } from '@rng/utils';
@@ -39,7 +39,7 @@ export function rwilcoxOne(m: number, n: number, rng: IRNG, sampleKind: IRNGSamp
     
     if (m < 0 || n < 0)
     {
-        return ML_ERR_return_NAN(printer_rwilcox);
+        return ML_ERR_return_NAN2(printer_rwilcox, lineInfo4);
     }
 
     if (m === 0 || n === 0)
@@ -51,8 +51,8 @@ export function rwilcoxOne(m: number, n: number, rng: IRNG, sampleKind: IRNGSamp
 
     if ( k >= MAXSIZE)
     {
-        ML_ERROR(ME.ME_DOMAIN, 'k > MAXSIZE(=2**32)', printer_rwilcox);
-        return ML_ERR_return_NAN(printer_rwilcox);
+        ML_ERROR2(ME.ME_DOMAIN, 'k > MAXSIZE(=2**32)', printer_rwilcox);
+        return ML_ERR_return_NAN2(printer_rwilcox, lineInfo4);
     }
     
     const x =  new Uint32Array(k);

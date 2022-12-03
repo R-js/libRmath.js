@@ -16,9 +16,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { debug } from 'debug';
+import { debug } from '@mangos/debug';
 
-import { ML_ERR_return_NAN, R_Q_P01_boundaries } from '@common/logger';
+import { ML_ERR_return_NAN2, lineInfo4, R_Q_P01_boundaries } from '@common/logger';
 
 import { NumberW } from '@common/toms708/NumberW';
 
@@ -61,9 +61,9 @@ export function qpois(
     if (isNaN(p) || isNaN(lambda)) return p + lambda;
 
     if (!isFinite(lambda)) {
-        return ML_ERR_return_NAN(printer);
+        return ML_ERR_return_NAN2(printer, lineInfo4);
     }
-    if (lambda < 0) return ML_ERR_return_NAN(printer);
+    if (lambda < 0) return ML_ERR_return_NAN2(printer, lineInfo4);
     if (lambda === 0) return 0;
 
     const rc = R_Q_P01_boundaries(lower_tail, log_p, p, 0, Infinity);

@@ -3,7 +3,7 @@ import { resolve } from 'path';
 
 
 import { loadData } from '@common/load';
-import { cl } from '@common/debug-select';
+import { cl } from '@common/debug-mangos-select';
 
 import { dcauchy } from '..';
 

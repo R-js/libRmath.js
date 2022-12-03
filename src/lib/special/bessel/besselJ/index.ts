@@ -15,10 +15,10 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 //3rd party
-import { debug } from 'debug';
+import { debug } from '@mangos/debug';
 
 //tooling
-import { ME, ML_ERROR } from '@common/logger';
+import { ME, ML_ERROR2 } from '@common/logger';
 
 import { cospi } from '@trig/cospi';
 import { sinpi } from '@trig/sinpi';
@@ -33,7 +33,7 @@ function BesselJ(x: number, alpha: number): number {
     /* NaNs propagated correctly */
     if (isNaN(x) || isNaN(alpha)) return x + alpha;
     if (x < 0) {
-        ML_ERROR(ME.ME_RANGE, 'BesselJ', printer);
+        ML_ERROR2(ME.ME_RANGE, 'BesselJ', printer);
         return NaN;
     }
     // double

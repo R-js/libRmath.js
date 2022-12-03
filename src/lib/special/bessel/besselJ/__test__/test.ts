@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //helper
 //import { loadData } from '@common/load';
-import { cl, select } from '@common/debug-select';
+import { cl, select } from '@common/debug-mangos-select';
 
 const regexpAll = /^.*$/
 const msgBesselJ = select('BesselJ')(regexpAll);

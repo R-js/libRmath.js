@@ -16,9 +16,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { debug } from 'debug';
+import { debug } from '@mangos/debug';
 
-import { ME, ML_ERR_return_NAN, ML_ERROR, R_Q_P01_boundaries } from '@common/logger';
+import { ME, ML_ERR_return_NAN2, lineInfo4, ML_ERROR2, R_Q_P01_boundaries } from '@common/logger';
 import { R_DT_qIv } from '@dist/exp/expm1';
 import { ptukey } from './ptukey';
 
@@ -133,14 +133,14 @@ export function qtukey(
 
     if (isNaN(p) || isNaN(nranges) || isNaN(nmeans) || isNaN(df))
     {
-        ML_ERROR(ME.ME_DOMAIN, 'qtukey', printer);
+        ML_ERROR2(ME.ME_DOMAIN, 'qtukey', printer);
         return NaN;
     }
 
     /* df must be > 1 ; there must be at least two values */
     if (df < 2 || nranges < 1 || nmeans < 2)
     {
-        return ML_ERR_return_NAN(printer);
+        return ML_ERR_return_NAN2(printer, lineInfo4);
     }
 
     const rc = R_Q_P01_boundaries(lower_tail, log_p, p, 0, Infinity);
@@ -207,6 +207,6 @@ export function qtukey(
 
     /* The process did not converge in 'maxiter' iterations */
     
-    ML_ERROR(ME.ME_NOCONV, 'qtukey', printer);
+    ML_ERROR2(ME.ME_NOCONV, 'qtukey', printer);
     return ans;   
 }

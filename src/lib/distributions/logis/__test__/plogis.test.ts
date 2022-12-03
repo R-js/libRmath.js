@@ -1,4 +1,4 @@
-import { cl, select } from '@common/debug-select';
+import { cl, select } from '@common/debug-mangos-select';
 
 import { plogis } from '..';
 
@@ -24,7 +24,7 @@ describe('plogis', function () {
         it('scale <= 0', () => {
             const nan = plogis(0,undefined, -0.5);
             expect(nan).toBeNaN();
-            expect(pLogisDomainWarns()).toEqual([ [ "argument out of domain in '%s'", '' ] ]);
+            expect(pLogisDomainWarns()).toEqual([ [ "argument out of domain in '%s'", 'plogis, line:34, col:34' ] ]);
         });
         it('x = -Infinity and x = Infinity', () => {
             const zero = plogis(-Infinity);

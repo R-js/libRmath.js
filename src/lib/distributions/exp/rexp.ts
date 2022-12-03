@@ -15,9 +15,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { ML_ERR_return_NAN } from '@common/logger';
+import { ML_ERR_return_NAN2, lineInfo4 } from '@common/logger';
 
-import { debug } from 'debug';
+import { debug } from '@mangos/debug';
 import { IRNG } from '@rng/irng';
 import { exp_rand } from './sexp';
 
@@ -27,7 +27,7 @@ export function rexpOne(scale: number, rng: IRNG): number {
     if (!Number.isFinite(scale) || scale <= 0.0) {
         if (scale === 0) return 0;
         /* else */
-        return ML_ERR_return_NAN(printer);
+        return ML_ERR_return_NAN2(printer, lineInfo4);
     }
     return scale * exp_rand(rng); // --> in ./sexp.c
 }

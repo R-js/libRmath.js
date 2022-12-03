@@ -14,8 +14,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { debug } from 'debug';
-import { R_Q_P01_check, ML_ERR_return_NAN, R_Q_P01_boundaries } from '@common/logger';
+import { debug } from '@mangos/debug';
+import { R_Q_P01_check, ML_ERR_return_NAN2, lineInfo4, R_Q_P01_boundaries } from '@common/logger';
 import { R_DT_Clog } from '@dist/exp/expm1';
 
 const printer = debug('qgeom');
@@ -24,7 +24,7 @@ export function qgeom(p: number, prob: number, lower_tail = true, log_p = false)
     if (isNaN(p) || isNaN(prob)) return NaN;
 
     if (prob <= 0 || prob > 1) {
-        return ML_ERR_return_NAN(printer);
+        return ML_ERR_return_NAN2(printer, lineInfo4);
     }
 
     const chk1 = R_Q_P01_check(log_p, p);

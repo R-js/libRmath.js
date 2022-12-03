@@ -14,11 +14,9 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { debug } from 'debug';
+import { debug } from '@mangos/debug';
 
-import {
-    ML_ERR_return_NAN
-} from '@common/logger';
+import { ML_ERR_return_NAN2, lineInfo4 } from '@common/logger';
 
 import {
     R_D__0,
@@ -166,7 +164,7 @@ export function lgamma1p(a: number): number {
 
     /* coeffs[i] holds (zeta(i+2)-1)/(i+2) , i = 0:(N-1), N = 40 : */
     const N = 40;
-    
+
 
     const c = 0.2273736845824652515226821577978691e-12; /* zeta(N+2)-1 */
     const tol_logcf = 1e-14;
@@ -271,13 +269,11 @@ function pgamma_smallx(x: number, alph: number, lowerTail: boolean, logP: boolea
         if (alph > 1) {
             f2 = dpois_raw(alph, x, logP);
             f2 = logP ? f2 + x : f2 * Math.exp(x);
-        } 
-        else if (logP) 
-        {
+        }
+        else if (logP) {
             f2 = alph * Math.log(x) - lgamma1p(alph);
         }
-        else
-        {
+        else {
             f2 = Math.pow(x, alph) / Math.exp(lgamma1p(alph));
         }
         pr_pgamma_smallx(' (f1,f2)= (%d,%d)', f1, f2);
@@ -422,7 +418,7 @@ function pd_lower_series(lambda: number, y: number): number {
          * The series does not converge as the terms start getting
          * bigger (besides flipping sign) for y < -lambda.
          */
- 
+
         pr_pd_lower_series(' y not int: add another term ');
 
         /* FIXME: in quite few cases, adding  term*f  has no effect (f too small)
@@ -454,7 +450,7 @@ function dpnorm(x: number, lowerTail: boolean, lp: number): number {
     //
     // but use it only in the non-critical case where either x is small
     // or p==exp(lp) is close to 1.
-    
+
 
     if (x < 0) {
         x = -x;
@@ -499,7 +495,7 @@ const coefs_a = new Float64Array([
 ]);
 
 const coefs_b = new Float64Array([
-    -1e99 ,// placeholder
+    -1e99,// placeholder
     1 / 12,
     1 / 288,
     -139 / 51840,
@@ -510,7 +506,7 @@ const coefs_b = new Float64Array([
 ]);
 
 function ppois_asymp(x: number, lambda: number, lowerTail: boolean, logP: boolean): number {
-   
+
     let elfb: number;
     let elfb_term: number;
     let res12: number;
@@ -526,7 +522,7 @@ function ppois_asymp(x: number, lambda: number, lowerTail: boolean, logP: boolea
     // about lambda.  So representation error in x or lambda can lead
     // to arbitrarily large values of pt_ and hence divergence of the
     // coefficients of this approximation.
-  
+
     const pt_ = -log1pmx(dfm / x);
     s2pt = Math.sqrt(2 * x * pt_);
     if (dfm < 0) s2pt = -s2pt;
@@ -584,29 +580,24 @@ export function pgamma_raw(x: number, alph: number, lowerTail: boolean, logP: bo
         return rc;
     }
 
-    if (x < 1)
-    {
+    if (x < 1) {
         res = pgamma_smallx(x, alph, lowerTail, logP);
-    } 
-    else if (x <= alph - 1 && x < 0.8 * (alph + 50))
-    {
-    
+    }
+    else if (x <= alph - 1 && x < 0.8 * (alph + 50)) {
+
         /* incl. large alph compared to x */
         const sum = pd_upper_series(x, alph, logP); /* = x/alph + o(x/alph) */
         const d = dpois_wrap(alph, x, logP);
         pr_pgamma_raw(' alph "large": sum=pd_upper*()= %d, d=dpois_w(*)= %d', sum, d);
-        if (!lowerTail)
-        {
+        if (!lowerTail) {
             res = logP ? R_Log1_Exp(d + sum) : 1 - d * sum;
         }
-        else
-        {
-             res = logP ? sum + d : sum * d;
+        else {
+            res = logP ? sum + d : sum * d;
         }
-    } 
-    else if (alph - 1 < x && alph < 0.8 * (x + 50))
-    {
-    
+    }
+    else if (alph - 1 < x && alph < 0.8 * (x + 50)) {
+
         /* incl. large x compared to alph */
         let sum;
         const d = dpois_wrap(alph, x, logP);
@@ -628,8 +619,7 @@ export function pgamma_raw(x: number, alph: number, lowerTail: boolean, logP: bo
         if (!lowerTail) res = logP ? sum + d : sum * d;
         else res = logP ? R_Log1_Exp(d + sum) : 1 - d * sum;
     }
-    else
-    {
+    else {
         /* x >= 1 and x fairly near alph. */
 
         pr_pgamma_raw(' using ppois_asymp()');
@@ -656,7 +646,7 @@ export function pgamma(x: number, shape: number, scale: number, lowerTail: boole
     if (isNaN(x) || isNaN(shape) || isNaN(scale)) {
         return NaN;
     }
-    if (shape < 0 || scale <= 0) return ML_ERR_return_NAN(printer_pgamma);
+    if (shape < 0 || scale <= 0) return ML_ERR_return_NAN2(printer_pgamma, lineInfo4);
 
     x /= scale;
 

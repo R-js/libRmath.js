@@ -15,8 +15,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { debug } from 'debug';
-import { ML_ERR_return_NAN, R_Q_P01_boundaries } from '@common/logger';
+import { debug } from '@mangos/debug';
+import { ML_ERR_return_NAN2, lineInfo4, R_Q_P01_boundaries } from '@common/logger';
 import { lfastchoose } from '@lib/special/choose';
 import { R_DT_qIv } from '@dist/exp/expm1';
 import { DBL_EPSILON } from '@lib/r-func';
@@ -91,7 +91,7 @@ export function qhyper(
     }
 
     if (!isFinite(p) || !isFinite(nr) || !isFinite(nb) || !isFinite(n)) {
-        return ML_ERR_return_NAN(printer_qhyper);
+        return ML_ERR_return_NAN2(printer_qhyper, lineInfo4);
     }
 
     _d[iNR] = Math.round(nr);
@@ -100,7 +100,7 @@ export function qhyper(
     const N = _d[iNR] + _d[iNB];
 
     n = Math.round(n);
-    if (_d[iNR] < 0 || _d[iNB] < 0 || n < 0 || n > N) return ML_ERR_return_NAN(printer_qhyper);
+    if (_d[iNR] < 0 || _d[iNB] < 0 || n < 0 || n > N) return ML_ERR_return_NAN2(printer_qhyper, lineInfo4);
 
     /* Goal:  Find  xr (= #{red balls in sample}) such that
      *   phyper(xr,  NR,NB, n) >= p > phyper(xr - 1,  NR,NB, n)

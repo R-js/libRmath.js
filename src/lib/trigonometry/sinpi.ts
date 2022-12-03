@@ -14,18 +14,18 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { debug } from 'debug';
+import { debug } from '@mangos/debug';
 
 import { fmod } from '@lib/r-func';
 
-import { ME, ML_ERROR } from '@common/logger';
+import { ME, ML_ERROR2 } from '@common/logger';
 
 // sin(pi * x)  -- exact when x = k/2  for all integer k
 const printer_sinpi = debug('sinpi');
 export function sinpi(x: number): number {
     if (isNaN(x)) return x;
     if (!isFinite(x)) {
-        ML_ERROR(ME.ME_DOMAIN, 'sinpi not finite', printer_sinpi);
+        ML_ERROR2(ME.ME_DOMAIN, 'sinpi not finite', printer_sinpi);
         return NaN;
     }
     x = fmod(x, 2); // sin(pi(x + 2k)) == sin(pi x)  for all integer k

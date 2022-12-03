@@ -16,9 +16,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { debug } from 'debug';
+import { debug } from '@mangos/debug';
 
-import { ML_ERR_return_NAN, R_Q_P01_check } from '@common/logger';
+import { ML_ERR_return_NAN2, lineInfo4, R_Q_P01_check } from '@common/logger';
 import { R_DT_0, R_DT_1, DBL_EPSILON } from '@lib/r-func';
 
 import { R_DT_qIv } from '@dist/exp/expm1';
@@ -39,7 +39,7 @@ export function qwilcox(x: number, m: number, n: number, lowerTail = true, logP 
     }
     if (!isFinite(x) || !isFinite(m) || !isFinite(n))
     {
-        return ML_ERR_return_NAN(printer_qwilcox);
+        return ML_ERR_return_NAN2(printer_qwilcox, lineInfo4);
     }
 
     const rc = R_Q_P01_check(logP, x);
@@ -49,7 +49,7 @@ export function qwilcox(x: number, m: number, n: number, lowerTail = true, logP 
 
     if (m <= 0 || n <= 0)
     {
-        return ML_ERR_return_NAN(printer_qwilcox);
+        return ML_ERR_return_NAN2(printer_qwilcox, lineInfo4);
     }
 
     if (x === R_DT_0(lowerTail, logP))

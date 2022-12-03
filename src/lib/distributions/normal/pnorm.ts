@@ -16,11 +16,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { debug } from 'debug';
+import { debug } from '@mangos/debug';
 
-import {
-  ML_ERR_return_NAN
-} from '@common/logger';
+import { ML_ERR_return_NAN2, lineInfo4 } from '@common/logger';
 
 import {
   R_DT_0,
@@ -51,7 +49,7 @@ export function pnorm5(
 
   if (!isFinite(q) && mu === q) return NaN; /* x-mu is NaN */
   if (sigma <= 0) {
-    if (sigma < 0) return ML_ERR_return_NAN(printer);
+    if (sigma < 0) return ML_ERR_return_NAN2(printer, lineInfo4);
     /* sigma = 0 : */
     return q < mu ? R_DT_0(lowerTail, logP) : R_DT_1(lowerTail, logP);
   }

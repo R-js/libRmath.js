@@ -3,7 +3,7 @@ import { globalUni, RNGKind } from '@rng/global-rng';
 import { IRNGNormalTypeEnum } from '@rng/normal/in01-type';
 import { rexp } from '..';
 
-import { cl, select } from '@common/debug-select';
+import { cl, select } from '@common/debug-mangos-select';
 
 const rexpLogs = select('rexp');
 const rexpDomainWarns = rexpLogs("argument out of domain in '%s'");

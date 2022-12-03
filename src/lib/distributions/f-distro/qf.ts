@@ -14,9 +14,9 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { debug } from 'debug';
+import { debug } from '@mangos/debug';
 
-import { ML_ERR_return_NAN, R_Q_P01_boundaries } from '@common/logger';
+import { ML_ERR_return_NAN2, lineInfo4, R_Q_P01_boundaries } from '@common/logger';
 
 import { qbeta } from '@dist/beta/qbeta';
 import { qchisq } from '@dist/chi-2/qchisq';
@@ -27,7 +27,7 @@ export function qf(p: number, df1: number, df2: number, lower_tail: boolean, log
 
     if (isNaN(p) || isNaN(df1) || isNaN(df2)) return p + df1 + df2;
 
-    if (df1 <= 0 || df2 <= 0) return ML_ERR_return_NAN(printer);
+    if (df1 <= 0 || df2 <= 0) return ML_ERR_return_NAN2(printer, lineInfo4);
 
     const rc = R_Q_P01_boundaries(lower_tail, log_p, p, 0, Infinity);
     if (rc !== undefined) {

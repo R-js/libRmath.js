@@ -14,9 +14,9 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { debug } from 'debug';
+import { debug } from '@mangos/debug';
 
-import { ML_ERR_return_NAN } from '@common/logger';
+import { ML_ERR_return_NAN2, lineInfo4 } from '@common/logger';
 import { R_DT_0, R_DT_1 } from '@lib/r-func';
 import { R_DT_Clog } from '@dist/exp/expm1';
 
@@ -26,7 +26,7 @@ export function pgeom(x: number, p: number, lowerTail = true, logP = false): num
     if (isNaN(x) || isNaN(p)) return NaN;
 
     if (p <= 0 || p > 1) {
-        return ML_ERR_return_NAN(printer);
+        return ML_ERR_return_NAN2(printer, lineInfo4);
     }
 
     if (x < 0) return R_DT_0(lowerTail, logP);

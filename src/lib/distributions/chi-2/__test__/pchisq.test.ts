@@ -2,7 +2,7 @@ import { resolve } from 'path';
 import { pchisq } from '..';
 
 import { loadData } from '@common/load';
-import { cl, select } from '@common/debug-select';
+import { cl, select } from '@common/debug-mangos-select';
 const pchisqDomainWarns = select('pchisq')("argument out of domain in '%s'");
 pchisqDomainWarns;
 

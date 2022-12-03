@@ -1,7 +1,7 @@
 
 import { loadData } from '@common/load';
 import { resolve } from 'path';
-import { cl, select } from '@common/debug-select';
+import { cl, select } from '@common/debug-mangos-select';
 
 import { emptyFloat64Array } from '@lib/r-func';
 import { IRNGNormalTypeEnum } from '@rng/normal/in01-type';

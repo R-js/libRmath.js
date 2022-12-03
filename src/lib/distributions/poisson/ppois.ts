@@ -16,10 +16,10 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { ML_ERR_return_NAN, } from '@common/logger';
+import { ML_ERR_return_NAN2, lineInfo4, } from '@common/logger';
 import { R_DT_0, R_DT_1, isFinite , floor } from '@lib/r-func';
 
-import { debug } from 'debug';
+import { debug } from '@mangos/debug';
 import { pgamma } from '@dist/gamma/pgamma';
 
 const printer = debug('ppois');
@@ -34,7 +34,7 @@ export function ppois(
 
     if (lambda < 0)
     {
-        return ML_ERR_return_NAN(printer);
+        return ML_ERR_return_NAN2(printer, lineInfo4);
     }
     if (x < 0)
     { 

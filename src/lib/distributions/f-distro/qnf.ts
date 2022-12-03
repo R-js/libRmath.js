@@ -14,9 +14,9 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { debug } from 'debug';
+import { debug } from '@mangos/debug';
 
-import { ML_ERR_return_NAN, R_Q_P01_boundaries } from '@common/logger';
+import { ML_ERR_return_NAN2, lineInfo4, R_Q_P01_boundaries } from '@common/logger';
 
 import { qnbeta } from '@dist/beta/qnbeta';
 import { qnchisq } from '@dist/chi-2/qnchisq';
@@ -34,7 +34,7 @@ export function qnf(p: number, df1: number, df2: number, ncp: number, lowerTail:
         ||
         (!isFinite(df1) && !isFinite(df2))
     ) {
-        return ML_ERR_return_NAN(printer);
+        return ML_ERR_return_NAN2(printer,lineInfo4);
     }
 
     const rc = R_Q_P01_boundaries(lowerTail, logP, p, 0, Infinity);

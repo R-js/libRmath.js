@@ -16,9 +16,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { ML_ERR_return_NAN, R_Q_P01_check } from '@common/logger';
+import { ML_ERR_return_NAN2, lineInfo4, R_Q_P01_check } from '@common/logger';
 
-import { debug } from 'debug';
+import { debug } from '@mangos/debug';
 import { R_DT_qIv } from '@dist/exp/expm1';
 
 const printer = debug('qunif');
@@ -37,11 +37,11 @@ export function qunif(p: number, a = 0, b = 1, lowerTail = true, logP = false): 
 
     if (!isFinite(a) || !isFinite(b))
     {
-        return ML_ERR_return_NAN(printer);
+        return ML_ERR_return_NAN2(printer, lineInfo4);
     }
     if (b < a)
     {
-        return ML_ERR_return_NAN(printer);
+        return ML_ERR_return_NAN2(printer, lineInfo4);
     }
     if (b === a)
     {

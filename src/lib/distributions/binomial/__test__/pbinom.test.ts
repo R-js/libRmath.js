@@ -2,7 +2,7 @@ import { resolve } from 'path';
 
 //helper
 import { loadData } from '@common/load';
-import { cl, select } from '@common/debug-select';
+import { cl, select } from '@common/debug-mangos-select';
 const pbinomDomainWarns = select('pbinom')("argument out of domain in '%s'");
 
 

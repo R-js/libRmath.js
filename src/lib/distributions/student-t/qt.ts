@@ -16,13 +16,14 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { debug } from 'debug';
+import { debug } from '@mangos/debug';
 
 import {
     ME,
-    ML_ERROR,
+    ML_ERROR2,
     R_Q_P01_boundaries,
-    ML_ERR_return_NAN
+    ML_ERR_return_NAN2,
+    lineInfo4
 } from '@common/logger';
 
 import {
@@ -76,7 +77,7 @@ export function qt(p: number, ndf: number, lower_tail: boolean, log_p: boolean):
 
     if (ndf <= 0.0)
     {
-        return ML_ERR_return_NAN(printer);
+        return ML_ERR_return_NAN2(printer, lineInfo4);
     }
 
     if (ndf < 1)
@@ -135,7 +136,7 @@ export function qt(p: number, ndf: number, lower_tail: boolean, log_p: boolean):
 
         if (iter >= 1000)
         {
-            ML_ERROR(ME.ME_PRECISION, 'qt', printer);
+            ML_ERROR2(ME.ME_PRECISION, 'qt', printer);
         }
         return 0.5 * (lx + ux);
     }

@@ -16,10 +16,10 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { debug } from 'debug';
+import { debug } from '@mangos/debug';
 
 import { rchisqOne } from '@dist/chi-2/rchisq';
-import { ML_ERR_return_NAN } from '@common/logger';
+import { ML_ERR_return_NAN2, lineInfo4 } from '@common/logger';
 import type { IRNGNormal } from '@rng/normal/normal-rng';
 import { globalNorm } from '@rng/global-rng';
 
@@ -28,7 +28,7 @@ const printer = debug('rt');
 export function rtOne(df: number, rng: IRNGNormal = globalNorm()): number {
     if (isNaN(df) || df <= 0.0)
     {
-        return ML_ERR_return_NAN(printer);
+        return ML_ERR_return_NAN2(printer, lineInfo4);
     }
 
     const num = rng.random();

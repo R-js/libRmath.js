@@ -14,9 +14,9 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { debug } from 'debug';
+import { debug } from '@mangos/debug';
 
-import { ML_ERR_return_NAN, R_Q_P01_boundaries, R_Q_P01_check } from '@common/logger';
+import { ML_ERR_return_NAN2, lineInfo4, R_Q_P01_boundaries, R_Q_P01_check } from '@common/logger';
 import { M_LN2, R_D__0, DBL_MIN } from '@lib/r-func';
 import { R_DT_Clog, R_DT_log, R_DT_qIv } from '@dist/exp/expm1';
 import { dgamma } from './dgamma';
@@ -56,7 +56,7 @@ function qchisq_appr(
         return rc;
     }
     if (nu <= 0) {
-        return ML_ERR_return_NAN(printer_qchisq_appr);
+        return ML_ERR_return_NAN2(printer_qchisq_appr, lineInfo4);
     }
 
     const alpha = 0.5 * nu; /* = [pq]gamma() shape */
@@ -159,7 +159,7 @@ export function qgamma(
     if (rc !== undefined) {
         return rc;
     }
-    if (alpha < 0 || scale <= 0) return ML_ERR_return_NAN(printer_qgamma);
+    if (alpha < 0 || scale <= 0) return ML_ERR_return_NAN2(printer_qgamma, lineInfo4);
 
     if (alpha === 0) /* all mass at 0 : */ return 0;
 
@@ -322,7 +322,7 @@ export function qgamma(
     printer_qgamma('qgamma(%d) not converged in %d iterations; rel.ch=%d', p, MAXIT, ch / Math.abs(q - ch));
 
     /* was
-     *    ML_ERROR(ME_PRECISION, "qgamma");
+     *    ML_ERROR2(ME_PRECISION, "qgamma");
      * does nothing in R !*/
 
 

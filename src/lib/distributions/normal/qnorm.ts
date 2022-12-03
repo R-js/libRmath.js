@@ -16,8 +16,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { debug } from 'debug';
-import { ML_ERR_return_NAN, R_Q_P01_boundaries } from '@common/logger';
+import { debug } from '@mangos/debug';
+import { ML_ERR_return_NAN2, lineInfo4, R_Q_P01_boundaries } from '@common/logger';
 import { R_DT_CIv, R_DT_qIv } from '@dist/exp/expm1';
 
 const printer = debug('qnorm');
@@ -32,7 +32,7 @@ export function qnorm(p: number, mu = 0, sigma = 1, lower_tail = true, log_p = f
     if (rc !== undefined) {
         return rc;
     }
-    if (sigma < 0) return ML_ERR_return_NAN(printer);
+    if (sigma < 0) return ML_ERR_return_NAN2(printer, lineInfo4);
     if (sigma === 0) return mu;
 
     const p_ = R_DT_qIv(lower_tail, log_p, p); /* real lower_tail prob. p */

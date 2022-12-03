@@ -14,10 +14,10 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { debug } from 'debug';
+import { debug } from '@mangos/debug';
 //
 import { rbinomOne } from '@dist/binomial/rbinom';
-import { ML_ERR_return_NAN } from '@common/logger';
+import { ML_ERR_return_NAN2, lineInfo4 } from '@common/logger';
 import { INT_MAX, M_LN_SQRT_2PI } from '@lib/r-func';
 import type { IRNG } from '@rng/irng';
 import { qhyper } from './qhyper';
@@ -134,7 +134,7 @@ function L_finis(): number {
 export function rhyperOne(nn1in: number, nn2in: number, kkin: number, rng: IRNG): number {
 
     if (!isFinite(nn1in) || !isFinite(nn2in) || !isFinite(kkin)) {
-        return ML_ERR_return_NAN(printer_rhyper);
+        return ML_ERR_return_NAN2(printer_rhyper, lineInfo4);
     }
 
     nn1in = Math.round(nn1in);
@@ -142,7 +142,7 @@ export function rhyperOne(nn1in: number, nn2in: number, kkin: number, rng: IRNG)
     kkin = Math.round(kkin);
 
     if (nn1in < 0 || nn2in < 0 || kkin < 0 || kkin > nn1in + nn2in) {
-        return ML_ERR_return_NAN(printer_rhyper);
+        return ML_ERR_return_NAN2(printer_rhyper, lineInfo4);
     }
     if (nn1in >= INT_MAX || nn2in >= INT_MAX || kkin >= INT_MAX) {
         /* large n -- evade integer overflow (and inappropriate algorithms)
@@ -369,7 +369,7 @@ export function rhyperOne(nn1in: number, nn2in: number, kkin: number, rng: IRNG)
                     r_i[i_kk],
                     n_uv
                 );
-                return ML_ERR_return_NAN(printer_rhyper);
+                return ML_ERR_return_NAN2(printer_rhyper, lineInfo4);
             }
 
             printer_rhyper(' ... L30: new (u=%d, v ~ U[0,1])[%d]\n',

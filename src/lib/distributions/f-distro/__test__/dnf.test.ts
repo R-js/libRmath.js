@@ -2,7 +2,7 @@ import { loadData } from '@common/load';
 import { resolve } from 'path';
 import { df } from '..';
 
-import { cl, select } from '@common/debug-select';
+import { cl, select } from '@common/debug-mangos-select';
 
 
 const dfLogs = select('dnf');

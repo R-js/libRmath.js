@@ -14,9 +14,9 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { debug } from 'debug';
+import { debug } from '@mangos/debug';
 
-import { ML_ERR_return_NAN, R_Q_P01_boundaries } from '@common/logger';
+import { ML_ERR_return_NAN2, lineInfo4, R_Q_P01_boundaries } from '@common/logger';
 
 import { NumberW } from '@common/toms708/NumberW';
 import { R_DT_qIv } from '@dist/exp/expm1';
@@ -59,19 +59,19 @@ export function qbinom(p: number, size: number, pr: number, lower_tail = true, l
     if (isNaN(p) || isNaN(size) || isNaN(pr)) return NaN;
 
     if (!isFinite(size) || !isFinite(pr)) {
-        return ML_ERR_return_NAN(printer_qbinom);
+        return ML_ERR_return_NAN2(printer_qbinom, lineInfo4);
     }
     /* if log_p is true, p = -Inf is a legitimate value */
     if (!isFinite(p) && !log_p) {
-        return ML_ERR_return_NAN(printer_qbinom);
+        return ML_ERR_return_NAN2(printer_qbinom, lineInfo4);
     }
 
     if (!Number.isInteger(size)) {
-        return ML_ERR_return_NAN(printer_qbinom);
+        return ML_ERR_return_NAN2(printer_qbinom, lineInfo4);
     }
 
     if (pr < 0 || pr > 1 || size < 0) {
-        return ML_ERR_return_NAN(printer_qbinom);
+        return ML_ERR_return_NAN2(printer_qbinom, lineInfo4);
     }
 
     const rc = R_Q_P01_boundaries(lower_tail, log_p, p, 0, size);
