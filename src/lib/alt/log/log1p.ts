@@ -32,9 +32,6 @@ import {
 } from '@lib/r-func';
 
 
-//const lineInfo3 = createLineInfo(3);
-
-
 // series for log1p on the interval -.375 to .375
 //				     with weighted error   6.35e-32
 //				      log weighted error  31.20
