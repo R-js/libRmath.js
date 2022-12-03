@@ -25,7 +25,7 @@ const BIG = 134217728; /* 2^27 */
 
 export class Inversion extends IRNGNormal {
 
-    public static kind = IRNGNormalTypeEnum.INVERSION;
+    public static override kind = IRNGNormalTypeEnum.INVERSION;
 
     constructor(_rng: IRNG = new MersenneTwister(0)) {
         super(_rng, 'Inversion');
@@ -33,7 +33,7 @@ export class Inversion extends IRNGNormal {
         this._rng.unregister(MessageType.INIT, this.reset);
     }
 
-    public random(): number {
+    public override random(): number {
         /* unif_rand() alone is not of high enough precision */
         let u1 = this._rng.random();
         const t = this._rng.random();

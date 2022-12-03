@@ -79,7 +79,7 @@ export * from './lib/rng/normal/kinderman-ramage';
 
 
 // generate seed from "crypto" node module or WebApi
-export { seed } from './lib/rng/seed';
+export { default as seed } from './lib/rng/seed';
 // stubs
 export { IRNG, MessageType } from './lib/rng/irng';
 export { IRNGNormal } from './lib/rng/normal/normal-rng';

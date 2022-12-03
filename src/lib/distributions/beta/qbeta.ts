@@ -121,7 +121,7 @@ function return_q_1(_give_log_q: boolean, qb: NumArray): void {
     return;
 }
 
-function return_q_half(give_log_q: boolean, qb: NumArray): void {
+function return_q_half(_give_log_q: boolean, qb: NumArray): void {
     //if (give_log_q) {
     //    qb[0] = qb[1] = -M_LN2;
     //} else {

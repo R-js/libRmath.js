@@ -44,7 +44,7 @@ export class MersenneTwister extends IRNG {
     private mt: Int32Array;
     private mti: number;
 
-    public static kind = IRNGTypeEnum.MERSENNE_TWISTER;
+    public static override kind = IRNGTypeEnum.MERSENNE_TWISTER;
 
     private MT_sgenrand(_seed: number) {
         for (let i = 0; i < N; i++) {
@@ -112,7 +112,7 @@ export class MersenneTwister extends IRNG {
 
 
 
-    public random(): number {
+    public override random(): number {
         const rc = this.MT_genrand();
         //if (this._block) throw Error('blocked!'+rc);
         return fixup(rc);
@@ -129,7 +129,7 @@ export class MersenneTwister extends IRNG {
 
     }
 
-    public init(_seed: number = seed()): void {
+    public override init(_seed: number = seed()): void {
         /* Initial scrambling */
         const s = new Uint32Array([0]);
         s[0] = _seed;

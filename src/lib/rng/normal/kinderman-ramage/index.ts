@@ -35,7 +35,7 @@ const C2 = 0.180025191068563;
  *    JASA 71, 893-896.
  */
 export class KindermanRamage extends IRNGNormal {
-    public static kind = IRNGNormalTypeEnum.KINDERMAN_RAMAGE;
+    public static override kind = IRNGNormalTypeEnum.KINDERMAN_RAMAGE;
 
     constructor(_rng: IRNG = new MersenneTwister(0)) {
         super(_rng, 'KinderMan Ramage');
@@ -43,7 +43,7 @@ export class KindermanRamage extends IRNGNormal {
         this._rng.unregister(MessageType.INIT, this.reset);
     }
 
-    public random(): number {
+    public override random(): number {
         let u2: number;
         let u3: number;
         let tt: number;

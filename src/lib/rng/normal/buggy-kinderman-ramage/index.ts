@@ -24,7 +24,7 @@ const { log, sqrt, min: fmin2, max: fmax2, abs: fabs, exp } = Math;
 
 export class BuggyKindermanRamage extends IRNGNormal {
     
-    public static kind = IRNGNormalTypeEnum.BUGGY_KINDERMAN_RAMAGE;
+    public static override kind = IRNGNormalTypeEnum.BUGGY_KINDERMAN_RAMAGE;
 
     constructor(_rng: IRNG = new MersenneTwister(0)) {
         super(_rng, 'Buggy-Kinderman-Ramage');
@@ -32,7 +32,7 @@ export class BuggyKindermanRamage extends IRNGNormal {
         this._rng.unregister(MessageType.INIT, this.reset);
     }
 
-    public random(): number {
+    public override random(): number {
         /* see Reference above */
         /* note: this has problems, but is retained for
          * reproducibility of older codes, with the same

@@ -29,9 +29,9 @@ const SEED_LEN = 3;
 export class WichmannHill extends IRNG {
     private m_seed: Uint32Array;
 
-    public static kind = IRNGTypeEnum.WICHMANN_HILL;
+    public static override kind = IRNGTypeEnum.WICHMANN_HILL;
 
-    public random(): number {
+    public override random(): number {
         const s = this.m_seed;
         s[0] = (s[0] * 171) % 30269;
         s[1] = (s[1] * 172) % 30307;
@@ -60,7 +60,7 @@ export class WichmannHill extends IRNG {
         return;
     }
 
-    public init(_seed: number = seed()): void {
+    public override init(_seed: number = seed()): void {
         /* Initial scrambling */
         const s = new Uint32Array([_seed]);
 

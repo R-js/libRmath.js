@@ -1,6 +1,8 @@
 
 export {};
 
+import type { MatcherHintOptions } from 'jest-matcher-utils';
+
 type NumberTypes = 'Float32Array' | 'Float64Array' | 'number' | 'number[]';
 
 type ObjectTypes =
@@ -178,9 +180,9 @@ function toScalar(o: NumArray, alt: string) {
 
 expect.extend({
     toEqualFloatingPointBinary(received, expected, mantissa = Infinity, cycle = true, hf = true) {
-        const options = {
-            isNot: this.isNot,
-            promise: this.promise,
+        const options: MatcherHintOptions = {
+            isNot: this.isNot as boolean,
+            promise: this.promise as string,
             comment: '',
         };
         const typeR = typeOf(received);

@@ -1,6 +1,10 @@
 {
     "extends": "./tsconfig.json",
+    "exclude": [
+      "node_modules"
+    ],
     "compilerOptions": {
+      "types": ["node", "jest"],
       "target": "ES2020",
       "baseUrl": "./src",
       "paths": {
