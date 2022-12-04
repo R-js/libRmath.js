@@ -95,5 +95,3 @@ export * from './lib/special/bessel';
 export * from './lib/special/beta';
 export * from './lib/special/choose';
 export * from './lib/special/gamma';
-
-

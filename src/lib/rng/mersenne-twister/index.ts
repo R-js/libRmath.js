@@ -125,8 +125,6 @@ export class MersenneTwister extends IRNG {
         this.mt = new Int32Array(buf, 4); // skip first i32? ok
         this.mti = N + 1;
         this.init(_seed);
-        super.init(_seed);
-
     }
 
     public override init(_seed: number = seed()): void {

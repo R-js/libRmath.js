@@ -13,8 +13,7 @@
         "@rng/*": ["lib/rng/*"],
         "@special/*": ["lib/special/*"],
         "@trig/*": ["lib/trigonometry/*"],
-        "@dist/*": ["lib/distributions/*"],
-        "*": ["src/typedefs/*"]
+        "@dist/*": ["lib/distributions/*"]
       },
       "plugins": [
         {
