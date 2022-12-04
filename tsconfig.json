@@ -3,15 +3,14 @@
   "exclude": ["**/__test__/**"],
   "files": ["src/index.ts"],
   "typeAcquisition": {
-    "enable": true
+    "enable": true,
+    "disableFilenameBasedTypeAcquisition": true
   },
   "compilerOptions": {
-    // part: type checks
-
     "allowUnreachableCode": true,
     "allowUnusedLabels": true,
     "exactOptionalPropertyTypes": true,
-    "noImplicitAny": true, // true if strict is true
+    "noImplicitAny": true,
     "noImplicitOverride": true,
     "noImplicitThis": false,
     "noPropertyAccessFromIndexSignature": false,
@@ -21,7 +20,7 @@
 
     "strict": true,
 
-    // part: modules
+ 
     "allowUmdGlobalAccess": false,
     "baseUrl": "./src",
     "module": "ESNext",
@@ -37,18 +36,16 @@
     "resolveJsonModule": true,
     "types": ["node"],
 
-    // part: Emit
-
     "declaration": false,
     "outDir": "dist/tsc",
     "preserveConstEnums": true,
     "stripInternal": true,
 
-    // JavaScript Support
+
 
     "checkJs": true,
 
-    // Editor Support
+
 
     "plugins": [
       {
@@ -63,50 +60,29 @@
       }
     ],
 
-    // here
 
-    "composite": false,
-
-    "incremental": true,
-    "lib": ["es5", "es6", "es2021", "dom"],
-
-    "noEmit": false,
-
-    "target": "ES2020",
 
     "allowSyntheticDefaultImports": false,
-
     "esModuleInterop": false,
-
+    "forceConsistentCasingInFileNames": true,
     "preserveSymlinks": true,
 
-    "emitDecoratorMetadata": false,
-    "experimentalDecorators": true,
 
-    "assumeChangesOnlyAffectDirectDependencies": false,
-    "noFallthroughCasesInSwitch": false,
-    "disableSizeLimit": true,
-    "disableSolutionSearching": false,
-    "disableSourceOfProjectReferenceRedirect": false,
+    
+    "lib": ["esnext", "dom"], 
+    "target": "esnext",
+    
 
+    "explainFiles": false,
     "extendedDiagnostics": true,
-    "forceConsistentCasingInFileNames": true,
-
     "listEmittedFiles": true,
     "listFiles": true,
-    "maxNodeModuleJsDepth": 0,
-    "noErrorTruncation": false,
-    "noImplicitUseStrict": false,
-    "noLib": false,
-    "noResolve": false,
-    "noStrictGenericChecks": false,
+    "traceResolution" : false,
 
-    "skipDefaultLibCheck": false,
-    "skipLibCheck": true,
 
-    "suppressExcessPropertyErrors": false,
-    "suppressImplicitAnyIndexErrors": false,
-    "traceResolution": false,
-    "useDefineForClassFields": true
+    "composite": false,
+    "incremental": false, 
+
+
   }
 }

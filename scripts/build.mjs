@@ -29,7 +29,7 @@ try {
 mkdirSync(DIR_COMMONJS, { recursive: true });
 mkdirSync(DIR_ESM, { recursive: true });
 // Read the TypeScript config file.
-const { config } = ts.readConfigFile("tsconfig-vercel.json", (fileName) =>
+const { config } = ts.readConfigFile("tsconfig.json", (fileName) =>
   readFileSync(fileName).toString()
 );
 
@@ -84,6 +84,7 @@ compile(getAllRootSourceFiles(), DIR_ESM, {
   removeComments: true,
   sourceMap: false,
   importHelpers: false,
+  outDir: undefined,
 });
 
 /**
