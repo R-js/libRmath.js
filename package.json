@@ -76,7 +76,7 @@
         "README.md"
     ],
     "scripts": {
-        "build": "npm run build.mjs",
+        "build": "node scripts/build.mjs",
         "lint": "eslint src/**/*.ts",
         "lint:fix": "eslint src/**/*.ts --fix",
         "prepare": "ts-patch install -s",
