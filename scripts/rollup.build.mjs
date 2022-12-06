@@ -87,7 +87,7 @@ const esmOutputOptionsMinimal = Object.assign({}, esmOutputOptions, {
 
 const iifeOutputOptionsMinimal = Object.assign({}, iifeOutputOptions, { 
     compact: true,
-    entryFileNames:`[name]-iife.${version}.min.js`, 
+    entryFileNames:`[name]-iife.min.${version}.js`, 
     plugins: [ terser() ]
  });
 
