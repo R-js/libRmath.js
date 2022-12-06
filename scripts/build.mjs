@@ -36,9 +36,7 @@ const { config } = ts.readConfigFile("tsconfig.json", (fileName) =>
 const sourceDir = join("src");
 
 function getAllRootSourceFiles() {
-  let sourceFiles = [
-      "./index.ts",
-  ];
+  let sourceFiles = ["./index.ts"];
   return sourceFiles.map((f) => join("src", f));
 }
 // Build CommonJS module.
@@ -56,15 +54,15 @@ compile(getAllRootSourceFiles(), DIR_COMMONJS, {
 // Build an ES2015 module and type declarations.
 
 compile(getAllRootSourceFiles(), DIR_ESM, {
-  module: ts.ModuleKind.ES2020,
-  moduleResolution: ts.ModuleResolutionKind.NodeJs,
-  declaration: true,
-  declarationDir: "./types", // this becomes ./dist/types
-  declarationMap: false,
-  removeComments: true,
-  sourceMap: false,
-  importHelpers: false,
-  outDir: undefined,
+    module: ts.ModuleKind.ES2020,
+    moduleResolution: ts.ModuleResolutionKind.NodeJs,
+    declaration: true,
+    declarationDir: "./types", // this becomes ./dist/types
+    declarationMap: false,
+    removeComments: true,
+    sourceMap: false,
+    importHelpers: false,
+    outDir: undefined,
 });
 
 /**
@@ -74,6 +72,7 @@ compile(getAllRootSourceFiles(), DIR_ESM, {
  * @param {ts.CompilerOptions} options
  */
 function compile(files, targetDIR, options) {
+
   const compilerOptions = { ...config.compilerOptions, ...options };
   const host = ts.createCompilerHost(compilerOptions);
 

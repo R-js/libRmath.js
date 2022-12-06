@@ -89,7 +89,7 @@ module.exports = {
     globals: {
         'ts-jest': {
             compiler: 'typescript',
-            tsconfig: 'tsconfig.test.json',
+            tsconfig: 'tsconfig.json',
             diagnostics: {
                 ignoreCodes: [151001],
             },
