@@ -37,28 +37,8 @@ const sourceDir = join("src");
 
 function getAllRootSourceFiles() {
   let sourceFiles = [
-    /*"/lib/alt/log/log1p.ts",
-    "/lib/common/toms708/index.ts",
-    "/lib/deviance/index.ts",
-    "/lib/rng/index.ts",
-    "/lib/special/bessel/index.ts",
-    "/lib/special/beta/index.ts",
-    "/lib/special/gamma/index.ts",
-    "/lib/special/choose/index.ts",
-    "/lib/special/stirling/index.ts",
-    "/lib/special/trigonometry/index.ts",
-    "/lib/r-func.ts",*/
-    "./index.ts",
+      "./index.ts",
   ];
-  // add distributions
-
-  /*
-    const entries = readdirSync("src/lib/distributions");
-    for (const entry of entries) {
-      sourceFiles.push("lib/distributions/" + entry + "/index.ts");
-    }
-*/
-
   return sourceFiles.map((f) => join("src", f));
 }
 // Build CommonJS module.
@@ -97,20 +77,12 @@ function compile(files, targetDIR, options) {
   const compilerOptions = { ...config.compilerOptions, ...options };
   const host = ts.createCompilerHost(compilerOptions);
 
-  // monkeypatch host
-  //  export type WriteFileCallback = (
-  //    1 fileName: string,
-  //    2 data: string,
-  //    3 writeByteOrderMark: boolean,
-  //    4 onError?: (message: string) => void,
-  //    5 sourceFiles?: readonly SourceFile[]
-  //    ) => void;
   host.writeFile = function (
     fileName,
     contents,
-    writeByteOrderMark,
+    _writeByteOrderMark,
     onError,
-    sourceFiles
+    _sourceFiles
   ) {
     const isDts = fileName.endsWith(".d.ts");
 
