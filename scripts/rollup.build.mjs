@@ -1,13 +1,15 @@
 import { rollup } from 'rollup';
 import { builtinModules } from 'module';
 
-import { terser } from 'rollup-plugin-terser';
+import terser from '@rollup/plugin-terser';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
-import commonjs from '@rollup/plugin-commonjs';
-import { resolve, } from 'path';
 
 const builtin = builtinModules.slice()
 builtin.splice(builtinModules.indexOf('crypto'), 1);
+
+import pkg from "../package.json" assert  { type: "json" };
+
+const version = pkg.version;
 
 
 function shims() {
@@ -25,9 +27,6 @@ function shims() {
             },
         };
     }`;
-    const debugSource = `
-      export function debug(ns) { return function(...args) { console.error(ns,...args) }; }
-    `;
     return {
         name: 'stubbing for browser',
         async resolveId(source, importer) {
@@ -38,17 +37,11 @@ function shims() {
             if (source.includes('crypto')) {
                 return source;
             }
-            if (source === 'debug') {
-                return source;
-            }
             return null;
         },
         async load(id) {
             if (id.includes('crypto')) {
                 return cryptoStub;
-            }
-            if (id === 'debug') {
-                return debugSource;
             }
             return null;
         },
@@ -57,34 +50,54 @@ function shims() {
 // see below for details on the options
 const inputOptions = {
     input: {
-        'lib-r-math': 'es6/index.js',
+        'lib-r-math': 'dist/esm/index.mjs',
     },
     external: (id) => {
         return builtin.includes(id);
     },
-   plugins: [shims(), commonjs(), nodeResolve()],
+   plugins: [
+    shims(),
+    nodeResolve({ dedupe:[ "@mangos/debug", "ms" ],  exportConditions:["import"] })
+],
 };
 
-const outputOptions = {
+const esmOutputOptions = {
     format: 'es',
-    dir: 'browser',
+    dir: 'dist',
     sourcemap: true,
-    name: 'R',
-    entryFileNames:'[name].js',
-    globals: {
-        [resolve('./es6/packages/common/logger')]: 'R.logger',
-    },
+    entryFileNames:`[name].${version}.mjs`,
     extend: true,
 };
 
 
-const outputOptionsMinimal = Object.assign({}, outputOptions, { compact: true, entryFileNames:'[name].min.js' ,plugins: [ terser() ] });
+const esmOutputOptionsMinimal = Object.assign({}, esmOutputOptions, { 
+    compact: true,
+    entryFileNames:`[name].min.${version}.mjs` 
+   ,plugins: [ terser() ]
+ });
+
+ const iifeOutputOptions = {
+    format: 'iife',
+    dir: 'dist',
+    sourcemap: true,
+    name: 'R',
+    entryFileNames:`[name].iife.${version}.js`,
+    extend: true,
+};
+
+const iifeOutputOptionsMinimal = Object.assign({}, iifeOutputOptions, { 
+    compact: true,
+    entryFileNames:`[name]-iife.${version}.min.js`, 
+    plugins: [ terser() ]
+ });
+
 
 async function build() {
     const bundle = await rollup(inputOptions);
-    await bundle.generate(outputOptions);
-    await bundle.write(outputOptions);
-    await bundle.write(outputOptionsMinimal);
+    await bundle.generate(esmOutputOptions);
+    await bundle.write(esmOutputOptionsMinimal);
+    await bundle.generate(iifeOutputOptions);
+    await bundle.write(iifeOutputOptionsMinimal);
 }
 
 build();
