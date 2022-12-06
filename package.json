@@ -76,15 +76,11 @@
         "README.md"
     ],
     "scripts": {
-        "xprebuild": "rimraf *.tsbuildinfo es6 browser commonjs types coverage .jest-cache",
-        "buildx": "tsc -p tsconfig-es6.json",
-        "xpostbuild": "node rollup.build.js",
+        "build": "npm run build.mjs",
         "lint": "eslint src/**/*.ts",
         "lint:fix": "eslint src/**/*.ts --fix",
         "prepare": "ts-patch install -s",
-        "pretest": "rimraf coverage .jest-cache",
-        "test": "jest --verbose",
-        "build2": "node scripts/build.mjs"
+        "test": "jest --verbose"
     },
     "contributes": {
         "typescriptServerPlugins": [
