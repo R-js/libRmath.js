@@ -69,6 +69,6 @@ export function dnf(x: number, df1: number, df2: number, ncp: number, giveLog: b
     }
 
     const y = (df1 / df2) * x;
-    z = dnbeta_scalar(y / (1 + y), df1 / 2, df2 / 2, ncp, giveLog) as number;
+    z = dnbeta_scalar(y / (1 + y), df1 / 2, df2 / 2, ncp, giveLog);
     return giveLog ? z + Math.log(df1) - Math.log(df2) - 2 * Math.log1p(y) : (z * (df1 / df2)) / (1 + y) / (1 + y);
 }

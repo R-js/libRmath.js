@@ -195,7 +195,7 @@ export function Y_bessel(x: number, alpha: number, nb: number): IBesselRC {
 
     const ex = x;
     let nu = alpha;
-    const by = new Array(nb).fill(0);
+    const by = new Float64Array(nb).fill(0);
     if (!(nb > 0 && 0 <= nu && nu < 1)) {
         printer('violaton: abort nb=%d, nu=%d', nb, nu);
         by[0] = 0;

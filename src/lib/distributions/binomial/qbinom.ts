@@ -31,7 +31,7 @@ function do_search(y: number, z: NumberW, p: number, n: number, pr: number, incr
 
         printer_do_search('new z=%o >= p = %d  --> search to left (y--) ..', z, p);
 
-        while (true) {
+        for (;;) {
             let newz: number;
             if (y === 0 || (newz = pbinom(y - incr, n, pr, /*l._t.*/ true, /*log_p*/ false)) < p) return y;
             y = Math.max(0, y - incr);
@@ -42,7 +42,7 @@ function do_search(y: number, z: NumberW, p: number, n: number, pr: number, incr
 
         printer_do_search('new z=%d < p = %d  --> search to right (y++) ..', z.val, p);
 
-        while (true) {
+        for (;;) {
             y = Math.min(y + incr, n);
             if (y === n || (z.val = pbinom(y, n, pr, /*l._t.*/ true, /*log_p*/ false)) >= p) return y;
         }

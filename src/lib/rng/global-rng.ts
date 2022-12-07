@@ -94,7 +94,7 @@ export function RNGKind(
         {
             // do nothing if it is the same type
             if (tu.kind !== (gu.constructor as unknown as typeof IRNG).kind){
-                gu.unregister(MessageType.INIT, no.reset);
+                gu.unregister(MessageType.INIT, no.reset.bind(no));
                 gu = globalUni(new tu());
                 no.reset(gu);
             }
@@ -112,7 +112,7 @@ export function RNGKind(
             if (tn.kind !== (no.constructor as unknown as typeof IRNGNormal).kind)
             // do nothing if it is the same type
             {
-                gu.unregister(MessageType.INIT, no.reset);
+                gu.unregister(MessageType.INIT, no.reset.bind(no));
                 no = globalNorm(new tn());
                 no.reset(gu);
             }

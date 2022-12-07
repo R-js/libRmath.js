@@ -40,7 +40,7 @@ export class KindermanRamage extends IRNGNormal {
     constructor(_rng: IRNG = new MersenneTwister(0)) {
         super(_rng, 'KinderMan Ramage');
         // there is no reset via message init
-        this._rng.unregister(MessageType.INIT, this.reset);
+        this._rng.unregister(MessageType.INIT, this.reset.bind(this));
     }
 
     public override random(): number {

@@ -20,14 +20,14 @@ describe('rhyper', function () {
             RNGKind(IRNGTypeEnum.MERSENNE_TWISTER, IRNGNormalTypeEnum.INVERSION);
             globalUni().init(123456);
         });
-        it('n=1, other params are NaNs or Infinity', async () => {
+        it('n=1, other params are NaNs or Infinity', () => {
             const nan2 = rhyper(1, NaN, 0, 0);
             const nan3 = rhyper(1, 0, NaN, 0);
             const nan4 = rhyper(1, 0, 0, Infinity);
             expect([nan2[0], nan3[0], nan4[0]]).toEqualFloatingPointBinary(NaN);
             expect(rhyperDomainWarns()).toHaveLength(3);
         });
-        it('test inputs nr < 0, nb <0, n <0 n > (nb+nr)', async () => {
+        it('test inputs nr < 0, nb <0, n <0 n > (nb+nr)', () => {
             const nan1 = rhyper(1, -1, 0, 0);
             const nan2 = rhyper(1, 0, -1, 0);
             const nan3 = rhyper(1, 0, 0, -1);
@@ -85,7 +85,7 @@ describe('rhyper', function () {
             RNGKind(IRNGTypeEnum.MERSENNE_TWISTER, IRNGNormalTypeEnum.INVERSION);
             globalUni().init(123456);
         });
-        it('n=50, NR=30, NB=15, K=20', async () => {
+        it('n=50, NR=30, NB=15, K=20', () => {
 
             const result = rhyper(50, 30, 15, 20);
             //R fidelity test
@@ -97,7 +97,7 @@ describe('rhyper', function () {
                 , 13, 15, 12, 11, 14, 13, 14, 13, 12, 13, 14
             ]);
         });
-        it('n=50, NR=15, NB=30,k=20', async () => {
+        it('n=50, NR=15, NB=30,k=20', () => {
             const result = rhyper(50, 15, 30, 20);
             //R fidelity test
             expect(result).toEqualFloatingPointBinary([

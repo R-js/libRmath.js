@@ -865,7 +865,7 @@ export class Toms708 {
         // C  CONTINUED FRACTION CALCULATION
         // C
 
-        while (true) {
+        for (;;) {
             n++;
             t = n / a;
             w = n * (b - n) * x;

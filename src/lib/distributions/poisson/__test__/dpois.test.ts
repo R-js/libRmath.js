@@ -69,7 +69,7 @@ describe('dpois', function () {
             const result = x.map(_x => dpois(_x, 10));
             expect(result).toEqualFloatingPointBinary(y, 46);
         });
-        it('lambda < MAX_SAFE_INTEGER * DBL_MIN', async () => {
+        it('lambda < MAX_SAFE_INTEGER * DBL_MIN', () => {
             const ans1 = dpois(
                 MAX_SAFE_INTEGER, // x
                 DBL_MIN * (trunc(MAX_SAFE_INTEGER - 1) // lambda

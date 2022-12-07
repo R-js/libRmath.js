@@ -327,7 +327,7 @@ function dpsifn(
     let L20 = false;
     let L30 = false;
 
-    while (true) {
+    for (;;) {
         nn = n + mm - 1;
         fn = nn;
         t = (fn + 1) * xln;
@@ -460,7 +460,7 @@ function dpsifn(
     } //if
     s = (s + t1) * tss;
     // while (true) is a goto capture
-    while (true) {
+    for (;;) {
         if (xinc !== 0.0) {
             /* backward recur from xdmy to x */
 

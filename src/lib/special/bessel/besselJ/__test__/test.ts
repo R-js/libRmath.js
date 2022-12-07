@@ -36,19 +36,19 @@ describe('bessel function of first kind (besselJ)', function () {
         cl.clear('J_bessel');
     });
     describe('invalid input and edge cases', () => {
-        it('[NaN] in, NaN', async () => {
+        it('[NaN] in, NaN', () => {
             const actual = besselJ(NaN, 0);
             expect(actual).toEqualFloatingPointBinary(NaN);
         });
-        it('[-1] in, NaN', async () => {
+        it('[-1] in, NaN', () => {
             const actual = besselJ(-1, 0);
             expect(actual).toEqualFloatingPointBinary(NaN);
         });
-        it('x=4,nu=1e9 gives NaN', async () => {
+        it('x=4,nu=1e9 gives NaN', () => {
             const actual = besselJ(4, 1e9);
             expect(actual).toEqualFloatingPointBinary(NaN);
         });
-        it('x=4E5,nu=-52 gives warning', async () => {
+        it('x=4E5,nu=-52 gives warning', () => {
             const actual = besselJ(4E5, -52);
             // check error log
             expect(actual).toEqualFloatingPointBinary(0);
@@ -62,15 +62,15 @@ describe('bessel function of first kind (besselJ)', function () {
         });
     });
     describe('fidelity', () => {
-        it('x=0.1,nu=-0.5', async () => {
+        it('x=0.1,nu=-0.5', () => {
             const actual = besselJ(0.1, -0.5);
             expect(actual).toEqualFloatingPointBinary(2.5105273689585096974);
         });
-        it('x=0.1,nu=-0.9', async () => {
+        it('x=0.1,nu=-0.9', () => {
             const actual = besselJ(0.1, -0.9);
             expect(actual).toEqualFloatingPointBinary(1.5191602453485768542);
         });
-        it('x< 1E-4, nu=-4.9', async () => {
+        it('x< 1E-4, nu=-4.9', () => {
             const actual = besselJ(1E-4/2.1, 4.9);
             expect(actual).toEqualFloatingPointBinary(2.1907703120848136824e-25);
         });

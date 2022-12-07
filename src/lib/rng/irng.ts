@@ -58,13 +58,13 @@ export abstract class IRNG implements IRandom {
         }
     }
 
-    public register(event: MessageType, handler: (...args: any[]) => void): void {
+    public register<F extends (...args: any[]) => void>(event: MessageType, handler: F): void {
         const handlers = this.notify.get(event) || [];
         this.notify.set(event, handlers);
         handlers.push(handler);
     }
 
-    public unregister(event: MessageType, handler?: (...args: any[]) => void): void {
+    public unregister<F extends (...args: any[]) => void>(event: MessageType, handler?: F): void {
         if (!handler) {
             this.notify.delete(event);
             return;
@@ -82,7 +82,7 @@ export abstract class IRNG implements IRandom {
         }
     }
 
-    public abstract  get seed(): Uint32Array | Int32Array; 
+    public abstract get seed(): Uint32Array | Int32Array;
     public abstract set seed(_seed: Uint32Array | Int32Array);
 
     public init(seed: number): void {

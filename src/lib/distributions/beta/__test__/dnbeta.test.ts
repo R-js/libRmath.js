@@ -40,7 +40,7 @@ describe('dbeta, ncp != undefined', () => {
         const z = dbeta(-1, 3, 3, 2, true);
         expect(z).toBe(-Infinity);
     });
-    it('ranges x = 0, shape1=3, shape2=0.01, ncp=4', async () => {
+    it('ranges x = 0, shape1=3, shape2=0.01, ncp=4', () => {
         const z = dbeta(0, 1, 0.01, 4);
         expect(z).toEqualFloatingPointBinary(0.0013533528323661276);
     });

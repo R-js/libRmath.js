@@ -33,14 +33,14 @@ import { max, sqrt, floor, round as nearbyint, isNaN, DBL_EPSILON, isFinite } fr
 function do_search(y: number, z: NumberW, p: number, lambda: number, incr: number): number {
     if (z.val >= p) {
         // search to the left
-        while (true) {
+        for (;;) {
             if (y === 0 || (z.val = ppois(y - incr, lambda, true, false)) < p) return y;
             y = max(0, y - incr);
         }
     } else {
         // search to the right
 
-        while (true) {
+        for (;;) {
             y = y + incr;
             if ((z.val = ppois(y, lambda, true, false)) >= p) return y;
         }
