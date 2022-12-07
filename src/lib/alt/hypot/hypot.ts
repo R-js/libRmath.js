@@ -34,7 +34,7 @@ import {
         // r = (min(|a|,|b|) / p) ^2
         tmp = fmin2(fabs(a), fabs(b)) / p;
         r = tmp * tmp;
-        while (true) {
+        for (;;) {
             t = 4.0 + r;
             // This was a test of 4.0 + r == 4.0, but optimizing
             //      compilers nowadays infinite loop on that.

@@ -199,8 +199,8 @@ export function summary(x: number[]): ISummary {
 // https://en.wikipedia.org/wiki/Welch%E2%80%93Satterthwaite_equation
 
 export function Welch_Satterthwaite(s: number[], n: number[]): number {
-    const elts = s.map((_s, i) => (_s * _s) / n[i as number]);
-    const dom = elts.map((e, i) => (e * e) / (n[i as number] - 1));
+    const elts = s.map((_s, i) => (_s * _s) / n[i]);
+    const dom = elts.map((e, i) => (e * e) / (n[i] - 1));
 
     return pow(sum(elts), 2) / sum(dom);
 }
@@ -485,7 +485,7 @@ export function R_pow_di(x: number, n: number): number {
             n = -n;
             x = 1 / x;
         }
-        while (true) {
+        for (;;) {
             if (n & 1) pow *= x;
             if ((n >>= 1)) x *= x;
             else break;

@@ -34,11 +34,11 @@ export function loadData(fullPath: string, sep = /,/, ...columns: number[]): Pro
                 }
                 const tps = result[j];
                 const _vs = cols[columns[j]];
-                if (_vs.match(matchNaN)) {
+                if (matchNaN.test(_vs)) {
                     tps[i] = NaN;
                     continue;
                 }
-                const rc = _vs.match(matchInf);
+                const rc = matchInf.exec(_vs);
                 if (rc) {
                     if (rc[1] === '-') {
                         tps[i] = -Infinity;

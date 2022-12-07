@@ -123,11 +123,11 @@ export function rbinomOne(nin: number, pp: number, rng: IRNG): number {
     const L_np_small = () => {
         //L_np_small:
         /*---------------------- np = n*p < 30 : ------------------------- */
-        while (true) {
+        for (;;) {
             ix = 0;
             f = qn;
             u = rng.random();
-            while (true) {
+            for (;;) {
                 if (u < f) {
                     //goto finis;
                     return;
@@ -180,7 +180,7 @@ export function rbinomOne(nin: number, pp: number, rng: IRNG): number {
    }*/
 
     /*-------------------------- np = n*p >= 30 : ------------------- */
-    while (true) {
+    for (;;) {
         u = rng.random() * p4;
         v = rng.random();
         /* triangular region */

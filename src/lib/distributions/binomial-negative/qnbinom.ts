@@ -32,7 +32,7 @@ function do_search(y: number, z: NumberW, p: number, n: number, pr: number, incr
     printer_do_search('start: y:%d, z:%o, p:%d, n:%d, pr:%d, incr:%d', y, z, p, n, pr, incr);
     if (z.val >= p) {
         //* search to the left
-        while (true) {
+        for (;;) {
             if (
                 y === 0 ||
                 (z.val = pnbinom(
@@ -51,7 +51,7 @@ function do_search(y: number, z: NumberW, p: number, n: number, pr: number, incr
     } else {
         // search to the right
 
-        while (true) {
+        for (;;) {
             y = y + incr;
             if (
                 (z.val = pnbinom(

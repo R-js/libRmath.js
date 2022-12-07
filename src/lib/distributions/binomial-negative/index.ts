@@ -100,6 +100,6 @@ export function rnbinom(
   if (prob === undefined) {
     throw new TypeError(probMis);
   }
-  return repeatedCall64(n, rnbinomOne, size, prob as number, rng);
+  return repeatedCall64(n, rnbinomOne, size, prob, rng);
 }
 

@@ -69,7 +69,7 @@ export function qwilcox(x: number, m: number, n: number, lowerTail = true, logP 
     if (x <= 0.5)
     {
         x = x - 10 * DBL_EPSILON;
-        while (true)
+        for(;;)
         {
             p += cwilcox(q, m, n, w) / c;
             if (p >= x) break;
@@ -79,7 +79,7 @@ export function qwilcox(x: number, m: number, n: number, lowerTail = true, logP 
     else
     {
         x = 1 - x + 10 * DBL_EPSILON;
-        while (true)
+        for (;;)
         {
             p += cwilcox(q, m, n, w) / c;
             if (p > x)

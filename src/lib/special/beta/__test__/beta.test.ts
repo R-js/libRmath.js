@@ -13,7 +13,7 @@ describe('beta(a,b)', function () {
     beforeEach(() => {
         cl.clear('beta');
     });
-    it('a = 0, b > 0', async () => {
+    it('a = 0, b > 0', () => {
         /* load data from fixture */
         const a = 0;
         const b = 0.5;

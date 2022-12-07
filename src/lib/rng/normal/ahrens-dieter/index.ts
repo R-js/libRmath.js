@@ -164,7 +164,7 @@ export class AhrensDieter extends IRNGNormal {
     constructor(_rng: IRNG = new MersenneTwister(0)) {
         super(_rng, 'Ahrens-Dieter');
         // there is no reset via message init
-        this._rng.unregister(MessageType.INIT, this.reset);
+        this._rng.unregister(MessageType.INIT, this.reset.bind(this));
     }
 
     // shaper
@@ -214,7 +214,7 @@ export class AhrensDieter extends IRNGNormal {
                 aa = aa + d[i[0] - 1];
                 i[0] = i[0] + 1;
             }
-            u1 = (u1 - 1.0) as number;
+            u1 = u1 - 1.0;
             // used to be a goto
             jump: for (;;) {
                 w = u1 * d[i[0] - 1];

@@ -15,7 +15,7 @@ describe('combinatorics (choose)', function () {
         beforeEach(() => {
             cl.clear('choose');
         });
-        it('a = NaN|b = NaN', async () => {
+        it('a = NaN|b = NaN', () => {
             const nan1 = choose(NaN, 5);
             const nan2 = choose(4, NaN);
             expect([nan1, nan2]).toEqualFloatingPointBinary(NaN);

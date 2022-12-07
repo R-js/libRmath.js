@@ -74,7 +74,7 @@ describe('qnorm', function () {
             const result = x.map(_x => qnorm(_x, 0, 1, true, false));
             expect(result).toEqualFloatingPointBinary(y);
         });  
-        it('p is very close to zero or 1, p=1-EPSILON and p = EPSILON mhu=0, sd=1, lower=F, aslog=F', async ()=>{
+        it('p is very close to zero or 1, p=1-EPSILON and p = EPSILON mhu=0, sd=1, lower=F, aslog=F', ()=>{
             const d1 = qnorm(1-Number.EPSILON, 0,1);
             expect(d1).toEqualFloatingPointBinary(8.125890664701906);
             const d2 = qnorm(Number.EPSILON, 0,1);

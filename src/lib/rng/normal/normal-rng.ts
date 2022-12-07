@@ -36,7 +36,7 @@ export abstract class IRNGNormal implements IRandom {
         this.random = this.random.bind(this);
         this.randoms = this.randoms.bind(this);
         this.reset = this.reset.bind(this);
-        this._rng.register(MessageType.INIT, this.reset);
+        this._rng.register(MessageType.INIT, this.reset.bind(this));
     }
 
     public reset(rng?: IRNG, seed?: number): void

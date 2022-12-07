@@ -1,7 +1,5 @@
 import { KnuthTAOCP } from '../..';
-import { fixture as getRFixture } from './fixture';
-
-const fixture = getRFixture();
+import { fixture } from './fixture';
 
 describe('rng knuth-taocp', function n() {
     it('sample for seed=0, n=10', () => {

@@ -115,7 +115,7 @@ export function rpoisOne(mu: number, rng: IRNGNormal = globalNorm()): number {
         q = p0 = p = exp(-mu);
         //}
 
-        while (true) {
+        for (;;) {
             /* Step U. uniform sample for inversion method */
             u = rng.uniform_rng.random();
             if (u <= p0) return 0;
@@ -181,7 +181,7 @@ export function rpoisOne(mu: number, rng: IRNGNormal = globalNorm()): number {
 
     let gotoStepF = false;
     let once = true;
-    while (true) {
+    for (;;) {
         if (once) {
             once = false;
             if (g >= 0) {

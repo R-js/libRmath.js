@@ -28,7 +28,7 @@ describe('qhyper(p,m,n,k,log)', function () {
             cl.clear('qhyper');
             cl.clear('R_Q_P01_boundaries');
         });
-        it('test inputs p, nr, ,b, n on NaN', async () => {
+        it('test inputs p, nr, ,b, n on NaN', () => {
             const nan1 = qhyper(NaN, 0, 0, 0);
             const nan2 = qhyper(0, NaN, 0, 0);
             const nan3 = qhyper(0, 0, NaN, 0);
@@ -36,7 +36,7 @@ describe('qhyper(p,m,n,k,log)', function () {
             expect([nan1, nan2, nan3, nan4]).toEqualFloatingPointBinary(NaN);
             expect(qhyperWarns()).toHaveLength(0);
         });
-        it('test inputs p,nr, nb, n on infinity', async () => {
+        it('test inputs p,nr, nb, n on infinity', () => {
             const I = Infinity;
             const nan1 = qhyper(I, 0, 0, 0);
             const nan2 = qhyper(0, I, 0, 0);
@@ -45,7 +45,7 @@ describe('qhyper(p,m,n,k,log)', function () {
             expect([nan1, nan2, nan3, nan4]).toEqualFloatingPointBinary(NaN);
             expect(qhyperWarns()).toHaveLength(4);
         });
-        it('test inputs nr < 0, nb <0, n <0 n > (nb+nr)', async () => {
+        it('test inputs nr < 0, nb <0, n <0 n > (nb+nr)', () => {
             const nan1 = qhyper(0.1, -1, 0, 0);
             const nan2 = qhyper(0.1, 0, -1, 0);
             const nan3 = qhyper(0.1, 0, 0, -1);
@@ -53,7 +53,7 @@ describe('qhyper(p,m,n,k,log)', function () {
             expect([nan1, nan2, nan3, nan4]).toEqualFloatingPointBinary(NaN);
             expect(qhyperWarns()).toHaveLength(4);
         });
-        it('p < 0 || p > 1', async () => {
+        it('p < 0 || p > 1', () => {
             const nan1 = qhyper(-1, 2, 3, 2);
             const nan2 = qhyper(1.21, 2, 3, 2);
             expect([nan1, nan2]).toEqualFloatingPointBinary(NaN);
@@ -61,7 +61,7 @@ describe('qhyper(p,m,n,k,log)', function () {
         });
     });
    describe('edge cases', () => {
-        it('(p=1 and p=1, m=300 n=150, k=400', async () => {
+        it('(p=1 and p=1, m=300 n=150, k=400', () => {
             // the minimum output is Max(0,  (nn-nb) )
             // the maximum output is min(nn, nr)
             // xstart = max(0, 400-150) = 250, so p=0 will output 250
