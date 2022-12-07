@@ -1,5 +1,6 @@
 .jest-cache
 .vscode
+coverage
 node_modules
 scripts
 src
@@ -9,6 +10,4 @@ tools
 .npmrc
 jest.config.cjs
 package-lock.json
-rollup.build.js
-spell.json
-tsconfig*
+tsconfig.json

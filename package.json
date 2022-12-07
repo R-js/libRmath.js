@@ -76,6 +76,8 @@
         "README.md"
     ],
     "scripts": {
+        "prepublishOnly": "npm run build",
+        "prebuild":"npm run lint",
         "build": "node --trace-warnings scripts/build.mjs",
         "postbuild": "node --trace-warnings scripts/rollup.build.mjs",
         "lint": "eslint src/**/*.ts",
