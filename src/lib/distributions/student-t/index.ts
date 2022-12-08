@@ -65,4 +65,5 @@ export function rt(n: number, df: number, ncp?: number, rng = globalNorm()): Flo
         return norm;
     }
 }
+export { rtOne };
 

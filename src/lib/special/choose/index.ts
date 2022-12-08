@@ -133,6 +133,5 @@ function choose(n: number, k: number): number {
     return exp(lfastchoose(n, k));
 }
 
-export { lchoose };
-export { choose };
-export { lfastchoose };
+export { lfastchoose, lchoose, choose };
+

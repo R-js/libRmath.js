@@ -1,6 +1,6 @@
 import { floor, ceil, log2, trunc } from '@lib/r-func';
-import type { IRNG } from '.';
-import { IRNGSampleKindTypeEnum } from '.';
+import type { IRNG } from './irng';
+import { IRNGSampleKindTypeEnum } from './sample-kind-type';
 
 
 /* Our PRNGs have at most 32 bit of precision. All generators except

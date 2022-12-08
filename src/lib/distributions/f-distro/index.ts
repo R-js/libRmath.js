@@ -53,21 +53,33 @@ export function qf(p: number, df1: number, df2: number, ncp?: number, lowerTail 
 }
 
 export function rf(n: number, df1: number, df2: number, ncp?: number, rng: IRNGNormal = globalNorm()): Float64Array {
-    
-    if (ncp === undefined){
+
+    if (ncp === undefined) {
         return repeatedCall64(n, _rfOne, df1, df2, rng);
     }
 
     // short cuts
-    if (isNaN(ncp) || isNaN(df1) || isNaN(df2) || !isFinite(df1) || !isFinite(df2) ){
-        return repeatedCall64(n, ()=>NaN);
+    if (isNaN(ncp) || isNaN(df1) || isNaN(df2) || !isFinite(df1) || !isFinite(df2)) {
+        return repeatedCall64(n, () => NaN);
     }
     // R fidelity
-    const noms = repeatedCall64(n, ()=> rnchisqOne(df1, ncp, rng) / df1);
+    const noms = repeatedCall64(n, () => rnchisqOne(df1, ncp, rng) / df1);
     // loop over all noms
-    for (let i = 0; i < noms.length; i++){
+    for (let i = 0; i < noms.length; i++) {
         const dom = rchisqOne(df2, rng) / df2;
-        noms[i] = noms[i]/dom;
+        noms[i] = noms[i] / dom;
     }
     return noms;
+}
+
+export function rfOne(df1: number, df2: number, ncp?: number, rng: IRNGNormal = globalNorm()): number {
+    if (ncp === undefined) {
+        return _rfOne( df1, df2, rng);
+    }
+    if (isNaN(ncp) || isNaN(df1) || isNaN(df2) || !isFinite(df1) || !isFinite(df2)) {
+        return NaN;
+    }
+    const nom = rnchisqOne(df1, ncp, rng) / df1;
+    const dom = rchisqOne(df2, rng) / df2;
+    return nom / dom;
 }
