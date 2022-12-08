@@ -54,4 +54,4 @@ function clearBackend(): boolean {
    return (rc === 3) ? true: false;
 }
 
-export { useWasmBackend, clearBackend }
+export { useWasmBackend, clearBackend, rsignrankOne }

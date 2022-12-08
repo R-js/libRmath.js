@@ -22,7 +22,7 @@ import { rhyperOne } from './rhyper';
 import { globalUni } from '@rng/global-rng';
 import { repeatedCall64 } from '@lib/r-func';
 import { initWasm as initWasmQhyper } from './qhyper_wasm';
-import type { QHyperFunctionMap } from './qhyper_wasm'
+import type { QHyperFunctionMap } from './qhyper_wasm';
 
 //rhyper(nn, m, n, k)
 export function rhyper(N: number, nn1in: number, nn2in: number, kkin: number, rng = globalUni()): Float64Array {
@@ -38,3 +38,5 @@ export async function useWasmBackends(): Promise<void> {
 export function clearBackends(): boolean {
    return unRegisterQHyperBackend(); // && unRegisterPHyperBackend etc
 }
+
+export  { rhyperOne };

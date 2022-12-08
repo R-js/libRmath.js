@@ -26,3 +26,5 @@ import { globalNorm } from '@rng/global-rng';
 export function rpois(n: number, lamda: number, rng: IRNGNormal = globalNorm()): Float32Array {
   return repeatedCall(n, rpoisOne, lamda, rng);
 }
+
+export { rpoisOne };

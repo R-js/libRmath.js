@@ -14,10 +14,12 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+import { rcauchyOne } from './rcauchy';
+
 export { dcauchy } from './dcauchy';
 export { pcauchy } from './pcauchy';
 export { qcauchy } from './qcauchy';
-import { rcauchyOne } from './rcauchy';
+export { rcauchyOne};
 
 import { repeatedCall } from '@lib/r-func';
 import { globalUni } from '@rng/global-rng';

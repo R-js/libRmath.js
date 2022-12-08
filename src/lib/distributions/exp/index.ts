@@ -38,3 +38,5 @@ export function qexp(p: number, rate = 1, lowerTail = true, logP = false): numbe
 export  function rexp(n: number, rate = 1, rng: IRNG = globalUni()):Float64Array{
   return repeatedCall64(n, rexpOne, 1 / rate, rng);
 }
+
+export { rexpOne };

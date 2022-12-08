@@ -27,3 +27,5 @@ export function runif(n: number, min = 0, max = 1, rng = globalUni()): Float64Ar
     return repeatedCall64(n, runifOne, min, max, rng);
 }
 
+export { runifOne };
+
