@@ -222,7 +222,8 @@ import { IRNGNormalTypeEnum } from './lib/rng/normal/in01-type';
 import {
     globalUni,
     globalNorm,
-    RNGKind as RNGkind
+    RNGKind as RNGkind,
+    setSeed
 } from './lib/rng/global-rng';
 
 // special
@@ -413,6 +414,7 @@ const defaultObservableNoteBook = {
     globalUni,
     globalNorm,
     RNGkind,
+    setSeed,
     //
     BesselJ,
     BesselI,
@@ -600,6 +602,7 @@ export {
     globalUni,
     globalNorm,
     RNGkind,
+    setSeed,
     //
     BesselJ,
     BesselI,

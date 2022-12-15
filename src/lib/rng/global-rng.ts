@@ -82,16 +82,29 @@ export type RandomGenSet = {
     sampleKind?: IRNGSampleKindTypeEnum
 };
 
-/*
 export function setSeed(
    seed: number,
    randomSet?: RandomGenSet,
 ): void {
-    let gu = globalUni();
-    let no = globalNorm();
-    let sk = globalSampleKind();
+    if (typeof seed !== 'number'){
+        throw new Error('Seed needs to bea number');
+    }
+    if (isNaN(seed) || !isFinite(seed)){
+        throw new Error('Seed needs to be a finite number');
+    }
+    if (randomSet){
+        RNGKind(randomSet);
+    }
+    const gu = globalUni();
+
+    const s = new Uint32Array([0]);
+    s[0] = seed;
+    if (s[0] !== seed){
+        throw new Error(`Seed needs to be an unsigned 32 bit integer, it is ${seed}`);
+    }
+    gu.init(seed); 
 }
-*/
+
 export function RNGKind(opt: RandomGenSet): RandomGenSet {
 
     let gu = globalUni();
