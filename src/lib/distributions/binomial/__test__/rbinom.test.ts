@@ -16,7 +16,7 @@ import { rbinom } from '..';
 
 describe('rbinom', function () {
     beforeAll(() => {
-        RNGKind(IRNGTypeEnum.MERSENNE_TWISTER, IRNGNormalTypeEnum.INVERSION);
+        RNGKind({ uniform: IRNGTypeEnum.MERSENNE_TWISTER, normal: IRNGNormalTypeEnum.INVERSION});
         cl.clear('_rbinom');
     });
     

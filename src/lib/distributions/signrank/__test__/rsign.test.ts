@@ -39,7 +39,7 @@ describe('rsignrank (wilcox sign rank)', function () {
     });
     describe('fidelity', () => {
         beforeEach(() => {
-            RNGKind(IRNGTypeEnum.MERSENNE_TWISTER, IRNGNormalTypeEnum.INVERSION);
+            RNGKind({ uniform: IRNGTypeEnum.MERSENNE_TWISTER, normal: IRNGNormalTypeEnum.INVERSION});
             globalUni().init(123456);
         });
         it('N = 50, n = 3000', async () => {

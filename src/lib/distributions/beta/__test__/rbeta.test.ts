@@ -14,7 +14,7 @@ import { globalNorm, globalUni, RNGKind } from '@rng/global-rng';
 describe('rbeta', function () {
 
     beforeAll(() => {
-        RNGKind(IRNGTypeEnum.MERSENNE_TWISTER, IRNGNormalTypeEnum.INVERSION);
+        RNGKind({ uniform: IRNGTypeEnum.MERSENNE_TWISTER, normal: IRNGNormalTypeEnum.INVERSION });
         cl.clear('rbeta');
     });
     it('sample 5 numbers, n=5, scp1=2, scp2=2', () => {
@@ -121,6 +121,6 @@ describe('rbeta', function () {
             0.504225708172377995,
             0.549149971710310880
         ],
-        22)
+            22)
     });
 });

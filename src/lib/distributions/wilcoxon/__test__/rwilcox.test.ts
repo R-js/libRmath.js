@@ -61,7 +61,7 @@ describe('rwilcox', function () {
         });
         it.todo('for rwilcox we are diverging for R for high population number 2**20 etc, investigate')
         /*it.only('(takes time) n=4, sample.kind=rounding, (m+n) > cut (2^25-1) of Marsaglia multicarry', async () => {
-            const rc = RNGKind(IRNGTypeEnum.KNUTH_TAOCP2002, IRNGSampleKindTypeEnum.ROUNDING);
+            const rc = RNGKind({ uniform: IRNGTypeEnum.KNUTH_TAOCP2002, normal: IRNGSampleKindTypeEnum.ROUNDING});
             rc.uniform.init(12345);
             //const [r] = await loadData(resolve(__dirname, 'fixture-generation', 'rwilcox3.R'), /\s+/, 1);
             const ans = rwilcox(4, 2**20, 5);

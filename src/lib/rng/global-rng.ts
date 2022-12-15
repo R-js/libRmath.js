@@ -76,25 +76,36 @@ export function globalSampleKind(d?: IRNGSampleKindTypeEnum): IRNGSampleKindType
     return (globalThis as EgT)[symSampleKind];
 }
 
+export type RandomGenSet = {
+    uniform?: IRNGTypeEnum
+    normal?: IRNGNormalTypeEnum
+    sampleKind?: IRNGSampleKindTypeEnum
+};
 
-export function RNGKind(
-    uniform?: IRNGTypeEnum | IRNGNormalTypeEnum | IRNGSampleKindTypeEnum,
-    normal?: IRNGNormalTypeEnum| IRNGSampleKindTypeEnum ,
-    sampleKind?: IRNGSampleKindTypeEnum 
-): { uniform: IRNG, normal: IRNGNormal, sampleKind: IRNGSampleKindTypeEnum }
-{
+/*
+export function setSeed(
+   seed: number,
+   randomSet?: RandomGenSet,
+): void {
+    let gu = globalUni();
+    let no = globalNorm();
+    let sk = globalSampleKind();
+}
+*/
+export function RNGKind(opt: RandomGenSet): RandomGenSet {
+
     let gu = globalUni();
     let no = globalNorm();
     let sk = globalSampleKind();
 
-    function testAndSetUniform(u: UniformMapKey): boolean
-    {
-        const tu =  uniformMap[u];
-        if (tu) 
-        {
+    function testAndSetUniform(u: UniformMapKey): boolean {
+        const tu = uniformMap[u];
+        if (tu) {
             // do nothing if it is the same type
-            if (tu.kind !== (gu.constructor as unknown as typeof IRNG).kind){
-                gu.unregister(MessageType.INIT, no.reset.bind(no));
+            if (tu.kind !== (gu.constructor as unknown as typeof IRNG).kind) { // different so change it
+                // it IS bound, (this happens in the constructor of the rng) 
+                // eslint-disable-next-line @typescript-eslint/unbound-method
+                gu.unregister(MessageType.INIT, no.reset);
                 gu = globalUni(new tu());
                 no.reset(gu);
             }
@@ -103,16 +114,16 @@ export function RNGKind(
         return false;
     }
 
-    function testAndSetNormal(n: NormalMapKey): boolean
-    {
+    function testAndSetNormal(n: NormalMapKey): boolean {
 
         const tn = normalMap[n];
-        if (tn)
-        {
+        if (tn) {
             if (tn.kind !== (no.constructor as unknown as typeof IRNGNormal).kind)
             // do nothing if it is the same type
             {
-                gu.unregister(MessageType.INIT, no.reset.bind(no));
+                // it IS bound, above line...
+                // eslint-disable-next-line @typescript-eslint/unbound-method
+                gu.unregister(MessageType.INIT, no.reset);
                 no = globalNorm(new tn());
                 no.reset(gu);
             }
@@ -121,15 +132,12 @@ export function RNGKind(
         return false;
     }
 
-    function testAndSetSampleKind(s: IRNGSampleKindTypeEnum): boolean
-    {
+    function testAndSetSampleKind(s: IRNGSampleKindTypeEnum): boolean {
         if (
             s === IRNGSampleKindTypeEnum.REJECTION
             ||
-            s === IRNGSampleKindTypeEnum.ROUNDING)
-        {
-            if (s !== sk)
-            {
+            s === IRNGSampleKindTypeEnum.ROUNDING) {
+            if (s !== sk) {
                 sk = globalSampleKind(s);
             }
             return true;
@@ -137,57 +145,23 @@ export function RNGKind(
         return false;
     }
 
-
-    // 0 arguments,  dud
-    //if (!uniform && !normal && !sampleKind){
-    //    return { uniform: gu, normal: no, sampleKind: sk };
-    //}
-
-    // 1 argument
-    // Is it?:
-    // 1. uniform
-    // 2. normal
-    // 3. sample kind
-    if (uniform && !normal && !sampleKind)
-    {
-        if (testAndSetUniform(uniform as UniformMapKey) === false)
-        {
-            if (testAndSetNormal(uniform as NormalMapKey) === false)
-            {
-                testAndSetSampleKind(uniform as IRNGSampleKindTypeEnum)
-            }
-        }
-    }
-    //there are 2 arguments
-    // possibilities:
-    // 1. uniform & normal
-    // 2. normal & samplekind
-    // 3. uniform & samplekind
-    if (uniform && normal && !sampleKind)
-    {
-        // 1
-        if (false === (testAndSetUniform(uniform as UniformMapKey) && testAndSetNormal(normal as NormalMapKey)))
-        {
-            //2
-            if (false === (testAndSetNormal(uniform as NormalMapKey) && testAndSetSampleKind(normal as IRNGSampleKindTypeEnum)))
-            {
-                //3
-                testAndSetUniform(uniform as UniformMapKey);
-                testAndSetSampleKind(normal as IRNGSampleKindTypeEnum);
-            }
-        }
-        //
+    if (opt.uniform) {
+        testAndSetUniform(opt.uniform as UniformMapKey); // replace it if it is different
     }
 
-    // there are 3 arguments, just as easy as 1
-    if (uniform && normal && sampleKind)
-    {
-        testAndSetUniform(uniform as UniformMapKey);
-        testAndSetNormal(normal as NormalMapKey);
-        testAndSetSampleKind(sampleKind);
+    if (opt.normal){
+        testAndSetNormal(opt.normal as NormalMapKey);
     }
 
-    return { uniform: gu, normal: no, sampleKind: sk };
+    if (opt.sampleKind){
+        testAndSetSampleKind(opt.sampleKind);
+    }
+   
+    return { 
+        uniform: (gu.constructor as unknown as typeof IRNG).kind,
+        normal: (no.constructor as unknown as typeof IRNGNormal).kind,
+        sampleKind: sk
+    };
 
 }
 

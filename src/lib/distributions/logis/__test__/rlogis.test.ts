@@ -13,7 +13,7 @@ describe('rlogis', function () {
 
     beforeEach(() => {
         cl.clear('rlogis');
-        RNGKind(IRNGTypeEnum.MERSENNE_TWISTER, IRNGNormalTypeEnum.INVERSION);
+        RNGKind({ uniform: IRNGTypeEnum.MERSENNE_TWISTER, normal: IRNGNormalTypeEnum.INVERSION});
         globalUni().init(123456);
     });
     it('n = 0', () => {

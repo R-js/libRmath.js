@@ -23,7 +23,7 @@ describe('rt (n,df,ncp)', function () {
     describe('invalid input and edge cases', () => {
         describe('ncp = undefined', () => {
             beforeEach(() => {
-                RNGKind(IRNGTypeEnum.MERSENNE_TWISTER, IRNGNormalTypeEnum.INVERSION);
+                RNGKind({ uniform: IRNGTypeEnum.MERSENNE_TWISTER, normal: IRNGNormalTypeEnum.INVERSION});
                 globalUni().init(123456);
                 cl.clear('rt');
                 cl.clear('rchisq');
@@ -47,7 +47,7 @@ describe('rt (n,df,ncp)', function () {
         });
         describe('ncp defined', () => {
             beforeEach(() => {
-                RNGKind(IRNGTypeEnum.MERSENNE_TWISTER, IRNGNormalTypeEnum.INVERSION);
+                RNGKind({ uniform: IRNGTypeEnum.MERSENNE_TWISTER, normal: IRNGNormalTypeEnum.INVERSION});
                 globalUni().init(123456);
                 cl.clear('rt');
                 cl.clear('rchisq');
@@ -66,7 +66,7 @@ describe('rt (n,df,ncp)', function () {
     describe('fidelity', () => {
         describe('ncp = undefined', () => {
             beforeEach(() => {
-                RNGKind(IRNGTypeEnum.MERSENNE_TWISTER, IRNGNormalTypeEnum.INVERSION);
+                RNGKind({ uniform: IRNGTypeEnum.MERSENNE_TWISTER, normal: IRNGNormalTypeEnum.INVERSION});
                 globalUni().init(123456);
             });
             it('samples for df = 0.5|df = 5| df=50| df=500', async () => {
