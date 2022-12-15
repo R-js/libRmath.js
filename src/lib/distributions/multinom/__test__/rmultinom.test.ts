@@ -34,7 +34,7 @@ describe('rmultinom', function () {
     });
     describe('fidelity', () => {
         beforeEach(() => {
-            RNGKind(IRNGTypeEnum.MERSENNE_TWISTER, IRNGNormalTypeEnum.INVERSION);
+            RNGKind({ uniform: IRNGTypeEnum.MERSENNE_TWISTER, normal: IRNGNormalTypeEnum.INVERSION});
             globalUni().init(123456);
         });
         it('probs = [0.4,0.4,0.0], size = 0, n = 0, empty array output', () => {

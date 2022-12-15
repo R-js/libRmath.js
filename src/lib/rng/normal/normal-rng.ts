@@ -36,7 +36,9 @@ export abstract class IRNGNormal implements IRandom {
         this.random = this.random.bind(this);
         this.randoms = this.randoms.bind(this);
         this.reset = this.reset.bind(this);
-        this._rng.register(MessageType.INIT, this.reset.bind(this));
+        // it IS bound, above line...
+        // eslint-disable-next-line @typescript-eslint/unbound-method
+        this._rng.register(MessageType.INIT, this.reset);
     }
 
     public reset(rng?: IRNG, seed?: number): void

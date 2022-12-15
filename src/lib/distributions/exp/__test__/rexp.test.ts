@@ -12,7 +12,7 @@ describe('rexp', function () {
     beforeEach(() => {
         cl.clear('rexp');
         
-        RNGKind(IRNGTypeEnum.MERSENNE_TWISTER, IRNGNormalTypeEnum.INVERSION);
+        RNGKind({ uniform: IRNGTypeEnum.MERSENNE_TWISTER, normal: IRNGNormalTypeEnum.INVERSION});
         globalUni().init(123456);
     })
 

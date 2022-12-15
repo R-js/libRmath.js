@@ -36,7 +36,7 @@ describe('rweibull', function () {
 
     describe('fidelity', () => {
         beforeEach(() => {
-            RNGKind(IRNGTypeEnum.MERSENNE_TWISTER, IRNGNormalTypeEnum.INVERSION);
+            RNGKind({ uniform: IRNGTypeEnum.MERSENNE_TWISTER, normal: IRNGNormalTypeEnum.INVERSION});
             globalUni().init(111_111);
         });
         it('n=10, scale=0.5, shape=4', () => {

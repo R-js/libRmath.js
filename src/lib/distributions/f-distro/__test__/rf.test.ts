@@ -11,7 +11,7 @@ const rfDomainWarns = rfLogs("argument out of domain in '%s'");
 
 describe('rf', function () {
     beforeEach(() => {
-        RNGKind(IRNGTypeEnum.MERSENNE_TWISTER, IRNGNormalTypeEnum.INVERSION);
+        RNGKind({ uniform: IRNGTypeEnum.MERSENNE_TWISTER, normal: IRNGNormalTypeEnum.INVERSION});
         globalUni().init(123456);
         cl.clear('rf');
     })

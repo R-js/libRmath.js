@@ -43,7 +43,7 @@ describe('rgeom', function () {
 
     describe('with fixtures', () => {
         beforeAll(()=>{
-            RNGKind(IRNGTypeEnum.MERSENNE_TWISTER, IRNGNormalTypeEnum.INVERSION);
+            RNGKind({ uniform: IRNGTypeEnum.MERSENNE_TWISTER, normal: IRNGNormalTypeEnum.INVERSION});
             globalUni().init(12345);
         });
         it('n=100, prob={0.3,0.6}', async () => {

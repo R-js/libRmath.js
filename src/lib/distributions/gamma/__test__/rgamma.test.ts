@@ -41,7 +41,7 @@ describe('rgamma', function () {
     });
     describe('fidelity, Mersenne-Twister & Inversion', () => {
         beforeEach(() => {
-            RNGKind(IRNGTypeEnum.MERSENNE_TWISTER, IRNGNormalTypeEnum.INVERSION);
+            RNGKind({ uniform: IRNGTypeEnum.MERSENNE_TWISTER, normal: IRNGNormalTypeEnum.INVERSION});
         });
         it('n=100, shape=1, scale=3', async () => {
             const [y] = await loadData(

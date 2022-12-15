@@ -15,7 +15,7 @@ import { IRNGNormalTypeEnum } from '@rng/normal/in01-type';
 describe('rnorm', function () {
     describe('invalid input check and edge cases', () => {
         beforeAll(()=>{
-            RNGKind(IRNGTypeEnum.MERSENNE_TWISTER, IRNGNormalTypeEnum.INVERSION);
+            RNGKind({ uniform: IRNGTypeEnum.MERSENNE_TWISTER, normal: IRNGNormalTypeEnum.INVERSION});
             globalUni().init(123456);
             cl.clear('rnorm');
         });
@@ -37,7 +37,7 @@ describe('rnorm', function () {
     });
     describe('fidelity',()=>{
         beforeAll(()=>{
-            RNGKind(IRNGTypeEnum.MERSENNE_TWISTER, IRNGNormalTypeEnum.INVERSION);
+            RNGKind({ uniform: IRNGTypeEnum.MERSENNE_TWISTER, normal: IRNGNormalTypeEnum.INVERSION});
             globalUni().init(123456);
         });
         it('100 samples', async () => {
