@@ -66,7 +66,7 @@
         "import": "./dist/esm/index.mjs",
         "require": "./dist/commonjs/index.cjs"
     },
-    "browser": "./dist/lib-r-math.min.2.0.0-rc1.mjs",
+    "browser": "./dist/lib-r-math.2.0.0-rc3.mjs",
     "types": "./dist/types/index.d.ts",
     "sideEffects": true,
     "files": [
