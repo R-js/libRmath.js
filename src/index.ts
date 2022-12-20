@@ -16,8 +16,6 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { chebyshev_eval, chebyshev_init } from './lib/chebyshev/chebyshev';
-
 // R versions of log1p and hypot
 import { default as log1p } from '././lib/alt/log/log1p';
 import { default as hypot } from './lib/alt/hypot/hypot';
@@ -250,8 +248,6 @@ import {
 import { IRNGSampleKindTypeEnum } from './lib/rng/sample-kind-type';
 
 const defaultObservableNoteBook = {
-    chebyshev_eval,
-    chebyshev_init,
     // R versions of log1p and hypot
     log1p,
     hypot,
@@ -439,8 +435,6 @@ const defaultObservableNoteBook = {
 }
 
 export {
-    chebyshev_eval,
-    chebyshev_init,
     // R versions of log1p and hypot
     log1p,
     hypot,

@@ -16,10 +16,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { debug } from '@mangos/debug';
 import {ML_ERR_return_NAN2, lineInfo4  } from '@common/logger';
-import { abs } from '@lib/r-func';
 
 const printer = debug('chebyshev_eval');
 
+/*
 export function chebyshev_init(dos: number[], nos: number, eta: number): number {
     let retCode = 0;
     //let ii: number;
@@ -38,7 +38,7 @@ export function chebyshev_init(dos: number[], nos: number, eta: number): number 
     }
     return retCode;
 }
-
+*/
 export function chebyshev_eval(x: number, a: number[], n: number): number {
     let b0: number;
     let b1: number;
