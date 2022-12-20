@@ -18,13 +18,14 @@ import { debug } from '@mangos/debug';
 import { ML_ERR_return_NAN2, lineInfo4 } from '@common/logger';
 import { R_pow_di } from '@lib/r-func';
 
-import type { IRNG } from '@rng/irng';
+import { globalUni } from '@rng/global-rng';
+
 import { qbinom } from './qbinom';
 
 
 const printer_rbinom = debug('rbinom');
 
-export function rbinomOne(nin: number, pp: number, rng: IRNG): number {
+export function rbinomOne(nin: number, pp: number, rng = globalUni()): number {
     // double
     let c = 0;
     let fm = 0;

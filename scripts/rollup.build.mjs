@@ -50,7 +50,7 @@ function shims() {
 // see below for details on the options
 const inputOptions = {
     input: {
-        'lib-r-math': 'dist/esm/index.mjs',
+         'web': 'dist/esm/index.mjs',
     },
     external: (id) => {
         return builtin.includes(id);
@@ -65,14 +65,14 @@ const esmOutputOptions = {
     format: 'es',
     dir: 'dist',
     sourcemap: true,
-    entryFileNames:`[name].${version}.mjs`,
+    entryFileNames:`[name].esm.mjs`,
     extend: true,
 };
 
 
 const esmOutputOptionsMinimal = Object.assign({}, esmOutputOptions, { 
     compact: true,
-    entryFileNames:`[name].min.${version}.mjs` 
+    entryFileNames:`[name].min.mjs` 
    ,plugins: [ terser() ]
  });
 
@@ -81,13 +81,13 @@ const esmOutputOptionsMinimal = Object.assign({}, esmOutputOptions, {
     dir: 'dist',
     sourcemap: true,
     name: 'R',
-    entryFileNames:`[name].iife.${version}.js`,
+    entryFileNames:`[name].iife.js`,
     extend: true,
 };
 
 const iifeOutputOptionsMinimal = Object.assign({}, iifeOutputOptions, { 
     compact: true,
-    entryFileNames:`[name]-iife.min.${version}.js`, 
+    entryFileNames:`[name]-iife.min.js`, 
     plugins: [ terser() ]
  });
 
