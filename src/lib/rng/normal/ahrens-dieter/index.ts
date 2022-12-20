@@ -16,7 +16,6 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { IRNG, MessageType } from '../../irng';
-import { MersenneTwister } from '../../mersenne-twister';
 import { IRNGNormal } from '../normal-rng';
 import { IRNGNormalTypeEnum } from '../in01-type';
 
@@ -161,7 +160,7 @@ export class AhrensDieter extends IRNGNormal {
    
     public static override kind = IRNGNormalTypeEnum.AHRENS_DIETER;
 
-    constructor(_rng: IRNG = new MersenneTwister(0)) {
+    constructor(_rng: IRNG) {
         super(_rng, 'Ahrens-Dieter');
         // there is no reset via message init
         this._rng.unregister(MessageType.INIT, this.reset.bind(this));

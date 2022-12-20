@@ -17,7 +17,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { IRNG, MessageType } from '@rng/irng';
 import { qnorm } from '@dist/normal/qnorm';
-import { MersenneTwister } from '@rng/mersenne-twister';
 import { IRNGNormal } from '@rng/normal/normal-rng';
 import { IRNGNormalTypeEnum } from '@rng/normal/in01-type';
 
@@ -27,7 +26,7 @@ export class Inversion extends IRNGNormal {
 
     public static override kind = IRNGNormalTypeEnum.INVERSION;
 
-    constructor(_rng: IRNG = new MersenneTwister(0)) {
+    constructor(_rng: IRNG) {
         super(_rng, 'Inversion');
         // there is no reset via message init
         this._rng.unregister(MessageType.INIT, this.reset.bind(this));

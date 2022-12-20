@@ -22,7 +22,6 @@ import { IRNGTypeEnum } from '../irng-type';
 import seed from '../seed';
 import { TAOCP1997init } from './taocp-1997-init';
 import { seedCheck } from '../seedcheck';
-import { IRandom } from '@rng/IRandom';
 
 /* helpers */
 /* helpers */
@@ -39,7 +38,7 @@ const mod_diff = (x: number, y: number) => (x - y) & (MM - 1);
 
 const SEED_LEN = 101;
 
-export class KnuthTAOCP extends IRNG implements IRandom {
+export class KnuthTAOCP extends IRNG {
 
     public static override kind =  IRNGTypeEnum.KNUTH_TAOCP;
     //private buf: ArrayBuffer;
