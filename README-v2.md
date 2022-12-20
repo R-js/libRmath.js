@@ -5,23 +5,110 @@ This R statistical [`nmath`][librmath.so] re-created in typescript/javascript.
 [![NPM](https://img.shields.io/npm/v/lib-r-math.js.svg)](https://www.npmjs.com/package/lib-r-math.js)
 [![Build Status](https://travis-ci.org/R-js/libRmath.js.svg?branch=master)](https://travis-ci.org/R-js/libRmath.js)
 
-#### Summary
+## BREAKING CHANGES For version 2.0
 
-libRmath.js port contains all functions implemented in R `nmath`:
+### Removed
 
-* probability and quantile functions related to 21 distributions.
-* functions to work with `Special functions  in mathematics` (`Bessel`,`Gamma`,`Beta`).
-* 7 uniform PRNG's. (same output pseudo-random sequence in R for the same initial seeding).
-* 6 normally distributed PRNG's. (same output sequence in R for te same initial seeding).
+#### helper functions for data mangling
 
-Removed:
-* Function vector (array) arguments follow the [R recycling rule](https://cran.r-project.org/doc/manuals/r-release/R-intro.html#The-recycling-rule).
+Functions removed from 2.0.0 onwards: `any`, `arrayrify`, `multiplex`, `each`, `flatten`, `c`, `map`, `selector`, `seq`.
 
-With this library it becomes trivial to implement hypothesis testing in javascript, calculating p-values and (1 - α) confidence intervals. (`ANOVA` uses the F-distribution. Tukey HSD uses `ptukey` function, etc, etc).
+It is recommended you either use well established js tools like [Rxjs](https://rxjs.dev) or [Ramdajs](https://ramdajs.com) to mangle arrays and data.
 
-#### Node and Web
+#### Removed helper functions for limiting numeric precision
 
-REMOVED: There is no UMD
+Functions removed from 2.0.0 onwards: `numberPrecision`
+
+This function mimicked the R's `options(digits=N)`.
+
+### Changed
+#### helper functions
+
+Functions changed from 2.0.0 onwards: `timeseed`.
+
+`timeseed` is now replaced by a cryptographic safe seed `seed`.
+
+#### Sample distributions return a result of type `Float64Array`.
+
+Functions changed from 2.0.0 onwards: 
+
+All these functions will return type of `Float64Array`:
+`rbeta`, `rbinom`, `rcauchy`, `rchisq`, `rexp`, `rf`, `rgamma`, `rgeom`, `rhyper`, `rlogis`, `rlnorm`, `rmultinom`, `rnorm`, `rpois`, `rsignrank`, `rt`,`runif`, `rweibull`, `rwilcox`. 
+
+For single scalar (number) return values, use the analogs:
+`rbetaOne`, `rbinomOne`, `rcauchyOne`, `rchisqOne`, `rexpOne`, `rfOne`, `rgammaOne`, `rgeomOne`, `rhyperOne`, `rlogisOne`, `rlnormOne`, `rnormOne`, `rpoisOne`, `rsignrankOne`, `rtOne`,`runifOne`, `rweibullOne`, `rwilcoxOne`. 
+
+Example:
+```javascript
+import { rbinom, rbinomOne, setSeed } from 'lib-r-math.js';
+
+rbinom(0); //
+// -> FloatArray(0)
+
+setSeed(123); // set.seed(123) in R
+rbinom(2, 8, 0.5); 
+// -> Float64Array(2) [ 3, 5 ]  //same result as in R
+
+setSeed(456); // set.seed(456) in R
+rbinomOne(350, 0.5);
+// -> 174  ( a single scalar )
+```
+
+### UMD module removed
+
+There is no UMD module from 2.0.0. What module types are available for node and browser is listed [here]().
+
+## Installation and usage
+
+```bash
+npm i lib-r-math.js
+```
+
+lib-r-math.js supports the following module types:
+
+### ESM for use in [observablehq](www.observablehq.com)
+
+
+```javascript
+library =  import("https://cdn/skypack.dev/lib-r-math.js/dist/web.esm.mjs");
+
+library.BesselJ(3, 0.4);
+//-> -0.30192051329163955
+
+```
+
+### ESM for use as dynamic import in generic web app
+
+```javascript
+import { BesselJ } from '
+```
+
+For both node and web, 
+
+`import
+
+|  umd  |       |
+### Node
+
+For Node there are both `commonjs` and `esm` style modules available, depending what you specify in your package.json `type` field.
+
+```bash
+npm i lib-r-math.js
+```
+
+```esm
+import { RNGkind, runif } from 'lib-r-math.js';
+
+
+RNGkind('Mersenne)
+```
+
+
+
+
+
+
+There is no UMD
 The library is an UMD library, it can be used in a web client
 as in server side node environment.
 
