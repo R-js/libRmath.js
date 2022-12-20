@@ -105,7 +105,7 @@ export function setSeed(
     gu.init(seed); 
 }
 
-export function RNGKind(opt: RandomGenSet): RandomGenSet {
+export function RNGKind(opt: RandomGenSet = {}): RandomGenSet {
 
     let gu = globalUni();
     let no = globalNorm();

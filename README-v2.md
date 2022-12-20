@@ -15,6 +15,33 @@ If you were not using a previous version to 2.0.0, you can skip _breaking change
 
 ### Removed
 
+#### RNG (normal and uniform) are only selectable via `RNGkind` function.
+
+The normal and uniform implementation of the various RNG's are not exported publicly anymore
+Select normal and uniform RNG's via the function `RNGkind`.
+
+```javascript
+// this is not possible anymore
+import { AhrensDieter } from 'lib-r-math.js';
+
+const ad = new AhrensDieter();
+ad.random();
+
+// NEW way of doing things
+
+import { RNGkind, IRNGTypeEnum, IRNGNormalTypeEnum, IRNGSampleKindTypeEnum  } from 'lib-r-math.js';
+
+// R analog to "RNGkind"
+RNGKind(
+    { 
+      uniform:    IRNGTypeEnum.KNUTH_TAOCP , 
+      normal:     IRNGNormalTypeEnum.KINDERMAN_RAMAGE,
+      sampleKind: IRNGSampleKindTypeEnum.ROUNDING
+    }
+);
+```
+
+
 #### helper functions for data mangling
 
 Functions removed from 2.0.0 onwards: `any`, `arrayrify`, `multiplex`, `each`, `flatten`, `c`, `map`, `selector`, `seq`, `summary`.
@@ -129,6 +156,7 @@ const answ = BesselJ(3, 0.4);
 - [libRmath.js](#librmathjs)
   - [BREAKING CHANGES For version 2.0](#breaking-changes-for-version-20)
     - [Removed](#removed)
+      - [RNG (normal and uniform) are only selectable via `RNGkind` function.](#rng-normal-and-uniform-are-only-selectable-via-rngkind-function)
       - [helper functions for data mangling](#helper-functions-for-data-mangling)
       - [Removed helper functions for limiting numeric precision](#removed-helper-functions-for-limiting-numeric-precision)
     - [Changed](#changed)
@@ -143,8 +171,8 @@ const answ = BesselJ(3, 0.4);
     - [COMMONJS for node](#commonjs-for-node)
   - [Table of Contents](#table-of-contents)
     - [Auxiliary functions](#auxiliary-functions)
-      - [`globalUni` the globally set uniform random number generator](#globaluni-the-globally-set-uniform-random-number-generator)
-      - [`globalNorm` shows the selected uniform random generator](#globalnorm-shows-the-selected-uniform-random-generator)
+      - [`RNGkind`](#rngkind)
+      - [`setSeed`](#setseed)
 - [Uniform Pseudo Random Number Generators](#uniform-pseudo-random-number-generators)
       - [Summary](#summary)
   - [The 7 Uniform Random Number Generators](#the-7-uniform-random-number-generators)
@@ -298,62 +326,75 @@ const answ = BesselJ(3, 0.4);
 
 ### Auxiliary functions
 
-#### `globalUni` the globally set uniform random number generator
+#### `RNGkind`
 
-This function fetches the globally used **uniform** random number generator.
+RNGkind is the analog to R's "RNGkind". This is how you select what RNG (normal and uniform) you use and the samplingKind
 
-Although most of the time you would not use this function directly, it is usefull to get the internal state of the RNG if you would need to get or set it.
+R console:
 
-```javascript
-// examples for other loading methods, see "install and usage". 
-import { globalUni } from 'lib-r-math.js';
-
-const rng = globalUni(); // the default RNG used is "Mersenne-Twister" (like in R)
-
-rng.seed; // -> read/write property, the internal state of the RNG (a 625 element Int32Array)
-rng.name; // -> string "Mersenne-Twister" set by
-
-rng.seed = new Int32Array(...); // for example: restore a previous internal state
+```R
+> RNGkind()
+[1] "Mersenne-Twister" "Ahrens-Dieter"   
+[3] "Rejection"   
 ```
 
-It is possible to create a extra normal RNG that is using the same uniform RNG as a source
+Rjs function spec:
 
-```javascript
-import { globalUni, AhrensDieter, setSeed, rnorm } from 'lib-r-math.js';
+```typescript
 
-const rng = globalUni();
+enum IRNGTypeEnum {
+    KNUTH_TAOCP = 'KNUTH_TAOCP',
+    KNUTH_TAOCP2002 = 'KNUTH_TAOCP2002',
+    LECUYER_CMRG = 'LECUYER_CMRG',
+    MARSAGLIA_MULTICARRY = 'MARSAGLIA_MULTICARRY',
+    MERSENNE_TWISTER = 'MERSENNE_TWISTER',
+    SUPER_DUPER = 'SUPER_DUPER',
+    WICHMANN_HILL = 'WICHMANN_HILL',
+    USER_DEFINED = 'USER_DEFINED'
+}
 
-const myNormalRNG = new AhrensDieter(rng);
+enum IRNGNormalTypeEnum {
+    AHRENS_DIETER = 'AHRENS_DIETER',
+    BOX_MULLER = 'BOX_MULLER',
+    BUGGY_KINDERMAN_RAMAGE = 'BUGGY_KINDERMAN_RAMAGE',
+    INVERSION = 'INVERSION',
+    KINDERMAN_RAMAGE = 'KINDERMAN_RAMAGE'
+}
 
-setSeed(45678); // analog to R "set.seed(456789)"
-// re-initialises the value for the uniform RNG
+enum IRNGSampleKindTypeEnum {
+    ROUNDING = 'ROUNDING',
+    REJECTION = 'REJECTION',
+}
 
-rnorm(2); // Keeps using "INVERSION" (the default) or whatever is specified with "RNGkind"
-// -> R  shows:   [ 0.02677283245         -0.75140638614      ]
-// -> Rjs shows:  [ 0.026772832452271488, -0.7514063861404197 ]
+// ONLY CHANGE the RNG for the type that is set
+type RandomGenSet = {
+    uniform?: IRNGTypeEnum
+    normal?: IRNGNormalTypeEnum
+    sampleKind?: IRNGSampleKindTypeEnum
+};
 
-myNormalRNG.random(); // -> Ahrens Dieter, NOTE: this will advance the state of the uniform RNG 
-// -> R shows:    0.9975545668
-// -> Rjs shows:  0.9975545667700594 
+RNGkind = function (options?: RandomGenSet): RandomGenSet;
 ```
 
-#### `globalNorm` shows the selected uniform random generator
+`RNGkind` optionally takes an argument of type `RandomGenSet`, but always returns the current (or adjusted) `RandomGenSet` indicating what RNG's are being used.
 
-This function fetches the globally used **normal** random number generator.
+Example: set uniform RNG to `SUPER_DUPER` and normal RNG to `BOX_MULLER`
 
-Normal RNG's are shapers using the uniform RNG's as source. It has a very small internal state (if any).
+```typescript
 
-```javascript
-// examples for other loading methods, see "install and usage". 
-import { globalNorm } from 'lib-r-math.js';
+import { RNGkind,  IRNGNormalTypeEnum, IRNGNormalTypeEnum } from 'lib-r-math.js'
 
-const normal = globalNorm(); // the default RNG used is "Inversion"
+const normal = IRNGNormalTypeEnum.SUPER_DUPER;
+const uniform = IRNGNormalTypeEnum.BOX_MULLER;
 
-normal.name; // -> string "Inversion" 
+RNGkind({ uniform, normal }); //-> does not change sampleKind
 
+RNGkind(); // does not change anything but returns the current used RNG's and "sampleKind"
 ```
 
+#### `setSeed`
 
+YOU ARE HERE I AM CALLING IT A DAY
 
 `global`
     globalNorm,
