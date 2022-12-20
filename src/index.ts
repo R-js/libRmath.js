@@ -42,6 +42,7 @@ import {
     dbinom,
     pbinom,
     qbinom,
+    rbinom,
     rbinomOne
 } from './lib/distributions/binomial';
 
@@ -270,6 +271,7 @@ const defaultObservableNoteBook = {
     dbinom,
     pbinom,
     qbinom,
+    rbinom,
     rbinomOne,
     //
     dnbinom,
@@ -457,6 +459,7 @@ export {
     dbinom,
     pbinom,
     qbinom,
+    rbinom,
     rbinomOne,
     //
     dnbinom,

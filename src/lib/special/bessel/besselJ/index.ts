@@ -64,7 +64,7 @@ function BesselJ(x: number, alpha: number): number {
     // alpha = -na 
     alpha -= na; // ==> alpha' in [0, 1) because na = Math.floor(alpha)
     const rc = J_bessel(x, alpha, nb);
-    console.log(`debug (alpha=${alpha}, na=${na}, nb=${nb}, rc=${JSON.stringify(rc)})`);
+    printer('debug (alpha=%d, na=%d, nb=%d, rc=%j', alpha, na, nb, rc);
     
     if (rc.ncalc !== nb) {
         /* error input */
