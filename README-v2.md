@@ -5,13 +5,19 @@ This R statistical [`nmath`][librmath.so] re-created in typescript/javascript.
 [![NPM](https://img.shields.io/npm/v/lib-r-math.js.svg)](https://www.npmjs.com/package/lib-r-math.js)
 [![Build Status](https://travis-ci.org/R-js/libRmath.js.svg?branch=master)](https://travis-ci.org/R-js/libRmath.js)
 
+
+If you were not using a previous version to 2.0.0, you can skip _breaking changes_ and go to:
+
+- [Installation and usage](#intsallation-and-usage)
+- [Table of contents](table-of-contents) 
+
 ## BREAKING CHANGES For version 2.0
 
 ### Removed
 
 #### helper functions for data mangling
 
-Functions removed from 2.0.0 onwards: `any`, `arrayrify`, `multiplex`, `each`, `flatten`, `c`, `map`, `selector`, `seq`.
+Functions removed from 2.0.0 onwards: `any`, `arrayrify`, `multiplex`, `each`, `flatten`, `c`, `map`, `selector`, `seq`, `summary`.
 
 It is recommended you either use well established js tools like [Rxjs](https://rxjs.dev) or [Ramdajs](https://ramdajs.com) to mangle arrays and data.
 
@@ -81,7 +87,7 @@ library.BesselJ(3, 0.4);
 
 ```html
 <script type="module">
-  import { BesselJ } from "https://unpkg.dev/lib-r-math.js@2.0.0-rc6/dist/web.esm.mjs";
+  import { BesselJ } from "https://unpkg.dev/lib-r-math.js@2.0.0-rc7/dist/web.esm.mjs";
 
   console.log(BesselJ(3, 0.4));
   //-> -0.30192051329163955
@@ -91,7 +97,7 @@ library.BesselJ(3, 0.4);
 ### IIFE for use in Browser client
 
 ```html
-<script src="https://unpkg.dev/lib-r-math.js@2.0.0-rc6/dist/web.iife.js"></script>
+<script src="https://unpkg.dev/lib-r-math.js@2.0.0-rc7/dist/web.iife.js"></script>
 <script>
   const answ = window.R.BesselJ(3, 0.4);
   console.log(answ);
@@ -99,563 +105,262 @@ library.BesselJ(3, 0.4);
 </script>
 ```
 
-For both node and web,
+### ESM for Node
 
-`import
+```javascript
 
-| umd | |
+import { BesselJ } from 'lib-r-math.js';
 
-### Node
-
-For Node there are both `commonjs` and `esm` style modules available, depending what you specify in your package.json `type` field.
-
-```bash
-npm i lib-r-math.js
+const answ = BesselJ(3, 0.4);
+//-> -0.30192051329163955
 ```
 
-```esm
-import { RNGkind, runif } from 'lib-r-math.js';
+### COMMONJS for node
 
+```javascript
+const { BesselJ } = require('lib-r-math.js');
 
-RNGkind('Mersenne)
+const answ = BesselJ(3, 0.4);
+//-> -0.30192051329163955
 ```
 
-There is no UMD
-The library is an UMD library, it can be used in a web client
-as in server side node environment.
+## Table of Contents
 
-## Installation
-
-#### serverside
-
-```bash
-npm install lib-r-math.js
-```
-
-#### web
-
-Remove: adjusted, there is iff, esm for web, show also example for observalblehq.com notebooks
-
-The module directory contains a minimized bundle for use in html `<script>` tag. The library is attached to the `window.libR` object after loading.
-
-```html
-<!-- script src="your_server_url/libR.min.js"></script -->
-<!-- this example uses unpkg as CDN -->
-<script src="https://unpkg.com/lib-r-math.js@1.0.74/dist/lib/libR.min.js"></script>
-<script>
-  const libR = window.libR;
-  //fetch some distribution namespaces
-  const { Tukey, Normal, Beta, StudentT, Wilcoxon } = libR;
-</script>
-```
-
-# Table of Contents
-
-- [Differences with R](#differences-with-r)
-- [_Read this first_: Helper functions](#helper-functions-for-porting-r-programs)
+- [libRmath.js](#librmathjs)
+  - [BREAKING CHANGES For version 2.0](#breaking-changes-for-version-20)
+    - [Removed](#removed)
+      - [helper functions for data mangling](#helper-functions-for-data-mangling)
+      - [Removed helper functions for limiting numeric precision](#removed-helper-functions-for-limiting-numeric-precision)
+    - [Changed](#changed)
+      - [helper functions](#helper-functions)
+      - [Sample distributions return a result of type `Float64Array`.](#sample-distributions-return-a-result-of-type-float64array)
+    - [UMD module removed](#umd-module-removed)
+  - [Installation and usage](#installation-and-usage)
+    - [ESM for use in observablehq](#esm-for-use-in-observablehq)
+    - [ESM for use as Browser client](#esm-for-use-as-browser-client)
+    - [IIFE for use in Browser client](#iife-for-use-in-browser-client)
+    - [ESM for Node](#esm-for-node)
+    - [COMMONJS for node](#commonjs-for-node)
+  - [Table of Contents](#table-of-contents)
+    - [Auxiliary functions](#auxiliary-functions)
+      - [`globalUni` the globally set uniform random number generator](#globaluni-the-globally-set-uniform-random-number-generator)
+      - [`globalNorm` shows the selected uniform random generator](#globalnorm-shows-the-selected-uniform-random-generator)
 - [Uniform Pseudo Random Number Generators](#uniform-pseudo-random-number-generators)
-- [Normal Random Number Generators](#normal-distributed-random-number-generators)
-- [Normal and Uniform distributions](#normal-and-uniform-distributions)
-  - [Uniform distribution](#uniform-distribution)
-  - [Normal distribution](#normal-distribution)
-- [Other Probability Distributions](#other-probability-distributions)
-  - [Beta distribution](#beta-distribution)
-  - [Binomial distribution](#binomial-distribution)
-  - [Negative Binomial distribution](#negative-binomial-distribution)
-  - [Cauchy distribution](#cauchy-distribution)
-  - [X<sup>2</sup> (non-central) distribution](#chi-squared-non-central-distribution)
-  - [Exponential distribution](#exponential-distribution)
-  - [F (non-central) distribution](#f-non-central-distribution)
-  - [Gamma distribution](#gamma-distribution)
-  - [Geometric distribution](#geometric-distribution)
-  - [Hypergeometric distribution](#hypergeometric-distribution)
-  - [Logistic distribution](#logistic-distribution)
-  - [Log Normal distribution](#log-normal-distribution)
-  - [Multinomial distribution](#multinomial-distribution)
-  - [Poisson distribution](#poisson-distribution)
-  - [Wilcoxon signed rank statistic distribution](#wilcoxon-signed-rank-statistic-distribution)
-  - [Student T distribution](#student-t-distribution)
-  - [Studentized Range distribution, (_Tukey_)](#studentized-range-distribution-tukey-hsd)
-  - [Weibull distribution](#weibull-distribution)
-  - [Wilcoxon rank sum statistic distribution](#wilcoxon-rank-sum-statistic-distribution)
-- [Special Functions of Mathematics](#special-functions-of-mathematics)
-  - [Bessel functions](#bessel-functions)
-  - [Beta functions](#beta-functions)
-  - [Gamma functions](#gamma-functions)
-  - [Binomial coefficient functions](#binomial-coefficient-functions)
+      - [Summary](#summary)
+  - [The 7 Uniform Random Number Generators](#the-7-uniform-random-number-generators)
+      - [Improvements compared to R](#improvements-compared-to-r)
+      - [General Usage](#general-usage)
+      - ["Mersenne Twister"](#mersenne-twister)
+      - ["Wichmann-Hill"](#wichmann-hill)
+      - ["Marsaglia-Multicarry"](#marsaglia-multicarry)
+      - ["Super Duper"](#super-duper)
+      - ["Knuth TAOCP"](#knuth-taocp)
+      - ["Knuth TAOCP 2002"](#knuth-taocp-2002)
+      - ["L'Ecuyer-CMRG":](#lecuyer-cmrg)
+  - [Normal distributed Random Number Generators](#normal-distributed-random-number-generators)
+      - [Summary](#summary-1)
+      - [General Use](#general-use)
+      - ["Ahrens Dieter"](#ahrens-dieter)
+      - [Box Muller](#box-muller)
+      - [Buggy Kinderman Ramage](#buggy-kinderman-ramage)
+      - [Inversion](#inversion)
+      - [Kinderman Ramage](#kinderman-ramage)
+  - [Normal and Uniform distributions](#normal-and-uniform-distributions)
+      - [Summary](#summary-2)
+    - [Uniform distribution](#uniform-distribution)
+      - [`dunif`](#dunif)
+      - [`punif`](#punif)
+      - [`qunif`](#qunif)
+      - [`runif`](#runif)
+    - [Normal distribution](#normal-distribution)
+      - [`dnorm`](#dnorm)
+      - [`pnorm`](#pnorm)
+      - [`qnorm`](#qnorm)
+      - [`rnorm`](#rnorm)
+  - [Other Probability Distributions](#other-probability-distributions)
+      - [summary](#summary-3)
+    - [Beta distribution](#beta-distribution)
+      - [`dbeta`](#dbeta)
+      - [`pbeta`](#pbeta)
+      - [`qbeta`](#qbeta)
+      - [`rbeta`](#rbeta)
+    - [Binomial distribution](#binomial-distribution)
+      - [`dbinom`](#dbinom)
+      - [`pbinom`](#pbinom)
+      - [`qbinom`](#qbinom)
+      - [`rbinom`](#rbinom)
+    - [Negative Binomial distribution](#negative-binomial-distribution)
+      - [`dnbinom`](#dnbinom)
+      - [`pnbinom`](#pnbinom)
+      - [`qnbinom`](#qnbinom)
+      - [`rnbinom`](#rnbinom)
+    - [Cauchy distribution](#cauchy-distribution)
+      - [`dcauchy`](#dcauchy)
+      - [`pcauchy`](#pcauchy)
+      - [`qcauchy`](#qcauchy)
+      - [`rcauchy`](#rcauchy)
+    - [Chi-Squared (non-central) Distribution](#chi-squared-non-central-distribution)
+      - [`dchisq`](#dchisq)
+      - [`pchisq`](#pchisq)
+      - [`qchisq`](#qchisq)
+      - [`rchisq`](#rchisq)
+    - [Exponential Distribution](#exponential-distribution)
+      - [`dexp`](#dexp)
+      - [`pexp`](#pexp)
+      - [`qexp`](#qexp)
+      - [`rexp`](#rexp)
+    - [F (non-central) Distribution](#f-non-central-distribution)
+      - [`df`](#df)
+      - [`pf`](#pf)
+      - [`qf`](#qf)
+      - [`rf`](#rf)
+    - [Gamma distribution](#gamma-distribution)
+      - [`dgamma`](#dgamma)
+      - [`pgamma`](#pgamma)
+      - [`qgamma`](#qgamma)
+      - [`rgamma`](#rgamma)
+    - [Geometric distribution](#geometric-distribution)
+      - [`dgeom`](#dgeom)
+      - [`pgeom`](#pgeom)
+      - [`qgeom`](#qgeom)
+      - [`rgeom`](#rgeom)
+    - [Hypergeometric distribution](#hypergeometric-distribution)
+      - [`dhyper`](#dhyper)
+      - [`phyper`](#phyper)
+      - [`qhyper`](#qhyper)
+      - [`rhyper`](#rhyper)
+    - [Logistic distribution](#logistic-distribution)
+      - [`dlogis`](#dlogis)
+      - [`plogis`](#plogis)
+      - [`qlogis`](#qlogis)
+      - [`rlogis`](#rlogis)
+    - [Log Normal distribution](#log-normal-distribution)
+      - [`dlnorm`](#dlnorm)
+      - [`plnorm`](#plnorm)
+      - [`qlnorm`](#qlnorm)
+      - [`rlnorm`](#rlnorm)
+    - [Multinomial distribution](#multinomial-distribution)
+      - [`dmultinom`](#dmultinom)
+      - [`rmultinom`](#rmultinom)
+    - [Poisson distribution](#poisson-distribution)
+      - [`dpois`](#dpois)
+      - [ppois](#ppois)
+      - [`qpois`](#qpois)
+      - [`rpois`](#rpois)
+    - [Wilcoxon signed rank statistic distribution](#wilcoxon-signed-rank-statistic-distribution)
+      - [`dsignrank`](#dsignrank)
+      - [`psignrank`](#psignrank)
+      - [`qsignrank`](#qsignrank)
+      - [`rsignrank`](#rsignrank)
+    - [Student T distribution](#student-t-distribution)
+      - [`dt`](#dt)
+      - [`pt`](#pt)
+      - [`qt`](#qt)
+      - [`rt`](#rt)
+    - [Studentized Range distribution, (_Tukey HSD_)](#studentized-range-distribution-tukey-hsd)
+      - [`ptukey`](#ptukey)
+      - [`qtukey`](#qtukey)
+    - [Weibull distribution](#weibull-distribution)
+      - [`dweibull`](#dweibull)
+      - [`pweibull`](#pweibull)
+      - [`qweibull`](#qweibull)
+      - [`rweibull`](#rweibull)
+    - [Wilcoxon `rank sum statistic` distribution](#wilcoxon-rank-sum-statistic-distribution)
+      - [`dwilcox`](#dwilcox)
+      - [`pwilcox`](#pwilcox)
+      - [`qwilcox`](#qwilcox)
+      - [`rwilcox`](#rwilcox)
+  - [Special Functions of Mathematics](#special-functions-of-mathematics)
+    - [Bessel functions](#bessel-functions)
+      - [`besselJ`](#besselj)
+      - [`besselY`](#bessely)
+      - [`besselI`](#besseli)
+      - [`besselK`](#besselk)
+    - [Beta functions](#beta-functions)
+      - [`beta`](#beta)
+      - [`lbeta`](#lbeta)
+    - [Gamma functions](#gamma-functions)
+      - [`digamma`](#digamma)
+      - [`trigamma`](#trigamma)
+      - [`tetragamma`](#tetragamma)
+      - [`pentagamma`](#pentagamma)
+      - [`psigamma`](#psigamma)
+      - [`gammma`](#gammma)
+      - [`lgammma`](#lgammma)
+    - [Binomial coefficient functions](#binomial-coefficient-functions)
+      - [`choose`](#choose)
+      - [`lchoose`](#lchoose)
+- [Changelog](#changelog)
+  - [\[Unreleased\]](#unreleased)
+    - [Changed](#changed-1)
+    - [Changed](#changed-2)
+    - [Removed](#removed-1)
 
-# Differences with R
+### Auxiliary functions
 
-Remove
-Some implementation differences exist with R `nmath`
+#### `globalUni` the globally set uniform random number generator
 
-like R there is a global uniform rng and normal rng (see with RNGkind command)
+This function fetches the globally used **uniform** random number generator.
 
-Removed--
-
-- PRNG's are not global singletons, but separate object instances and you can have as many as you want. The programmer has the choice of having different deviate generators sharing a common source PRNG.
-
-ADD:
-Wilcoxon Sum Rank comes with an accelerated Wasm backed that can be turned onn
-
-All Helper functions have been removed
-
-# Helper functions for porting `R` programs
-
-Removed
-
-#### Summary
-
-R language operators and function arguments can work with `vectorized input`.
-These helper functions are used to mimic this functionality and assist porting of scripts from the R ecosystem using `libRmath.js`.
-
-Removed
-
-### `div`
-
-Divides scalar or an array of values with element of the second array or scalar.
-
-Usage:
-
-```javascript
-const libR = require("lib-r-math.js");
-const { div } = libR.R;
-
-//1
-div(3, 5); //= 3/5
-//0.6
-
-div([0, 1, 2, 3], 5);
-//[0, 0.2, 0.4, 0.6]
-
-div([10, 2, 3], [2, 4]); // Uses R recycling rules
-//[ 5, 0.5, 1.5 ]
-```
-
-REMOVED
-
-### `mult`
-
-Multiplies scalar or an array of values with another scalar or array of values.
-Applies [R recycling rules](https://cran.r-project.org/doc/manuals/r-release/R-intro.html#The-recycling-rule) in case of arguments of unequal array length.
-
-Usage:
-
-```javascript
-const libR = require("lib-r-math.js");
-const { mult } = libR.R;
-
-//1
-mult(3, 5); //= 3*5
-//15
-
-mult([0, 1, 2, 3], [5, 2]); // R recycling rules apply
-//[ 0, 2, 10, 6 ]
-```
-
-Removed:
-
-### `asArray`
-
-Creates a new function from an existing one for it to always return its result as an array.
-
-Usage:
-
-```typescript
-const libR = require("lib-r-math.js");
-const { asArray } = libR.R;
-
-const r = asArray(Math.random);
-
-//always returns the result wrapped in an array
-r();
-//[ 0.39783583929513 ]
-r();
-//[ 0.04431401890179831 ]
-r();
-//[ 0.7629304997301447 ]
-```
-
-Removed:
-
-### `sum`
-
-Analog to `R`'s `sum` function. Calculates the sum of all elements of an array.
-
-```javascript
-const libR = require("lib-r-math.js");
-const { sum } = libR.R;
-
-//1
-sum(5); //trivial
-//5
-
-//2
-sum([1, 2, 3, 4]);
-//10
-```
-
-Removed
-
-### `summary`
-
-Gives summary information of numeric data in an array.
-
-_typescript decl_
-
-```typescript
-declare function summary(data: number[]): ISummary;
-
-//output
-interface ISummary {
-  N: number; // number of samples in "data"
-  mu: number; // mean of "data"
-  population: {
-    variance: number; // population variance (data is seen as finite population)
-    sd: number; // square root of the population variance
-  };
-  sample: {
-    variance: number; // sample variance (data is seen as a small sample from an very large population)
-    sd: number; // square root of "sample variance"
-  };
-  relX; // = x-E(x)
-  relX2; // = ( x-E(x) )^2
-  stats: {
-    min: number; // minimal value from "data"
-    "1st Qu.": number; // 1st quantile from "data"
-    median: number; // median value from "data
-    "3rd Qu.": number; // 3rd quantile from "data"
-    max: number; // maximum value in data
-  };
-}
-```
-
-Usage:
+Although most of the time you would not use this function directly, it is usefull to get the internal state of the RNG if you would need to get or set it.
 
 ```javascript
-const libR = require("lib-r-math.js");
-const { summary } = libR.R;
+// examples for other loading methods, see "install and usage". 
+import { globalUni } from 'lib-r-math.js';
 
-summary([360, 352, 294, 160, 146, 142, 318, 200, 142, 116]);
-/*
-{ N: 10,
-  mu: 223,
-  population: { variance: 8447.4, sd: 91.90973833060346 },
-  sample: { variance: 9386, sd: 96.88137075826292 },
-  relX: [ 137, 129, 71, -63, -77, -81, 95, -23, -81, -107 ],
-  relX2: [ 18769, 16641, 5041, 3969, 5929, 6561, 9025, 529, 6561, 11449 ],
-  stats: { min: 116, '1st Qu.': 143, median: 180, '3rd Qu.': 312, max: 360 } }
-*/
+const rng = globalUni(); // the default RNG used is "Mersenne-Twister" (like in R)
+
+rng.seed; // -> read/write property, the internal state of the RNG (a 625 element Int32Array)
+rng.name; // -> string "Mersenne-Twister" set by
+
+rng.seed = new Int32Array(...); // for example: restore a previous internal state
 ```
 
-Removed
-
-### `numberPrecision`
-
-Truncates numbers to a specified significant digits.
-Takes single numeric value as argument or an array of numbers.
-
-Usage:
+It is possible to create a extra normal RNG that is using the same uniform RNG as a source
 
 ```javascript
-const libR = require("lib-r-math.js");
+import { globalUni, AhrensDieter, setSeed, rnorm } from 'lib-r-math.js';
 
-const digits4 = libR.R.numberPrecision(4);
+const rng = globalUni();
 
-//1 single value
-const pr4a = digits4(1.12345678);
-//1.123
+const myNormalRNG = new AhrensDieter(rng);
 
-//2 works with arrays
-const pr4b = digits4([0.4553, -2.1243]);
-//[ 0.4553, -2.124 ]
+setSeed(45678); // analog to R "set.seed(456789)"
+// re-initialises the value for the uniform RNG
+
+rnorm(2); // Keeps using "INVERSION" (the default) or whatever is specified with "RNGkind"
+// -> R  shows:   [ 0.02677283245         -0.75140638614      ]
+// -> Rjs shows:  [ 0.026772832452271488, -0.7514063861404197 ]
+
+myNormalRNG.random(); // -> Ahrens Dieter, NOTE: this will advance the state of the uniform RNG 
+// -> R shows:    0.9975545668
+// -> Rjs shows:  0.9975545667700594 
 ```
 
-Removed
+#### `globalNorm` shows the selected uniform random generator
 
-### `any`
+This function fetches the globally used **normal** random number generator.
 
-Test a Predicate for each element in an Array. Returns true or false depending on a test function.
-
-Usage:
+Normal RNG's are shapers using the uniform RNG's as source. It has a very small internal state (if any).
 
 ```javascript
-const libR = require("lib-r-math.js");
-const any = libR.R.any;
+// examples for other loading methods, see "install and usage". 
+import { globalNorm } from 'lib-r-math.js';
 
-//1
-any([1, 2, 3, 4])((x) => x < 2);
-//true
+const normal = globalNorm(); // the default RNG used is "Inversion"
 
-//2
-any([1, 2, 3, 4])((x) => x > 5);
-//false
+normal.name; // -> string "Inversion" 
+
 ```
 
-Removed
 
-### `arrayrify` **(DEPRICATED use [`multiplex`](#multiplex))**
 
-Mimics R vectorized function arguments. Wraps an existing function changing the first first argument to accept both scalar (number) or an array( number[] ).
+`global`
+    globalNorm,
+    RNGKind as RNGkind,
+    setSeed
 
-_Note: Only the first argument is vectorized_
-
-_typescript decl_
-
-```typescript
-declare function arrayrify<T, R>(fn: (x: T, ...rest: unknown[]) => R);
-```
-
-#### R example
-
-```R
-# raise each element by power of 2
-c(1,2,3,4)^2
-#[1]  1  4  9 16
-```
-
-#### Javascript equivalent
-
-```javascript
-const libR = require("lib-r-math.js");
-const { arrayrify } = libR.R;
-
-// create vectorize "/" operator
-const pow = arrayrify(Math.pow);
-
-pow(3, 4); // 81
-
-pow([3, 4, 5], 4); //81 256 625
-```
-
-REMOVED
-
-### `each`
-
-Functional analog to `Array.prototype.forEach`, but can also loop over object properties.
-The return type can be either an new array or a scalar (see `Example`).
-
-Example:
-
-```javascript
-const libR = require("lib-r-math.js");
-const { each } = libR.R;
-
-each(11)((v) => console.log(v * 2));
-
-// single element array result are forced to return scalar
-each([3])((v) => console.log(v * 2));
-
-each([11, 12])((v, idx) => console.log({ v, idx }));
-
-//looping over object properties
-each({ p: 1, name: "myname" })((value, key) => console.log(`${key}=${value}`));
-```
-
-REMOVED
-
-### `flatten` or `c` (alias)
-
-Analog to R's `c` function. Constructs a final array by (recursively) flattening and merging all of its arguments which can be a combination of scalars and arrays.
-
-Example:
-
-```javascript
-const libR = require("lib-r-math.js");
-
-// optionally rename as `c` to make it look like `R`
-const { c } = libR.R;
-
-c(-1, 0, [1], "r", "b", [2, 3, [4, 5]]);
-// [ -1, 0, 1, 'r', 'b', 2, 3, 4, 5 ]
-```
-
-REMOVED
-
-### `map`
-
-Functional analog to `Array.prototype.map`, but can also loop over object properties.
-The return type can be either an new array or a scalar (see `Example`).
-
-Example:
-
-```javascript
-const libR = require("lib-r-math.js");
-const { map } = libR.R;
-
-map(11)((v) => v * 2);
-//22
-
-// single element array result are forced to return scalar
-map([3])((v) => v * 2);
-//6
-
-map([11, 12])((v, idx) => idx);
-// [0, 1]
-
-//looping over object properties
-map({ p: 1, name: "myname" })((value, key) => `${key}=${value}`);
-//["p=1", "name=myname"]
-```
-
-REMOVED
-
-### `selector`
-
-Filter function generator, to be used with `Array.prototype.filter` to pick elements based on their order (zero based index) in the array.
-Usually used together with `seq` to pick items from an array.
-
-**NOTE:** Always returns an instance of Array.
-
-Example:
-
-```javascript
-const libR = require("lib-r-math.js");
-const { selector } = libR.R;
-
-["an", "array", "with", "some", "elements"].filter(
-  selector([0, 2, 3]) // select values at these indexes
-);
-//[ 'an', 'with', 'some']
-
-["an", "array", "with", "some", "elements"].filter(
-  selector(3) // just one value at position 3
-);
-//['some']
-
-const seq = libR.R.seq()(); // see "seq" for defaults.
-
-[7, 1, 2, 9, 4, 8, 16].filter(
-  selector(
-    seq(0, 6, 2) // creates an array [ 0, 2, 4, 6]
-  )
-);
-// returns [7, 2, 4, 16]
-```
-
-REMOVED
-
-### `seq`
-
-_typescript decl_
-
-```typescript
-const seq = (adjustUp = 0) => (adjustDown = adjust) => (
-  start: number,
-  end: number = 1,
-  step: number = 1
-) => number[];
-```
-
-R analog to the `seq` function in R. Generates an array between `start` and `end` (inclusive) using `step` (defaults to `1`). The JS implementation ignores the **sign** of the
-`step` argument and only looks at its absolute value.
-
-Like in R, If `(end-start)/step` is not an exact integer, `seq` will not overstep the bounds while counting up (or down).
-
-Arguments:
-
-- `adjustUp`: (default 0). If `end` >= `start` then `adjust` value is added to every element in the array.
-- `adjustDown`: (default 0). If `start` >= `end` then `adjustMin` value is added to every element in the array.
-- `start`: (inclusive) the sequence start value
-- `stop`: defaults to `1`. (inclusive) the sequence stop value if possible with `step`
-- `step`: defaults to `1`, sign is ignored. Sign is inferred from the values of `start` and `stop`.
-
-First we look how `seq` works in R.
-
-_R_
-
-```R
-seq(1,3,0.5);
-#[1] 1.0 1.5 2.0 2.5 3.0
-
-seq(7,-2, -1.3);
-#[1]  7.0  5.7  4.4  3.1  1.8  0.5 -0.8
-```
-
-_Equivalent in Javascript_
-
-```javascript
-const libR = require("lib-r-math.js");
-
-// seqA is a sequence generator
-let seqA = libR.R.seq()();
-
-seqA(1, 5);
-//[ 1, 2, 3, 4, 5 ]
-
-seqA(5, -3);
-//[ 5, 4, 3, 2, 1, 0, -1, -2, -3 ]
-
-seqA(3);
-//[3, 2, 1]
-
-//add 1 if stepping upwards, add -2 if stepping downwards
-let seqB = libR.R.seq(1)(-2);
-
-seqB(0, 4); //range will be adjusted with '1'
-//[ 1, 2, 3, 4]
-seqB(6, 5, 0.3); //range will be adjusted with '-2', step
-//[4, 3.7, 3.4, 3.1]
-```
-
-REMOVED
-
-### `multiplex`
-
-Turns an existing javascript function into one that follows the [R argument recycling rule](https://cran.r-project.org/doc/manuals/r-release/R-intro.html#The-recycling-rule).
-
-Multiplexes the value of several array arguments into one array with the
-use of a mapping function.
-
-The length of the result is the maximum of the lengths of the parameters.
-All parameters are recycled to that length.
-
-```javascript
-const libR = require("lib-r-math.js");
-
-const { multiplex, c } = libR.R;
-
-//make the build in Math function follow R-recycling rule
-const pow = multiplex(Math.pow);
-//
-pow([1, 2, 3, 4], 2); //squared
-//[ 1, 4, 9, 16 ]
-
-//powers of 2
-pow(2, [2, 3, 4]);
-//[ 4, 8, 16 ]
-
-//R recycling rule
-pow([2, 3], [2, 3, 4, 5]);
-//[4, 27, 16, 243]
-//4 = 2 ^ 2
-//27 = 3 ^ 3
-//16 = 2 ^ 4
-//243 = 3 ^ 5
-```
-
-REMOVED
-
-### `timeseed`
-
-Generates a number based by on your system time clock. Intended use is with
-PRNG (re)initialization. Its a synchronized function that will wait for some milliseconds before sampling the system clock and returning a result.
-
-Usage:
-
-```javascript
-const libR = require("lib-r-math.js");
-
-const {
-  rng: { timeseed },
-} = libR;
-
-timeseed();
-//2632999169 , based on timestamp
-```
-
-WAYPOINT: 19/12/2022 I AM HERE
-
+RNGkind
 # Uniform Pseudo Random Number Generators
 
 #### Summary
