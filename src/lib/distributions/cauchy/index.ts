@@ -22,9 +22,8 @@ export { qcauchy } from './qcauchy';
 export { rcauchyOne};
 
 import { repeatedCall } from '@lib/r-func';
-import { globalUni } from '@rng/global-rng';
 
 
-export function rcauchy(n: number, location = 0, scale = 1, rng = globalUni()): Float32Array {
-    return repeatedCall(n, rcauchyOne, location, scale, rng);
+export function rcauchy(n: number, location = 0, scale = 1): Float32Array {
+    return repeatedCall(n, rcauchyOne, location, scale);
 }

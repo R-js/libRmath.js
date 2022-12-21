@@ -14,8 +14,6 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-import type { IRNGNormal } from '@rng/normal/normal-rng';
-import { globalNorm } from '@rng/global-rng';
 import { dnbinom as _dnb, dnbinom_mu } from './dnbinom';
 import { pnbinom as _pnb, pnbinom_mu } from './pnbinom';
 import { qnbinom as _qnb, qnbinom_mu } from './qnbinom';
@@ -24,8 +22,6 @@ import { repeatedCall64 } from '@lib/r-func';
 
 const probAndMuBoth = '"prob" and "mu" both specified';
 const probMis = 'argument "prob" is missing, with no default';
-
-export { }
 
 export function dnbinom(
   x: number,
@@ -90,36 +86,34 @@ export function rnbinom(
   n: number,
   size: number,
   prob?: number,
-  mu?: number,
-  rng: IRNGNormal = globalNorm()
+  mu?: number
 ): Float64Array {
   if (mu !== undefined && prob !== undefined) {
     throw new TypeError(probAndMuBoth);
   }
   if (mu !== undefined) {
-    return repeatedCall64(n, rnbinom_muOne, size, mu, rng);
+    return repeatedCall64(n, rnbinom_muOne, size, mu);
   }
   if (prob === undefined) {
     throw new TypeError(probMis);
   }
-  return repeatedCall64(n, _rnbinomOne, size, prob, rng);
+  return repeatedCall64(n, _rnbinomOne, size, prob);
 }
 
 export function rnbinomOne(
   size: number,
   prob?: number,
-  mu?: number,
-  rng: IRNGNormal = globalNorm()
+  mu?: number
 ): number {
   if (mu !== undefined && prob !== undefined) {
     throw new TypeError(probAndMuBoth);
   }
   if (mu !== undefined) {
-    return rnbinom_muOne(size, mu, rng);
+    return rnbinom_muOne(size, mu);
   }
   if (prob === undefined) {
     throw new TypeError(probMis);
   }
-  return _rnbinomOne(size, prob, rng);
+  return _rnbinomOne(size, prob);
 }
 

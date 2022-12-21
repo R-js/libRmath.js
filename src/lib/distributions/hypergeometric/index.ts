@@ -19,14 +19,13 @@ export { phyper } from './phyper';
 export { qhyper } from './qhyper';
 import { registerBackend as registerQHyperBackend, unRegisterBackend as unRegisterQHyperBackend } from './qhyper';
 import { rhyperOne } from './rhyper';
-import { globalUni } from '@rng/global-rng';
 import { repeatedCall64 } from '@lib/r-func';
 import { initWasm as initWasmQhyper } from './qhyper_wasm';
 import type { QHyperFunctionMap } from './qhyper_wasm';
 
 //rhyper(nn, m, n, k)
-export function rhyper(N: number, nn1in: number, nn2in: number, kkin: number, rng = globalUni()): Float64Array {
-   return repeatedCall64(N, rhyperOne, nn1in, nn2in, kkin, rng);
+export function rhyper(N: number, nn1in: number, nn2in: number, kkin: number): Float64Array {
+   return repeatedCall64(N, rhyperOne, nn1in, nn2in, kkin);
 }
 
 export async function useWasmBackends(): Promise<void> {

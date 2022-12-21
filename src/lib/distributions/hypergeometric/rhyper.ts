@@ -19,8 +19,8 @@ import { debug } from '@mangos/debug';
 import { rbinomOne } from '@dist/binomial/rbinom';
 import { ML_ERR_return_NAN2, lineInfo4 } from '@common/logger';
 import { INT_MAX, M_LN_SQRT_2PI } from '@lib/r-func';
-import type { IRNG } from '@rng/irng';
 import { qhyper } from './qhyper';
+import { globalUni } from '../../rng/global-rng';
 //
 const printer_afc = debug('afc');
 
@@ -131,7 +131,9 @@ function L_finis(): number {
 }
 
 
-export function rhyperOne(nn1in: number, nn2in: number, kkin: number, rng: IRNG): number {
+export function rhyperOne(nn1in: number, nn2in: number, kkin: number): number {
+
+    const rng = globalUni();
 
     if (!isFinite(nn1in) || !isFinite(nn2in) || !isFinite(kkin)) {
         return ML_ERR_return_NAN2(printer_rhyper, lineInfo4);
@@ -153,7 +155,7 @@ export function rhyperOne(nn1in: number, nn2in: number, kkin: number, rng: IRNG)
             // Bernoulli
             const rinv = 1 + nn2in / nn1in;
             const r = 1 / rinv;
-            return rbinomOne(kkin, r, rng);
+            return rbinomOne(kkin, r);
         }
         // Slow, but safe: return  F^{-1}(U)  where F(.) = phyper(.) and  U ~ U[0,1]
         // This will take crazy long time even in C native code, I throw an error

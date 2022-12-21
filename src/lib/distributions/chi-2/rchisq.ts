@@ -18,14 +18,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import { debug } from '@mangos/debug';
 import { ML_ERR_return_NAN2, lineInfo4 } from '@common/logger';
 import { rgamma } from '@dist/gamma/rgamma';
-import { globalNorm } from '@rng/global-rng';
 
 const printer = debug('rchisq');
 
 export function rchisqOne(df: number): number {
-    const rng = globalNorm();
     if (!isFinite(df) || df < 0.0) {
         return ML_ERR_return_NAN2(printer, lineInfo4);
     }
-    return rgamma(df / 2.0, 2.0, rng);
+    return rgamma(df / 2.0, 2.0);
 }

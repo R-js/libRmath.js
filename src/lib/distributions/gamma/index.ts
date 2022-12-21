@@ -19,8 +19,6 @@ import { dgamma as _dgamma } from './dgamma';
 import { pgamma as _pgamma } from './pgamma';
 import { qgamma as _qgamma } from './qgamma';
 import { rgamma as _rgamma } from './rgamma';
-import type { IRNGNormal } from '@rng/normal/normal-rng';
-import { globalNorm } from '@rng/global-rng';
 
 import { repeatedCall64 } from '@lib/r-func';
 
@@ -66,11 +64,10 @@ export function rgamma(
     n: number,
     shape: number,
     rate?: number,
-    scale?: number,
-    rng: IRNGNormal = globalNorm()
+    scale?: number
     ): Float64Array {
     const _scale = gammaNormalizeParams(rate, scale);
-    return repeatedCall64(n, _rgamma, shape, _scale, rng);
+    return repeatedCall64(n, _rgamma, shape, _scale);
 }
 
 

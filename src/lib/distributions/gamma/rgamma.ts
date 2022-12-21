@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import { debug } from '@mangos/debug';
 import { ML_ERR_return_NAN2, lineInfo4 } from '@common/logger';
 import { exp_rand } from '@dist/exp/sexp';
-import { IRNGNormal } from '@rng/normal/normal-rng';
+import { globalNorm } from '../../rng/global-rng';
 
 const printer_rgamma = debug('rgamma');
 
@@ -46,7 +46,8 @@ const a5 = 0.1423657;
 const a6 = -0.1367177;
 const a7 = 0.1233795;
 
-export function rgamma(a: number, scale: number, rng: IRNGNormal): number {
+export function rgamma(a: number, scale: number): number {
+    const rng = globalNorm();
     /* State variables [FIXME for threading!] :*/
 
     //let aa = 0;

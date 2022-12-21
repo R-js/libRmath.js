@@ -19,9 +19,10 @@ import { debug } from '@mangos/debug';
 import { ML_ERR_return_NAN2, lineInfo4 } from '@common/logger';
 
 const printer = debug('rcauchy');
-import type { IRNG } from '@rng/irng';
+import { globalUni } from '@lib/rng';
 
-export function rcauchyOne(location: number, scale: number, rng: IRNG): number {
+export function rcauchyOne(location: number, scale: number): number {
+    const rng = globalUni();
     if (isNaN(location) || !isFinite(scale) || scale < 0) {
         return ML_ERR_return_NAN2(printer, lineInfo4);
     }
