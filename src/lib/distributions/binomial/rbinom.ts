@@ -25,7 +25,8 @@ import { qbinom } from './qbinom';
 
 const printer_rbinom = debug('rbinom');
 
-export function rbinomOne(nin: number, pp: number, rng = globalUni()): number {
+export function rbinomOne(nin: number, pp: number): number {
+    const rng = globalUni();
     // double
     let c = 0;
     let fm = 0;

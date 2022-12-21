@@ -1,6 +1,4 @@
-import { BoxMuller } from '@rng/normal/box-muller';
 import { globalUni } from '@rng/global-rng';
-import { SuperDuper } from '@rng/super-duper';
 
 import { cl, select } from '@common/debug-mangos-select';
 
@@ -8,6 +6,10 @@ const rnbinomDomainWarns = select('rnbinom')("argument out of domain in '%s'");
 const rnbinomMuDomainWarns = select('rnbinom_mu')("argument out of domain in '%s'");
 rnbinomDomainWarns;
 //rnbinomMuDomainWarns;
+
+import { IRNGNormalTypeEnum, IRNGTypeEnum, setSeed } from '../../../../index';
+
+import { RNGkind } from '../../../../index';
 
 import { rnbinom } from '..';
 
@@ -50,9 +52,9 @@ describe('rnbinom', function () {
             expect(z).toEqualFloatingPointBinary(0);
         });
         it('n=1, size=1, prob=1', () => {
-            const un = new SuperDuper(1234);
-            const bm = new BoxMuller(un);
-            const z = rnbinom(10, 8, 0.2, undefined, bm);
+            RNGkind({ uniform: IRNGTypeEnum.SUPER_DUPER, normal: IRNGNormalTypeEnum.BOX_MULLER });
+            setSeed(1234);
+            const z = rnbinom(10, 8, 0.2, undefined);
             expect(z).toEqualFloatingPointBinary([
                 21, 39, 44, 20, 26, 42, 59, 23, 22, 35
             ]);
@@ -64,9 +66,9 @@ describe('rnbinom', function () {
             cl.clear('rnbinom_mu');
         });
         it('n=10, size=8, mu=12 (prob=0.6)', () => {
-            const un = new SuperDuper(1234);
-            const bm = new BoxMuller(un);
-            const z = rnbinom(10, 8, undefined, 12, bm);
+            RNGkind({ uniform: IRNGTypeEnum.SUPER_DUPER, normal: IRNGNormalTypeEnum.BOX_MULLER });
+            setSeed(1234);
+            const z = rnbinom(10, 8, undefined, 12);
             expect(z).toEqualFloatingPointBinary([10, 10, 17, 6, 9, 14, 10, 12, 3, 5]);
         });
         it('(check M.E.)n=1, size=8, mu=NaN', () => {

@@ -16,11 +16,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { rbinomOne } from '@dist/binomial/rbinom';
-import { globalUni } from '@rng/global-rng';
 import { emptyFloat64Array, sumfp64 } from '@lib/r-func';
 
 
-export function rmultinom(n: number, size: number, prob: Float64Array, rng = globalUni()): Float64Array | never {
+export function rmultinom(n: number, size: number, prob: Float64Array): Float64Array | never {
     // returns matrix n x prob
     if (n < 0) {
         throw new Error('invalid first argument "n"');
@@ -68,7 +67,7 @@ export function rmultinom(n: number, size: number, prob: Float64Array, rng = glo
         }
         else {
             const pp = prob[i2] / pTotal;
-            rc[i] = rbinomOne(K, pp, rng);
+            rc[i] = rbinomOne(K, pp);
         }
         // adjust, because it is sampling without replacement
         K -= rc[i];

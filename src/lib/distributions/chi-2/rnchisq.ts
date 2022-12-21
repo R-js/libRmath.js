@@ -30,11 +30,11 @@ export function rnchisqOne(df: number, lambda: number): number {
         return ML_ERR_return_NAN2(printer, lineInfo4);
     }
     if (lambda === 0) {
-        return df === 0 ? 0 : rgamma(df / 2, 2, rng);
+        return df === 0 ? 0 : rgamma(df / 2, 2);
     } else {
         let r = rpoisOne(lambda / 2, rng);
         if (r > 0) r = rchisqOne(2 * r);
-        if (df > 0) r += rgamma(df / 2, 2, rng);
+        if (df > 0) r += rgamma(df / 2, 2);
         return r;
     }
 }

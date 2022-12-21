@@ -19,16 +19,14 @@ export { dbinom } from './dbinom';
 export { pbinom } from './pbinom';
 export { qbinom } from './qbinom';
 import { rbinomOne } from './rbinom';
-import type { IRNG } from '@rng/irng';
 import { repeatedCall64 } from '@lib/r-func';
 
 export function rbinom(
   n: number,
   size: number,
-  pp: number,
-  rng?: IRNG
+  pp: number
 ): Float64Array {
-  return repeatedCall64(n, rbinomOne, size, pp, rng);
+  return repeatedCall64(n, rbinomOne, size, pp);
 }
 
 export { rbinomOne };
