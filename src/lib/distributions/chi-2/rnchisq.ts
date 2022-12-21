@@ -20,12 +20,12 @@ import { ML_ERR_return_NAN2, lineInfo4 } from '@common/logger';
 import { rgamma } from '@dist/gamma/rgamma';
 import { rpoisOne } from '@dist/poisson/rpois';
 import { rchisqOne } from '@dist/chi-2/rchisq';
-
-import type { IRNGNormal } from '@rng/normal/normal-rng';
+import { globalNorm } from '@rng/global-rng';
 
 const printer = debug('rnchisq');
 
-export function rnchisqOne(df: number, lambda: number, rng: IRNGNormal): number {
+export function rnchisqOne(df: number, lambda: number): number {
+    const rng = globalNorm();
     if (!isFinite(df) || !isFinite(lambda) || df < 0 || lambda < 0) {
         return ML_ERR_return_NAN2(printer, lineInfo4);
     }
@@ -33,7 +33,7 @@ export function rnchisqOne(df: number, lambda: number, rng: IRNGNormal): number 
         return df === 0 ? 0 : rgamma(df / 2, 2, rng);
     } else {
         let r = rpoisOne(lambda / 2, rng);
-        if (r > 0) r = rchisqOne(2 * r, rng);
+        if (r > 0) r = rchisqOne(2 * r);
         if (df > 0) r += rgamma(df / 2, 2, rng);
         return r;
     }

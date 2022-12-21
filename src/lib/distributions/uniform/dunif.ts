@@ -18,23 +18,23 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import { debug } from '@mangos/debug';
 import { ML_ERR_return_NAN2, lineInfo4 } from '@common/logger';
-import { log, R_D__0 } from '@lib/r-func';
+import { log as logfn, R_D__0 } from '@lib/r-func';
 
 const printer = debug('dunif');
 
 
-export function dunif(x: number, a = 0, b = 1, give_log = false): number {
-    if (isNaN(x) || isNaN(a) || isNaN(b)) {
-        return x + a + b;
+export function dunif(x: number, min = 0, max = 1, log = false): number {
+    if (isNaN(x) || isNaN(min) || isNaN(max)) {
+        return x + min + max;
     }
-    if (b <= a) 
+    if (max <= min) 
     {
         return ML_ERR_return_NAN2(printer, lineInfo4);
     }
 
-    if (a <= x && x <= b)
+    if (min <= x && x <= max)
     {
-        return give_log ? -log(b - a) : 1. / (b - a);
+        return log ? -logfn(max - min) : 1. / (max - min);
     }
-    return R_D__0(give_log);
+    return R_D__0(log);
 }

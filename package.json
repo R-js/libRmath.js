@@ -1,6 +1,6 @@
 {
     "name": "lib-r-math.js",
-    "version": "2.0.0-rc3",
+    "version": "2.0.0-rc9",
     "description": "Javascript Pure Implementation of Statistical R \"core\" numerical libRmath",
     "keywords": [
         "statistics",
@@ -66,7 +66,7 @@
         "import": "./dist/esm/index.mjs",
         "require": "./dist/commonjs/index.cjs"
     },
-    "browser": "./dist/lib-r-math.2.0.0-rc3.mjs",
+    "browser": "./dist/web.esm.mjs",
     "types": "./dist/types/index.d.ts",
     "sideEffects": true,
     "files": [

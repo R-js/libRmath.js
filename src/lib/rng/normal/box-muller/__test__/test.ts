@@ -1,4 +1,6 @@
 import { BoxMuller } from '@rng/normal/box-muller';
+import { MersenneTwister } from '../../../mersenne-twister/index';
+import type { IRNG } from '../../../irng';
 import {
     rnormAfterSeed123,
     rnormAfterUniformRNGBleed,
@@ -8,8 +10,12 @@ import {
 
 
 describe('rng box-muller', function () {
+    let rng: IRNG;
+    beforeAll(()=>{
+        rng = new MersenneTwister(0)
+    });
     it('compare 100 samples seed=0', () => {
-        const bm = new BoxMuller(); // by default will use Mersenne-Twister like in R
+        const bm = new BoxMuller(rng); // by default will use Mersenne-Twister like in R
         bm.uniform_rng.init(1234);
         const result1 = bm.randoms(10);
         expect(result1).toEqualFloatingPointBinary(rnormAfterSeed123, 22, false, false);

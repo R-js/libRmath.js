@@ -1,4 +1,4 @@
-import { IRNG, MessageType } from '@rng/irng';
+import { IRNG } from '@rng/irng';
 import { KnuthTAOCP } from './knuth-taocp';
 import { KnuthTAOCP2002 } from '@rng/knuth-taocp-2002';
 import { LecuyerCMRG } from '@rng/lecuyer-cmrg';
@@ -105,7 +105,7 @@ export function setSeed(
     gu.init(seed); 
 }
 
-export function RNGKind(opt: RandomGenSet): RandomGenSet {
+export function RNGKind(opt: RandomGenSet = {}): RandomGenSet {
 
     let gu = globalUni();
     let no = globalNorm();
@@ -118,9 +118,9 @@ export function RNGKind(opt: RandomGenSet): RandomGenSet {
             if (tu.kind !== (gu.constructor as unknown as typeof IRNG).kind) { // different so change it
                 // it IS bound, (this happens in the constructor of the rng) 
                 // eslint-disable-next-line @typescript-eslint/unbound-method
-                gu.unregister(MessageType.INIT, no.reset);
-                gu = globalUni(new tu());
-                no.reset(gu);
+                no.unregister(); // decouple the normal rng from the old uniform rng
+                gu = globalUni(new tu()); // replace global uniform
+                no.register(gu); // register the uniform rng as a source of the existing normal rng
             }
             return true;
         }
@@ -136,9 +136,10 @@ export function RNGKind(opt: RandomGenSet): RandomGenSet {
             {
                 // it IS bound, above line...
                 // eslint-disable-next-line @typescript-eslint/unbound-method
-                gu.unregister(MessageType.INIT, no.reset);
-                no = globalNorm(new tn());
-                no.reset(gu);
+                // we need to de-couple all normal rngs that this inrg
+                no.unregister();
+                no = globalNorm(new tn(gu));
+                no.register(gu);
             }
             return true;
         }
@@ -178,6 +179,17 @@ export function RNGKind(opt: RandomGenSet): RandomGenSet {
 
 }
 
+export function randomSeed(internalState?: Uint32Array | Int32Array): Uint32Array | Int32Array | never {
+    const gu = globalUni();
+    if (internalState === undefined){
+        return gu.seed;
+    }
+    const state = gu.seed;
+    if (state.constructor.name === internalState.constructor.name && state.length === internalState.length){
+       gu.seed = internalState;
+    }
+    throw new Error(`the internal state of ${gu.name} is a ${state.constructor.name} of length ${state.length}`);
+}
 
 //init
 (globalThis as EgT)[symRNG] = new MersenneTwister;

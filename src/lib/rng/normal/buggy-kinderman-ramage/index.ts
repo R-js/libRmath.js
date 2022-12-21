@@ -16,7 +16,6 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { IRNG, MessageType } from '@rng/irng';
-import { MersenneTwister } from '@rng/mersenne-twister';
 import { IRNGNormal } from '@rng/normal/normal-rng';
 import { IRNGNormalTypeEnum } from '@rng/normal/in01-type';
 
@@ -26,7 +25,7 @@ export class BuggyKindermanRamage extends IRNGNormal {
     
     public static override kind = IRNGNormalTypeEnum.BUGGY_KINDERMAN_RAMAGE;
 
-    constructor(_rng: IRNG = new MersenneTwister(0)) {
+    constructor(_rng: IRNG) {
         super(_rng, 'Buggy-Kinderman-Ramage');
         // there is no reset via message init
         this._rng.unregister(MessageType.INIT, this.reset.bind(this));

@@ -16,8 +16,6 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { chebyshev_eval, chebyshev_init } from './lib/chebyshev/chebyshev';
-
 // R versions of log1p and hypot
 import { default as log1p } from '././lib/alt/log/log1p';
 import { default as hypot } from './lib/alt/hypot/hypot';
@@ -198,7 +196,7 @@ import {
 } from './lib/distributions/wilcoxon';
 
 //rng (uniform)
-import { KnuthTAOCP } from './lib/rng/knuth-taocp';
+/*import { KnuthTAOCP } from './lib/rng/knuth-taocp';
 
 import { KnuthTAOCP2002 } from './lib/rng/knuth-taocp-2002';
 import { LecuyerCMRG } from './lib/rng/lecuyer-cmrg';
@@ -206,12 +204,14 @@ import { MersenneTwister } from './lib/rng/mersenne-twister';
 import { SuperDuper } from './lib/rng/super-duper';
 import { MarsagliaMultiCarry } from './lib/rng/marsaglia-multicarry';
 import { WichmannHill } from './lib/rng/wichmann-hill';
+*/
 //rng (normal)
-import { AhrensDieter } from './lib/rng/normal/ahrens-dieter';
+/*import { AhrensDieter } from './lib/rng/normal/ahrens-dieter';
 import { Inversion } from './lib/rng/normal/inversion';
 import { BoxMuller } from './lib/rng/normal/box-muller';
 import { BuggyKindermanRamage } from './lib/rng/normal/buggy-kinderman-ramage';
 import { KindermanRamage } from './lib/rng/normal/kinderman-ramage';
+*/
 import { default as seed } from './lib/rng/seed';
 // stubs
 import { IRNG, MessageType } from './lib/rng/irng';
@@ -221,10 +221,11 @@ import { IRNGNormalTypeEnum } from './lib/rng/normal/in01-type';
 
 // globalRNG
 import {
-    globalUni,
-    globalNorm,
+    //globalUni,
+    //globalNorm,
     RNGKind as RNGkind,
-    setSeed
+    setSeed,
+    randomSeed
 } from './lib/rng/global-rng';
 
 // special
@@ -250,8 +251,6 @@ import {
 import { IRNGSampleKindTypeEnum } from './lib/rng/sample-kind-type';
 
 const defaultObservableNoteBook = {
-    chebyshev_eval,
-    chebyshev_init,
     // R versions of log1p and hypot
     log1p,
     hypot,
@@ -387,7 +386,7 @@ const defaultObservableNoteBook = {
     rwilcox,
     rwilcoxOne,
     // uniform rngs
-    KnuthTAOCP,
+    /*KnuthTAOCP,
     KnuthTAOCP2002,
     MersenneTwister,
     SuperDuper,
@@ -399,6 +398,7 @@ const defaultObservableNoteBook = {
     BoxMuller,
     BuggyKindermanRamage,
     KindermanRamage,
+    */
     //
     seed,
     // infrastructure
@@ -413,10 +413,11 @@ const defaultObservableNoteBook = {
     IRNGNormalTypeEnum,
     IRNGSampleKindTypeEnum,
     //
-    globalUni,
-    globalNorm,
+    //globalUni,
+    //globalNorm,
     RNGkind,
     setSeed,
+    randomSeed,
     //
     BesselJ,
     BesselI,
@@ -439,8 +440,6 @@ const defaultObservableNoteBook = {
 }
 
 export {
-    chebyshev_eval,
-    chebyshev_init,
     // R versions of log1p and hypot
     log1p,
     hypot,
@@ -575,7 +574,7 @@ export {
     rwilcox,
     rwilcoxOne,
     // uniforms rngs
-    KnuthTAOCP,
+    /*KnuthTAOCP,
     KnuthTAOCP2002,
     LecuyerCMRG,
     MersenneTwister,
@@ -588,6 +587,7 @@ export {
     BoxMuller,
     BuggyKindermanRamage,
     KindermanRamage,
+    */
     //
     seed,
     // infrastructure
@@ -602,10 +602,11 @@ export {
     IRNGNormalTypeEnum,
     IRNGSampleKindTypeEnum,
     //
-    globalUni,
-    globalNorm,
+    //globalUni,
+    //globalNorm,
     RNGkind,
     setSeed,
+    randomSeed,
     //
     BesselJ,
     BesselI,

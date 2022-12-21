@@ -2,16 +2,45 @@
 
 This R statistical [`nmath`][librmath.so] re-created in typescript/javascript.
 
-[![NPM](https://img.shields.io/npm/v/lib-r-math.js.svg)](https://www.npmjs.com/package/lib-r-math.js)
-[![Build Status](https://travis-ci.org/R-js/libRmath.js.svg?branch=master)](https://travis-ci.org/R-js/libRmath.js)
+If you were not using a previous version to 2.0.0, you can skip _breaking changes_ and go to:
+
+- [Installation and usage](#intsallation-and-usage)
+- [Table of contents](table-of-contents) 
 
 ## BREAKING CHANGES For version 2.0
 
 ### Removed
 
+#### RNG (normal and uniform) are only selectable via `RNGkind` function.
+
+The normal and uniform implementation of the various RNG's are not exported publicly anymore
+Select normal and uniform RNG's via the function `RNGkind`.
+
+```javascript
+// this is not possible anymore
+import { AhrensDieter } from 'lib-r-math.js';
+
+const ad = new AhrensDieter();
+ad.random();
+
+// NEW way of doing things
+
+import { RNGkind, IRNGTypeEnum, IRNGNormalTypeEnum, IRNGSampleKindTypeEnum  } from 'lib-r-math.js';
+
+// R analog to "RNGkind"
+RNGKind(
+    { 
+      uniform:    IRNGTypeEnum.KNUTH_TAOCP , 
+      normal:     IRNGNormalTypeEnum.KINDERMAN_RAMAGE,
+      sampleKind: IRNGSampleKindTypeEnum.ROUNDING
+    }
+);
+```
+
+
 #### helper functions for data mangling
 
-Functions removed from 2.0.0 onwards: `any`, `arrayrify`, `multiplex`, `each`, `flatten`, `c`, `map`, `selector`, `seq`.
+Functions removed from 2.0.0 onwards: `any`, `arrayrify`, `multiplex`, `each`, `flatten`, `c`, `map`, `selector`, `seq`, `summary`.
 
 It is recommended you either use well established js tools like [Rxjs](https://rxjs.dev) or [Ramdajs](https://ramdajs.com) to mangle arrays and data.
 
@@ -22,6 +51,7 @@ Functions removed from 2.0.0 onwards: `numberPrecision`
 This function mimicked the R's `options(digits=N)`.
 
 ### Changed
+
 #### helper functions
 
 Functions changed from 2.0.0 onwards: `timeseed`.
@@ -30,23 +60,24 @@ Functions changed from 2.0.0 onwards: `timeseed`.
 
 #### Sample distributions return a result of type `Float64Array`.
 
-Functions changed from 2.0.0 onwards: 
+Functions changed from 2.0.0 onwards:
 
 All these functions will return type of `Float64Array`:
-`rbeta`, `rbinom`, `rcauchy`, `rchisq`, `rexp`, `rf`, `rgamma`, `rgeom`, `rhyper`, `rlogis`, `rlnorm`, `rmultinom`, `rnorm`, `rpois`, `rsignrank`, `rt`,`runif`, `rweibull`, `rwilcox`. 
+`rbeta`, `rbinom`, `rcauchy`, `rchisq`, `rexp`, `rf`, `rgamma`, `rgeom`, `rhyper`, `rlogis`, `rlnorm`, `rmultinom`, `rnorm`, `rpois`, `rsignrank`, `rt`,`runif`, `rweibull`, `rwilcox`.
 
 For single scalar (number) return values, use the analogs:
-`rbetaOne`, `rbinomOne`, `rcauchyOne`, `rchisqOne`, `rexpOne`, `rfOne`, `rgammaOne`, `rgeomOne`, `rhyperOne`, `rlogisOne`, `rlnormOne`, `rnormOne`, `rpoisOne`, `rsignrankOne`, `rtOne`,`runifOne`, `rweibullOne`, `rwilcoxOne`. 
+`rbetaOne`, `rbinomOne`, `rcauchyOne`, `rchisqOne`, `rexpOne`, `rfOne`, `rgammaOne`, `rgeomOne`, `rhyperOne`, `rlogisOne`, `rlnormOne`, `rnormOne`, `rpoisOne`, `rsignrankOne`, `rtOne`,`runifOne`, `rweibullOne`, `rwilcoxOne`.
 
 Example:
+
 ```javascript
-import { rbinom, rbinomOne, setSeed } from 'lib-r-math.js';
+import { rbinom, rbinomOne, setSeed } from "lib-r-math.js";
 
 rbinom(0); //
 // -> FloatArray(0)
 
 setSeed(123); // set.seed(123) in R
-rbinom(2, 8, 0.5); 
+rbinom(2, 8, 0.5);
 // -> Float64Array(2) [ 3, 5 ]  //same result as in R
 
 setSeed(456); // set.seed(456) in R
@@ -68,1288 +99,356 @@ lib-r-math.js supports the following module types:
 
 ### ESM for use in [observablehq](www.observablehq.com)
 
-
 ```javascript
-library =  import("https://cdn/skypack.dev/lib-r-math.js/dist/web.esm.mjs");
+library = import("https://cdn/skypack.dev/lib-r-math.js/dist/web.esm.mjs");
 
 library.BesselJ(3, 0.4);
 //-> -0.30192051329163955
-
 ```
 
-### ESM for use as dynamic import in generic web app
-
-```javascript
-import { BesselJ } from '
-```
-
-For both node and web, 
-
-`import
-
-|  umd  |       |
-### Node
-
-For Node there are both `commonjs` and `esm` style modules available, depending what you specify in your package.json `type` field.
-
-```bash
-npm i lib-r-math.js
-```
-
-```esm
-import { RNGkind, runif } from 'lib-r-math.js';
-
-
-RNGkind('Mersenne)
-```
-
-
-
-
-
-
-There is no UMD
-The library is an UMD library, it can be used in a web client
-as in server side node environment.
-
-## Installation
-
-#### serverside
-
-```bash
-npm install lib-r-math.js
-```
-
-#### web
-
-Remove: adjusted, there is iff, esm for web, show also example for observalblehq.com notebooks
-
-The module directory contains a minimized bundle for use in html `<script>` tag. The library is attached to the `window.libR` object after loading.
+### ESM for use as Browser client
 
 ```html
-<!-- script src="your_server_url/libR.min.js"></script -->
-<!-- this example uses unpkg as CDN -->
-<script src="https://unpkg.com/lib-r-math.js@1.0.74/dist/lib/libR.min.js"></script>
-<script>
-  const libR = window.libR;
-  //fetch some distribution namespaces
-  const { Tukey, Normal, Beta, StudentT, Wilcoxon } = libR;
+<script type="module">
+  import { BesselJ } from "https://unpkg.dev/lib-r-math.js@2.0.0-rc7/dist/web.esm.mjs";
+
+  console.log(BesselJ(3, 0.4));
+  //-> -0.30192051329163955
 </script>
 ```
 
-# Table of Contents
+### IIFE for use in Browser client
 
-* [Differences with R](#differences-with-r)
-* [*Read this first*: Helper functions](#helper-functions-for-porting-r-programs)
-* [Uniform Pseudo Random Number Generators](#uniform-pseudo-random-number-generators)
-* [Normal Random Number Generators](#normal-distributed-random-number-generators)
-* [Normal and Uniform distributions](#normal-and-uniform-distributions)
-  * [Uniform distribution](#uniform-distribution)
-  * [Normal distribution](#normal-distribution)
-* [Other Probability Distributions](#other-probability-distributions)
-  * [Beta distribution](#beta-distribution)
-  * [Binomial distribution](#binomial-distribution)
-  * [Negative Binomial distribution](#negative-binomial-distribution)
-  * [Cauchy distribution](#cauchy-distribution)
-  * [X<sup>2</sup> (non-central) distribution](#chi-squared-non-central-distribution)
-  * [Exponential distribution](#exponential-distribution)
-  * [F (non-central) distribution](#f-non-central-distribution)
-  * [Gamma distribution](#gamma-distribution)
-  * [Geometric distribution](#geometric-distribution)
-  * [Hypergeometric distribution](#hypergeometric-distribution)
-  * [Logistic distribution](#logistic-distribution)
-  * [Log Normal distribution](#log-normal-distribution)
-  * [Multinomial distribution](#multinomial-distribution)
-  * [Poisson distribution](#poisson-distribution)
-  * [Wilcoxon signed rank statistic distribution](#wilcoxon-signed-rank-statistic-distribution)
-  * [Student T distribution](#student-t-distribution)
-  * [Studentized Range distribution, (_Tukey_)](#studentized-range-distribution-tukey-hsd)
-  * [Weibull distribution](#weibull-distribution)
-  * [Wilcoxon rank sum statistic distribution](#wilcoxon-rank-sum-statistic-distribution)
-* [Special Functions of Mathematics](#special-functions-of-mathematics)
-  * [Bessel functions](#bessel-functions)
-  * [Beta functions](#beta-functions)
-  * [Gamma functions](#gamma-functions)
-  * [Binomial coefficient functions](#binomial-coefficient-functions)
-
-# Differences with R
-
-Remove
-Some implementation differences exist with R `nmath`
-
-like R there is a global uniform rng and normal rng (see with RNGkind command)
-
-Removed--
-* PRNG's are not global singletons, but separate object instances and you can have as many as you want. The programmer has the choice of having different deviate generators sharing a common source PRNG.
-
-ADD:
-Wilcoxon Sum Rank comes with an accelerated Wasm backed that can be turned onn
-
-
-All Helper functions have been removed
-# Helper functions for porting `R` programs
-
-Removed
-#### Summary
-
-R language operators and function arguments can work with `vectorized input`.
-These helper functions are used to mimic this functionality and assist porting of scripts from the R ecosystem using `libRmath.js`.
-
-Removed
-### `div`
-
-Divides scalar or an array of values with element of the second array or scalar.
-
-Usage:
-
-```javascript
-const libR = require('lib-r-math.js');
-const { div } = libR.R;
-
-//1
-div(3, 5); //= 3/5
-//0.6
-
-div([0, 1, 2, 3], 5);
-//[0, 0.2, 0.4, 0.6]
-
-div([10,2,3],[2,4]);// Uses R recycling rules
-//[ 5, 0.5, 1.5 ]
+```html
+<script src="https://unpkg.dev/lib-r-math.js@2.0.0-rc7/dist/web.iife.js"></script>
+<script>
+  const answ = window.R.BesselJ(3, 0.4);
+  console.log(answ);
+  //-> -0.30192051329163955
+</script>
 ```
 
-REMOVED
-### `mult`
-
-Multiplies scalar or an array of values with another scalar or array of values.
-Applies [R recycling rules](https://cran.r-project.org/doc/manuals/r-release/R-intro.html#The-recycling-rule) in case of arguments of unequal array length.
-
-Usage:
+### ESM for Node
 
 ```javascript
-const libR = require('lib-r-math.js');
-const { mult } = libR.R;
 
-//1
-mult(3, 5); //= 3*5
-//15
+import { BesselJ } from 'lib-r-math.js';
 
-mult([0, 1, 2, 3], [5,2]); // R recycling rules apply
-//[ 0, 2, 10, 6 ]
+const answ = BesselJ(3, 0.4);
+//-> -0.30192051329163955
 ```
 
-Removed:
-### `asArray`
+### COMMONJS for node
 
-Creates a new function from an existing one for it to always return its result as an array.
+```javascript
+const { BesselJ } = require('lib-r-math.js');
 
-Usage:
+const answ = BesselJ(3, 0.4);
+//-> -0.30192051329163955
+```
+
+## Table of Contents
+
+- [libRmath.js](#librmathjs)
+  - [BREAKING CHANGES For version 2.0](#breaking-changes-for-version-20)
+    - [Removed](#removed)
+      - [RNG (normal and uniform) are only selectable via `RNGkind` function.](#rng-normal-and-uniform-are-only-selectable-via-rngkind-function)
+      - [helper functions for data mangling](#helper-functions-for-data-mangling)
+      - [Removed helper functions for limiting numeric precision](#removed-helper-functions-for-limiting-numeric-precision)
+    - [Changed](#changed)
+      - [helper functions](#helper-functions)
+      - [Sample distributions return a result of type `Float64Array`.](#sample-distributions-return-a-result-of-type-float64array)
+    - [UMD module removed](#umd-module-removed)
+  - [Installation and usage](#installation-and-usage)
+    - [ESM for use in observablehq](#esm-for-use-in-observablehq)
+    - [ESM for use as Browser client](#esm-for-use-as-browser-client)
+    - [IIFE for use in Browser client](#iife-for-use-in-browser-client)
+    - [ESM for Node](#esm-for-node)
+    - [COMMONJS for node](#commonjs-for-node)
+  - [Table of Contents](#table-of-contents)
+  - [Auxiliary functions](#auxiliary-functions)
+    - [`RNGkind`](#rngkind)
+    - [`setSeed`](#setseed)
+    - [`randomSeed`](#randomseed)
+  - [Distributions](#distributions)
+    - [Uniform distribution](#uniform-distribution)
+      - [`dunif`](#dunif)
+      - [`punif`](#punif)
+      - [`qunif`](#qunif)
+      - [`runif`](#runif)
+    - [Normal distribution](#normal-distribution)
+      - [`dnorm`](#dnorm)
+      - [`pnorm`](#pnorm)
+      - [`qnorm`](#qnorm)
+      - [`rnorm`](#rnorm)
+  - [Other Probability Distributions](#other-probability-distributions)
+      - [summary](#summary)
+    - [Beta distribution](#beta-distribution)
+      - [`dbeta`](#dbeta)
+      - [`pbeta`](#pbeta)
+      - [`qbeta`](#qbeta)
+      - [`rbeta`](#rbeta)
+    - [Binomial distribution](#binomial-distribution)
+      - [`dbinom`](#dbinom)
+      - [`pbinom`](#pbinom)
+      - [`qbinom`](#qbinom)
+      - [`rbinom`](#rbinom)
+    - [Negative Binomial distribution](#negative-binomial-distribution)
+      - [`dnbinom`](#dnbinom)
+      - [`pnbinom`](#pnbinom)
+      - [`qnbinom`](#qnbinom)
+      - [`rnbinom`](#rnbinom)
+    - [Cauchy distribution](#cauchy-distribution)
+      - [`dcauchy`](#dcauchy)
+      - [`pcauchy`](#pcauchy)
+      - [`qcauchy`](#qcauchy)
+      - [`rcauchy`](#rcauchy)
+    - [Chi-Squared (non-central) Distribution](#chi-squared-non-central-distribution)
+      - [`dchisq`](#dchisq)
+      - [`pchisq`](#pchisq)
+      - [`qchisq`](#qchisq)
+      - [`rchisq`](#rchisq)
+    - [Exponential Distribution](#exponential-distribution)
+      - [`dexp`](#dexp)
+      - [`pexp`](#pexp)
+      - [`qexp`](#qexp)
+      - [`rexp`](#rexp)
+    - [F (non-central) Distribution](#f-non-central-distribution)
+      - [`df`](#df)
+      - [`pf`](#pf)
+      - [`qf`](#qf)
+      - [`rf`](#rf)
+    - [Gamma distribution](#gamma-distribution)
+      - [`dgamma`](#dgamma)
+      - [`pgamma`](#pgamma)
+      - [`qgamma`](#qgamma)
+      - [`rgamma`](#rgamma)
+    - [Geometric distribution](#geometric-distribution)
+      - [`dgeom`](#dgeom)
+      - [`pgeom`](#pgeom)
+      - [`qgeom`](#qgeom)
+      - [`rgeom`](#rgeom)
+    - [Hypergeometric distribution](#hypergeometric-distribution)
+      - [`dhyper`](#dhyper)
+      - [`phyper`](#phyper)
+      - [`qhyper`](#qhyper)
+      - [`rhyper`](#rhyper)
+    - [Logistic distribution](#logistic-distribution)
+      - [`dlogis`](#dlogis)
+      - [`plogis`](#plogis)
+      - [`qlogis`](#qlogis)
+      - [`rlogis`](#rlogis)
+    - [Log Normal distribution](#log-normal-distribution)
+      - [`dlnorm`](#dlnorm)
+      - [`plnorm`](#plnorm)
+      - [`qlnorm`](#qlnorm)
+      - [`rlnorm`](#rlnorm)
+    - [Multinomial distribution](#multinomial-distribution)
+      - [`dmultinom`](#dmultinom)
+      - [`rmultinom`](#rmultinom)
+    - [Poisson distribution](#poisson-distribution)
+      - [`dpois`](#dpois)
+      - [ppois](#ppois)
+      - [`qpois`](#qpois)
+      - [`rpois`](#rpois)
+    - [Wilcoxon signed rank statistic distribution](#wilcoxon-signed-rank-statistic-distribution)
+      - [`dsignrank`](#dsignrank)
+      - [`psignrank`](#psignrank)
+      - [`qsignrank`](#qsignrank)
+      - [`rsignrank`](#rsignrank)
+    - [Student T distribution](#student-t-distribution)
+      - [`dt`](#dt)
+      - [`pt`](#pt)
+      - [`qt`](#qt)
+      - [`rt`](#rt)
+    - [Studentized Range distribution, (_Tukey HSD_)](#studentized-range-distribution-tukey-hsd)
+      - [`ptukey`](#ptukey)
+      - [`qtukey`](#qtukey)
+    - [Weibull distribution](#weibull-distribution)
+      - [`dweibull`](#dweibull)
+      - [`pweibull`](#pweibull)
+      - [`qweibull`](#qweibull)
+      - [`rweibull`](#rweibull)
+    - [Wilcoxon `rank sum statistic` distribution](#wilcoxon-rank-sum-statistic-distribution)
+      - [`dwilcox`](#dwilcox)
+      - [`pwilcox`](#pwilcox)
+      - [`qwilcox`](#qwilcox)
+      - [`rwilcox`](#rwilcox)
+  - [Special Functions of Mathematics](#special-functions-of-mathematics)
+    - [Bessel functions](#bessel-functions)
+      - [`besselJ`](#besselj)
+      - [`besselY`](#bessely)
+      - [`besselI`](#besseli)
+      - [`besselK`](#besselk)
+    - [Beta functions](#beta-functions)
+      - [`beta`](#beta)
+      - [`lbeta`](#lbeta)
+    - [Gamma functions](#gamma-functions)
+      - [`digamma`](#digamma)
+      - [`trigamma`](#trigamma)
+      - [`tetragamma`](#tetragamma)
+      - [`pentagamma`](#pentagamma)
+      - [`psigamma`](#psigamma)
+      - [`gammma`](#gammma)
+      - [`lgammma`](#lgammma)
+    - [Binomial coefficient functions](#binomial-coefficient-functions)
+      - [`choose`](#choose)
+      - [`lchoose`](#lchoose)
+- [Changelog](#changelog)
+  - [\[Unreleased\]](#unreleased)
+    - [Changed](#changed-1)
+    - [Changed](#changed-2)
+    - [Removed](#removed-1)
+
+## Auxiliary functions
+
+### `RNGkind`
+
+RNGkind is the analog to R's "RNGkind". This is how you select what RNG (normal and uniform) you use and the samplingKind
+
+R console:
+
+```R
+> RNGkind()
+[1] "Mersenne-Twister" "Ahrens-Dieter"   
+[3] "Rejection"   
+```
+
+Rjs _typescript decl_:
 
 ```typescript
 
-const libR = require('lib-r-math.js');
-const { asArray } = libR.R;
-
-const r = asArray(Math.random);
-
-//always returns the result wrapped in an array
-r()
-//[ 0.39783583929513 ]
-r()
-//[ 0.04431401890179831 ]
-r()
-//[ 0.7629304997301447 ]
-```
-
-Removed:
-### `sum`
-
-Analog to `R`'s `sum` function. Calculates the sum of all elements of an array.
-
-```javascript
-const libR = require('lib-r-math.js');
-const { sum } = libR.R;
-
-//1
-sum(5); //trivial
-//5
-
-//2
-sum([1, 2, 3, 4]);
-//10
-```
-
-Removed
-### `summary`
-
-Gives summary information of numeric data in an array.
-
-_typescript decl_
-
-```typescript
-declare function summary(data: number[]): ISummary;
-
-//output
-interface ISummary {
-  N: number; // number of samples in "data"
-  mu: number; // mean of "data"
-  population: {
-    variance: number; // population variance (data is seen as finite population)
-    sd: number; // square root of the population variance
-  };
-  sample: {
-    variance: number; // sample variance (data is seen as a small sample from an very large population)
-    sd: number; // square root of "sample variance"
-  };
-  relX; // = x-E(x)
-  relX2; // = ( x-E(x) )^2
-  stats: {
-    min: number; // minimal value from "data"
-    '1st Qu.': number; // 1st quantile from "data"
-    median: number; // median value from "data
-    '3rd Qu.': number; // 3rd quantile from "data"
-    max: number; // maximum value in data
-  };
+enum IRNGTypeEnum {
+    KNUTH_TAOCP = 'KNUTH_TAOCP',
+    KNUTH_TAOCP2002 = 'KNUTH_TAOCP2002',
+    LECUYER_CMRG = 'LECUYER_CMRG',
+    MARSAGLIA_MULTICARRY = 'MARSAGLIA_MULTICARRY',
+    MERSENNE_TWISTER = 'MERSENNE_TWISTER',
+    SUPER_DUPER = 'SUPER_DUPER',
+    WICHMANN_HILL = 'WICHMANN_HILL',
+    USER_DEFINED = 'USER_DEFINED'
 }
+
+enum IRNGNormalTypeEnum {
+    AHRENS_DIETER = 'AHRENS_DIETER',
+    BOX_MULLER = 'BOX_MULLER',
+    BUGGY_KINDERMAN_RAMAGE = 'BUGGY_KINDERMAN_RAMAGE',
+    INVERSION = 'INVERSION',
+    KINDERMAN_RAMAGE = 'KINDERMAN_RAMAGE'
+}
+
+enum IRNGSampleKindTypeEnum {
+    ROUNDING = 'ROUNDING',
+    REJECTION = 'REJECTION',
+}
+
+// All props option, ONLY set the property you want to change
+type RandomGenSet = {
+    uniform?: IRNGTypeEnum
+    normal?: IRNGNormalTypeEnum
+    sampleKind?: IRNGSampleKindTypeEnum
+};
+
+RNGkind = function (options?: RandomGenSet): RandomGenSet;
 ```
 
-Usage:
+`RNGkind` optionally takes an argument of type `RandomGenSet`, but always returns the current (or adjusted) `RandomGenSet` indicating what RNG's are being used.
 
-```javascript
-const libR = require('lib-r-math.js');
-const { summary } = libR.R;
-
-summary([360, 352, 294, 160, 146, 142, 318, 200, 142, 116])
-/*
-{ N: 10,
-  mu: 223,
-  population: { variance: 8447.4, sd: 91.90973833060346 },
-  sample: { variance: 9386, sd: 96.88137075826292 },
-  relX: [ 137, 129, 71, -63, -77, -81, 95, -23, -81, -107 ],
-  relX2: [ 18769, 16641, 5041, 3969, 5929, 6561, 9025, 529, 6561, 11449 ],
-  stats: { min: 116, '1st Qu.': 143, median: 180, '3rd Qu.': 312, max: 360 } }
-*/
-```
-Removed
-### `numberPrecision`
-
-Truncates numbers to a specified significant digits.
-Takes single numeric value as argument or an array of numbers.
-
-Usage:
-
-```javascript
-const libR = require('lib-r-math.js');
-
-const digits4 = libR.R.numberPrecision(4);
-
-//1 single value
-const pr4a = digits4(1.12345678);
-//1.123
-
-//2 works with arrays
-const pr4b = digits4([0.4553, -2.1243]);
-//[ 0.4553, -2.124 ]
-```
-Removed
-### `any`
-
-Test a Predicate for each element in an Array. Returns true or false depending on a test function.
-
-Usage:
-
-```javascript
-const libR = require('lib-r-math.js');
-const any = libR.R.any;
-
-//1
-any([1, 2, 3, 4])(x => x < 2);
-//true
-
-//2
-any([1, 2, 3, 4])(x => x > 5);
-//false
-```
-
-Removed
-### `arrayrify` **(DEPRICATED use [`multiplex`](#multiplex))**
-
-Mimics R vectorized function arguments. Wraps an existing function changing the first first argument to accept both scalar (number) or an array( number[] ).
-
-_Note: Only the first argument is vectorized_
-
-_typescript decl_
+Example: set uniform RNG to `SUPER_DUPER` and normal RNG to `BOX_MULLER`
 
 ```typescript
-declare function arrayrify<T, R>(fn: (x: T, ...rest: unknown[]) => R);
+import { RNGkind,  IRNGNormalTypeEnum, IRNGNormalTypeEnum } from 'lib-r-math.js'
+
+const normal = IRNGNormalTypeEnum.SUPER_DUPER;
+const uniform = IRNGNormalTypeEnum.BOX_MULLER;
+
+RNGkind({ uniform, normal }); //-> does not change sampleKind
+
+RNGkind(); // does not change anything but returns the current used RNG's and "sampleKind"
 ```
 
-#### R example
+### `setSeed`
 
-```R
-# raise each element by power of 2
-c(1,2,3,4)^2
-#[1]  1  4  9 16
-```
+Uses a single value to initialize the internal state of the currently selected uniform RNG.
 
-#### Javascript equivalent
+R console analog: `set.seed`
 
-```javascript
- const libR = require('lib-r-math.js');
- const { arrayrify } = libR.R;
-
- // create vectorize "/" operator
- const pow = arrayrify(Math.pow);
-
- pow(3, 4); // 81
-
- pow([3, 4, 5], 4); //81 256 625
-```
-
-REMOVED
-### `each`
-
-Functional analog to `Array.prototype.forEach`, but can also loop over object properties.
-The return type can be either an new array or a scalar (see `Example`).
-
-Example:
-
-```javascript
-const libR = require('lib-r-math.js');
-const { each } = libR.R;
-
-each(11)(v => console.log(v * 2)) ;
-
-// single element array result are forced to return scalar
-each([3])(v => console.log(v * 2));
-
-each([11, 12])( (v, idx) => console.log({ v, idx}));
-
-//looping over object properties
-each({ p:1, name:'myname' })( (value, key) => console.log(`${key}=${value}`))
-```
-
-REMOVED
-### `flatten` or `c` (alias)
-
-Analog to R's `c` function. Constructs a final array by (recursively) flattening and merging all of its arguments which can be a combination of scalars and arrays.
-
-Example:
-
-```javascript
-const libR = require('lib-r-math.js');
-
-// optionally rename as `c` to make it look like `R`
-const { c } = libR.R;
-
-c(-1, 0, [1], 'r', 'b', [2, 3, [4, 5]]);
-// [ -1, 0, 1, 'r', 'b', 2, 3, 4, 5 ]
-```
-
-REMOVED
-### `map`
-
-Functional analog to `Array.prototype.map`, but can also loop over object properties.
-The return type can be either an new array or a scalar (see `Example`).
-
-Example:
-
-```javascript
-const libR = require('lib-r-math.js');
-const { map } = libR.R;
-
-map(11)(v => v * 2);
-//22
-
-// single element array result are forced to return scalar
-map([3])(v => v * 2);
-//6
-
-map([11, 12])( (v, idx) => idx);
-// [0, 1]
-
-//looping over object properties
-map({ p:1, name:'myname' })( (value, key) => `${key}=${value}`)
-//["p=1", "name=myname"]
-```
-
-REMOVED
-### `selector`
-
-Filter function generator, to be used with `Array.prototype.filter` to pick elements based on their order (zero based index) in the array.
-Usually used together with `seq` to pick items from an array.
-
-**NOTE:** Always returns an instance of Array.
-
-Example:
-
-```javascript
-const libR = require('lib-r-math.js');
-const { selector } = libR.R;
-
-['an', 'array', 'with', 'some', 'elements'].filter(
-  selector([0, 2, 3]) // select values at these indexes
-);
-//[ 'an', 'with', 'some']
-
-['an', 'array', 'with', 'some', 'elements'].filter(
-  selector(3) // just one value at position 3
-);
-//['some']
-
-const seq = libR.R.seq()(); // see "seq" for defaults.
-
-[7, 1, 2, 9, 4, 8, 16].filter(
-  selector(
-    seq(0, 6, 2) // creates an array [ 0, 2, 4, 6]
-  )
-);
-// returns [7, 2, 4, 16]
-```
-
-REMOVED
-### `seq`
-
-_typescript decl_
+Rjs _typescript decl_
 
 ```typescript
-const seq = (adjustUp = 0) => (adjustDown = adjust) => (
-  start: number,
-  end: number = 1,
-  step: number = 1
-) => number[];
+function setSeed(s: number): void;
 ```
 
-R analog to the `seq` function in R. Generates an array between `start` and `end` (inclusive) using `step` (defaults to `1`). The JS implementation ignores the **sign** of the
-`step` argument and only looks at its absolute value.
+Argument `s` is coerced to an unsigned 32 bit integer 
 
-Like in R, If `(end-start)/step` is not an exact integer, `seq` will not overstep the bounds while counting up (or down).
+### `randomSeed`
 
-Arguments:
+R console analog: `.Random.seed`
 
-* `adjustUp`: (default 0). If `end` >= `start` then `adjust` value is added to every element in the array.
-* `adjustDown`: (default 0). If `start` >= `end` then `adjustMin` value is added to every element in the array.
-* `start`: (inclusive) the sequence start value
-* `stop`: defaults to `1`. (inclusive) the sequence stop value if possible with `step`
-* `step`: defaults to `1`, sign is ignored. Sign is inferred from the values of `start` and `stop`.
+Rjs _typescript decl_
 
-First we look how `seq` works in R.
-
-_R_
-
-```R
-seq(1,3,0.5);
-#[1] 1.0 1.5 2.0 2.5 3.0
-
-seq(7,-2, -1.3);
-#[1]  7.0  5.7  4.4  3.1  1.8  0.5 -0.8
+```typescript
+function randomSeed(internalState?: Uint32Array | Int32Array): Uint32Array | Int32Array | never;
 ```
 
-_Equivalent in Javascript_
+- If no arguments is used, it will return the internal RNG state of the currently selected uniform RNG
+- If an argument is provided, it will use this value to set the internal RNG state of the currently selected uniform RNG
 
-```javascript
-const libR = require('lib-r-math.js');
 
-// seqA is a sequence generator
-let seqA = libR.R.seq()();
-
-seqA(1, 5);
-//[ 1, 2, 3, 4, 5 ]
-
-seqA(5, -3);
-//[ 5, 4, 3, 2, 1, 0, -1, -2, -3 ]
-
-seqA(3)
-//[3, 2, 1]
-
-//add 1 if stepping upwards, add -2 if stepping downwards
-let seqB = libR.R.seq(1)(-2);
-
-seqB(0, 4); //range will be adjusted with '1'
-//[ 1, 2, 3, 4]
-seqB(6, 5, 0.3); //range will be adjusted with '-2', step
-//[4, 3.7, 3.4, 3.1]
-
-```
-
-REMOVED
-### `multiplex`
-
-Turns an existing javascript function into one that follows the [R argument recycling rule](https://cran.r-project.org/doc/manuals/r-release/R-intro.html#The-recycling-rule).
-
-Multiplexes the value of several array arguments into one array with the
-use of a mapping function.
-
-The length of the result is the maximum of the lengths of the parameters.
-All parameters are recycled to that length.
-
-```javascript
-const libR = require('lib-r-math.js');
-
-const { multiplex, c } = libR.R;
-
-//make the build in Math function follow R-recycling rule
-const pow = multiplex(Math.pow);
-//
-pow([1, 2, 3, 4], 2); //squared
-//[ 1, 4, 9, 16 ]
-
-//powers of 2
-pow(2, [2, 3, 4])
-    //[ 4, 8, 16 ]
-
-//R recycling rule
-pow([2, 3], [2, 3, 4, 5]);
-//[4, 27, 16, 243]
-//4 = 2 ^ 2
-//27 = 3 ^ 3
-//16 = 2 ^ 4
-//243 = 3 ^ 5
-```
-
-REMOVED
-### `timeseed`
-
-Generates a number based by on your system time clock. Intended use is with
-PRNG (re)initialization. Its a synchronized function that will wait for some milliseconds before sampling the system clock and returning a result.
-
-Usage:
-
-```javascript
-const libR = require('lib-r-math.js');
-
-const { rng: { timeseed } } = libR;
-
-timeseed();
-//2632999169 , based on timestamp
-```
-
-WAYPOINT: 19/12/2022 I AM HERE
-
-# Uniform Pseudo Random Number Generators
-
-#### Summary
-
-In 'R', the functions that generate random deviates of distributions (Example: Poisson (`rpois`), Student-t (`rt`), Normal (`rnorm`), etc) use uniform PRNG's directly or indirectly (as wrapped in a normal distributed PRNG). This section discusses the uniform distributed PRNG's that have been ported from R to JS.
-
-## The 7 Uniform Random Number Generators
-
-All 7 uniform random generators have been ported and tested to yield exactly the
-same as their R counterpart.
-
-ADD: global unif and norm are added and can be set via "setSeed" and "RNGkind"
-#### Improvements compared to R
-
-In R it is impossible to use different types of uniform random generators at the
-same time because of a global shared seed buffer. In our port every random
-generator has its own buffer and can therefore be used concurrently.
-
-#### General Usage
-
-All uniform random generator classes have these public methods:
-
-1. `init`: set the random generator seed. Same as R `set.seed()`
-2. `seed (read/write property)`: get/set the current seed values as an array. Same as R `.Random.seed`.
-3. `unif_random`: get a random value, same as `runif(1)` in R
-
-#### "Mersenne Twister"
-
-From Matsumoto and Nishimura (1998). A twisted GFSR with period `2^19937 - 1`
-and equi-distribution in 623 consecutive dimensions (over the whole period). The
-_`seed`_ is a 624-dimensional set of 32-bit integers plus a current position in
-that set.
-
-usage example:
-
-```javascript
-const libR = require('lib-r-math.js');
-const {
-    R: { numberPrecision },
-    rng: { MersenneTwister, timeseed }
-} = libR;
-
-//helpers
-const precision = numberPrecision(9); //9 digits accuracy
-
-//example
-const mt = new MersenneTwister(12345); // initialize with seed = 12345
-
-//example
-mt.init(timeseed()); // Use seed derived from system clock
-
-//example
-mt.init(0); // re-initialize with seed = 0
-
-// show first 8 values of the seed buffer of the mt instance.
-mt.seed.slice(0, 8);
-/*[ 624,   1280795612,  -169270483,  -442010614,  -603558397,  -222347416,
-  1489374793, 865871222 ]
-*/
-
-const rmt1 = mt.unif_rand(5);
-precision(rmt1);
-//[ 0.8966972, 0.265508663, 0.3721239, 0.572853363, 0.90820779 ]
-```
-
-_Equivalent in R_
-
-```R
-RNGkind("Mersenne-Twister")
-set.seed(0)
-
-#show first 8 values of the seed buffer
-.Random.seed[2:9]
-#[1]        624 1280795612 -169270483 -442010614 -603558397 -222347416 1489374793
-#[8]  865871222
-
-runif(5)
-#[1] 0.8966972 0.2655087 0.3721239 0.5728534
-#[5] 0.9082078
-```
-
-#### "Wichmann-Hill"
-
-The seed, is an integer vector of length 3, where each element is in `1:(p[i] - 1)`, where p is the length 3 vector of primes, `p = (30269, 30307, 30323)`. The
-`Wichmann–Hill` generator has a cycle length of `6.9536e12 = ( 30269 * 30307 * 30323 )`, see Applied Statistics (1984) 33, 123 which corrects the original
-article).
-
-usage example:
-
-```javascript
-const libR = require('lib-r-math.js');
-const {
-  rng: { WichmannHill, timeseed },
-  R: { numberPrecision }
-} = libR;
-
-// some helpers
-
-const precision = numberPrecision(9);
-
-// Some options on seeding given below
-const wh = new WichmannHill(1234); // initialize seed with 1234 on creation (default 0)
-//
-wh.init(timeseed()); // re-init seed with a random seed based on timestamp
-
-wh.init(0); // re-init seed to zero
-wh.seed; // show seed
-//[ 2882, 21792, 10079 ]
-const rwh1 = wh.unif_rand(5);
-precision(rwh1);
-//[ 0.462553151, 0.26582675, 0.57721078, 0.510793206, 0.337560559 ]
-```
-
-_in R console_:
-
-```R
-> RNGkind("Wichmann-Hill")
-> set.seed(0)
-> runif(5)
-[1] 0.4625532 0.2658268 0.5772108 0.5107932
-[5] 0.3375606
-```
-
-#### "Marsaglia-Multicarry"
-
-A multiply-with-carry RNG is used, as recommended by George Marsaglia in his
-post to the mailing list ‘sci.stat.math’. It has a period of more than 2^60 and
-has passed all tests (according to Marsaglia). The seed is two integers (all
-values allowed).
-
-usage example:
-
-```javascript
-const libR = require('lib-r-math.js');
-const {
-    rng: { MarsagliaMultiCarry, timeseed },
-    R: { numberPrecision }
-} = libR;
-
-//usefull helpers
-const precision = numberPrecision(9); //9 significant digits
-
-// Some options on seeding given below
-const mmc = new MarsagliaMultiCarry(1234); // use seed = 1234 on creation
-
-mmc.init(timeseed());
-mmc.init(0); // also, defaults to '0' if seed is not specified
-mmc.seed;
-//[ -835792825, 1280795612 ]
-
-const rmmc = mmc.unif_rand(5);
-precision(rmmc);
-//[ 0.169153755, 0.53154353, 0.594605297, 0.233315406, 0.45765618 ]
-```
-
-_in R console_:
-
-```R
-> RNGkind("Marsaglia-Multicarry")
-> set.seed(0)
-# we cannot access the PRNG directly
-# we need to use runif wrapper.
-> runif(5)
-[1] 0.1691538 0.5315435 0.5946053 0.2333154
-[5] 0.4576562
-```
-
-#### "Super Duper"
-
-Marsaglia's famous Super-Duper from the 70's. This is the original version which
-does not pass the `MTUPLE` test of the `Diehard` battery. It has a period of about
-4.6\*10^18 for most initial seeds. The seed is two integers (all values allowed
-for the first seed: the second must be odd).
-
-_We use the implementation by Reeds et al (1982–84)._
-
-usage example:
-
-```javascript
-const libR = require('lib-r-math.js');
-const {
-    rng: { SuperDuper, timeseed },
-    R: { seq, numberPrecision }
-} = libR;
-
-//usefull helpers
-const precision = numberPrecision(9); //9 significant digits
-
-// Seeding possibilities shown below
-const sd = new SuperDuper(1234); // use seed = 1234 on creation
-sd.init(timeseed()); // re-initialize with random seed based on timestamp
-sd.init(0); // re-initialize with seed = 0.
-//
-sd.seed;
-//[ -835792825, 1280795613 ]
-
-const rsd1 = sd.unif_rand(5);
-precision(rsd1);
-//[ 0.640403562, 0.592731255, 0.412968712, 0.187729399, 0.267905811 ]
-```
-
-_in R console_:
-
-```R
-> RNGkind("Super-Duper")
-> set.seed(0)
-> runif(5)
-[1] 0.6404036 0.5927313 0.4129687 0.1877294
-[5] 0.2679058
-```
-
-#### "Knuth TAOCP"
-
-An earlier version from Knuth (1997).
-
-The 2002 version was not backwards compatible with the earlier version: the
-initialization of the GFSR from the seed was altered. R did not allow you to
-choose consecutive seeds, the reported ‘weakness’, and already scrambled the
-seeds.
-
-usage example:
-
-```javascript
-const libR = require('lib-r-math.js');
-const {
-    rng: { KnuthTAOCP, timeseed },
-    R: { numberPrecision }
-} = libR;
-
-//usefull helpers
-const precision = numberPrecision(9); //9 significant digits
-
-// Seeding possibilities shown below
-const kn97 = new KnuthTAOCP(1234); // use seed = 1234 on creation
-kn97.init(timeseed()); // re-initialize with random seed based on timestamp
-kn97.init(0); // re-initialize with seed = 0.
-
-kn97.seed;
-// 101 unsigned integer array, only shown the first few values are shown
-/*[ 673666444,
-  380305043,
-  1062889978,
-  926003693,
- .
- .]*/
-
-const rkn97 = kn97.unif_rand(5);
-// limit precision to 9 digits
-precision(rkn97);
-//[ 0.627400767, 0.354186672, 0.989893431, 0.862408143, 0.662299205 ]
-```
-
-<details>
-  <summary><b>same example in R</b> (click to show)</summary>
-
-```R
-> RNGkind("Knuth-TAOCP")
-> set.seed(0)
-> runif(5)
-[1] 0.6274008 0.3541867 0.9898934 0.8624081 0.6622992
-```
-
-</details>
-
-#### "Knuth TAOCP 2002"
-
-A 32-bit integer GFSR using lagged Fibonacci sequences with subtraction. That
-is, the recurrence used is
-
-```R
-X[j] = (X[j-100] - X[j-37]) mod 2^30
-```
-
-and the ‘seed’ is the set of the 100 last numbers (actually recorded as 101
-numbers, the last being a cyclic shift of the buffer). The period is around
-2<sup>129</sup>.
-
-usage example:
-
-```javascript
-const libR = require('lib-r-math.js');
-const {
-    rng: { KnuthTAOCP2002, timeseed },
-    R: { numberPrecision }
-} = libR;
-
-//some helpers
-const precision = numberPrecision(9);
-
-// Seeding possibilities shown below
-const kt2002 = new KnuthTAOCP2002(1234); // use seed = 1234 on creation
-
-kt2002.init(timeseed()); //re-initialize with random seed based on timestamp
-
-kt2002.init(0); //re-initialize with seed = 0
-kt2002.seed;
-// 101 unsigned integer array
-//[ 481970911,
-//  634898052,
-//  994481106,
-//  607894626,
-//  1044251579,
-//  763229919,
-//  638368738,
-// .
-// .]
-const kt02 = kt2002.unif_rand(5);
-precision(kt02);
-//[ 0.195819038, 0.753866884, 0.472411247, 0.193160437, 0.19501841 ]
-```
-
-<details>
-  <summary><b>same example in R</b> (click to show)</summary>
-
-```R
-> RNGkind("Knuth-TAOCP-2002")
-> set.seed(0)
-> runif(5)
-[1] 0.1958190 0.7538669 0.4724112 0.1931604
-[5] 0.1950184
-```
-
-</details>
-
-#### "L'Ecuyer-CMRG":
-
-A ‘combined multiple-recursive generator’ from L'Ecuyer (1999), each element of
-which is a feedback multiplicative generator with three integer elements: thus
-the seed is a (signed) integer vector of length 6. The period is around 2^191.
-
-The 6 elements of the seed are internally regarded as 32-bit unsigned integers.
-Neither the first three nor the last three should be all zero, and they are
-limited to less than 4294967087 and 4294944443 respectively.
-
-This is not particularly interesting of itself, but provides the basis for the
-multiple streams used in package parallel.
-
-usage example:
-
-```javascript
-const libR = require('lib-r-math.js');
-const {
-    rng: { LecuyerCMRG, timeseed },
-    R: { numberPrecision }
-} = libR;
-
-//some helpers
-const precision = numberPrecision(9);
-
-// Seeding possibilities shown below
-const lc = new LecuyerCMRG(1234);
-
-lc.init(timeseed()); //re-initialize with random seed based on timestamp
-
-lc.init(0); //re-initialize with seed = 0
-lc.seed;
-/*
-[ -835792825,
-  1280795612,
-  -169270483,
-  -442010614,
-  -603558397,
-  -222347416 ]
-*/
-const lc1 = lc.unif_rand(5);
-precision(lc1);
-//[ 0.332927492, 0.890352618, 0.163963441, 0.299050824, 0.395239092 ]
-```
-
-_in R console_:
-
-```R
-> RNGkind("L'Ecuyer-CMRG")
-> set.seed(0)
-> .Random.seed[2:7]  #show the seeds
-[1] -835792825 1280795612 -169270483 -442010614
-[5] -603558397 -222347416
-
-#pick 6 random numbers
-#same numbers as generated in javascript
-> runif(5)
-[1] 0.3329275 0.8903526 0.1639634 0.2990508
-[5] 0.3952391
-```
-
-## Normal distributed Random Number Generators
-
-#### Summary
-
-This section discusses the `normal distributed PRNG's` that have been ported from R to JS.
-
-All 6 `normal random generators` have been ported and tested to yield exactly the same as their R counterpart.
-
-#### General Use
-
-All normal random generator adhere to the same principles:
-
-1. A constructor that takes an instance of a uniform PRNG as an argument
-2. A function `norm_random`: get a random value, same as `rnorm(1)` in R.
-3. A function `unif_random`: the underlying _uniform_ PRNG.
-4. The default argument for the constructor for _normal_ PRNG is : `Mersenne-Twister`.
-
-5. The class instance property `rng` contains the wrapped _uniform_ PRNG instance.
-5. All PRNG producing normal variates are packaged under the JS library name space `rng.normal`.
-
-#### "Ahrens Dieter"
-
-Ahrens, J. H. and Dieter, U. (1973) Extensions of Forsythe's method for random
-sampling from the normal distribution. Mathematics of Computation 27, 927-937.
-
-example usage:
-
-```javascript
-const libR = require('lib-r-math.js');
-const {
-    rng: {
-        SuperDuper,
-        normal: { AhrensDieter }
-    },
-    R: { numberPrecision }
-} = libR;
-
-//helper
-const precision = numberPrecision(9);
-
-// explicit use of uniform PRNG
-const sd = new SuperDuper(0);
-const ad1 = new AhrensDieter(sd);
-
-// At any time reset normal PRNG seed via wrapped uniform.
-sd.init(9987);
-ad1.rng.init(9987); //same as above
-
-// uses default uniform PRNG "MersenneTwister" with seed 0
-const ad2 = new AhrensDieter();
-
-// reference to uniform PRNG under rng property
-ad2.rng.init(0);
-
-// bleed the normal PRNG
-const rngAd = ad2.norm_rand(5);
-precision(rngAd);
-//[ -1.17616753, 0.674117732, 1.06414352, -0.143897298, -1.2311498 ]
-
-// its still possible to bleed the uniform PRNG from the normal PRNG
-ad2.unif_rand();
-//0.2016819310374558
-
-ad2.rng.unif_rand();
-//0.8983896849676967
-```
-
-_in R console_
-
-```R
-> RNGkind("Mersenne-Twister",normal.kind="Ahrens-Dieter")
-> set.seed(0)
-> rnorm(5)
-[1] -1.1761675  0.6741177  1.0641435 -0.1438973
-[5] -1.2311498
-> runif(2)
-[1] 0.2016819 0.8983897
-```
-
-#### Box Muller
-
-Box, G. E. P. and Muller, M. E. (1958) A note on the generation of normal random
-deviates. Annals of Mathematical Statistics 29, 610–611.
-
-Example usage:
-
-```javascript
-const libR = require('lib-r-math.js');
-
-const {
-    rng: {
-        SuperDuper,
-        normal: { BoxMuller }
-    },
-    R: { numberPrecision }
-} = libR;
-
-// helper
-const precision = numberPrecision(9);
-
-const sd = new SuperDuper(0);
-const bm1 = new BoxMuller(sd);
-
-// At any time reset normal PRNG seed, with the reference to uniform PRNG
-sd.init(0);
-
-// uses default uniform PRNG: MersenneTwister with seed 0
-const bm2 = new BoxMuller();
-
-// reference to uniform PRNG under rng property
-bm2.rng.init(0);
-// bleed the normal PRNG
-const bm = bm2.norm_rand(5);
-precision(bm);
-//[ 1.29738758, -0.984378527, -0.732798867, 0.759774198, 1.49998876 ]
-
-// its possible to bleed the uniform PRNG from the normal PRNG
-bm2.unif_rand();
-//0.8983896849676967
-
-bm2.rng.unif_rand();
-//0.944675268605351
-```
-
-_R equivalent_
-
-```R
-> RNGkind("Mersenne-Twister",normal.kind="Box-Muller")
-> set.seed(0)
-> rnorm(5)
-[1]  1.2973876 -0.9843785 -0.7327989  0.7597742
-[5]  1.4999888
-> runif(2)
-[1] 0.8983897 0.9446753
-```
-
-#### Buggy Kinderman Ramage
-
-Kinderman, A. J. and Ramage, J. G. (1976) Computer generation of normal random variables. Journal of the American Statistical Association 71, 893-896.
-
-The Kinderman-Ramage generator used in versions prior to 1.7.0 (now called "Buggy") had several approximation errors and should only be used for reproduction of old results.
-
-example usage:
-
-```javascript
-const libR = require('lib-r-math.js');
-const {
-    R: { numberPrecision },
-    rng: { SuperDuper, normal: { BuggyKindermanRamage } }
-} = libR;
-//helper
-const precision = numberPrecision(9);
-
-// Possible to arbitraty uniform PRNG source (example: SuperDuper)
-const sd = new SuperDuper(0);
-const bkm1 = new BuggyKindermanRamage(sd);
-
-// At any time reset normal PRNG seed, with the reference to uniform PRNG
-sd.init(0);
-bkm1.rng.init(0); //same as above
-
-// uses default uniform PRNG new MersenneTwister with seed 0
-const bkm2 = new BuggyKindermanRamage();
-
-// reference to uniform PRNG under rng property
-bkm2.rng.init(0);
-
-// bleed the normal PRNG
-const bk = bkm2.norm_rand(5);
-precision(bk);
-//[ 0.3216151, 1.23251561, 0.280369528, -1.17519641, -1.60471361 ]
-
-// its possible to bleed the uniform PRNG from the normal PRNG
-bkm2.unif_rand();
-//0.17655675252899528
-
-bkm2.rng.unif_rand();
-//0.6870228466577828
-```
-
-_in R Console_
-
-```R
-RNGkind("Mersenne-Twister",normal.kind="Buggy Kinderman-Ramage");
-set.seed(0);
-rnorm(5);
-#[1]  0.3216151  1.2325156  0.2803695 -1.1751964
-#[5] -1.6047136
-
-runif(2);
-#[1] 0.1765568 0.6870228
-```
-
-#### Inversion
-
-Inverse transform sampling [wiki](https://en.wikipedia.org/wiki/Inverse_transform_sampling)
-
-example usage:
-
-```javascript
-const libR = require('lib-r-math.js');
-// Possible to arbitraty uniform PRNG source (example: SuperDuper)
-const {
-    rng: { SuperDuper, normal: { Inversion } },
-    R: { numberPrecision }
-} = libR;
-//helper
-const precision = numberPrecision(9);
-
-const sd = new SuperDuper(0);
-const inv1 = new Inversion(sd);
-// At any time reset normal PRNG seed, with the reference to uniform PRNG
-sd.init(0);
-
-// uses as default uniform PRNG "MersenneTwister" with seed 0;
-const inv2 = new Inversion();
-
-// reference to uniform PRNG under rng property
-inv2.rng.init(0);
-
-// bleed the normal PRNG
-const in2 = inv2.norm_rand(5);
-precision(in2);
-//[ 1.26295428, -0.326233361, 1.32979926, 1.27242932, 0.414641434 ]
-
-// its possible to bleed the uniform PRNG from the normal PRNG
-inv2.unif_rand();
-//0.061786270467564464
-
-inv2.rng.unif_rand();
-//0.20597457489930093
-```
-
-_in R console_
-
-```R
-> RNGkind("Mersenne-Twister",normal.kind="Inversion")
-> set.seed(0)
-> rnorm(5)
-[1]  1.2629543 -0.3262334  1.3297993  1.2724293
-[5]  0.4146414
-> runif(2)
-[1] 0.06178627 0.20597457
-```
-
-#### Kinderman Ramage
-
-Kinderman, A. J. and Ramage, J. G. (1976) Computer generation of normal random variables. Journal of the American Statistical Association 71, 893-896.
-
-_Non "buggy" version_
-
-Example usage:
-
-```javascript
-const libR = require('lib-r-math.js');
-const {
-    rng: {
-        SuperDuper,
-        normal: { KindermanRamage }
-    },
-    R: { numberPrecision }
-} = libR;
-
-//helper
-const precision = numberPrecision(9);
-
-const sd = new SuperDuper(0);
-const km1 = new KindermanRamage(sd);
-
-// At any time reset normal PRNG seed, with the reference to uniform PRNG
-sd.init(1234);
-km1.rng.init(1234); // same as above
-
-// uses default uniform PRNG MersenneTwister with seed "0"
-const km2 = new KindermanRamage();
-
-km2.rng.init(0); // at any time reset PRNG with a new seed.
-
-// bleed the normal PRNG
-const k2 = km2.norm_rand(5);
-precision(k2);
-//[ 0.3216151, 1.23251561, 0.280369528, -1.17519641, -1.60471361 ]
-
-// it's possible to bleed the uniform PRNG from the normal PRNG
-km2.unif_rand();
-//0.17655675252899528
-
-km2.rng.unif_rand();
-//0.6870228466577828
-```
-
-_in R console_
-
-```R
-> RNGkind("Mersenne-Twister",normal.kind="Kinder")
-> set.seed(0)
-> rnorm(5)
-[1]  0.3216151  1.2325156  0.2803695 -1.1751964
-[5] -1.6047136
-> runif(2)
-[1] 0.1765568 0.6870228
->
-```
-
-## Normal and Uniform distributions
-
-#### Summary
-
-In the Section [1](#uniform-pseudo-random-number-generators)
-and [2](#normal-distributed-random-number-generators)
-we discussed uniform and normal PRNG classes. These classes can be used by themselves but mostly intended to be consumed to generate
-random numbers with a particular distribution (like `Uniform`, `Normal`, `Gamma`,
-`Weibull`, `Chi-square` etc).
+YOU ARE HERE I AM CALLING IT A DAY
+## Distributions
 
 ### Uniform distribution
 
-`dunif, qunif, punif, runif`
+- `dunif`: density function
+- `punif`: cummulative distribution
+- `qunif`: quantile function
+- `runif`: generate random deviates in bulk
+- `runifOne`: generate random deviates one per time
+
+Uses the RNG generator set by `RNGkind` function.
+
+Rjs _typescript decl_
+
+```typescript
+function dunif(x: number, min = 0, max = 1, log = false): number
+
+function punif(q: number, min = 0, max = 1, lowerTail = true, logP = false): number
+
+function qunif(p: number, min = 0, max = 1, lowerTail = true, logP = false): number
+
+function runif(n: number, min = 0, max = 1): Float64Array
+
+function runifOne(min: number, max: number): number
+```
+
+arguments:
+
+- `x, q`: quantiles
+- `p`: probability
+- `n`: number of observations
+- `min, max`: lower and upper limits of the distribution. Must be finite.
+- `log, logP`: if TRUE, probabilities p are given as log(p).
+- `lowerTail`: if TRUE (default), probabilities are P[X ≤ x] otherwise, P[X > x].
+
+Example:
+
+```javascript
+import { dunif } from 'lib-r-math.js';
+
+dunif(1.8, 1, 4, true);
+// -> -1.098612 (log of 0.33333)
+```
+
+I AM HERE
+
 
 See [R doc](http://stat.ethz.ch/R-manual/R-patched/library/stats/html/Uniform.html)
 
 These functions are created with the factory method `Uniform` taking as argument a uniform PRNG. Defaults to [Mersenne-Twister](#mersenne-twister).
 
-Usage:
 
-```javascript
-const libR = require('lib-r-math.js');
-const {
-    Uniform,
-    rng: { SuperDuper }
-} = libR;
 
-//Create Uniform family of functions using "SuperDuper"
-const uni1 = Uniform(new SuperDuper(0));
-
-// Create Uniform family of functions using default "Mersenne-Twister"
-const uni2 = Uniform();
-
-// functions exactly named as in `R`
-const { runif, dunif, punif, qunif } = uni2;
-```
 
 #### `dunif`
 
@@ -1366,17 +465,17 @@ declare function dunif(
 ): number | number[];
 ```
 
-* `x`: scalar or vector of quantiles
-* `min, max` lower and upper limits of the distribution. Must be finite.
-* `asLog` if `true`, results are given as ln.
+- `x`: scalar or vector of quantiles
+- `min, max` lower and upper limits of the distribution. Must be finite.
+- `asLog` if `true`, results are given as ln.
 
 Example:
 
 ```javascript
-const libR = require('lib-r-math.js');
+const libR = require("lib-r-math.js");
 const {
-    Uniform,
-    R: { numberPrecision, c }
+  Uniform,
+  R: { numberPrecision, c },
 } = libR;
 
 //helper
@@ -1416,18 +515,18 @@ declare function punif(
 ): number | number[];
 ```
 
-* `x`: scalar or vector of quantiles
-* `min, max`: lower and upper limits of the distribution. Must be finite.
-* `lowerTail`: if TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
-* `logP`: if `true`, probabilities p are given as ln(p).
+- `x`: scalar or vector of quantiles
+- `min, max`: lower and upper limits of the distribution. Must be finite.
+- `lowerTail`: if TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
+- `logP`: if `true`, probabilities p are given as ln(p).
 
 Example:
 
 ```javascript
-const libR = require('lib-r-math.js');
+const libR = require("lib-r-math.js");
 const {
-    Uniform,
-    R: { numberPrecision }
+  Uniform,
+  R: { numberPrecision },
 } = libR; // use default Mersenne-Twister PRNG
 
 //helper
@@ -1472,18 +571,18 @@ declare function qunif(
 ): number | number[];
 ```
 
-* `p`: scalar or vector of quantiles
-* `min, max` lower and upper limits of the distribution. Must be finite.
-* `lowerTail` if `true` (default), probabilities are P[X ≤ x], otherwise, P[X > x].
-* `logP` if `true`, probabilities p are given as ln(p).
+- `p`: scalar or vector of quantiles
+- `min, max` lower and upper limits of the distribution. Must be finite.
+- `lowerTail` if `true` (default), probabilities are P[X ≤ x], otherwise, P[X > x].
+- `logP` if `true`, probabilities p are given as ln(p).
 
 Example:
 
 ```javascript
-const libR = require('lib-r-math.js');
+const libR = require("lib-r-math.js");
 const {
-    Uniform,
-    R: { numberPrecision, multiplex }
+  Uniform,
+  R: { numberPrecision, multiplex },
 } = libR;
 
 //helper
@@ -1519,18 +618,18 @@ declare function runif(
 ): number | number[];
 ```
 
-* `n`: number of deviates. Defaults to 1.
-* `min, max` lower and upper limits of the distribution. Must be finite.
+- `n`: number of deviates. Defaults to 1.
+- `min, max` lower and upper limits of the distribution. Must be finite.
 
 Example:
 
 ```javascript
-const libR = require('lib-r-math.js');
+const libR = require("lib-r-math.js");
 
 const {
-    Uniform,
-    rng: { LecuyerCMRG },
-    R: { numberPrecision }
+  Uniform,
+  rng: { LecuyerCMRG },
+  R: { numberPrecision },
 } = libR;
 
 //helper
@@ -1572,7 +671,7 @@ These functions are created with the factory method `Normal` taking as optional 
 Usage:
 
 ```javascript
-import 'lib-r-math.js';
+import "lib-r-math.js";
 
 //specify explicit PRNG's
 const norm1 = Normal(new rng.AhrensDieter(new rng.SuperDuper(1234)));
@@ -1591,18 +690,13 @@ The density function of the [Normal distribution][wiki-norm]. See [R manual][r-m
 _typescript decl_
 
 ```typescript
-declare function dnorm(
-  x: number,
-  mu = 0,
-  sd = 1,
-  log = false
-): number;
+declare function dnorm(x: number, mu = 0, sd = 1, log = false): number;
 ```
 
-* `x`:scalar or array of quantiles
-* `mu`: mean, default `0`.
-* `sd`: standard deviation, default `1`.
-* `log`: give result as ln(..) value, default `false`
+- `x`:scalar or array of quantiles
+- `mu`: mean, default `0`.
+- `sd`: standard deviation, default `1`.
+- `log`: give result as ln(..) value, default `false`
 
 <details>
   <summary><b>Example:</b> (click to show)</summary>
@@ -1667,6 +761,7 @@ dnorm(x, 0,1, TRUE);
 # [1]       -Inf       -Inf        NaN -8.9189385 -5.4189385 -2.9189385
 # [7] -1.4189385 -0.9189385 -1.4189385 -2.9189385 -5.4189385 -8.9189385
 ```
+
 </details>
 
 #### `pnorm`
@@ -1685,11 +780,11 @@ declare function pnorm(
 ): number;
 ```
 
-* `q`:scalar or array of quantiles
-* `mu`: mean (default 0)
-* `sd`: standard deviation (default 1)
-* `lowerTail`: if `true` (default), probabilities are P[X ≤ x], otherwise, P[X > x].
-* `log`: give result as log value
+- `q`:scalar or array of quantiles
+- `mu`: mean (default 0)
+- `sd`: standard deviation (default 1)
+- `lowerTail`: if `true` (default), probabilities are P[X ≤ x], otherwise, P[X > x].
+- `log`: give result as log value
 
 <details>
   <summary><b>Example:</b> (click to show)</summary>
@@ -1733,6 +828,7 @@ pnorm(-1:1, lower.tail=FALSE);
 pnorm(-1:1, log.p= TRUE);
 #[1] -0.1727538 -0.6931472 -1.8410216
 ```
+
 </details>
 
 #### `qnorm`
@@ -1751,10 +847,10 @@ declare function qnorm(
 ): number;
 ```
 
-* `p`: probabilities (scalar or array).
-* `mu`: normal mean (default 0).
-* `sd`: standard deviation (default 1).
-* `logP`: probabilities are given as ln(p).
+- `p`: probabilities (scalar or array).
+- `mu`: normal mean (default 0).
+- `sd`: standard deviation (default 1).
+- `logP`: probabilities are given as ln(p).
 
 <details>
   <summary><b>Example:</b> (click to show)</summary>
@@ -1809,6 +905,7 @@ qnorm(p, 0, 2, FALSE);
 qnorm(log(p), 0, 2, FALSE, TRUE);
 #[1]      Inf  1.34898  0.00000 -1.34898     -Inf
 ```
+
 </details>
 
 #### `rnorm`
@@ -1821,20 +918,23 @@ _typescript decl_
 declare function rnorm(n = 1, mu = 0, sd = 1): number | number[];
 ```
 
-* `n`: number of deviates
-* `mu`: mean of the distribution. Defaults to 0.
-* `sd`: standard deviation. Defaults to 1.
+- `n`: number of deviates
+- `mu`: mean of the distribution. Defaults to 0.
+- `sd`: standard deviation. Defaults to 1.
 
 <details>
   <summary><b>Example:</b> (click to show)</summary>
 
 ```javascript
 //node
-const libR = require('lib-r-math.js');
+const libR = require("lib-r-math.js");
 //browser
-window.libR
+window.libR;
 
-const { Normal, R: { numberPrecision } } = libR //(or window.libR);
+const {
+  Normal,
+  R: { numberPrecision },
+} = libR; //(or window.libR);
 
 //helper
 const _9 = numberPrecision(9); // 9 digits
@@ -1842,7 +942,7 @@ const _9 = numberPrecision(9); // 9 digits
 //default Mersenne-Twister/Inversion
 const { rnorm, dnorm, pnorm, qnorm } = Normal();
 
-const Rnorm = chain(_9, rnorm)
+const Rnorm = chain(_9, rnorm);
 
 const r1 = Rnorm(5);
 //-> [ 1.26295428, -0.326233361, 1.32979926, 1.27242932, 0.414641434 ]
@@ -1867,6 +967,7 @@ rnorm(5,2,3)
 #[3]  1.1158387  1.9826985
 #[5]  9.2139602
 ```
+
 </details>
 
 ## Other Probability Distributions
@@ -1887,8 +988,14 @@ These functions are members of an object created by the `Beta` factory method. T
 Usage:
 
 ```javascript
-const libR = require('lib-r-math.js');
-const { Beta, rng: { SuperDuper, normal: { BoxMuller } } } = libR;
+const libR = require("lib-r-math.js");
+const {
+  Beta,
+  rng: {
+    SuperDuper,
+    normal: { BoxMuller },
+  },
+} = libR;
 
 // explicit use of PRNG's
 const explicitB = Beta(new BoxMuller(new SuperDuper(0))); //
@@ -1919,15 +1026,18 @@ declare function dbeta(
 ): number | number[];
 ```
 
-* `x`: scalar or array of quantiles. 0 <= x <= 1
-* `shape1`: non-negative `a` parameter of the Beta distribution.
-* `shape2`: non-negative `b` parameter of the Beta distribution.
-* `ncp`: non centrality parameter. _Note: `undefined` is different then `0`_
-* `asLog`: return result as ln(p)
+- `x`: scalar or array of quantiles. 0 <= x <= 1
+- `shape1`: non-negative `a` parameter of the Beta distribution.
+- `shape2`: non-negative `b` parameter of the Beta distribution.
+- `ncp`: non centrality parameter. _Note: `undefined` is different then `0`_
+- `asLog`: return result as ln(p)
 
 ```javascript
-const libR = require('lib-r-math.js');
-const { Beta, R: { numberPrecision } } = libR;
+const libR = require("lib-r-math.js");
+const {
+  Beta,
+  R: { numberPrecision },
+} = libR;
 
 //helpers, 9 digits precision
 const _9 = numberPrecision(9);
@@ -1948,12 +1058,7 @@ const d3 = _9(dbeta(0.4, 2, 2, 1, true));
 //0.252504851
 
 //4
-const d4 = _9(
-    dbeta(
-        [0, 0.2, 0.4, 0.8, 1, 1.2],
-        2,
-        2)
-);
+const d4 = _9(dbeta([0, 0.2, 0.4, 0.8, 1, 1.2], 2, 2));
 //[ 0, 0.96, 1.44, 0.96, 0, 0 ]
 ```
 
@@ -1992,20 +1097,20 @@ declare function pbeta(
 ): number | number[];
 ```
 
-* `p`: quantiles. 0 <= x <= 1
-* `shape1`: non-negative `a` parameter of the Beta distribution.
-* `shape2`: non-negative `b` parameter of the Beta distribution.
-* `ncp`: non centrality parameter. _Note: `undefined` is different then `0`_
-* `lowerTail`: if TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
-* `logP`: return probabilities as ln(p)
+- `p`: quantiles. 0 <= x <= 1
+- `shape1`: non-negative `a` parameter of the Beta distribution.
+- `shape2`: non-negative `b` parameter of the Beta distribution.
+- `ncp`: non centrality parameter. _Note: `undefined` is different then `0`_
+- `lowerTail`: if TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
+- `logP`: return probabilities as ln(p)
 
 Usage:
 
 ```javascript
-const libR = require('lib-r-math.js');
+const libR = require("lib-r-math.js");
 const {
-    Beta,
-    R: { multiplex, numberPrecision, seq: _seq }
+  Beta,
+  R: { multiplex, numberPrecision, seq: _seq },
 } = libR;
 
 //helpers
@@ -2087,18 +1192,21 @@ declare function qbeta(
 ): number | number[];
 ```
 
-* `p`: quantiles (scalar or array).
-* `shape1`: non-negative `a` parameter of the Beta distribution.
-* `shape2`: non-negative `b` parameter of the Beta distribution.
-* `ncp`: non centrality parameter. _Note: `undefined` is different then `0`_
-* `lowerTail`: if TRUE (default), _probabilities_ are P[X ≤ x], otherwise, P[X > x].
-* `logP`: return _probabilities_ as ln(p).
+- `p`: quantiles (scalar or array).
+- `shape1`: non-negative `a` parameter of the Beta distribution.
+- `shape2`: non-negative `b` parameter of the Beta distribution.
+- `ncp`: non centrality parameter. _Note: `undefined` is different then `0`_
+- `lowerTail`: if TRUE (default), _probabilities_ are P[X ≤ x], otherwise, P[X > x].
+- `logP`: return _probabilities_ as ln(p).
 
 Usage:
 
 ```javascript
-const libR = require('lib-r-math.js');
-const { Beta, R: { multiplex, numberPrecision } } = libR;
+const libR = require("lib-r-math.js");
+const {
+  Beta,
+  R: { multiplex, numberPrecision },
+} = libR;
 
 //helpers
 const ln = multiplex(Math.log);
@@ -2113,7 +1221,7 @@ const p = [0, 0.25, 0.5, 0.75, 1];
 const q1 = _9(qbeta(0, 99, 66));
 //0
 
-//2. 
+//2.
 const q2 = _9(qbeta(p, 4, 5));
 //[ 0, 0.329083427, 0.440155205, 0.555486315, 1 ]
 
@@ -2126,14 +1234,16 @@ const q4 = _9(qbeta(p, 4, 5, undefined, false)); //
 //[ 1, 0.555486315, 0.440155205, 0.329083427, 0 ]
 
 //5. same as [5] but, logP=true,
-const q5 = _9(qbeta(
+const q5 = _9(
+  qbeta(
     ln(p),
     4,
     5,
     undefined,
     false,
     true //p as ln(p)
-));
+  )
+);
 //[ 1, 0.555486315, 0.440155205, 0.329083427, 0 ]
 ```
 
@@ -2178,20 +1288,20 @@ declare function rbeta(
 ): number | number[];
 ```
 
-* `n`: number of deviates
-* `shape1`: non-negative `a` parameter of the Beta distribution.
-* `shape2`: non-negative `b` parameter of the Beta distribution.
-* `ncp`: non centrality parameter.
+- `n`: number of deviates
+- `shape1`: non-negative `a` parameter of the Beta distribution.
+- `shape2`: non-negative `b` parameter of the Beta distribution.
+- `ncp`: non centrality parameter.
 
 ```javascript
-const libR = require('lib-r-math.js');
+const libR = require("lib-r-math.js");
 const {
-    Beta,
-    rng: {
-        LecuyerCMRG,
-        normal: { Inversion }
-    },
-    R: { multiplex, numberPrecision }
+  Beta,
+  rng: {
+    LecuyerCMRG,
+    normal: { Inversion },
+  },
+  R: { multiplex, numberPrecision },
 } = libR;
 
 //helpers
@@ -2258,8 +1368,11 @@ These functions are members of an object created by the `Binomial` factory metho
 Usage:
 
 ```javascript
-const libR = require('lib-r-math.js');
-const { Binomial, rng: { LecuyerCMRG } } = libR;
+const libR = require("lib-r-math.js");
+const {
+  Binomial,
+  rng: { LecuyerCMRG },
+} = libR;
 
 // explicit use if PRNG
 const lc = new LecuyerCMRG(0);
@@ -2288,18 +1401,18 @@ declare function dbinom(
 ): number | number[];
 ```
 
-* `x`: scalar or array of quantiles.
-* `size`: number of trails
-* `p`: probability of success.
-* `asLog`: return result as ln(p)
+- `x`: scalar or array of quantiles.
+- `size`: number of trails
+- `p`: probability of success.
+- `asLog`: return result as ln(p)
 
 Usage:
 
 ```javascript
-const libR = require('lib-r-math.js');
+const libR = require("lib-r-math.js");
 const {
-    Binomial,
-    R: { numberPrecision, seq: _seq }
+  Binomial,
+  R: { numberPrecision, seq: _seq },
 } = libR;
 
 //helper, 9 digits precision
@@ -2363,19 +1476,19 @@ declare function pbinom(
 ): number | number[];
 ```
 
-* `q`: scalar or array of quantiles.
-* `size`: number of trails
-* `prob`: probability of success.
-* `lowerTail`: if TRUE (default), _probabilities_ are P[X ≤ x], otherwise, P[X > x].
-* `logP`: return result as ln(p)
+- `q`: scalar or array of quantiles.
+- `size`: number of trails
+- `prob`: probability of success.
+- `lowerTail`: if TRUE (default), _probabilities_ are P[X ≤ x], otherwise, P[X > x].
+- `logP`: return result as ln(p)
 
 Usage:
 
 ```javascript
-const libR = require('lib-r-math.js');
+const libR = require("lib-r-math.js");
 const {
-    Binomial,
-    R: { numberPrecision, seq: _seq }
+  Binomial,
+  R: { numberPrecision, seq: _seq },
 } = libR;
 
 //helper, 9 digits precision
@@ -2434,19 +1547,19 @@ declare function qbinom(
 ): number | number[];
 ```
 
-* `p`: scalar or array of quantiles.
-* `size`: number of trails
-* `prob`: probability of success.
-* `lowerTail`: if TRUE (default), _probabilities_ are P[X ≤ x], otherwise, P[X > x].
-* `LogP`: return result as ln(p)
+- `p`: scalar or array of quantiles.
+- `size`: number of trails
+- `prob`: probability of success.
+- `lowerTail`: if TRUE (default), _probabilities_ are P[X ≤ x], otherwise, P[X > x].
+- `LogP`: return result as ln(p)
 
 Usage:
 
 ```javascript
-const libR = require('lib-r-math.js');
+const libR = require("lib-r-math.js");
 const {
-    Binomial,
-    R: { multiplex, numberPrecision, seq: _seq }
+  Binomial,
+  R: { multiplex, numberPrecision, seq: _seq },
 } = libR;
 
 //helpers
@@ -2512,17 +1625,17 @@ declare function rbinom(
 ): number | number[];
 ```
 
-* `n`: number of deviates
-* `size`: number of trails
-* `prob`: probability of success.
+- `n`: number of deviates
+- `size`: number of trails
+- `prob`: probability of success.
 
 Usage:
 
 ```javascript
-const libR = require('lib-r-math.js');
+const libR = require("lib-r-math.js");
 const {
-    Binomial,
-    rng: { KnuthTAOCP2002 }
+  Binomial,
+  rng: { KnuthTAOCP2002 },
 } = libR;
 
 const kn = new KnuthTAOCP2002(1234);
@@ -2572,13 +1685,13 @@ These functions are members of an object created by the `NegativeBinomial` facto
 Usage:
 
 ```javascript
-const libR = require('lib-r-math.js');
+const libR = require("lib-r-math.js");
 const {
-    NegativeBinomial,
-    rng: {
-        SuperDuper,
-        normal: { BoxMuller }
-    }
+  NegativeBinomial,
+  rng: {
+    SuperDuper,
+    normal: { BoxMuller },
+  },
 } = libR;
 
 //explicit use PRNG's
@@ -2612,19 +1725,19 @@ declare function dnbinom(
 ): number | number[];
 ```
 
-* `x`: non-negative integer quantiles. Number of failures before reaching `size` successes.
-* `size`: target for number of successful trials, or dispersion parameter (the shape parameter of the gamma mixing distribution). Must be strictly positive, need not be integer.
-* `prob`: probability of success in each trial. 0 < prob <= 1
-* `mu`: alternative parametrization via mean: see [‘Details’ section]().
-* `asLog`: if `true`, probabilities p are given as ln(p).
+- `x`: non-negative integer quantiles. Number of failures before reaching `size` successes.
+- `size`: target for number of successful trials, or dispersion parameter (the shape parameter of the gamma mixing distribution). Must be strictly positive, need not be integer.
+- `prob`: probability of success in each trial. 0 < prob <= 1
+- `mu`: alternative parametrization via mean: see [‘Details’ section]().
+- `asLog`: if `true`, probabilities p are given as ln(p).
 
 Usage:
 
 ```javascript
-const libR = require('lib-r-math.js');
+const libR = require("lib-r-math.js");
 const {
-    NegativeBinomial,
-    R: { seq: _seq, numberPrecision }
+  NegativeBinomial,
+  R: { seq: _seq, numberPrecision },
 } = libR;
 
 //some helpers
@@ -2641,11 +1754,11 @@ const d1 = _9(dnbinom(x, 3, 0.5));
 //[ 0.125, 0.1875, 0.1171875, 0.0546875, 0.0219726562, 0.00805664062 ]
 
 //2. alternative presentation with `mu` = n*(1-p)/p
-const d2 = _9(dnbinom(x, 3, undefined, 3 * (1 - 0.5) / 0.5));
+const d2 = _9(dnbinom(x, 3, undefined, (3 * (1 - 0.5)) / 0.5));
 //[ 0.125, 0.1875, 0.1171875, 0.0546875, 0.0219726562, 0.00805664062 ]
 
 //3
-const d3 = _9(dnbinom(x, 3, undefined, 3 * (1 - 0.5) / 0.5, true));
+const d3 = _9(dnbinom(x, 3, undefined, (3 * (1 - 0.5)) / 0.5, true));
 /*[ -2.07944154, -1.67397643,  -2.14398006, -2.90612011,
     -3.8179565,  -4.82125861
 ]*/
@@ -2687,20 +1800,20 @@ _typescript decl_
   ): number|number[]
 ```
 
-* `q`: non-negative integer quantiles.
-* `size`: target for number of successful trials, or dispersion parameter (the shape parameter of the gamma mixing distribution). Must be strictly positive, need not be integer.
-* `prob`: probability of success in each trial. 0 < prob <= 1
-* `mu`: alternative parametrization via mean: see [‘Details’ section]().
-* `lowerTail`: if TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
-* `logP`: if `true`, probabilities p are given as ln(p).
+- `q`: non-negative integer quantiles.
+- `size`: target for number of successful trials, or dispersion parameter (the shape parameter of the gamma mixing distribution). Must be strictly positive, need not be integer.
+- `prob`: probability of success in each trial. 0 < prob <= 1
+- `mu`: alternative parametrization via mean: see [‘Details’ section]().
+- `lowerTail`: if TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
+- `logP`: if `true`, probabilities p are given as ln(p).
 
 Usage:
 
 ```javascript
-const libR = require('lib-r-math.js');
+const libR = require("lib-r-math.js");
 const {
-    NegativeBinomial,
-    R: { numberPrecision, seq: _seq, c }
+  NegativeBinomial,
+  R: { numberPrecision, seq: _seq, c },
 } = libR;
 
 //some helpers
@@ -2718,7 +1831,7 @@ const p1 = _9(pnbinom(x, 3, 0.5));
 //[ 0.125, 0.3125, 0.5, 0.65625, 0.7734375, 0.85546875, 0.91015625, 1 ]
 
 //2. alternative presentation of 1 with mu = n(1-p)/p
-const p2 = _9(pnbinom(x, 3, undefined, 3 * (1 - 0.5) / 0.5));
+const p2 = _9(pnbinom(x, 3, undefined, (3 * (1 - 0.5)) / 0.5));
 //[ 0.125, 0.3125, 0.5, 0.65625, 0.7734375, 0.85546875, 0.91015625, 1 ]
 
 //3
@@ -2779,20 +1892,20 @@ declare function qnbinom(
 ): number | number[];
 ```
 
-* `p`: probabilities (scalar or array).
-* `size`: target for number of successful trials, or dispersion parameter (the shape parameter of the gamma mixing distribution). Must be strictly positive, need not be integer.
-* `prob`: probability of success in each trial. 0 < prob <= 1
-* `mu`: alternative parametrization via mean: see [‘Details’ section]().
-* `lowerTail`: if TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
-* `logP`: if `true`, probabilities p are given as ln(p).
+- `p`: probabilities (scalar or array).
+- `size`: target for number of successful trials, or dispersion parameter (the shape parameter of the gamma mixing distribution). Must be strictly positive, need not be integer.
+- `prob`: probability of success in each trial. 0 < prob <= 1
+- `mu`: alternative parametrization via mean: see [‘Details’ section]().
+- `lowerTail`: if TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
+- `logP`: if `true`, probabilities p are given as ln(p).
 
 Usage:
 
 ```javascript
-const libR = require('lib-r-math.js');
+const libR = require("lib-r-math.js");
 const {
-    NegativeBinomial,
-    R: { numberPrecision, seq: _seq, multiplex }
+  NegativeBinomial,
+  R: { numberPrecision, seq: _seq, multiplex },
 } = libR;
 
 //some helpers
@@ -2854,17 +1967,20 @@ declare function rnbinom(
 ): number | number[];
 ```
 
-* `n`: ensemble size.
-* `size`: target of successful trials.
-* `prob`: probability of success in each trial. 0 < prob <= 1
+- `n`: ensemble size.
+- `size`: target of successful trials.
+- `prob`: probability of success in each trial. 0 < prob <= 1
 
 Usage:
 
 ```javascript
-const libR = require('lib-r-math.js');
+const libR = require("lib-r-math.js");
 const {
-    NegativeBinomial,
-    rng: { SuperDuper, normal: { BoxMuller } }
+  NegativeBinomial,
+  rng: {
+    SuperDuper,
+    normal: { BoxMuller },
+  },
 } = libR;
 
 //explicit use of RNG
@@ -2875,7 +1991,7 @@ const { dnbinom, pnbinom, qnbinom, rnbinom } = NegativeBinomial(bm);
 const r1 = rnbinom(7, 100, 0.5);
 //[ 94, 81, 116, 101, 71, 112, 85 ]
 
-//2. 
+//2.
 const r2 = rnbinom(7, 100, 0.1);
 //[ 889, 747, 1215, 912, 1105, 993, 862 ]
 
@@ -2885,7 +2001,7 @@ const r3 = rnbinom(7, 100, 0.9);
 
 //4
 bm.rng.init(98765); //set new seed
-const r4 = rnbinom(7, 100, undefined, 100 * (1 - 0.5) / 0.5);
+const r4 = rnbinom(7, 100, undefined, (100 * (1 - 0.5)) / 0.5);
 //[ 87, 120, 113, 107, 87, 95, 88 ]
 ```
 
@@ -2924,8 +2040,11 @@ These functions are members of an object created by the `Cauchy` factory method.
 Usage:
 
 ```javascript
-const libR = require('lib-r-math.js');
-const { Cauchy, rng: { WichmannHill } } = libR;
+const libR = require("lib-r-math.js");
+const {
+  Cauchy,
+  rng: { WichmannHill },
+} = libR;
 
 //explcit use of PRNG
 const wh = new WichmannHill(1234);
@@ -2956,18 +2075,18 @@ declare function dcauchy(
 ): number | number[];
 ```
 
-* `x`: scalar or array of quantile(s).
-* `location`: the location parameter, default 0.
-* `scale`: the scale parameter, default 1.
-* `asLog`: return values as ln(p)
+- `x`: scalar or array of quantile(s).
+- `location`: the location parameter, default 0.
+- `scale`: the scale parameter, default 1.
+- `asLog`: return values as ln(p)
 
 Usage:
 
 ```javascript
-const libR = require('lib-r-math.js');
+const libR = require("lib-r-math.js");
 const {
-    Cauchy,
-    R: { numberPrecision, seq: _seq }
+  Cauchy,
+  R: { numberPrecision, seq: _seq },
 } = libR;
 
 // some usefull tools
@@ -3033,17 +2152,20 @@ declare function pcauchy(
 ): T;
 ```
 
-* `q`: Scalar or array of quantile(s).
-* `location`: The location parameter, default 0.
-* `scale`: The scale parameter, default 1.
-* `lowerTail`: If TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
-* `logP`: If TRUE, probabilities p are given as ln(p).
+- `q`: Scalar or array of quantile(s).
+- `location`: The location parameter, default 0.
+- `scale`: The scale parameter, default 1.
+- `lowerTail`: If TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
+- `logP`: If TRUE, probabilities p are given as ln(p).
 
 Usage:
 
 ```javascript
-const libR = require('lib-r-math.js');
-const { Cauchy, R: { numberPrecision } } = libR;
+const libR = require("lib-r-math.js");
+const {
+  Cauchy,
+  R: { numberPrecision },
+} = libR;
 
 // some usefull tools
 const seq = libR.R.seq()();
@@ -3102,17 +2224,20 @@ declare function qcauchy(
 ): number | number[];
 ```
 
-* `p`: Scalar or array of probabilities(s).
-* `location`: The location parameter, default 0.
-* `scale`: The scale parameter, default 1.
-* `lowerTail`: If TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
-* `logP`: If TRUE, probabilities p are given as ln(p).
+- `p`: Scalar or array of probabilities(s).
+- `location`: The location parameter, default 0.
+- `scale`: The scale parameter, default 1.
+- `lowerTail`: If TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
+- `logP`: If TRUE, probabilities p are given as ln(p).
 
 Usage:
 
 ```javascript
-const libR = require('lib-r-math.js');
-const { Cauchy, R: { numberPrecision, seq: _seq } } = libR;
+const libR = require("lib-r-math.js");
+const {
+  Cauchy,
+  R: { numberPrecision, seq: _seq },
+} = libR;
 
 //some usefull tools
 const seq = _seq()();
@@ -3163,25 +2288,21 @@ Generates random deviates from the [Cauchy distribution](https://en.wikipedia.or
 _typescript decl_
 
 ```typescript
-declare function rcauchy(
-  n: number,
-  location = 0,
-  scale = 1
-): number | number[];
+declare function rcauchy(n: number, location = 0, scale = 1): number | number[];
 ```
 
-* `n`: number of deviates to generate.
-* `location`: The location parameter, default 0.
-* `scale`: The scale parameter, default 1.
+- `n`: number of deviates to generate.
+- `location`: The location parameter, default 0.
+- `scale`: The scale parameter, default 1.
 
 Usage:
 
 ```javascript
-const libR = require('lib-r-math.js');
+const libR = require("lib-r-math.js");
 const {
-    Cauchy,
-    rng: { SuperDuper },
-    R: { numberPrecision }
+  Cauchy,
+  rng: { SuperDuper },
+  R: { numberPrecision },
 } = libR;
 
 // helpers
@@ -3235,8 +2356,14 @@ These functions are members of an object created by the `ChiSquared` factory met
 Usage:
 
 ```javascript
-const libR = require('lib-r-math.js');
-const { ChiSquared, rng: { WichmannHill, normal: { AhrensDieter } } } = libR;
+const libR = require("lib-r-math.js");
+const {
+  ChiSquared,
+  rng: {
+    WichmannHill,
+    normal: { AhrensDieter },
+  },
+} = libR;
 
 //uses as default: "Inversion" and "Mersenne-Twister"
 const defaultChi = ChiSquared();
@@ -3265,21 +2392,18 @@ declare function dchisq(
 ): number | number[];
 ```
 
-* `x`: quantiles (array or scalar).
-* `df`: degrees of freedom.
-* `ncp`: non centrality parameter, default undefined.
-* `asLog`: return probabilities as ln(p), default false.
+- `x`: quantiles (array or scalar).
+- `df`: degrees of freedom.
+- `ncp`: non centrality parameter, default undefined.
+- `asLog`: return probabilities as ln(p), default false.
 
 Usage:
 
 ```javascript
-const libR = require('lib-r-math.js');
+const libR = require("lib-r-math.js");
 const {
-    ChiSquared,
-    R: {
-        numberPrecision,
-        seq: _seq
-    }
+  ChiSquared,
+  R: { numberPrecision, seq: _seq },
 } = libR;
 
 const { dchisq, pchisq, qchisq, rchisq } = ChiSquared();
@@ -3345,19 +2469,19 @@ declare function pchisq(
 ): number | number[];
 ```
 
-* `q`: quantiles (array or scalar).
-* `df`: degrees of freedom.
-* `ncp`: non centrality parameter.
-* `lowerTail`: if TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
-* `logP`: return probabilities as ln(p)
+- `q`: quantiles (array or scalar).
+- `df`: degrees of freedom.
+- `ncp`: non centrality parameter.
+- `lowerTail`: if TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
+- `logP`: return probabilities as ln(p)
 
 Usage:
 
 ```javascript
-const libR = require('lib-r-math.js');
+const libR = require("lib-r-math.js");
 const {
-    ChiSquared,
-    R: { numberPrecision, seq: _seq, c }
+  ChiSquared,
+  R: { numberPrecision, seq: _seq, c },
 } = libR;
 
 //helpers
@@ -3421,19 +2545,19 @@ declare function qchisq(
 ): number | number[];
 ```
 
-* `p`: probabilities (array or scalar).
-* `df`: degrees of freedom.
-* `ncp`: non centrality parameter.
-* `lowerTail`: if TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
-* `logP`: probabilities are as ln(p)
+- `p`: probabilities (array or scalar).
+- `df`: degrees of freedom.
+- `ncp`: non centrality parameter.
+- `lowerTail`: if TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
+- `logP`: probabilities are as ln(p)
 
 Usage:
 
 ```javascript
-const libR = require('lib-r-math.js');
+const libR = require("lib-r-math.js");
 const {
-    ChiSquared,
-    R: { multiplex, numberPrecision, seq: _seq }
+  ChiSquared,
+  R: { multiplex, numberPrecision, seq: _seq },
 } = libR;
 
 //helpers
@@ -3486,28 +2610,24 @@ Creates random deviates for the [X<sup>2</sup> distribution](https://en.wikipedi
 _typescript decl_
 
 ```typescript
-declare function rchisq(
-  n: number,
-  df: number,
-  ncp?: number
-): number | number[];
+declare function rchisq(n: number, df: number, ncp?: number): number | number[];
 ```
 
-* `p`: probabilities (array or scalar).
-* `df`: degrees of freedom.
-* `ncp`: non centrality parameter.
+- `p`: probabilities (array or scalar).
+- `df`: degrees of freedom.
+- `ncp`: non centrality parameter.
 
 Usage:
 
 ```javascript
-const libR = require('lib-r-math.js');
+const libR = require("lib-r-math.js");
 const {
-    ChiSquared,
-    rng: {
-        LecuyerCMRG,
-        normal: { AhrensDieter }
-    },
-    R: { numberPrecision }
+  ChiSquared,
+  rng: {
+    LecuyerCMRG,
+    normal: { AhrensDieter },
+  },
+  R: { numberPrecision },
 } = libR;
 
 //helpers
@@ -3520,7 +2640,6 @@ const { dchisq, pchisq, qchisq, rchisq } = ChiSquared(new AhrensDieter(lc));
 //1
 const r1 = _9(rchisq(5, 6));
 //[ 12.4101973, 6.79954177, 9.80911877, 4.64604085, 0.351985504 ]
-
 
 //2. df=40, ncp=3
 const r2 = _9(rchisq(5, 40, 3));
@@ -3561,8 +2680,11 @@ These functions are members of an object created by the `Exponential` factory me
 Usage:
 
 ```javascript
-const libR = require('lib-r-math.js');
-const { Exponential, rng: { MarsagliaMultiCarry } } = libR;
+const libR = require("lib-r-math.js");
+const {
+  Exponential,
+  rng: { MarsagliaMultiCarry },
+} = libR;
 
 //1. initialize default
 const defaultExponential = Exponential();
@@ -3591,15 +2713,18 @@ declare function dexp(
 ): number | number[];
 ```
 
-* `x`: quantiles (array or scalar).
-* `rate`: the λ parameter.
-* `asLog`: return probabilities as ln(p)
+- `x`: quantiles (array or scalar).
+- `rate`: the λ parameter.
+- `asLog`: return probabilities as ln(p)
 
 Usage:
 
 ```javascript
-const libR = require('lib-r-math.js');
-const { Exponential, R: { numberPrecision } } = libR;
+const libR = require("lib-r-math.js");
+const {
+  Exponential,
+  R: { numberPrecision },
+} = libR;
 
 //helpers
 const seq = libR.R.seq()();
@@ -3662,16 +2787,19 @@ declare function pexp(
 ): number | number[];
 ```
 
-* `q`: quantiles (array or scalar).
-* `rate`: the λ parameter.
-* `lowerTail`: if TRUE (default), probabilities are P[X ≤ q], otherwise, P[X > q].
-* `logP`: return probabilities as ln(p)
+- `q`: quantiles (array or scalar).
+- `rate`: the λ parameter.
+- `lowerTail`: if TRUE (default), probabilities are P[X ≤ q], otherwise, P[X > q].
+- `logP`: return probabilities as ln(p)
 
 Usage:
 
 ```javascript
-const libR = require('lib-r-math.js');
-const { Exponential, R: { numberPrecision } } = libR;
+const libR = require("lib-r-math.js");
+const {
+  Exponential,
+  R: { numberPrecision },
+} = libR;
 
 //helpers
 const seq = libR.R.seq()();
@@ -3739,16 +2867,19 @@ declare function qexp(
 ): number | number[];
 ```
 
-* `p`: probabilities (array or scalar).
-* `rate`: the λ parameter.
-* `lowerTail`: if TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
-* `logP`: return probabilities as ln(p)
+- `p`: probabilities (array or scalar).
+- `rate`: the λ parameter.
+- `lowerTail`: if TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
+- `logP`: return probabilities as ln(p)
 
 Usage:
 
 ```javascript
-const libR = require('lib-r-math.js');
-const { Exponential, R: { arrayrify, numberPrecision } } = libR;
+const libR = require("lib-r-math.js");
+const {
+  Exponential,
+  R: { arrayrify, numberPrecision },
+} = libR;
 
 //helpers
 const log = arrayrify(Math.log);
@@ -3809,14 +2940,18 @@ _typescript decl_
 declare function rexp(n: number, rate: number = 1): number | number[];
 ```
 
-* `n`: number of deviates to generate (array or scalar).
-* `rate`: the λ parameter.
+- `n`: number of deviates to generate (array or scalar).
+- `rate`: the λ parameter.
 
 Usage:
 
 ```javascript
-const libR = require('lib-r-math.js');
-const { Exponential, rng: { WichmannHill }, R: { numberPrecision } } = libR;
+const libR = require("lib-r-math.js");
+const {
+  Exponential,
+  rng: { WichmannHill },
+  R: { numberPrecision },
+} = libR;
 
 //helper
 const precision = numberPrecision(9);
@@ -3871,13 +3006,13 @@ These functions are members of an object created by the `FDist` factory method. 
 Usage:
 
 ```javascript
-const libR = require('lib-r-math.js');
+const libR = require("lib-r-math.js");
 const {
   FDist,
   rng: {
     MersenneTwister,
-    normal: { KindermanRamage }
-  }
+    normal: { KindermanRamage },
+  },
 } = libR;
 
 //1. initialize default
@@ -3911,17 +3046,20 @@ declare function df(
 ): number | number[];
 ```
 
-* `x`: quantiles (array or scalar).
-* `df1`: degrees of freedom. `Infinity` is allowed.
-* `df2`: degrees of freedom. `Infinity` is allowed.
-* `ncp`: non-centrality parameter. If omitted the central F is assumed.
-* `asLog`: if TRUE, probabilities p are given as ln(p).
+- `x`: quantiles (array or scalar).
+- `df1`: degrees of freedom. `Infinity` is allowed.
+- `df2`: degrees of freedom. `Infinity` is allowed.
+- `ncp`: non-centrality parameter. If omitted the central F is assumed.
+- `asLog`: if TRUE, probabilities p are given as ln(p).
 
 Usage:
 
 ```javascript
-const libR = require('lib-r-math.js');
-const { FDist, R: { numberPrecision } } = libR;
+const libR = require("lib-r-math.js");
+const {
+  FDist,
+  R: { numberPrecision },
+} = libR;
 
 //helpers
 const seq = libR.R.seq()();
@@ -4006,20 +3144,20 @@ declare function pf(
 ): number[] | number;
 ```
 
-* `q`: quantiles (array or scalar).
-* `df1`: degrees of freedom. `Infinity` is allowed.
-* `df2`: degrees of freedom. `Infinity` is allowed.
-* `ncp`: non-centrality parameter. If omitted the central F is assumed.
-* `lowerTail`: if TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
-* `asLog`: if TRUE, probabilities p are given as ln(p).
+- `q`: quantiles (array or scalar).
+- `df1`: degrees of freedom. `Infinity` is allowed.
+- `df2`: degrees of freedom. `Infinity` is allowed.
+- `ncp`: non-centrality parameter. If omitted the central F is assumed.
+- `lowerTail`: if TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
+- `asLog`: if TRUE, probabilities p are given as ln(p).
 
 Usage:
 
 ```javascript
-const libR = require('lib-r-math.js');
+const libR = require("lib-r-math.js");
 const {
   FDist,
-  R: { numberPrecision }
+  R: { numberPrecision },
 } = libR;
 
 //some usefull tools
@@ -4107,17 +3245,17 @@ declare function qf(
 ): number | number[];
 ```
 
-* `p`: probabilities (array or scalar).
-* `df1`: degrees of freedom. `Infinity` is allowed.
-* `df2`: degrees of freedom. `Infinity` is allowed.
-* `ncp`: non-centrality parameter. If omitted the central F is assumed.
-* `lowerTail`: if TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
-* `asLog`: if TRUE, probabilities p are given as ln(p).
+- `p`: probabilities (array or scalar).
+- `df1`: degrees of freedom. `Infinity` is allowed.
+- `df2`: degrees of freedom. `Infinity` is allowed.
+- `ncp`: non-centrality parameter. If omitted the central F is assumed.
+- `lowerTail`: if TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
+- `asLog`: if TRUE, probabilities p are given as ln(p).
 
 Usage:
 
 ```javascript
-const libR = require('lib-r-math.js');
+const libR = require("lib-r-math.js");
 const { FDist } = libR;
 
 //helpers
@@ -4128,11 +3266,11 @@ const precision = libR.R.numberPrecision(9);
 const { df, pf, qf, rf } = FDist();
 
 //data
-const q = [ ...seq(0,4), Infinity];
+const q = [...seq(0, 4), Infinity];
 
 //1
-const pp1 = pf(q, 50,  10,  undefined,  false);
-const q1 = qf( pp1, 50, 10, undefined, false);
+const pp1 = pf(q, 50, 10, undefined, false);
+const q1 = qf(pp1, 50, 10, undefined, false);
 precision(q1);
 //[ 0, 1, 2, 3, 4, Infinity ]
 
@@ -4195,22 +3333,22 @@ declare function rf(
 ): number | number[];
 ```
 
-* `n`: number of deviates to generate.
-* `df1`: degrees of freedom. `Infinity` is allowed.
-* `df2`: degrees of freedom. `Infinity` is allowed.
-* `ncp`: non-centrality parameter. If omitted the central F is assumed.
+- `n`: number of deviates to generate.
+- `df1`: degrees of freedom. `Infinity` is allowed.
+- `df2`: degrees of freedom. `Infinity` is allowed.
+- `ncp`: non-centrality parameter. If omitted the central F is assumed.
 
 Usage:
 
 ```javascript
-const libR = require('lib-r-math.js');
+const libR = require("lib-r-math.js");
 const {
-    FDist,
-    rng: {
-        MersenneTwister,
-        normal: { KindermanRamage }
-    },
-    R: { numberPrecision }
+  FDist,
+  rng: {
+    MersenneTwister,
+    normal: { KindermanRamage },
+  },
+  R: { numberPrecision },
 } = libR;
 
 //helpers
@@ -4272,13 +3410,13 @@ These functions are members of an object created by the `Gamma` factory method. 
 Usage:
 
 ```javascript
-const libR = require('lib-r-math.js');
+const libR = require("lib-r-math.js");
 const {
   Gamma,
-  rng: { 
+  rng: {
     KnuthTAOCP2002,
-    normal: { AhrensDieter } 
-  }
+    normal: { AhrensDieter },
+  },
 } = libR;
 
 //1. initialize default, always "MersenneTwister" and "Inversion"
@@ -4298,9 +3436,9 @@ The density function of the [Gamma distribution](https://en.wikipedia.org/wiki/G
 
 $$ f(x)= \frac{1}{s^{a} \Gamma(a)} x^{a-1} e^{-x/s} $$
 
-* `a`: shape parameter
-* `s`: scale parameter
-* `x`: x >= 0
+- `a`: shape parameter
+- `s`: scale parameter
+- `x`: x >= 0
 
 Alternative represention using _shape_ parameter `a` and _rate_ parameter `β`= $1/s$:
 
@@ -4320,19 +3458,19 @@ declare function dgamma(
 ): number | number[];
 ```
 
-* `x`: quantiles (scalar or array).
-* `shape`: [shape](https://en.wikipedia.org/wiki/Gamma_distribution) parameter, must be positive.
-* `rate`: The [rate](https://en.wikipedia.org/wiki/Gamma_distribution) parameter, when specified, leave `scale` undefined (or set `rate = 1/scale`). Must be strictly positive.
-* `scale`: The [scale](https://en.wikipedia.org/wiki/Gamma_distribution) parameter, when specified, leave `rate` undefined (or set `scale = 1/rate`). Must be strictly positive.
-* `asLog`: if _true_, probabilities/densities p are returned as ln(p).
+- `x`: quantiles (scalar or array).
+- `shape`: [shape](https://en.wikipedia.org/wiki/Gamma_distribution) parameter, must be positive.
+- `rate`: The [rate](https://en.wikipedia.org/wiki/Gamma_distribution) parameter, when specified, leave `scale` undefined (or set `rate = 1/scale`). Must be strictly positive.
+- `scale`: The [scale](https://en.wikipedia.org/wiki/Gamma_distribution) parameter, when specified, leave `rate` undefined (or set `scale = 1/rate`). Must be strictly positive.
+- `asLog`: if _true_, probabilities/densities p are returned as ln(p).
 
 Usage:
 
 ```javascript
-const libR = require('lib-r-math.js');
+const libR = require("lib-r-math.js");
 const {
   Gamma,
-  R: { numberPrecision, arrayrify }
+  R: { numberPrecision, arrayrify },
 } = libR;
 
 //helpers
@@ -4342,15 +3480,15 @@ const precision = numberPrecision(9); //restrict to 9 significant digits
 
 const { dgamma, pgamma, qgamma, rgamma } = Gamma();
 
-const x =  seq(0, 10, 2);
+const x = seq(0, 10, 2);
 //1.
-const d1 =  dgamma( x, 1, 0.5); //using rate
+const d1 = dgamma(x, 1, 0.5); //using rate
 precision(d1);
 /*[ 0.5,            0.183939721,    0.0676676416,     0.0248935342,
     0.00915781944,  0.0033689735 ]*/
 
 //2.
-const d2 =  dgamma(x, 2, 1/2); //using rate
+const d2 = dgamma(x, 2, 1 / 2); //using rate
 precision(d2);
 /*[
   0,            0.183939721,  0.135335283,  0.0746806026,
@@ -4364,7 +3502,7 @@ precision(d3);
   0.133852618,  0.0572522885,  0.0189166374]*/
 
 //4.
-const d4 = dgamma( x, 7.5, 1, undefined, true);
+const d4 = dgamma(x, 7.5, 1, undefined, true);
 precision(d4);
 /*[ -Infinity,   -5.02890756,  -2.52345089,
     -1.88792769, -2.01799422,  -2.56756113 ]*/
@@ -4411,20 +3549,20 @@ declare function pgamma(
 ): number | number[];
 ```
 
-* `x`: quantiles (scalar or array).
-* `shape`: [shape](https://en.wikipedia.org/wiki/Gamma_distribution) parameter, must be positive.
-* `rate`: The [rate](https://en.wikipedia.org/wiki/Gamma_distribution) parameter, when specified, leave `scale` undefined (or set `rate = 1/scale`). Must be strictly positive.
-* `scale`: The [scale](https://en.wikipedia.org/wiki/Gamma_distribution) parameter, when specified, leave `rate` undefined (or set `scale = 1/rate`). Must be strictly positive.
-* `lowerTail`: if TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
-* `logP`: if _true_, probabilities/densities p are as ln(p).
+- `x`: quantiles (scalar or array).
+- `shape`: [shape](https://en.wikipedia.org/wiki/Gamma_distribution) parameter, must be positive.
+- `rate`: The [rate](https://en.wikipedia.org/wiki/Gamma_distribution) parameter, when specified, leave `scale` undefined (or set `rate = 1/scale`). Must be strictly positive.
+- `scale`: The [scale](https://en.wikipedia.org/wiki/Gamma_distribution) parameter, when specified, leave `rate` undefined (or set `scale = 1/rate`). Must be strictly positive.
+- `lowerTail`: if TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
+- `logP`: if _true_, probabilities/densities p are as ln(p).
 
 Usage:
 
 ```javascript
-const libR = require('lib-r-math.js');
+const libR = require("lib-r-math.js");
 const {
   Gamma,
-  R: { arrayrify, numberPrecision }
+  R: { arrayrify, numberPrecision },
 } = libR;
 
 //helpers
@@ -4508,20 +3646,20 @@ declare function pgamma(
 ): number | number[];
 ```
 
-* `x`: quantiles (scalar or array).
-* `shape`: [shape](https://en.wikipedia.org/wiki/Gamma_distribution) parameter, must be positive.
-* `rate`: The [rate](https://en.wikipedia.org/wiki/Gamma_distribution) parameter, when specified, leave `scale` undefined (or set `rate = 1/scale`). Must be strictly positive.
-* `scale`: The [scale](https://en.wikipedia.org/wiki/Gamma_distribution) parameter, when specified, leave `rate` undefined (or set `scale = 1/rate`). Must be strictly positive.
-* `lowerTail`: if TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
-* `logP`: if _true_, probabilities/densities p are as ln(p).
+- `x`: quantiles (scalar or array).
+- `shape`: [shape](https://en.wikipedia.org/wiki/Gamma_distribution) parameter, must be positive.
+- `rate`: The [rate](https://en.wikipedia.org/wiki/Gamma_distribution) parameter, when specified, leave `scale` undefined (or set `rate = 1/scale`). Must be strictly positive.
+- `scale`: The [scale](https://en.wikipedia.org/wiki/Gamma_distribution) parameter, when specified, leave `rate` undefined (or set `scale = 1/rate`). Must be strictly positive.
+- `lowerTail`: if TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
+- `logP`: if _true_, probabilities/densities p are as ln(p).
 
 Usage:
 
 ```javascript
-const libR = require('lib-r-math.js');
+const libR = require("lib-r-math.js");
 const {
   Gamma,
-  R: { numberPrecision, arrayrify }
+  R: { numberPrecision, arrayrify },
 } = libR;
 
 //some tools
@@ -4597,22 +3735,22 @@ declare function rgamma(
 ): number | number[];
 ```
 
-* `n`: number of deviates generated.
-* `shape`: [shape](https://en.wikipedia.org/wiki/Gamma_distribution) parameter, must be positive.
-* `rate`: The [rate](https://en.wikipedia.org/wiki/Gamma_distribution) parameter, when specified, leave `scale` undefined (or set `rate = 1/scale`). Must be strictly positive.
-* `scale`: The [scale](https://en.wikipedia.org/wiki/Gamma_distribution) parameter, when specified, leave `rate` undefined (or set `scale = 1/rate`). Must be strictly positive.
+- `n`: number of deviates generated.
+- `shape`: [shape](https://en.wikipedia.org/wiki/Gamma_distribution) parameter, must be positive.
+- `rate`: The [rate](https://en.wikipedia.org/wiki/Gamma_distribution) parameter, when specified, leave `scale` undefined (or set `rate = 1/scale`). Must be strictly positive.
+- `scale`: The [scale](https://en.wikipedia.org/wiki/Gamma_distribution) parameter, when specified, leave `rate` undefined (or set `scale = 1/rate`). Must be strictly positive.
 
 Usage:
 
 ```typescript
-const libR = require('lib-r-math.js');
+const libR = require("lib-r-math.js");
 const {
   Gamma,
   rng: {
     LecuyerCMRG,
-    normal: { BoxMuller }
+    normal: { BoxMuller },
   },
-  R: { arrayrify, numberPrecision }
+  R: { arrayrify, numberPrecision },
 } = libR;
 
 //some tools
@@ -4670,13 +3808,13 @@ These functions are properties of an object created by the `Geometric` factory m
 Usage:
 
 ```javascript
-const libR = require('lib-r-math.js');
+const libR = require("lib-r-math.js");
 const {
   Geometric,
   rng: {
     SuperDuper,
-    normal: { BoxMuller }
-  }
+    normal: { BoxMuller },
+  },
 } = libR;
 
 //1. initialize default, "Inversion" and "MersenneTwister"
@@ -4706,17 +3844,17 @@ declare function dgeom(
 ): number | number[];
 ```
 
-* `x`: quantiles (array or scalar).
-* `prob`: probability of success in each trial. 0 < prob <= 1.
-* `asLog`: if TRUE, probabilities p are given as ln(p).
+- `x`: quantiles (array or scalar).
+- `prob`: probability of success in each trial. 0 < prob <= 1.
+- `asLog`: if TRUE, probabilities p are given as ln(p).
 
 Usage:
 
 ```javascript
-const libR = require('lib-r-math.js');
-const { 
+const libR = require("lib-r-math.js");
+const {
   Geometric,
-  R: { numberPrecision }
+  R: { numberPrecision },
 } = libR;
 
 //helpers
@@ -4726,7 +3864,7 @@ const precision = numberPrecision(9); //restrict to 9 significant digits
 const { dgeom, pgeom, qgeom, rgeom } = Geometric();
 
 //data
-const x = seq(0,4);
+const x = seq(0, 4);
 //1
 const d1 = dgeom(x, 0.5);
 precision(d1);
@@ -4767,16 +3905,16 @@ declare function pgeom(
 ): number | number[];
 ```
 
-* `q`: the number of failures before success.
-* `prob`: probability of success.
-* `lowerTail`: if TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
-* `logP`: if TRUE, probabilities p are given as ln(p).
+- `q`: the number of failures before success.
+- `prob`: probability of success.
+- `lowerTail`: if TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
+- `logP`: if TRUE, probabilities p are given as ln(p).
 
 ```javascript
-const libR = require('lib-r-math.js');
+const libR = require("lib-r-math.js");
 const {
   Geometric,
-  R: { numberPrecision }
+  R: { numberPrecision },
 } = libR;
 
 //helpers
@@ -4834,18 +3972,18 @@ declare function qgeom(
 ): number | number[];
 ```
 
-* `p`: probabilities (scalar or array).
-* `prob`: probability of success.
-* `lowerTail`: if TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
-* `logP`: if TRUE, probabilities p are given as ln(p).
+- `p`: probabilities (scalar or array).
+- `prob`: probability of success.
+- `lowerTail`: if TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
+- `logP`: if TRUE, probabilities p are given as ln(p).
 
 Usage:
 
 ```javascript
-const libR = require('lib-r-math.js');
+const libR = require("lib-r-math.js");
 const {
   Geometric,
-  R:{ numberPrecision }
+  R: { numberPrecision },
 } = libR;
 
 //helpers
@@ -4903,26 +4041,23 @@ Generates random deviates for the [Geometric distribution](https://en.wikipedia.
 _typescript decl_
 
 ```typescript
-declare function rgeom(
-  n: number,
-  prob: number
-): number | number[];
+declare function rgeom(n: number, prob: number): number | number[];
 ```
 
-* `n`: number of deviates to generate.
-* `prob`: probability of success.
+- `n`: number of deviates to generate.
+- `prob`: probability of success.
 
 Usage:
 
 ```javascript
-const libR = require('lib-r-math.js');
+const libR = require("lib-r-math.js");
 const {
   Geometric,
   rng: {
     KnuthTAOCP,
-    normal: { KindermanRamage }
+    normal: { KindermanRamage },
   },
-  R: { arrayrify, numberPrecision, seq: seqCR }
+  R: { arrayrify, numberPrecision, seq: seqCR },
 } = libR;
 
 //helpers
@@ -5023,15 +4158,15 @@ declare function dhyper(
 
 Where:
 
-* `x`: is the number of observed successes.
-* `m`: is the number of success states in the population
-* `n`: is the number of failure states in the population
-* `k`: is the number of draws from the population (n+m) sample.
+- `x`: is the number of observed successes.
+- `m`: is the number of success states in the population
+- `n`: is the number of failure states in the population
+- `k`: is the number of draws from the population (n+m) sample.
 
 Usage:
 
 ```javascript
-const libR = require('lib-r-math.js');
+const libR = require("lib-r-math.js");
 const { HyperGeometric } = libR;
 
 //some tools
@@ -5128,17 +4263,17 @@ declare function phyper(
 ): number | number[];
 ```
 
-* `q`: is the number of observed successes.
-* `m`: is the number of success states in the population
-* `n`: is the number of failure states in the population
-* `k`: is the number of draws from the population (n+m) sample.
-* `lowerTail`: if TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
-* `logP`: if TRUE, probabilities p are given as ln(p).
+- `q`: is the number of observed successes.
+- `m`: is the number of success states in the population
+- `n`: is the number of failure states in the population
+- `k`: is the number of draws from the population (n+m) sample.
+- `lowerTail`: if TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
+- `logP`: if TRUE, probabilities p are given as ln(p).
 
 Usage:
 
 ```javascript
-const libR = require('lib-r-math.js');
+const libR = require("lib-r-math.js");
 const { HyperGeometric } = libR;
 
 //some tools
@@ -5215,17 +4350,17 @@ declare function qhyper(
 ): number | number[];
 ```
 
-* `p`: is probability of observed successes.
-* `m`: is the number of success states in the population
-* `n`: is the number of failure states in the population
-* `k`: is the number of draws from the population (n+m) sample.
-* `lowerTail`: if TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
-* `logP`: if TRUE, probabilities p are given as ln(p).
+- `p`: is probability of observed successes.
+- `m`: is the number of success states in the population
+- `n`: is the number of failure states in the population
+- `k`: is the number of draws from the population (n+m) sample.
+- `lowerTail`: if TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
+- `logP`: if TRUE, probabilities p are given as ln(p).
 
 Usage:
 
 ```javascript
-const libR = require('lib-r-math.js');
+const libR = require("lib-r-math.js");
 const { HyperGeometric } = libR;
 
 //some tools
@@ -5300,16 +4435,19 @@ declare function rhyper(
 ): number | number[];
 ```
 
-* `N`: number of deviates to generate.
-* `m`: is the number of success states in the population
-* `n`: is the number of failure states in the population
-* `k`: is the number of draws from the total population (n+m) sample.
+- `N`: number of deviates to generate.
+- `m`: is the number of success states in the population
+- `n`: is the number of failure states in the population
+- `k`: is the number of draws from the total population (n+m) sample.
 
 Usage:
 
 ```javascript
-const libR = require('lib-r-math.js');
-const { HyperGeometric, rng: { MersenneTwister } } = libR;
+const libR = require("lib-r-math.js");
+const {
+  HyperGeometric,
+  rng: { MersenneTwister },
+} = libR;
 
 //some tools
 const log = libR.R.arrayrify(Math.log);
@@ -5371,8 +4509,11 @@ These functions are properties of an object created by the `Logistic` factory me
 Usage:
 
 ```javascript
-const libR = require('lib-r-math.js');
-const { Logistic, rng: { MersenneTwister, SuperDuper } } = libR;
+const libR = require("lib-r-math.js");
+const {
+  Logistic,
+  rng: { MersenneTwister, SuperDuper },
+} = libR;
 
 //some tools
 const log = libR.R.arrayrify(Math.log);
@@ -5408,15 +4549,15 @@ declare function dlogis(
 ): number | number[];
 ```
 
-* `x`: quantiles (scalar or array).
-* `location`: location parameter of the [Logistic distribution](https://en.wikipedia.org/wiki/Logistic_distribution)
-* `scale`: the scale parameter of the [Logistic distribution](https://en.wikipedia.org/wiki/Logistic_distribution). Strictly positive.
-* `asLog`: if TRUE, probabilities p are given as ln(p).
+- `x`: quantiles (scalar or array).
+- `location`: location parameter of the [Logistic distribution](https://en.wikipedia.org/wiki/Logistic_distribution)
+- `scale`: the scale parameter of the [Logistic distribution](https://en.wikipedia.org/wiki/Logistic_distribution). Strictly positive.
+- `asLog`: if TRUE, probabilities p are given as ln(p).
 
 Usage:
 
 ```javascript
-const libR = require('lib-r-math.js');
+const libR = require("lib-r-math.js");
 const { Logistic } = libR;
 
 //some tools
@@ -5495,16 +4636,16 @@ declare function plogis(
 ): number | number[];
 ```
 
-* `q`: quantiles (scalar or array).
-* `location`: location parameter of the [Logistic distribution](https://en.wikipedia.org/wiki/Logistic_distribution)
-* `scale`: the scale parameter of the [Logistic distribution](https://en.wikipedia.org/wiki/Logistic_distribution). Strictly positive.
-* `lowerTail`: if TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
-* `logP`: if TRUE, probabilities p are given as ln(p).
+- `q`: quantiles (scalar or array).
+- `location`: location parameter of the [Logistic distribution](https://en.wikipedia.org/wiki/Logistic_distribution)
+- `scale`: the scale parameter of the [Logistic distribution](https://en.wikipedia.org/wiki/Logistic_distribution). Strictly positive.
+- `lowerTail`: if TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
+- `logP`: if TRUE, probabilities p are given as ln(p).
 
 Usage:
 
 ```javascript
-const libR = require('lib-r-math.js');
+const libR = require("lib-r-math.js");
 const { Logistic } = libR;
 
 //some tools
@@ -5586,16 +4727,16 @@ declare function qlogis(
 ): number | number[];
 ```
 
-* `p`: probabilities (scalar or array). 0 ≤ p ≤ 1.
-* `location`: location parameter of the [Logistic distribution](https://en.wikipedia.org/wiki/Logistic_distribution)
-* `scale`: the scale parameter of the [Logistic distribution](https://en.wikipedia.org/wiki/Logistic_distribution). Strictly positive.
-* `lowerTail`: if TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
-* `logP`: if TRUE, probabilities p are given as ln(p).
+- `p`: probabilities (scalar or array). 0 ≤ p ≤ 1.
+- `location`: location parameter of the [Logistic distribution](https://en.wikipedia.org/wiki/Logistic_distribution)
+- `scale`: the scale parameter of the [Logistic distribution](https://en.wikipedia.org/wiki/Logistic_distribution). Strictly positive.
+- `lowerTail`: if TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
+- `logP`: if TRUE, probabilities p are given as ln(p).
 
 Usage:
 
 ```javascript
-const libR = require('lib-r-math.js');
+const libR = require("lib-r-math.js");
 const { Logistic } = libR;
 
 //some tools
@@ -5662,15 +4803,18 @@ declare function rlogis(
 ): number | number[];
 ```
 
-* `N`: number of random deviates to generate.
-* `location`: location parameter of the [Logistic distribution](https://en.wikipedia.org/wiki/Logistic_distribution)
-* `scale`: the scale parameter of the [Logistic distribution](https://en.wikipedia.org/wiki/Logistic_distribution). Strictly positive.
+- `N`: number of random deviates to generate.
+- `location`: location parameter of the [Logistic distribution](https://en.wikipedia.org/wiki/Logistic_distribution)
+- `scale`: the scale parameter of the [Logistic distribution](https://en.wikipedia.org/wiki/Logistic_distribution). Strictly positive.
 
 Usage:
 
 ```javascript
-const libR = require('lib-r-math.js');
-const { Logistic, rng: { MersenneTwister } } = libR;
+const libR = require("lib-r-math.js");
+const {
+  Logistic,
+  rng: { MersenneTwister },
+} = libR;
 
 //some tools
 const log = libR.R.arrayrify(Math.log);
@@ -5728,12 +4872,14 @@ These functions are properties of an object created by the `LogNormal` factory m
 Usage:
 
 ```javascript
-const libR = require('lib-r-math.js');
+const libR = require("lib-r-math.js");
 const {
   Normal,
   LogNormal,
   rng: { MersenneTwister },
-  rng: { normal: { Inversion } }
+  rng: {
+    normal: { Inversion },
+  },
 } = libR;
 
 //some tools
@@ -5770,15 +4916,15 @@ declare function dlnorm(
 ): number | number[];
 ```
 
-* `x`: quantiles, with distribution $x ~ N(\mu, \sigma)$
-* `meanLog`: the mean of the normally distributed `x`
-* `sdLog`: the standard deviation ($\sigma$) of the normal distributed `x`.
-* `asLog`: return the densities as ln(p).
+- `x`: quantiles, with distribution $x ~ N(\mu, \sigma)$
+- `meanLog`: the mean of the normally distributed `x`
+- `sdLog`: the standard deviation ($\sigma$) of the normal distributed `x`.
+- `asLog`: return the densities as ln(p).
 
 Usage:
 
 ```javascript
-const libR = require('lib-r-math.js');
+const libR = require("lib-r-math.js");
 const { LogNormal } = libR;
 
 //some tools
@@ -5864,16 +5010,16 @@ declare function plnorm(
 ): number | number[];
 ```
 
-* `q`: quantiles, with distribution $x ~ N(\mu, \sigma)$
-* `meanLog`: the mean of the normally distributed `x`
-* `sdLog`: the standard deviation ($\sigma$) of the normal distributed `x`.
-* `lowerTail`: if TRUE (default), probabilities are P[X <= x], otherwise, P[X > x].
-* `logP`: if TRUE, probabilities p are given as ln(p).
+- `q`: quantiles, with distribution $x ~ N(\mu, \sigma)$
+- `meanLog`: the mean of the normally distributed `x`
+- `sdLog`: the standard deviation ($\sigma$) of the normal distributed `x`.
+- `lowerTail`: if TRUE (default), probabilities are P[X <= x], otherwise, P[X > x].
+- `logP`: if TRUE, probabilities p are given as ln(p).
 
 Usage:
 
 ```javascript
-const libR = require('lib-r-math.js');
+const libR = require("lib-r-math.js");
 const { LogNormal } = libR;
 
 //some tools
@@ -5953,16 +5099,16 @@ declare function qlnorm(
 ): number | number[];
 ```
 
-* `p`: probabilities.
-* `meanLog`: the mean of the normally distributed `x`
-* `sdLog`: the standard deviation ($\sigma$) of the normal distributed `x`.
-* `lowerTail`: if TRUE (default), probabilities are P[X <= x], otherwise, P[X > x].
-* `logP`: if TRUE, probabilities p are given as ln(p).
+- `p`: probabilities.
+- `meanLog`: the mean of the normally distributed `x`
+- `sdLog`: the standard deviation ($\sigma$) of the normal distributed `x`.
+- `lowerTail`: if TRUE (default), probabilities are P[X <= x], otherwise, P[X > x].
+- `logP`: if TRUE, probabilities p are given as ln(p).
 
 Usage:
 
 ```javascript
-const libR = require('lib-r-math.js');
+const libR = require("lib-r-math.js");
 const { LogNormal } = libR;
 
 //some tools
@@ -6036,12 +5182,14 @@ declare function rlnorm(
 Usage:
 
 ```javascript
-const libR = require('lib-r-math.js');
+const libR = require("lib-r-math.js");
 const {
   Normal,
   LogNormal,
   rng: { MersenneTwister },
-  rng: { normal: { Inversion } }
+  rng: {
+    normal: { Inversion },
+  },
 } = libR;
 
 //some tools
@@ -6114,8 +5262,11 @@ $$\frac{(size+k)!}{k!\cdot((size+k)-k)!}$$
 Usage:
 
 ```javascript
-const libR = require('lib-r-math.js');
-const { MultiNomial, rng: { MersenneTwister, SuperDuper } } = libR;
+const libR = require("lib-r-math.js");
+const {
+  MultiNomial,
+  rng: { MersenneTwister, SuperDuper },
+} = libR;
 
 //some tools
 const log = libR.R.arrayrify(Math.log);
@@ -6153,15 +5304,15 @@ declare function dmultinom(option: IdmultinomOptions): number[];
 
 `dmultinom` needs as input an JS object (typescript interface type `IdmultinomOptions`) with the following properties:
 
-* `x`: array of quantiles (minimal item count is 2)
-* `prob`: array of corresponding non-zero probabilities corresponding with the quantiles.
-* `size`: optional, you can safely omit it, functions as a kind of checksum: size = $\sum*{i=1}^{k} x*{i}$
-* `asLog`: probabilities are returned as ln(p).
+- `x`: array of quantiles (minimal item count is 2)
+- `prob`: array of corresponding non-zero probabilities corresponding with the quantiles.
+- `size`: optional, you can safely omit it, functions as a kind of checksum: size = $\sum*{i=1}^{k} x*{i}$
+- `asLog`: probabilities are returned as ln(p).
 
 Usage:
 
 ```javascript
-const libR = require('lib-r-math.js');
+const libR = require("lib-r-math.js");
 const { Multinomial } = libR;
 
 //some tools
@@ -6172,7 +5323,7 @@ const { dmultinom, rmultinom } = Multinomial();
 //1. binomial analog
 const d1 = dmultinom({
   x: [3, 5],
-  prob: [0.25, 0.75]
+  prob: [0.25, 0.75],
 });
 precision(d1);
 //0.207641602
@@ -6180,7 +5331,7 @@ precision(d1);
 //2. binomial analog
 const d2 = dmultinom({
   x: [3, 5, 9],
-  prob: [0.2, 0.7, 0.1]
+  prob: [0.2, 0.7, 0.1],
 });
 precision(d2);
 //0.0000018304302
@@ -6189,7 +5340,7 @@ precision(d2);
 const d3 = dmultinom({
   x: [3, 5, 9, 4],
   prob: [2, 8, 4, 6], // will normalized to = [ 2/20, 8/20, 4/20, 6/20 ]
-  asLog: true
+  asLog: true,
 });
 precision(d3);
 //-7.96903499
@@ -6225,23 +5376,25 @@ declare function rmultinom(
   n: number,
   size: number,
   prob: number | number[]
-): (number[]) | (number[][]); //return an array of arrays n x prob.length elements.
+): number[] | number[][]; //return an array of arrays n x prob.length elements.
 ```
 
-* `n`: returns an array of size `n` nested arrays of dimension `prob.length`.
-* `size`: distribute size elements amongst `prob.length` bins for each deviate.
-* `prob`: an array (in case of a scalar or array of length 1) describing the probabilities for success for ech bin.
-* `@return`: returns `n` arrays each of length `k = (prob.length)`.
+- `n`: returns an array of size `n` nested arrays of dimension `prob.length`.
+- `size`: distribute size elements amongst `prob.length` bins for each deviate.
+- `prob`: an array (in case of a scalar or array of length 1) describing the probabilities for success for ech bin.
+- `@return`: returns `n` arrays each of length `k = (prob.length)`.
 
 Usage:
 
 ```javascript
-const libR = require('lib-r-math.js');
+const libR = require("lib-r-math.js");
 const {
   Multinomial,
   rng: { MersenneTwister },
-  rng: { normal: { Inversion } },
-  R: { sum, div, mult }
+  rng: {
+    normal: { Inversion },
+  },
+  R: { sum, div, mult },
 } = libR;
 
 //some tools
@@ -6343,8 +5496,14 @@ These functions are properties of an object created by the `Poisson` factory met
 Usage:
 
 ```javascript
-const libR = require('lib-r-math.js');
-const { Poisson, rng: { SuperDuper }, rng: { normal: { BoxMuller } } } = libR;
+const libR = require("lib-r-math.js");
+const {
+  Poisson,
+  rng: { SuperDuper },
+  rng: {
+    normal: { BoxMuller },
+  },
+} = libR;
 
 //default (uses Inversion and MersenneTwister)
 const defaultP = Poisson();
@@ -6372,14 +5531,14 @@ declare function dpois(
 ): number | number[];
 ```
 
-* `x`: quantile(s). Scalar or array.
-* `lambda`: the lambda `λ` parameter from the [Poisson distribution](https://en.wikipedia.org/wiki/Poisson_distribution).
-* `asLog`: if TRUE, probabilities p are given as ln(p).
+- `x`: quantile(s). Scalar or array.
+- `lambda`: the lambda `λ` parameter from the [Poisson distribution](https://en.wikipedia.org/wiki/Poisson_distribution).
+- `asLog`: if TRUE, probabilities p are given as ln(p).
 
 Usage:
 
 ```javascript
-const libR = require('lib-r-math.js');
+const libR = require("lib-r-math.js");
 const { Poisson } = libR;
 
 //some tools
@@ -6457,15 +5616,15 @@ declare function ppois(
 ): number | number[];
 ```
 
-* `q`: quantile(s). A Scalar or array.
-* `lambda`: the lambda `λ` parameter from the [Poisson distribution](https://en.wikipedia.org/wiki/Poisson_distribution).
-* `lowerTail`: if TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
-* `logP`: if TRUE, probabilities p are given as ln(p).
+- `q`: quantile(s). A Scalar or array.
+- `lambda`: the lambda `λ` parameter from the [Poisson distribution](https://en.wikipedia.org/wiki/Poisson_distribution).
+- `lowerTail`: if TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
+- `logP`: if TRUE, probabilities p are given as ln(p).
 
 Usage:
 
 ```javascript
-const libR = require('lib-r-math.js');
+const libR = require("lib-r-math.js");
 const { Poisson } = libR;
 
 //some tools
@@ -6549,16 +5708,19 @@ declare function qpois(
 ): number | number[];
 ```
 
-* `p`: probabilities, scalar or array.
-* `lambda`: the lambda `λ` parameter from the [Poisson distribution](https://en.wikipedia.org/wiki/Poisson_distribution).
-* `lowerTail`: if TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
-* `logP`: if TRUE, probabilities p are given as ln(p).
+- `p`: probabilities, scalar or array.
+- `lambda`: the lambda `λ` parameter from the [Poisson distribution](https://en.wikipedia.org/wiki/Poisson_distribution).
+- `lowerTail`: if TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
+- `logP`: if TRUE, probabilities p are given as ln(p).
 
 Usage:
 
 ```javascript
-const libR = require('lib-r-math.js');
-const { Poisson, R: { arrayrify } } = libR;
+const libR = require("lib-r-math.js");
+const {
+  Poisson,
+  R: { arrayrify },
+} = libR;
 
 //some tools
 const seq = libR.R.seq()();
@@ -6615,17 +5777,19 @@ _typescript decl_
 declare function rpois(N: number, lambda: number): number | number[];
 ```
 
-* `N`: number of deviates to generate.
-* `lambda`: the lambda `λ` parameter from the [Poisson distribution](https://en.wikipedia.org/wiki/Poisson_distribution).
+- `N`: number of deviates to generate.
+- `lambda`: the lambda `λ` parameter from the [Poisson distribution](https://en.wikipedia.org/wiki/Poisson_distribution).
 
 Usage:
 
 ```javascript
-const libR = require('lib-r-math.js');
+const libR = require("lib-r-math.js");
 const {
   Poisson,
   rng: { MersenneTwister },
-  rng: { normal: { Inversion } }
+  rng: {
+    normal: { Inversion },
+  },
 } = libR;
 
 //helpers
@@ -6683,8 +5847,11 @@ Density, distribution function, quantile function and random generation for the 
 Usage:
 
 ```javascript
-const libR = require('lib-r-math.js');
-const { SignRank, rng: { MarsagliaMultiCarry } } = libR;
+const libR = require("lib-r-math.js");
+const {
+  SignRank,
+  rng: { MarsagliaMultiCarry },
+} = libR;
 
 //helpers
 const precision = libR.R.numberPrecision(9); //restrict to 9 significant digits
@@ -6713,14 +5880,14 @@ declare function dsignrank(
 ): number | number[];
 ```
 
-* `x`: quantiles (scalar or array of values the rank W+).
-* `n`: total number of observations.
-* `asLog`: give probabilities as ln(p). Default is false.
+- `x`: quantiles (scalar or array of values the rank W+).
+- `n`: total number of observations.
+- `asLog`: give probabilities as ln(p). Default is false.
 
 Usage:
 
 ```javascript
-const libR = require('lib-r-math.js');
+const libR = require("lib-r-math.js");
 const { SignRank } = libR;
 
 //some usefull helpers
@@ -6787,15 +5954,15 @@ declare function psignrank(
 ): number | number[];
 ```
 
-* `q`: quantiles (scalar or array of values the rank W+).
-* `n`: total number of observations.
-* `lowerTail`: if TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
-* `logP`: if TRUE, probabilities p are given as ln(p).
+- `q`: quantiles (scalar or array of values the rank W+).
+- `n`: total number of observations.
+- `lowerTail`: if TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
+- `logP`: if TRUE, probabilities p are given as ln(p).
 
 Usage:
 
 ```javascript
-const libR = require('lib-r-math.js');
+const libR = require("lib-r-math.js");
 const { SignRank } = libR;
 
 //some usefull helpers
@@ -6866,15 +6033,15 @@ declare function qsignrank(
 ): number | number[];
 ```
 
-* `p`: probabilities.
-* `n`: total number of observations.
-* `lowerTail`: if TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
-* `logP`: if TRUE, probabilities p are given as ln(p).
+- `p`: probabilities.
+- `n`: total number of observations.
+- `lowerTail`: if TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
+- `logP`: if TRUE, probabilities p are given as ln(p).
 
 Usage:
 
 ```javascript
-const libR = require('lib-r-math.js');
+const libR = require("lib-r-math.js");
 const { SignRank } = libR;
 
 const { dsignrank, psignrank, qsignrank, rsignrank } = SignRank();
@@ -6918,13 +6085,13 @@ _typescript decl_
 declare function rsignrank(N: number, n: number): number | number[];
 ```
 
-* `N`: Number of deviates to generate..
-* `n`: total number of observations.
+- `N`: Number of deviates to generate..
+- `n`: total number of observations.
 
 Usage:
 
 ```javascript
-const libR = require('lib-r-math.js');
+const libR = require("lib-r-math.js");
 const { SignRank } = libR;
 
 const mmc = new MarsagliaMultiCarry(0);
@@ -6974,11 +6141,13 @@ Density, distribution function, quantile function and random generation for the 
 Usage:
 
 ```javascript
-const libR = require('lib-r-math.js');
+const libR = require("lib-r-math.js");
 const {
   StudentT,
   rng: { MarsagliaMultiCarry },
-  rng: { normal: { AhrensDieter } }
+  rng: {
+    normal: { AhrensDieter },
+  },
 } = libR;
 
 //*.Uses default argument "Normal()".
@@ -7010,15 +6179,15 @@ declare function dt(
 ): number | number[];
 ```
 
-* `x`: quantiles.(Scalar or array).
-* `df`: degrees of freedom.
-* `ncp`: non-central parameter.
-* `asLog`: return result as ln(p);
+- `x`: quantiles.(Scalar or array).
+- `df`: degrees of freedom.
+- `ncp`: non-central parameter.
+- `asLog`: return result as ln(p);
 
 Usage:
 
 ```javascript
-const libR = require('lib-r-math.js');
+const libR = require("lib-r-math.js");
 const { StudentT } = libR;
 
 //usefull helpers
@@ -7097,16 +6266,16 @@ declare function pt(
 ): number | number[];
 ```
 
-* `q`: quantiles, array or scalar.
-* `df`: degrees of freedom.
-* `ncp`: non central parameter.
-* `lowerTail`: if TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
-* `logP`: if TRUE, probabilities p are given as ln(p).
+- `q`: quantiles, array or scalar.
+- `df`: degrees of freedom.
+- `ncp`: non central parameter.
+- `lowerTail`: if TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
+- `logP`: if TRUE, probabilities p are given as ln(p).
 
 Usage:
 
 ```javascript
-const libR = require('lib-r-math.js');
+const libR = require("lib-r-math.js");
 const { StudentT } = libR;
 
 //usefull helpers
@@ -7186,16 +6355,16 @@ declare function qt(
 ): number | number[];
 ```
 
-* `p`: probabilities, array or scalar.
-* `df`: degrees of freedom.
-* `ncp`: non central parameter.
-* `lowerTail`: if TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
-* `logP`: if TRUE, probabilities p are given as ln(p).
+- `p`: probabilities, array or scalar.
+- `df`: degrees of freedom.
+- `ncp`: non central parameter.
+- `lowerTail`: if TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
+- `logP`: if TRUE, probabilities p are given as ln(p).
 
 Usage:
 
 ```javascript
-const libR = require('lib-r-math.js');
+const libR = require("lib-r-math.js");
 const { StudentT } = libR;
 
 //usefull helpers
@@ -7266,18 +6435,20 @@ _typescript decl_
 declare function rt(n: number, df: number, ncp?: number): number | number[];
 ```
 
-* `n`: number of random deviates to generate.
-* `df`: degrees of freedom.
-* `ncp`: non central parameter.
+- `n`: number of random deviates to generate.
+- `df`: degrees of freedom.
+- `ncp`: non central parameter.
 
 Usage:
 
 ```javascript
-const libR = require('lib-r-math.js');
+const libR = require("lib-r-math.js");
 const {
   StudentT,
   rng: { MarsagliaMultiCarry },
-  rng: { normal: { AhrensDieter } }
+  rng: {
+    normal: { AhrensDieter },
+  },
 } = libR;
 
 //some usefull helpers
@@ -7344,12 +6515,12 @@ For `1 way anova` having `k` groups containing $n_{i}$ samples and $T_{i}$ group
 
 Then the (1 - α) confidence interval for each $u_{j} \neq u_{i}$ comparison will be:
 
-$$  \left(T_{i} - T_{j} \right)  - q_{\alpha,k,v} \cdot \sqrt{ S^2/k } \lt u_{i} - u_{j} \lt  \left(T_{i} - T_{j} \right)  + q_{\alpha,k,v} \cdot \sqrt{ S^2/k } $$
+$$ \left(T*{i} - T*{j} \right) - q*{\alpha,k,v} \cdot \sqrt{ S^2/k } \lt u*{i} - u*{j} \lt \left(T*{i} - T*{j} \right) + q*{\alpha,k,v} \cdot \sqrt{ S^2/k } $$
 
 With `q(α,k,v)` equal to:
 
 ```javascript
-qtukey(1-α, k, N-k);
+qtukey(1 - α, k, N - k);
 ```
 
 #### `ptukey`
@@ -7360,38 +6531,38 @@ _typescript decl_
 
 ```typescript
 declare function ptukey(
-    q: number|number[],
-    nmeans: number,
-    df: number,
-    nranges: number = 1,
-    lowerTail: boolean = true,
-    logP: boolean = false
-): number|number[]
+  q: number | number[],
+  nmeans: number,
+  df: number,
+  nranges: number = 1,
+  lowerTail: boolean = true,
+  logP: boolean = false
+): number | number[];
 ```
 
-* `q`: number of random deviates to generate.
-* `nmeans`: sample size for range (same for each group).
-* `df`: degrees of freedom of S².
-* `nranges`: number of groups whose maximum range is considered.
-* `lowerTail`: if TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
-* `logP`: if TRUE, probabilities p are given as log(p).
+- `q`: number of random deviates to generate.
+- `nmeans`: sample size for range (same for each group).
+- `df`: degrees of freedom of S².
+- `nranges`: number of groups whose maximum range is considered.
+- `lowerTail`: if TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
+- `logP`: if TRUE, probabilities p are given as log(p).
 
 Usage:
 
 ```javascript
-const libR = require('lib-r-math.js');
+const libR = require("lib-r-math.js");
 const { Tukey } = libR;
 
 const { abs } = Math;
 
 const { qtukey, ptukey } = Tukey();
 
-const differenceOf2Means = -67.46;  //Ti - Tj
+const differenceOf2Means = -67.46; //Ti - Tj
 const std = 16.69658048823; // = S/sqrt(n) see formula for S²
-const df = 20;  //degrees of freedom for std
+const df = 20; //degrees of freedom for std
 const k = 5; // number of treatments in 1-way anova
 
-const pValue = 1 - ptukey(abs(differenceOf2Means) / std, k, df)
+const pValue = 1 - ptukey(abs(differenceOf2Means) / std, k, df);
 
 // p value = 0.0657, if  α < p-value (example α = 0.05 ) this difference (Ti = Tj) would not rejected.
 ```
@@ -7411,29 +6582,29 @@ _typescript decl_
 
 ```typescript
 declare function qtukey(
-    p: number|number[],
-    nmeans: number,
-    df: number,
-    nranges: number = 1,
-    lowerTail: boolean = true,
-    logP: boolean = false
-): number|number[]
+  p: number | number[],
+  nmeans: number,
+  df: number,
+  nranges: number = 1,
+  lowerTail: boolean = true,
+  logP: boolean = false
+): number | number[];
 ```
 
-* `q`: probabilities.
-* `nmeans`: sample size for range (same for each group).
-* `df`: degrees of freedom of S².
-* `nranges`: number of groups whose maximum range is considered.
-* `lowerTail`: if TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
-* `logP`: if TRUE, probabilities p are given as log(p).
+- `q`: probabilities.
+- `nmeans`: sample size for range (same for each group).
+- `df`: degrees of freedom of S².
+- `nranges`: number of groups whose maximum range is considered.
+- `lowerTail`: if TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
+- `logP`: if TRUE, probabilities p are given as log(p).
 
 Usage:
 
 ```javascript
-const libR = require('lib-r-math.js');
+const libR = require("lib-r-math.js");
 const {
   Tukey,
-  R: { seq:_seq, numberPrecision }
+  R: { seq: _seq, numberPrecision },
 } = libR;
 
 //some helpers
@@ -7444,21 +6615,21 @@ const { ptukey, qtukey } = Tukey();
 
 // Generates partial table for Tukey HSD table table 1-α = 0.95
 //df=5
-const row1 = seq(2,10).map(v => qtukey(0.95,v, 5));
+const row1 = seq(2, 10).map((v) => qtukey(0.95, v, 5));
 prec3(row1);
 
 //[ 3.64, 4.6, 5.22, 5.67, 6.03, 6.33, 6.58, 6.8, 6.99 ]
 
 //df=6
-prec3(seq(2,10).map(v => qtukey(0.95,v, 6)))
+prec3(seq(2, 10).map((v) => qtukey(0.95, v, 6)));
 //[ 3.46, 4.34, 4.9, 5.3, 5.63, 5.9, 6.12, 6.32, 6.49 ]
 
 //df=7
-prec3(seq(2,10).map(v => qtukey(0.95,v, 7)));
+prec3(seq(2, 10).map((v) => qtukey(0.95, v, 7)));
 //[ 3.34, 4.16, 4.68, 5.06, 5.36, 5.61, 5.82, 6, 6.16 ]
 
 //df=8
-prec3(seq(2,10).map(v => qtukey(0.95,v, 8)));
+prec3(seq(2, 10).map((v) => qtukey(0.95, v, 8)));
 //[ 3.34, 4.16, 4.68, 5.06, 5.36, 5.61, 5.82, 6, 6.16 ]
 ```
 
@@ -7552,7 +6723,6 @@ qtukey(p=0.95, nmeans=2:10, df= 8)
     </tbody>
 </table>
 
-
 ### Weibull distribution
 
 `dweibull, pweibull, qweibull, rweibull`
@@ -7562,10 +6732,10 @@ Density, distribution function, quantile function and random generation for the 
 Usage:
 
 ```javascript
-const libR = require('lib-r-math.js');
+const libR = require("lib-r-math.js");
 const {
-    Weibull,
-    rng: { WichmannHill }
+  Weibull,
+  rng: { WichmannHill },
 } = libR;
 
 const wh = new WichmannHill(1234);
@@ -7587,25 +6757,25 @@ _typescript decl_
 
 ```typescript
 declare function dweibull(
-  x: number|number[],
+  x: number | number[],
   shape: number,
   scale: number = 1,
   aslog: boolean = false
-): number|number[];
+): number | number[];
 ```
 
-* `x`: quantiles (scalar or Array)
-* `shape`: shape parameter
-* `scale`: scale parameter
-* `asLog`: return result p as ln(p).
+- `x`: quantiles (scalar or Array)
+- `shape`: shape parameter
+- `scale`: scale parameter
+- `asLog`: return result p as ln(p).
 
 Usage:
 
 ```javascript
-const libR = require('lib-r-math.js');
+const libR = require("lib-r-math.js");
 const {
   Weibull,
-  R: { seq: _seq, numberPrecision }
+  R: { seq: _seq, numberPrecision },
 } = libR;
 
 //some usefull helpers
@@ -7675,22 +6845,22 @@ declare function pweibull(
   scale: number = 1,
   lowerTail: boolean = true,
   logP: boolean = false
-): number|number[];
+): number | number[];
 ```
 
-* `q`: quantiles (scalar or Array)
-* `shape`: shape parameter
-* `scale`: scale parameter
-* `lowerTail`: if TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
-* `logP`: if `true`, probabilities p are given as ln(p).
+- `q`: quantiles (scalar or Array)
+- `shape`: shape parameter
+- `scale`: scale parameter
+- `lowerTail`: if TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
+- `logP`: if `true`, probabilities p are given as ln(p).
 
 Usage:
 
 ```javascript
-const libR = require('lib-r-math.js');
+const libR = require("lib-r-math.js");
 const {
   Weibull,
-  R: { seq:_seq, numberPrecision }
+  R: { seq: _seq, numberPrecision },
 } = libR;
 
 //some usefull helpers
@@ -7754,27 +6924,27 @@ _typescript decl_
 
 ```typescript
 declare function qweibull(
-  p: number|number[],
+  p: number | number[],
   shape: number,
   scale: number = 1,
   lowerTail: boolean = true,
   logP: boolean = false
-): number|number[];
+): number | number[];
 ```
 
-* `p`: probabilities (scalar or Array)
-* `shape`: shape parameter
-* `scale`: scale parameter
-* `lowerTail`: if TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
-* `logP`: if `true`, probabilities p are given as ln(p).
+- `p`: probabilities (scalar or Array)
+- `shape`: shape parameter
+- `scale`: scale parameter
+- `lowerTail`: if TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
+- `logP`: if `true`, probabilities p are given as ln(p).
 
 Usage:
 
 ```javascript
-const libR = require('lib-r-math.js');
+const libR = require("lib-r-math.js");
 const {
   Weibull,
-  R: { seq:_seq, numberPrecision }
+  R: { seq: _seq, numberPrecision },
 } = libR;
 
 //some usefull helpers
@@ -7796,8 +6966,8 @@ const q2 = qweibull(pp, 0.5, 2);
 precision(q2);
 //[ 0, 0.099586089, 0.521885636, 1.67917741, 5.18058079, Infinity ]
 
-const q3 =  qweibull(pp, 1.5, 9);
-precision(q3)
+const q3 = qweibull(pp, 1.5, 9);
+precision(q3);
 //[ 0, 3.31104744, 5.75118881, 8.49046297, 12.3601952, Infinity ]
 ```
 
@@ -7835,18 +7005,18 @@ declare function rweibull(
 ): number | number[];
 ```
 
-* `n`: Number of deviates to generate.
-* `shape`: shape parameter
-* `scale`: scale parameter
+- `n`: Number of deviates to generate.
+- `shape`: shape parameter
+- `scale`: scale parameter
 
 Usage:
 
 ```javascript
-const libR = require('lib-r-math.js');
+const libR = require("lib-r-math.js");
 const {
-    Weibull,
-    rng: { WichmannHill },
-    R: {  numberPrecision }
+  Weibull,
+  rng: { WichmannHill },
+  R: { numberPrecision },
 } = libR;
 
 //some usefull helpers
@@ -7895,7 +7065,7 @@ rweibull(5, 1.5, 9);
 
 `dwilcox, pwilcox, qwilcox, rwilcox`
 
-The Wilcoxon rank sum test  is also known as the [Mann–Whitney U test](https://en.wikipedia.org/wiki/Mann%E2%80%93Whitney_U_test)
+The Wilcoxon rank sum test is also known as the [Mann–Whitney U test](https://en.wikipedia.org/wiki/Mann%E2%80%93Whitney_U_test)
 
 Density, distribution function, quantile function and random generation for the [Wilcoxon rank sum statistic](https://en.wikipedia.org/wiki/Mann%E2%80%93Whitney_U_test). See [R doc](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/Wilcoxon.html).
 
@@ -7931,27 +7101,27 @@ _typescript decl_
 
 ```typescript
 declare function dwilcox(
-  x: number|number[],
+  x: number | number[],
   m: number,
   n: number,
   asLog: boolean = false
-): number|number[]
+): number | number[];
 ```
 
-* `x`: quantile(s), scalar or array of values.
-* `m`: size of first sample, the convention is to have m ≤ n.
-* `n`: size of the second sample, the convention is n ≥ m.
-* `asLog`: return value as ln(p)
+- `x`: quantile(s), scalar or array of values.
+- `m`: size of first sample, the convention is to have m ≤ n.
+- `n`: size of the second sample, the convention is n ≥ m.
+- `asLog`: return value as ln(p)
 
 Note: if `m` ≥ `n` the values are swapped internally.
 
 Usage:
 
 ```javascript
-const libR = require('lib-r-math.js');
+const libR = require("lib-r-math.js");
 const {
   Wilcoxon,
-  R: { seq:_seq , numberPrecision, arrayrify }
+  R: { seq: _seq, numberPrecision, arrayrify },
 } = libR;
 
 //helper functions
@@ -7962,12 +7132,12 @@ const pow = arrayrify(Math.pow); //allow it to accept "R" like vectorized input
 //init
 const { dwilcox, pwilcox, qwilcox, rwilcox } = Wilcoxon();
 
-const x = pow( seq(0,10,2), 2);
+const x = pow(seq(0, 10, 2), 2);
 //[ 0, 4, 16, 36, 64, 100 ]
 
 //
 const d1 = dwilcox(x, 8, 9);
-precision(d1)
+precision(d1);
 /*[
   0.0000411353353,  0.000205676676,  0.0064171123,
   0.0374331551,     0.000904977376,  0
@@ -7989,6 +7159,7 @@ precision(d3);
   0.00212589686,    0.0114631694,      0.0136238031
 ]*/
 ```
+
 _Equivalent in R_
 
 ```R
@@ -8021,30 +7192,29 @@ _typescript decl_
 
 ```typescript
 declare function pwilcox(
-  q: number|number[],
+  q: number | number[],
   m: number,
   n: number,
   lowerTail: boolean = true,
   logP: boolean = false
-): number|number[]
+): number | number[];
 ```
 
-* `q`: quantile(s), scalar or array of values.
-* `m`: size of first sample, the convention is to have m ≤ n.
-* `n`: size of the second sample, the convention is n ≥ m.
-* `lowerTail`: if TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
-* `logP`: if `true`, probabilities p are given as ln(p).
+- `q`: quantile(s), scalar or array of values.
+- `m`: size of first sample, the convention is to have m ≤ n.
+- `n`: size of the second sample, the convention is n ≥ m.
+- `lowerTail`: if TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
+- `logP`: if `true`, probabilities p are given as ln(p).
 
 Note: if `m` ≥ `n` the values are swapped internally.
 
 Usage:
 
 ```javascript
-
-const libR = require('lib-r-math.js');
+const libR = require("lib-r-math.js");
 const {
   Wilcoxon,
-  R: { seq:_seq , numberPrecision, arrayrify }
+  R: { seq: _seq, numberPrecision, arrayrify },
 } = libR;
 
 //helper functions
@@ -8055,11 +7225,11 @@ const pow = arrayrify(Math.pow); //allow it to accept "R" like vectorized input
 //init
 const { dwilcox, pwilcox, qwilcox, rwilcox } = Wilcoxon();
 
-const q = pow( seq(0,10,2), 2);
+const q = pow(seq(0, 10, 2), 2);
 
 //1
 const p1 = pwilcox(q, 8, 9);
-precision(p1)
+precision(p1);
 /*[
   0.0000411353353,  0.000493624023,  0.0296174414,
   0.518716578,      0.99814891,      1 ]*/
@@ -8111,29 +7281,29 @@ _typescript decl_
 
 ```typescript
 declare function qwilcox(
-  p: number|number[],
+  p: number | number[],
   m: number,
   n: number,
   lowerTail: boolean = true,
   logP: boolean = false
-): number|number[]
+): number | number[];
 ```
 
-* `p`: probabilities, scalar or array of values.
-* `m`: size of first sample, the convention is to have m ≤ n.
-* `n`: size of the second sample, the convention is n ≥ m.
-* `lowerTail`: if TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
-* `logP`: if `true`, probabilities p are given as ln(p).
+- `p`: probabilities, scalar or array of values.
+- `m`: size of first sample, the convention is to have m ≤ n.
+- `n`: size of the second sample, the convention is n ≥ m.
+- `lowerTail`: if TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
+- `logP`: if `true`, probabilities p are given as ln(p).
 
 Note: if `m` ≥ `n` the values are swapped internally.
 
 Usage:
 
 ```javascript
-const libR = require('lib-r-math.js');
+const libR = require("lib-r-math.js");
 const {
   Wilcoxon,
-  R: { seq:_seq }
+  R: { seq: _seq },
 } = libR;
 
 //helper functions
@@ -8143,7 +7313,7 @@ const seq = _seq()();
 const { dwilcox, pwilcox, qwilcox, rwilcox } = Wilcoxon();
 
 //probabilities (0, 1)
-const p = seq(0,1,0.2);
+const p = seq(0, 1, 0.2);
 //[ 0, 0.2, 0.4, 0.6, 0.8, 1 ]
 
 //1
@@ -8186,32 +7356,28 @@ Generates random deviates for of the [Wilcoxon rank sum statistic](https://en.wi
 _typescript decl_
 
 ```typescript
-declare function rwilcox(
-  nn: number,
-  m: number,
-  n: number
-  ): number|number[];
+declare function rwilcox(nn: number, m: number, n: number): number | number[];
 ```
 
-* `nn`: number of deviates to generate.
-* `m`: size of first sample, the convention is to have m ≤ n.
-* `n`: size of the second sample, the convention is n ≥ m.
+- `nn`: number of deviates to generate.
+- `m`: size of first sample, the convention is to have m ≤ n.
+- `n`: size of the second sample, the convention is n ≥ m.
 
 Note: if `m` ≥ `n` the values are swapped internally.
 
 Usage:
 
 ```javascript
-const libR = require('lib-r-math.js');
+const libR = require("lib-r-math.js");
 const {
   Wilcoxon,
-  rng: { SuperDuper }
+  rng: { SuperDuper },
 } = libR;
 
 const sd = new SuperDuper(1234);
 const { dwilcox, pwilcox, qwilcox, rwilcox } = Wilcoxon(sd);
 
-sd.init(1234);// you may do this at any time
+sd.init(1234); // you may do this at any time
 
 //1
 rwilcox(5, 8, 9);
@@ -8222,7 +7388,7 @@ rwilcox(5, 100, 50);
 //[ 2521, 2373, 2266, 2136, 2397 ]
 
 //3
-rwilcox(5, 5, 34)
+rwilcox(5, 5, 34);
 //[ 138, 73, 83, 72, 99 ]
 ```
 
@@ -8262,9 +7428,9 @@ Bessel Functions of integer and fractional order, of first and second kind, J(nu
 Usage:
 
 ```javascript
-const libR = require('lib-r-math.js');
+const libR = require("lib-r-math.js");
 const {
-    special: { besselJ, besselK, besselI, besselY }
+  special: { besselJ, besselK, besselI, besselY },
 } = libR;
 ```
 
@@ -8276,13 +7442,13 @@ _typescript decl_
 
 ```typescript
 declare function besselJ(
-  x: number|number[],
-  nu: number|number[]
-): number|number[];
+  x: number | number[],
+  nu: number | number[]
+): number | number[];
 ```
 
-* `x`: input value x ≥ 0.
-* `nu`: order, (may be fractional!)
+- `x`: input value x ≥ 0.
+- `nu`: order, (may be fractional!)
 
 _**Note:** if `x` and `nu` are arrays or (scalar/array combinations)
 of unequal length then R argument cycling rules apply._
@@ -8290,19 +7456,43 @@ of unequal length then R argument cycling rules apply._
 Usage:
 
 ```javascript
-const libR = require('lib-r-math.js');
+const libR = require("lib-r-math.js");
 const {
-    special: { besselJ, besselK, besselI, besselY },
-    R: { map, numberPrecision, c }
+  special: { besselJ, besselK, besselI, besselY },
+  R: { map, numberPrecision, c },
 } = libR;
 
 const _9 = numberPrecision(9);
 
-let xJ = c(1, 7.389, 20.09, 7.389, 403.4, 1097,
-    0.3679, 8103, 22030, 0.04979, 7.389, 1097);
+let xJ = c(
+  1,
+  7.389,
+  20.09,
+  7.389,
+  403.4,
+  1097,
+  0.3679,
+  8103,
+  22030,
+  0.04979,
+  7.389,
+  1097
+);
 
-let nuJ = c(11.02, 0.1353, 0.4066, 54.6, 63.43, 73.7,
- -3.669, -0.4066, -1.221, -63.43, -54.6, -73.7);
+let nuJ = c(
+  11.02,
+  0.1353,
+  0.4066,
+  54.6,
+  63.43,
+  73.7,
+  -3.669,
+  -0.4066,
+  -1.221,
+  -63.43,
+  -54.6,
+  -73.7
+);
 
 const bJ = _9(besselJ(xJ, nuJ));
 /*[
@@ -8332,13 +7522,13 @@ _typescript decl_
 
 ```typescript
 export function besselY(
-  x: number|number[],
-  nu: number|number[]
-): number|number[];
+  x: number | number[],
+  nu: number | number[]
+): number | number[];
 ```
 
-* `x`: input value x ≥ 0.
-* `nu`: order, (may be fractional!)
+- `x`: input value x ≥ 0.
+- `nu`: order, (may be fractional!)
 
 _**Note:** if `x`, `nu`, or `expo` are arrays or (scalar/array combinations)
 of unequal length then R argument cycling rules apply._
@@ -8346,17 +7536,42 @@ of unequal length then R argument cycling rules apply._
 Usage:
 
 ```javascript
-const libR = require('lib-r-math.js');
+const libR = require("lib-r-math.js");
 const {
-    special: { besselJ, besselK, besselI, besselY },
-    R: { map, numberPrecision, c }
+  special: { besselJ, besselK, besselI, besselY },
+  R: { map, numberPrecision, c },
 } = libR;
 
 const _9 = numberPrecision(9);
 
-let xY = c(0.1353, 148.4, 22030, 20.09, 403.4, 1097, 0.1353, 2.718, 2981, 1, 8103, 22030);
-let nuY = c(1.221, 3.669, 1.221, 63.43, 63.43,
-    73.7, -1.221, -33.12, -0.1353, -63.43, -63.43, -73.7);
+let xY = c(
+  0.1353,
+  148.4,
+  22030,
+  20.09,
+  403.4,
+  1097,
+  0.1353,
+  2.718,
+  2981,
+  1,
+  8103,
+  22030
+);
+let nuY = c(
+  1.221,
+  3.669,
+  1.221,
+  63.43,
+  63.43,
+  73.7,
+  -1.221,
+  -33.12,
+  -0.1353,
+  -63.43,
+  -63.43,
+  -73.7
+);
 
 const bY = _9(besselY(xY, nuY));
 /*[
@@ -8389,15 +7604,15 @@ _typescript decl_
 
 ```typescript
 declare function besselI(
-  x: number|number[],
-  nu: number|number[],
-  expo: boolean|boolean[] = false
+  x: number | number[],
+  nu: number | number[],
+  expo: boolean | boolean[] = false
 ): number;
 ```
 
-* `x`: input value x ≥ 0.
-* `nu`: order, (may be fractional!)
-* `expo`: if TRUE, the results are scaled in order to avoid overflow `exp(-x)*BesselI(x;nu)`.
+- `x`: input value x ≥ 0.
+- `nu`: order, (may be fractional!)
+- `expo`: if TRUE, the results are scaled in order to avoid overflow `exp(-x)*BesselI(x;nu)`.
 
 _**Note:** if `x`, `nu`, or `expo` are arrays or (scalar/array combinations)
 of unequal length then R argument cycling rules apply._
@@ -8405,22 +7620,46 @@ of unequal length then R argument cycling rules apply._
 Usage:
 
 ```javascript
-const libR = require('lib-r-math.js');
+const libR = require("lib-r-math.js");
 const {
-    special: { besselJ, besselK, besselI, besselY },
-    R: { map, numberPrecision, c }
+  special: { besselJ, besselK, besselI, besselY },
+  R: { map, numberPrecision, c },
 } = libR;
 
 const _9 = numberPrecision(9);
 
 //just to show parameter combinations
-let xI = c(0.3679, 1, 22030,  0.04979,  54.6,  403.4,
-  0.04979,  2981,  8103, 0.1353, 0.3679, 2.718);
-let nuI = c(3.669, 11.02, 1.221, 63.43, 73.7, 63.43,
-  -0.4066, -0.1353, -0.4066, -73.7, -54.6, -73.7);
+let xI = c(
+  0.3679,
+  1,
+  22030,
+  0.04979,
+  54.6,
+  403.4,
+  0.04979,
+  2981,
+  8103,
+  0.1353,
+  0.3679,
+  2.718
+);
+let nuI = c(
+  3.669,
+  11.02,
+  1.221,
+  63.43,
+  73.7,
+  63.43,
+  -0.4066,
+  -0.1353,
+  -0.4066,
+  -73.7,
+  -54.6,
+  -73.7
+);
 
 // besselI doesnt take vactorized input like R counterpart. So we use a map
-const bI = _9(  besselI(xI, nuI, true)  );
+const bI = _9(besselI(xI, nuI, true));
 /*[
   0.0000947216027,  4.31519634e-12,  0.00268776062,     1.48153081e-190,
   1.82886482e-21,   0.000136207159,  2.8416423,         0.00730711526,
@@ -8449,15 +7688,15 @@ _typescript decl_
 
 ```typescript
 declare function besselK(
-  x: number|number[],
-  nu: number|number[],
-  expo: boolean|boolean[] = false
+  x: number | number[],
+  nu: number | number[],
+  expo: boolean | boolean[] = false
 ): number;
 ```
 
-* `x`: input value x ≥ 0.
-* `nu`: order, (may be fractional!)
-* `expo`: if TRUE, the results are scaled in order to avoid underflow `exp(x)*BesselK(x;nu)`.
+- `x`: input value x ≥ 0.
+- `nu`: order, (may be fractional!)
+- `expo`: if TRUE, the results are scaled in order to avoid underflow `exp(x)*BesselK(x;nu)`.
 
 _**Note:** if `x`, `nu`, or `expo` are arrays or (scalar/array combinations)
 of unequal length then R argument cycling rules apply._
@@ -8465,21 +7704,45 @@ of unequal length then R argument cycling rules apply._
 Usage:
 
 ```javascript
-const libR = require('lib-r-math.js');
+const libR = require("lib-r-math.js");
 const {
-    special: { besselJ, besselK, besselI, besselY },
-    R: { map, numberPrecision, flatten:c }
+  special: { besselJ, besselK, besselI, besselY },
+  R: { map, numberPrecision, flatten: c },
 } = libR;
 
 const _9 = numberPrecision(9);
 
-let xK=c(0.3679,  2.718,  403.4,  1,  54.6,  2981,  0.3679,  148.4,
-  22030,  0.1353,  2.718,  148.4 );
+let xK = c(
+  0.3679,
+  2.718,
+  403.4,
+  1,
+  54.6,
+  2981,
+  0.3679,
+  148.4,
+  22030,
+  0.1353,
+  2.718,
+  148.4
+);
 
-let nuK= c(3.669, 33.12, 11.02, 63.43, 73.7, 54.6, -3.669, -3.669,
- -1.221, -73.7, -73.7, -54.6);
+let nuK = c(
+  3.669,
+  33.12,
+  11.02,
+  63.43,
+  73.7,
+  54.6,
+  -3.669,
+  -3.669,
+  -1.221,
+  -73.7,
+  -73.7,
+  -54.6
+);
 
-const bK = _9(  besselK(xK, nuK, true)  );
+const bK = _9(besselK(xK, nuK, true));
 /*[
   1430.97872,     1.10637213e+32,  0.0725008692,    3.13780349e+105,
   2.98065514e+18, 0.0378422686,    1430.97872,      0.107549709,
@@ -8524,16 +7787,16 @@ declare function beta(
 ): number | number[];
 ```
 
-* `a`: non-negative (scalar or array). See [wiki](https://en.wikipedia.org/wiki/Beta_function)
-* `b`: non-negative (scalar or array). See [wiki](https://en.wikipedia.org/wiki/Beta_function)
+- `a`: non-negative (scalar or array). See [wiki](https://en.wikipedia.org/wiki/Beta_function)
+- `b`: non-negative (scalar or array). See [wiki](https://en.wikipedia.org/wiki/Beta_function)
 
 Usage:
 
 ```javascript
-const libR = require('lib-r-math.js');
+const libR = require("lib-r-math.js");
 const {
-    special: { beta, lbeta },
-    R: { flatten: c }
+  special: { beta, lbeta },
+  R: { flatten: c },
 } = libR;
 
 //1
@@ -8570,16 +7833,16 @@ declare function lbeta(
 ): number | number[];
 ```
 
-* `a`: non-negative (scalar or array). See [wiki](https://en.wikipedia.org/wiki/Beta_function)
-* `b`: non-negative (scalar or array). See [wiki](https://en.wikipedia.org/wiki/Beta_function)
+- `a`: non-negative (scalar or array). See [wiki](https://en.wikipedia.org/wiki/Beta_function)
+- `b`: non-negative (scalar or array). See [wiki](https://en.wikipedia.org/wiki/Beta_function)
 
 Usage:
 
 ```javascript
-const libR = require('lib-r-math.js');
+const libR = require("lib-r-math.js");
 const {
-    special: { beta, lbeta },
-    R: { flatten: c }
+  special: { beta, lbeta },
+  R: { flatten: c },
 } = libR;
 
 //1
@@ -8619,23 +7882,21 @@ The first derivative ψ(x) of the natural logarithm of the [gamma function](#gam
 Alias for [psigmma](#psigamma) function with the `deriv` argument set to `0`.
 Aka `psigamma(x, 0)`.
 
-$$ ψ(x) = \frac{d}{dx}  (ln Γ(x) )= \frac{Γ'(x)}{ Γ(x)} $$
+$$ ψ(x) = \frac{d}{dx} (ln Γ(x) )= \frac{Γ'(x)}{ Γ(x)} $$
 
 _typescript decl_
 
 ```typescript
-declare function digamma(
-  x: number|number[]
-): number|number[];
+declare function digamma(x: number | number[]): number | number[];
 ```
 
 Usage:
 
 ```javascript
-const libR = require('lib-r-math.js');
+const libR = require("lib-r-math.js");
 const {
-    special: { digamma },
-    R: { numberPrecision, seq: _seq, flatten: c }
+  special: { digamma },
+  R: { numberPrecision, seq: _seq, flatten: c },
 } = libR;
 
 //some helpers
@@ -8666,27 +7927,25 @@ digamma(x);
 
 #### `trigamma`
 
-The 2nd derivative of  `ln Γ(x)`. See [R doc]()
+The 2nd derivative of `ln Γ(x)`. See [R doc]()
 
-$$ ψ(x)' = \frac{d²}{dx²}  (ln Γ(x) )$$
+$$ ψ(x)' = \frac{d²}{dx²} (ln Γ(x) )$$
 
 _typescript decl_
 
 ```typescript
-declare function trigamma(
-  x:number|number[]
-):number|number[];
+declare function trigamma(x: number | number[]): number | number[];
 ```
 
-* `x`: 0 ≤ x ≤ Infinity.
+- `x`: 0 ≤ x ≤ Infinity.
 
 Usage:
 
 ```javascript
-const libR = require('lib-r-math.js');
+const libR = require("lib-r-math.js");
 const {
-    special: { trigamma },
-    R: { numberPrecision, seq: _seq, flatten: c }
+  special: { trigamma },
+  R: { numberPrecision, seq: _seq, flatten: c },
 } = libR;
 
 //some helpers
@@ -8715,28 +7974,26 @@ trigamma(x);
 
 #### `tetragamma`
 
-The 3rd derivative of  `ln Γ(x)`. This function is deprecated in `R`.
+The 3rd derivative of `ln Γ(x)`. This function is deprecated in `R`.
 `tetragamma(x)` is an alias for `psigamma(x,2)`.
 
-$$ ψ(x)³ = \frac{d²}{dx²}  (ln Γ(x) )$$
+$$ ψ(x)³ = \frac{d²}{dx²} (ln Γ(x) )$$
 
 _typescript decl_
 
 ```typescript
-declare function tetragamma(
-  x:number|number[]
-):number|number[];
+declare function tetragamma(x: number | number[]): number | number[];
 ```
 
-* `x`: 0 ≤ x ≤ Infinity.
+- `x`: 0 ≤ x ≤ Infinity.
 
 Usage:
 
 ```javascript
-const libR = require('lib-r-math.js');
+const libR = require("lib-r-math.js");
 const {
-    special: { tetragamma },
-    R: { numberPrecision, seq: _seq, flatten: c }
+  special: { tetragamma },
+  R: { numberPrecision, seq: _seq, flatten: c },
 } = libR;
 
 //some helpers
@@ -8766,28 +8023,26 @@ psigamma(x,2);
 
 #### `pentagamma`
 
-The 4th derivative of  `ln Γ(x)`. This function is deprecated in `R`.
+The 4th derivative of `ln Γ(x)`. This function is deprecated in `R`.
 `pentagamma(x)` is an alias for `psigamma(x,3)`.
 
-$$ ψ³(x) = \frac{d⁴}{dx⁴}  (ln Γ(x) )$$
+$$ ψ³(x) = \frac{d⁴}{dx⁴} (ln Γ(x) )$$
 
 _typescript decl_
 
 ```typescript
-declare function pentagamma(
-  x:number|number[]
-):number|number[];
+declare function pentagamma(x: number | number[]): number | number[];
 ```
 
-* `x`: 0 ≤ x ≤ Infinity.
+- `x`: 0 ≤ x ≤ Infinity.
 
 Usage:
 
 ```javascript
-const libR = require('lib-r-math.js');
+const libR = require("lib-r-math.js");
 const {
-    special: { pentagamma },
-    R: { numberPrecision, seq: _seq, flatten: c }
+  special: { pentagamma },
+  R: { numberPrecision, seq: _seq, flatten: c },
 } = libR;
 
 //some helpers
@@ -8819,26 +8074,26 @@ psigamma(x,3);
 
 #### `psigamma`
 
-The nth derivative of  `ln Γ(x)`.
+The nth derivative of `ln Γ(x)`.
 
-$$ ψ(x)^{n} = \frac{d^{n}}{dx^{n}}  (ln Γ(x) )$$
+$$ ψ(x)^{n} = \frac{d^{n}}{dx^{n}} (ln Γ(x) )$$
 
 _typescript decl_
 
 ```typescript
 declare function psigamma(
-  x:number|number[],
-  deriv: number|number[]
-):number|number[];
+  x: number | number[],
+  deriv: number | number[]
+): number | number[];
 ```
 
 Usage:
 
 ```javascript
-const libR = require('lib-r-math.js');
+const libR = require("lib-r-math.js");
 const {
-    special: { psigamma },
-    R: { numberPrecision, seq: _seq, flatten: c }
+  special: { psigamma },
+  R: { numberPrecision, seq: _seq, flatten: c },
 } = libR;
 
 //some helpers
@@ -8871,18 +8126,16 @@ The [gammma function](https://en.wikipedia.org/wiki/Gamma_function) Γ(x). See [
 _typescript decl_
 
 ```typescript
-declare function gamma(
-  x: number|number[]
-): number|number[]
+declare function gamma(x: number | number[]): number | number[];
 ```
 
 Usage:
 
 ```javascript
-const libR = require('lib-r-math.js');
+const libR = require("lib-r-math.js");
 const {
-    special: { gamma },
-    R: { numberPrecision, seq: _seq, flatten: c }
+  special: { gamma },
+  R: { numberPrecision, seq: _seq, flatten: c },
 } = libR;
 
 //some helpers
@@ -8890,7 +8143,7 @@ const seq = _seq()();
 const precision9 = numberPrecision(9); //truncate past 9 digits
 
 //generate data
-const gx = seq(2,5,.5).map(x=> x*x-9);
+const gx = seq(2, 5, 0.5).map((x) => x * x - 9);
 //[ -5, -2.75, 0, 3.25, 7, 11.25, 16 ]
 
 const g = precision9(gamma(gx));
@@ -8915,18 +8168,16 @@ The [logarithmic gammma function](https://en.wikipedia.org/wiki/Gamma_function) 
 _typescript decl_
 
 ```typescript
-declare function lgamma(
-  x: number|number[]
-): number|number[] 
+declare function lgamma(x: number | number[]): number | number[];
 ```
 
 Usage:
 
 ```javascript
-const libR = require('lib-r-math.js');
+const libR = require("lib-r-math.js");
 const {
-    special: { lgamma },
-    R: { numberPrecision, seq: _seq, flatten: c }
+  special: { lgamma },
+  R: { numberPrecision, seq: _seq, flatten: c },
 } = libR;
 
 //some helpers
@@ -8934,7 +8185,7 @@ const seq = _seq()();
 const precision9 = numberPrecision(9); //truncate past 9 digits
 
 //generate data
-const gx = seq(2,5,.5).map(x=> x*x-9);
+const gx = seq(2, 5, 0.5).map((x) => x * x - 9);
 //[ -5, -2.75, 0, 3.25, 7, 11.25, 16 ]
 
 const g = precision9(lgamma(gx));
@@ -8965,23 +8216,23 @@ _typescript decl_
 
 ```typescript
 declare function choose(
-  n: number|number[],
-  k: number|number[]
-): number|number[]
+  n: number | number[],
+  k: number | number[]
+): number | number[];
 ```
 
-* `n`: scalar or array of numbers
-* `k`: scalar or array of numbers
+- `n`: scalar or array of numbers
+- `k`: scalar or array of numbers
 
 **Note:** if `n` and `k` are unequal sized arrays then R argument cycling rules apply.
 
 Usage:
 
 ```javascript
-const libR = require('lib-r-math.js');
+const libR = require("lib-r-math.js");
 const {
-    special: { choose },
-    R: { seq: _seq, flatten: c }
+  special: { choose },
+  R: { seq: _seq, flatten: c },
 } = libR;
 
 //1  All coefficeints of the expanded (x+y)⁴.
@@ -9021,23 +8272,23 @@ _typescript decl_
 
 ```typescript
 declare function choose(
-  n: number|number[],
-  k: number|number[]
-): number|number[]
+  n: number | number[],
+  k: number | number[]
+): number | number[];
 ```
 
-* `n`: scalar or array of numbers
-* `k`: scalar or array of numbers
+- `n`: scalar or array of numbers
+- `k`: scalar or array of numbers
 
 **Note:** if `n` and `k` are unequal sized arrays then R argument cycling rules apply.
 
 Usage:
 
 ```javascript
-const libR = require('lib-r-math.js');
+const libR = require("lib-r-math.js");
 const {
-    special: { choose },
-    R: { seq: _seq, flatten: c }
+  special: { choose },
+  R: { seq: _seq, flatten: c },
 } = libR;
 
 //1  All ln's of the coefficeints of the expanded (x+y)⁴.
@@ -9046,7 +8297,6 @@ const lcoef1 = lchoose(4, c(0, 1, 2, 3, 4));
   0,                  1.3862943611198906,  1.7917594692280552, 
   1.3862943611198906, 0
 ]*/
-
 
 //2
 const lcoef2 = lchoose(4000, 30);
@@ -9072,7 +8322,6 @@ lchoose(4000,30);
 lchoose(2000,998);
 #[1] 1382.264
 ```
-
 
 Contributor Covenant Code of Conduct
 Our Pledge
@@ -9110,14 +8359,18 @@ Attribution
 This Code of Conduct is adapted from the Contributor Covenant, version 1.4, available at https://www.contributor-covenant.org/version/1/4/code-of-conduct.html
 
 # Changelog
+
 All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
 ### Changed
+
 ### Changed
+
 ### Removed
 
 Guiding Principles
@@ -9139,7 +8392,5 @@ Security in case of vulnerabilities.
 [constributer-convenant]: https://www.contributor-covenant.org/
 [code-conduct]: https://www.contributor-covenant.org/version/1/4/code-of-conduct.html
 [librmath.so]: https://svn.r-project.org/R/trunk/src/nmath
-
-
 [wiki-norm]: https://en.wikipedia.org/wiki/Normal_distribution
 [r-doc-norm]: http://stat.ethz.ch/r-manual/r-patched/library/stats/html/normal.html

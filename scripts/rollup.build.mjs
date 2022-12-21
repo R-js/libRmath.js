@@ -64,7 +64,7 @@ const inputOptions = {
 const esmOutputOptions = {
     format: 'es',
     dir: 'dist',
-    sourcemap: true,
+    sourcemap: false,
     entryFileNames:`[name].esm.mjs`,
     extend: true,
 };
@@ -79,7 +79,7 @@ const esmOutputOptionsMinimal = Object.assign({}, esmOutputOptions, {
  const iifeOutputOptions = {
     format: 'iife',
     dir: 'dist',
-    sourcemap: true,
+    sourcemap: false,
     name: 'R',
     entryFileNames:`[name].iife.js`,
     extend: true,

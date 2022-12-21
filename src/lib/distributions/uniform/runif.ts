@@ -18,11 +18,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import { debug } from '@mangos/debug';
 import { ML_ERR_return_NAN2, lineInfo4 } from '@common/logger';
-import type { IRNG } from '@rng/irng';
+import { globalUni } from '@rng/global-rng';
 
 const printer = debug('runif');
 
-export function runifOne(min: number, max: number, u: IRNG): number {
+export function runifOne(min: number, max: number): number {
+    const u = globalUni();
+
     if (!(isFinite(min) && isFinite(max) && max > min))
     {
         return ML_ERR_return_NAN2(printer, lineInfo4);

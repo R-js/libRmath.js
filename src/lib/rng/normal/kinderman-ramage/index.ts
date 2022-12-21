@@ -17,7 +17,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { IRNG, MessageType } from '@rng/irng';
-import { MersenneTwister } from '@rng/mersenne-twister';
 import { IRNGNormal } from '@rng/normal/normal-rng';
 import { IRNGNormalTypeEnum } from '@rng/normal/in01-type';
 
@@ -37,7 +36,7 @@ const C2 = 0.180025191068563;
 export class KindermanRamage extends IRNGNormal {
     public static override kind = IRNGNormalTypeEnum.KINDERMAN_RAMAGE;
 
-    constructor(_rng: IRNG = new MersenneTwister(0)) {
+    constructor(_rng: IRNG) {
         super(_rng, 'KinderMan Ramage');
         // there is no reset via message init
         this._rng.unregister(MessageType.INIT, this.reset.bind(this));

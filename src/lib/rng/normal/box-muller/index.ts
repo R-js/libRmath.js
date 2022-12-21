@@ -17,7 +17,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { IRNGNormalTypeEnum } from '@rng/normal/in01-type';
 import { IRNG } from '@rng/irng';
-import { MersenneTwister } from '@rng/mersenne-twister';
 import { IRNGNormal } from '@rng/normal/normal-rng';
 
 const { log, sqrt, cos, sin } = Math;
@@ -36,7 +35,7 @@ export class BoxMuller extends IRNGNormal {
         this.BM_norm_keep = 0;
     }
 
-    constructor(_rng: IRNG = new MersenneTwister(0)) {
+    constructor(_rng: IRNG) {
         super(_rng, 'Box-Muller');
         this.BM_norm_keep = 0; // not needed but tsc will give problems
     }

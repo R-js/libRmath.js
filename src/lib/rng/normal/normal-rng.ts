@@ -23,31 +23,42 @@ export abstract class IRNGNormal implements IRandom {
 
     public static kind: IRNGNormalTypeEnum;
 
-    protected _rng: IRNG;
+    protected _rng!: IRNG;
     protected _name: string;
+
+    // some normal rng's have internal state
+    protected reset(rng?: IRNG, _seed?: number): void
+    {     
+        if (rng && rng.name !== this._rng.name){
+            this._rng = rng;
+        }
+    }
     
     constructor(_rng: IRNG, name: string)
     {
         if (this.constructor.name === 'IRNGNormal'){
             throw new TypeError(`Cannot instantiate class "IRNGNormal" directly`);
         }
-        this._rng = _rng;
         this._name = name;
+        this.register = this.register.bind(this);
+        this.unregister = this.unregister.bind(this);
+        this.register(_rng);
+    }
+
+    public unregister(): void {
+        // unregister is "bound" so we can us init here
+        // eslint-disable-next-line @typescript-eslint/unbound-method
+        this._rng.unregister(MessageType.INIT, this.reset);
+    }
+
+    public register(_rng: IRNG): void {
+        this._rng = _rng; // overwrite
         this.random = this.random.bind(this);
         this.randoms = this.randoms.bind(this);
         this.reset = this.reset.bind(this);
         // it IS bound, above line...
         // eslint-disable-next-line @typescript-eslint/unbound-method
         this._rng.register(MessageType.INIT, this.reset);
-    }
-
-    public reset(rng?: IRNG, seed?: number): void
-    {
-        
-        if (rng && rng.name !== this._rng.name){
-            this._rng = rng;
-        }
-        seed;
     }
 
     public randoms(n: number): Float32Array {
