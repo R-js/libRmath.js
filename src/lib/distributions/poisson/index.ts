@@ -19,12 +19,11 @@ export { dpois } from './dpois';
 export { ppois } from './ppois';
 export { qpois } from './qpois';
 import { rpoisOne } from './rpois';
-import type { IRNGNormal } from '@rng/normal/normal-rng';
 import { repeatedCall } from '@lib/r-func';
-import { globalNorm } from '@rng/global-rng';
 
-export function rpois(n: number, lamda: number, rng: IRNGNormal = globalNorm()): Float32Array {
-  return repeatedCall(n, rpoisOne, lamda, rng);
+
+export function rpois(n: number, lamda: number): Float32Array {
+  return repeatedCall(n, rpoisOne, lamda);
 }
 
 export { rpoisOne };

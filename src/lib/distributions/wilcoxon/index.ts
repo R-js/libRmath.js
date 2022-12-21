@@ -21,10 +21,8 @@ export { qwilcox } from './qwilcox';
 import { rwilcoxOne } from './rwilcox';
 import { repeatedCall } from '@lib/r-func';
 
-import type { IRNG } from '@rng/irng';
-import { globalUni, globalSampleKind } from '@rng/global-rng';
 
 export { rwilcoxOne };
-export function rwilcox(N: number, m: number, n: number, rng:IRNG = globalUni(), kind = globalSampleKind()): Float32Array {
-    return repeatedCall(N, rwilcoxOne, m, n, rng, kind);
+export function rwilcox(N: number, m: number, n: number): Float32Array {
+    return repeatedCall(N, rwilcoxOne, m, n);
 }

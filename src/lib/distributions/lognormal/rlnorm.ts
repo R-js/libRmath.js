@@ -17,13 +17,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import { debug } from '@mangos/debug';
 import { ML_ERR_return_NAN2, lineInfo4 } from '@common/logger';
 import { rnormOne } from '@dist/normal/rnorm';
-import type { IRNGNormal } from '@rng/normal/normal-rng';
+import { exp } from '@lib/r-func';
 
 const printer = debug('rlnorm');
 
-export function rlnormOne(meanlog = 0, sdlog = 1, rng: IRNGNormal): number {
+export function rlnormOne(meanlog = 0, sdlog = 1): number {
     if (isNaN(meanlog) || !isFinite(sdlog) || sdlog < 0) {
         return ML_ERR_return_NAN2(printer, lineInfo4);
     }
-    return Math.exp(rnormOne(meanlog, sdlog, rng));
+    return exp(rnormOne(meanlog, sdlog));
 }

@@ -20,13 +20,12 @@ export { pweibull } from './pweibull';
 export { qweibull } from './qweibull';
 import { rweibullOne } from './rweibull';
 
-import type { IRNG } from '@rng/irng';
 import { repeatedCall64 } from '@lib/r-func';
-import { globalUni } from '@rng/global-rng';
+
 
 export { rweibullOne };
 
-export function rweibull(n: number, shape: number, scale = 1, rng: IRNG = globalUni()): Float64Array {
-    return repeatedCall64(n, rweibullOne, shape, scale, rng);
+export function rweibull(n: number, shape: number, scale = 1): Float64Array {
+    return repeatedCall64(n, rweibullOne, shape, scale);
 }
 

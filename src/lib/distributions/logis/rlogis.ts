@@ -17,11 +17,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import { debug } from '@mangos/debug';
 import { ML_ERR_return_NAN2, lineInfo4 } from '@common/logger';
-import type { IRNG } from '@rng/irng';
-
+import { globalUni } from '@lib/rng';
 const printer_rlogis = debug('rlogis');
 
-export function rlogisOne(location: number, scale: number, rng: IRNG): number {
+export function rlogisOne(location: number, scale: number): number {
+    const rng = globalUni()
     if (isNaN(location) || !isFinite(scale)) {
         return ML_ERR_return_NAN2(printer_rlogis, lineInfo4);
     }

@@ -19,13 +19,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import { debug } from '@mangos/debug';
 
 import { ML_ERR_return_NAN2, lineInfo4 } from '@common/logger';
+import { globalNorm } from '@rng/global-rng';
 
 import { imax2, imin2, M_1_SQRT_2PI, trunc, log, abs, pow, exp, floor, sqrt, isFinite } from '@lib/r-func';
 import { fsign } from './fsign';
 
 import { exp_rand } from '@dist/exp/sexp';
-import type { IRNGNormal } from '@rng/normal/normal-rng';
-import { globalNorm } from '@rng/global-rng';
 
 const a0 = -0.5;
 const a1 = 0.3333333;
@@ -45,7 +44,8 @@ const printer_rpois = debug('rpois');
 /* Factorial Table (0:9)! */
 const fact = [1, 1, 2, 6, 24, 120, 720, 5040, 40320, 362880];
 
-export function rpoisOne(mu: number, rng: IRNGNormal = globalNorm()): number {
+export function rpoisOne(mu: number, ): number {
+    const rng =globalNorm();  
 
     /* In Original C code these are static (why? perf improvement?) --- persistent between calls for same mu : */
     let l = 0;

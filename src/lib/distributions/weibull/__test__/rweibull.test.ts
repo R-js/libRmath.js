@@ -4,7 +4,7 @@ import { rweibullOne } from '../rweibull';
 import { rweibull } from '..';
 
 import { IRNGTypeEnum } from '@rng/irng-type';
-import { globalUni, RNGKind } from '@rng/global-rng';
+import { RNGKind, setSeed } from '@rng/global-rng';
 import { IRNGNormalTypeEnum } from '@rng/normal/in01-type'
 
 const qweibullDomainWarns = select('rweibull')("argument out of domain in '%s'");
@@ -16,20 +16,20 @@ describe('rweibull', function () {
             cl.clear('rweibull');
         });
         it('shape=NaN|scale=NaN', () => {
-            const nan1 = rweibullOne(NaN, 0.5, globalUni());
+            const nan1 = rweibullOne(NaN, 0.5);
             expect(nan1).toBeNaN();
-            const nan2 = rweibullOne(4, NaN, globalUni());
+            const nan2 = rweibullOne(4, NaN);
             expect(nan2).toBeNaN();
         });
         it('shape <= 0 | scale <= 0', () => {
-            const nan1 = rweibullOne(3, -0.5, globalUni());
+            const nan1 = rweibullOne(3, -0.5);
             expect(nan1).toBeNaN();
-            const nan2 = rweibullOne(-4, 0.5, globalUni());
+            const nan2 = rweibullOne(-4, 0.5);
             expect(nan2).toBeNaN();
             expect(qweibullDomainWarns()).toHaveLength(2);
         });
         it('shape <= 0 | scale = 0', () => {
-            const zero = rweibullOne(-3, 0, globalUni());
+            const zero = rweibullOne(-3, 0);
             expect(zero).toBe(0);
         });
     });
@@ -37,7 +37,7 @@ describe('rweibull', function () {
     describe('fidelity', () => {
         beforeEach(() => {
             RNGKind({ uniform: IRNGTypeEnum.MERSENNE_TWISTER, normal: IRNGNormalTypeEnum.INVERSION});
-            globalUni().init(111_111);
+            setSeed(111_111);
         });
         it('n=10, scale=0.5, shape=4', () => {
             const ans = rweibull(10, 4, 0.5);

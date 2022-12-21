@@ -4,40 +4,40 @@ import { resolve } from 'path';
 import { cl, select } from '@common/debug-mangos-select';
 import { rwilcoxOne, rwilcox } from '..';
 
-import { globalUni, globalSampleKind } from '@rng/global-rng';
-
 import { IRNGSampleKindTypeEnum } from '@rng/sample-kind-type';
+import { setSeed, RNGKind as RNGkind} from '@rng/global-rng';
 
 const rwilcoxDomainWarns = select('rwilcox')("argument out of domain in '%s'");
 
 describe('rwilcox', function () {
+    beforeEach(() => {
+        cl.clear('rwilcox');
+        setSeed(12345);
+        RNGkind({sampleKind: IRNGSampleKindTypeEnum.ROUNDING});
+    });
     describe('invalid input and edge cases', () => {
-        beforeEach(() => {
-            cl.clear('rwilcox');
-            globalUni().init(12345);
-            globalSampleKind(IRNGSampleKindTypeEnum.ROUNDING);
-        });
+      
         it('m=NaN|m=NaN|n=NaN', () => {
-            const nan1 = rwilcoxOne(NaN, 4, globalUni(), globalSampleKind());
-            const nan2 = rwilcoxOne(4, NaN, globalUni(), globalSampleKind());
+            const nan1 = rwilcoxOne(NaN, 4);
+            const nan2 = rwilcoxOne(4, NaN);
             expect(nan1).toBeNaN();
             expect(nan2).toBeNaN();
         });
         it('m < 0 | n < 0', () => {
-            const nan1 = rwilcoxOne(-1, 3,  globalUni(), globalSampleKind());
-            const nan2 = rwilcoxOne(5, -4,  globalUni(), globalSampleKind());
+            const nan1 = rwilcoxOne(-1, 3);
+            const nan2 = rwilcoxOne(5, -4);
             expect(nan1).toBeNaN()
             expect(nan2).toBeNaN();
             expect(rwilcoxDomainWarns()).toHaveLength(2);
         });
         it('m == 0 | n == 0', () => {
-            const z1 = rwilcoxOne(0, 3,  globalUni(), globalSampleKind());
-            const z2 = rwilcoxOne(1, 0,  globalUni(), globalSampleKind());
+            const z1 = rwilcoxOne(0, 3);
+            const z2 = rwilcoxOne(1, 0);
             expect(z1).toBe(0);
             expect(z2).toBe(0);
         });
         it('( m + n ) > 800_000_000', () => {
-            const nan = rwilcoxOne(400_000_000, 400_000_000,  globalUni(), globalSampleKind());
+            const nan = rwilcoxOne(400_000_000, 400_000_000);
             expect(nan).toBeNaN();
             expect(rwilcoxDomainWarns()).toHaveLength(2);
         });
@@ -45,17 +45,12 @@ describe('rwilcox', function () {
     describe('fidelity', () => {
         it('n=100, m = 100 & n= 20, sample.kind=rounding', async () => {
             const [r] = await loadData(resolve(__dirname, 'fixture-generation', 'rwilcox1.R'), /\s+/, 1);
-            globalSampleKind(IRNGSampleKindTypeEnum.ROUNDING);
-            const unif_ran = globalUni();
-            unif_ran.init(12345);
             const ans = rwilcox(100, 100, 20);
             expect(ans).toEqualFloatingPointBinary(r);
         });
         it('n=100, m = 100 & n= 20, sample.kind=rejection', async () => {
             const [r] = await loadData(resolve(__dirname, 'fixture-generation', 'rwilcox2.R'), /\s+/, 1);
-            globalSampleKind(IRNGSampleKindTypeEnum.REJECTION);
-            const unif_ran = globalUni();
-            unif_ran.init(12345);
+            RNGkind({sampleKind: IRNGSampleKindTypeEnum.REJECTION});
             const ans = rwilcox(100, 100, 20);
             expect(ans).toEqualFloatingPointBinary(r);
         });

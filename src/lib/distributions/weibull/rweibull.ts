@@ -18,12 +18,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import { debug } from '@mangos/debug';
 
 import { ML_ERR_return_NAN2, lineInfo4 } from '@common/logger';
-import type { IRNG } from '@rng/irng';
 import { pow, log } from '@lib/r-func';
+import { globalUni } from '@rng/global-rng';
 
 const printer = debug('rweibull');
 
-export function rweibullOne(shape: number, scale: number, rng: IRNG): number {
+export function rweibullOne(shape: number, scale: number): number {
+    const rng = globalUni();
     if (!isFinite(shape) || !isFinite(scale) || shape <= 0 || scale <= 0)
     {
         if (scale === 0)

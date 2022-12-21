@@ -19,12 +19,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import { debug } from '@mangos/debug';
 
 import { ML_ERR_return_NAN2, lineInfo4 } from '@common/logger';
-import type { IRNGNormal } from '@rng/normal/normal-rng';
 import { globalNorm } from '@rng/global-rng';
 
 const printer = debug('rnorm');
 
-export function rnormOne(mu = 0, sigma = 1, rng: IRNGNormal = globalNorm()): number {
+export function rnormOne(mu = 0, sigma = 1, ): number {
+    const rng = globalNorm()
     if (isNaN(mu) || !isFinite(sigma) || sigma < 0) {
         return ML_ERR_return_NAN2(printer, lineInfo4);
     }
