@@ -19,8 +19,6 @@ import { pexp as _pexp} from './pexp';
 import { qexp as _qexp} from './qexp';
 import { rexpOne } from './rexp';
 
-import { globalUni } from '@rng/global-rng';
-import type { IRNG } from '@rng/irng';
 import { repeatedCall64 } from '@lib/r-func';
 
 export function dexp(x: number, rate = 1, asLog = false): number{
@@ -35,8 +33,8 @@ export function qexp(p: number, rate = 1, lowerTail = true, logP = false): numbe
   return _qexp(p, 1 / rate, lowerTail, logP);
 }
 
-export  function rexp(n: number, rate = 1, rng: IRNG = globalUni()):Float64Array{
-  return repeatedCall64(n, rexpOne, 1 / rate, rng);
+export  function rexp(n: number, rate = 1):Float64Array{
+  return repeatedCall64(n, rexpOne, 1 / rate);
 }
 
 export { rexpOne };

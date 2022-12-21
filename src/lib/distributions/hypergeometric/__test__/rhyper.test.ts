@@ -59,7 +59,6 @@ describe('rhyper', function () {
                 2 ** 31 - 1, //nn1in
                 2 ** 31 - 1, //nn2in
                 2 ** 31 - 1, //kkin
-                undefined,   //rng
             );
             expect(z3).toEqualFloatingPointBinary(1073761537);
             const t1 = Date.now();
@@ -69,7 +68,6 @@ describe('rhyper', function () {
                 (2 ** 31) / 2, //nn1in
                 (2 ** 31) / 2, //nn2in
                 2 ** 31 - 1, //kkin
-                undefined,   //rng
             );
             const t2 = Date.now();
             expect(z4).toEqualFloatingPointBinary(1073741824);

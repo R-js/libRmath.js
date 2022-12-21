@@ -21,10 +21,8 @@ export { qnorm } from './qnorm';
 import { rnormOne } from './rnorm';
 import { repeatedCall64 } from '@lib/r-func';
 
-import type { IRNGNormal } from '@rng/normal/normal-rng';
-
-export function rnorm(n: number, mu?: number, sigma?: number, rng?:IRNGNormal): Float64Array {
-    return repeatedCall64(n, rnormOne, mu, sigma, rng);
+export function rnorm(n: number, mu?: number, sigma?: number): Float64Array {
+    return repeatedCall64(n, rnormOne, mu, sigma);
 }
 
 export { rnormOne };

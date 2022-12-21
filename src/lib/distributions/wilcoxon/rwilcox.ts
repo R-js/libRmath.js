@@ -18,17 +18,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import { debug } from '@mangos/debug';
 import { ML_ERR_return_NAN2, lineInfo4, ML_ERROR2, ME } from '@common/logger';
-import { IRNG } from '@rng/irng';
 import { round, trunc, floor } from '@lib/r-func';
 import { R_unif_index } from '@rng/utils';
-import { IRNGSampleKindTypeEnum } from '@rng/sample-kind-type'
+import { globalUni, globalSampleKind } from '@rng/global-rng';
 
 const printer_rwilcox = debug('rwilcox');
 
 const MAXSIZE = 800_000_000;
 
-export function rwilcoxOne(m: number, n: number, rng: IRNG, sampleKind: IRNGSampleKindTypeEnum): number 
+export function rwilcoxOne(m: number, n: number): number 
 {
+    const rng = globalUni();
+    const sampleKind = globalSampleKind();
     /* NaNs propagated correctly */
     if (isNaN(m) || isNaN(n))
     {   

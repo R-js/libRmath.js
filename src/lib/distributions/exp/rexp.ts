@@ -18,12 +18,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import { ML_ERR_return_NAN2, lineInfo4 } from '@common/logger';
 
 import { debug } from '@mangos/debug';
-import { IRNG } from '@rng/irng';
 import { exp_rand } from './sexp';
+
+import { globalUni } from '@rng/global-rng';
+
 
 const printer = debug('rexp');
 
-export function rexpOne(scale: number, rng: IRNG): number {
+export function rexpOne(scale: number): number {
+    const rng = globalUni();
     if (!Number.isFinite(scale) || scale <= 0.0) {
         if (scale === 0) return 0;
         /* else */
