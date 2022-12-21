@@ -224,7 +224,8 @@ import {
     //globalUni,
     //globalNorm,
     RNGKind as RNGkind,
-    setSeed
+    setSeed,
+    randomSeed
 } from './lib/rng/global-rng';
 
 // special
@@ -416,6 +417,7 @@ const defaultObservableNoteBook = {
     //globalNorm,
     RNGkind,
     setSeed,
+    randomSeed,
     //
     BesselJ,
     BesselI,
@@ -604,6 +606,7 @@ export {
     //globalNorm,
     RNGkind,
     setSeed,
+    randomSeed,
     //
     BesselJ,
     BesselI,

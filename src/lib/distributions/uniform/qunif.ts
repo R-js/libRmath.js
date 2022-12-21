@@ -23,8 +23,8 @@ import { R_DT_qIv } from '@dist/exp/expm1';
 
 const printer = debug('qunif');
 
-export function qunif(p: number, a = 0, b = 1, lowerTail = true, logP = false): number {
-    if (isNaN(p) || isNaN(a) || isNaN(b))
+export function qunif(p: number, min = 0, max = 1, lowerTail = true, logP = false): number {
+    if (isNaN(p) || isNaN(min) || isNaN(max))
     {
         return NaN;
     }
@@ -35,18 +35,18 @@ export function qunif(p: number, a = 0, b = 1, lowerTail = true, logP = false): 
         return rc;
     }
 
-    if (!isFinite(a) || !isFinite(b))
+    if (!isFinite(min) || !isFinite(max))
     {
         return ML_ERR_return_NAN2(printer, lineInfo4);
     }
-    if (b < a)
+    if (max < min)
     {
         return ML_ERR_return_NAN2(printer, lineInfo4);
     }
-    if (b === a)
+    if (max === min)
     {
-        return a;
+        return min;
     }
 
-    return a + R_DT_qIv(lowerTail, logP, p) * (b - a);
+    return min + R_DT_qIv(lowerTail, logP, p) * (max - min);
 }

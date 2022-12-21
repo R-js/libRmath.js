@@ -18,14 +18,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import { debug } from '@mangos/debug';
 import { ML_ERR_return_NAN2, lineInfo4 } from '@common/logger';
 import { DBL_MAX_EXP } from '@lib/r-func';
-import { IRNG } from '@rng/irng';
 import { globalUni } from '@rng/global-rng';
 
 const printer = debug('rbeta');
 
 export const expmax = DBL_MAX_EXP * Math.LN2; /* = log(DBL_MAX) */
 
-export function rbetaOne(aa: number, bb: number, rng: IRNG = globalUni()): number {
+export function rbetaOne(aa: number, bb: number): number {
+    const rng = globalUni();
+    
     if (isNaN(aa)|| isNaN(bb)){
         return ML_ERR_return_NAN2(printer, lineInfo4);
     }

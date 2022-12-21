@@ -29,7 +29,6 @@ import { qnt } from './qnt';
 import { qt as _qt } from './qt';
 //
 import { repeatedCall64 } from '@lib/r-func';
-import { globalNorm } from '@rng/global-rng';
 
 export function dt(x: number, df: number, ncp = 0, asLog = false): number {
     return dnt(x, df, ncp, asLog);
@@ -43,9 +42,9 @@ export function qt(p: number, df: number, ncp?: number, lowerTail = true, logP =
     return ncp === undefined ? _qt(p, df, lowerTail, logP) : qnt(p, df, ncp, lowerTail, logP);
 }
 
-export function rt(n: number, df: number, ncp?: number, rng = globalNorm()): Float64Array {
+export function rt(n: number, df: number, ncp?: number): Float64Array {
     if (ncp === undefined) {
-        return repeatedCall64(n, rtOne, df, rng);
+        return repeatedCall64(n, rtOne, df);
     }
     // cannot do this enhancement because of bleeding of RNG by rchisq below
     //        (must achieve fidelity)
@@ -55,8 +54,8 @@ export function rt(n: number, df: number, ncp?: number, rng = globalNorm()): Flo
     //}
     else {
         // have to do it like this, bleeds the RNG's in this order, to create fidelity
-        const norm = rnorm(n, ncp, 1, rng); // bleed this first from rng
-        const chisq = rchisq(n, df, undefined, rng);
+        const norm = rnorm(n, ncp, 1); // bleed this first from rng
+        const chisq = rchisq(n, df, undefined);
         for (let i = 0; i < n; i++) {
             chisq[i] /= df;
             chisq[i] = Math.sqrt(chisq[i]);

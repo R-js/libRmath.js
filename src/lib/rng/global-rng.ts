@@ -179,6 +179,17 @@ export function RNGKind(opt: RandomGenSet = {}): RandomGenSet {
 
 }
 
+export function randomSeed(internalState?: Uint32Array | Int32Array): Uint32Array | Int32Array | never {
+    const gu = globalUni();
+    if (internalState === undefined){
+        return gu.seed;
+    }
+    const state = gu.seed;
+    if (state.constructor.name === internalState.constructor.name && state.length === internalState.length){
+       gu.seed = internalState;
+    }
+    throw new Error(`the internal state of ${gu.name} is a ${state.constructor.name} of length ${state.length}`);
+}
 
 //init
 (globalThis as EgT)[symRNG] = new MersenneTwister;

@@ -2,10 +2,6 @@
 
 This R statistical [`nmath`][librmath.so] re-created in typescript/javascript.
 
-[![NPM](https://img.shields.io/npm/v/lib-r-math.js.svg)](https://www.npmjs.com/package/lib-r-math.js)
-[![Build Status](https://travis-ci.org/R-js/libRmath.js.svg?branch=master)](https://travis-ci.org/R-js/libRmath.js)
-
-
 If you were not using a previous version to 2.0.0, you can skip _breaking changes_ and go to:
 
 - [Installation and usage](#intsallation-and-usage)
@@ -170,31 +166,11 @@ const answ = BesselJ(3, 0.4);
     - [ESM for Node](#esm-for-node)
     - [COMMONJS for node](#commonjs-for-node)
   - [Table of Contents](#table-of-contents)
-    - [Auxiliary functions](#auxiliary-functions)
-      - [`RNGkind`](#rngkind)
-      - [`setSeed`](#setseed)
-- [Uniform Pseudo Random Number Generators](#uniform-pseudo-random-number-generators)
-      - [Summary](#summary)
-  - [The 7 Uniform Random Number Generators](#the-7-uniform-random-number-generators)
-      - [Improvements compared to R](#improvements-compared-to-r)
-      - [General Usage](#general-usage)
-      - ["Mersenne Twister"](#mersenne-twister)
-      - ["Wichmann-Hill"](#wichmann-hill)
-      - ["Marsaglia-Multicarry"](#marsaglia-multicarry)
-      - ["Super Duper"](#super-duper)
-      - ["Knuth TAOCP"](#knuth-taocp)
-      - ["Knuth TAOCP 2002"](#knuth-taocp-2002)
-      - ["L'Ecuyer-CMRG":](#lecuyer-cmrg)
-  - [Normal distributed Random Number Generators](#normal-distributed-random-number-generators)
-      - [Summary](#summary-1)
-      - [General Use](#general-use)
-      - ["Ahrens Dieter"](#ahrens-dieter)
-      - [Box Muller](#box-muller)
-      - [Buggy Kinderman Ramage](#buggy-kinderman-ramage)
-      - [Inversion](#inversion)
-      - [Kinderman Ramage](#kinderman-ramage)
-  - [Normal and Uniform distributions](#normal-and-uniform-distributions)
-      - [Summary](#summary-2)
+  - [Auxiliary functions](#auxiliary-functions)
+    - [`RNGkind`](#rngkind)
+    - [`setSeed`](#setseed)
+    - [`randomSeed`](#randomseed)
+  - [Distributions](#distributions)
     - [Uniform distribution](#uniform-distribution)
       - [`dunif`](#dunif)
       - [`punif`](#punif)
@@ -206,7 +182,7 @@ const answ = BesselJ(3, 0.4);
       - [`qnorm`](#qnorm)
       - [`rnorm`](#rnorm)
   - [Other Probability Distributions](#other-probability-distributions)
-      - [summary](#summary-3)
+      - [summary](#summary)
     - [Beta distribution](#beta-distribution)
       - [`dbeta`](#dbeta)
       - [`pbeta`](#pbeta)
@@ -324,9 +300,9 @@ const answ = BesselJ(3, 0.4);
     - [Changed](#changed-2)
     - [Removed](#removed-1)
 
-### Auxiliary functions
+## Auxiliary functions
 
-#### `RNGkind`
+### `RNGkind`
 
 RNGkind is the analog to R's "RNGkind". This is how you select what RNG (normal and uniform) you use and the samplingKind
 
@@ -338,7 +314,7 @@ R console:
 [3] "Rejection"   
 ```
 
-Rjs function spec:
+Rjs _typescript decl_:
 
 ```typescript
 
@@ -366,7 +342,7 @@ enum IRNGSampleKindTypeEnum {
     REJECTION = 'REJECTION',
 }
 
-// ONLY CHANGE the RNG for the type that is set
+// All props option, ONLY set the property you want to change
 type RandomGenSet = {
     uniform?: IRNGTypeEnum
     normal?: IRNGNormalTypeEnum
@@ -381,7 +357,6 @@ RNGkind = function (options?: RandomGenSet): RandomGenSet;
 Example: set uniform RNG to `SUPER_DUPER` and normal RNG to `BOX_MULLER`
 
 ```typescript
-
 import { RNGkind,  IRNGNormalTypeEnum, IRNGNormalTypeEnum } from 'lib-r-math.js'
 
 const normal = IRNGNormalTypeEnum.SUPER_DUPER;
@@ -392,748 +367,88 @@ RNGkind({ uniform, normal }); //-> does not change sampleKind
 RNGkind(); // does not change anything but returns the current used RNG's and "sampleKind"
 ```
 
-#### `setSeed`
+### `setSeed`
+
+Uses a single value to initialize the internal state of the currently selected uniform RNG.
+
+R console analog: `set.seed`
+
+Rjs _typescript decl_
+
+```typescript
+function setSeed(s: number): void;
+```
+
+Argument `s` is coerced to an unsigned 32 bit integer 
+
+### `randomSeed`
+
+R console analog: `.Random.seed`
+
+Rjs _typescript decl_
+
+```typescript
+function randomSeed(internalState?: Uint32Array | Int32Array): Uint32Array | Int32Array | never;
+```
+
+- If no arguments is used, it will return the internal RNG state of the currently selected uniform RNG
+- If an argument is provided, it will use this value to set the internal RNG state of the currently selected uniform RNG
+
 
 YOU ARE HERE I AM CALLING IT A DAY
-
-`global`
-    globalNorm,
-    RNGKind as RNGkind,
-    setSeed
-
-RNGkind
-# Uniform Pseudo Random Number Generators
-
-#### Summary
-
-In 'R', the functions that generate random deviates of distributions (Example: Poisson (`rpois`), Student-t (`rt`), Normal (`rnorm`), etc) use uniform PRNG's directly or indirectly (as wrapped in a normal distributed PRNG). This section discusses the uniform distributed PRNG's that have been ported from R to JS.
-
-## The 7 Uniform Random Number Generators
-
-All 7 uniform random generators have been ported and tested to yield exactly the
-same as their R counterpart.
-
-ADD: global unif and norm are added and can be set via "setSeed" and "RNGkind"
-
-#### Improvements compared to R
-
-In R it is impossible to use different types of uniform random generators at the
-same time because of a global shared seed buffer. In our port every random
-generator has its own buffer and can therefore be used concurrently.
-
-#### General Usage
-
-All uniform random generator classes have these public methods:
-
-1. `init`: set the random generator seed. Same as R `set.seed()`
-2. `seed (read/write property)`: get/set the current seed values as an array. Same as R `.Random.seed`.
-3. `unif_random`: get a random value, same as `runif(1)` in R
-
-#### "Mersenne Twister"
-
-From Matsumoto and Nishimura (1998). A twisted GFSR with period `2^19937 - 1`
-and equi-distribution in 623 consecutive dimensions (over the whole period). The
-_`seed`_ is a 624-dimensional set of 32-bit integers plus a current position in
-that set.
-
-usage example:
-
-```javascript
-const libR = require("lib-r-math.js");
-const {
-  R: { numberPrecision },
-  rng: { MersenneTwister, timeseed },
-} = libR;
-
-//helpers
-const precision = numberPrecision(9); //9 digits accuracy
-
-//example
-const mt = new MersenneTwister(12345); // initialize with seed = 12345
-
-//example
-mt.init(timeseed()); // Use seed derived from system clock
-
-//example
-mt.init(0); // re-initialize with seed = 0
-
-// show first 8 values of the seed buffer of the mt instance.
-mt.seed.slice(0, 8);
-/*[ 624,   1280795612,  -169270483,  -442010614,  -603558397,  -222347416,
-  1489374793, 865871222 ]
-*/
-
-const rmt1 = mt.unif_rand(5);
-precision(rmt1);
-//[ 0.8966972, 0.265508663, 0.3721239, 0.572853363, 0.90820779 ]
-```
-
-_Equivalent in R_
-
-```R
-RNGkind("Mersenne-Twister")
-set.seed(0)
-
-#show first 8 values of the seed buffer
-.Random.seed[2:9]
-#[1]        624 1280795612 -169270483 -442010614 -603558397 -222347416 1489374793
-#[8]  865871222
-
-runif(5)
-#[1] 0.8966972 0.2655087 0.3721239 0.5728534
-#[5] 0.9082078
-```
-
-#### "Wichmann-Hill"
-
-The seed, is an integer vector of length 3, where each element is in `1:(p[i] - 1)`, where p is the length 3 vector of primes, `p = (30269, 30307, 30323)`. The
-`Wichmann–Hill` generator has a cycle length of `6.9536e12 = ( 30269 * 30307 * 30323 )`, see Applied Statistics (1984) 33, 123 which corrects the original
-article).
-
-usage example:
-
-```javascript
-const libR = require("lib-r-math.js");
-const {
-  rng: { WichmannHill, timeseed },
-  R: { numberPrecision },
-} = libR;
-
-// some helpers
-
-const precision = numberPrecision(9);
-
-// Some options on seeding given below
-const wh = new WichmannHill(1234); // initialize seed with 1234 on creation (default 0)
-//
-wh.init(timeseed()); // re-init seed with a random seed based on timestamp
-
-wh.init(0); // re-init seed to zero
-wh.seed; // show seed
-//[ 2882, 21792, 10079 ]
-const rwh1 = wh.unif_rand(5);
-precision(rwh1);
-//[ 0.462553151, 0.26582675, 0.57721078, 0.510793206, 0.337560559 ]
-```
-
-_in R console_:
-
-```R
-> RNGkind("Wichmann-Hill")
-> set.seed(0)
-> runif(5)
-[1] 0.4625532 0.2658268 0.5772108 0.5107932
-[5] 0.3375606
-```
-
-#### "Marsaglia-Multicarry"
-
-A multiply-with-carry RNG is used, as recommended by George Marsaglia in his
-post to the mailing list ‘sci.stat.math’. It has a period of more than 2^60 and
-has passed all tests (according to Marsaglia). The seed is two integers (all
-values allowed).
-
-usage example:
-
-```javascript
-const libR = require("lib-r-math.js");
-const {
-  rng: { MarsagliaMultiCarry, timeseed },
-  R: { numberPrecision },
-} = libR;
-
-//usefull helpers
-const precision = numberPrecision(9); //9 significant digits
-
-// Some options on seeding given below
-const mmc = new MarsagliaMultiCarry(1234); // use seed = 1234 on creation
-
-mmc.init(timeseed());
-mmc.init(0); // also, defaults to '0' if seed is not specified
-mmc.seed;
-//[ -835792825, 1280795612 ]
-
-const rmmc = mmc.unif_rand(5);
-precision(rmmc);
-//[ 0.169153755, 0.53154353, 0.594605297, 0.233315406, 0.45765618 ]
-```
-
-_in R console_:
-
-```R
-> RNGkind("Marsaglia-Multicarry")
-> set.seed(0)
-# we cannot access the PRNG directly
-# we need to use runif wrapper.
-> runif(5)
-[1] 0.1691538 0.5315435 0.5946053 0.2333154
-[5] 0.4576562
-```
-
-#### "Super Duper"
-
-Marsaglia's famous Super-Duper from the 70's. This is the original version which
-does not pass the `MTUPLE` test of the `Diehard` battery. It has a period of about
-4.6\*10^18 for most initial seeds. The seed is two integers (all values allowed
-for the first seed: the second must be odd).
-
-_We use the implementation by Reeds et al (1982–84)._
-
-usage example:
-
-```javascript
-const libR = require("lib-r-math.js");
-const {
-  rng: { SuperDuper, timeseed },
-  R: { seq, numberPrecision },
-} = libR;
-
-//usefull helpers
-const precision = numberPrecision(9); //9 significant digits
-
-// Seeding possibilities shown below
-const sd = new SuperDuper(1234); // use seed = 1234 on creation
-sd.init(timeseed()); // re-initialize with random seed based on timestamp
-sd.init(0); // re-initialize with seed = 0.
-//
-sd.seed;
-//[ -835792825, 1280795613 ]
-
-const rsd1 = sd.unif_rand(5);
-precision(rsd1);
-//[ 0.640403562, 0.592731255, 0.412968712, 0.187729399, 0.267905811 ]
-```
-
-_in R console_:
-
-```R
-> RNGkind("Super-Duper")
-> set.seed(0)
-> runif(5)
-[1] 0.6404036 0.5927313 0.4129687 0.1877294
-[5] 0.2679058
-```
-
-#### "Knuth TAOCP"
-
-An earlier version from Knuth (1997).
-
-The 2002 version was not backwards compatible with the earlier version: the
-initialization of the GFSR from the seed was altered. R did not allow you to
-choose consecutive seeds, the reported ‘weakness’, and already scrambled the
-seeds.
-
-usage example:
-
-```javascript
-const libR = require("lib-r-math.js");
-const {
-  rng: { KnuthTAOCP, timeseed },
-  R: { numberPrecision },
-} = libR;
-
-//usefull helpers
-const precision = numberPrecision(9); //9 significant digits
-
-// Seeding possibilities shown below
-const kn97 = new KnuthTAOCP(1234); // use seed = 1234 on creation
-kn97.init(timeseed()); // re-initialize with random seed based on timestamp
-kn97.init(0); // re-initialize with seed = 0.
-
-kn97.seed;
-// 101 unsigned integer array, only shown the first few values are shown
-/*[ 673666444,
-  380305043,
-  1062889978,
-  926003693,
- .
- .]*/
-
-const rkn97 = kn97.unif_rand(5);
-// limit precision to 9 digits
-precision(rkn97);
-//[ 0.627400767, 0.354186672, 0.989893431, 0.862408143, 0.662299205 ]
-```
-
-<details>
-  <summary><b>same example in R</b> (click to show)</summary>
-
-```R
-> RNGkind("Knuth-TAOCP")
-> set.seed(0)
-> runif(5)
-[1] 0.6274008 0.3541867 0.9898934 0.8624081 0.6622992
-```
-
-</details>
-
-#### "Knuth TAOCP 2002"
-
-A 32-bit integer GFSR using lagged Fibonacci sequences with subtraction. That
-is, the recurrence used is
-
-```R
-X[j] = (X[j-100] - X[j-37]) mod 2^30
-```
-
-and the ‘seed’ is the set of the 100 last numbers (actually recorded as 101
-numbers, the last being a cyclic shift of the buffer). The period is around
-2<sup>129</sup>.
-
-usage example:
-
-```javascript
-const libR = require("lib-r-math.js");
-const {
-  rng: { KnuthTAOCP2002, timeseed },
-  R: { numberPrecision },
-} = libR;
-
-//some helpers
-const precision = numberPrecision(9);
-
-// Seeding possibilities shown below
-const kt2002 = new KnuthTAOCP2002(1234); // use seed = 1234 on creation
-
-kt2002.init(timeseed()); //re-initialize with random seed based on timestamp
-
-kt2002.init(0); //re-initialize with seed = 0
-kt2002.seed;
-// 101 unsigned integer array
-//[ 481970911,
-//  634898052,
-//  994481106,
-//  607894626,
-//  1044251579,
-//  763229919,
-//  638368738,
-// .
-// .]
-const kt02 = kt2002.unif_rand(5);
-precision(kt02);
-//[ 0.195819038, 0.753866884, 0.472411247, 0.193160437, 0.19501841 ]
-```
-
-<details>
-  <summary><b>same example in R</b> (click to show)</summary>
-
-```R
-> RNGkind("Knuth-TAOCP-2002")
-> set.seed(0)
-> runif(5)
-[1] 0.1958190 0.7538669 0.4724112 0.1931604
-[5] 0.1950184
-```
-
-</details>
-
-#### "L'Ecuyer-CMRG":
-
-A ‘combined multiple-recursive generator’ from L'Ecuyer (1999), each element of
-which is a feedback multiplicative generator with three integer elements: thus
-the seed is a (signed) integer vector of length 6. The period is around 2^191.
-
-The 6 elements of the seed are internally regarded as 32-bit unsigned integers.
-Neither the first three nor the last three should be all zero, and they are
-limited to less than 4294967087 and 4294944443 respectively.
-
-This is not particularly interesting of itself, but provides the basis for the
-multiple streams used in package parallel.
-
-usage example:
-
-```javascript
-const libR = require("lib-r-math.js");
-const {
-  rng: { LecuyerCMRG, timeseed },
-  R: { numberPrecision },
-} = libR;
-
-//some helpers
-const precision = numberPrecision(9);
-
-// Seeding possibilities shown below
-const lc = new LecuyerCMRG(1234);
-
-lc.init(timeseed()); //re-initialize with random seed based on timestamp
-
-lc.init(0); //re-initialize with seed = 0
-lc.seed;
-/*
-[ -835792825,
-  1280795612,
-  -169270483,
-  -442010614,
-  -603558397,
-  -222347416 ]
-*/
-const lc1 = lc.unif_rand(5);
-precision(lc1);
-//[ 0.332927492, 0.890352618, 0.163963441, 0.299050824, 0.395239092 ]
-```
-
-_in R console_:
-
-```R
-> RNGkind("L'Ecuyer-CMRG")
-> set.seed(0)
-> .Random.seed[2:7]  #show the seeds
-[1] -835792825 1280795612 -169270483 -442010614
-[5] -603558397 -222347416
-
-#pick 6 random numbers
-#same numbers as generated in javascript
-> runif(5)
-[1] 0.3329275 0.8903526 0.1639634 0.2990508
-[5] 0.3952391
-```
-
-## Normal distributed Random Number Generators
-
-#### Summary
-
-This section discusses the `normal distributed PRNG's` that have been ported from R to JS.
-
-All 6 `normal random generators` have been ported and tested to yield exactly the same as their R counterpart.
-
-#### General Use
-
-All normal random generator adhere to the same principles:
-
-1. A constructor that takes an instance of a uniform PRNG as an argument
-2. A function `norm_random`: get a random value, same as `rnorm(1)` in R.
-3. A function `unif_random`: the underlying _uniform_ PRNG.
-4. The default argument for the constructor for _normal_ PRNG is : `Mersenne-Twister`.
-
-5. The class instance property `rng` contains the wrapped _uniform_ PRNG instance.
-6. All PRNG producing normal variates are packaged under the JS library name space `rng.normal`.
-
-#### "Ahrens Dieter"
-
-Ahrens, J. H. and Dieter, U. (1973) Extensions of Forsythe's method for random
-sampling from the normal distribution. Mathematics of Computation 27, 927-937.
-
-example usage:
-
-```javascript
-const libR = require("lib-r-math.js");
-const {
-  rng: {
-    SuperDuper,
-    normal: { AhrensDieter },
-  },
-  R: { numberPrecision },
-} = libR;
-
-//helper
-const precision = numberPrecision(9);
-
-// explicit use of uniform PRNG
-const sd = new SuperDuper(0);
-const ad1 = new AhrensDieter(sd);
-
-// At any time reset normal PRNG seed via wrapped uniform.
-sd.init(9987);
-ad1.rng.init(9987); //same as above
-
-// uses default uniform PRNG "MersenneTwister" with seed 0
-const ad2 = new AhrensDieter();
-
-// reference to uniform PRNG under rng property
-ad2.rng.init(0);
-
-// bleed the normal PRNG
-const rngAd = ad2.norm_rand(5);
-precision(rngAd);
-//[ -1.17616753, 0.674117732, 1.06414352, -0.143897298, -1.2311498 ]
-
-// its still possible to bleed the uniform PRNG from the normal PRNG
-ad2.unif_rand();
-//0.2016819310374558
-
-ad2.rng.unif_rand();
-//0.8983896849676967
-```
-
-_in R console_
-
-```R
-> RNGkind("Mersenne-Twister",normal.kind="Ahrens-Dieter")
-> set.seed(0)
-> rnorm(5)
-[1] -1.1761675  0.6741177  1.0641435 -0.1438973
-[5] -1.2311498
-> runif(2)
-[1] 0.2016819 0.8983897
-```
-
-#### Box Muller
-
-Box, G. E. P. and Muller, M. E. (1958) A note on the generation of normal random
-deviates. Annals of Mathematical Statistics 29, 610–611.
-
-Example usage:
-
-```javascript
-const libR = require("lib-r-math.js");
-
-const {
-  rng: {
-    SuperDuper,
-    normal: { BoxMuller },
-  },
-  R: { numberPrecision },
-} = libR;
-
-// helper
-const precision = numberPrecision(9);
-
-const sd = new SuperDuper(0);
-const bm1 = new BoxMuller(sd);
-
-// At any time reset normal PRNG seed, with the reference to uniform PRNG
-sd.init(0);
-
-// uses default uniform PRNG: MersenneTwister with seed 0
-const bm2 = new BoxMuller();
-
-// reference to uniform PRNG under rng property
-bm2.rng.init(0);
-// bleed the normal PRNG
-const bm = bm2.norm_rand(5);
-precision(bm);
-//[ 1.29738758, -0.984378527, -0.732798867, 0.759774198, 1.49998876 ]
-
-// its possible to bleed the uniform PRNG from the normal PRNG
-bm2.unif_rand();
-//0.8983896849676967
-
-bm2.rng.unif_rand();
-//0.944675268605351
-```
-
-_R equivalent_
-
-```R
-> RNGkind("Mersenne-Twister",normal.kind="Box-Muller")
-> set.seed(0)
-> rnorm(5)
-[1]  1.2973876 -0.9843785 -0.7327989  0.7597742
-[5]  1.4999888
-> runif(2)
-[1] 0.8983897 0.9446753
-```
-
-#### Buggy Kinderman Ramage
-
-Kinderman, A. J. and Ramage, J. G. (1976) Computer generation of normal random variables. Journal of the American Statistical Association 71, 893-896.
-
-The Kinderman-Ramage generator used in versions prior to 1.7.0 (now called "Buggy") had several approximation errors and should only be used for reproduction of old results.
-
-example usage:
-
-```javascript
-const libR = require("lib-r-math.js");
-const {
-  R: { numberPrecision },
-  rng: {
-    SuperDuper,
-    normal: { BuggyKindermanRamage },
-  },
-} = libR;
-//helper
-const precision = numberPrecision(9);
-
-// Possible to arbitraty uniform PRNG source (example: SuperDuper)
-const sd = new SuperDuper(0);
-const bkm1 = new BuggyKindermanRamage(sd);
-
-// At any time reset normal PRNG seed, with the reference to uniform PRNG
-sd.init(0);
-bkm1.rng.init(0); //same as above
-
-// uses default uniform PRNG new MersenneTwister with seed 0
-const bkm2 = new BuggyKindermanRamage();
-
-// reference to uniform PRNG under rng property
-bkm2.rng.init(0);
-
-// bleed the normal PRNG
-const bk = bkm2.norm_rand(5);
-precision(bk);
-//[ 0.3216151, 1.23251561, 0.280369528, -1.17519641, -1.60471361 ]
-
-// its possible to bleed the uniform PRNG from the normal PRNG
-bkm2.unif_rand();
-//0.17655675252899528
-
-bkm2.rng.unif_rand();
-//0.6870228466577828
-```
-
-_in R Console_
-
-```R
-RNGkind("Mersenne-Twister",normal.kind="Buggy Kinderman-Ramage");
-set.seed(0);
-rnorm(5);
-#[1]  0.3216151  1.2325156  0.2803695 -1.1751964
-#[5] -1.6047136
-
-runif(2);
-#[1] 0.1765568 0.6870228
-```
-
-#### Inversion
-
-Inverse transform sampling [wiki](https://en.wikipedia.org/wiki/Inverse_transform_sampling)
-
-example usage:
-
-```javascript
-const libR = require("lib-r-math.js");
-// Possible to arbitraty uniform PRNG source (example: SuperDuper)
-const {
-  rng: {
-    SuperDuper,
-    normal: { Inversion },
-  },
-  R: { numberPrecision },
-} = libR;
-//helper
-const precision = numberPrecision(9);
-
-const sd = new SuperDuper(0);
-const inv1 = new Inversion(sd);
-// At any time reset normal PRNG seed, with the reference to uniform PRNG
-sd.init(0);
-
-// uses as default uniform PRNG "MersenneTwister" with seed 0;
-const inv2 = new Inversion();
-
-// reference to uniform PRNG under rng property
-inv2.rng.init(0);
-
-// bleed the normal PRNG
-const in2 = inv2.norm_rand(5);
-precision(in2);
-//[ 1.26295428, -0.326233361, 1.32979926, 1.27242932, 0.414641434 ]
-
-// its possible to bleed the uniform PRNG from the normal PRNG
-inv2.unif_rand();
-//0.061786270467564464
-
-inv2.rng.unif_rand();
-//0.20597457489930093
-```
-
-_in R console_
-
-```R
-> RNGkind("Mersenne-Twister",normal.kind="Inversion")
-> set.seed(0)
-> rnorm(5)
-[1]  1.2629543 -0.3262334  1.3297993  1.2724293
-[5]  0.4146414
-> runif(2)
-[1] 0.06178627 0.20597457
-```
-
-#### Kinderman Ramage
-
-Kinderman, A. J. and Ramage, J. G. (1976) Computer generation of normal random variables. Journal of the American Statistical Association 71, 893-896.
-
-_Non "buggy" version_
-
-Example usage:
-
-```javascript
-const libR = require("lib-r-math.js");
-const {
-  rng: {
-    SuperDuper,
-    normal: { KindermanRamage },
-  },
-  R: { numberPrecision },
-} = libR;
-
-//helper
-const precision = numberPrecision(9);
-
-const sd = new SuperDuper(0);
-const km1 = new KindermanRamage(sd);
-
-// At any time reset normal PRNG seed, with the reference to uniform PRNG
-sd.init(1234);
-km1.rng.init(1234); // same as above
-
-// uses default uniform PRNG MersenneTwister with seed "0"
-const km2 = new KindermanRamage();
-
-km2.rng.init(0); // at any time reset PRNG with a new seed.
-
-// bleed the normal PRNG
-const k2 = km2.norm_rand(5);
-precision(k2);
-//[ 0.3216151, 1.23251561, 0.280369528, -1.17519641, -1.60471361 ]
-
-// it's possible to bleed the uniform PRNG from the normal PRNG
-km2.unif_rand();
-//0.17655675252899528
-
-km2.rng.unif_rand();
-//0.6870228466577828
-```
-
-_in R console_
-
-```R
-> RNGkind("Mersenne-Twister",normal.kind="Kinder")
-> set.seed(0)
-> rnorm(5)
-[1]  0.3216151  1.2325156  0.2803695 -1.1751964
-[5] -1.6047136
-> runif(2)
-[1] 0.1765568 0.6870228
->
-```
-
-## Normal and Uniform distributions
-
-#### Summary
-
-In the Section [1](#uniform-pseudo-random-number-generators)
-and [2](#normal-distributed-random-number-generators)
-we discussed uniform and normal PRNG classes. These classes can be used by themselves but mostly intended to be consumed to generate
-random numbers with a particular distribution (like `Uniform`, `Normal`, `Gamma`,
-`Weibull`, `Chi-square` etc).
+## Distributions
 
 ### Uniform distribution
 
-`dunif, qunif, punif, runif`
+- `dunif`: density function
+- `punif`: cummulative distribution
+- `qunif`: quantile function
+- `runif`: generate random deviates in bulk
+- `runifOne`: generate random deviates one per time
+
+Uses the RNG generator set by `RNGkind` function.
+
+Rjs _typescript decl_
+
+```typescript
+function dunif(x: number, min = 0, max = 1, log = false): number
+
+function punif(q: number, min = 0, max = 1, lowerTail = true, logP = false): number
+
+function qunif(p: number, min = 0, max = 1, lowerTail = true, logP = false): number
+
+function runif(n: number, min = 0, max = 1): Float64Array
+
+function runifOne(min: number, max: number): number
+```
+
+arguments:
+
+- `x, q`: quantiles
+- `p`: probability
+- `n`: number of observations
+- `min, max`: lower and upper limits of the distribution. Must be finite.
+- `log, logP`: if TRUE, probabilities p are given as log(p).
+- `lowerTail`: if TRUE (default), probabilities are P[X ≤ x] otherwise, P[X > x].
+
+Example:
+
+```javascript
+import { dunif } from 'lib-r-math.js';
+
+dunif(1.8, 1, 4, true);
+// -> -1.098612 (log of 0.33333)
+```
+
+I AM HERE
+
 
 See [R doc](http://stat.ethz.ch/R-manual/R-patched/library/stats/html/Uniform.html)
 
 These functions are created with the factory method `Uniform` taking as argument a uniform PRNG. Defaults to [Mersenne-Twister](#mersenne-twister).
 
-Usage:
 
-```javascript
-const libR = require("lib-r-math.js");
-const {
-  Uniform,
-  rng: { SuperDuper },
-} = libR;
 
-//Create Uniform family of functions using "SuperDuper"
-const uni1 = Uniform(new SuperDuper(0));
-
-// Create Uniform family of functions using default "Mersenne-Twister"
-const uni2 = Uniform();
-
-// functions exactly named as in `R`
-const { runif, dunif, punif, qunif } = uni2;
-```
 
 #### `dunif`
 

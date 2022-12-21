@@ -35,16 +35,15 @@ import { rbetaOne } from './rbeta';
 
 //helper
 import { repeatedCall } from '@lib/r-func';
-import { globalNorm } from '@rng/global-rng';
 
 export { rbetaOne };
 
-export function dbeta(x: number, shape1: number, shape2: number, ncp?: number, log?: boolean): number {
+export function dbeta(x: number, shape1: number, shape2: number, ncp?: number, log = false): number {
     // I added the === 0 here, because dnbeta will go back to dbeta if 0 (c source code)
     if (ncp === undefined) {
-        return dbeta_scalar(x, shape1, shape2, log || false);
+        return dbeta_scalar(x, shape1, shape2, log);
     } else {
-        return dnbeta_scalar(x, shape1, shape2, ncp, log || false);
+        return dnbeta_scalar(x, shape1, shape2, ncp, log);
     }
 }
 
@@ -68,14 +67,13 @@ export function rbeta(
     n: number,
     shape1: number,
     shape2: number,
-    ncp?: number,
-    rng = globalNorm()
+    ncp?: number
 ): Float32Array {
     if (ncp === undefined) {
-        return repeatedCall(n, rbetaOne, shape1, shape2, rng.uniform_rng);
+        return repeatedCall(n, rbetaOne, shape1, shape2);
     } else {
-        const ar = repeatedCall(n, rnchisqOne, 2 * shape1, ncp, rng);
-        const br = repeatedCall(n, rchisqOne, 2 * shape2, rng);
+        const ar = repeatedCall(n, rnchisqOne, 2 * shape1, ncp);
+        const br = repeatedCall(n, rchisqOne, 2 * shape2);
         const result = ar.map((a, i) => a/(a+br[i]));
         return result;
     }

@@ -21,21 +21,20 @@ import { pchisq as _pchisq } from './pchisq';
 import { pnchisq as _pnchisq } from './pnchisq';
 import { qchisq as _qchisq } from './qchisq';
 import { qnchisq as _qnchisq } from './qnchisq';
-import { globalNorm } from '@rng/global-rng';
 import { rchisqOne as _rchisqOne } from './rchisq';
 import { rnchisqOne as _rnchisqOne } from './rnchisq';
 import { repeatedCall64 } from '@lib/r-func';
 
-export function rchisq(n: number, df: number, ncp?: number, rng = globalNorm()): Float64Array {
+export function rchisq(n: number, df: number, ncp?: number): Float64Array {
   return ncp === undefined
-    ? repeatedCall64(n, _rchisqOne, df, rng)
-    : repeatedCall64(n, _rnchisqOne, df, ncp, rng);
+    ? repeatedCall64(n, _rchisqOne, df)
+    : repeatedCall64(n, _rnchisqOne, df, ncp);
 }
 
-export function rchisqOne(df: number, ncp?: number, rng = globalNorm()): number {
+export function rchisqOne(df: number, ncp?: number): number {
   return ncp === undefined
-    ? _rchisqOne(df, rng)
-    : _rnchisqOne(df, ncp, rng);
+    ? _rchisqOne(df)
+    : _rnchisqOne(df, ncp);
 }
 
 export function qchisq(

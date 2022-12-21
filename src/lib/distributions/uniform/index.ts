@@ -21,10 +21,10 @@ export { punif } from './punif';
 export { qunif } from './qunif';
 import { runifOne } from './runif';
 import { repeatedCall64 } from '@lib/r-func';
-import { globalUni } from '@rng/global-rng';
 
-export function runif(n: number, min = 0, max = 1, rng = globalUni()): Float64Array {
-    return repeatedCall64(n, runifOne, min, max, rng);
+
+export function runif(n: number, min = 0, max = 1): Float64Array {
+    return repeatedCall64(n, runifOne, min, max);
 }
 
 export { runifOne };
