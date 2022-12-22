@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { fixup } from '../fixup';
 import { IRNG } from '../irng';
-import { IRNGTypeEnum } from '../irng-type';
+import type { IRNGType } from '@rng/rng-types';
 import seed from '../seed';
 import { seedCheck } from '../seedcheck';
 import { INT_MAX } from '@lib/r-func';
@@ -44,7 +44,7 @@ export class MersenneTwister extends IRNG {
     private mt: Int32Array;
     private mti: number;
 
-    public static override kind = IRNGTypeEnum.MERSENNE_TWISTER;
+    public static override kind: IRNGType = "MERSENNE_TWISTER";
 
     private MT_sgenrand(_seed: number) {
         for (let i = 0; i < N; i++) {

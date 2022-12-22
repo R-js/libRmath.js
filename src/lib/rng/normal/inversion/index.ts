@@ -18,13 +18,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import { IRNG, MessageType } from '@rng/irng';
 import { qnorm } from '@dist/normal/qnorm';
 import { IRNGNormal } from '@rng/normal/normal-rng';
-import { IRNGNormalTypeEnum } from '@rng/normal/in01-type';
+import type { IRNGNormalType } from '@lib/rng/normal/rng-types';
 
 const BIG = 134217728; /* 2^27 */
 
 export class Inversion extends IRNGNormal {
 
-    public static override kind = IRNGNormalTypeEnum.INVERSION;
+    public static override kind: IRNGNormalType = "INVERSION";
 
     constructor(_rng: IRNG) {
         super(_rng, 'Inversion');

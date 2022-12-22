@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import { INT_MAX } from '@lib/r-func';
 import { fixup, i2_32m1 } from '../fixup';
 import { IRNG } from '../irng';
-import { IRNGTypeEnum } from '../irng-type';
+import type { IRNGType } from '@rng/rng-types';
 import seed from '../seed';
 import { seedCheck } from '../seedcheck';
 
@@ -27,7 +27,7 @@ const SEED_LEN = 2;
 
 export class MarsagliaMultiCarry extends IRNG {
 
-    public static override kind = IRNGTypeEnum.MARSAGLIA_MULTICARRY;
+    public static override kind: IRNGType = "MARSAGLIA_MULTICARRY";
     private m_seed: Int32Array;
 
     private fixupSeeds(): void {

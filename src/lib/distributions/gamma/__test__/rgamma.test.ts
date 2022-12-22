@@ -3,9 +3,7 @@ import { resolve } from 'path';
 import { cl, select } from '@common/debug-mangos-select';
 
 import { emptyFloat64Array } from '@lib/r-func';
-import { IRNGNormalTypeEnum } from '@rng/normal/in01-type';
-import { globalUni, RNGKind } from '@rng/global-rng';
-import { IRNGTypeEnum } from '@rng/irng-type';
+import { globalUni, RNGkind } from '@rng/global-rng';
 import { rgamma } from '..';
 
 const rgammaLogs = select('rgamma');
@@ -41,7 +39,7 @@ describe('rgamma', function () {
     });
     describe('fidelity, Mersenne-Twister & Inversion', () => {
         beforeEach(() => {
-            RNGKind({ uniform: IRNGTypeEnum.MERSENNE_TWISTER, normal: IRNGNormalTypeEnum.INVERSION});
+            RNGkind({ uniform: "MERSENNE_TWISTER", normal: "INVERSION"});
         });
         it('n=100, shape=1, scale=3', async () => {
             const [y] = await loadData(

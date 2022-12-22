@@ -1,11 +1,9 @@
 import { rf } from '..';
-import { IRNGTypeEnum } from '@rng/irng-type';
-import { globalUni, RNGKind } from '@rng/global-rng';
-import { IRNGNormalTypeEnum } from '@rng/normal/in01-type';
+import { globalUni, RNGkind } from '@rng/global-rng';
 
 describe('rnf with ncp defined', function () {
     beforeEach(() => {
-        RNGKind({ uniform: IRNGTypeEnum.MERSENNE_TWISTER, normal: IRNGNormalTypeEnum.INVERSION});
+        RNGkind({ uniform: "MERSENNE_TWISTER", normal: "INVERSION"});
         globalUni().init(123456);
     })
     it('n=2 df1=3, df2=55 ncp=NaN', () => {

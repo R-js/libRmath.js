@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import { INT_MAX } from '@lib/r-func';
 import { fixup } from '@rng/fixup';
 import { IRNG } from '@rng/irng';
-import { IRNGTypeEnum } from '@rng/irng-type';
+import type { IRNGType } from '@rng/rng-types';
 import seed from '@lib/rng/seed';
 import { seedCheck } from '@rng/seedcheck';
 import { frac } from '@lib/r-func';
@@ -29,7 +29,7 @@ const SEED_LEN = 3;
 export class WichmannHill extends IRNG {
     private m_seed: Uint32Array;
 
-    public static override kind = IRNGTypeEnum.WICHMANN_HILL;
+    public static override kind: IRNGType = 'WICHMANN_HILL';
 
     public override random(): number {
         const s = this.m_seed;

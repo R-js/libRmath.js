@@ -1,21 +1,14 @@
 
 
 
-import { globalUni, RNGKind } from '@rng/global-rng';
+import { globalUni, RNGkind } from '@rng/global-rng';
 import { rcauchy } from '..';
-import { IRNGTypeEnum  } from '@rng/irng-type';
-import { IRNGNormalTypeEnum } from '@rng/normal/in01-type';
-
-import { cl, select } from '@common/debug-mangos-select';
-
-const rcauchyDomainWarns = select('rcauchy')("argument out of domain in '%s'");
-rcauchyDomainWarns;
-
+import { cl } from '@common/debug-mangos-select';
 
 describe('rcauchy', function () {
 
     beforeEach(() => {
-        RNGKind({ uniform: IRNGTypeEnum.MERSENNE_TWISTER, normal: IRNGNormalTypeEnum.INVERSION});
+        RNGkind({ uniform: "MERSENNE_TWISTER", normal: "INVERSION"});
         globalUni().init(98765);
         cl.clear('rcauchy');
     })

@@ -4,9 +4,7 @@ import { resolve } from 'path';
 import { cl, select } from '@common/debug-mangos-select';
 
 import { emptyFloat64Array } from '@lib/r-func';
-import { IRNGNormalTypeEnum } from '@rng/normal/in01-type';
-import { globalUni, RNGKind } from '@rng/global-rng';
-import { IRNGTypeEnum } from '@rng/irng-type';
+import { globalUni, RNGkind } from '@rng/global-rng';
 import { rgeom } from '..';
 
 const rgeomLogs = select('rgeom');
@@ -43,7 +41,7 @@ describe('rgeom', function () {
 
     describe('with fixtures', () => {
         beforeAll(()=>{
-            RNGKind({ uniform: IRNGTypeEnum.MERSENNE_TWISTER, normal: IRNGNormalTypeEnum.INVERSION});
+            RNGkind({ uniform: "MERSENNE_TWISTER", normal: "INVERSION"});
             globalUni().init(12345);
         });
         it('n=100, prob={0.3,0.6}', async () => {

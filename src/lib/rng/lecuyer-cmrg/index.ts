@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { IRNG } from '../irng';
-import { IRNGTypeEnum } from '../irng-type';
+import type { IRNGType } from '@rng/rng-types';
 import seed from '../seed';
 import { seedCheck } from '../seedcheck';
 import { INT_MAX } from '@lib/r-func';
@@ -34,7 +34,7 @@ const a23n = 1370589;
 
 export class LecuyerCMRG extends IRNG {
 
-    public static override kind = IRNGTypeEnum.LECUYER_CMRG;
+    public static override kind: IRNGType = "LECUYER_CMRG";
 
     private m_seed: Int32Array;
 

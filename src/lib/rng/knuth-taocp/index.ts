@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import { fixup } from '../fixup';
 import { IRNG } from '../irng';
-import { IRNGTypeEnum } from '../irng-type';
+import type { IRNGType } from '@rng/rng-types';
 import seed from '../seed';
 import { TAOCP1997init } from './taocp-1997-init';
 import { seedCheck } from '../seedcheck';
@@ -40,7 +40,7 @@ const SEED_LEN = 101;
 
 export class KnuthTAOCP extends IRNG {
 
-    public static override kind =  IRNGTypeEnum.KNUTH_TAOCP;
+    public static override kind: IRNGType = "KNUTH_TAOCP";
     //private buf: ArrayBuffer;
 
     private m_seed: Uint32Array;
@@ -123,6 +123,6 @@ export class KnuthTAOCP extends IRNG {
     }
 
     public get cut(): number {
-        return 2**25-1;
+        return 2 ** 25 - 1;
     }
 }

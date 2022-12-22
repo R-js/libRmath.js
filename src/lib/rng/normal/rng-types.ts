@@ -16,10 +16,4 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-export enum IRNGNormalTypeEnum {
-    AHRENS_DIETER = 'AHRENS_DIETER',
-    BOX_MULLER = 'BOX_MULLER',
-    BUGGY_KINDERMAN_RAMAGE = 'BUGGY_KINDERMAN_RAMAGE',
-    INVERSION = 'INVERSION',
-    KINDERMAN_RAMAGE = 'KINDERMAN_RAMAGE'
-}
+export type IRNGNormalType = 'AHRENS_DIETER' | 'BOX_MULLER' | 'BUGGY_KINDERMAN_RAMAGE' | 'INVERSION' | 'KINDERMAN_RAMAGE';

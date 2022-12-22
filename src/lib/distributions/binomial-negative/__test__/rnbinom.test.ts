@@ -7,9 +7,7 @@ const rnbinomMuDomainWarns = select('rnbinom_mu')("argument out of domain in '%s
 rnbinomDomainWarns;
 //rnbinomMuDomainWarns;
 
-import { IRNGNormalTypeEnum, IRNGTypeEnum, setSeed } from '../../../../index';
-
-import { RNGkind } from '../../../../index';
+import { RNGkind, setSeed } from '@rng/global-rng';
 
 import { rnbinom } from '..';
 
@@ -52,7 +50,7 @@ describe('rnbinom', function () {
             expect(z).toEqualFloatingPointBinary(0);
         });
         it('n=1, size=1, prob=1', () => {
-            RNGkind({ uniform: IRNGTypeEnum.SUPER_DUPER, normal: IRNGNormalTypeEnum.BOX_MULLER });
+            RNGkind({ uniform: "SUPER_DUPER", normal: "BOX_MULLER" });
             setSeed(1234);
             const z = rnbinom(10, 8, 0.2, undefined);
             expect(z).toEqualFloatingPointBinary([
@@ -66,7 +64,7 @@ describe('rnbinom', function () {
             cl.clear('rnbinom_mu');
         });
         it('n=10, size=8, mu=12 (prob=0.6)', () => {
-            RNGkind({ uniform: IRNGTypeEnum.SUPER_DUPER, normal: IRNGNormalTypeEnum.BOX_MULLER });
+            RNGkind({ uniform: "SUPER_DUPER", normal: "BOX_MULLER" });
             setSeed(1234);
             const z = rnbinom(10, 8, undefined, 12);
             expect(z).toEqualFloatingPointBinary([10, 10, 17, 6, 9, 14, 10, 12, 3, 5]);

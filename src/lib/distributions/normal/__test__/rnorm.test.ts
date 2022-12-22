@@ -8,14 +8,12 @@ const rnormLogs = select('rnorm');
 const rnormDomainWarns = rnormLogs("argument out of domain in '%s'");
 
 //const boundaries = select('R_Q_P01_boundaries')("argument out of domain in '%s'");
-import { IRNGTypeEnum } from '@rng/irng-type';
-import { globalUni, RNGKind } from '@rng/global-rng';
-import { IRNGNormalTypeEnum } from '@rng/normal/in01-type';
+import { globalUni, RNGkind } from '@rng/global-rng';
 
 describe('rnorm', function () {
     describe('invalid input check and edge cases', () => {
         beforeAll(()=>{
-            RNGKind({ uniform: IRNGTypeEnum.MERSENNE_TWISTER, normal: IRNGNormalTypeEnum.INVERSION});
+            RNGkind({ uniform: "MERSENNE_TWISTER", normal: "INVERSION"});
             globalUni().init(123456);
             cl.clear('rnorm');
         });
@@ -37,7 +35,7 @@ describe('rnorm', function () {
     });
     describe('fidelity',()=>{
         beforeAll(()=>{
-            RNGKind({ uniform: IRNGTypeEnum.MERSENNE_TWISTER, normal: IRNGNormalTypeEnum.INVERSION});
+            RNGkind({ uniform: "MERSENNE_TWISTER", normal: "INVERSION"});
             globalUni().init(123456);
         });
         it('100 samples', async () => {

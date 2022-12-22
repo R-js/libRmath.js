@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import { fixup, i2_32m1 } from '@rng/fixup';
 import { IRNG } from '@rng/irng';
-import { IRNGTypeEnum } from '@rng/irng-type';
+import type { IRNGType } from '@rng/rng-types';
 import seed from '@lib/rng/seed';
 import { seedCheck } from '@rng/seedcheck';
 import { INT_MAX } from '@lib/r-func';
@@ -27,7 +27,7 @@ const SEED_LEN = 2;
 
 export class SuperDuper extends IRNG {
 
-    public static override kind = IRNGTypeEnum.SUPER_DUPER;
+    public static override kind: IRNGType = "SUPER_DUPER";
 
     private m_seed: Int32Array;
 

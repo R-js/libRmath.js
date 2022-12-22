@@ -1,10 +1,7 @@
 import { cl, select } from '@common/debug-mangos-select';
 
 import { rlogis } from '..';
-import { IRNGTypeEnum } from '@rng/irng-type';
-import { globalUni, RNGKind } from '@rng/global-rng';
-import { IRNGNormalTypeEnum } from '@rng/normal/in01-type';
-
+import { globalUni, RNGkind } from '@rng/global-rng';
 
 const rLogisLogs = select('rlogis');
 const rLogisDomainWarns = rLogisLogs("argument out of domain in '%s'");
@@ -13,7 +10,7 @@ describe('rlogis', function () {
 
     beforeEach(() => {
         cl.clear('rlogis');
-        RNGKind({ uniform: IRNGTypeEnum.MERSENNE_TWISTER, normal: IRNGNormalTypeEnum.INVERSION});
+        RNGkind({ uniform: "MERSENNE_TWISTER", normal: "INVERSION" });
         globalUni().init(123456);
     });
     it('n = 0', () => {

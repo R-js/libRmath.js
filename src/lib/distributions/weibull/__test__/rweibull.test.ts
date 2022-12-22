@@ -3,9 +3,7 @@ import { cl, select } from '@common/debug-mangos-select';
 import { rweibullOne } from '../rweibull';
 import { rweibull } from '..';
 
-import { IRNGTypeEnum } from '@rng/irng-type';
-import { RNGKind, setSeed } from '@rng/global-rng';
-import { IRNGNormalTypeEnum } from '@rng/normal/in01-type'
+import { RNGkind, setSeed } from '@rng/global-rng';
 
 const qweibullDomainWarns = select('rweibull')("argument out of domain in '%s'");
 
@@ -36,7 +34,7 @@ describe('rweibull', function () {
 
     describe('fidelity', () => {
         beforeEach(() => {
-            RNGKind({ uniform: IRNGTypeEnum.MERSENNE_TWISTER, normal: IRNGNormalTypeEnum.INVERSION});
+            RNGkind({ uniform: "MERSENNE_TWISTER", normal: "INVERSION"});
             setSeed(111_111);
         });
         it('n=10, scale=0.5, shape=4', () => {

@@ -1,6 +1,6 @@
-import { IRNGTypeEnum } from '@rng/irng-type';
-import { globalUni, RNGKind } from '@rng/global-rng';
-import { IRNGNormalTypeEnum } from '@rng/normal/in01-type';
+
+import { globalUni, RNGkind } from '@rng/global-rng';
+
 import { rexp } from '..';
 
 import { cl, select } from '@common/debug-mangos-select';
@@ -12,7 +12,7 @@ describe('rexp', function () {
     beforeEach(() => {
         cl.clear('rexp');
         
-        RNGKind({ uniform: IRNGTypeEnum.MERSENNE_TWISTER, normal: IRNGNormalTypeEnum.INVERSION});
+        RNGkind({ uniform: "MERSENNE_TWISTER", normal: "INVERSION"});
         globalUni().init(123456);
     })
 

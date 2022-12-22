@@ -1,9 +1,9 @@
 import { IRNG, MessageType } from '../';
-import { IRNGTypeEnum } from '../';
+import type { IRNGType } from '../rng-types';
 import { fixup, i2_32m1 } from '../fixup';
 
 class MyIRNG extends IRNG {
-    public static override kind = IRNGTypeEnum.USER_DEFINED;
+    public static override kind: IRNGType = 'USER_DEFINED' as IRNGType; // force extra kind
     public get cut(): number {
         return 2**25-1;
     }

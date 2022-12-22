@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import { fixup } from '../fixup';
 import { IRNG } from '../irng';
-import { IRNGTypeEnum } from '../irng-type';
+import type { IRNGType } from '@rng/rng-types';
 import seed from '../seed';
 import { seedCheck } from '../seedcheck';
 
@@ -44,7 +44,7 @@ function is_odd(x: number): boolean {
 
 export class KnuthTAOCP2002 extends IRNG {
 
-    public static override kind = IRNGTypeEnum.KNUTH_TAOCP2002
+    public static override kind: IRNGType = "KNUTH_TAOCP2002";
     //
     //
     private qualityBuffer: ArrayBuffer;

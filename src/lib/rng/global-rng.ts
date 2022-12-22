@@ -16,34 +16,30 @@ import { Inversion } from '@rng/normal/inversion';
 import { KindermanRamage } from '@rng/normal/kinderman-ramage';
 
 //enums
-import { IRNGTypeEnum } from './irng-type';
-import { IRNGNormalTypeEnum } from './normal/in01-type';
-import { IRNGSampleKindTypeEnum } from './sample-kind-type';
+import type { IRNGType } from './rng-types';
+import type { IRNGNormalType } from './normal/rng-types';
+import type { SampleKindType } from './sample-kind-type';
 
 
 const uniformMap = {
     // uniform
-    [IRNGTypeEnum.KNUTH_TAOCP]: KnuthTAOCP,
-    [IRNGTypeEnum.KNUTH_TAOCP2002]: KnuthTAOCP2002,
-    [IRNGTypeEnum.LECUYER_CMRG]: LecuyerCMRG,
-    [IRNGTypeEnum.MARSAGLIA_MULTICARRY]: MarsagliaMultiCarry,
-    [IRNGTypeEnum.MERSENNE_TWISTER]: MersenneTwister,
-    [IRNGTypeEnum.SUPER_DUPER]: SuperDuper,
-    [IRNGTypeEnum.WICHMANN_HILL]: WichmannHill,
-}
+    ["KNUTH_TAOCP"]: KnuthTAOCP,
+    ["KNUTH_TAOCP2002"]: KnuthTAOCP2002,
+    ["LECUYER_CMRG"]: LecuyerCMRG,
+    ["MARSAGLIA_MULTICARRY"]: MarsagliaMultiCarry,
+    ["MERSENNE_TWISTER"]: MersenneTwister,
+    ["SUPER_DUPER"]: SuperDuper,
+    ["WICHMANN_HILL"]: WichmannHill,
+};
 
-type UniformMapKey = keyof (typeof uniformMap);
-
-const normalMap = {
+const normalMap ={
     // normal
-    [IRNGNormalTypeEnum.AHRENS_DIETER]: AhrensDieter,
-    [IRNGNormalTypeEnum.BOX_MULLER]: BoxMuller,
-    [IRNGNormalTypeEnum.BUGGY_KINDERMAN_RAMAGE]: BuggyKindermanRamage,
-    [IRNGNormalTypeEnum.INVERSION]: Inversion,
-    [IRNGNormalTypeEnum.KINDERMAN_RAMAGE]: KindermanRamage
-}
-
-type NormalMapKey = keyof (typeof normalMap);
+    ["AHRENS_DIETER"]: AhrensDieter,
+    ["BOX_MULLER"]: BoxMuller,
+    ["BUGGY_KINDERMAN_RAMAGE"]: BuggyKindermanRamage,
+    ["INVERSION"]: Inversion,
+    ["KINDERMAN_RAMAGE"]: KindermanRamage
+};
 
 const symRNG = Symbol.for('rngUNIFORM');
 const symRNGNormal = Symbol.for('rngNORMAL');
@@ -52,7 +48,7 @@ const symSampleKind = Symbol.for('sample.kind');
 type EgT = typeof globalThis & {
     [symRNG]: IRNG,
     [symRNGNormal]: IRNGNormal,
-    [symSampleKind]: IRNGSampleKindTypeEnum
+    [symSampleKind]: SampleKindType
 };
 
 export function globalUni(d?: IRNG): IRNG {
@@ -69,7 +65,7 @@ export function globalNorm(d?: IRNGNormal): IRNGNormal {
     return (globalThis as EgT)[symRNGNormal];
 }
 
-export function globalSampleKind(d?: IRNGSampleKindTypeEnum): IRNGSampleKindTypeEnum {
+export function globalSampleKind(d?: SampleKindType): SampleKindType {
     if (d) {
         (globalThis as EgT)[symSampleKind] = d;
     }
@@ -77,9 +73,9 @@ export function globalSampleKind(d?: IRNGSampleKindTypeEnum): IRNGSampleKindType
 }
 
 export type RandomGenSet = {
-    uniform?: IRNGTypeEnum
-    normal?: IRNGNormalTypeEnum
-    sampleKind?: IRNGSampleKindTypeEnum
+    uniform?: IRNGType,
+    normal?: IRNGNormalType
+    sampleKind?: SampleKindType
 };
 
 export function setSeed(
@@ -93,7 +89,7 @@ export function setSeed(
         throw new Error('Seed needs to be a finite number');
     }
     if (randomSet){
-        RNGKind(randomSet);
+        RNGkind(randomSet);
     }
     const gu = globalUni();
 
@@ -104,14 +100,19 @@ export function setSeed(
     }
     gu.init(seed); 
 }
-
-export function RNGKind(opt: RandomGenSet = {}): RandomGenSet {
+/*
+const attachProp = <F , K extends string>(fn: F, key: K): F & Readonly<Record<K,K>> => { 
+    Object.defineProperty(fn, key, { value: key, enumerable: true });
+    return fn as F & Record<K,K>;
+}
+*/
+export function RNGkind(opt: RandomGenSet = {}): RandomGenSet {
 
     let gu = globalUni();
     let no = globalNorm();
     let sk = globalSampleKind();
 
-    function testAndSetUniform(u: UniformMapKey): boolean {
+    function testAndSetUniform(u: IRNGType): boolean {
         const tu = uniformMap[u];
         if (tu) {
             // do nothing if it is the same type
@@ -127,7 +128,7 @@ export function RNGKind(opt: RandomGenSet = {}): RandomGenSet {
         return false;
     }
 
-    function testAndSetNormal(n: NormalMapKey): boolean {
+    function testAndSetNormal(n: IRNGNormalType): boolean {
 
         const tn = normalMap[n];
         if (tn) {
@@ -146,11 +147,11 @@ export function RNGKind(opt: RandomGenSet = {}): RandomGenSet {
         return false;
     }
 
-    function testAndSetSampleKind(s: IRNGSampleKindTypeEnum): boolean {
+    function testAndSetSampleKind(s: SampleKindType): boolean {
         if (
-            s === IRNGSampleKindTypeEnum.REJECTION
+            s === "REJECTION"
             ||
-            s === IRNGSampleKindTypeEnum.ROUNDING) {
+            s === "ROUNDING") {
             if (s !== sk) {
                 sk = globalSampleKind(s);
             }
@@ -160,11 +161,11 @@ export function RNGKind(opt: RandomGenSet = {}): RandomGenSet {
     }
 
     if (opt.uniform) {
-        testAndSetUniform(opt.uniform as UniformMapKey); // replace it if it is different
+        testAndSetUniform(opt.uniform); // replace it if it is different
     }
 
     if (opt.normal){
-        testAndSetNormal(opt.normal as NormalMapKey);
+        testAndSetNormal(opt.normal);
     }
 
     if (opt.sampleKind){
@@ -194,7 +195,7 @@ export function randomSeed(internalState?: Uint32Array | Int32Array): Uint32Arra
 //init
 (globalThis as EgT)[symRNG] = new MersenneTwister;
 (globalThis as EgT)[symRNGNormal] = new Inversion((globalThis as EgT)[symRNG]);
-(globalThis as EgT)[symSampleKind] = IRNGSampleKindTypeEnum.ROUNDING;
+(globalThis as EgT)[symSampleKind] = "ROUNDING";
 
 
 

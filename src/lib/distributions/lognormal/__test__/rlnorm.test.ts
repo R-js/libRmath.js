@@ -6,9 +6,7 @@ const logs = select('rlnorm');
 const logDomainWanrs = logs("argument out of domain in '%s'");
 //  rlnormOne(meanlog = 0, sdlog = 1, rng: IRNGNormal);
 
-import { IRNGNormalTypeEnum } from '@rng/normal/in01-type';
-import { globalUni, RNGKind } from '@rng/global-rng';
-import { IRNGTypeEnum } from '@rng/irng-type';
+import { globalUni, RNGkind } from '@rng/global-rng';
 
 import { rlnorm } from '..';
 
@@ -29,7 +27,7 @@ describe('rlnorm', () => {
     });
     describe('fidelity (defer to rnorm[One] for most)', () => {
         beforeEach(() => {
-            RNGKind({ uniform: IRNGTypeEnum.MERSENNE_TWISTER, normal: IRNGNormalTypeEnum.INVERSION});
+            RNGkind({ uniform: "MERSENNE_TWISTER", normal: "INVERSION" });
             globalUni().init(123456);
         });
         it('n=50, mhu=4, sd=8', async () => {
