@@ -1,9 +1,7 @@
 import { loadData } from '@common/load';
 import { resolve } from 'path';
 
-import { IRNGTypeEnum } from '@rng/irng-type';
-import { globalUni, RNGKind } from '@rng/global-rng';
-import { IRNGNormalTypeEnum } from '@rng/normal/in01-type';
+import { globalUni, RNGkind } from '@rng/global-rng';
 
 import { cl, select } from '@common/debug-mangos-select';
 
@@ -39,7 +37,7 @@ describe('rsignrank (wilcox sign rank)', function () {
     });
     describe('fidelity', () => {
         beforeEach(() => {
-            RNGKind({ uniform: IRNGTypeEnum.MERSENNE_TWISTER, normal: IRNGNormalTypeEnum.INVERSION});
+            RNGkind({ uniform: "MERSENNE_TWISTER", normal: "INVERSION"});
             globalUni().init(123456);
         });
         it('N = 50, n = 3000', async () => {

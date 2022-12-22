@@ -16,12 +16,14 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { IRNG, MessageType } from '@rng/irng';
-import { IRNGNormalTypeEnum } from './in01-type';
+import type { IRNGNormalType } from '@lib/rng/normal/rng-types';
+
+//normal/in01-type';
 import type { IRandom } from '@rng/IRandom';
 
 export abstract class IRNGNormal implements IRandom {
 
-    public static kind: IRNGNormalTypeEnum;
+    public static kind: IRNGNormalType;
 
     protected _rng!: IRNG;
     protected _name: string;

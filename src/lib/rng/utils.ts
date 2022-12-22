@@ -1,6 +1,6 @@
 import { floor, ceil, log2, trunc } from '@lib/r-func';
 import type { IRNG } from './irng';
-import { IRNGSampleKindTypeEnum } from './sample-kind-type';
+import type { SampleKindType } from './sample-kind-type';
 
 
 /* Our PRNGs have at most 32 bit of precision. All generators except
@@ -51,9 +51,9 @@ function R_unif_index_0(dn: number, unif_rand: IRNG): number {
 
 //external to the module, 
 // this is to get an value between 0 and dn?
-export function R_unif_index(dn: number, unif_rand: IRNG, sampleKind:IRNGSampleKindTypeEnum): number {
+export function R_unif_index(dn: number, unif_rand: IRNG, sampleKind: SampleKindType): number {
     
-    if (sampleKind === IRNGSampleKindTypeEnum.ROUNDING) {
+    if (sampleKind === "ROUNDING") {
         return R_unif_index_0(dn, unif_rand);
     }
 

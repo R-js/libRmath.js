@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import { IRNG, MessageType } from '@rng/irng';
 import { IRNGNormal } from '@rng/normal/normal-rng';
-import { IRNGNormalTypeEnum } from '@rng/normal/in01-type';
+import type { IRNGNormalType } from '@lib/rng/normal/rng-types';
 
 const { exp, log, sqrt, max: fmax2, min: fmin2, abs: fabs } = Math;
 
@@ -34,7 +34,7 @@ const C2 = 0.180025191068563;
  *    JASA 71, 893-896.
  */
 export class KindermanRamage extends IRNGNormal {
-    public static override kind = IRNGNormalTypeEnum.KINDERMAN_RAMAGE;
+    public static override kind: IRNGNormalType = "KINDERMAN_RAMAGE";
 
     constructor(_rng: IRNG) {
         super(_rng, 'KinderMan Ramage');

@@ -216,14 +216,13 @@ import { default as seed } from './lib/rng/seed';
 // stubs
 import { IRNG, MessageType } from './lib/rng/irng';
 import { IRNGNormal } from './lib/rng/normal/normal-rng';
-import { IRNGTypeEnum } from './lib/rng/irng-type';
-import { IRNGNormalTypeEnum } from './lib/rng/normal/in01-type';
+import type { IRNGNormalType } from './lib/rng/normal/rng-types';
 
 // globalRNG
 import {
     //globalUni,
     //globalNorm,
-    RNGKind as RNGkind,
+    RNGkind,
     setSeed,
     randomSeed
 } from './lib/rng/global-rng';
@@ -248,7 +247,8 @@ import {
     lgamma
 }  from './lib/special/gamma';
 
-import { IRNGSampleKindTypeEnum } from './lib/rng/sample-kind-type';
+export type { IRNGNormalType };
+
 
 const defaultObservableNoteBook = {
     // R versions of log1p and hypot
@@ -409,9 +409,6 @@ const defaultObservableNoteBook = {
     // abstract class IRNGNormal
     IRNGNormal,
     // enums
-    IRNGTypeEnum,
-    IRNGNormalTypeEnum,
-    IRNGSampleKindTypeEnum,
     //
     //globalUni,
     //globalNorm,
@@ -598,9 +595,6 @@ export {
     // abstract class IRNGNormal
     IRNGNormal,
     // enums
-    IRNGTypeEnum,
-    IRNGNormalTypeEnum,
-    IRNGSampleKindTypeEnum,
     //
     //globalUni,
     //globalNorm,

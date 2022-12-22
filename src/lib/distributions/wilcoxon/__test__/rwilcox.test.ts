@@ -4,8 +4,7 @@ import { resolve } from 'path';
 import { cl, select } from '@common/debug-mangos-select';
 import { rwilcoxOne, rwilcox } from '..';
 
-import { IRNGSampleKindTypeEnum } from '@rng/sample-kind-type';
-import { setSeed, RNGKind as RNGkind} from '@rng/global-rng';
+import { setSeed, RNGkind} from '@rng/global-rng';
 
 const rwilcoxDomainWarns = select('rwilcox')("argument out of domain in '%s'");
 
@@ -13,7 +12,7 @@ describe('rwilcox', function () {
     beforeEach(() => {
         cl.clear('rwilcox');
         setSeed(12345);
-        RNGkind({sampleKind: IRNGSampleKindTypeEnum.ROUNDING});
+        RNGkind({sampleKind: "ROUNDING"});
     });
     describe('invalid input and edge cases', () => {
       
@@ -50,13 +49,13 @@ describe('rwilcox', function () {
         });
         it('n=100, m = 100 & n= 20, sample.kind=rejection', async () => {
             const [r] = await loadData(resolve(__dirname, 'fixture-generation', 'rwilcox2.R'), /\s+/, 1);
-            RNGkind({sampleKind: IRNGSampleKindTypeEnum.REJECTION});
+            RNGkind({sampleKind: "REJECTION"});
             const ans = rwilcox(100, 100, 20);
             expect(ans).toEqualFloatingPointBinary(r);
         });
         it.todo('for rwilcox we are diverging for R for high population number 2**20 etc, investigate')
         /*it.only('(takes time) n=4, sample.kind=rounding, (m+n) > cut (2^25-1) of Marsaglia multicarry', async () => {
-            const rc = RNGKind({ uniform: IRNGTypeEnum.KNUTH_TAOCP2002, normal: IRNGSampleKindTypeEnum.ROUNDING});
+            const rc = RNGkind({ uniform: IRNGTypeEnum.KNUTH_TAOCP2002, normal: IRNGSampleKindTypeEnum.ROUNDING});
             rc.uniform.init(12345);
             //const [r] = await loadData(resolve(__dirname, 'fixture-generation', 'rwilcox3.R'), /\s+/, 1);
             const ans = rwilcox(4, 2**20, 5);

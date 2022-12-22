@@ -1,9 +1,7 @@
 import { loadData } from '@common/load';
 import { resolve } from 'path';
 
-import { IRNGTypeEnum } from '@rng/irng-type';
-import { globalUni, RNGKind } from '@rng/global-rng';
-import { IRNGNormalTypeEnum } from '@rng/normal/in01-type';
+import { globalUni, RNGkind } from '@rng/global-rng';
 
 import { cl, select } from '@common/debug-mangos-select';
 
@@ -23,7 +21,7 @@ describe('rt (n,df,ncp)', function () {
     describe('invalid input and edge cases', () => {
         describe('ncp = undefined', () => {
             beforeEach(() => {
-                RNGKind({ uniform: IRNGTypeEnum.MERSENNE_TWISTER, normal: IRNGNormalTypeEnum.INVERSION});
+                RNGkind({ uniform: "MERSENNE_TWISTER", normal: "INVERSION"});
                 globalUni().init(123456);
                 cl.clear('rt');
                 cl.clear('rchisq');
@@ -47,7 +45,7 @@ describe('rt (n,df,ncp)', function () {
         });
         describe('ncp defined', () => {
             beforeEach(() => {
-                RNGKind({ uniform: IRNGTypeEnum.MERSENNE_TWISTER, normal: IRNGNormalTypeEnum.INVERSION});
+                RNGkind({ uniform: "MERSENNE_TWISTER", normal: "INVERSION"});
                 globalUni().init(123456);
                 cl.clear('rt');
                 cl.clear('rchisq');
@@ -66,7 +64,7 @@ describe('rt (n,df,ncp)', function () {
     describe('fidelity', () => {
         describe('ncp = undefined', () => {
             beforeEach(() => {
-                RNGKind({ uniform: IRNGTypeEnum.MERSENNE_TWISTER, normal: IRNGNormalTypeEnum.INVERSION});
+                RNGkind({ uniform: "MERSENNE_TWISTER", normal: "INVERSION"});
                 globalUni().init(123456);
             });
             it('samples for df = 0.5|df = 5| df=50| df=500', async () => {

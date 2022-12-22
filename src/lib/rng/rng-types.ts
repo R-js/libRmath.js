@@ -14,13 +14,4 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-export enum IRNGTypeEnum {
-    KNUTH_TAOCP = 'KNUTH_TAOCP',
-    KNUTH_TAOCP2002 = 'KNUTH_TAOCP2002',
-    LECUYER_CMRG = 'LECUYER_CMRG',
-    MARSAGLIA_MULTICARRY = 'MARSAGLIA_MULTICARRY',
-    MERSENNE_TWISTER = 'MERSENNE_TWISTER',
-    SUPER_DUPER = 'SUPER_DUPER',
-    WICHMANN_HILL = 'WICHMANN_HILL',
-    USER_DEFINED = 'USER_DEFINED'
-}
+export type IRNGType = 'KNUTH_TAOCP' | 'KNUTH_TAOCP2002' | 'LECUYER_CMRG' | 'MARSAGLIA_MULTICARRY' | 'MERSENNE_TWISTER' | 'SUPER_DUPER' | 'WICHMANN_HILL';

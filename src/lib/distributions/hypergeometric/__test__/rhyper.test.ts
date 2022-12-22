@@ -5,9 +5,7 @@ import ms from "ms";
 import { loadData } from '@common/load';
 import { cl, select } from '@common/debug-mangos-select';
 
-import { IRNGNormalTypeEnum } from '@rng/normal/in01-type';
-import { globalUni, RNGKind } from '@rng/global-rng';
-import { IRNGTypeEnum } from '@rng/irng-type';
+import { globalUni, RNGkind } from '@rng/global-rng';
 import { rhyper, useWasmBackends, clearBackends } from '..';
 
 
@@ -17,7 +15,7 @@ describe('rhyper', function () {
     describe('invalid input', () => {
         beforeEach(() => {
             cl.clear('rhyper');
-            RNGKind({ uniform: IRNGTypeEnum.MERSENNE_TWISTER, normal: IRNGNormalTypeEnum.INVERSION});
+            RNGkind({ uniform: "MERSENNE_TWISTER", normal: "INVERSION" });
             globalUni().init(123456);
         });
         it('n=1, other params are NaNs or Infinity', () => {
@@ -40,7 +38,7 @@ describe('rhyper', function () {
     describe('edge cases', () => {
         beforeEach(() => {
             cl.clear('rhyper');
-            RNGKind({ uniform: IRNGTypeEnum.MERSENNE_TWISTER, normal: IRNGNormalTypeEnum.INVERSION});
+            RNGkind({ uniform: "MERSENNE_TWISTER", normal: "INVERSION"});
             globalUni().init(123456);
         });
 
@@ -80,7 +78,7 @@ describe('rhyper', function () {
     describe('reguler', () => {
         beforeEach(() => {
             cl.clear('rhyper');
-            RNGKind({ uniform: IRNGTypeEnum.MERSENNE_TWISTER, normal: IRNGNormalTypeEnum.INVERSION});
+            RNGkind({ uniform: "MERSENNE_TWISTER", normal: "INVERSION"});
             globalUni().init(123456);
         });
         it('n=50, NR=30, NB=15, K=20', () => {

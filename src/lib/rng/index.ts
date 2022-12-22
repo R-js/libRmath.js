@@ -32,9 +32,9 @@ export { KindermanRamage } from './normal/kinderman-ramage';
 // stubs
 export { IRNG, MessageType } from './irng';
 export { IRNGNormal } from './normal/normal-rng';
-export { IRNGTypeEnum } from './irng-type';
-export { IRNGNormalTypeEnum } from './normal/in01-type';
+export type { IRNGType } from './rng-types';
+export type { IRNGNormalType } from './normal/rng-types';
 // globalRNG
-export { globalUni, globalNorm, RNGKind } from './global-rng';
-export { IRNGSampleKindTypeEnum } from './sample-kind-type';
+export { globalUni, globalNorm, RNGkind } from './global-rng';
+export type { SampleKindType } from './sample-kind-type';
 

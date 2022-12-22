@@ -15,7 +15,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { IRNGNormalTypeEnum } from '@rng/normal/in01-type';
+import type { IRNGNormalType } from '@lib/rng/normal/rng-types';
 import { IRNG } from '@rng/irng';
 import { IRNGNormal } from '@rng/normal/normal-rng';
 
@@ -26,7 +26,7 @@ const M_PI = 3.14159265358979323846264338327950288;
 
 export class BoxMuller extends IRNGNormal {
 
-    public static override kind = IRNGNormalTypeEnum.BOX_MULLER;
+    public static override kind: IRNGNormalType = "BOX_MULLER";
 
     private BM_norm_keep: number;
 

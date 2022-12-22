@@ -1,4 +1,1 @@
-export enum IRNGSampleKindTypeEnum {
-    ROUNDING = 'ROUNDING',
-    REJECTION = 'REJECTION',
-}
+export type SampleKindType = 'ROUNDING' | 'REJECTION';

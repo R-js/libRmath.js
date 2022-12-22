@@ -17,13 +17,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { IRNG, MessageType } from '@rng/irng';
 import { IRNGNormal } from '@rng/normal/normal-rng';
-import { IRNGNormalTypeEnum } from '@rng/normal/in01-type';
+import type { IRNGNormalType } from '@lib/rng/normal/rng-types';
 
 const { log, sqrt, min: fmin2, max: fmax2, abs: fabs, exp } = Math;
 
 export class BuggyKindermanRamage extends IRNGNormal {
     
-    public static override kind = IRNGNormalTypeEnum.BUGGY_KINDERMAN_RAMAGE;
+    public static override kind: IRNGNormalType = "BUGGY_KINDERMAN_RAMAGE";
 
     constructor(_rng: IRNG) {
         super(_rng, 'Buggy-Kinderman-Ramage');

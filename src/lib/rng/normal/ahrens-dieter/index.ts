@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { IRNG, MessageType } from '../../irng';
 import { IRNGNormal } from '../normal-rng';
-import { IRNGNormalTypeEnum } from '../in01-type';
+import type { IRNGNormalType } from '@lib/rng/normal/rng-types';
 
 const a = [
     0.0,
@@ -158,7 +158,7 @@ const h = [
 
 export class AhrensDieter extends IRNGNormal {
    
-    public static override kind = IRNGNormalTypeEnum.AHRENS_DIETER;
+    public static override kind: IRNGNormalType = "AHRENS_DIETER";
 
     constructor(_rng: IRNG) {
         super(_rng, 'Ahrens-Dieter');

@@ -7,14 +7,14 @@ const rbetaDomainWarns = select('rbeta')("argument out of domain in '%s'");
 
 //app
 import { rbeta } from '..';
-import { IRNGTypeEnum } from '@rng/irng-type';
-import { IRNGNormalTypeEnum } from '@rng/normal/in01-type';
-import { globalNorm, globalUni, RNGKind } from '@rng/global-rng';
+
+
+import { globalNorm, globalUni, RNGkind } from '@rng/global-rng';
 
 describe('rbeta', function () {
 
     beforeAll(() => {
-        RNGKind({ uniform: IRNGTypeEnum.MERSENNE_TWISTER, normal: IRNGNormalTypeEnum.INVERSION });
+        RNGkind({ uniform: "MERSENNE_TWISTER", normal: "INVERSION"});
         cl.clear('rbeta');
     });
     it('sample 5 numbers, n=5, scp1=2, scp2=2', () => {

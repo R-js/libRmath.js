@@ -14,7 +14,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { IRNGTypeEnum } from './irng-type';
+import type { IRNGType } from './rng-types';
 import type { IRandom } from './IRandom';
 
 export enum MessageType {
@@ -23,7 +23,7 @@ export enum MessageType {
 
 export abstract class IRNG implements IRandom {
     protected _name: string;
-    static readonly kind: IRNGTypeEnum;
+    static readonly kind: IRNGType;
     private notify: Map<MessageType, ((...args: unknown[]) => void)[]>;
 
     //protected abstract random(): number;

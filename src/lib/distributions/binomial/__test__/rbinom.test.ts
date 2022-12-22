@@ -3,10 +3,8 @@ import { resolve } from 'path';
 import { loadData } from '@common/load';
 import { cl /*, select*/ } from '@common/debug-mangos-select';
 
+import { globalUni, RNGkind } from '@rng/global-rng';
 
-import { IRNGNormalTypeEnum } from '@rng/normal/in01-type';
-import { globalUni, RNGKind } from '@rng/global-rng';
-import { IRNGTypeEnum } from '@rng/irng-type';
 
 
 //const rbinomDomainWarns = select('rbinom')("argument out of domain in '%s'");
@@ -16,7 +14,7 @@ import { rbinom } from '..';
 
 describe('rbinom', function () {
     beforeAll(() => {
-        RNGKind({ uniform: IRNGTypeEnum.MERSENNE_TWISTER, normal: IRNGNormalTypeEnum.INVERSION});
+        RNGkind({ uniform: "MERSENNE_TWISTER", normal: "INVERSION" });
         cl.clear('_rbinom');
     });
     

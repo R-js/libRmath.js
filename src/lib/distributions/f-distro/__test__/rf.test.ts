@@ -1,9 +1,7 @@
 import { cl, select } from '@common/debug-mangos-select';
 
 import { rf } from '..';
-import { IRNGTypeEnum } from '@rng/irng-type';
-import { globalUni, RNGKind } from '@rng/global-rng';
-import { IRNGNormalTypeEnum } from '@rng/normal/in01-type';
+import { globalUni, RNGkind } from '@rng/global-rng';
 
 
 const rfLogs = select('rf');
@@ -11,7 +9,7 @@ const rfDomainWarns = rfLogs("argument out of domain in '%s'");
 
 describe('rf', function () {
     beforeEach(() => {
-        RNGKind({ uniform: IRNGTypeEnum.MERSENNE_TWISTER, normal: IRNGNormalTypeEnum.INVERSION});
+        RNGkind({ uniform: "MERSENNE_TWISTER", normal: "INVERSION" });
         globalUni().init(123456);
         cl.clear('rf');
     })
