@@ -65,22 +65,23 @@ const printer = debug('dbinom');
     return R_D_exp(give_log, lc - 0.5 * lf);
 }
 
-function dbinom(x: number, n: number, p: number, logX = false): number {
+//function dbinom(x: number, n: number, prob: number, log = false): number
+function dbinom(x: number, n: number, prob: number, log = false): number {
     /* NaNs propagated correctly */
-    if (isNaN(x) || isNaN(n) || isNaN(p)) return x + n + p;
+    if (isNaN(x) || isNaN(n) || isNaN(prob)) return x + n + prob;
 
-    if (p < 0 || p > 1 || R_D_negInonint(n)) return ML_ERR_return_NAN2(printer, lineInfo4);
+    if (prob < 0 || prob > 1 || R_D_negInonint(n)) return ML_ERR_return_NAN2(printer, lineInfo4);
 
-    const ch = R_D_nonint_check(logX, x, printer);
+    const ch = R_D_nonint_check(log, x, printer);
     if (ch !== undefined){
         return ch;
     }
-    if (x < 0 || !isFinite(x)) return R_D__0(logX);
+    if (x < 0 || !isFinite(x)) return R_D__0(log);
 
     n = Math.round(n);
     x = Math.round(x);
 
-    return dbinom_raw(x, n, p, 1 - p, logX);
+    return dbinom_raw(x, n, prob, 1 - prob, log);
 }
 
 export { dbinom_raw , dbinom };

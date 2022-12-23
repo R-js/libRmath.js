@@ -16,14 +16,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { debug } from '@mangos/debug';
 import { ML_ERR_return_NAN2, lineInfo4 } from '@common/logger';
-
-const { isNaN: ISNAN } = Number;
-const { PI: M_PI, log } = Math;
+import { isNaN, PI, log as ln} from '@lib/r-func';
 const printer = debug('dcauchy');
 
-export function dcauchy(x: number, location = 0, scale = 1, giveLog = false): number {
+export function dcauchy(x: number, location = 0, scale = 1, log = false): number {
     /* NaNs propagated correctly */
-    if (ISNAN(x) || ISNAN(location) || ISNAN(scale)) {
+    if (isNaN(x) || isNaN(location) || isNaN(scale)) {
         return x + location + scale;
     }
 
@@ -32,5 +30,5 @@ export function dcauchy(x: number, location = 0, scale = 1, giveLog = false): nu
     }
 
     const y = (x - location) / scale;
-    return giveLog ? -log(M_PI * scale * (1 + y * y)) : 1 / (M_PI * scale * (1 + y * y));
+    return log ? -ln(PI * scale * (1 + y * y)) : 1 / (PI * scale * (1 + y * y));
 }

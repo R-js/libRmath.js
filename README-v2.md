@@ -17,26 +17,17 @@ The normal and uniform implementation of the various RNG's are not exported publ
 Select normal and uniform RNG's via the function `RNGkind`.
 
 ```javascript
-// this is not possible anymore
+// this is NOT possible anymore
 import { AhrensDieter } from 'lib-r-math.js';
-
 const ad = new AhrensDieter();
 ad.random();
 
 // NEW way of doing things
+import { RNGkind } from 'lib-r-math.js';
+RNGkind({ normal: "AHRENS_DIETER" }); // R analog to "RNGkind"
+rnorm(8); // get 8 samples, if you only want one sample consider rnormOne()  
 
-import { RNGkind, IRNGTypeEnum, IRNGNormalTypeEnum, IRNGSampleKindTypeEnum  } from 'lib-r-math.js';
-
-// R analog to "RNGkind"
-RNGKind(
-    { 
-      uniform:    IRNGTypeEnum.KNUTH_TAOCP , 
-      normal:     IRNGNormalTypeEnum.KINDERMAN_RAMAGE,
-      sampleKind: IRNGSampleKindTypeEnum.ROUNDING
-    }
-);
 ```
-
 
 #### helper functions for data mangling
 
@@ -171,9 +162,11 @@ const answ = BesselJ(3, 0.4);
     - [`setSeed`](#setseed)
     - [`randomSeed`](#randomseed)
   - [Distributions](#distributions)
-    - [Uniform distribution](#uniform-distribution)
-      - [`dunif`](#dunif)
-      - [`punif`](#punif)
+    - [Beta distribution](#beta-distribution)
+    - [Binomial distribution](#binomial-distribution)
+    - [The Negative Binomial Distribution](#the-negative-binomial-distribution)
+  - [The Cauchy Distribution](#the-cauchy-distribution)
+- [END OF OLD DOC](#end-of-old-doc)
       - [`qunif`](#qunif)
       - [`runif`](#runif)
     - [Normal distribution](#normal-distribution)
@@ -183,26 +176,6 @@ const answ = BesselJ(3, 0.4);
       - [`rnorm`](#rnorm)
   - [Other Probability Distributions](#other-probability-distributions)
       - [summary](#summary)
-    - [Beta distribution](#beta-distribution)
-      - [`dbeta`](#dbeta)
-      - [`pbeta`](#pbeta)
-      - [`qbeta`](#qbeta)
-      - [`rbeta`](#rbeta)
-    - [Binomial distribution](#binomial-distribution)
-      - [`dbinom`](#dbinom)
-      - [`pbinom`](#pbinom)
-      - [`qbinom`](#qbinom)
-      - [`rbinom`](#rbinom)
-    - [Negative Binomial distribution](#negative-binomial-distribution)
-      - [`dnbinom`](#dnbinom)
-      - [`pnbinom`](#pnbinom)
-      - [`qnbinom`](#qnbinom)
-      - [`rnbinom`](#rnbinom)
-    - [Cauchy distribution](#cauchy-distribution)
-      - [`dcauchy`](#dcauchy)
-      - [`pcauchy`](#pcauchy)
-      - [`qcauchy`](#qcauchy)
-      - [`rcauchy`](#rcauchy)
     - [Chi-Squared (non-central) Distribution](#chi-squared-non-central-distribution)
       - [`dchisq`](#dchisq)
       - [`pchisq`](#pchisq)
@@ -306,6 +279,8 @@ const answ = BesselJ(3, 0.4);
 
 RNGkind is the analog to R's "RNGkind". This is how you select what RNG (normal and uniform) you use and the samplingKind
 
+Follows closely the R implementation [here](https://stat.ethz.ch/R-manual/R-devel/library/base/html/Random.html)
+
 R console:
 
 ```R
@@ -314,57 +289,56 @@ R console:
 [3] "Rejection"   
 ```
 
+Just like in _R_, calling `RNGkind` with no argument returns the currently active RNG's (uniform and normal) and sample kind (Rounding or Rejection)
+
+Like in _R_, `RNGkind` optionally takes an argument of type `RandomGenSet`, after processing it will return the (adjusted) `RandomGenSet` indicating what RNG's and "kind of sampling" is being used.
+
 Rjs _typescript decl_:
 
 ```typescript
-
-enum IRNGTypeEnum {
-    KNUTH_TAOCP = 'KNUTH_TAOCP',
-    KNUTH_TAOCP2002 = 'KNUTH_TAOCP2002',
-    LECUYER_CMRG = 'LECUYER_CMRG',
-    MARSAGLIA_MULTICARRY = 'MARSAGLIA_MULTICARRY',
-    MERSENNE_TWISTER = 'MERSENNE_TWISTER',
-    SUPER_DUPER = 'SUPER_DUPER',
-    WICHMANN_HILL = 'WICHMANN_HILL',
-    USER_DEFINED = 'USER_DEFINED'
-}
-
-enum IRNGNormalTypeEnum {
-    AHRENS_DIETER = 'AHRENS_DIETER',
-    BOX_MULLER = 'BOX_MULLER',
-    BUGGY_KINDERMAN_RAMAGE = 'BUGGY_KINDERMAN_RAMAGE',
-    INVERSION = 'INVERSION',
-    KINDERMAN_RAMAGE = 'KINDERMAN_RAMAGE'
-}
-
-enum IRNGSampleKindTypeEnum {
-    ROUNDING = 'ROUNDING',
-    REJECTION = 'REJECTION',
-}
-
-// All props option, ONLY set the property you want to change
-type RandomGenSet = {
-    uniform?: IRNGTypeEnum
-    normal?: IRNGNormalTypeEnum
-    sampleKind?: IRNGSampleKindTypeEnum
-};
-
-RNGkind = function (options?: RandomGenSet): RandomGenSet;
+function RNGkind (options?: RandomGenSet): RandomGenSet;
 ```
 
-`RNGkind` optionally takes an argument of type `RandomGenSet`, but always returns the current (or adjusted) `RandomGenSet` indicating what RNG's are being used.
+Arguments:
+- `options`: an object of type `RandomGenSet`
+  - `options.uniform`: string, specify name of uniform RNG to use.
+  - `options.normal`: string, specify nam of normal RNG (shaper) to use
+  - `options.sampleKind`: string, specify sample strategy to use
+
+Typescript definition:
+```typescript
+type RandomGenSet = {
+    uniform?: 'KNUTH_TAOCP'| 'KNUTH_TAOCP2002'|'LECUYER_CMRG'| 'MARSAGLIA_MULTICARRY'|'MERSENNE_TWISTER'|'SUPER_DUPER'|'WICHMANN_HILL'
+    normal?:'AHRENS_DIETER'|'BOX_MULLER'|'BUGGY_KINDERMAN_RAMAGE'|'KINDERMAN_RAMAGE'|'INVERSION'
+    sampleKind?: 'ROUNDING'|'REJECTION'
+};
+```
+
+The `RNGkind` function is decorated with the following extra properties:
+
+| property             | description                        | example                                                                                |
+| -------------------- | ---------------------------------- | -------------------------------------------------------------------------------------- |
+| `RNGkind.uniform`    | list of constants of uniform RNG's | `RNGkind.uniform.MARSAGLIA_MULTICARRY` is equal to the string `"MARSAGLIA_MULTICARRY"` |
+| `RNGkind.normal`     | list of constants of normal RNG's  | `RNGkind.normal.KINDERMAN_RAMAGE` is equal to the string `"KINDERMAN_RAMAGE"`          |
+| `RNGkind.sampleKind` | list of sampling strategies        | `RNGkind.sampleKind.ROUNDING` is equal to the string `"ROUNDING"`                      |
 
 Example: set uniform RNG to `SUPER_DUPER` and normal RNG to `BOX_MULLER`
 
 ```typescript
-import { RNGkind,  IRNGNormalTypeEnum, IRNGNormalTypeEnum } from 'lib-r-math.js'
+import { RNGkind } from 'lib-r-math.js'
 
-const normal = IRNGNormalTypeEnum.SUPER_DUPER;
-const uniform = IRNGNormalTypeEnum.BOX_MULLER;
+const uniform = RNGkind.uniform.SUPER_DUPER;
+const normal = RNGkind.normal.BOX_MULLER;
 
-RNGkind({ uniform, normal }); //-> does not change sampleKind
+RNGkind({ uniform, normal }); //-> "sampleKind" not specified so this will not be changed
 
-RNGkind(); // does not change anything but returns the current used RNG's and "sampleKind"
+RNGkind(); // no arguments, will return the current used RNG's and "sampleKind"
+// returns 
+//  {
+//    uniform: 'SUPER_DUPER',
+//    normal: 'BOX_MULLER',
+//    sampleKind: 'ROUNDING'  // was not changed from default setting
+//  }
 ```
 
 ### `setSeed`
@@ -379,7 +353,8 @@ Rjs _typescript decl_
 function setSeed(s: number): void;
 ```
 
-Argument `s` is coerced to an unsigned 32 bit integer 
+Arguments:
+- `s` is coerced to an unsigned 32 bit integer 
 
 ### `randomSeed`
 
@@ -391,169 +366,165 @@ Rjs _typescript decl_
 function randomSeed(internalState?: Uint32Array | Int32Array): Uint32Array | Int32Array | never;
 ```
 
-- If no arguments is used, it will return the internal RNG state of the currently selected uniform RNG
-- If an argument is provided, it will use this value to set the internal RNG state of the currently selected uniform RNG
+Arguments:
+  - (optional) `internalState`: the value of a previously saved RNG state, the current RNG state will be set to this.
+  - return state of the current selected RNG 
+
+Exceptions:
+  - If the `internalState` value is not correct for the RNG selected an Error will be thrown.
 
 
 YOU ARE HERE I AM CALLING IT A DAY
 ## Distributions
 
-### Uniform distribution
+All distribution functions follow a prefix pattern:
 
-- `dunif`: density function
-- `punif`: cummulative distribution
-- `qunif`: quantile function
-- `runif`: generate random deviates in bulk
-- `runifOne`: generate random deviates one per time
 
-Uses the RNG generator set by `RNGkind` function.
+- `d` (like `dbeta`, `dgamma`) are desnisty functions
+- `p` (like `pbeta`, `pgamma`) are (cummulative) distribution function
+- `q` (like `qbeta`, `qgamma`) are quantile functions
+- `r` (like `rbeta/rbetaOne`, `rgamma/rgammaOne`) generates random deviates 
 
-Rjs _typescript decl_
+### Beta distribution
 
-```typescript
-function dunif(x: number, min = 0, max = 1, log = false): number
+| type                     | function spec                                                                                                     |
+| ------------------------ | ----------------------------------------------------------------------------------------------------------------- |
+| density function         | `function dbeta(x: number, shape1: number, shape2: number, ncp?: number, log = false): number`                    |
+| distribution function    | `function pbeta(q: number, shape1: number, shape2: number, ncp?: number, lowerTail = true, logP = false): number` |
+| quantile function        | `function qbeta(p: number, shape1: number, shape2: number, ncp?: number, lowerTail = true, logP = false): number` |
+| random generation (bulk) | `function rbeta(n: number, shape1: number, shape2: number, ncp?: number): Float32Array`                           |
+| ranom generation         | `function rbetaOne(shape1: number, shape2: number): number`                                                       |
 
-function punif(q: number, min = 0, max = 1, lowerTail = true, logP = false): number
+- Arguments:
+  - `x, q`: quantile value
+  - `p`: probability
+  - `n`: number of observations
+  - `shape1, shape2`: Shape parameters of the Beta distribution
+  - `log, logP`: if `true`, probabilities are given as `log(p)`.
+  - `lowerTail`: if `true`, probabilities are `P[X ≤ x]`, otherwise, `P[X > x]`.
 
-function qunif(p: number, min = 0, max = 1, lowerTail = true, logP = false): number
-
-function runif(n: number, min = 0, max = 1): Float64Array
-
-function runifOne(min: number, max: number): number
-```
-
-arguments:
-
-- `x, q`: quantiles
-- `p`: probability
-- `n`: number of observations
-- `min, max`: lower and upper limits of the distribution. Must be finite.
-- `log, logP`: if TRUE, probabilities p are given as log(p).
-- `lowerTail`: if TRUE (default), probabilities are P[X ≤ x] otherwise, P[X > x].
 
 Example:
 
 ```javascript
-import { dunif } from 'lib-r-math.js';
+import { dbeta } from 'lib-r-math.js';
 
-dunif(1.8, 1, 4, true);
-// -> -1.098612 (log of 0.33333)
+dbeta(0.5, 2, 2);
+// -> 1.5
 ```
 
-I AM HERE
+### Binomial distribution
 
+| type                     | function spec                                                                                     |
+| ------------------------ | ------------------------------------------------------------------------------------------------- |
+| density function         | `function dbinom(x: number, n: number, prob: number, log = false): number`                        |
+| distribution function    | `function pbinom(q: number, n: number, prob: number, lowerTail = true, logP = false): number`     |
+| quantile function        | `function qbinom(p: number, size: number, prob: number, lower_tail = true, logP = false): number` |
+| random generation (bulk) | `function rbinom(n: number, size: number, prob: number): Float64Array`                            |
+| ranom generation         | `function rbinomOne(size: number, prob: number): number`                                          |
 
-See [R doc](http://stat.ethz.ch/R-manual/R-patched/library/stats/html/Uniform.html)
-
-These functions are created with the factory method `Uniform` taking as argument a uniform PRNG. Defaults to [Mersenne-Twister](#mersenne-twister).
-
-
-
-
-#### `dunif`
-
-The density function. See [R doc](http://stat.ethz.ch/r-manual/r-patched/library/stats/html/uniform.html)
-
-_typescript decl_
-
-```typescript
-declare function dunif(
-  x: number | number[],
-  min = 0,
-  max = 1,
-  asLog = false
-): number | number[];
-```
-
-- `x`: scalar or vector of quantiles
-- `min, max` lower and upper limits of the distribution. Must be finite.
-- `asLog` if `true`, results are given as ln.
+- Arguments:
+  - `x, q`: quantile value
+  - `p`: probability
+  - `n`: number of observations.
+  - `size`: number of trials (zero or more).
+  - `prob`: probability of success on each trial.
+  - `log, logP`: if `true`, probabilities are given as `log(p)`.
+  - `lowerTail`: if `true`, probabilities are `P[X ≤ x]`, otherwise, `P[X > x]`.
 
 Example:
 
 ```javascript
-const libR = require("lib-r-math.js");
-const {
-  Uniform,
-  R: { numberPrecision, c },
-} = libR;
+import { dbinom } from 'lib-r-math.js';
 
-//helper
-const precision = numberPrecision(9);
-
-const { runif, dunif, punif, qunif } = Uniform();
-
-const x = [-1, 0, 0.4, 1, 2];
-
-const d0 = dunif(0.5);
-//1
-
-const d1 = dunif(x);
-// [ 0, 1, 1, 1, 0 ]  Everythin is 1 for inputs between 0 and 1
-
-const d2 = dunif(x, 0, 2);
-// [ 0, 0.5, 0.5, 0.5, 0.5 ]
-
-const d3 = dunif(x, 0, 2, true);
-precision(d3);
-//[ -Infinity,  -0.693147181, -0.693147181, -0.693147181, -0.693147181 ]
+dbinom(50, 100, 0.5);
+// -> 0.07958924
 ```
 
-#### `punif`
+### The Negative Binomial Distribution
 
-The probability function. See [R doc](http://stat.ethz.ch/r-manual/r-patched/library/stats/html/uniform.html)
+| type                     | function spec                                                                                                   |
+| ------------------------ | --------------------------------------------------------------------------------------------------------------- |
+| density function         | `function dnbinom(x: number, size: number, prob?: number, mu?: number, log = false): number`                    |
+| distribution function    | `function pnbinom(q: number, size: number, prob?: number, mu?: number, lowerTail = true, logP = false): number` |
+| quantile function        | `function qnbinom(p: number, size: number, prob?: number, mu?: number, lowerTail = true, logP = false): number` |
+| random generation (bulk) | `function rnbinom(n: number, size: number, prob?: number, mu?: number): Float64Array`                           |
+| ranom generation         | `function rnbinom(size: number, prob?: number, mu?: number): number`                                            |
 
-_typescript decl_
+Arguments:
+- `x, q`: quantile value.
+- `p`: probability.
+- `n`: number of observations.
+- `size`: target for number of successful trials, (need not be integer) or dispersion parameter (the shape parameter of the gamma mixing distribution). Must be strictly positive.
+- `prob`: probability of success in each trial. `0 < prob <= 1`.
+- `mu`: alternative parametrization via mean: see ‘Details’.
+- `log, logP`: if `true`, probabilities are given as `log(p)`.
+- `lowerTail`: if `true`, probabilities are `P[X ≤ x]`, otherwise, `P[X > x]`.
 
-```typescript
-declare function punif(
-  q: number | number[],
-  min = 0,
-  max = 1,
-  lowerTail = true,
-  logP = false
-): number | number[];
-```
+Details: (from R [doc](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/NegBinomial.html))
 
-- `x`: scalar or vector of quantiles
-- `min, max`: lower and upper limits of the distribution. Must be finite.
-- `lowerTail`: if TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
-- `logP`: if `true`, probabilities p are given as ln(p).
+A negative binomial distribution can also arise as a mixture of Poisson distributions with mean distributed as a gamma distribution (see pgamma) with scale parameter (1 - prob)/prob and shape parameter size. (This definition allows non-integer values of size.)
+
+An **alternative parametrization** (often used in ecology) is by the mean `mu` (see above), and size, the dispersion parameter, where `prob = size/(size+mu)`. The variance is `mu + mu^2/size` in this parametrization.
 
 Example:
 
-```javascript
-const libR = require("lib-r-math.js");
-const {
-  Uniform,
-  R: { numberPrecision },
-} = libR; // use default Mersenne-Twister PRNG
+R console:
 
-//helper
-const precision = numberPrecision(9);
-
-const { runif, dunif, punif, qunif } = Uniform();
-
-const q = [-2, 0.25, 0.75, 2];
-
-const p1 = punif(0.25);
-// 0.25
-
-const p2 = punif(q);
-//[ 0, 0.25, 0.75, 1 ]
-
-const p3 = punif(q, 0, 1, false);
-precision(p3);
-//[ 1, 0.75, 0.25, 0 ]
-
-const p4 = punif(q, 0, 2, false, true);
-precision(p4);
-//[ 0, -0.133531393, -0.470003629, -Infinity ]
-
-const p5 = punif(q, 0, 2, true, true);
-precision(p5);
-//[ 0, -0.133531393, -0.470003629, -Infinity ]
+ ```R
+ > options(digits=22)
+> 126 /  dnbinom(0:8, size  = 2, prob  = 1/2)
+[1]   504.0000000000000000000   503.9999999999998863132   672.0000000000000000000  1008.0000000000001136868
+[5]  1612.7999999999994997779  2688.0000000000013642421  4607.9999999999972715159  8064.0000000000000000000
+[9] 14336.0000000000145519152
 ```
+
+Equivalent in js (fidelity):
+
+```typescript
+import { dnbinom } from 'lib-r-math.js';
+
+[0, 1, 2, 3, 4, 5, 6, 7, 8].map( x => 126/dnbinom(x , 2, 0.5));
+// ->
+[ 504, 503.9999999999999, 672, 1008.0000000000001, 1612.7999999999988, 2688.0000000000014, 4607.999999999997, 8064, 14336.000000000015 ]
+```
+
+## The Cauchy Distribution
+
+| type                     | function spec                                                                                                   |
+| ------------------------ | --------------------------------------------------------------------------------------------------------------- |
+| density function         | `function dcauchy(x: number, location = 0, scale = 1, log = false): number`                    |
+| distribution function    | `function pcauchy(x: number, location = 0, scale = 1, lowerTail = true, logP = false): number` |
+| quantile function        | `function qcauchy(p: number, location = 0, scale = 1, lowerTail = true, logP = false): number` |
+| random generation (bulk) | `function rcauchy(n: number, location = 0, scale = 1): Float32Array`                           |
+| ranom generation         | `function rcauchyOne(location = 0, scale = 1): number`                                            |
+
+Arguments:
+- `x, q`: quantile value.
+- `p`: probability.
+- `n`: number of observations.
+- `location, scale`: location and scale parameters.
+- `log, logP`: if `true`, probabilities are given as `log(p)`.
+- `lowerTail`: if `true`, probabilities are `P[X ≤ x]`, otherwise, `P[X > x]`.
+
+Examples
+
+R console:
+```R
+dcauchy(-1:4)
+[1] 0.15915494309189534560822 0.31830988618379069121644 0.15915494309189534560822 0.06366197723675813546773
+[5] 0.03183098861837906773387 0.01872411095198768526959
+```
+
+Equivalent in js (fidelity):
+```typescript
+import { dcauchy } from 'lib-r-math.js';
+
+[-1,0,1,2,3,4].map(x => dcauchy(x));
+// -> [  0.15915494309189535, 0.3183098861837907, 0.15915494309189535, 0.06366197723675814, 0.03183098861837907, 0.018724110951987685 ]
+```
+
+# END OF OLD DOC
 
 #### `qunif`
 
@@ -975,1377 +946,6 @@ rnorm(5,2,3)
 #### summary
 
 `libRmath.so` contains 19 probability distributions (other then `Normal` and `Uniform`) with their specific density, quantile and random generators, all are ported and have been verified to yield the same output.
-
-### Beta distribution
-
-`dbeta, qbeta, pbeta, rbeta`
-
-See [R doc](http://stat.ethz.ch/R-manual/R-patched/library/stats/html/Beta.html).
-See [wiki](https://en.wikipedia.org/wiki/Beta_distribution).
-
-These functions are members of an object created by the `Beta` factory method. The factory method needs an instance of an optional [normal PRNG](#normal-distributed-random-number-generators). Various instantiation methods are given below.
-
-Usage:
-
-```javascript
-const libR = require("lib-r-math.js");
-const {
-  Beta,
-  rng: {
-    SuperDuper,
-    normal: { BoxMuller },
-  },
-} = libR;
-
-// explicit use of PRNG's
-const explicitB = Beta(new BoxMuller(new SuperDuper(0))); //
-
-// go with defaults 'MersenneTwister" and "Inversion"
-const defaultB = Beta();
-
-// Or just go with Default.. defaults to PRNG "Inversion" and "Mersenne-Twister"
-const { dbeta, pbeta, qbeta, rbeta } = defaultB;
-```
-
-#### `dbeta`
-
-<img src="./dbeta.svg">
-
-The density function of the [Beta distribution](https://en.wikipedia.org/wiki/Beta_distribution).
-See [R doc](http://stat.ethz.ch/R-manual/R-patched/library/stats/html/Beta.html).
-
-_typescript decl_
-
-```typescript
-declare function dbeta(
-  x: number | number[],
-  shape1: number,
-  shape2: number,
-  ncp = undefined,
-  asLog = false
-): number | number[];
-```
-
-- `x`: scalar or array of quantiles. 0 <= x <= 1
-- `shape1`: non-negative `a` parameter of the Beta distribution.
-- `shape2`: non-negative `b` parameter of the Beta distribution.
-- `ncp`: non centrality parameter. _Note: `undefined` is different then `0`_
-- `asLog`: return result as ln(p)
-
-```javascript
-const libR = require("lib-r-math.js");
-const {
-  Beta,
-  R: { numberPrecision },
-} = libR;
-
-//helpers, 9 digits precision
-const _9 = numberPrecision(9);
-
-//just go with Default.. uses Normal(), defaults to PRNG "Inversion" and "Mersenne-Twister"
-const { dbeta, pbeta, qbeta, rbeta } = Beta();
-
-//1. ncp argument = 1
-const d1 = _9(dbeta(0.4, 2, 2, 1));
-//1.28724574
-
-//2., No named arguments in JS, so use undefined to skip
-const d2 = _9(dbeta(0.4, 2, 2, undefined, true));
-//0.364643114
-
-//3
-const d3 = _9(dbeta(0.4, 2, 2, 1, true));
-//0.252504851
-
-//4
-const d4 = _9(dbeta([0, 0.2, 0.4, 0.8, 1, 1.2], 2, 2));
-//[ 0, 0.96, 1.44, 0.96, 0, 0 ]
-```
-
-_Equivalent in R_
-
-```R
-#1
-dbeta(0.4,2,2, ncp=1)
-#[1] 1.287246
-
-#2
-dbeta(0.4,2,2, log = TRUE)
-#[1] 0.3646431
-
-#3
-dbeta(0.4,2,2, ncp=1, TRUE)
-#[1] 0.2525049
-
-#4
-dbeta( c(0, 0.2, 0.4, 0.8, 1, 1.2), 2, 2)
-#[1] 0.00 0.96 1.44 0.96 0.00 0.00
-```
-
-#### `pbeta`
-
-The cumulative probability function of the [Beta distribution](https://en.wikipedia.org/wiki/Beta_distribution). See [R doc](http://stat.ethz.ch/R-manual/R-patched/library/stats/html/Beta.html).
-
-```typescript
-declare function pbeta(
-  q: number | number[],
-  shape1: number,
-  shape2: number,
-  ncp?: number,
-  lowerTail: boolean = true,
-  logP: boolean = false
-): number | number[];
-```
-
-- `p`: quantiles. 0 <= x <= 1
-- `shape1`: non-negative `a` parameter of the Beta distribution.
-- `shape2`: non-negative `b` parameter of the Beta distribution.
-- `ncp`: non centrality parameter. _Note: `undefined` is different then `0`_
-- `lowerTail`: if TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
-- `logP`: return probabilities as ln(p)
-
-Usage:
-
-```javascript
-const libR = require("lib-r-math.js");
-const {
-  Beta,
-  R: { multiplex, numberPrecision, seq: _seq },
-} = libR;
-
-//helpers
-// 9 digit precision
-const _9 = numberPrecision(9);
-const log = multiplex(Math.log);
-const seq = _seq()();
-
-//just go with Default.. uses Normal(), defaults to PRNG "Inversion" and "Mersenne-Twister"
-const { dbeta, pbeta, qbeta, rbeta } = Beta();
-const q = seq(0, 1, 0.2);
-
-//1.
-const p1 = _9(pbeta(0.5, 2, 5));
-//0.890625
-
-//2.
-const p2 = _9(pbeta(0.5, 2, 5, 4));
-//0.63923843
-
-//3.
-const p3 = _9(pbeta(q, 2, 5, 4));
-//[ 0, 0.106517718, 0.438150345, 0.813539396, 0.986024517, 1 ]
-
-//4.
-const p4 = _9(pbeta(q, 2, 5, undefined));
-//[ 0, 0.345027474, 0.76672, 0.95904, 0.9984, 1 ]
-
-//5. result as as ln(p)
-const p5 = _9(pbeta(q, 2, 5, undefined, true, true));
-/*[
-  -Infinity,     -1.06413123,    -0.265633603,
-  -0.0418224949, -0.00160128137,  0
-  ]*/
-```
-
-_Equivalent in R_
-
-```R
-q = c(0, 0.2, 0.4, 0.6, 0.8, 1);
-
-#1
-pbeta(0.5, 2, 5);
-#[1] 0.890625
-
-#2
-pbeta(0.5, 2, 5, 4)
-#[1] 0.6392384
-
-#3
-pbeta(q, 2, 5, 4);
-#[1] 0.0000000 0.1061302 0.4381503 0.8135394
-#[5] 0.9860245 1.0000000
-
-#4
-pbeta(q, 2, 5);
-#[1] 0.00000 0.34464 0.76672 0.95904 0.99840 1.00000
-
-#5
-pbeta(q, 2, 5, log.p=TRUE)
-#[1]         -Inf -1.065254885 -0.265633603
-#[4] -0.041822495 -0.001601281  0.000000000
-```
-
-#### `qbeta`
-
-The quantile function of the [Beta distribution](https://en.wikipedia.org/wiki/Beta_distribution). See [R doc](http://stat.ethz.ch/R-manual/R-patched/library/stats/html/Beta.html).
-
-_typescript decl_
-
-```typescript
-declare function qbeta(
-  p: number | number[],
-  shape1: number,
-  shape2: number,
-  ncp = undefined,
-  lowerTail = true,
-  logP = false
-): number | number[];
-```
-
-- `p`: quantiles (scalar or array).
-- `shape1`: non-negative `a` parameter of the Beta distribution.
-- `shape2`: non-negative `b` parameter of the Beta distribution.
-- `ncp`: non centrality parameter. _Note: `undefined` is different then `0`_
-- `lowerTail`: if TRUE (default), _probabilities_ are P[X ≤ x], otherwise, P[X > x].
-- `logP`: return _probabilities_ as ln(p).
-
-Usage:
-
-```javascript
-const libR = require("lib-r-math.js");
-const {
-  Beta,
-  R: { multiplex, numberPrecision },
-} = libR;
-
-//helpers
-const ln = multiplex(Math.log);
-const _9 = numberPrecision(9); // 9 digits precision
-
-const { dbeta, pbeta, qbeta, rbeta } = Beta();
-
-//take probabilities in steps of 25%
-const p = [0, 0.25, 0.5, 0.75, 1];
-
-//1. always zero, regardless of shape params, because 0 ≤ x ≤ 1.
-const q1 = _9(qbeta(0, 99, 66));
-//0
-
-//2.
-const q2 = _9(qbeta(p, 4, 5));
-//[ 0, 0.329083427, 0.440155205, 0.555486315, 1 ]
-
-//3 ncp = 3
-const q3 = _9(qbeta(p, 4, 5, 3));
-//[ 0, 0.406861514, 0.521344641, 0.631881288, 1 ]
-
-//4. ncp = undefined, lowerTail = false, logP=false(default)
-const q4 = _9(qbeta(p, 4, 5, undefined, false)); //
-//[ 1, 0.555486315, 0.440155205, 0.329083427, 0 ]
-
-//5. same as [5] but, logP=true,
-const q5 = _9(
-  qbeta(
-    ln(p),
-    4,
-    5,
-    undefined,
-    false,
-    true //p as ln(p)
-  )
-);
-//[ 1, 0.555486315, 0.440155205, 0.329083427, 0 ]
-```
-
-_Equivalent in R_
-
-```R
-p = c(0,.25,.5,.75,1);
-#1
-qbeta(0,99,66);
-#[1] 0
-
-#2
-qbeta(p, 4,5);
-#[1] 0.0000000 0.3290834 0.4401552 0.5554863 1.0000000
-
-#3
-qbeta(p, 4,5,3);
-#[1] 0.0000000 0.4068615 0.5213446 0.6318813 1.0000000
-
-#4
-qbeta(p, 4,5, lower.tail = FALSE);
-#[1] 1.0000000 0.5554863 0.4401552 0.3290834
-#[5] 0.0000000
-
-#5
-qbeta(  log(p)  ,4,5, lower.tail = FALSE, log.p=TRUE);
-#[1] 1.0000000 0.5554863 0.4401552 0.3290834 0.0000000
-```
-
-#### `rbeta`
-
-Generates random deviates for the [Beta distribution](https://en.wikipedia.org/wiki/Beta_distribution). See [R doc](http://stat.ethz.ch/R-manual/R-patched/library/stats/html/Beta.html).
-
-_typescript decl_
-
-```typescript
-declare function rbeta(
-  n: number,
-  shape1: number,
-  shape2: number,
-  ncp = 0 // NOTE: normally the default is "undefined", but not here
-): number | number[];
-```
-
-- `n`: number of deviates
-- `shape1`: non-negative `a` parameter of the Beta distribution.
-- `shape2`: non-negative `b` parameter of the Beta distribution.
-- `ncp`: non centrality parameter.
-
-```javascript
-const libR = require("lib-r-math.js");
-const {
-  Beta,
-  rng: {
-    LecuyerCMRG,
-    normal: { Inversion },
-  },
-  R: { multiplex, numberPrecision },
-} = libR;
-
-//helpers
-const ln = multiplex(Math.log); //
-const _9 = numberPrecision(9);
-
-const lc = new LecuyerCMRG(0);
-const { dbeta, pbeta, qbeta, rbeta } = Beta(new Inversion(lc));
-
-//1.
-const r1 = _9(rbeta(5, 0.5, 0.5));
-//[ 0.800583949,  0.962961579, 0.700710737,  0.169742664, 0.0169845581 ]
-
-//2.
-const r2 = _9(rbeta(5, 2, 2, 4));
-//[ 0.940977213, 0.803938008, 0.762066155, 0.775315234, 0.0395894783 ]
-
-//3. // re-initialize seed
-lc.init(0);
-
-//3
-const r3 = _9(rbeta(5, 2, 2));
-//[ 0.37955891, 0.240142694, 0.425371111, 0.935280271, 0.636741506 ]
-
-//4.
-const r4 = _9(rbeta(5, 2, 2, 5));
-//[ 0.532034853, 0.985042931, 0.724819159, 0.67645358, 0.837372377 ]
-```
-
-Same values as in R
-
-_Equivalent in R_
-
-```R
-RNGkind("L'Ecuyer-CMRG", normal.kind ="Inversion")
-set.seed(0)
-
-#1
-rbeta(5, 0.5, 0.5)
-#[1] 0.80058395 0.96296158 0.70071074 0.16974266 0.01698456
-
-#2
-rbeta(5, 2, 2, 4)
-#[1] 0.94097721 0.80393801 0.76206615 0.77531523 0.03958948
-
-set.seed(0)
-#3
-rbeta(5, 2, 2);
-#[1] 0.3795589 0.2401427 0.4253711 0.9352803 0.6367415
-
-#4
-rbeta(5, 2, 2, 5);
-#[1] 0.5320349 0.9850429 0.7248192 0.6764536 0.8373724
-```
-
-### Binomial distribution
-
-`dbinom, qbinom, pbinom, rbinom`
-
-See [R doc](http://stat.ethz.ch/R-manual/R-patched/library/stats/html/Binomial.html) and [wiki](https://en.wikipedia.org/wiki/Binomial_distribution).
-
-These functions are members of an object created by the `Binomial` factory method. The factory method needs an instance of a [normal PRNG](#normal-distributed-random-number-generators). Various instantiation methods are given below.
-
-Usage:
-
-```javascript
-const libR = require("lib-r-math.js");
-const {
-  Binomial,
-  rng: { LecuyerCMRG },
-} = libR;
-
-// explicit use if PRNG
-const lc = new LecuyerCMRG(0);
-const explicitB = Binomial(lc);
-
-//default, used "Inversion" and "MersenneTwister"
-const defaultB = Binomial();
-
-const { dbinom, pbinom, qbinom, rbinom } = defaultB;
-```
-
-#### `dbinom`
-
-The density function of the [Binomial distribution](https://en.wikipedia.org/wiki/Binomial_distribution). See [R doc](http://stat.ethz.ch/R-manual/R-patched/library/stats/html/Binomial.html)
-
-$$p(x) = \frac{n!}{x!(n-x)!} p^{x} (1-p)^{n-x}$$
-
-_typescript decl_
-
-```typescript
-declare function dbinom(
-  x: number,
-  size: number,
-  p: number,
-  asLog = false
-): number | number[];
-```
-
-- `x`: scalar or array of quantiles.
-- `size`: number of trails
-- `p`: probability of success.
-- `asLog`: return result as ln(p)
-
-Usage:
-
-```javascript
-const libR = require("lib-r-math.js");
-const {
-  Binomial,
-  R: { numberPrecision, seq: _seq },
-} = libR;
-
-//helper, 9 digits precision
-const _9 = numberPrecision(9);
-const seq = _seq()();
-
-//some data
-const x = seq(1, 4);
-
-//Binomial()  uses Normal() as default argument,
-const { dbinom, pbinom, qbinom, rbinom } = Binomial();
-
-//1. 2 successes out of 4 trials, with success probility 0.3
-const d1 = _9(dbinom(2, 4, 0.3));
-//0.2646
-
-//2. same as [1], but results as log
-const d2 = _9(dbinom(2, 4, 0.3, true));
-//-1.32953603
-
-//3. all possibilities out of 4 trials
-const d3 = _9(dbinom(x, 4, 0.3));
-//[ 0.4116, 0.2646, 0.0756, 0.0081 ]
-
-//4
-const d4 = _9(dbinom(x, 4, 0.3, true));
-//[ -0.887703275, -1.32953603, -2.582299, -4.81589122 ]
-```
-
-_Equivalent in R_
-
-```R
-#1
-dbinom(2,4,0.3)
-#[1] 0.2646
-
-#2
-dbinom(2,4,0.3, TRUE)
-#[1] -1.329536
-
-#3
-dbinom(c(1,2,3,4),4,0.3)
-#[1] 0.4116 0.2646 0.0756 0.0081
-
-#4
-dbinom(c(1,2,3,4),4,0.3, TRUE)
-#[1] -0.8877033 -1.3295360 -2.5822990  -4.8158912
-```
-
-#### `pbinom`
-
-The cumulative probability function of the [Binomial distribution](https://en.wikipedia.org/wiki/Binomial_distribution). See [R doc](http://stat.ethz.ch/R-manual/R-patched/library/stats/html/Binomial.html)
-
-```typescript
-declare function pbinom(
-  q: number | number[],
-  size: number,
-  prob: number,
-  lowerTail = true,
-  logP = false
-): number | number[];
-```
-
-- `q`: scalar or array of quantiles.
-- `size`: number of trails
-- `prob`: probability of success.
-- `lowerTail`: if TRUE (default), _probabilities_ are P[X ≤ x], otherwise, P[X > x].
-- `logP`: return result as ln(p)
-
-Usage:
-
-```javascript
-const libR = require("lib-r-math.js");
-const {
-  Binomial,
-  R: { numberPrecision, seq: _seq },
-} = libR;
-
-//helper, 9 digits precision
-const _9 = numberPrecision(9);
-const seq = _seq()();
-
-const { dbinom, pbinom, qbinom, rbinom } = Binomial();
-//some data
-
-const q = seq(0, 4);
-//1.
-const p1 = pbinom(4, 4, 0.5);
-//1
-
-//2.
-const p2 = _9(pbinom(q, 4, 0.5));
-//[ 0.0625, 0.3125, 0.6875, 0.9375, 1 ]
-
-//4.
-const p3 = _9(pbinom(q, 4, 0.5, false, true));
-/*[ -0.0645385211,  -0.374693449,  -1.16315081,  -2.77258872,  -Infinity
-]*/
-```
-
-_Equivalent in R_
-
-```R
-q = c(0, 1, 2, 3, 4);
-#1
-pbinom(4, 4, 0.5)
-#[1] 1
-
-#2
-pbinom(q, 4, 0.5)
-#[1] 0.0625 0.3125 0.6875 0.9375 1.0000
-
-#3
-pbinom(q, 4, 0.5, FALSE, TRUE)
-#[1] -0.06453852 -0.37469345 -1.16315081
-#[4] -2.77258872        -Inf
-```
-
-#### `qbinom`
-
-The quantile function of the [Binomial distribution](https://en.wikipedia.org/wiki/Binomial_distribution). See [R doc](http://stat.ethz.ch/R-manual/R-patched/library/stats/html/Binomial.html)
-
-_typescript decl_
-
-```typescript
-declare function qbinom(
-  p: number | number[],
-  size: number,
-  prob: number,
-  lowerTail = true,
-  logP = false
-): number | number[];
-```
-
-- `p`: scalar or array of quantiles.
-- `size`: number of trails
-- `prob`: probability of success.
-- `lowerTail`: if TRUE (default), _probabilities_ are P[X ≤ x], otherwise, P[X > x].
-- `LogP`: return result as ln(p)
-
-Usage:
-
-```javascript
-const libR = require("lib-r-math.js");
-const {
-  Binomial,
-  R: { multiplex, numberPrecision, seq: _seq },
-} = libR;
-
-//helpers
-const _9 = numberPrecision(9);
-const log = multiplex(Math.log);
-const seq = _seq()();
-
-const { dbinom, pbinom, qbinom, rbinom } = Binomial();
-
-//data
-const p = seq(0, 1, 0.25); //[0, 0.25, 0.5, 0.75, 1];
-
-//1
-const q1 = _9(qbinom(0.25, 4, 0.3));
-//1
-
-//2.
-const q2 = _9(qbinom(p, 40, 0.3));
-//[0 10 12 14 40]
-
-//3.
-const q3 = _9(qbinom(p, 40, 0.3, false));
-//[ 40, 14, 12, 10, 0 ]
-
-//4.  same as 3.
-const q4 = _9(qbinom(log(p), 40, 0.3, false, true));
-//[ 40, 14, 12, 10, 0 ]
-```
-
-_Equivalent in R_
-
-```R
-p = seq(0,1,0.25); #c(0, 0.25, 0.5, 0.75, 1);
-
-#1
-qbinom(.25,4,.3)
-#[1] 1
-
-#2
-qbinom(p, 40,.3)
-#[1]  0 10 12 14 40
-
-#3
-qbinom(p, 40,.3, FALSE)
-#[1] 40 14 12 10  0
-
-#4
-qbinom(log(p), 40,.3, FALSE, TRUE)
-#[1] 40 14 12 10  0
-```
-
-#### `rbinom`
-
-Generates random beta deviates for the [Binomial distribution](https://en.wikipedia.org/wiki/Binomial_distribution). See [R doc](http://stat.ethz.ch/R-manual/R-patched/library/stats/html/Binomial.html).
-
-_typescript decl_
-
-```typescript
-declare function rbinom(
-  n: number,
-  size: number,
-  prop: number
-): number | number[];
-```
-
-- `n`: number of deviates
-- `size`: number of trails
-- `prob`: probability of success.
-
-Usage:
-
-```javascript
-const libR = require("lib-r-math.js");
-const {
-  Binomial,
-  rng: { KnuthTAOCP2002 },
-} = libR;
-
-const kn = new KnuthTAOCP2002(1234);
-const { dbinom, pbinom, qbinom, rbinom } = Binomial(kn);
-
-//1.
-const r1 = rbinom(2, 40, 0.5);
-//[ 24, 19 ]
-
-//2.
-const r2 = rbinom(3, 20, 0.5);
-//[ 11, 13, 13 ]
-
-//3.
-const r3 = rbinom(2, 10, 0.25);
-//[ 2, 2 ]
-```
-
-_Equivalent in R_
-
-```R
-RNGkind("Knuth-TAOCP-2002")
-set.seed(1234)
-
-#1
-rbinom(2, 40, 0.5);
-#[1] 24 18
-
-#2
-rbinom(3, 20, 0.5);
-#[1] 11 13 13
-
-#3
-rbinom(2, 10, 0.25);
-#[1] 2 2
-```
-
-### Negative Binomial distribution
-
-`dnbinom, pnbinom, qnbinom, rnbinom.`
-
-See [R doc](https: //stat.ethz.ch/R-manual/R-devel/library/stats/html/NegBinomial.html)
-See [wiki](https://en.wikipedia.org/wiki/Negative_binomial_distribution)
-
-These functions are members of an object created by the `NegativeBinomial` factory method. This factory method needs an instance of a [normal PRNG](#normal-distributed-random-number-generators). Various instantiation methods are given below.
-
-Usage:
-
-```javascript
-const libR = require("lib-r-math.js");
-const {
-  NegativeBinomial,
-  rng: {
-    SuperDuper,
-    normal: { BoxMuller },
-  },
-} = libR;
-
-//explicit use PRNG's
-const bm = new BoxMuller(new SuperDuper(0));
-const explicitNB = NegativeBinomial(bm);
-
-//default uses PRNG "Inverion" and "MersenneTwister"
-const defaultNB = NegativeBinomial();
-
-const { dnbinom, pnbinom, qnbinom, rnbinom } = defaultNB;
-```
-
-#### `dnbinom`
-
-The density function of the [Negative Binomial distribution](https://en.wikipedia.org/wiki/Negative_binomial_distribution).
-
-$$ \frac{Γ(x+n)}{Γ(n) x!} p^{n} (1-p)^{x} $$
-
-See [R doc]
-(https: //stat.ethz.ch/R-manual/R-devel/library/stats/html/NegBinomial.html).
-
-_typescript decl_
-
-```typescript
-declare function dnbinom(
-  x: number | number[],
-  size: number,
-  prob?: number,
-  mu?: number,
-  asLog = false
-): number | number[];
-```
-
-- `x`: non-negative integer quantiles. Number of failures before reaching `size` successes.
-- `size`: target for number of successful trials, or dispersion parameter (the shape parameter of the gamma mixing distribution). Must be strictly positive, need not be integer.
-- `prob`: probability of success in each trial. 0 < prob <= 1
-- `mu`: alternative parametrization via mean: see [‘Details’ section]().
-- `asLog`: if `true`, probabilities p are given as ln(p).
-
-Usage:
-
-```javascript
-const libR = require("lib-r-math.js");
-const {
-  NegativeBinomial,
-  R: { seq: _seq, numberPrecision },
-} = libR;
-
-//some helpers
-const seq = _seq()();
-const _9 = numberPrecision(9);
-
-const { dnbinom, pnbinom, qnbinom, rnbinom } = NegativeBinomial();
-
-//some data
-const x = seq(0, 10, 2);
-
-//1.
-const d1 = _9(dnbinom(x, 3, 0.5));
-//[ 0.125, 0.1875, 0.1171875, 0.0546875, 0.0219726562, 0.00805664062 ]
-
-//2. alternative presentation with `mu` = n*(1-p)/p
-const d2 = _9(dnbinom(x, 3, undefined, (3 * (1 - 0.5)) / 0.5));
-//[ 0.125, 0.1875, 0.1171875, 0.0546875, 0.0219726562, 0.00805664062 ]
-
-//3
-const d3 = _9(dnbinom(x, 3, undefined, (3 * (1 - 0.5)) / 0.5, true));
-/*[ -2.07944154, -1.67397643,  -2.14398006, -2.90612011,
-    -3.8179565,  -4.82125861
-]*/
-```
-
-_Equivalent in R_
-
-```R
-#1
-dnbinom(0:10, size = 3, prob = 0.5);
-# [1] 0.125000000 0.187500000 0.187500000 0.156250000 0.117187500 0.082031250
-# [7] 0.054687500 0.035156250 0.021972656 0.013427734 0.008056641
-
-#2
-dnbinom(0:10, size = 3, mu = 3*(1-0.5)/0.5);
-# [1] 0.125000000 0.187500000 0.187500000 0.156250000 0.117187500 0.082031250
-# [7] 0.054687500 0.035156250 0.021972656 0.013427734 0.008056641
-
-dnbinom(0:10, size = 3, mu = 3*(1-0.5)/0.5, log=T);
-# [1] -2.079442 -1.673976 -1.673976 -1.856298 -2.143980 -2.500655 -2.906120
-# [8] -3.347953 -3.817956 -4.310433 -4.821259
-```
-
-#### `pnbinom`
-
-The gives the cumulative probability function of the [Negative Binomial distribution](https://en.wikipedia.org/wiki/Negative_binomial_distribution).
-See [R doc](https: //stat.ethz.ch/R-manual/R-devel/library/stats/html/NegBinomial.html).
-
-_typescript decl_
-
-```typescript
- declare function pnbinom(
-    q: number | number[],
-    size: number,
-    prob?: number,
-    mu?: number,
-    lowerTail = true
-    logP =  false
-  ): number|number[]
-```
-
-- `q`: non-negative integer quantiles.
-- `size`: target for number of successful trials, or dispersion parameter (the shape parameter of the gamma mixing distribution). Must be strictly positive, need not be integer.
-- `prob`: probability of success in each trial. 0 < prob <= 1
-- `mu`: alternative parametrization via mean: see [‘Details’ section]().
-- `lowerTail`: if TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
-- `logP`: if `true`, probabilities p are given as ln(p).
-
-Usage:
-
-```javascript
-const libR = require("lib-r-math.js");
-const {
-  NegativeBinomial,
-  R: { numberPrecision, seq: _seq, c },
-} = libR;
-
-//some helpers
-const seq = _seq()();
-const _9 = numberPrecision(9);
-
-const { dnbinom, pnbinom, qnbinom, rnbinom } = NegativeBinomial();
-
-//some data
-const x = c(seq(0, 6), Infinity);
-//[ 0, 1, 2, 3, 4, 5, 6, Infinity ]
-
-//1.
-const p1 = _9(pnbinom(x, 3, 0.5));
-//[ 0.125, 0.3125, 0.5, 0.65625, 0.7734375, 0.85546875, 0.91015625, 1 ]
-
-//2. alternative presentation of 1 with mu = n(1-p)/p
-const p2 = _9(pnbinom(x, 3, undefined, (3 * (1 - 0.5)) / 0.5));
-//[ 0.125, 0.3125, 0.5, 0.65625, 0.7734375, 0.85546875, 0.91015625, 1 ]
-
-//3
-const p3 = _9(pnbinom(x, 3, 0.5, undefined, false));
-//[ 0.875, 0.6875, 0.5, 0.34375, 0.2265625, 0.14453125, 0.08984375, 0 ]
-
-//4
-const p4 = _9(pnbinom(x, 3, 0.5, undefined, false, true));
-/*[ 
-  -0.133531393,  -0.374693449,  -0.693147181,  -1.06784063,  -1.48473443,  -1.93425953,
-  -2.40968323,   -Infinity ]
-*/
-```
-
-_Equivalent in R_
-
-```R
-x = c(seq(0, 6), Inf);
-
-#1
-pnbinom(x, 3, 0.5)
-#[1] 0.1250000 0.3125000 0.5000000 0.6562500 0.7734375 0.8554688 0.9101562
-#[8] 1.0000000
-
-#2
-pnbinom(x, size=3, mu=3*(1-0.5)/0.5)
-#[1] 0.87500000 0.68750000 0.50000000 0.34375000 0.22656250 0.14453125 0.08984375
-#[8] 0.00000000
-
-#3
-pnbinom(x, size=3, prob=0.5, lower.tail=FALSE);
-#[1] 0.87500000 0.68750000 0.50000000 0.34375000 0.22656250 0.14453125 0.08984375
-#[8] 0.00000000
-
-#4
-pnbinom(x, size=3, prob=0.5, lower.tail=FALSE, log.p=TRUE);
-#[1] -0.1335314 -0.3746934 -0.6931472 -1.0678406 -1.4847344 -1.9342595 -2.4096832
-#[8]       -Inf
-```
-
-#### `qnbinom`
-
-The quantile function of the
-[Negative Binomial distribution]
-(https://en.wikipedia.org/wiki/Negative_binomial_distribution).
-See [R doc](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/NegBinomial.html).
-
-_typescript decl_
-
-```typescript
-declare function qnbinom(
-  p: number | number[],
-  size: number,
-  prob?: number,
-  mu?: number,
-  lowerTail = true,
-  logP = false
-): number | number[];
-```
-
-- `p`: probabilities (scalar or array).
-- `size`: target for number of successful trials, or dispersion parameter (the shape parameter of the gamma mixing distribution). Must be strictly positive, need not be integer.
-- `prob`: probability of success in each trial. 0 < prob <= 1
-- `mu`: alternative parametrization via mean: see [‘Details’ section]().
-- `lowerTail`: if TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
-- `logP`: if `true`, probabilities p are given as ln(p).
-
-Usage:
-
-```javascript
-const libR = require("lib-r-math.js");
-const {
-  NegativeBinomial,
-  R: { numberPrecision, seq: _seq, multiplex },
-} = libR;
-
-//some helpers
-const _9 = numberPrecision(9);
-const log = multiplex(Math.log);
-const seq = _seq()();
-
-const { dnbinom, pnbinom, qnbinom, rnbinom } = NegativeBinomial();
-
-//some data
-const p = seq(0, 1, 0.2);
-//[ 0, 0.2, 0.4, 0.6, 0.8, 1 ]
-
-//1. inversion
-const q1 = _9(qnbinom(p, 3, 0.5));
-//[ 0, 1, 2, 3, 5, Infinity ]
-
-//2. lowerTail=false
-const q2 = _9(qnbinom(p, 3, 0.5, undefined, false));
-//[ Infinity, 5, 3, 2, 1, 0 ]
-
-//3. with logP=true, get your input sequence back
-const q3 = _9(qnbinom(log(p), 3, 0.5, undefined, false, true));
-//[ Infinity, 5, 3, 2, 1, 0 ]
-```
-
-_Equivalent in R_
-
-```R
-p = seq(0, 1, 0.2);
-
-#1
-qnbinom(p, 3, 0.5);
-#[1] 0 1 2 3 5  Inf
-
-#2
-qnbinom(p, 3, 0.5, lower.tail = FALSE);
-#[1] Inf  5  3  2  1  0
-
-#3
-qnbinom(log(p),3,0.5, lower.tail = FALSE, log.p = TRUE);
-#[1] Inf 5 3 2 1 0
-```
-
-#### `rnbinom`
-
-Generates random deviates for the
-[Negative binomial distribution]
-(https://en.wikipedia.org/wiki/Negative_binomial_distribution).
-See [R doc](https: //stat.ethz.ch/R-manual/R-devel/library/stats/html/NegBinomial.html).
-
-_typescript decl_
-
-```typescript
-declare function rnbinom(
-  n: number,
-  size: number,
-  prob: number
-): number | number[];
-```
-
-- `n`: ensemble size.
-- `size`: target of successful trials.
-- `prob`: probability of success in each trial. 0 < prob <= 1
-
-Usage:
-
-```javascript
-const libR = require("lib-r-math.js");
-const {
-  NegativeBinomial,
-  rng: {
-    SuperDuper,
-    normal: { BoxMuller },
-  },
-} = libR;
-
-//explicit use of RNG
-const bm = new BoxMuller(new SuperDuper(12345));
-const { dnbinom, pnbinom, qnbinom, rnbinom } = NegativeBinomial(bm);
-
-//1
-const r1 = rnbinom(7, 100, 0.5);
-//[ 94, 81, 116, 101, 71, 112, 85 ]
-
-//2.
-const r2 = rnbinom(7, 100, 0.1);
-//[ 889, 747, 1215, 912, 1105, 993, 862 ]
-
-//3.
-const r3 = rnbinom(7, 100, 0.9);
-//[ 9, 14, 12, 18, 15, 14, 7 ]
-
-//4
-bm.rng.init(98765); //set new seed
-const r4 = rnbinom(7, 100, undefined, (100 * (1 - 0.5)) / 0.5);
-//[ 87, 120, 113, 107, 87, 95, 88 ]
-```
-
-_Equivalent in R_
-
-```R
-RNGkind("Super-Duper", normal.kind="Box-Muller")
-set.seed(12345);
-
-#1
-rnbinom(7, 100, 0.5);
-#[1] 109  95  89 112  88  90  90
-
-#2
-rnbinom(7, 100, 0.1);
-#[1]  989 1004  842  974  820  871  798
-
-#3
-rnbinom(7, 100, 0.9);
-#[1] 10 14  9  7 12 11 10
-
-#4
-set.seed(98765)
-rnbinom(7,100, mu= 100*(1-0.5)/0.5)
-#[1]  87 120 113 107  87  95  88
-```
-
-### Cauchy distribution
-
-`dcauchy, qcauchy, pcauchy, rcauchy`
-
-See [R doc](http://stat.ethz.ch/R-manual/R-devel/library/stats/html/Cauchy.html). See [wiki](https://en.wikipedia.org/wiki/Cauchy_distribution)
-
-These functions are members of an object created by the `Cauchy` factory method. The factory method needs as optional argument an instance of one of the [uniform PRNG](#uniform-pseudo-random-number-generators) generators.
-
-Usage:
-
-```javascript
-const libR = require("lib-r-math.js");
-const {
-  Cauchy,
-  rng: { WichmannHill },
-} = libR;
-
-//explcit use of PRNG
-const wh = new WichmannHill(1234);
-const explicitC = Cauchy(wh);
-
-//default, uses MersenneTwister
-const defaultC = Cauchy();
-
-const { dcauchy, pcauchy, qcauchy, rcauchy } = defaultC;
-```
-
-#### `dcauchy`
-
-The density function of the [The Cauchy density](https://en.wikipedia.org/wiki/Cauchy_distribution). See [R doc](http://stat.ethz.ch/R-manual/R-devel/library/stats/html/Cauchy.html).
-
-Lemma formula: `s` is the _"scale"_ parameter and `l` is the _"location"_ parameter.
-
-$$ f(x) = \frac{1}{ π s (1 + ( \frac{x-l}{s} )^{2}) } $$
-
-_typescript decl_
-
-```typescript
-declare function dcauchy(
-  x: number | number[],
-  location = 0,
-  scale = 1,
-  asLog = false
-): number | number[];
-```
-
-- `x`: scalar or array of quantile(s).
-- `location`: the location parameter, default 0.
-- `scale`: the scale parameter, default 1.
-- `asLog`: return values as ln(p)
-
-Usage:
-
-```javascript
-const libR = require("lib-r-math.js");
-const {
-  Cauchy,
-  R: { numberPrecision, seq: _seq },
-} = libR;
-
-// some usefull tools
-const seq = _seq()();
-const _9 = numberPrecision(9);
-
-// initialize
-const { dcauchy, pcauchy, qcauchy, rcauchy } = Cauchy();
-
-//data
-const x = seq(-4, 4, 2);
-
-//1.
-const d1 = _9(dcauchy(x, -2, 0.5));
-/*[
-  0.0374482219,  0.636619772,  0.0374482219,
-  0.00979415034,  0.00439048119 ]*/
-
-//2.
-const d2 = _9(dcauchy(x, -2, 0.5, true));
-/*[
-  -3.28479605,  -0.451582705,  -3.28479605,
-  -4.62596998,  -5.42831645 ]*/
-
-//3.
-const d3 = _9(dcauchy(x, 0, 2));
-/*[
-  0.0318309886,  0.0795774715,  0.159154943,
-  0.0795774715,  0.0318309886 ]*/
-```
-
-_Equivalent in R_
-
-```R
-x=seq(-4,4,2);
-
-#1
-dcauchy(seq(-4,4,2), location=-2, scale=0.5);
-#[1] 0.037448222 0.636619772 0.037448222 0.009794150 0.004390481
-
-#2
-dcauchy(seq(-4,4,2), location=-2, scale=0.5, log=TRUE);
-#[1] -3.2847960 -0.4515827 -3.2847960 -4.6259700 -5.4283164
-
-#3
-dcauchy(seq(-4,4,2), location=0, scale=2);
-#[1] 0.03183099 0.07957747 0.15915494 0.07957747 0.03183099
-```
-
-#### `pcauchy`
-
-The cumulative probability function of the [Cauchy distribution](https://en.wikipedia.org/wiki/Cauchy_distribution). See [R doc](http://stat.ethz.ch/R-manual/R-devel/library/stats/html/Cauchy.html).
-
-_typescript decl_
-
-```typescript
-declare function pcauchy(
-  q: T,
-  location = 0,
-  scale = 1,
-  lowerTail = true,
-  logP = false
-): T;
-```
-
-- `q`: Scalar or array of quantile(s).
-- `location`: The location parameter, default 0.
-- `scale`: The scale parameter, default 1.
-- `lowerTail`: If TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
-- `logP`: If TRUE, probabilities p are given as ln(p).
-
-Usage:
-
-```javascript
-const libR = require("lib-r-math.js");
-const {
-  Cauchy,
-  R: { numberPrecision },
-} = libR;
-
-// some usefull tools
-const seq = libR.R.seq()();
-const _9 = numberPrecision(9);
-
-// initialize
-const { dcauchy, pcauchy, qcauchy, rcauchy } = Cauchy();
-
-//data
-const x = seq(-4, 4, 2);
-
-//1
-const p1 = _9(pcauchy(x, -2, 0.5));
-//[ 0.0779791304, 0.5, 0.92202087, 0.960416576, 0.973535324 ]
-
-//2.
-const p2 = _9(pcauchy(x, -2, 0.5, true, true));
-/*[ -2.55131405,  -0.693147181,  -0.0811874205, -0.0403881555,-0.0268211693 ]*/
-
-//3.
-const p3 = _9(pcauchy(x, 0, 2));
-//[ 0.147583618, 0.25, 0.5, 0.75, 0.852416382 ]
-```
-
-_Equivalent in R_
-
-```R
-x=seq(-4,4,2)
-
-#1
-pcauchy(x, location=-2, scale=0.5);
-#[1] 0.07797913 0.50000000 0.92202087 0.96041658 0.97353532
-
-#2
-pcauchy(x, location=-2, scale=0.5, log=TRUE);
-#[1] -2.55131405 -0.69314718 -0.08118742 -0.04038816 -0.02682117
-
-#3
-pcauchy(x, location=0, scale=2);
-#[1] 0.1475836 0.2500000 0.5000000 0.7500000 0.8524164
-```
-
-#### `qcauchy`
-
-The quantile function of the [Cauchy distribution](https://en.wikipedia.org/wiki/Cauchy_distribution). See [R doc](http://stat.ethz.ch/R-manual/R-devel/library/stats/html/Cauchy.html).
-
-_typescript decl_
-
-```typescript
-declare function qcauchy(
-  p: number | number[],
-  location = 0,
-  scale = 1,
-  lowerTail = true,
-  logP = false
-): number | number[];
-```
-
-- `p`: Scalar or array of probabilities(s).
-- `location`: The location parameter, default 0.
-- `scale`: The scale parameter, default 1.
-- `lowerTail`: If TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
-- `logP`: If TRUE, probabilities p are given as ln(p).
-
-Usage:
-
-```javascript
-const libR = require("lib-r-math.js");
-const {
-  Cauchy,
-  R: { numberPrecision, seq: _seq },
-} = libR;
-
-//some usefull tools
-const seq = _seq()();
-const _9 = numberPrecision(9);
-
-//initialize
-const { dcauchy, pcauchy, qcauchy, rcauchy } = Cauchy();
-
-//data
-const x = seq(0, 1, 0.2);
-
-//1
-const q1 = _9(qcauchy(x, -2, 0.5));
-//[ -Infinity, -2.68819096, -2.16245985, -1.83754015, -1.31180904, Infinity ]
-
-//2.
-const q2 = _9(qcauchy(x, -2, 0.5, false));
-//[ Infinity, -1.31180904, -1.83754015, -2.16245985, -2.68819096, -Infinity ]
-
-//3.
-const q3 = _9(qcauchy(x, 0, 2));
-//[ -Infinity, -2.75276384, -0.649839392, 0.649839392, 2.75276384, Infinity ]
-```
-
-_Equivalent in R_
-
-```R
-x = seq(0, 1, 0.2);
-#[1] 0.0 0.2 0.4 0.6 0.8 1.0
-
-#1
-qcauchy(x, -2, 0.5);
-#[1]      -Inf -2.688191 -2.162460 -1.837540 -1.311809       Inf
-
-#2
-qcauchy(x, -2,  0.5, lower.tail=FALSE)
-#[1]       Inf -1.311809 -1.837540 -2.162460 -2.688191      -Inf
-
-#3
-qcauchy(x, 0, 2);
-#[1]       -Inf -2.7527638 -0.6498394  0.6498394  2.7527638        Inf
-```
-
-#### `rcauchy`
-
-Generates random deviates from the [Cauchy distribution](https://en.wikipedia.org/wiki/Cauchy_distribution). See [R doc](http://stat.ethz.ch/R-manual/R-devel/library/stats/html/Cauchy.html).
-
-_typescript decl_
-
-```typescript
-declare function rcauchy(n: number, location = 0, scale = 1): number | number[];
-```
-
-- `n`: number of deviates to generate.
-- `location`: The location parameter, default 0.
-- `scale`: The scale parameter, default 1.
-
-Usage:
-
-```javascript
-const libR = require("lib-r-math.js");
-const {
-  Cauchy,
-  rng: { SuperDuper },
-  R: { numberPrecision },
-} = libR;
-
-// helpers
-const _9 = numberPrecision(9);
-
-//initialize Cauchy
-const sd = new SuperDuper();
-const { dcauchy, pcauchy, qcauchy, rcauchy } = Cauchy(sd);
-
-//1.
-sd.init(43210);
-const r1 = _9(rcauchy(5, 0, 0.5));
-//[ 0.0472614703, 0.577704013, 6.76536712, -0.0360997453, 0.719042522 ]
-
-//2.
-const r2 = _9(rcauchy(5, 2, 2));
-//[ 3.19844084, 3.28147192, 1.24543133, 2.04599347, 3.5392328 ]
-
-//3.
-sd.init(9876);
-const r3 = _9(rcauchy(5, -2, 0.25));
-//[ -9.8223614, 3.25884168, -0.918724179, -1.7870667, -1.76212205 ]
-```
-
-_Equivalent in R_
-
-```R
-RNGkind("Super-Duper");
-set.seed(43210)
-
-#1
-rcauchy(5, 0, 0.5);
-#[1]  0.04726147  0.57770401  6.76536712 -0.03609975  0.71904252
-
-#2
-rcauchy(5, 2, 2);
-#[1] 3.198441 3.281472 1.245431 2.045993 3.539233
-
-#3
-set.seed(9876)
-rcauchy(5, -2, 0.25);
-#[1] -9.8223614  3.2588417 -0.9187242 -1.7870667 -1.7621220
-```
 
 ### Chi-Squared (non-central) Distribution
 

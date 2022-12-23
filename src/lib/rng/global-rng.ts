@@ -23,23 +23,48 @@ import type { SampleKindType } from './sample-kind-type';
 
 const uniformMap = {
     // uniform
-    ["KNUTH_TAOCP"]: KnuthTAOCP,
-    ["KNUTH_TAOCP2002"]: KnuthTAOCP2002,
-    ["LECUYER_CMRG"]: LecuyerCMRG,
-    ["MARSAGLIA_MULTICARRY"]: MarsagliaMultiCarry,
-    ["MERSENNE_TWISTER"]: MersenneTwister,
-    ["SUPER_DUPER"]: SuperDuper,
-    ["WICHMANN_HILL"]: WichmannHill,
+    KNUTH_TAOCP: KnuthTAOCP,
+    KNUTH_TAOCP2002: KnuthTAOCP2002,
+    LECUYER_CMRG: LecuyerCMRG,
+    MARSAGLIA_MULTICARRY: MarsagliaMultiCarry,
+    MERSENNE_TWISTER: MersenneTwister,
+    SUPER_DUPER: SuperDuper,
+    WICHMANN_HILL: WichmannHill,
 };
 
 const normalMap ={
     // normal
-    ["AHRENS_DIETER"]: AhrensDieter,
-    ["BOX_MULLER"]: BoxMuller,
-    ["BUGGY_KINDERMAN_RAMAGE"]: BuggyKindermanRamage,
-    ["INVERSION"]: Inversion,
-    ["KINDERMAN_RAMAGE"]: KindermanRamage
+    AHRENS_DIETER: AhrensDieter,
+    BOX_MULLER: BoxMuller,
+    BUGGY_KINDERMAN_RAMAGE: BuggyKindermanRamage,
+    INVERSION: Inversion,
+    KINDERMAN_RAMAGE: KindermanRamage
 };
+
+const uniformKeys: Record<IRNGType, IRNGType> = {
+    // uniform
+    KNUTH_TAOCP: 'KNUTH_TAOCP',
+    KNUTH_TAOCP2002: 'KNUTH_TAOCP2002',
+    LECUYER_CMRG: 'LECUYER_CMRG',
+    MARSAGLIA_MULTICARRY: 'MARSAGLIA_MULTICARRY',
+    MERSENNE_TWISTER: 'MERSENNE_TWISTER',
+    SUPER_DUPER: 'SUPER_DUPER',
+    WICHMANN_HILL: 'WICHMANN_HILL'
+};
+
+const normalKeys: Record<IRNGNormalType, IRNGNormalType>  = {
+    AHRENS_DIETER: 'AHRENS_DIETER',
+    BOX_MULLER: 'BOX_MULLER',
+    BUGGY_KINDERMAN_RAMAGE: 'BUGGY_KINDERMAN_RAMAGE',
+    INVERSION: 'INVERSION',
+    KINDERMAN_RAMAGE: 'KINDERMAN_RAMAGE'
+};
+
+const sampleKind: Record<SampleKindType, SampleKindType> = {
+    ROUNDING: "ROUNDING",
+    REJECTION: "REJECTION"
+};
+
 
 const symRNG = Symbol.for('rngUNIFORM');
 const symRNGNormal = Symbol.for('rngNORMAL');
@@ -100,13 +125,8 @@ export function setSeed(
     }
     gu.init(seed); 
 }
-/*
-const attachProp = <F , K extends string>(fn: F, key: K): F & Readonly<Record<K,K>> => { 
-    Object.defineProperty(fn, key, { value: key, enumerable: true });
-    return fn as F & Record<K,K>;
-}
-*/
-export function RNGkind(opt: RandomGenSet = {}): RandomGenSet {
+
+function RNGkind(opt: RandomGenSet = {}): RandomGenSet {
 
     let gu = globalUni();
     let no = globalNorm();
@@ -179,6 +199,12 @@ export function RNGkind(opt: RandomGenSet = {}): RandomGenSet {
     };
 
 }
+
+RNGkind.uniform = uniformKeys;
+RNGkind.normal = normalKeys;
+RNGkind.sampleKind = sampleKind;
+
+export { RNGkind };
 
 export function randomSeed(internalState?: Uint32Array | Int32Array): Uint32Array | Int32Array | never {
     const gu = globalUni();

@@ -33,7 +33,7 @@ function do_search(y: number, z: NumberW, p: number, n: number, pr: number, incr
 
         for (;;) {
             let newz: number;
-            if (y === 0 || (newz = pbinom(y - incr, n, pr, /*l._t.*/ true, /*log_p*/ false)) < p) return y;
+            if (y === 0 || (newz = pbinom(y - incr, n, pr, /*l._t.*/ true, /*logP*/ false)) < p) return y;
             y = Math.max(0, y - incr);
             z.val = newz;
         }
@@ -44,25 +44,25 @@ function do_search(y: number, z: NumberW, p: number, n: number, pr: number, incr
 
         for (;;) {
             y = Math.min(y + incr, n);
-            if (y === n || (z.val = pbinom(y, n, pr, /*l._t.*/ true, /*log_p*/ false)) >= p) return y;
+            if (y === n || (z.val = pbinom(y, n, pr, /*l._t.*/ true, /*logP*/ false)) >= p) return y;
         }
     }
 }
 
 const printer_qbinom = debug('qbinom');
 
-export function qbinom(p: number, size: number, pr: number, lower_tail = true, log_p = false): number {
+export function qbinom(p: number, size: number, prob: number, lowerTail = true, logP = false): number {
 
     const z = new NumberW(0);
     let y: number;
 
-    if (isNaN(p) || isNaN(size) || isNaN(pr)) return NaN;
+    if (isNaN(p) || isNaN(size) || isNaN(prob)) return NaN;
 
-    if (!isFinite(size) || !isFinite(pr)) {
+    if (!isFinite(size) || !isFinite(prob)) {
         return ML_ERR_return_NAN2(printer_qbinom, lineInfo4);
     }
-    /* if log_p is true, p = -Inf is a legitimate value */
-    if (!isFinite(p) && !log_p) {
+    /* if logP is true, p = -Inf is a legitimate value */
+    if (!isFinite(p) && !logP) {
         return ML_ERR_return_NAN2(printer_qbinom, lineInfo4);
     }
 
@@ -70,42 +70,42 @@ export function qbinom(p: number, size: number, pr: number, lower_tail = true, l
         return ML_ERR_return_NAN2(printer_qbinom, lineInfo4);
     }
 
-    if (pr < 0 || pr > 1 || size < 0) {
+    if (prob < 0 || prob > 1 || size < 0) {
         return ML_ERR_return_NAN2(printer_qbinom, lineInfo4);
     }
 
-    const rc = R_Q_P01_boundaries(lower_tail, log_p, p, 0, size);
+    const rc = R_Q_P01_boundaries(lowerTail, logP, p, 0, size);
     if (rc !== undefined) {
         return rc;
     }
 
     //edge cases
 
-    if (pr === 0 || size === 0) return 0;
+    if (prob === 0 || size === 0) return 0;
 
-    const q = 1 - pr;
+    const q = 1 - prob;
     if (q === 0) return size; /* covers the full range of the distribution */
 
-    const mu = size * pr; //mean
-    const sigma = Math.sqrt(size * pr * q); //standard deviation
+    const mu = size * prob; //mean
+    const sigma = Math.sqrt(size * prob * q); //standard deviation
 
-    const gamma = (q - pr) / sigma; // = (  (1 - pr)-pr )/sd = (1 - 2pr)/sd
+    const gamma = (q - prob) / sigma; // = (  (1 - prob)-prob )/sd = (1 - 2pr)/sd
 
     printer_qbinom(
-        'qbinom(p=%d, n=%d, pr=%d, l.t.=%s, log=%s): sigm=%d, gam=%d',
+        'qbinom(p=%d, n=%d, prob=%d, l.t.=%s, log=%s): sigm=%d, gam=%d',
         p,
         size,
-        pr,
-        lower_tail,
-        log_p,
+        prob,
+        lowerTail,
+        logP,
         sigma,
         gamma,
     );
 
     /* Note : "same" code in qpois.c, qbinom.c, qnbinom.c --
      * FIXME: This is far from optimal [cancellation for p ~= 1, etc]: */
-    if (!lower_tail || log_p) {
-        p = R_DT_qIv(lower_tail, log_p, p); /* need check again (cancellation!): */
+    if (!lowerTail || logP) {
+        p = R_DT_qIv(lowerTail, logP, p); /* need check again (cancellation!): */
         if (p === 0) return 0; // will never happen
         if (p === 1) return size; // will never happen
     }
@@ -116,7 +116,7 @@ export function qbinom(p: number, size: number, pr: number, lower_tail = true, l
     }
 
     /* y := approx.value (Cornish-Fisher expansion) :  */
-    z.val = qnorm(p, 0, 1, /*lower_tail*/ true, /*log_p*/ false);
+    z.val = qnorm(p, 0, 1, /*lowerTail*/ true, /*logP*/ false);
     y = Math.floor(mu + sigma * (z.val + (gamma * (z.val * z.val - 1)) / 6) + 0.5);
 
     if (y > size) {
@@ -125,13 +125,13 @@ export function qbinom(p: number, size: number, pr: number, lower_tail = true, l
 
     printer_qbinom('new (p,1-p)=(%d,%d), z=qnorm(..)=%d, y=%d, size=%d', p, 1 - p, z.val, y, size);
 
-    z.val = pbinom(y, size, pr, /*lower_tail*/ true, /*log_p*/ false);
+    z.val = pbinom(y, size, prob, /*lowerTail*/ true, /*logP*/ false);
 
     /* fuzz to ensure left continuity: */
     p *= 1 - 64 * Number.EPSILON;
 
     if (size < 1e5) {
-        return do_search(y, z, p, size, pr, 1);
+        return do_search(y, z, p, size, prob, 1);
     }
     /* Otherwise be a bit cleverer in the search */
 
@@ -139,7 +139,7 @@ export function qbinom(p: number, size: number, pr: number, lower_tail = true, l
     let oldincr;
     do {
         oldincr = incr;
-        y = do_search(y, z, p, size, pr, incr);
+        y = do_search(y, z, p, size, prob, incr);
         incr = Math.max(1, Math.floor(incr / 100));
     } while (oldincr > 1 && incr > size * 1e-15);
     return y;

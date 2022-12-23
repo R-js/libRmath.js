@@ -1,35 +1,3 @@
-const collectCoverageFrom = [
-    'src/lib/alt/**/*.ts',
-    'src/lib/distributions/beta/*.ts',
-    'src/lib/distributions/binomial/*.ts',
-    'src/lib/distributions/binomial-negative/*.ts',
-    'src/lib/distributions/cauchy/*.ts',
-    'src/lib/distributions/chi-2/*.ts',
-    'src/lib/distributions/exp/*.ts',
-    'src/lib/distributions/f-distro/*.ts',
-    'src/lib/distributions/gamma/*.ts',
-    'src/lib/distributions/geometric/*.ts',
-    'src/lib/distributions/hypergeometric/*.ts',
-    'src/lib/distributions/logis/*.ts',
-    'src/lib/distributions/lognormal/*.ts',
-    'src/lib/distributions/multinom/*.ts',
-    'src/lib/distributions/normal/*.ts',
-    'src/lib/distributions/poisson/*.ts',
-    'src/lib/distributions/signrank/*.ts',
-    'src/lib/distributions/student-t/*.ts',
-    'src/lib/distributions/tukey/*.ts',
-    'src/lib/distributions/uniform/*.ts',
-    'src/lib/distributions/weibull/*.ts',
-    'src/lib/distributions/wilcoxon/*.ts',
-    'src/lib/r-func.ts',
-    'src/lib/index.ts',
-    'src/lib/trigonometry/*.ts',
-    'src/lib/stirling/index.ts',
-    'src/lib/special/**/*.ts',
-    //
-    'src/lib/rng/**/*.ts',
-    'src/packages/common/logger.ts'
-];
 
 const testRegex = [
     'src/lib/alt/(.*)/__test__/test.ts',
@@ -67,6 +35,39 @@ const testRegex = [
     'src/lib/special/beta/__test__/.*\.test.ts',
     'src/lib/special/choose/__test__/.*\.test.ts',
     'src/lib/special/gamma/__test__/.*\.test.ts'
+];
+
+const collectCoverageFrom = [
+    'src/lib/alt/**/*.ts',
+    'src/lib/distributions/beta/*.ts',
+    'src/lib/distributions/binomial/*.ts',
+    'src/lib/distributions/binomial-negative/*.ts',
+    'src/lib/distributions/cauchy/*.ts',
+    'src/lib/distributions/chi-2/*.ts',
+    'src/lib/distributions/exp/*.ts',
+    'src/lib/distributions/f-distro/*.ts',
+    'src/lib/distributions/gamma/*.ts',
+    'src/lib/distributions/geometric/*.ts',
+    'src/lib/distributions/hypergeometric/*.ts',
+    'src/lib/distributions/logis/*.ts',
+    'src/lib/distributions/lognormal/*.ts',
+    'src/lib/distributions/multinom/*.ts',
+    'src/lib/distributions/normal/*.ts',
+    'src/lib/distributions/poisson/*.ts',
+    'src/lib/distributions/signrank/*.ts',
+    'src/lib/distributions/student-t/*.ts',
+    'src/lib/distributions/tukey/*.ts',
+    'src/lib/distributions/uniform/*.ts',
+    'src/lib/distributions/weibull/*.ts',
+    'src/lib/distributions/wilcoxon/*.ts',
+    'src/lib/r-func.ts',
+    'src/lib/index.ts',
+    'src/lib/trigonometry/*.ts',
+    'src/lib/stirling/index.ts',
+    'src/lib/special/**/*.ts',
+    //
+    'src/lib/rng/**/*.ts',
+    'src/packages/common/logger.ts'
 ];
 
 module.exports = {
