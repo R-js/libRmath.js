@@ -24,8 +24,8 @@ import { qbinom } from './qbinom';
 
 
 const printer_rbinom = debug('rbinom');
-
-export function rbinomOne(nin: number, pp: number): number {
+ 
+export function rbinomOne(size: number, prob: number): number {
     const rng = globalUni();
     // double
     let c = 0;
@@ -73,20 +73,20 @@ export function rbinomOne(nin: number, pp: number): number {
     let k;
 
 
-    if (!isFinite(nin)) return ML_ERR_return_NAN2(printer_rbinom, lineInfo4);
-    r = Math.round(nin);
-    if (r !== nin) return ML_ERR_return_NAN2(printer_rbinom, lineInfo4);
+    if (!isFinite(size)) return ML_ERR_return_NAN2(printer_rbinom, lineInfo4);
+    r = Math.round(size);
+    if (r !== size) return ML_ERR_return_NAN2(printer_rbinom, lineInfo4);
     if (
-        !isFinite(pp) ||
+        !isFinite(prob) ||
         /* n=0, p=0, p=1 are not errors <TSL>*/
         r < 0 ||
-        pp < 0 ||
-        pp > 1
+        prob < 0 ||
+        prob > 1
     ) {
         return ML_ERR_return_NAN2(printer_rbinom, lineInfo4);
     }
-    if (r === 0 || pp === 0) return 0;
-    if (pp === 1) return r;
+    if (r === 0 || prob === 0) return 0;
+    if (prob === 1) return r;
 
     if (r >= 2147483647 /*INT_MAX*/) {
         /* evade integer overflow,
@@ -96,7 +96,7 @@ export function rbinomOne(nin: number, pp: number): number {
         const retv = qbinom(
             _p,
             r,
-            pp,
+            prob,
             /*lower_tail*/ false,
             /*log_p*/ false,
         );
@@ -105,7 +105,7 @@ export function rbinomOne(nin: number, pp: number): number {
     /* else */
     const n = Math.trunc(r);
 
-    const p = Math.min(pp, 1 - pp);
+    const p = Math.min(prob, 1 - prob);
     const q = 1 - p;
     const np = n * p;
     r = p / q;
@@ -142,10 +142,8 @@ export function rbinomOne(nin: number, pp: number): number {
         }
     };
 
-
-
-    //if (pp !== psave || n !== nsave) {
-    psave = pp;
+    //if (prob !== psave || n !== nsave) {
+    psave = prob;
     //nsave = Math.trunc(n);
     if (np < 30.0) {
         /* inverse cdf logic for mean less than 30 */

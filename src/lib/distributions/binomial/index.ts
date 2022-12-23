@@ -24,9 +24,9 @@ import { repeatedCall64 } from '@lib/r-func';
 export function rbinom(
   n: number,
   size: number,
-  pp: number
+  prob: number
 ): Float64Array {
-  return repeatedCall64(n, rbinomOne, size, pp);
+  return repeatedCall64(n, rbinomOne, size, prob);
 }
 
 export { rbinomOne };

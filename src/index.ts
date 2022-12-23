@@ -220,8 +220,6 @@ import type { IRNGNormalType } from './lib/rng/normal/rng-types';
 
 // globalRNG
 import {
-    //globalUni,
-    //globalNorm,
     RNGkind,
     setSeed,
     randomSeed

@@ -28,18 +28,18 @@ export function dnbinom(
   size: number,
   prob?: number,
   mu?: number,
-  giveLog = false
+  log = false
 ): number {
   if (mu !== undefined && prob !== undefined) {
     throw new TypeError(probAndMuBoth);
   }
   if (mu !== undefined) {
-    return dnbinom_mu(x, size, mu, giveLog);
+    return dnbinom_mu(x, size, mu, log);
   }
   if (prob === undefined) {
     throw new TypeError(probMis);
   }
-  return _dnb(x, size, prob, giveLog);
+  return _dnb(x, size, prob, log);
 } 
 
 export function pnbinom(

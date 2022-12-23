@@ -17,31 +17,31 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import { debug } from '@mangos/debug';
 import { ML_ERR_return_NAN2, lineInfo4 } from '@common/logger';
-import { DBL_MAX_EXP } from '@lib/r-func';
+import { DBL_MAX_EXP, min, max } from '@lib/r-func';
 import { globalUni } from '@rng/global-rng';
 
 const printer = debug('rbeta');
 
 export const expmax = DBL_MAX_EXP * Math.LN2; /* = log(DBL_MAX) */
 
-export function rbetaOne(aa: number, bb: number): number {
+export function rbetaOne(shape1: number, shape2: number): number {
     const rng = globalUni();
     
-    if (isNaN(aa)|| isNaN(bb)){
+    if (isNaN(shape1)|| isNaN(shape2)){
         return ML_ERR_return_NAN2(printer, lineInfo4);
     }
-    if (aa < 0 || bb < 0) {
+    if (shape1 < 0 || shape2 < 0) {
         return ML_ERR_return_NAN2(printer, lineInfo4);
     }
-    if (!isFinite(aa) && !isFinite(bb))
+    if (!isFinite(shape1) && !isFinite(shape2))
         // a = b = Inf : all mass at 1/2
         return 0.5;
-    if (aa === 0 && bb === 0)
+    if (shape1 === 0 && shape2 === 0)
         // point mass 1/2 at each of {0,1} :
         return rng.random() < 0.5 ? 0 : 1;
     // now, at least one of a, b is finite and positive
-    if (!isFinite(aa) || bb === 0) return 1.0;
-    if (!isFinite(bb) || aa === 0) return 0.0;
+    if (!isFinite(shape1) || shape2 === 0) return 1.0;
+    if (!isFinite(shape2) || shape1 === 0) return 0.0;
 
   
     let r;
@@ -65,14 +65,14 @@ export function rbetaOne(aa: number, bb: number): number {
     let oldb = -1.0;
 
     /* Test if we need new "initializing" */
-    const qsame = olda === aa && oldb === bb;
+    const qsame = olda === shape1 && oldb === shape2;
     if (!qsame) {
-        olda = aa;
-        oldb = bb;
+        olda = shape1;
+        oldb = shape2;
     }
 
-    const a = Math.min(aa, bb);
-    const b = Math.max(aa, bb); /* a <= b */
+    const a = min(shape1, shape2);
+    const b = max(shape1, shape2); /* a <= b */
     const alpha = a + b;
 
     function v_w_from__u1_bet(AA: number) {
@@ -120,7 +120,7 @@ export function rbetaOne(aa: number, bb: number): number {
 
             if (alpha * (Math.log(alpha / (a + w)) + v) - 1.3862944 >= Math.log(z)) break;
         }
-        return aa === a ? a / (a + w) : w / (a + w);
+        return shape1 === a ? a / (a + w) : w / (a + w);
     } else {
         /* Algorithm BB */
 
@@ -143,6 +143,6 @@ export function rbetaOne(aa: number, bb: number): number {
             if (s > t) break;
         } while (r + alpha * Math.log(alpha / (b + w)) < t);
 
-        return aa !== a ? b / (b + w) : w / (b + w);
+        return shape1 !== a ? b / (b + w) : w / (b + w);
     }
 }
