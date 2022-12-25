@@ -21,8 +21,8 @@ import { rexpOne } from './rexp';
 
 import { repeatedCall64 } from '@lib/r-func';
 
-export function dexp(x: number, rate = 1, asLog = false): number{
-  return _dexp(x, 1 / rate, asLog);
+export function dexp(x: number, rate = 1, log = false): number {
+  return _dexp(x, 1 / rate, log);
 }
 
 export function pexp(q: number, rate = 1, lowerTail = true, logP = false): number {
@@ -33,8 +33,8 @@ export function qexp(p: number, rate = 1, lowerTail = true, logP = false): numbe
   return _qexp(p, 1 / rate, lowerTail, logP);
 }
 
-export  function rexp(n: number, rate = 1):Float64Array{
-  return repeatedCall64(n, rexpOne, 1 / rate);
+export function rexp(n: number, rate = 1):Float64Array {
+  return repeatedCall64(n, rexpOne, rate);
 }
 
 export { rexpOne };

@@ -1,5 +1,5 @@
 
-import { globalUni, RNGkind } from '@rng/global-rng';
+import { setSeed, RNGkind } from '@rng/global-rng';
 
 import { rexp } from '..';
 
@@ -11,9 +11,8 @@ const rexpDomainWarns = rexpLogs("argument out of domain in '%s'");
 describe('rexp', function () {
     beforeEach(() => {
         cl.clear('rexp');
-        
         RNGkind({ uniform: "MERSENNE_TWISTER", normal: "INVERSION"});
-        globalUni().init(123456);
+        setSeed(123456);
     })
 
     it('n=0', () => {
@@ -58,7 +57,7 @@ describe('rexp', function () {
         expect(nan).toEqualFloatingPointBinary(NaN);
         expect(rexpDomainWarns()).toHaveLength(1);
     });
-    it('n=1 , rate=infinity', () => {
+    it('n=1 , rate=Infinity', () => {
         const z = rexp(1, Infinity);
         expect(z).toEqualFloatingPointBinary(0);
     });

@@ -4,7 +4,7 @@ This R statistical [`nmath`][librmath.so] re-created in typescript/javascript.
 
 If you were not using a previous version to 2.0.0, you can skip _breaking changes_ and go to:
 
-- [Installation and usage](#intsallation-and-usage)
+- [Installation and usage](#installation-and-usage)
 - [Table of contents](table-of-contents) 
 
 ## BREAKING CHANGES For version 2.0
@@ -162,10 +162,15 @@ const answ = BesselJ(3, 0.4);
     - [`setSeed`](#setseed)
     - [`randomSeed`](#randomseed)
   - [Distributions](#distributions)
-    - [Beta distribution](#beta-distribution)
-    - [Binomial distribution](#binomial-distribution)
+    - [The Beta distribution](#the-beta-distribution)
+    - [The Binomial distribution](#the-binomial-distribution)
     - [The Negative Binomial Distribution](#the-negative-binomial-distribution)
   - [The Cauchy Distribution](#the-cauchy-distribution)
+  - [The Chi-Squared (non-central) Distribution](#the-chi-squared-non-central-distribution)
+  - [The Exponential Distribution](#the-exponential-distribution)
+  - [The F Distribution](#the-f-distribution)
+  - [The Gamma Distribution](#the-gamma-distribution)
+  - [The Geometric Distribution](#the-geometric-distribution)
 - [END OF OLD DOC](#end-of-old-doc)
       - [`qunif`](#qunif)
       - [`runif`](#runif)
@@ -176,31 +181,6 @@ const answ = BesselJ(3, 0.4);
       - [`rnorm`](#rnorm)
   - [Other Probability Distributions](#other-probability-distributions)
       - [summary](#summary)
-    - [Chi-Squared (non-central) Distribution](#chi-squared-non-central-distribution)
-      - [`dchisq`](#dchisq)
-      - [`pchisq`](#pchisq)
-      - [`qchisq`](#qchisq)
-      - [`rchisq`](#rchisq)
-    - [Exponential Distribution](#exponential-distribution)
-      - [`dexp`](#dexp)
-      - [`pexp`](#pexp)
-      - [`qexp`](#qexp)
-      - [`rexp`](#rexp)
-    - [F (non-central) Distribution](#f-non-central-distribution)
-      - [`df`](#df)
-      - [`pf`](#pf)
-      - [`qf`](#qf)
-      - [`rf`](#rf)
-    - [Gamma distribution](#gamma-distribution)
-      - [`dgamma`](#dgamma)
-      - [`pgamma`](#pgamma)
-      - [`qgamma`](#qgamma)
-      - [`rgamma`](#rgamma)
-    - [Geometric distribution](#geometric-distribution)
-      - [`dgeom`](#dgeom)
-      - [`pgeom`](#pgeom)
-      - [`qgeom`](#qgeom)
-      - [`rgeom`](#rgeom)
     - [Hypergeometric distribution](#hypergeometric-distribution)
       - [`dhyper`](#dhyper)
       - [`phyper`](#phyper)
@@ -374,18 +354,16 @@ Exceptions:
   - If the `internalState` value is not correct for the RNG selected an Error will be thrown.
 
 
-YOU ARE HERE I AM CALLING IT A DAY
 ## Distributions
 
 All distribution functions follow a prefix pattern:
-
 
 - `d` (like `dbeta`, `dgamma`) are desnisty functions
 - `p` (like `pbeta`, `pgamma`) are (cummulative) distribution function
 - `q` (like `qbeta`, `qgamma`) are quantile functions
 - `r` (like `rbeta/rbetaOne`, `rgamma/rgammaOne`) generates random deviates 
 
-### Beta distribution
+### The Beta distribution
 
 | type                     | function spec                                                                                                     |
 | ------------------------ | ----------------------------------------------------------------------------------------------------------------- |
@@ -413,7 +391,7 @@ dbeta(0.5, 2, 2);
 // -> 1.5
 ```
 
-### Binomial distribution
+### The Binomial distribution
 
 | type                     | function spec                                                                                     |
 | ------------------------ | ------------------------------------------------------------------------------------------------- |
@@ -484,20 +462,22 @@ Equivalent in js (fidelity):
 ```typescript
 import { dnbinom } from 'lib-r-math.js';
 
-[0, 1, 2, 3, 4, 5, 6, 7, 8].map( x => 126/dnbinom(x , 2, 0.5));
+console.log(  
+  [0, 1, 2, 3, 4, 5, 6, 7, 8].map( x => 126/dnbinom(x , 2, 0.5))
+);
 // ->
 [ 504, 503.9999999999999, 672, 1008.0000000000001, 1612.7999999999988, 2688.0000000000014, 4607.999999999997, 8064, 14336.000000000015 ]
 ```
 
 ## The Cauchy Distribution
 
-| type                     | function spec                                                                                                   |
-| ------------------------ | --------------------------------------------------------------------------------------------------------------- |
+| type                     | function spec                                                                                  |
+| ------------------------ | ---------------------------------------------------------------------------------------------- |
 | density function         | `function dcauchy(x: number, location = 0, scale = 1, log = false): number`                    |
 | distribution function    | `function pcauchy(x: number, location = 0, scale = 1, lowerTail = true, logP = false): number` |
 | quantile function        | `function qcauchy(p: number, location = 0, scale = 1, lowerTail = true, logP = false): number` |
 | random generation (bulk) | `function rcauchy(n: number, location = 0, scale = 1): Float32Array`                           |
-| ranom generation         | `function rcauchyOne(location = 0, scale = 1): number`                                            |
+| ranom generation         | `function rcauchyOne(location = 0, scale = 1): number`                                         |
 
 Arguments:
 - `x, q`: quantile value.
@@ -520,8 +500,211 @@ Equivalent in js (fidelity):
 ```typescript
 import { dcauchy } from 'lib-r-math.js';
 
-[-1,0,1,2,3,4].map(x => dcauchy(x));
+console.log(  [-1,0,1,2,3,4].map(x => dcauchy(x))  );
 // -> [  0.15915494309189535, 0.3183098861837907, 0.15915494309189535, 0.06366197723675814, 0.03183098861837907, 0.018724110951987685 ]
+```
+
+## The Chi-Squared (non-central) Distribution
+
+| type                     | function spec                                                                                   |
+| ------------------------ | ----------------------------------------------------------------------------------------------- |
+| density function         | `function dchisq(x: number, df: number, ncp?: number, log = false ): number`                    |
+| distribution function    | `function pchisq(p: number, df: number, ncp?: number, lowerTail = true, logP = false ): number` |
+| quantile function        | `function qchisq(p: number, df: number, ncp?: number, lowerTail = true, logP = false ): number` |
+| random generation (bulk) | `function rchisq(n: number, df: number, ncp?: number): Float64Array`                            |
+| ranom generation         | `function rchisqOne(df: number, ncp?: number): number `                                         |
+
+
+Arguments:
+- `x, q`: quantile.
+- `p`: probability.
+- `n`: number of observations.
+- `df`: degrees of freedom (non-negative, but can be non-integer).
+- `ncp`: non-centrality parameter (non-negative).
+- `log, logP`: if `true`, probabily p are given as log(p).
+- `lowerTail`: if true`TRUE (default), probabilities are P[X \le x]P[X≤x], otherwise, P[X > x]P[X>x].
+
+Examples
+
+R console:
+```R
+dchisq(1, df = 1:3)
+[1] 0.2419707 0.3032653 0.2419707
+```
+
+Equivalent in js (fidelity):
+```typescript
+import { dchisq } from 'lib-r-math.js';
+
+console.log(   [1,2,3].map( df => dchisq(1, df))  );
+// -> [ 0.24197072451914337, 0.3032653298563167, 0.24197072451914337 ]
+```
+
+## The Exponential Distribution
+
+| type                     | function spec                                                                |
+| ------------------------ | ---------------------------------------------------------------------------- |
+| density function         | `function dexp(x: number, rate = 1, log = false): number`                    |
+| distribution function    | `function pexp(q: number, rate = 1, lowerTail = true, logP = false): number` |
+| quantile function        | `function qexp(p: number, rate = 1, lowerTail = true, logP = false): number` |
+| random generation (bulk) | `function rexp(n: number, rate = 1):Float64Array`                            |
+| ranom generation         | `function rexpOne(rate = 1): number `                                        |
+
+Arguments:
+- `x, q`: quantile.
+- `p`: probabily.
+- `n`: number of observations.
+- `rate`: the exp rate parameter
+- `log, logP`: if `true`, probabilities `p` are given as `log(p)`.
+- `lower.tail`: if `true` (default), probabilities are P[ X ≤ x ], otherwise, P[X > x].
+
+Examples
+
+R console:
+
+``R
+dexp(1) - exp(-1)
+[1] 0
+```
+
+Equivalent in js (fidelity):
+```typescript
+import { dexp } from 'lib-r-math.js';
+
+console.log( dexp(1) - Math.exp(-1)  );
+// -> 0
+```
+
+## The F Distribution
+
+| type                     | function spec                                                                                            |
+| ------------------------ | -------------------------------------------------------------------------------------------------------- |
+| density function         | `function df(x: number, df1: number, df2: number, ncp?: number, log = false): number`                    |
+| distribution function    | `function pf(q: number, df1: number, df2: number, ncp?: number, lowerTail = true, logP = false): number` |
+| quantile function        | `function qf(p: number, df1: number, df2: number, ncp?: number, lowerTail = true, logP = false): number` |
+| random generation (bulk) | `function rf(n: number, df1: number, df2: number, ncp?: number): Float64Array`                           |
+| ranom generation         | `function rfOne(df1: number, df2: number, ncp?: number): number`                                         |
+
+Arguments:
+- `x, q`: quantile.
+- `p`: probabily.
+- `n`: number of observations.
+- `df1, df1`: degrees of freedom. `Infinity` is allowed.
+- `ncp`: non-centrality parameter. If omitted the central F is assumed.
+- `log, logP`: if `true`, probabilities `p` are given as `log(p)`.
+- `lowerTail`: if `true` (default), probabilities are `P[ X ≤ x ]`, otherwise, `P[X > x]`S.
+
+**NOTE: JS has no named arguments for functions, so specify ncp = undefined, if you want to change the `log, logP, lowerTail` away from their defaults
+
+Examples
+
+R console:
+```R
+## Identity (F <-> Beta <-> incompl.beta):
+n1 <- 7 ; n2 <- 12; qF <- c((0:4)/4, 1.5, 2:16)
+x <- n2/(n2 + n1*qF)
+stopifnot(all.equal(pf(qF, n1, n2, lower.tail=FALSE),
+                    pbeta(x, n2/2, n1/2)))
+```
+
+Equivalent in js (fidelity):
+```typescript
+import { pf, pbeta } from "lib-r-math.js";
+
+var qF = [
+  0.0, 0.25, 0.5, 0.75, 1.0, 1.5, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0,
+  11.0, 12.0, 13.0, 14.0, 15.0, 16.0,
+];
+
+var n1 = 7;
+var n2 = 12;
+var xs = qF.map((qf) => n2 / (n2 + n1 * qf));
+
+var betas = xs.map((x) => pbeta(x, n2 / 2, n1 / 2));
+
+var fisher = qF.map((qf) => pf(qf, n1, n2, undefined /*no ncp*/, false));
+
+// array "betas" and "fisher" should be equal
+
+console.log(fisher.map((f,i) => f - betas[i]));
+//-> [ 0, 0, 0, 0, 0, ...., 0]
+```
+
+## The Gamma Distribution
+
+| type                     | function spec                                                                                                      |
+| ------------------------ | ------------------------------------------------------------------------------------------------------------------ |
+| density function         | `function dgamma(x: number, shape: number, rate?: number, scale?: number, log = false): number`                    |
+| distribution function    | `function pgamma(q: number, shape: number, rate?: number, scale?: number, lowerTail = true, logP = false): number` |
+| quantile function        | `function qgamma(p: number, shape: number, rate?: number, scale?: number, lowerTail = true, logP = false): number` |
+| random generation (bulk) | `function rgamma(n: number, shape: number, rate?: number, scale?: number): Float64Array`                           |
+| ranom generation         | `function rgammaOne(shape: number, rate?: number, scale?: number): number`                                         |
+
+
+Arguments:
+- `x, q`: quantile
+- `p`: probability
+- `n`: number of observations.
+- `rate`: an alternative way to specify the scale.
+- `shape, scale`: shape and scale parameters. Must be positive, scale strictly.
+- `log, logP`: if `true`, probabilities/densities `p` are returned as `log(p)`.
+- `lowerTail`: if `true` (default), probabilities are `P[ X ≤ x]`, otherwise, `P[X > x]`.
+
+Example:
+
+R console:
+```R
+-log(dgamma(1:4, shape = 1))
+[1] 1 2 3 4
+```
+
+Equivalent in js (fidelity):
+```typescript
+import { dgamma } from "lib-r-math.js";
+
+let dg = [1,2,3,4].map( x => Math.log( dgamma(x, 1) ));
+// -> [ -1, -2, -3, -4 ]
+//
+// this is equivalent to to 
+// [1,2,3,4].map (x => dgamma(x, 1, undefined, undefined, true) );
+```
+
+## The Geometric Distribution
+
+| type                     | function spec                                                                      |
+| ------------------------ | ---------------------------------------------------------------------------------- |
+| density function         | `function dgeom(x: number, p: number, log = false): number`                        |
+| distribution function    | `function qgeom(p: number, prob: number, lowerTail = true, logP = false): number ` |
+| quantile function        | `function qgeom(p: number, prob: number, lowerTail = true, logP = false): number`  |
+| random generation (bulk) | `function rgeom(n: number, prob: number): Float64Array`                            |
+| ranom generation         | `function rgeomOne(p: number): number`                                             |
+
+Arguments:
+- `x, q`: quantile
+- `p`: probability
+- `n`: number of observations.
+- `prob`: probability of success in each trial. 0 < prob <= 1.
+- `log, logP`: if `true`, probabilities/densities `p` are returned as `log(p)`.
+- `lowerTail`: if `true` (default), probabilities are `P[ X ≤ x]`, otherwise, `P[X > x]`.
+
+Example:
+
+R console:
+```R
+qgeom((1:9)/10, prob = .2)
+[1]  0  0  1  2  3  4  5  7 10
+```
+
+Equivalent in js (fidelity):
+```typescript
+import { qgeom } from "lib-r-math.js";
+
+let dg = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+  .map((p) => p / 10)
+  .map((p) => qgeom(p, 0.2));
+
+console.log(dg);
+// -> [ 0, 0, 1,  2, 3, 4, 5, 7, 10 ]
 ```
 
 # END OF OLD DOC
@@ -947,1764 +1130,6 @@ rnorm(5,2,3)
 
 `libRmath.so` contains 19 probability distributions (other then `Normal` and `Uniform`) with their specific density, quantile and random generators, all are ported and have been verified to yield the same output.
 
-### Chi-Squared (non-central) Distribution
-
-`dchisq, qchisq, pchisq, rchisq`
-
-These functions are members of an object created by the `ChiSquared` factory method. The factory method needs as optional argument an instance of a [normal PRNG](#normal-distributed-random-number-generators). See [wiki](https://en.wikipedia.org/wiki/Chi-squared_distribution). See [R doc](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/Chisquare.html)
-
-Usage:
-
-```javascript
-const libR = require("lib-r-math.js");
-const {
-  ChiSquared,
-  rng: {
-    WichmannHill,
-    normal: { AhrensDieter },
-  },
-} = libR;
-
-//uses as default: "Inversion" and "Mersenne-Twister"
-const defaultChi = ChiSquared();
-
-//uses explicit PRNG
-const wh = new WichmannHill();
-const explicitChi = ChiSquared(new AhrensDieter(wh));
-
-const { dchisq, pchisq, qchisq, rchisq } = explicitChi;
-```
-
-#### `dchisq`
-
-The [X<sup>2</sup>](https://en.wikipedia.org/wiki/Chi-squared_distribution) density function, see [R doc](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/Chisquare.html).
-
-$$ f\_{n}(x) = \frac{1}{2^{\frac{n}{2}} Γ(\frac{n}{2})} x^{\frac{n}{2}-1} e^{\frac{-x}{2}} $$
-
-_typescript decl_
-
-```typescript
-declare function dchisq(
-  x: number | number[],
-  df: number,
-  ncp?: number,
-  asLog: boolean = false
-): number | number[];
-```
-
-- `x`: quantiles (array or scalar).
-- `df`: degrees of freedom.
-- `ncp`: non centrality parameter, default undefined.
-- `asLog`: return probabilities as ln(p), default false.
-
-Usage:
-
-```javascript
-const libR = require("lib-r-math.js");
-const {
-  ChiSquared,
-  R: { numberPrecision, seq: _seq },
-} = libR;
-
-const { dchisq, pchisq, qchisq, rchisq } = ChiSquared();
-
-//helpers
-const seq = _seq()();
-const _9 = numberPrecision(9);
-
-//data
-const x = seq(0, 10, 2);
-//[ 0, 2, 4, 6, 8, 10 ]
-
-//1. df=5
-const d1 = _9(dchisq(x, 5));
-/*[
-  0,            0.138369166,  0.143975911,  0.0973043467,  0.0551119609, 
-  0.0283345553 ]*/
-
-//2. df=3, ncp=4
-const d2 = _9(dchisq(x, 3, 4));
-/*[
-  0,            0.0837176564,  0.0997021125,  0.0901474176,
-  0.070764993,  0.0507582667 ]*/
-
-//3. df=3, ncp=4, log=true
-const d3 = _9(dchisq(x, 3, 4, true));
-/*[
-  -Infinity,  -2.48030538,  -2.30556841,
-  -2.40630898,-2.64839085,  -2.98068078 ]
-*/
-```
-
-_Equivalent in R_
-
-```R
-x=seq(0, 10, 2);
-#1
-dchisq(x, 5);
-#[1] 0.00000000 0.13836917 0.14397591 0.09730435 0.05511196 0.02833456
-
-#2
-dchisq(x, 3, 4);
-#[1] 0.00000000 0.08371766 0.09970211 0.09014742 0.07076499 0.05075827
-
-#3
-dchisq(x, 3, 4, TRUE);
-#[1]      -Inf -2.480305 -2.305568 -2.406309 -2.648391 -2.980681
-```
-
-#### `pchisq`
-
-The [X<sup>2</sup>](https://en.wikipedia.org/wiki/Chi-squared_distribution) cumulative probability function, see [R doc](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/Chisquare.html).
-
-_typescript decl_
-
-```typescript
-declare function pchisq(
-  q: number | number[],
-  df: number,
-  ncp?: number,
-  lowerTail = true,
-  logP = false
-): number | number[];
-```
-
-- `q`: quantiles (array or scalar).
-- `df`: degrees of freedom.
-- `ncp`: non centrality parameter.
-- `lowerTail`: if TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
-- `logP`: return probabilities as ln(p)
-
-Usage:
-
-```javascript
-const libR = require("lib-r-math.js");
-const {
-  ChiSquared,
-  R: { numberPrecision, seq: _seq, c },
-} = libR;
-
-//helpers
-const _9 = numberPrecision(9);
-const seq = _seq()();
-
-const { dchisq, pchisq, qchisq, rchisq } = ChiSquared();
-
-const q = c(seq(0, 10, 2), Infinity);
-//[ 0, 2, 4, 6, 8, 10, Infinity ]
-
-//1.
-const p1 = _9(pchisq(q, 3));
-/*[
-  0,            0.427593296,  0.73853587,  0.888389775,
-  0.953988294,  0.981433865,  1 ]*/
-
-//2. df=8, ncp=4, lowerTail=false
-const p2 = _9(pchisq(q, 8, 4, false));
-/*[ 1,            0.996262804,   0.96100264,  0.872268946,
-    0.739243049,  0.587302859    0 ]*/
-
-//3. df=8, ncp=4, lowerTail=true, logP=true
-const p3 = _9(pchisq(q, 8, 4, true, true));
-/*[
-  -Infinity,  -5.58941966,  -3.24426132,
-  -2.05782837,-1.34416653,  -0.885041269 ]*/
-```
-
-_Equivalent in R_
-
-```R
-q = c(seq(0, 10, 2), Inf);
-
-#1
-pchisq(q, 3);
-#[1] 0.0000000 0.4275933 0.7385359 0.8883898 0.9814339 1.0000000
-
-#2
-pchisq(q, 8, 4, lower.tail=FALSE);
-#[1] 1.0000000 0.9962628 0.9610026 0.8722689 0.5873029 0.0000000
-
-#3
-pchisq(q, 8, 4, lower.tail=TRUE, log.p=TRUE);
-#[1]  -Inf -5.5894197 -3.2442613 -2.0578284 -1.3441665 -0.8850413  0.0000000
-```
-
-#### `qchisq`
-
-The [X<sup>2</sup>](https://en.wikipedia.org/wiki/Chi-squared_distribution) quantile function, see [R doc](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/Chisquare.html).
-
-_typescript decl_
-
-```typescript
-declare function qchisq(
-  p: number | number[],
-  df: number,
-  ncp?: number,
-  lowerTail = true,
-  logP = false
-): number | number[];
-```
-
-- `p`: probabilities (array or scalar).
-- `df`: degrees of freedom.
-- `ncp`: non centrality parameter.
-- `lowerTail`: if TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
-- `logP`: probabilities are as ln(p)
-
-Usage:
-
-```javascript
-const libR = require("lib-r-math.js");
-const {
-  ChiSquared,
-  R: { multiplex, numberPrecision, seq: _seq },
-} = libR;
-
-//helpers
-const seq = _seq()();
-const log = multiplex(Math.log);
-const _9 = numberPrecision(9);
-
-const { dchisq, pchisq, qchisq, rchisq } = ChiSquared();
-
-// data
-const p = seq(0, 1, 0.2);
-
-//1. df=3,
-const q1 = _9(qchisq(p, 3));
-//[ 0, 1.00517401, 1.8691684, 2.94616607, 4.64162768, Infinity ]
-
-//2. df=3, ncp=undefined, lowerTail=false
-const q2 = _9(qchisq(p, 50, undefined, false));
-//[ Infinity, 58.1637966, 51.8915839, 46.8637762, 41.4492107, 0 ]
-
-//3. df=50, ncp=0, lowerTail=false, logP=true
-const q3 = _9(qchisq(log(p), 50, 0, false, true));
-//[ Infinity, 58.1637966, 51.8915839, 46.8637762, 41.4492107, 0 ]
-```
-
-_Equivalence in R_
-
-```R
-#R-script
-#data
-p=seq(0, 1, 0.2);
-
-#1
-qchisq(p, 3);
-#[1] 0.000000 1.005174 1.869168 2.946166 4.641628      Inf
-
-#2
-qchisq(p, 50, lower.tail=FALSE);
-#[1]      Inf 58.16380 51.89158 46.86378 41.44921  0.00000
-
-#3
-qchisq(log(p), 50, 0, lower.tail=FALSE, log.p=TRUE);
-#[1]      Inf 58.16380 51.89158 46.86378 41.44921  0.00000
-```
-
-#### `rchisq`
-
-Creates random deviates for the [X<sup>2</sup> distribution](https://en.wikipedia.org/wiki/Chi-squared_distribution), see [R doc](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/Chisquare.html).
-
-_typescript decl_
-
-```typescript
-declare function rchisq(n: number, df: number, ncp?: number): number | number[];
-```
-
-- `p`: probabilities (array or scalar).
-- `df`: degrees of freedom.
-- `ncp`: non centrality parameter.
-
-Usage:
-
-```javascript
-const libR = require("lib-r-math.js");
-const {
-  ChiSquared,
-  rng: {
-    LecuyerCMRG,
-    normal: { AhrensDieter },
-  },
-  R: { numberPrecision },
-} = libR;
-
-//helpers
-const _9 = numberPrecision(9);
-
-//explicit use of PRNG
-const lc = new LecuyerCMRG(1234);
-const { dchisq, pchisq, qchisq, rchisq } = ChiSquared(new AhrensDieter(lc));
-
-//1
-const r1 = _9(rchisq(5, 6));
-//[ 12.4101973, 6.79954177, 9.80911877, 4.64604085, 0.351985504 ]
-
-//2. df=40, ncp=3
-const r2 = _9(rchisq(5, 40, 3));
-//[ 22.2010553, 44.033609, 36.3201158, 44.6212447, 40.1142555 ]
-
-//3. df=20
-const r3 = _9(rchisq(5, 20));
-//[ 24.4339678, 19.0379177, 26.6965258, 18.1288566, 26.7243317 ]
-```
-
-_Equivalent in R_
-
-```R
-RNGkind("L'Ecuyer-CMRG", normal.kind="Ahrens-Dieter")
-set.seed(1234)
-
-#1
-rchisq(5, 6);
-#[1] 12.4101973  6.7995418  9.8091188  4.6460409  0.3519855
-
-#2
-rchisq(5, 40, 3);
-#[1] 22.20106 44.03361 36.32012 44.62124 40.11426
-
-#3
-rchisq(5, 20);
-#[1] 24.43397 19.03792 26.69653 18.12886 26.72433
-```
-
-### Exponential Distribution
-
-`dexp, qexp, pexp, rexp`
-
-See [R doc](http://stat.ethz.ch/R-manual/R-patched/library/stats/html/Exponential.html)
-
-These functions are members of an object created by the `Exponential` factory method. The factory method needs as optional argument an instance of an [uniform PRNG](#uniform-pseudo-random-number-generators) class.
-
-Usage:
-
-```javascript
-const libR = require("lib-r-math.js");
-const {
-  Exponential,
-  rng: { MarsagliaMultiCarry },
-} = libR;
-
-//1. initialize default
-const defaultExponential = Exponential();
-
-//2. alternative: initialize with explicit uniform PRNG
-const mmc = new MarsagliaMultiCarry(123456); //keep reference so we can do mt.init(...)
-const customExponential = Exponential(mmc);
-
-//get functions
-const { dexp, pexp, qexp, rexp } = defaultExponential;
-```
-
-#### `dexp`
-
-The [Exponential density function](https://en.wikipedia.org/wiki/Exponential_distribution), see [R doc](http://stat.ethz.ch/R-manual/R-patched/library/stats/html/Exponential.html).
-
-$$ f(x) = λ {e}^{- λ x} $$
-
-_typescript decl_
-
-```typescript
-declare function dexp(
-  x: number | number[],
-  rate: number = 1,
-  asLog: boolean = false
-): number | number[];
-```
-
-- `x`: quantiles (array or scalar).
-- `rate`: the λ parameter.
-- `asLog`: return probabilities as ln(p)
-
-Usage:
-
-```javascript
-const libR = require("lib-r-math.js");
-const {
-  Exponential,
-  R: { numberPrecision },
-} = libR;
-
-//helpers
-const seq = libR.R.seq()();
-const precision = numberPrecision(9); //9 significant digits
-
-const { dexp, pexp, qexp, rexp } = Exponential();
-
-const x = seq(0, 0.3, 0.05);
-
-//1
-const d1 = dexp(x, 3);
-precision(d1);
-/*[ 3,          2.58212393, 2.22245466, 1.91288445,
-    1.64643491, 1.41709966, 1.21970898 ]*/
-
-//2.
-const d2 = dexp(x, 3, true);
-precision(d2);
-/*[ 1.09861229,  0.948612289,  0.798612289, 0.648612289,
-    0.498612289, 0.348612289,  0.198612289 ]*/
-
-//3
-const d3 = dexp(x, 0.2);
-precision(d3);
-/*[
-    0.2,          0.198009967,  0.196039735,  0.194089107,
-    0.192157888,  0.190245885,  0.188352907 ]*/
-```
-
-_Equivalent in R_
-
-```R
-x = seq(0, 0.3, 0.05);
-
-#1
-dexp(x, 3)
-#[1] 3.000000 2.582124 2.222455 1.912884 1.646435 1.417100 1.219709
-
-#2
-dexp(x, 3, TRUE)
-#[1] 1.0986123 0.9486123 0.7986123 0.6486123 0.4986123 0.3486123 0.1986123
-
-#3
-dexp(x, 0.2)
-#[1] 0.2000000 0.1980100 0.1960397 0.1940891 0.1921579 0.1902459 0.1883529
-```
-
-#### `pexp`
-
-The cumulative probability of the [Exponential distribution](https://en.wikipedia.org/wiki/Exponential_distribution), see [R doc](http://stat.ethz.ch/R-manual/R-patched/library/stats/html/Exponential.html).
-
-_typescript decl_
-
-```typescript
-declare function pexp(
-  q: number | number[],
-  rate: number = 1,
-  lowerTail: boolean = true,
-  logP: boolean = false
-): number | number[];
-```
-
-- `q`: quantiles (array or scalar).
-- `rate`: the λ parameter.
-- `lowerTail`: if TRUE (default), probabilities are P[X ≤ q], otherwise, P[X > q].
-- `logP`: return probabilities as ln(p)
-
-Usage:
-
-```javascript
-const libR = require("lib-r-math.js");
-const {
-  Exponential,
-  R: { numberPrecision },
-} = libR;
-
-//helpers
-const seq = libR.R.seq()();
-const precision = numberPrecision(9);
-
-const { dexp, pexp, qexp, rexp } = Exponential();
-
-//data
-const q = seq(0, 0.3, 0.05);
-
-///1
-const p1 = pexp(q, 3);
-precision(p1);
-/*[
-  0,            0.139292024,  0.259181779,
-  0.362371848,  0.451188364,  0.527633447,
-  0.59343034
-  ]*/
-
-//2
-const p2 = pexp(q, 7, false, true);
-precision(p2);
-//[ 0, -0.35, -0.7, -1.05, -1.4, -1.75, -2.1 ]
-
-//3
-const p3 = pexp(seq(0, 10, 2), 0.2);
-precision(p3);
-/*[
-  0,            0.329679954,  0.550671036,
-  0.698805788,  0.798103482,  0.864664717
-  ]*/
-```
-
-_Equivalent in R_
-
-```R
-#data
-q = seq(0, 0.3, 0.05);
-
-#1
-pexp(q, 3);
-#[1] 0.0000000 0.1392920 0.2591818 0.3623718 0.4511884 0.5276334 0.5934303
-
-#2
-pexp(q, 7, FALSE, TRUE);
-#[1]  0.00 -0.35 -0.70 -1.05 -1.40 -1.75 -2.10
-
-#3
-pexp(seq(0,10,2),0.2)
-#[1] 0.0000000 0.3296800 0.5506710 0.6988058 0.7981035 0.8646647
-```
-
-#### `qexp`
-
-The quantile function of the [Exponential distribution](https://en.wikipedia.org/wiki/Exponential_distribution), see [R doc](http://stat.ethz.ch/R-manual/R-patched/library/stats/html/Exponential.html).
-
-_typescript decl_
-
-```typescript
-declare function qexp(
-  p: number | number[],
-  rate: number = 1,
-  lowerTail = true,
-  logP = false
-): number | number[];
-```
-
-- `p`: probabilities (array or scalar).
-- `rate`: the λ parameter.
-- `lowerTail`: if TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
-- `logP`: return probabilities as ln(p)
-
-Usage:
-
-```javascript
-const libR = require("lib-r-math.js");
-const {
-  Exponential,
-  R: { arrayrify, numberPrecision },
-} = libR;
-
-//helpers
-const log = arrayrify(Math.log);
-const seq = libR.R.seq()();
-const precision = numberPrecision(9);
-
-const { dexp, pexp, qexp, rexp } = Exponential();
-
-//data
-const q = seq(0, 10, 2);
-//1
-const pp1 = pexp(q, 0.2);
-const q1 = qexp(log(pp1), 0.2, true, true);
-precision(q1);
-//[ 0, 2, 4, 6, 8, 10 ]
-
-//2
-const pp2 = pexp(seq(0, 10, 2), 0.2);
-const q2 = qexp(pp1, 0.2);
-precision(q2);
-//[ 0, 2, 4, 6, 8, 10 ]
-
-//3
-const pp3 = pexp(seq(0, 0.3, 0.05), 3);
-const q3 = qexp(pp3, 3);
-precision(q3);
-//[ 0, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3 ]
-```
-
-_Equivalent in R_
-
-```R
-q = seq(0,10,2);
-
-#1
-pp1 = pexp(q,0.2);
-qexp(log(pp1),0.2, TRUE, TRUE)
-#[1]  0  2  4  6  8 10
-
-#2
-pp2 = pexp(q ,0.2);
-qexp(pp2,0.2)
-#[1]  0  2  4  6  8 10
-
-#3
-pp3 = pexp(seq(0, 0.3, 0.05), 3);
-q3 = qexp(pp3,3)
-#[1] 0.00 0.05 0.10 0.15 0.20 0.25 0.30
-```
-
-#### `rexp`
-
-Creates random deviates for the [Exponential distribution](https://en.wikipedia.org/wiki/Exponential_distribution), see [R doc](http://stat.ethz.ch/R-manual/R-patched/library/stats/html/Exponential.html).
-
-_typescript decl_
-
-```typescript
-declare function rexp(n: number, rate: number = 1): number | number[];
-```
-
-- `n`: number of deviates to generate (array or scalar).
-- `rate`: the λ parameter.
-
-Usage:
-
-```javascript
-const libR = require("lib-r-math.js");
-const {
-  Exponential,
-  rng: { WichmannHill },
-  R: { numberPrecision },
-} = libR;
-
-//helper
-const precision = numberPrecision(9);
-
-const wh = new WichmannHill(1234); //seed 1234
-const { dexp, pexp, qexp, rexp } = Exponential(wh);
-
-//1
-wh.init(12345);
-const r1 = rexp(5);
-precision(r1);
-//[ 0.189141121, 1.56731395, 3.80442336, 3.15394116, 2.66186551 ]
-
-//2
-const r2 = rexp(5, 0.1);
-precision(r2);
-//[ 6.23691783, 3.69025109, 4.06170046, 9.35617011, 17.9486493 ]
-
-//3
-const r3 = rexp(5, 3);
-precision(r3);
-//[ 0.103834413, 0.18975976, 0.329332554, 0.462307908, 0.426360565 ]
-```
-
-_Equivalent in R_
-
-```R
-RNGkind("Wichmann-Hill")
-set.seed(12345)
-
-#1
-rexp(5)
-#[1] 0.1891411 1.5673139 3.8044234 3.1539412 2.6618655
-
-#2
-rexp(5,0.1)
-#[1]  6.236918  3.690251  4.061700  9.356170 17.948649
-
-#3
-rexp(5,3)
-#[1] 0.1038344 0.1897598 0.3293326 0.4623079 0.4263606
-```
-
-### F (non-central) Distribution
-
-`df, qf, pf, rf`
-
-See [R doc](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/Fdist.html)
-
-These functions are members of an object created by the `FDist` factory method. The factory method needs as optional argument an instance of one of the [normal PRNG's](#normal-distributed-random-number-generators).
-
-Usage:
-
-```javascript
-const libR = require("lib-r-math.js");
-const {
-  FDist,
-  rng: {
-    MersenneTwister,
-    normal: { KindermanRamage },
-  },
-} = libR;
-
-//1. initialize default
-const defaultF = FDist();
-
-//2. alternative: initialize with explicit uniform PRNG
-const mt = new MersenneTwister(1234); //keep reference so we can do mt.init(...)
-const customF = FDist(new KindermanRamage(mt));
-
-//get functions
-const { df, pf, qf, rf } = customF; // or use "defaultF"
-```
-
-#### `df`
-
-The density function of the [F distribution](https://en.wikipedia.org/wiki/F-distribution). See [R doc](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/Fdist.html)
-
-With `df1` and `df2` degrees of freedom:
-
-$$ \large f(x) = \frac{ Γ(\frac{df1 + df2}{2}) } { Γ(\frac{df1}{2}) Γ(\frac{df2}{2}) } {(\frac{n1}{n2})}^{(\frac{df1}{2})} x^{(\frac{df1}{2} - 1)} (1 + \frac{df1}{df2} x)^{-(n1 + n2)/2} $$
-
-_typescript decl_
-
-```typescript
-declare function df(
-  x: number | number[],
-  df1: number,
-  df2: number,
-  ncp?: number,
-  asLog: boolean = false
-): number | number[];
-```
-
-- `x`: quantiles (array or scalar).
-- `df1`: degrees of freedom. `Infinity` is allowed.
-- `df2`: degrees of freedom. `Infinity` is allowed.
-- `ncp`: non-centrality parameter. If omitted the central F is assumed.
-- `asLog`: if TRUE, probabilities p are given as ln(p).
-
-Usage:
-
-```javascript
-const libR = require("lib-r-math.js");
-const {
-  FDist,
-  R: { numberPrecision },
-} = libR;
-
-//helpers
-const seq = libR.R.seq()();
-const precision = numberPrecision(9);
-
-const { df, pf, qf, rf } = FDist();
-
-const x = seq(0, 4, 0.5);
-
-//1.
-const d1 = df(x, 5, 10, 8);
-precision(d1);
-/*[
-  0,            0.0972906993,  0.219523567,  0.270256085,
-  0.262998414,  0.229004229,   0.188412981,  0.150538493,
-  0.118556123 ]*/
-
-//2.
-const d2 = df(x, 50, 10, undefined, true);
-precision(d2);
-/*[
-  -Infinity,  -0.688217839,  -0.222580527,  -0.940618761,
-  -1.7711223, -2.55950945,   -3.28076319,   -3.93660717,
-  -4.53440492 ]*/
-
-//3.
-const d3 = df(x, 6, 25);
-precision(d3);
-/*[
-  0,            0.729921524,  0.602808536,  0.323999956,
-  0.155316972,  0.0724829398, 0.0340225684, 0.0162807852,
-  0.00798668195 ]*/
-
-//4.
-const d4 = df(x, 6, 25, 8, true);
-precision(d4);
-/*[ -Infinity,  -2.43273687,  -1.38207439,  -1.08123445,
-  -1.09408866,  -1.27043349,  -1.54026185,  -1.86581606,
-  -2.22490033 ]*/
-```
-
-_Equivalence in R_
-
-```R
-x = seq(0, 4, 0.5);
-
-#1.
-df(x, df1=5,df2=10, ncp=8)
-#[1] 0.0000000 0.0972907 0.2195236 0.2702561 0.2629984 0.2290042 0.1884130
-#[8] 0.1505385 0.1185561
-
-#2.
-df(x, df1=50,df2=10, log = TRUE)
-#[1]       -Inf -0.6882178 -0.2225805 -0.9406188 -1.7711223 -2.5595094 -3.2807632
-#[8] -3.9366072 -4.5344049
-
-#3
-df(x, 6, 25)
-#[1] 0.000000000 0.729921524 0.602808536 0.323999956 0.155316972 0.072482940
-#[7] 0.034022568 0.016280785 0.007986682
-
-#4
-df(x, 6, 25, 8, log=TRUE)
-#[1]      -Inf -2.432737 -1.382074 -1.081234 -1.094089 -1.270433 -1.540262
-#[8] -1.865816 -2.224900
-```
-
-#### `pf`
-
-The cumulative probability function of the [F distribution](https://en.wikipedia.org/wiki/F-distribution). See [R doc](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/Fdist.html).
-
-_typescript decl_
-
-```typescript
-declare function pf(
-  q: number[] | number,
-  df1: number,
-  df2: number,
-  ncp?: number,
-  lowerTail: boolean = true,
-  logP: boolean = false
-): number[] | number;
-```
-
-- `q`: quantiles (array or scalar).
-- `df1`: degrees of freedom. `Infinity` is allowed.
-- `df2`: degrees of freedom. `Infinity` is allowed.
-- `ncp`: non-centrality parameter. If omitted the central F is assumed.
-- `lowerTail`: if TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
-- `asLog`: if TRUE, probabilities p are given as ln(p).
-
-Usage:
-
-```javascript
-const libR = require("lib-r-math.js");
-const {
-  FDist,
-  R: { numberPrecision },
-} = libR;
-
-//some usefull tools
-const seq = libR.R.seq()();
-const precision = numberPrecision(9);
-
-//strip functions
-const { df, pf, qf, rf } = FDist();
-
-const x = seq(0, 4, 0.5);
-
-//1. df1 = 5, df2=10, ncp=8
-const p1 = pf(x, 5, 10, 8);
-precision(p1);
-/*[
-  0,            0.0189961379,  0.100468407,  0.225990517,
-  0.361015189,  0.484609879,   0.588981209,  0.673508458,
-  0.740516322 ]*/
-
-//2. df1=50, df2=10, lowerTail=false
-const p2 = pf(x, 50, 10, undefined, false);
-pecision(p2);
-/*[
-  1,            0.946812312,  0.543643095,  0.25065625,
-  0.118135409,  0.0595867293, 0.0321901407, 0.0184730352,
-  0.0111614023 ]*/
-
-//3.
-const p3 = pf(x, 50, 10, undefined, false, true);
-precision(p3);
-/*[
-  0,            -0.0546543979,  -0.609462324,
-  -1.3836728,   -2.13592378,    -2.82032239,
-  -3.43609506,  -3.99144317,    -4.49529367 ]*/
-
-//4. "undefined" will skip and use defaults (if specified)
-const p4 = pf(x, 6, 25, 8, undefined, true);
-precision(p4);
-/*[
-  -Infinity,    -4.20235111,  -2.29618223,  -1.376145,
-  -0.85773694,  -0.546177623, -0.35253857,  -0.229797274,
-  -0.15099957 ]*/
-```
-
-_Equivalent in R_
-
-```R
-x = seq(0, 4, 0.5);
-
-#1
-pf(x, 5, 10, 8);
-#[1] 0.00000000 0.01899614 0.10046841 0.22599052 0.36101519 0.48460988 0.58898121
-#[8] 0.67350846 0.74051632
-
-#2
-pf(x, 50, 10, lower.tail=FALSE);
-#[1] 1.00000000 0.94681231 0.54364309 0.25065625 0.11813541 0.05958673 0.03219014
-#[8] 0.01847304 0.01116140
-
-#3
-pf(x, 50, 10,  lower.tail=FALSE, log.p=TRUE);
-#[1]  0.0000000 -0.0546544 -0.6094623 -1.3836728 -2.1359238 -2.8203224 -3.4360951
-#[8] -3.9914432 -4.4952937
-
-#4
-pf(x, 6, 25, 8, log.p=TRUE);
-#[1]       -Inf -4.2023511 -2.2961822 -1.3761450 -0.8577369 -0.5461776 -0.3525386
-#[8] -0.2297973 -0.1509996
-```
-
-#### `qf`
-
-The quantile function of the [F distribution](https://en.wikipedia.org/wiki/F-distribution). See [R doc](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/Fdist.html).
-
-_typescript decl_
-
-```typescript
-declare function qf(
-  p: number | number[],
-  df1: number,
-  df2: number,
-  ncp?: number,
-  lowerTail: boolean = true,
-  logP: boolean = false
-): number | number[];
-```
-
-- `p`: probabilities (array or scalar).
-- `df1`: degrees of freedom. `Infinity` is allowed.
-- `df2`: degrees of freedom. `Infinity` is allowed.
-- `ncp`: non-centrality parameter. If omitted the central F is assumed.
-- `lowerTail`: if TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
-- `asLog`: if TRUE, probabilities p are given as ln(p).
-
-Usage:
-
-```javascript
-const libR = require("lib-r-math.js");
-const { FDist } = libR;
-
-//helpers
-const seq = libR.R.seq()();
-const precision = libR.R.numberPrecision(9);
-
-//strip functions
-const { df, pf, qf, rf } = FDist();
-
-//data
-const q = [...seq(0, 4), Infinity];
-
-//1
-const pp1 = pf(q, 50, 10, undefined, false);
-const q1 = qf(pp1, 50, 10, undefined, false);
-precision(q1);
-//[ 0, 1, 2, 3, 4, Infinity ]
-
-//2
-const pp2 = pf(q, 50, 10, 9, false, true);
-const q2 = qf(pp2, 50, 10, 9, false, true);
-precision(q2);
-//[ 0, 1, 2, 3, 4, Infinity ]
-
-//3.
-const pp3 = pf(q, 6, 25, 8);
-const q3 = qf(pp3, 6, 25, 8);
-precision(q3);
-//[ 0, 1, 2, 3, 4, Infinity ]
-
-//4
-const pp4 = pf(q, 3, 9000, undefined, false);
-const q4 = qf(pp4, 3, 9000, undefined, false);
-//[ 0, 1, 2, 3, 4, Infinity ]
-```
-
-_Equivlent in R_
-
-```R
-q = c( seq(0,4), Inf);
-
-#1.
-pp1=pf(q, 50, 10, lower.tail=FALSE);
-qf(pp1, 50, 10, lower.tail=FALSE);
-#[1]   0   1   2   3   4 Inf
-
-#2
-pp2 = pf(q, 50, 10, 9, lower.tail=FALSE, log.p=TRUE);
-qf(pp2, 50, 10, 9, lower.tail=FALSE, log.p=TRUE);
-#[1]   0   1   2   3   4 Inf
-
-#3
-pp3 = pf(q, 6, 25, 8);
-qf(pp3, 6, 25, 8);
-#[1]   0   1   2   3   4 Inf
-
-#4
-pp4 = pf(q, 3, 9000, lower.tail=FALSE);
-qf(pp4, 3, 9000, lower.tail=FALSE);
-#[1]   0   1   2   3   4 Inf
-```
-
-#### `rf`
-
-Generates deviates for the [F distribution](https://en.wikipedia.org/wiki/F-distribution). See [R doc](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/Fdist.html).
-
-_typescript decl_
-
-```typescript
-declare function rf(
-  n: number,
-  df1: number,
-  df2: number,
-  ncp?: number
-): number | number[];
-```
-
-- `n`: number of deviates to generate.
-- `df1`: degrees of freedom. `Infinity` is allowed.
-- `df2`: degrees of freedom. `Infinity` is allowed.
-- `ncp`: non-centrality parameter. If omitted the central F is assumed.
-
-Usage:
-
-```javascript
-const libR = require("lib-r-math.js");
-const {
-  FDist,
-  rng: {
-    MersenneTwister,
-    normal: { KindermanRamage },
-  },
-  R: { numberPrecision },
-} = libR;
-
-//helpers
-const seq = libR.R.seq()();
-const precision = numberPrecision(9);
-
-const mt = new MersenneTwister(1234);
-const { df, pf, qf, rf } = FDist(new KindermanRamage(mt));
-
-//seed is already set to 1234
-//1.
-precision(rf(5, 8, 6));
-//[ 0.391172977, 0.528225588, 1.09478902, 2.4961292, 0.143678921 ]
-
-//2.
-precision(rf(5, Infinity, Infinity));
-//[ 1, 1, 1, 1, 1 ]
-
-//3. produces NaNs because df1 or/and df2 is Infinity and ncp !== undefined (yes, ncp=0 produces NaNs!)
-precision(rf(5, 40, Infinity, 0));
-//[ NaN, NaN, NaN, NaN, NaN ]
-
-//4.
-precision(rf(5, 400, Infinity));
-//[ 1.00424008, 1.00269156, 1.03619851, 0.965292995, 0.904786448 ]
-```
-
-_in R Console:_
-
-```R
-RNGkind("Mersenne-Twister", normal.kind="Kinderman-Ramage");
-set.seed(1234);
-
-#1.
-rf(5,8,6)
-#[1] 0.3986174 2.1329082 2.0211488 2.5957924 4.0114025
-
-#2.
-rf(5, Inf, Inf)
-#[1] 1 1 1 1 1
-
-#3.
-rf(5, 40, Inf, 0)
-#[1] NaN NaN NaN NaN NaN
-
-#4.
-rf(5, 400, Inf)
-#[1] 1.0042401 1.0026916 1.0361985 0.9652930 0.9047864
-```
-
-### Gamma distribution
-
-`dgamma, qgamma, pgamma, rgamma`
-
-See [R doc](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/GammaDist.html). See [wiki](https://en.wikipedia.org/wiki/Gamma_distribution).
-
-These functions are members of an object created by the `Gamma` factory method. The factory method needs as optional argument an instance of one of the [normal PRNG's](#normal-distributed-random-number-generators).
-
-Usage:
-
-```javascript
-const libR = require("lib-r-math.js");
-const {
-  Gamma,
-  rng: {
-    KnuthTAOCP2002,
-    normal: { AhrensDieter },
-  },
-} = libR;
-
-//1. initialize default, always "MersenneTwister" and "Inversion"
-const defaultGamma = Gamma();
-
-//2. alternative: initialize with explicit uniform PRNG
-const mt = new KnuthTAOCP2002(123456); //keep reference so we can do mt.init(...)
-const customG = Gamma(new AhrensDieter(mt));
-
-//get functions
-const { dgamma, pgamma, qgamma, rgamma } = customG; // or use "defaultGamma"
-```
-
-#### `dgamma`
-
-The density function of the [Gamma distribution](https://en.wikipedia.org/wiki/Gamma_distribution). See [R doc](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/GammaDist.html)
-
-$$ f(x)= \frac{1}{s^{a} \Gamma(a)} x^{a-1} e^{-x/s} $$
-
-- `a`: shape parameter
-- `s`: scale parameter
-- `x`: x >= 0
-
-Alternative represention using _shape_ parameter `a` and _rate_ parameter `β`= $1/s$:
-
-$$ f(x)= \frac{β^{a}}{\Gamma(a)} x^{a-1} e^{-xβ} $$
-
-You must either specify `scale` or `rate` parameters _but not both_ (unless rate = 1/scale).
-
-_typescript decl_
-
-```typescript
-declare function dgamma(
-  x: number | number[],
-  shape: number,
-  rate: number = 1,
-  scale: number = 1 / rate,
-  asLog: boolean = false
-): number | number[];
-```
-
-- `x`: quantiles (scalar or array).
-- `shape`: [shape](https://en.wikipedia.org/wiki/Gamma_distribution) parameter, must be positive.
-- `rate`: The [rate](https://en.wikipedia.org/wiki/Gamma_distribution) parameter, when specified, leave `scale` undefined (or set `rate = 1/scale`). Must be strictly positive.
-- `scale`: The [scale](https://en.wikipedia.org/wiki/Gamma_distribution) parameter, when specified, leave `rate` undefined (or set `scale = 1/rate`). Must be strictly positive.
-- `asLog`: if _true_, probabilities/densities p are returned as ln(p).
-
-Usage:
-
-```javascript
-const libR = require("lib-r-math.js");
-const {
-  Gamma,
-  R: { numberPrecision, arrayrify },
-} = libR;
-
-//helpers
-const log = arrayrify(Math.log);
-const seq = libR.R.seq()();
-const precision = numberPrecision(9); //restrict to 9 significant digits
-
-const { dgamma, pgamma, qgamma, rgamma } = Gamma();
-
-const x = seq(0, 10, 2);
-//1.
-const d1 = dgamma(x, 1, 0.5); //using rate
-precision(d1);
-/*[ 0.5,            0.183939721,    0.0676676416,     0.0248935342,
-    0.00915781944,  0.0033689735 ]*/
-
-//2.
-const d2 = dgamma(x, 2, 1 / 2); //using rate
-precision(d2);
-/*[
-  0,            0.183939721,  0.135335283,  0.0746806026,
-  0.0366312778, 0.0168448675 ]*/
-
-//3.
-const d3 = dgamma(x, 5, 1); //using rate
-precision(d3);
-/*[
-  0,            0.0902235222,  0.195366815,
-  0.133852618,  0.0572522885,  0.0189166374]*/
-
-//4.
-const d4 = dgamma(x, 7.5, 1, undefined, true);
-precision(d4);
-/*[ -Infinity,   -5.02890756,  -2.52345089,
-    -1.88792769, -2.01799422,  -2.56756113 ]*/
-```
-
-_in R Console_
-
-```R
-#1. these 2 give the same output
-dgamma( seq(0, 10, 2), 1, scale = 2);
-dgamma( seq(0, 10, 2), 1, rate = 1/2);
-#[1] 0.500000000 0.183939721 0.067667642 0.024893534 0.009157819 0.003368973
-
-#2.
-dgamma( seq(0, 10, 2), 2, scale = 2);
-dgamma( seq(0, 10, 2), 2, rate = 1/2);
-#[1] 0.00000000 0.18393972 0.13533528 0.07468060 0.03663128 0.01684487
-
-#3.
-dgamma( seq(0, 10, 2), 5, scale = 1);
-dgamma( seq(0, 10, 2), 5, rate = 1);
-#[1] 0.00000000 0.09022352 0.19536681 0.13385262 0.05725229 0.01891664
-
-#4.
-dgamma( seq(0, 10, 2), 7.5, scale = 1, log = TRUE)
-dgamma( seq(0, 10, 2), 7.5, rate = 1, log = TRUE)
-#[1]      -Inf -5.028908 -2.523451 -1.887928 -2.017994 -2.567561
-```
-
-#### `pgamma`
-
-The cumulative probability function of the [Gamma distribution](https://en.wikipedia.org/wiki/Gamma_distribution). See [R doc](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/GammaDist.html).
-
-_typescript decl_
-
-```typescript
-declare function pgamma(
-  x: number | number[],
-  shape: number,
-  rate: number = 1,
-  scale: number = 1 / rate, //alternative for rate
-  lowerTail: boolean = true,
-  logP: boolean = false
-): number | number[];
-```
-
-- `x`: quantiles (scalar or array).
-- `shape`: [shape](https://en.wikipedia.org/wiki/Gamma_distribution) parameter, must be positive.
-- `rate`: The [rate](https://en.wikipedia.org/wiki/Gamma_distribution) parameter, when specified, leave `scale` undefined (or set `rate = 1/scale`). Must be strictly positive.
-- `scale`: The [scale](https://en.wikipedia.org/wiki/Gamma_distribution) parameter, when specified, leave `rate` undefined (or set `scale = 1/rate`). Must be strictly positive.
-- `lowerTail`: if TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
-- `logP`: if _true_, probabilities/densities p are as ln(p).
-
-Usage:
-
-```javascript
-const libR = require("lib-r-math.js");
-const {
-  Gamma,
-  R: { arrayrify, numberPrecision },
-} = libR;
-
-//helpers
-const log = arrayrify(Math.log);
-const seq = libR.R.seq()();
-const precision = numberPrecision(9); //restrict to 9 significant digits
-
-const { dgamma, pgamma, qgamma, rgamma } = Gamma();
-
-const x = seq(0, 10, 2);
-
-//1.
-const p1 = pgamma(x, 1, 0.5);
-const p1Equavalent = pgamma(x, 1, undefined, 2);
-precision(p1);
-/*[
-  0,            0.632120559,  0.864664717,  0.950212932,
-  0.981684361,  0.993262053 ]*/
-
-//2.
-const p2 = pgamma(x, 2, 0.5);
-const p2Equivalent = pgamma(x, 2, undefined, 2);
-precision(p2);
-/*
-[ 0,            0.264241118,  0.59399415,  0.800851727,
-  0.908421806,  0.959572318 ]*/
-
-//3.
-const p3 = pgamma(x, 5, 1, undefined, false, true);
-const p3Equivalent = pgamma(x, 5, undefined, 1, false, true);
-precision(p3);
-/*[
-  0,            -0.0540898509,  -0.4638833,  -1.25506787,
-  -2.30626786,  -3.53178381 ]*/
-
-//4.
-const p4 = pgamma(x, 7.5, 1, undefined, false, true);
-const p4Equivalent = pgamma(x, 7.5, undefined, 1, false, true);
-precision(p4);
-/*
-[ 0,            -0.00226521952,  -0.0792784046,
-  -0.387091358, -0.96219944,     -1.76065222 ]*/
-```
-
-_Equivalent in R_
-
-```R
-x=seq(0,10,2);
-
-#1
-pgamma(x, 1, rate = 0.5);
-#[1] 0.0000000 0.6321206 0.8646647 0.9502129 0.9816844 0.9932621
-
-#2
-pgamma(x, 2, rate = 0.5);
-#[1] 0.0000000 0.2642411 0.5939942 0.8008517 0.9084218 0.9595723
-
-#3
-pgamma(x, 5, rate=1, lower.tail = FALSE, log.p = TRUE);
-#[1]  0.00000000 -0.05408985 -0.46388330 -1.25506787 -2.30626786 -3.53178381
-
-#4
-pgamma(x, 7.5, rate = 7.5, lower.tail = FALSE , log.p = TRUE );
-#[1]  0.00000000 -0.00226522 -0.07927840 -0.38709136 -0.96219944 -1.76065222
-```
-
-#### `qgamma`
-
-The quantile function of the [Gamma distribution](https://en.wikipedia.org/wiki/Gamma_distribution). See [R doc](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/GammaDist.html).
-
-_typescript decl_
-
-```typescript
-declare function pgamma(
-  x: number | number[],
-  shape: number,
-  rate: number = 1,
-  scale: number = 1 / rate, //alternative for rate
-  lowerTail: boolean = true,
-  logP: boolean = false
-): number | number[];
-```
-
-- `x`: quantiles (scalar or array).
-- `shape`: [shape](https://en.wikipedia.org/wiki/Gamma_distribution) parameter, must be positive.
-- `rate`: The [rate](https://en.wikipedia.org/wiki/Gamma_distribution) parameter, when specified, leave `scale` undefined (or set `rate = 1/scale`). Must be strictly positive.
-- `scale`: The [scale](https://en.wikipedia.org/wiki/Gamma_distribution) parameter, when specified, leave `rate` undefined (or set `scale = 1/rate`). Must be strictly positive.
-- `lowerTail`: if TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
-- `logP`: if _true_, probabilities/densities p are as ln(p).
-
-Usage:
-
-```javascript
-const libR = require("lib-r-math.js");
-const {
-  Gamma,
-  R: { numberPrecision, arrayrify },
-} = libR;
-
-//some tools
-const log = arrayrify(Math.log);
-const seq = libR.R.seq()();
-const precision = numberPrecision(9); //restrict to 9 significant digits
-
-const { dgamma, pgamma, qgamma, rgamma } = Gamma();
-
-const x = seq(0, 10, 2);
-
-//1.
-const pp1 = pgamma(x, 1, 0.5);
-const q1 = qgamma(pp1, 1, 0.5);
-precision(q1);
-//[ 0, 2, 4, 6, 8, 10 ]
-
-//2.
-const pp2 = pgamma(x, 2, 0.5);
-const q2 = qgamma(pp2, 2, 0.5);
-precision(q2);
-//[ 0, 2, 4, 6, 8, 10 ]
-
-//3.
-const pp3 = pgamma(x, 5, 1, undefined, false, true);
-const q3 = qgamma(pp3, 5, undefined, 1, false, true);
-precision(q3);
-//[ 0, 2, 4, 6, 8, 10 ]
-
-//4.
-const pp4 = pgamma(x, 7.5, 1, undefined, false);
-const q4 = qgamma(log(pp4), 7.5, 1, undefined, false, true);
-precision(q4);
-//[ 0, 2, 4, 6, 8, 10 ]
-```
-
-_Equivalent in R_
-
-```R
-x = seq(0, 10, 2);
-
-#1.
-pp1 = pgamma(x, 1, 0.5)
-qgamma(pp1, 1, 0.5)
-#[1]  0  2  4  6  8 10
-
-#2.
-pp2 = pgamma(x, 2, 0.5);
-qgamma(pp2, 2, 0.5);
-#[1]  0  2  4  6  8 10
-
-#3.
-pp3 = pgamma(x, 5, 1, lower.tail= FALSE, log.p=TRUE);
-qgamma(pp3, 5, scale= 1, lower.tail=FALSE, log.p=TRUE);
-#[1]  0  2  4  6  8 10
-
-#4
-pp4 = pgamma(x, 7.5, 1, lower.tail=FALSE);
-qgamma(log(pp4), 7.5, 1, lower.tail=FALSE , log.p=TRUE);
-#[1]  0  2  4  6  8 10
-```
-
-#### `rgamma`
-
-Generates random deviates for the [Gamma distribution](https://en.wikipedia.org/wiki/Gamma_distribution). See [R doc](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/GammaDist.html).
-
-```typescript
-declare function rgamma(
-  n: number,
-  shape: number,
-  rate: number = 1,
-  scale: number = 1 / rate //alternative for rate
-): number | number[];
-```
-
-- `n`: number of deviates generated.
-- `shape`: [shape](https://en.wikipedia.org/wiki/Gamma_distribution) parameter, must be positive.
-- `rate`: The [rate](https://en.wikipedia.org/wiki/Gamma_distribution) parameter, when specified, leave `scale` undefined (or set `rate = 1/scale`). Must be strictly positive.
-- `scale`: The [scale](https://en.wikipedia.org/wiki/Gamma_distribution) parameter, when specified, leave `rate` undefined (or set `scale = 1/rate`). Must be strictly positive.
-
-Usage:
-
-```typescript
-const libR = require("lib-r-math.js");
-const {
-  Gamma,
-  rng: {
-    LecuyerCMRG,
-    normal: { BoxMuller },
-  },
-  R: { arrayrify, numberPrecision },
-} = libR;
-
-//some tools
-const log = arrayrify(Math.log);
-const seq = libR.R.seq()();
-const precision = numberPrecision(9); //restrict to 9 significant digits
-
-//init PRNG
-const lc = new LecuyerCMRG(1234);
-const { dgamma, pgamma, qgamma, rgamma } = Gamma(new BoxMuller(lc));
-
-//1.
-const r1 = rgamma(5, 1, 0.5);
-precision(r1);
-//[ 0.245895782, 1.18079997, 0.121397968, 1.9369898, 0.00324084998 ]
-
-//2.
-const r2 = rgamma(5, 2, 0.5);
-precision(r2);
-//[ 2.70358022, 2.13849656, 3.20216826, 2.99776528, 1.78394229 ]
-
-//3.
-const r3 = rgamma(5, 7.5, 1);
-precision(r3);
-//[ 8.87110239, 5.34863306, 10.805079, 9.07713185, 9.39337443 ]
-```
-
-_Equivalent in R_
-
-```R
-RNGkind("L'Ecuyer-CMRG", normal.kind="Box-Muller")
-set.seed(1234);
-
-#1
-rgamma(5, 1, 0.5);
-#[1] 0.24589578 1.18079997 0.12139797 1.93698980 0.00324085
-
-#2
-rgamma(5, 2, 0.5);
-#[1] 2.703580 2.138497 3.202168 2.997765 1.783942
-
-#3
-rgamma(5, 7.5, 1);
-#[1]  8.871102  5.348633 10.805079  9.077132  9.393374
-```
-
-### Geometric distribution
-
-`dgeom, qgeom, pgeom, rgeom`
-
-See [R doc](https://stat.ethz.ch/R-manual/R-patched/library/stats/html/Geometric.html) and [wiki](https://en.wikipedia.org/wiki/Geometric_distribution).
-
-These functions are properties of an object created by the `Geometric` factory method. The factory method needs as optional argument an instance of one of the [normal PRNG's](#normal-distributed-random-number-generators).
-
-Usage:
-
-```javascript
-const libR = require("lib-r-math.js");
-const {
-  Geometric,
-  rng: {
-    SuperDuper,
-    normal: { BoxMuller },
-  },
-} = libR;
-
-//1. initialize default, "Inversion" and "MersenneTwister"
-const defaultG = Geometric();
-
-//2. alternative: initialize with explicit uniform PRNG
-const sd = new SuperDuper(3456); //keep reference so we can do mt.init(...)
-const explicitG = Geometric(new BoxMuller(mt));
-
-//get functions
-const { dgeom, pgeom, qgeom, rgeom } = explicitG; // or use "defaultGamma"
-```
-
-#### `dgeom`
-
-The density function of the [Geometric distribution](https://en.wikipedia.org/wiki/Geometric_distribution). See [R doc](https://stat.ethz.ch/R-manual/R-patched/library/stats/html/Geometric.html).
-
-$$ \large p(x) = p (1-p)^{x} $$
-
-_typescript decl_
-
-```typescript
-declare function dgeom(
-  x: number | number[],
-  prob: number,
-  asLog: boolean = false
-): number | number[];
-```
-
-- `x`: quantiles (array or scalar).
-- `prob`: probability of success in each trial. 0 < prob <= 1.
-- `asLog`: if TRUE, probabilities p are given as ln(p).
-
-Usage:
-
-```javascript
-const libR = require("lib-r-math.js");
-const {
-  Geometric,
-  R: { numberPrecision },
-} = libR;
-
-//helpers
-const seq = libR.R.seq()();
-const precision = numberPrecision(9); //restrict to 9 significant digits
-
-const { dgeom, pgeom, qgeom, rgeom } = Geometric();
-
-//data
-const x = seq(0, 4);
-//1
-const d1 = dgeom(x, 0.5);
-precision(d1);
-//[ 0.5, 0.25, 0.125, 0.0625, 0.03125 ]
-
-//2
-const d2 = dgeom(x, 0.2, true);
-precision(d2);
-//[ -1.60943791, -1.83258146, -2.05572502, -2.27886857, -2.50201212 ]
-```
-
-_Equivalent in R_
-
-```R
-x = seq(0,4);
-
-#1
-> dgeom(x, 0.5)
-[1] 0.50000 0.25000 0.12500 0.06250 0.03125
-
-#2
-> dgeom(x, 0.2, TRUE)
-[1] -1.609438 -1.832581 -2.055725 -2.278869 -2.502012
-```
-
-#### `pgeom`
-
-The distribution function of the [Geometric distribution](https://en.wikipedia.org/wiki/Geometric_distribution). See [R doc](https://stat.ethz.ch/R-manual/R-patched/library/stats/html/Geometric.html).
-
-_typescript decl_
-
-```typescript
-declare function pgeom(
-  q: number | number[],
-  prob: number,
-  lowerTail: boolean = true,
-  logP: boolean = false
-): number | number[];
-```
-
-- `q`: the number of failures before success.
-- `prob`: probability of success.
-- `lowerTail`: if TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
-- `logP`: if TRUE, probabilities p are given as ln(p).
-
-```javascript
-const libR = require("lib-r-math.js");
-const {
-  Geometric,
-  R: { numberPrecision },
-} = libR;
-
-//helpers
-const seq = libR.R.seq()();
-const precision = numberPrecision(9); //restrict to 9 significant digits
-const { dgeom, pgeom, qgeom, rgeom } = Geometric();
-
-const q = seq(5, 9);
-
-//1.
-const p1 = pgeom(q, 0.1);
-precision(p1);
-//[ 0.468559, 0.5217031, 0.56953279, 0.612579511, 0.65132156 ]
-
-//2.
-const p2 = pgeom(q, 0.1, false);
-precision(p2);
-//[ 0.531441, 0.4782969, 0.43046721, 0.387420489, 0.34867844 ]
-
-//3.
-const p3 = pgeom(q, 0.2, false, true);
-precision(p3);
-//[ -1.33886131, -1.56200486, -1.78514841, -2.00829196, -2.23143551 ]
-```
-
-_Equivalent in R_
-
-```R
-q=seq(5, 9);
-#1
-pgeom(q, 0.1);
-#[1] 0.4685590 0.5217031 0.5695328 0.6125795 0.6513216
-
-#2
-pgeom(q, 0.1, FALSE)
-#[1] 0.5314410 0.4782969 0.4304672 0.3874205 0.3486784
-
-#3
-pgeom(q, 0.2, FALSE, TRUE)
-#[1] -1.338861 -1.562005 -1.785148 -2.008292 -2.231436
-```
-
-#### `qgeom`
-
-The quantile function of the [Geometric distribution](https://en.wikipedia.org/wiki/Geometric_distribution). See [R doc](https://stat.ethz.ch/R-manual/R-patched/library/stats/html/Geometric.html).
-
-_typescript decl_
-
-```typescript
-declare function qgeom(
-  p: number | number[],
-  prob: number,
-  lowerTail: boolean = true,
-  logP: boolean = false
-): number | number[];
-```
-
-- `p`: probabilities (scalar or array).
-- `prob`: probability of success.
-- `lowerTail`: if TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
-- `logP`: if TRUE, probabilities p are given as ln(p).
-
-Usage:
-
-```javascript
-const libR = require("lib-r-math.js");
-const {
-  Geometric,
-  R: { numberPrecision },
-} = libR;
-
-//helpers
-const seq = libR.R.seq()();
-const precision = numberPrecision(9); //restrict to 9 significant digits
-
-const { dgeom, pgeom, qgeom, rgeom } = Geometric();
-
-const q = seq(5, 9);
-
-//1
-const pp1 = pgeom(q, 0.2, false, true);
-const q1 = qgeom(pp1, 0.2, false, true);
-precision(q1);
-//[ 5, 6, 7, 8, 9 ]
-
-//2
-const pp2 = pgeom(q, 0.9, true, true);
-const q2 = qgeom(pp2, 0.9, true, true);
-precision(q2);
-//[ 5, 6, 7, 8 , 9 ]
-
-//3
-const pp3 = pgeom([...q, Infinity], 0.5);
-const q3 = qgeom(pp3, 0.5);
-precision(q3);
-//[ 5, 6, 7, 8, 9, Infinity ]
-```
-
-_Equivalent in R_
-
-```R
-q = seq(5, 9);
-
-#1
-pp1 = pgeom(q, 0.2, FALSE, TRUE)
-qgeom(pp1, 0.2, FALSE, TRUE)
-#[1] 5 6 7 8 9
-
-#2
-pp2 = pgeom(q, 0.9, TRUE, TRUE);
-qgeom(pp2, 0.9, TRUE, TRUE);
-#[1] 5 6 7 8 9
-
-#3
-pp3 = pgeom(c(q, Inf), 0.5);
-qgeom(pp3, 0.5);
-#[1] 5 6 7 8 9, Inf
-```
-
-#### `rgeom`
-
-Generates random deviates for the [Geometric distribution](https://en.wikipedia.org/wiki/Geometric_distribution). See [R doc](https://stat.ethz.ch/R-manual/R-patched/library/stats/html/Geometric.html).
-
-_typescript decl_
-
-```typescript
-declare function rgeom(n: number, prob: number): number | number[];
-```
-
-- `n`: number of deviates to generate.
-- `prob`: probability of success.
-
-Usage:
-
-```javascript
-const libR = require("lib-r-math.js");
-const {
-  Geometric,
-  rng: {
-    KnuthTAOCP,
-    normal: { KindermanRamage },
-  },
-  R: { arrayrify, numberPrecision, seq: seqCR },
-} = libR;
-
-//helpers
-const log = arrayrify(Math.log);
-const seq = seqCR()();
-const precision = numberPrecision(9); //restrict to 9 significant digits
-
-//explicit PRNG
-const k97 = new KnuthTAOCP(1234);
-const { dgeom, pgeom, qgeom, rgeom } = Geometric(new KindermanRamage(mt));
-
-//1
-k97.init(3456);
-rgeom(5, 0.001);
-//[ 573, 1153, 75, 82, 392 ]
-
-//2
-k97.init(9876);
-rgeom(5, 0.999);
-//[ 0, 0, 0, 0, 0 ]  low failure rate!!
-
-//3
-k97.init(934);
-rgeom(10, 0.4);
-//[ 1, 2, 6, 1, 0, 1, 0, 0, 1, 2 ]
-```
-
-_in R Console_
-
-```R
-RNGkind("Mersenne-Twister", normal.kind = "Inversion");
-
-#1.
-> set.seed(3456)
-> rgeom(5, 0.001)
-[1]  573 1153   75   82  392
-
-#2
-> set.seed(9876)
-> rgeom(5, 0.999);
-[1] 0 0 0 0 0
-
-#3
-> set.seed(934)
-> rgeom(10, 0.4);
- [1] 1 2 6 1 0 1 0 0 1 2
-```
 
 ### Hypergeometric distribution
 

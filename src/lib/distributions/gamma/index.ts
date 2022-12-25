@@ -36,23 +36,21 @@ function gammaNormalizeParams(rate?: number, scale?: number): number {
         }
         return 1 / rate;
     }
-    // scale is defined
+    // scale !== defined
     if (rate === undefined) {
         return scale;
     }
     throw new TypeError("specify 'rate' or 'scale' but not both");
 }
 
-export { rgamma as rgammaOne } 
-
-export function dgamma(x: number, shape: number, rate?: number, scale?: number, asLog = false): number {
+export function dgamma(x: number, shape: number, rate?: number, scale?: number, log = false): number {
     const _scale = gammaNormalizeParams(rate, scale);
-    return _dgamma(x, shape, _scale, asLog);
+    return _dgamma(x, shape, _scale, log);
 }
 
-export function qgamma(q: number, shape: number, rate?: number, scale?: number, lowerTail = true, logP = false): number {
+export function qgamma(p: number, shape: number, rate?: number, scale?: number, lowerTail = true, logP = false): number {
     const _scale = gammaNormalizeParams(rate, scale);
-    return _qgamma(q, shape, _scale, lowerTail, logP);
+    return _qgamma(p, shape, _scale, lowerTail, logP);
 }
 
 export function pgamma(q: number, shape: number, rate?: number, scale?: number, lowerTail = true, logP = false): number {
@@ -65,9 +63,17 @@ export function rgamma(
     shape: number,
     rate?: number,
     scale?: number
-    ): Float64Array {
+): Float64Array {
     const _scale = gammaNormalizeParams(rate, scale);
     return repeatedCall64(n, _rgamma, shape, _scale);
+}
+
+export function rgammaOne(
+    shape: number,
+    rate?: number,
+    scale?: number): number {
+    const _scale = gammaNormalizeParams(rate, scale);
+    return _rgamma(shape, _scale);
 }
 
 
