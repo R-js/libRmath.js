@@ -25,12 +25,12 @@ import { globalUni } from '@rng/global-rng';
 
 const printer = debug('rexp');
 
-export function rexpOne(scale: number): number {
+export function rexpOne(rate: number): number {
     const rng = globalUni();
-    if (!Number.isFinite(scale) || scale <= 0.0) {
-        if (scale === 0) return 0;
+    if (rate === Infinity || isNaN(rate) || rate <= 0) {
+        if (rate === Infinity || rate === -Infinity) return 0;
         /* else */
         return ML_ERR_return_NAN2(printer, lineInfo4);
     }
-    return scale * exp_rand(rng); // --> in ./sexp.c
+    return exp_rand(rng) / rate; // --> in ./sexp.c
 }

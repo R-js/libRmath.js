@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import { debug } from '@mangos/debug';
 import { ML_ERR_return_NAN2, lineInfo4 } from '@common/logger';
-import { DBL_MAX_EXP, min, max } from '@lib/r-func';
+import { DBL_MAX_EXP, min, max, log } from '@lib/r-func';
 import { globalUni } from '@rng/global-rng';
 
 const printer = debug('rbeta');
@@ -76,7 +76,7 @@ export function rbetaOne(shape1: number, shape2: number): number {
     const alpha = a + b;
 
     function v_w_from__u1_bet(AA: number) {
-        v = beta * Math.log(u1 / (1.0 - u1));
+        v = beta * log(u1 / (1.0 - u1));
         if (v <= expmax) {
             w = AA * Math.exp(v);
             if (!isFinite(w)) {
@@ -118,7 +118,7 @@ export function rbetaOne(shape1: number, shape2: number): number {
 
             v_w_from__u1_bet(b);
 
-            if (alpha * (Math.log(alpha / (a + w)) + v) - 1.3862944 >= Math.log(z)) break;
+            if (alpha * (log(alpha / (a + w)) + v) - 1.3862944 >= log(z)) break;
         }
         return shape1 === a ? a / (a + w) : w / (a + w);
     } else {
@@ -139,9 +139,9 @@ export function rbetaOne(shape1: number, shape2: number): number {
             r = gamma * v - 1.3862944;
             s = a + r - w;
             if (s + 2.609438 >= 5.0 * z) break;
-            t = Math.log(z);
+            t = log(z);
             if (s > t) break;
-        } while (r + alpha * Math.log(alpha / (b + w)) < t);
+        } while (r + alpha * log(alpha / (b + w)) < t);
 
         return shape1 !== a ? b / (b + w) : w / (b + w);
     }
