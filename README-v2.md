@@ -165,12 +165,12 @@ const answ = BesselJ(3, 0.4);
     - [The Beta distribution](#the-beta-distribution)
     - [The Binomial distribution](#the-binomial-distribution)
     - [The Negative Binomial Distribution](#the-negative-binomial-distribution)
-  - [The Cauchy Distribution](#the-cauchy-distribution)
-  - [The Chi-Squared (non-central) Distribution](#the-chi-squared-non-central-distribution)
-  - [The Exponential Distribution](#the-exponential-distribution)
-  - [The F Distribution](#the-f-distribution)
-  - [The Gamma Distribution](#the-gamma-distribution)
-  - [The Geometric Distribution](#the-geometric-distribution)
+    - [The Cauchy Distribution](#the-cauchy-distribution)
+    - [The Chi-Squared (non-central) Distribution](#the-chi-squared-non-central-distribution)
+    - [The Exponential Distribution](#the-exponential-distribution)
+    - [The F Distribution](#the-f-distribution)
+    - [The Gamma Distribution](#the-gamma-distribution)
+    - [The Geometric Distribution](#the-geometric-distribution)
 - [END OF OLD DOC](#end-of-old-doc)
       - [`qunif`](#qunif)
       - [`runif`](#runif)
@@ -181,11 +181,6 @@ const answ = BesselJ(3, 0.4);
       - [`rnorm`](#rnorm)
   - [Other Probability Distributions](#other-probability-distributions)
       - [summary](#summary)
-    - [Hypergeometric distribution](#hypergeometric-distribution)
-      - [`dhyper`](#dhyper)
-      - [`phyper`](#phyper)
-      - [`qhyper`](#qhyper)
-      - [`rhyper`](#rhyper)
     - [Logistic distribution](#logistic-distribution)
       - [`dlogis`](#dlogis)
       - [`plogis`](#plogis)
@@ -247,11 +242,6 @@ const answ = BesselJ(3, 0.4);
     - [Binomial coefficient functions](#binomial-coefficient-functions)
       - [`choose`](#choose)
       - [`lchoose`](#lchoose)
-- [Changelog](#changelog)
-  - [\[Unreleased\]](#unreleased)
-    - [Changed](#changed-1)
-    - [Changed](#changed-2)
-    - [Removed](#removed-1)
 
 ## Auxiliary functions
 
@@ -469,7 +459,7 @@ console.log(
 [ 504, 503.9999999999999, 672, 1008.0000000000001, 1612.7999999999988, 2688.0000000000014, 4607.999999999997, 8064, 14336.000000000015 ]
 ```
 
-## The Cauchy Distribution
+### The Cauchy Distribution
 
 | type                     | function spec                                                                                  |
 | ------------------------ | ---------------------------------------------------------------------------------------------- |
@@ -504,7 +494,7 @@ console.log(  [-1,0,1,2,3,4].map(x => dcauchy(x))  );
 // -> [  0.15915494309189535, 0.3183098861837907, 0.15915494309189535, 0.06366197723675814, 0.03183098861837907, 0.018724110951987685 ]
 ```
 
-## The Chi-Squared (non-central) Distribution
+### The Chi-Squared (non-central) Distribution
 
 | type                     | function spec                                                                                   |
 | ------------------------ | ----------------------------------------------------------------------------------------------- |
@@ -540,7 +530,7 @@ console.log(   [1,2,3].map( df => dchisq(1, df))  );
 // -> [ 0.24197072451914337, 0.3032653298563167, 0.24197072451914337 ]
 ```
 
-## The Exponential Distribution
+### The Exponential Distribution
 
 | type                     | function spec                                                                |
 | ------------------------ | ---------------------------------------------------------------------------- |
@@ -575,7 +565,7 @@ console.log( dexp(1) - Math.exp(-1)  );
 // -> 0
 ```
 
-## The F Distribution
+### The F Distribution
 
 | type                     | function spec                                                                                            |
 | ------------------------ | -------------------------------------------------------------------------------------------------------- |
@@ -630,7 +620,7 @@ console.log(fisher.map((f,i) => f - betas[i]));
 //-> [ 0, 0, 0, 0, 0, ...., 0]
 ```
 
-## The Gamma Distribution
+### The Gamma Distribution
 
 | type                     | function spec                                                                                                      |
 | ------------------------ | ------------------------------------------------------------------------------------------------------------------ |
@@ -669,7 +659,7 @@ let dg = [1,2,3,4].map( x => Math.log( dgamma(x, 1) ));
 // [1,2,3,4].map (x => dgamma(x, 1, undefined, undefined, true) );
 ```
 
-## The Geometric Distribution
+### The Geometric Distribution
 
 | type                     | function spec                                                                      |
 | ------------------------ | ---------------------------------------------------------------------------------- |
@@ -1131,397 +1121,7 @@ rnorm(5,2,3)
 `libRmath.so` contains 19 probability distributions (other then `Normal` and `Uniform`) with their specific density, quantile and random generators, all are ported and have been verified to yield the same output.
 
 
-### Hypergeometric distribution
 
-`dhyper, qhyper, phyper, rhyper`
-
-See [R doc](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/Hypergeometric.html) and [wiki](https://en.wikipedia.org/wiki/Hypergeometric_distribution).
-
-These functions are properties of an object created by the `HyperGeometric` factory method. The factory method needs as optional argument an instance of one of the [uniform random PRNG's](#uniform-pseudo-random-number-generators) classes.
-
-Usage:
-
-```javascript
-const libR = require('lib-r-math.js');
-const {
-    HyperGeometric,
-    rng: { MersenneTwister, SuperDuper }
-} = libR;
-
-//some tools
-const log = libR.R.arrayrify(Math.log);
-const seq = libR.R.seq()();
-const precision = libR.R.numberPrecision(9); //restrict to 9 significant digits
-
-//init PRNG
-const sd = new SuperDuper(1234);
-const hyperG = HyperGeometric(sd);
-
-//or use default  (uses MersenneTwister)
-const default = HyperGeometric();
-
-const { dhyper, phyper, qhyper, rhyper } = default;
-```
-
-#### `dhyper`
-
-The density function of the Hypergeometric distribution. See [R doc](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/Hypergeometric.html) and [wiki](https://en.wikipedia.org/wiki/Hypergeometric_distribution).
-
-$$ \large p(X = x) = \frac{choose(m, x) choose(n, k-x)}{choose(m+n, k)} $$
-
-_typescript decl_
-
-```typescript
-declare function dhyper(
-  x: number | number[],
-  m: number,
-  n: number,
-  k: number,
-  aslog: boolean = false
-): number | number[];
-```
-
-Where:
-
-- `x`: is the number of observed successes.
-- `m`: is the number of success states in the population
-- `n`: is the number of failure states in the population
-- `k`: is the number of draws from the population (n+m) sample.
-
-Usage:
-
-```javascript
-const libR = require("lib-r-math.js");
-const { HyperGeometric } = libR;
-
-//some tools
-const log = libR.R.arrayrify(Math.log);
-const seq = libR.R.seq()();
-const precision = libR.R.numberPrecision(9); //restrict to 9 significant digits
-
-const { dhyper, phyper, qhyper, rhyper } = HyperGeometric();
-
-//1.
-// m = 3, n = 3, m+n=6 ,k=5 (≤ m+n).
-const d1 = dhyper(
-  seq(0, 4), //success count, number of white balls drawn
-  5, //population white balls
-  3, //population red balls
-  5, //total balls drawn from (5+3)
-  false
-);
-precision(d1);
-//[ 0, 0, 0.178571429, 0.535714286, 0.267857143 ]
-
-//2.
-// m = 3, n = 4, m+n = 7, k=7 (≤ m+n).
-const d2 = dhyper(
-  seq(0, 4), //success count, number of white
-  3, //population white balls
-  4, //population red balls
-  7 //total balls drawn 7 ≤ (4+3), all balls are drawn
-);
-precision(d2);
-//[ 0, 0, 0, 1, 0 ]
-
-//3.
-// m = 3, n = 4, m+n = 7, k=5 (≤ m+n).
-const d3 = dhyper(
-  seq(0, 3), //success count, number of white balls drawn, must be ≤ 3
-  3, //population white balls
-  4, //population red balls
-  5 //total balls drawn, must be < (4+3)
-);
-precision(d3);
-//[ 0, 0.142857143, 0.571428571, 0.285714286 ]
-
-//4.
-// m = 3, = 9, m+n = 12, k = 5 (≤ m+n)
-const d4 = dhyper(
-  seq(0, 3), //success count, number of white balls drawn, must be ≤ 3
-  3, //population white balls
-  9, //population red balls
-  5 //total balls drawn, must be < (4+3)
-);
-precision(d4);
-//[ 0.159090909, 0.477272727, 0.318181818, 0.0454545455 ]
-```
-
-_in R Console_
-
-```R
-#1
-> dhyper( seq(0, 4), 5, 3, 5, FALSE );
-[1] 0.0000000 0.0000000 0.1785714 0.5357143 0.2678571
-
-#2
- > dhyper( seq(0, 4), 3, 4, 7 );
-[1] 0 0 0 1 0
-
-#3
-> dhyper( seq(0, 3), 3, 4, 5);
-[1] 0.0000000 0.1428571 0.5714286 0.2857143
-
-#4
-> dhyper( seq(0, 3), # success count, number of white balls drawn, must be ≤ 3
-    3, #population white balls
-    9, #population red balls
-    5 #total balls drawn, must be < (4+3)
-);
-[1] 0.15909091 0.47727273 0.31818182 0.04545455
-```
-
-#### `phyper`
-
-The distribution function of the Hypergeometric distribution. See [R doc](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/Hypergeometric.html) and [wiki](https://en.wikipedia.org/wiki/Hypergeometric_distribution).
-
-_typescript decl_
-
-```typescript
-declare function phyper(
-  q: number | number[],
-  m: number,
-  n: number,
-  k: number,
-  lowerTail: boolean = true,
-  logP: boolean = false
-): number | number[];
-```
-
-- `q`: is the number of observed successes.
-- `m`: is the number of success states in the population
-- `n`: is the number of failure states in the population
-- `k`: is the number of draws from the population (n+m) sample.
-- `lowerTail`: if TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
-- `logP`: if TRUE, probabilities p are given as ln(p).
-
-Usage:
-
-```javascript
-const libR = require("lib-r-math.js");
-const { HyperGeometric } = libR;
-
-//some tools
-const log = libR.R.arrayrify(Math.log);
-const seq = libR.R.seq()();
-const precision = libR.R.numberPrecision(9); //restrict to 9 significant digits
-
-const { dhyper, phyper, qhyper, rhyper } = HyperGeometric();
-
-//1. m=5, n=3, m+n=6 ,k=5 (≤ m+n).
-const p1 = phyper(
-  seq(2, 5), //success count, number of white balls drawn
-  5, //population white balls
-  3, //population red balls
-  5 //total balls drawn from (5+3)
-);
-precision(p1);
-//[ 0.178571429, 0.714285714, 0.982142857, 1 ]
-
-//2. m=9, n=18, m+n=27 ,k=9 (≤ m+n).
-const p2 = phyper(
-  seq(2, 6), //success count, number of white balls drawn
-  9, //population white balls
-  18, //population red balls
-  9, //total balls drawn from (5+3)
-  false
-);
-precision(p2);
-//[ 0.66115526, 0.328440469, 0.0980994597, 0.0158348135, 0.00120998757 ]
-
-//3. m=9, n=18, m+n=27 ,k=9 (≤ m+n).
-const p3 = phyper(
-  seq(2, 6), //success count, number of white balls drawn
-  9, //population white balls
-  18, //population red balls
-  6, //total balls drawn (from white add red)
-  false,
-  true
-);
-precision(p3);
-//[ -1.1886521, -2.616312, -4.83512721, -8.16733172, -Infinity ]
-```
-
-_Equivalent in R Console_
-
-```R
-#1
-> phyper( seq(2, 5), 5, 3, 5 );
-[1] 0.1785714 0.7142857 0.9821429 1.0000000
-
-#2
-> phyper( seq(2, 6), 9, 18, 9, FALSE);
-[1] 0.661155260 0.328440469 0.098099460 0.015834814 0.001209988
-
-#3
-> phyper( seq(2, 6), 9, 18, 6, FALSE, TRUE);
-[1] -1.188652 -2.616312 -4.835127 -8.167332      -Inf
-```
-
-#### `qhyper`
-
-The quantile function of the Hypergeometric distribution. See [R doc](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/Hypergeometric.html) and [wiki](https://en.wikipedia.org/wiki/Hypergeometric_distribution).
-
-_typescript decl_
-
-```typescript
-declare function qhyper(
-  p: number | number[],
-  m: number,
-  n: number,
-  k: number,
-  lowerTail: boolean = true,
-  logP: boolean = false
-): number | number[];
-```
-
-- `p`: is probability of observed successes.
-- `m`: is the number of success states in the population
-- `n`: is the number of failure states in the population
-- `k`: is the number of draws from the population (n+m) sample.
-- `lowerTail`: if TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
-- `logP`: if TRUE, probabilities p are given as ln(p).
-
-Usage:
-
-```javascript
-const libR = require("lib-r-math.js");
-const { HyperGeometric } = libR;
-
-//some tools
-const log = libR.R.arrayrify(Math.log);
-const seq = libR.R.seq()();
-const precision = libR.R.numberPrecision(9); //restrict to 9 significant digits
-
-const { dhyper, phyper, qhyper, rhyper } = HyperGeometric();
-
-//1
-const q1 = qhyper(
-  seq(0, 1, 0.2), //probabilities of drawing white balls
-  5, //population white balls
-  2, //population red balls
-  3 //total balls drawn from (5+2)
-);
-precision(q1);
-//[ 1, 2, 2, 2, 3, 3 ]
-
-//2 there is a bug in R: NaN should be '3'.
-// It is corrected in qhyper
-const q2 = qhyper(
-  log(seq(0, 1, 0.2)), //probabilities of drawing white balls
-  5, //population white balls
-  2, //population red balls
-  3, //total balls drawn from (5+2)
-  false,
-  true
-);
-precision(q2);
-//[ 3, 3, 2, 2, 2, 1 ]
-
-//3 m=50, n=20, n+m=70, k=6 (≤ m+n)
-const q3 = qhyper(
-  seq(0, 1, 0.2), //probabilities of drawing white balls
-  50, // population with white balls
-  20, // population with red balls
-  6 // total picks
-);
-precision(q3);
-//[ 0, 3, 4, 5, 5, 6 ]
-```
-
-_Equivalent in R Console_
-
-```R
-#1.
->qhyper( seq(0, 1, 0.2), 5,2,3 );
-[1] 1 2 2 2 3 3
-
-#2. There is a bug in R: 'NaN' should be '3'
->qhyper( log(seq(0, 1, 0.2)), 5, 2, 3, FALSE, TRUE);
-[1] NaN   3   2   2   2   1
-
-#3
->qhyper( seq(0, 1, 0.2),50,20,6 );
-[1] 0 3 4 5 5 6
-```
-
-#### `rhyper`
-
-Generates random deviates for the Hypergeometric distribution. See [R doc](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/Hypergeometric.html) and [wiki](https://en.wikipedia.org/wiki/Hypergeometric_distribution).
-
-_typescript decl_
-
-```typescript
-declare function rhyper(
-  N: number,
-  m: number,
-  n: number,
-  k: number
-): number | number[];
-```
-
-- `N`: number of deviates to generate.
-- `m`: is the number of success states in the population
-- `n`: is the number of failure states in the population
-- `k`: is the number of draws from the total population (n+m) sample.
-
-Usage:
-
-```javascript
-const libR = require("lib-r-math.js");
-const {
-  HyperGeometric,
-  rng: { MersenneTwister },
-} = libR;
-
-//some tools
-const log = libR.R.arrayrify(Math.log);
-const seq = libR.R.seq()();
-const precision = libR.R.numberPrecision(9); //restrict to 9 significant digits
-
-//init PRNG
-const mt = new MersenneTwister(1234);
-const hyperG = HyperGeometric(mt);
-
-const { dhyper, phyper, qhyper, rhyper } = hyperG;
-
-//1. N=5, m=4, n=3, (m+n)=7,  k=5 (≤ m+n)
-// k will pick at least 2 (from m) and at most all 4 (from m).
-mt.init(1234);
-rhyper(5, 4, 3, 5);
-//[ 2, 3, 3, 3, 4 ]
-
-//2. N=5, m=40, n=19, (m+n)=59, k=13 (≤ m+n)
-mt.init(9876);
-rhyper(5, 40, 19, 13);
-//[ 7, 9, 11, 9, 9 ]
-
-//3. N=5, m=4, n=17, (m+n)=23, k=3
-mt.init(5688);
-rhyper(5, 40, 99, 33);
-//[ 12, 10, 10, 7, 12 ]
-```
-
-_Equivalent in R Console_
-
-```R
-RNGkind("Mersenne-Twister", normal.kind="Inversion")
-
-#1
->set.seed(1234);
->rhyper(5, 4, 3, 5);
-[1] 2 3 3 3 4
-
-#2
->set.seed(9876);
->rhyper(5, 40, 19, 13);
-[1]  7  9 11  9  9
-
-#3
-> set.seed(5688);
-> rhyper(5, 40, 99, 33);
-[1] 12 10 10  7 12
-```
 
 ### Logistic distribution
 
@@ -5347,72 +4947,6 @@ lchoose(4000,30);
 lchoose(2000,998);
 #[1] 1382.264
 ```
-
-Contributor Covenant Code of Conduct
-Our Pledge
-In the interest of fostering an open and welcoming environment, we as contributors and maintainers pledge to making participation in our project and our community a harassment-free experience for everyone, regardless of age, body size, disability, ethnicity, gender identity and expression, level of experience, education, socio-economic status, nationality, personal appearance, race, religion, or sexual identity and orientation.
-
-Our Standards
-Examples of behavior that contributes to creating a positive environment include:
-
-Using welcoming and inclusive language
-Being respectful of differing viewpoints and experiences
-Gracefully accepting constructive criticism
-Focusing on what is best for the community
-Showing empathy towards other community members
-Examples of unacceptable behavior by participants include:
-
-The use of sexualized language or imagery and unwelcome sexual attention or advances
-Trolling, insulting/derogatory comments, and personal or political attacks
-Public or private harassment
-Publishing others' private information, such as a physical or electronic address, without explicit permission
-Other conduct which could reasonably be considered inappropriate in a professional setting
-Our Responsibilities
-Project maintainers are responsible for clarifying the standards of acceptable behavior and are expected to take appropriate and fair corrective action in response to any instances of unacceptable behavior.
-
-Project maintainers have the right and responsibility to remove, edit, or reject comments, commits, code, wiki edits, issues, and other contributions that are not aligned to this Code of Conduct, or to ban temporarily or permanently any contributor for other behaviors that they deem inappropriate, threatening, offensive, or harmful.
-
-Scope
-This Code of Conduct applies both within project spaces and in public spaces when an individual is representing the project or its community. Examples of representing a project or community include using an official project e-mail address, posting via an official social media account, or acting as an appointed representative at an online or offline event. Representation of a project may be further defined and clarified by project maintainers.
-
-Enforcement
-Instances of abusive, harassing, or otherwise unacceptable behavior may be reported by contacting Ben Lesh (ben@benlesh.com), Tracy Lee (tracy@thisdot.co) or OJ Kwon (kwon.ohjoong@gmail.com). All complaints will be reviewed and investigated and will result in a response that is deemed necessary and appropriate to the circumstances. The project team is obligated to maintain confidentiality with regard to the reporter of an incident. Further details of specific enforcement policies may be posted separately.
-
-Project maintainers who do not follow or enforce the Code of Conduct in good faith may face temporary or permanent repercussions as determined by other members of the project's leadership.
-
-Attribution
-This Code of Conduct is adapted from the Contributor Covenant, version 1.4, available at https://www.contributor-covenant.org/version/1/4/code-of-conduct.html
-
-# Changelog
-
-All notable changes to this project will be documented in this file.
-
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
-
-## [Unreleased]
-
-### Changed
-
-### Changed
-
-### Removed
-
-Guiding Principles
-Changelogs are for humans, not machines.
-There should be an entry for every single version.
-The same types of changes should be grouped.
-Versions and sections should be linkable.
-The latest version comes first.
-The release date of each version is displayed.
-Mention whether you follow Semantic Versioning.
-Types of changes
-Added for new features.
-Changed for changes in existing functionality.
-Deprecated for soon-to-be removed features.
-Removed for now removed features.
-Fixed for any bug fixes.
-Security in case of vulnerabilities.
 
 [constributer-convenant]: https://www.contributor-covenant.org/
 [code-conduct]: https://www.contributor-covenant.org/version/1/4/code-of-conduct.html
