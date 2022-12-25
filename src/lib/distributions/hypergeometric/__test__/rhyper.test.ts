@@ -6,7 +6,7 @@ import { loadData } from '@common/load';
 import { cl, select } from '@common/debug-mangos-select';
 
 import { globalUni, RNGkind } from '@rng/global-rng';
-import { rhyper, useWasmBackends, clearBackends } from '..';
+import { rhyper, useWasmBackendHyperGeom, clearBackendHyperGeom } from '..';
 
 
 const rhyperDomainWarns = select('rhyper')("argument out of domain in '%s'");
@@ -50,7 +50,7 @@ describe('rhyper', function () {
         });
         it('(wasm) with k=2^31-1 AND m, n, bigger then INT_MAX (2^31-1', async () => { 
             globalUni().init(1234);
-            await useWasmBackends();
+            await useWasmBackendHyperGeom();
             const t0 = Date.now();
             const z3 = rhyper(
                 1, //N
@@ -69,7 +69,7 @@ describe('rhyper', function () {
             );
             const t2 = Date.now();
             expect(z4).toEqualFloatingPointBinary(1073741824);
-            clearBackends();
+            clearBackendHyperGeom();
             console.log(`rhyper: (wasm) ${ms(t1-t0)}`);
             console.log(`rhyper: (wasm) ${ms(t2-t1)}`);
         });

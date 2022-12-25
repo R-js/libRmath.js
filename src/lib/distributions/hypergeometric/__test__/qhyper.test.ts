@@ -3,7 +3,7 @@ import ms from 'ms';
 import { loadData } from '@common/load';
 import { resolve } from 'path';
 import { cl, select } from '@common/debug-mangos-select';
-import { qhyper, useWasmBackends, clearBackends } from '..';
+import { qhyper, useWasmBackendHyperGeom, clearBackendHyperGeom } from '..';
 
 const qhyperLogs = select('qhyper');
 const qhyperWarns = qhyperLogs("argument out of domain in '%s'");
@@ -129,12 +129,12 @@ describe('qhyper(p,m,n,k,log)', function () {
         })
         it('(28 sec) wasm-accelerated test, p=0.5, nr=2**31-1, nb=2**31-1, n=2**31-1',async () => {
             // initialize wasm
-            await useWasmBackends();
+            await useWasmBackendHyperGeom();
             const start = Date.now();
             const result = qhyper(0.5,2**31-1,2**31-1,2**31-1);
             const stop = Date.now();
             console.log(`(wasm) duration: ${ms(stop-start)}`);
-            clearBackends();
+            clearBackendHyperGeom();
             expect(result).toBe(1073741806);
         });
     });

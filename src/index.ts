@@ -106,8 +106,8 @@ import {
     qhyper,
     rhyper,
     rhyperOne,
-    useWasmBackends as useHyperGeomBackend,
-    clearBackends as clearHyperGeomBackend
+    useWasmBackendHyperGeom,
+    clearBackendHyperGeom
 } from './lib/distributions/hypergeometric';
 
 import {
@@ -318,8 +318,8 @@ const defaultObservableNoteBook = {
     qhyper,
     rhyper,
     rhyperOne,
-    useHyperGeomBackend,
-    clearHyperGeomBackend,
+    useWasmBackendHyperGeom,
+    clearBackendHyperGeom,
     //
     useSignRankBackend,
     clearSignRankBackend,
@@ -503,8 +503,8 @@ export {
     qhyper,
     rhyper,
     rhyperOne,
-    useHyperGeomBackend,
-    clearHyperGeomBackend,
+    useWasmBackendHyperGeom,
+    clearBackendHyperGeom,
     //
     useSignRankBackend,
     clearSignRankBackend,
