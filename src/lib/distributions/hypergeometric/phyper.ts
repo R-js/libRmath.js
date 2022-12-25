@@ -24,7 +24,7 @@ import { dhyper } from './dhyper';
 //NOTE: p[d]hyper is not  typo!!
 //const printer_pdhyper = debug('pdhyper');
 
-function pdhyper(x: number, NR: number, NB: number, n: number, log_p: boolean): number {
+function pdhyper(x: number, NR: number, NB: number, n: number, logP: boolean): number {
     /*
      * Calculate
      *
@@ -48,7 +48,7 @@ function pdhyper(x: number, NR: number, NB: number, n: number, log_p: boolean): 
     }
 
     const ss = sum;
-    return log_p ? Math.log1p(ss) : 1 + ss;
+    return logP ? Math.log1p(ss) : 1 + ss;
 }
 
 /* FIXME: The old phyper() code was basically used in ./qhyper.c as well
@@ -59,7 +59,7 @@ const printer_phyper = debug('phyper');
 export function phyper(x: number, nr: number, nb: number, nn: number, lowerTail = true, logP = false): number {
     /* Sample of  n balls from  NR red  and	 NB black ones;	 x are red */
     let lower_tail = lowerTail; //copy it gets changed
-    const log_p = logP;
+
         
     if (isNaN(x)
         ||
@@ -114,31 +114,31 @@ export function phyper(x: number, nr: number, nb: number, nn: number, lowerTail 
         lower_tail = !lower_tail;
     }
 
-    if (x < 0 || x < nn - nb) return R_DT_0(lower_tail, log_p);
+    if (x < 0 || x < nn - nb) return R_DT_0(lower_tail, logP);
     // if x>=nr then also x>=nn (this is true at the same time because of condition A)
     // these clauses cannot be true at the same time:
     //   1. condition A ot be not true
     //   2. (x >= k AND x < nr) 
     if (x >= nr){
-        return R_DT_1(lower_tail, log_p);
+        return R_DT_1(lower_tail, logP);
     }
 
     if(x >= nn) { // this condition does not happen? (see above)
         printer_phyper('trace x>=nn x=%d nr=%d nb=%d nn=%d', ox, onr, onb, onn);
-        return R_DT_1(lower_tail, log_p);
+        return R_DT_1(lower_tail, logP);
     }
 
-    const d = dhyper(x, nr, nb, nn, log_p);
+    const d = dhyper(x, nr, nb, nn, logP);
 
     if (
-        (!log_p && d == 0.)
+        (!logP && d == 0.)
         ||
-        (log_p && d == -Infinity)
+        (logP && d == -Infinity)
     ) {
-        return R_DT_0(lowerTail, log_p);
+        return R_DT_0(lowerTail, logP);
     }
 
-    const pd = pdhyper(x, nr, nb, nn, log_p);
+    const pd = pdhyper(x, nr, nb, nn, logP);
 
-    return log_p ? R_DT_log(lower_tail, log_p, d + pd) : R_D_Lval(lower_tail, d * pd);
+    return logP ? R_DT_log(lower_tail, logP, d + pd) : R_D_Lval(lower_tail, d * pd);
 }

@@ -17,25 +17,23 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 export { dhyper } from './dhyper';
 export { phyper } from './phyper';
 export { qhyper } from './qhyper';
-import { registerBackend as registerQHyperBackend, unRegisterBackend as unRegisterQHyperBackend } from './qhyper';
+import { registerBackend, unRegisterBackend } from './qhyper';
 import { rhyperOne } from './rhyper';
 import { repeatedCall64 } from '@lib/r-func';
 import { initWasm as initWasmQhyper } from './qhyper_wasm';
 import type { QHyperFunctionMap } from './qhyper_wasm';
 
-//rhyper(nn, m, n, k)
 export function rhyper(N: number, nn1in: number, nn2in: number, kkin: number): Float64Array {
    return repeatedCall64(N, rhyperOne, nn1in, nn2in, kkin);
 }
 
-export async function useWasmBackends(): Promise<void> {
+export async function useWasmBackendHyperGeom(): Promise<void> {
    const fns: QHyperFunctionMap = await initWasmQhyper();
-   registerQHyperBackend(fns);
-   //  accellerate more functions ??
+   registerBackend(fns);
 }
 
-export function clearBackends(): boolean {
-   return unRegisterQHyperBackend(); // && unRegisterPHyperBackend etc
+export function clearBackendHyperGeom(): boolean {
+   return unRegisterBackend();
 }
 
 export  { rhyperOne };

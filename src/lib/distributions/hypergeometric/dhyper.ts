@@ -17,23 +17,25 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import { debug } from '@mangos/debug';
 
-import { ML_ERR_return_NAN2, lineInfo4,  } from '@common/logger';
+import { ML_ERR_return_NAN2, lineInfo4, } from '@common/logger';
 import { R_D__0, R_D__1, R_D_negInonint, R_D_nonint_check } from '@lib/r-func';
 import { dbinom_raw } from '@dist/binomial/dbinom';
 
 const printer = debug('dhyper');
 
-export function dhyper(x: number, r: number, b: number, n: number, give_log = false): number {
+export function dhyper(x: number, r: number, b: number, n: number, log = false): number {
 
-    if (isNaN(x) || isNaN(r) || isNaN(b) || isNaN(n)) return NaN;
+    if (isNaN(x) || isNaN(r) || isNaN(b) || isNaN(n)) {
+        return NaN;
+    }
 
     if (R_D_negInonint(r) || R_D_negInonint(b) || R_D_negInonint(n) || n > r + b) {
         return ML_ERR_return_NAN2(printer, lineInfo4);
     }
-    if (x < 0) { 
-        return R_D__0(give_log);
+    if (x < 0) {
+        return R_D__0(log);
     }
-    const rc = R_D_nonint_check(give_log, x, printer); // incl warning
+    const rc = R_D_nonint_check(log, x, printer); // incl warning
     if (rc !== undefined) {
         return rc;
     }
@@ -42,17 +44,17 @@ export function dhyper(x: number, r: number, b: number, n: number, give_log = fa
     b = Math.round(b);
     n = Math.round(n);
 
-    if (n < x || r < x || n - x > b) return R_D__0(give_log);
+    if (n < x || r < x || n - x > b) return R_D__0(log);
     if (n === 0) { // implies x < n is false so x ===0
-        return R_D__1(give_log);
+        return R_D__1(log);
     }
 
     const p = n / (r + b);
     const q = (r + b - n) / (r + b);
 
-    const p1 = dbinom_raw(x, r, p, q, give_log);
-    const p2 = dbinom_raw(n - x, b, p, q, give_log);
-    const p3 = dbinom_raw(n, r + b, p, q, give_log);
+    const p1 = dbinom_raw(x, r, p, q, log);
+    const p2 = dbinom_raw(n - x, b, p, q, log);
+    const p3 = dbinom_raw(n, r + b, p, q, log);
 
-    return give_log ? p1 + p2 - p3 : (p1 * p2) / p3;
+    return log ? p1 + p2 - p3 : (p1 * p2) / p3;
 }
