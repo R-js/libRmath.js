@@ -17,6 +17,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import { debug  } from '@mangos/debug';
 import { ML_ERR_return_NAN2, lineInfo4 } from '@common/logger';
+import { exp, round, log as _log, sqrt, abs } from '@lib/r-func';
+
 
 import {
     DBL_MANT_DIG,
@@ -30,42 +32,42 @@ import {
 
 const printer = debug('dnorm');
 
-const PRECISION_LIMIT = Math.sqrt(-2 * M_LN2 * (DBL_MIN_EXP + 1 - DBL_MANT_DIG));
+const PRECISION_LIMIT = sqrt(-2 * M_LN2 * (DBL_MIN_EXP + 1 - DBL_MANT_DIG));
 
-export function dnorm4(x: number, mu = 0, sigma = 1, give_log = false): number {
-    if (isNaN(x) || isNaN(mu) || isNaN(sigma)) {
+export function dnorm4(x: number, mean = 0, sd = 1, log = false): number {
+    if (isNaN(x) || isNaN(mean) || isNaN(sd)) {
         return NaN;
     }
 
-    if (!isFinite(sigma)) {
-        return R_D__0(give_log);
+    if (!isFinite(sd)) {
+        return R_D__0(log);
     }
 
-    if (!isFinite(x) && mu === x) {
-        return NaN; /* x-mu is NaN */
+    if (!isFinite(x) && mean === x) {
+        return NaN; /* x-mean is NaN */
     }
 
-    if (sigma <= 0) {
-        if (sigma < 0) {
+    if (sd <= 0) {
+        if (sd < 0) {
             return ML_ERR_return_NAN2(printer, lineInfo4);
         }
-        /* sigma == 0 */
-        return x === mu ? Infinity : R_D__0(give_log);
+        /* sd == 0 */
+        return x === mean ? Infinity : R_D__0(log);
     }
 
-    x = (x - mu) / sigma;
+    x = (x - mean) / sd;
 
-    if (!isFinite(x)) return R_D__0(give_log);
+    if (!isFinite(x)) return R_D__0(log);
 
-    x = Math.abs(x);
-    if (x >= 2 * Math.sqrt(Number.MAX_VALUE)) {
-        return R_D__0(give_log);
+    x = abs(x);
+    if (x >= 2 * sqrt(Number.MAX_VALUE)) {
+        return R_D__0(log);
     }
-    if (give_log) {
-        return -(M_LN_SQRT_2PI + 0.5 * x * x + Math.log(sigma));
+    if (log) {
+        return -(M_LN_SQRT_2PI + 0.5 * x * x + _log(sd));
     }
 
-    if (x < 5) return (M_1_SQRT_2PI * Math.exp(-0.5 * x * x)) / sigma;
+    if (x < 5) return (M_1_SQRT_2PI * exp(-0.5 * x * x)) / sd;
 
     /* ELSE:
 
@@ -96,7 +98,7 @@ export function dnorm4(x: number, mu = 0, sigma = 1, give_log = false): number {
 
      * If we do not have IEEE this is still an improvement over the naive formula.
      */
-    const x1 = ldexp(Math.round(ldexp(x, 16)), -16); //  R_forceint(x * 65536) / 65536 =
+    const x1 = ldexp(round(ldexp(x, 16)), -16); //  R_forceint(x * 65536) / 65536 =
     const x2 = x - x1;
-    return (M_1_SQRT_2PI / sigma) * (Math.exp(-0.5 * x1 * x1) * Math.exp((-0.5 * x2 - x1) * x2));
+    return (M_1_SQRT_2PI / sd) * (exp(-0.5 * x1 * x1) * exp((-0.5 * x2 - x1) * x2));
 }

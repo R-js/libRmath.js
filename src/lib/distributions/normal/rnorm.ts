@@ -23,13 +23,13 @@ import { globalNorm } from '@rng/global-rng';
 
 const printer = debug('rnorm');
 
-export function rnormOne(mu = 0, sigma = 1, ): number {
+export function rnormOne(mean = 0, sd = 1): number {
     const rng = globalNorm()
-    if (isNaN(mu) || !isFinite(sigma) || sigma < 0) {
+    if (isNaN(mean) || !isFinite(sd) || sd < 0) {
         return ML_ERR_return_NAN2(printer, lineInfo4);
     }
-    if (sigma === 0 || !isFinite(mu)) {
-        return mu; /* includes mu = +/- Inf with finite sigma */
+    if (sd === 0 || !isFinite(mean)) {
+        return mean; /* includes mean = +/- Inf with finite sd */
     }
-    return mu + sigma * rng.random();
+    return mean + sd * rng.random();
 }
