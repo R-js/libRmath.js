@@ -23,8 +23,8 @@ import { repeatedCall64 } from '@lib/r-func';
 import { initWasm as initWasmQhyper } from './qhyper_wasm';
 import type { QHyperFunctionMap } from './qhyper_wasm';
 
-export function rhyper(N: number, nn1in: number, nn2in: number, kkin: number): Float64Array {
-   return repeatedCall64(N, rhyperOne, nn1in, nn2in, kkin);
+export function rhyper(nn: number, m: number, n: number, k: number): Float64Array {
+   return repeatedCall64(nn, rhyperOne, m, n, k);
 }
 
 export async function useWasmBackendHyperGeom(): Promise<void> {

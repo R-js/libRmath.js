@@ -20,7 +20,7 @@ import { ML_ERR_return_NAN2, lineInfo4 } from '@common/logger';
 import { globalUni } from '@lib/rng';
 const printer_rlogis = debug('rlogis');
 
-export function rlogisOne(location: number, scale: number): number {
+export function rlogisOne(location = 0, scale = 1): number {
     const rng = globalUni()
     if (isNaN(location) || !isFinite(scale)) {
         return ML_ERR_return_NAN2(printer_rlogis, lineInfo4);

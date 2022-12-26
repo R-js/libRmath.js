@@ -171,6 +171,9 @@ const answ = BesselJ(3, 0.4);
     - [The F Distribution](#the-f-distribution)
     - [The Gamma Distribution](#the-gamma-distribution)
     - [The Geometric Distribution](#the-geometric-distribution)
+    - [The Hypergeometric Distribution (Web Assembly accalerated)](#the-hypergeometric-distribution-web-assembly-accalerated)
+      - [Web Assembly backend](#web-assembly-backend)
+    - [The Logistic Distribution](#the-logistic-distribution)
 - [END OF OLD DOC](#end-of-old-doc)
       - [`qunif`](#qunif)
       - [`runif`](#runif)
@@ -696,6 +699,129 @@ let dg = [1, 2, 3, 4, 5, 6, 7, 8, 9]
 console.log(dg);
 // -> [ 0, 0, 1,  2, 3, 4, 5, 7, 10 ]
 ```
+
+### The Hypergeometric Distribution (Web Assembly accalerated)
+
+| type                     | function spec                                                                                         |
+| ------------------------ | ----------------------------------------------------------------------------------------------------- |
+| density function         | `function dhyper(x: number, m: number, n: number, k: number, log = false): number`                    |
+| distribution function    | `function phyper(q: number, m: number, n: number, k: number, lowerTail = true, logP = false): number` |
+| quantile function        | `function qhyper(p: number, m: number, n: number, k: number, lowerTail = true, logP = false): number` |
+| random generation (bulk) | `function rhyper(nn: number, m: number, n: number, k: number): Float64Array`                          |
+| ranom generation         | `function rhyperOne(m: number, n: number, k: number): number`                                         |
+
+Arguments:
+- `x, q`: quantile
+- `p`: probability
+- `m`: the number of white balls in the urn.
+- `n`: the number of black balls in the urn.
+- `k`: the number of balls drawn from the urn, hence must be in `0,1,…,m+n`.
+- `p`: probability, it must be between 0 and 1.
+- `nn`: number of observations.
+- `log, logP`: if `true`, probabilities/densities `p` are returned as `log(p)`.
+- `lowerTail`: if `true` (default), probabilities are `P[ X ≤ x]`, otherwise, `P[X > x]`.
+
+Example:
+
+R console:
+```R
+m <- 10; n <- 7; k <- 8
+x <- 0:(k+1)
+rbind(phyper(x, m, n, k), dhyper(x, m, n, k))
+     [,1]         [,2]       [,3]     [,4]      [,5]      [,6]      [,7]       [,8]       [,9] [,10]
+[1,]    0 0.0004113534 0.01336898 0.117030 0.4193747 0.7821884 0.9635952 0.99814891 1.00000000     1
+[2,]    0 0.0004113534 0.01295763 0.103661 0.3023447 0.3628137 0.1814068 0.03455368 0.00185109     0
+```
+
+Equivalent in js (fidelity):
+```typescript
+import { phyper, dhyper } from "lib-r-math.js";
+var m = 10;
+var n = 7;
+var k = 8;
+var xs = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+
+console.log( ...xs.map( x => phyper(x, m, n, k)));
+0 0.000411353352529823 0.01336898395721926 0.11703002879473474 0.4193747429041546 0.7821883998354585 0.9635952283011107 0.9981489099136158 1 1
+
+console.log( ...xs.map( x => dhyper(x, m, n, k)));
+0 0.000411353352529823 0.012957630604689437 0.10366104483751548 0.30234471410941993 0.3628136569313041 0.18140682846565206 0.03455368161250514 0.001851090086384205 0 
+```
+
+#### Web Assembly backend
+
+Use `useWasmBackendHyperGeom` and `clearBackendHyperGeom` to enable/disable wasm backend.
+
+```typescript
+import {  
+    useWasmBackendHyperGeom,
+    clearBackendHyperGeom,
+    //
+    qhyper
+    } from 'lib-r-math.js'
+
+// the functions "qhyper" will be accelerated (on part with native C for node >=16)
+await useWasmBackendHyperGeom();
+
+qhyper(0.5, 2**31-1, 2**31-1, 2**31-1); // 28 sec in wasm big numbers to make it do some work
+// -> 1073741806
+
+clearBackendHyperGeom(); // revert to js backend
+
+qhyper(0.5, 2**31-1, 2**31-1, 2**31-1); // this will take 428 sec
+// -> 1073741806
+```
+
+### The Logistic Distribution
+
+| type                     | function spec                                                                                 |
+| ------------------------ | --------------------------------------------------------------------------------------------- |
+| density function         | `function dlogis(x: number, location = 0, scale = 1, log = false): number`                    |
+| distribution function    | `function plogis(x: number, location = 0, scale = 1, lowerTail = true, logP = false): number` |
+| quantile function        | `function qlogis(p: number, location = 0, scale = 1, lowerTail = true, logP = false): number` |
+| random generation (bulk) | `function rlogis(n: number, location = 0, scale = 1): Float64Array`                           |
+| ranom generation         | `function rlogisOne(location = 0, scale = 1): number`                                         |
+
+
+Arguments:
+- `x, q`: quantile
+- `p`: probability
+- `location, scale`: location and scale parameters.
+- `log, logP`: if `true`, probabilities/densities `p` are returned as `log(p)`.
+- `lowerTail`: if `true` (default), probabilities are `P[ X ≤ x]`, otherwise, `P[X > x]`.
+
+Example:
+
+R console:
+```R
+> RNGkind()
+[1] "Mersenne-Twister" "Inversion"        "Rejection"       
+> set.seed(12345)
+> var(rlogis(4000, 0, scale = 5)) 
+[1] 80.83207
+```
+
+Equivalent in js (fidelity):
+```typescript
+import { setSeed, RNGkind, rlogis } from "lib-r-math.js";
+
+const uniform = RNGkind.uniform.MERSENNE_TWISTER;
+const normal = RNGkind.normal.INVERSION;
+
+RNGkind({ uniform, normal });
+setSeed(12345);
+
+let samples = rlogis(4000, 0, 5); // get 4000 samples
+
+// calculate sample variance
+const N = samples.length;
+const µ = samples.reduce((sum, x) => sum + x, 0) / N;
+const S = (1 / (N - 1)) * samples.reduce((sum, x) => sum + (x - µ) ** 2, 0); // sample variance
+
+console.log(S);
+// -> 80.83207248898108 (fidelity with R)
+```
+
 
 # END OF OLD DOC
 

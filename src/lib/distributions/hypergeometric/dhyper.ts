@@ -23,13 +23,13 @@ import { dbinom_raw } from '@dist/binomial/dbinom';
 
 const printer = debug('dhyper');
 
-export function dhyper(x: number, r: number, b: number, n: number, log = false): number {
+export function dhyper(x: number, m: number, n: number, k: number, log = false): number {
 
-    if (isNaN(x) || isNaN(r) || isNaN(b) || isNaN(n)) {
+    if (isNaN(x) || isNaN(m) || isNaN(n) || isNaN(k)) {
         return NaN;
     }
 
-    if (R_D_negInonint(r) || R_D_negInonint(b) || R_D_negInonint(n) || n > r + b) {
+    if (R_D_negInonint(m) || R_D_negInonint(n) || R_D_negInonint(k) || k > m + n) {
         return ML_ERR_return_NAN2(printer, lineInfo4);
     }
     if (x < 0) {
@@ -40,21 +40,21 @@ export function dhyper(x: number, r: number, b: number, n: number, log = false):
         return rc;
     }
     x = Math.round(x);
-    r = Math.round(r);
-    b = Math.round(b);
+    m = Math.round(m);
     n = Math.round(n);
+    k = Math.round(k);
 
-    if (n < x || r < x || n - x > b) return R_D__0(log);
-    if (n === 0) { // implies x < n is false so x ===0
+    if (k < x || m < x || k - x > n) return R_D__0(log);
+    if (k === 0) { // implies x < k is false so x ===0
         return R_D__1(log);
     }
 
-    const p = n / (r + b);
-    const q = (r + b - n) / (r + b);
+    const p = k / (m + n);
+    const q = (m + n - k) / (m + n);
 
-    const p1 = dbinom_raw(x, r, p, q, log);
-    const p2 = dbinom_raw(n - x, b, p, q, log);
-    const p3 = dbinom_raw(n, r + b, p, q, log);
+    const p1 = dbinom_raw(x, m, p, q, log);
+    const p2 = dbinom_raw(k - x, n, p, q, log);
+    const p3 = dbinom_raw(k, m + n, p, q, log);
 
     return log ? p1 + p2 - p3 : (p1 * p2) / p3;
 }

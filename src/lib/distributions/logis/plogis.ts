@@ -27,7 +27,7 @@ export function Rf_log1pexp(x: number): number {
 
 const printer_plogis = debug('plogis');
 
-export function plogis(x: number, location = 0, scale = 1, lower_tail = true, log_p = false): number {
+export function plogis(x: number, location = 0, scale = 1, lowerTail = true, logP = false): number {
     if (isNaN(x) || isNaN(location) || isNaN(scale)) return NaN;
 
     if (scale <= 0.0) {
@@ -35,14 +35,14 @@ export function plogis(x: number, location = 0, scale = 1, lower_tail = true, lo
     }
 
     x = (x - location) / scale;
-    const rc = R_P_bounds_Inf_01(lower_tail, log_p, x);
+    const rc = R_P_bounds_Inf_01(lowerTail, logP, x);
     if (rc !== undefined) {
         return rc;
     }
 
-    if (log_p) {
+    if (logP) {
         // log(1 / (1 + exp( +- x ))) = -log(1 + exp( +- x))
-        return -Rf_log1pexp(lower_tail ? -x : x);
+        return -Rf_log1pexp(lowerTail ? -x : x);
     }
-    return 1 / (1 + Math.exp(lower_tail ? -x : x));
+    return 1 / (1 + Math.exp(lowerTail ? -x : x));
 }
