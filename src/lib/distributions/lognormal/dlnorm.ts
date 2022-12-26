@@ -16,29 +16,28 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { debug } from '@mangos/debug';
 import { ML_ERR_return_NAN2, lineInfo4 } from '@common/logger';
-import { M_1_SQRT_2PI, M_LN_SQRT_2PI, R_D__0 } from '@lib/r-func';
+import { M_1_SQRT_2PI, M_LN_SQRT_2PI, R_D__0, log as _log } from '@lib/r-func';
 const printer = debug('dlnorm');
 
-
-export function dlnorm(fx: number, meanlog = 0, sdlog = 1, give_log = false): number {
-    if (isNaN(fx) || isNaN(meanlog) || isNaN(sdlog)) {
-        return fx + meanlog + sdlog; // preserve NaN metatdata bits
+export function dlnorm(x: number, meanlog = 0, sdlog = 1, log = false): number {
+    if (isNaN(x) || isNaN(meanlog) || isNaN(sdlog)) {
+        return x + meanlog + sdlog; // preserve NaN metatdata bits
     }
     if (sdlog <= 0) {
         if (sdlog < 0) {
             return ML_ERR_return_NAN2(printer, lineInfo4);
         }
         // sdlog == 0 :
-        return Math.log(fx) === meanlog ? Infinity : R_D__0(give_log);
+        return Math.log(x) === meanlog ? Infinity : R_D__0(log);
     }
-    if (fx <= 0) {
-        return R_D__0(give_log);
+    if (x <= 0) {
+        return R_D__0(log);
     }
     // Z- transform
-    const y = (Math.log(fx) - meanlog) / sdlog;
-    return give_log
-        ? -(M_LN_SQRT_2PI + 0.5 * y * y + Math.log(fx * sdlog))
-        : (M_1_SQRT_2PI * Math.exp(-0.5 * y * y)) / (fx * sdlog);
+    const y = (_log(x) - meanlog) / sdlog;
+    return log
+        ? -(M_LN_SQRT_2PI + 0.5 * y * y + _log(x * sdlog))
+        : (M_1_SQRT_2PI * Math.exp(-0.5 * y * y)) / (x * sdlog);
     // M_1_SQRT_2PI = 1 / sqrt( 2*pi )
     // M_LN_SQRT_2PI = log( sqrt( 2*pi ) )
 }

@@ -18,7 +18,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import { rbinomOne } from '@dist/binomial/rbinom';
 import { emptyFloat64Array, sumfp64 } from '@lib/r-func';
 
-
 export function rmultinom(n: number, size: number, prob: Float64Array): Float64Array | never {
     // returns matrix n x prob
     if (n < 0) {

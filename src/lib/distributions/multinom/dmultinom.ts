@@ -70,7 +70,7 @@ function (x, size = NULL , prob, log = FALSE)
 */
 import { debug } from '@mangos/debug';
 import { lgammafn_sign } from '@special/gamma/lgammafn_sign';
-import { sumfp } from '@lib/r-func';
+import { sumfp, log as _log, exp, trunc } from '@lib/r-func';
 
 const printer = debug('dmultinom');
 
@@ -78,15 +78,15 @@ function isZeroOrPositiveAndFinite(x: number) {
     return x >= 0;
 }
 
-export function dmultinomLikeR(x: Float32Array, prob: Float32Array, asLog = false): number | never {
-    const rc = dmultinom(x, prob, asLog);
+export function dmultinomLikeR(x: Float32Array, prob: Float32Array, log = false): number | never {
+    const rc = dmultinom(x, prob, log);
     if (isNaN(rc)) {
         throw new Error(`Error in dmultinom`);
     }
     return rc;
 }
 
-export function dmultinom(x: Float32Array, prob: Float32Array, asLog = false): number {
+export function dmultinom(x: Float32Array, prob: Float32Array, log = false): number {
    
     // prob and x must be the same length
     if (x.length !== prob.length) {
@@ -112,7 +112,7 @@ export function dmultinom(x: Float32Array, prob: Float32Array, asLog = false): n
     // this is not the same as round,
     // must do because of R fidelity
     x.forEach((v, i, arr) => {
-        arr[i] = Math.trunc(v + 0.5);
+        arr[i] = trunc(v + 0.5);
     });
 
     if (x.every(isZeroOrPositiveAndFinite) === false) {
@@ -127,14 +127,14 @@ export function dmultinom(x: Float32Array, prob: Float32Array, asLog = false): n
     for (let i = 0; i < prob.length; i++) {
         if (prob[i] === 0) {
             if (x[i] !== 0) {
-                return asLog ? -Infinity : 0;
+                return log ? -Infinity : 0;
             }
             continue;
         }
-        rc += x[i] * Math.log(prob[i]) - lgammafn_sign(x[i] + 1)
+        rc += x[i] * _log(prob[i]) - lgammafn_sign(x[i] + 1)
     }
     /*if (N === 0) {
         return asLog ? 0 : 1;
     }*/
-    return asLog ? rc : Math.exp(rc);
+    return log ? rc : exp(rc);
 }

@@ -174,6 +174,8 @@ const answ = BesselJ(3, 0.4);
     - [The Hypergeometric Distribution (Web Assembly accalerated)](#the-hypergeometric-distribution-web-assembly-accalerated)
       - [Web Assembly backend](#web-assembly-backend)
     - [The Logistic Distribution](#the-logistic-distribution)
+    - [The Log Normal Distribution](#the-log-normal-distribution)
+    - [The Multinomial Distribution](#the-multinomial-distribution)
 - [END OF OLD DOC](#end-of-old-doc)
       - [`qunif`](#qunif)
       - [`runif`](#runif)
@@ -787,6 +789,7 @@ Arguments:
 - `x, q`: quantile
 - `p`: probability
 - `location, scale`: location and scale parameters.
+- `n`: number of observations.
 - `log, logP`: if `true`, probabilities/densities `p` are returned as `log(p)`.
 - `lowerTail`: if `true` (default), probabilities are `P[ X ≤ x]`, otherwise, `P[X > x]`.
 
@@ -819,7 +822,107 @@ const µ = samples.reduce((sum, x) => sum + x, 0) / N;
 const S = (1 / (N - 1)) * samples.reduce((sum, x) => sum + (x - µ) ** 2, 0); // sample variance
 
 console.log(S);
-// -> 80.83207248898108 (fidelity with R)
+// -> 80.83207248898108 (fidelity proven)
+```
+
+### The Log Normal Distribution
+
+| type                     | function spec                                                                                |
+| ------------------------ | -------------------------------------------------------------------------------------------- |
+| density function         | `function dlnorm(x: number, meanlog = 0, sdlog = 1, log = false): number`                    |
+| distribution function    | `function plnorm(q: number, meanlog = 0, sdlog = 1, lowerTail = true, logP = false): number` |
+| quantile function        | `function qlnorm(p: number, meanlog = 0, sdlog = 1, lowerTail = true, logP = false): number` |
+| random generation (bulk) | `function rlnorm(n: number, meanlog = 0, sdlog = 1): Float32Array`                           |
+| ranom generation         | `function rlnormOne(meanlog = 0, sdlog = 1): number `                                        |
+
+Arguments:
+- `x, q`: quantile
+- `p`: probability
+- `meanlog, sdlog`: mean and standard deviation of the distribution on the log scale with default values of 0 and 1 respectively.
+- `n`: number of observations.
+- `log, logP`: if `true`, probabilities/densities `p` are returned as `log(p)`.
+- `lowerTail`: if `true` (default), probabilities are `P[ X ≤ x]`, otherwise, `P[X > x]`.
+
+Examples:
+
+R console:
+```R
+dlnorm(1) == dnorm(0)
+[1] TRUE
+```
+
+Equivalent in js (fidelity):
+```typescript
+import { dlnorm, dnorm } from "lib-r-math.js";
+console.log(dlnorm(1) === dnorm(0))
+// -> true
+```
+
+### The Multinomial Distribution
+
+| type                      | function spec                                                                       |
+| ------------------------- | ----------------------------------------------------------------------------------- |
+| density function          | `function dmultinom(x: Float32Array, prob: Float32Array, log = false): number`      |
+| density function (R like) | `function dmultinomLikeR(x: Float32Array, prob: Float32Array, log = false): number` |
+| random generation (bulk)  | `function rmultinom(n: number, size: number, prob: Float64Array): Float64Array `    |
+
+Arguments:
+- `x`: quantile
+- `n`: number of random vectors to draw.
+- `size`:
+  - integer, say `N`, specifying the total number of objects that are put into `K` boxes in the typical multinomial experiment.
+  - `dmultinom` omit's the `size` parameter (used in R version), see "Details" below for motivation.
+- `prob`: numeric non-negative array of length `K`, specifying the probability for the `K` classes; is internally normalized to sum 1. Infinite and missing values are not allowed.
+- `log`: if `true`, log probabilities are computed.
+
+Motivation for removing `size` argument from `dmultinom`:
+
+The code snippet shows clarification
+
+```R
+N <- sum(x)
+if (is.null(size)) # if size is the default (null) then assign it the value N (number of ) 
+  size <- N
+else if (size != N) # if manually set AND not equal to sum(x) throw Error,
+  stop("size != sum(x), i.e. one is wrong")
+```
+
+Because of the above R code allowing manual setting of `size` in dmultinom is omitted
+
+
+Example:
+
+R console:
+```R
+> RNGkind()
+[1] "Mersenne-Twister" "Inversion"        "Rejection"  
+> set.seed(1234)
+> rmultinom(10, size = 12, prob = c(0.1,0.2,0.8))
+     [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10]
+[1,]    0    1    2    0    1    1    0    0    0     0
+[2,]    3    3    2    1    2    2    4    4    1     1
+[3,]    9    8    8   11    9    9    8    8   11    11
+> 
+```
+
+Equivalent in js (fidelity):
+```typescript
+import { RNGkind, setSeed, rmultinom } from 'lib-r-math.js'
+
+RNGkind({
+  uniform: RNGkind.uniform.MERSENNE_TWISTER,
+  normal: RNGkind.normal.INVERSION
+});
+
+setSeed(1234); // use same seed as in R example
+
+const answer = rmultinom(10, 12, new Float64Array([0.1, 0.2, 0.8]));
+// returns a (row-first) matrix as a single Float64Array with size (prob.length x size)
+
+console.log(...answer);
+// -> 0 3 9 1 3 8 2 2 8 0 1 11 1 2 9 1 2 9 0 4 8 0 4 8 0 1 11 0 1 11
+// first column 0 3 9
+// second column 1 3 8  etc etc
 ```
 
 

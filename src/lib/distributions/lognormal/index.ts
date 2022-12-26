@@ -26,4 +26,3 @@ export { rlnormOne }
 export function rlnorm(n: number, meanlog = 0, sdlog = 1): Float32Array {
   return repeatedCall(n, rlnormOne, meanlog, sdlog)
 }
-
