@@ -54,11 +54,11 @@ describe('bessel function of first kind (besselJ)', function () {
             expect(actual).toEqualFloatingPointBinary(0);
             expect(msgBesselJInternal()).toEqual([["argument out of range in '%s'", 'J_bessel_err_nr=1000']]);
         });
-        it('x=27.595, alpha=398.5', () => {
+        it('x=27.595, nu=398.5', () => {
             const actual = besselJ(27.595, 398.5);
             expect(actual).toBe(0);
             expect(msgBesselJ()).toEqual([
-                ['debug (alpha=%d, na=%d, nb=%d, rc=%j', 0.5, 398, 399, { nb: 399, ncalc: 320, x: 0 } ],
+                ['debug (nu=%d, na=%d, nb=%d, rc=%j', 0.5, 398, 399, { nb: 399, ncalc: 320, x: 0 } ],
                 ['bessel_j(%d,nu=%d): precision lost in result', 27.595, 398.5]
             ]);
             expect(msgBesselJInternal()).toEqual([['rest: x=%d, nb=%d\t', 27.595, 399]]);

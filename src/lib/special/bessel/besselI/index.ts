@@ -29,34 +29,34 @@ const printer = debug('besselI');
 // Modified Bessel function of the first kind
 
 /* .Internal(besselI(*)) : */
-function BesselI(x: number, alpha: number, expo = false): number {
+function BesselI(x: number, nu: number, exponScaled = false): number {
     /* NaNs propagated correctly */
-    if (isNaN(x) || isNaN(alpha)) return x + alpha;
+    if (isNaN(x) || isNaN(nu)) return x + nu;
     if (x < 0) {
         ML_ERROR2(ME.ME_RANGE, 'bessel_i', printer);
         return NaN;
     }
-    const ize = expo ? 2 : 1;
-    const na = floor(alpha);
-    if (alpha < 0) {
+    const ize = exponScaled ? 2 : 1;
+    const na = floor(nu);
+    if (nu < 0) {
         /* Using Abramowitz & Stegun  9.6.2 & 9.6.6
          * this may not be quite optimal (CPU and accuracy wise) */
         return (
-            BesselI(x, -alpha, expo) +
-            (alpha === na
-                ? /* sin(pi * alpha) = 0 */ 0
-                : ((BesselK(x, -alpha, expo) * (ize === 1 ? 2 : 2 * exp(-2 * x))) / PI) * sinpi(-alpha))
+            BesselI(x, -nu, exponScaled) +
+            (nu === na
+                ? /* sin(pi * nu) = 0 */ 0
+                : ((BesselK(x, -nu, exponScaled) * (ize === 1 ? 2 : 2 * exp(-2 * x))) / PI) * sinpi(-nu))
         );
     }
-    const nb = 1 + trunc(na); /* nb-1 <= alpha < nb */
-    alpha -= nb - 1;
+    const nb = 1 + trunc(na); /* nb-1 <= nu < nb */
+    nu -= nb - 1;
 
-    const rc = I_bessel(x, alpha, nb, ize);
+    const rc = I_bessel(x, nu, nb, ize);
     if (rc.ncalc !== rc.nb) {
         /* error input */
         if (rc.ncalc < 0)
-            printer('bessel_i(%d): ncalc (=%d) != nb (=%d); alpha=%d. Arg. out of range?', x, rc.ncalc, rc.nb, alpha);
-        else printer('bessel_i(%d,nu=%d): precision lost in result\n', rc.x, alpha + rc.nb - 1);
+            printer('bessel_i(%d): ncalc (=%d) != nb (=%d); nu=%d. Arg. out of range?', x, rc.ncalc, rc.nb, nu);
+        else printer('bessel_i(%d,nu=%d): precision lost in result\n', rc.x, nu + rc.nb - 1);
     }
     x = rc.x; // bi[nb - 1];
 
