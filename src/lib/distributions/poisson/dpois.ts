@@ -65,7 +65,7 @@ export function dpois_raw(x: number, lambda: number, give_log: boolean): number 
     return R_D_fexp(give_log, M_2PI * x, -stirlerr(x) - bd0(x, lambda));
 }
 
-export function dpois(x: number, lambda: number, give_log = false): number {
+export function dpois(x: number, lambda: number, log = false): number {
     if (isNaN(x) || isNaN(lambda)) {
         return NaN;
     }
@@ -74,15 +74,15 @@ export function dpois(x: number, lambda: number, give_log = false): number {
         return ML_ERR_return_NAN2(printer, lineInfo4);
     }
 
-    const rc = R_D_nonint_check(give_log, x, printer);
+    const rc = R_D_nonint_check(log, x, printer);
 
     if (rc !== undefined) {
         return rc;
     }
 
     if (x < 0 || !isFinite(x)) {
-        return R_D__0(give_log);
+        return R_D__0(log);
     }
 
-    return dpois_raw(x, lambda, give_log);
+    return dpois_raw(x, lambda, log);
 }

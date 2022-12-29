@@ -7,7 +7,7 @@ import { cl, select } from '@common/debug-mangos-select';
 
 
 
-import { dsignrank, useWasmBackend, clearBackend } from '..';
+import { dsignrank, useWasmBackendSignRank, clearBackendSignRank } from '..';
 
 const dsignrankLogs = select('dsignrank');
 const dsignrankDomainWarns = dsignrankLogs("argument out of domain in '%s'");
@@ -78,12 +78,12 @@ describe('dsignrank (wilcox sign rank)', function () {
             //         sqrt(n*(n+1)*(2*n+1)/24)
             // Z(4025500, 4000)= 0 gives 0.2561791 pnorm(z) = 0.6010937 
             // R gives Inf, so does this algo 
-            await useWasmBackend();
+            await useWasmBackendSignRank();
             const start = Date.now();
             const res = dsignrank(4025500, 4000);
             expect(res).toEqual(Infinity)
             console.log(`dsign (wasm) duration: ${ms(Date.now()-start)}`);
-            clearBackend();
+            clearBackendSignRank();
         });
         it('(no wasm) test large inputnumbers n = 4000, W= 4025500', () => {
             const start = Date.now();

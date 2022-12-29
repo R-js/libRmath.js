@@ -24,19 +24,14 @@ import { pgamma } from '@dist/gamma/pgamma';
 
 const printer = debug('ppois');
 
-export function ppois(
-    x: number,
-    lambda: number,
-    lowerTail = true,
-    logP = false,
-): number {
-    if (isNaN(x) || isNaN(lambda)) return x + lambda;
+export function ppois(q: number,lambda: number, lowerTail = true, logP = false): number {
+    if (isNaN(q) || isNaN(lambda)) return q + lambda;
 
     if (lambda < 0)
     {
         return ML_ERR_return_NAN2(printer, lineInfo4);
     }
-    if (x < 0)
+    if (q < 0)
     { 
         return R_DT_0(lowerTail, logP);
     }
@@ -44,12 +39,12 @@ export function ppois(
     {
         return R_DT_1(lowerTail, logP);
     }
-    if (!isFinite(x))
+    if (!isFinite(q))
     {
         return R_DT_1(lowerTail, logP);
     }
-    x = floor(x + 1e-7);
+    q = floor(q + 1e-7);
 
-    return pgamma(lambda, x + 1, 1, !lowerTail, logP);
+    return pgamma(lambda, q + 1, 1, !lowerTail, logP);
 }
 

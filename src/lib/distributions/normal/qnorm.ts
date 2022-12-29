@@ -19,26 +19,27 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import { debug } from '@mangos/debug';
 import { ML_ERR_return_NAN2, lineInfo4, R_Q_P01_boundaries } from '@common/logger';
 import { R_DT_CIv, R_DT_qIv } from '@dist/exp/expm1';
+import { abs, sqrt, log as _log } from '@lib/r-func';
 
 const printer = debug('qnorm');
 
-export function qnorm(p: number, mu = 0, sigma = 1, lower_tail = true, log_p = false): number {
+export function qnorm(p: number, mean = 0, sd = 1, lowerTail = true, logP = false): number {
     let r;
     let val;
 
-    if (isNaN(p) || isNaN(mu) || isNaN(sigma)) return NaN;
+    if (isNaN(p) || isNaN(mean) || isNaN(sd)) return NaN;
 
-    const rc = R_Q_P01_boundaries(lower_tail, log_p, p, -Infinity, Infinity);
+    const rc = R_Q_P01_boundaries(lowerTail, logP, p, -Infinity, Infinity);
     if (rc !== undefined) {
         return rc;
     }
-    if (sigma < 0) return ML_ERR_return_NAN2(printer, lineInfo4);
-    if (sigma === 0) return mu;
+    if (sd < 0) return ML_ERR_return_NAN2(printer, lineInfo4);
+    if (sd === 0) return mean;
 
-    const p_ = R_DT_qIv(lower_tail, log_p, p); /* real lower_tail prob. p */
+    const p_ = R_DT_qIv(lowerTail, logP, p); /* real lowerTail prob. p */
     const q = p_ - 0.5;
 
-    printer('qnorm(p=%d, m=%d, s=%d, l.t.= %s, log= %s): q = %d', p, mu, sigma, lower_tail, log_p, q);
+    printer('qnorm(p=%d, m=%d, s=%d, l.t.= %s, log= %s): q = %d', p, mean, sd, lowerTail, logP, q);
 
     /*-- use AS 241 --- */
     /* double ppnd16_(double *p, long *ifault)*/
@@ -50,7 +51,7 @@ export function qnorm(p: number, mu = 0, sigma = 1, lower_tail = true, log_p = f
             (original fortran code used PARAMETER(..) for the coefficients
              and provided hash codes for checking them...)
     */
-    if (Math.abs(q) <= 0.425) {
+    if (abs(q) <= 0.425) {
         /* 0.075 <= p <= 0.925 */
         r = 0.180625 - q * q;
         val =
@@ -81,7 +82,7 @@ export function qnorm(p: number, mu = 0, sigma = 1, lower_tail = true, log_p = f
         /* r = min(p, 1-p) < 0.075 */
         if (q > 0)
         {
-            r = R_DT_CIv(lower_tail, log_p, p);
+            r = R_DT_CIv(lowerTail, logP, p);
         }
         /* 1-p */
         else
@@ -89,7 +90,7 @@ export function qnorm(p: number, mu = 0, sigma = 1, lower_tail = true, log_p = f
             r = p_; /* = R_DT_Iv(p) ^=  p */
         }
 
-        r = Math.sqrt(-(log_p && ((lower_tail && q <= 0) || (!lower_tail && q > 0)) ? p : /* else */ Math.log(r) ) );
+        r = sqrt(-(logP && ((lowerTail && q <= 0) || (!lowerTail && q > 0)) ? p : /* else */ _log(r) ) );
         /* r = sqrt(-log(r))  <==>  min(p, 1-p) = exp( - r^2 ) */
 
         printer('close to 0 or 1: r = %7d', r);
@@ -147,5 +148,5 @@ export function qnorm(p: number, mu = 0, sigma = 1, lower_tail = true, log_p = f
         if (q < 0.0) val = -val;
         /* return (q >= 0.)? r : -r ;*/
     }
-    return mu + sigma * val;
+    return mean + sd * val;
 }

@@ -130,44 +130,45 @@ function L_finis(): number {
     return r_i[i_ix];
 }
 
+// function rhyper(nn: number, m: number, n: number, k: number): Float64Array {
 
-export function rhyperOne(nn1in: number, nn2in: number, kkin: number): number {
+export function rhyperOne(m: number, n: number, k: number): number {
 
     const rng = globalUni();
 
-    if (!isFinite(nn1in) || !isFinite(nn2in) || !isFinite(kkin)) {
+    if (!isFinite(m) || !isFinite(n) || !isFinite(k)) {
         return ML_ERR_return_NAN2(printer_rhyper, lineInfo4);
     }
 
-    nn1in = Math.round(nn1in);
-    nn2in = Math.round(nn2in);
-    kkin = Math.round(kkin);
+    m = Math.round(m);
+    n = Math.round(n);
+    k = Math.round(k);
 
-    if (nn1in < 0 || nn2in < 0 || kkin < 0 || kkin > nn1in + nn2in) {
+    if (m < 0 || n < 0 || k < 0 || k > m + n) {
         return ML_ERR_return_NAN2(printer_rhyper, lineInfo4);
     }
-    if (nn1in >= INT_MAX || nn2in >= INT_MAX || kkin >= INT_MAX) {
+    if (m >= INT_MAX || n >= INT_MAX || k >= INT_MAX) {
         /* large n -- evade integer overflow (and inappropriate algorithms)
            -------- */
         // FIXME: Much faster to give rbinom() approx when appropriate; -> see Kuensch(1989)
         // Johnson, Kotz,.. p.258 (top) mention the *four* different binomial approximations
-        if (kkin === 1) {
+        if (k === 1) {
             // Bernoulli
-            const rinv = 1 + nn2in / nn1in;
+            const rinv = 1 + n / m;
             const r = 1 / rinv;
-            return rbinomOne(kkin, r);
+            return rbinomOne(k, r);
         }
         // Slow, but safe: return  F^{-1}(U)  where F(.) = phyper(.) and  U ~ U[0,1]
         // This will take crazy long time even in C native code, I throw an error
-        //if (kkin > 1E6) {
-        //    throw new TypeError(`Blocked, these input parameters takes (even in R) 2 min to run k=${kkin},nr=${nn1in},nb=${nn2in}`);
+        //if (k > 1E6) {
+        //    throw new TypeError(`Blocked, these input parameters takes (even in R) 2 min to run k=${k},nr=${m},nb=${n}`);
         //}
-        return qhyper(rng.random(), nn1in, nn2in, kkin, false, false);
+        return qhyper(rng.random(), m, n, k, false, false);
     }
 
-    r_i[i_nn1] = nn1in;
-    r_i[i_nn2] = nn2in;
-    r_i[i_kk] = kkin;
+    r_i[i_nn1] = m;
+    r_i[i_nn2] = n;
+    r_i[i_kk] = k;
 
     let setup1: boolean;
     let setup2: boolean;

@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import { debug } from '@mangos/debug';
 import { ML_ERR_return_NAN2, lineInfo4, } from '@common/logger';
 import { cpu_csignrank } from './csignrank';
-import { R_D__0, R_D_exp, isNaN, trunc, abs, log, M_LN2, round } from '@lib/r-func';
+import { R_D__0, R_D_exp, isNaN, trunc, abs, log as _log, M_LN2, round } from '@lib/r-func';
 import { growMemory, memory } from './csignrank_wasm';
 
 import type { CSingRank, CSignRankMap } from './csignrank_wasm';
@@ -38,7 +38,7 @@ export { unRegisterBackend, registerBackend };
 
 const printer = debug('dsignrank');
 
-export function dsignrank(x: number, n: number, logX = false): number {
+export function dsignrank(x: number, n: number, log = false): number {
 
     if (isNaN(x) || isNaN(n)) {
         return x + n;
@@ -49,7 +49,7 @@ export function dsignrank(x: number, n: number, logX = false): number {
     }
 
     if (abs(x - round(x)) > 1e-7) {
-        return R_D__0(logX);
+        return R_D__0(log);
     }
 
     // both "n" and "x" are typecasted to (int) 32bit signed integer 
@@ -61,7 +61,7 @@ export function dsignrank(x: number, n: number, logX = false): number {
     x = round(x);
 
     if (x < 0 || x > (n * (n + 1)) / 2) {
-        return R_D__0(logX);
+        return R_D__0(log);
     }
 
     // int
@@ -71,7 +71,7 @@ export function dsignrank(x: number, n: number, logX = false): number {
     growMemory(c+1);
     new Float64Array(memory.buffer).fill(0, 0, c+1);
     
-    const d = R_D_exp(logX, log(_csignrank(trunc(x), n, u, c)) - n * M_LN2);
+    const d = R_D_exp(log, _log(_csignrank(trunc(x), n, u, c)) - n * M_LN2);
     return d;
 }
 

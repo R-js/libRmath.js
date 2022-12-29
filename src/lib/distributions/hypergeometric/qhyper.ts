@@ -77,44 +77,45 @@ function cpuBackendBigN(sum: number, term: number, p: number, xr: number, end: n
     return xr;
 }
 
+
 export function qhyper(
     p: number,
-    nr: number,
-    nb: number,
+    m: number,
     n: number,
+    k: number,
     lowerTail = true,
     logP = false
 ): number {
 
-    if (isNaN(p) || isNaN(nr) || isNaN(nb) || isNaN(n)) {
+    if (isNaN(p) || isNaN(m) || isNaN(n) || isNaN(k)) {
         return NaN;
     }
 
-    if (!isFinite(p) || !isFinite(nr) || !isFinite(nb) || !isFinite(n)) {
+    if (!isFinite(p) || !isFinite(m) || !isFinite(n) || !isFinite(k)) {
         return ML_ERR_return_NAN2(printer_qhyper, lineInfo4);
     }
 
-    _d[iNR] = Math.round(nr);
-    _d[iNB] = Math.round(nb);
+    _d[iNR] = Math.round(m);
+    _d[iNB] = Math.round(n);
 
     const N = _d[iNR] + _d[iNB];
 
-    n = Math.round(n);
-    if (_d[iNR] < 0 || _d[iNB] < 0 || n < 0 || n > N) return ML_ERR_return_NAN2(printer_qhyper, lineInfo4);
+    k = Math.round(k);
+    if (_d[iNR] < 0 || _d[iNB] < 0 || k < 0 || k > N) return ML_ERR_return_NAN2(printer_qhyper, lineInfo4);
 
     /* Goal:  Find  xr (= #{red balls in sample}) such that
-     *   phyper(xr,  NR,NB, n) >= p > phyper(xr - 1,  NR,NB, n)
+     *   phyper(xr,  NR,NB, k) >= p > phyper(xr - 1,  NR,NB, k)
      */
 
-    const xstart = Math.max(0, n - _d[iNB]);
-    const xend = Math.min(n, _d[iNR]);
+    const xstart = Math.max(0, k - _d[iNB]);
+    const xend = Math.min(k, _d[iNR]);
 
     const rc = R_Q_P01_boundaries(lowerTail, logP, p, xstart, xend);
     if (rc !== undefined) {
         return rc;
     }
     _d[ixr] = xstart;
-    _d[ixb] = n - _d[ixr]; /* always ( = #{black balls in sample} ) */
+    _d[ixb] = k - _d[ixr]; /* always ( = #{black balls in sample} ) */
 
     const small_N = N < 1000; /* won't have underflow in product below */
     /* if N is small,  term := product.ratio( bin.coef );
@@ -124,7 +125,7 @@ export function qhyper(
         +
         lfastchoose(_d[iNB], _d[ixb])
         -
-        lfastchoose(N, n);
+        lfastchoose(N, k);
     if (small_N) _d[iterm] = Math.exp(_d[iterm]);
     _d[iNR] -= _d[ixr];
     _d[iNB] -= _d[ixb];

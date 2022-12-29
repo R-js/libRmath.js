@@ -43,7 +43,6 @@ function unRegisterBackend(): boolean {
 
 export { unRegisterBackend, registerBackend };
 
-
 export function qsignrank(p: number, n: number, lowerTail = true, logP = false): number {
     
     if (isNaN(p) || isNaN(n)) {

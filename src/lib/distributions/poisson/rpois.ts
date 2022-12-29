@@ -44,10 +44,10 @@ const printer_rpois = debug('rpois');
 /* Factorial Table (0:9)! */
 const fact = [1, 1, 2, 6, 24, 120, 720, 5040, 40320, 362880];
 
-export function rpoisOne(mu: number, ): number {
+export function rpoisOne(lambda: number): number {
     const rng =globalNorm();  
 
-    /* In Original C code these are static (why? perf improvement?) --- persistent between calls for same mu : */
+    /* In Original C code these are static (why? perf improvement?) --- persistent between calls for same lambda : */
     let l = 0;
     let m = 0;
     const pp = new Float32Array(36);
@@ -85,34 +85,34 @@ export function rpoisOne(mu: number, ): number {
     let k;
     let kflag = 0;
     
-    if (!isFinite(mu) || mu < 0) {
+    if (!isFinite(lambda) || lambda < 0) {
         return ML_ERR_return_NAN2(printer_rpois, lineInfo4);
     }
-    if (mu === 0) return 0;
+    if (lambda === 0) return 0;
 
-    const big_mu = mu >= 10;
+    const big_mu = lambda >= 10;
    
     if (big_mu) {
-        /* Case A. (recalculation of s,d,l	because mu has changed):
+        /* Case A. (recalculation of s,d,l	because lambda has changed):
          * The poisson probabilities pk exceed the discrete normal
-         * probabilities fk whenever k >= m(mu).
+         * probabilities fk whenever k >= m(lambda).
          */
-        //muprev = mu;
-        s = sqrt(mu);
-        d = 6 * mu * mu;
-        big_l = floor(mu - 1.1484);
-        /* = an upper bound to m(mu) for all mu >= 10.*/
+        //muprev = lambda;
+        s = sqrt(lambda);
+        d = 6 * lambda * lambda;
+        big_l = floor(lambda - 1.1484);
+        /* = an upper bound to m(lambda) for all lambda >= 10.*/
     } else {
-        /* Small mu ( < 10) -- not using normal approx. */
+        /* Small lambda ( < 10) -- not using normal approx. */
 
         /* Case B. (start new table and calculate p0 if necessary) */
 
-        /*muprev = 0.;-* such that next time, mu != muprev ..*/
-        //if (mu !== muprev) {
-        //muprev = mu;
-        m = imax2(1, trunc(mu));
+        /*muprev = 0.;-* such that next time, lambda != muprev ..*/
+        //if (lambda !== muprev) {
+        //muprev = lambda;
+        m = imax2(1, trunc(lambda));
         l = 0; /* pp[] is already ok up to pp[l] */
-        q = p0 = p = exp(-mu);
+        q = p0 = p = exp(-lambda);
         //}
 
         for (;;) {
@@ -122,7 +122,7 @@ export function rpoisOne(mu: number, ): number {
 
             /* Step T. table comparison until the end pp[l] of the
                pp-table of cumulative poisson probabilities
-               (0.458 > ~= pp[9](= 0.45792971447) for mu=10 ) */
+               (0.458 > ~= pp[9](= 0.45792971447) for lambda=10 ) */
             if (l !== 0) {
                 for (k = u <= 0.458 ? 1 : imin2(l, m); k <= l; k++) if (u <= pp[k]) return k;
                 if (l === 35)
@@ -133,7 +133,7 @@ export function rpoisOne(mu: number, ): number {
                probabilities p[l..] and their cumulatives q =: pp[k] */
             l++;
             for (k = l; k <= 35; k++) {
-                p *= mu / k;
+                p *= lambda / k;
                 q += p;
                 pp[k] = q;
                 if (u <= q) {
@@ -143,13 +143,13 @@ export function rpoisOne(mu: number, ): number {
             }
             l = 35;
         } /* end(repeat) */
-    } /* mu < 10 */
+    } /* lambda < 10 */
     //} /* end {initialize persistent vars} */
 
-    /* Only if mu >= 10 : ----------------------- */
+    /* Only if lambda >= 10 : ----------------------- */
 
     /* Step N. normal sample */
-    const g = mu + s * rng.random(); /* norm_rand() ~ N(0,1), standard normal */
+    const g = lambda + s * rng.random(); /* norm_rand() ~ N(0,1), standard normal */
 
     if (g >= 0) {
         pois = floor(g);
@@ -157,7 +157,7 @@ export function rpoisOne(mu: number, ): number {
         if (pois >= big_l) return pois;
         /* Step S. squeeze acceptance */
         fk = pois;
-        difmuk = mu - fk;
+        difmuk = lambda - fk;
         u = rng.uniform_rng.random(); /* ~ U(0,1) - sample */
         if (d * u >= difmuk * difmuk * difmuk) return pois;
     }
@@ -170,13 +170,13 @@ export function rpoisOne(mu: number, ): number {
         /* The quantities b1, b2, c3, c2, c1, c0 are for the Hermite
          * approximations to the discrete normal probabilities fk. */
 
-        b1 = one_24 / mu;
+        b1 = one_24 / lambda;
         b2 = 0.3 * b1 * b1;
         c3 = one_7 * b1 * b2;
         c2 = b2 - 15 * c3;
         c1 = b1 - 6 * b2 + 45 * c3;
         c0 = 1 - b1 + 3 * b2 - 15 * c3;
-        c = 0.1069 / mu; /* guarantees majorization by the 'hat'-function. */
+        c = 0.1069 / lambda; /* guarantees majorization by the 'hat'-function. */
     }
 
     let gotoStepF = false;
@@ -197,15 +197,15 @@ export function rpoisOne(mu: number, ): number {
             E = exp_rand(rng.uniform_rng); /* ~ Exp(1) (standard exponential) */
 
             /*  sample t from the laplace 'hat'
-                (if t <= -0.6744 then pk < fk for all mu >= 10.) */
+                (if t <= -0.6744 then pk < fk for all lambda >= 10.) */
             u = 2 * rng.uniform_rng.random() - 1;
             t = 1.8 + fsign(E, u >= 0);
         }
         if (t > -0.6744 || gotoStepF) {
             if (!gotoStepF) {
-                pois = floor(mu + s * t);
+                pois = floor(lambda + s * t);
                 fk = pois;
-                difmuk = mu - fk;
+                difmuk = lambda - fk;
 
                 /* 'subroutine' F is called (kflag=1 for correct return) */
                 kflag = 1;
@@ -215,8 +215,8 @@ export function rpoisOne(mu: number, ): number {
 
             if (pois < 10) {
                 /* use factorials from table fact[] */
-                px = -mu;
-                py = pow(mu, pois) / fact[trunc(pois)];
+                px = -lambda;
+                py = pow(lambda, pois) / fact[trunc(pois)];
             } else {
                 /* Case pois >= 10 uses polynomial approximation
                    a0-a7 for accuracy when advisable */

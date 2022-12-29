@@ -15,15 +15,15 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { R_Q_P01_boundaries } from '@common/logger';
-
+import { exp } from '@lib/r-func';
 import { qnorm } from '@dist/normal/qnorm';
 
-export function qlnorm(p: number, meanlog = 0, sdlog = 1, lower_tail = true, log_p = false): number {
+export function qlnorm(p: number, meanlog = 0, sdlog = 1, lowerTail = true, logP = false): number {
     if (isNaN(p) || isNaN(meanlog) || isNaN(sdlog)) return p + meanlog + sdlog;
 
-    const rc = R_Q_P01_boundaries(lower_tail, log_p, p, 0, Infinity);
+    const rc = R_Q_P01_boundaries(lowerTail, logP, p, 0, Infinity);
     if (rc !== undefined) {
         return rc;
     }
-    return Math.exp(qnorm(p, meanlog, sdlog, lower_tail, log_p));
+    return exp(qnorm(p, meanlog, sdlog, lowerTail, logP));
 }

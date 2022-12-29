@@ -28,10 +28,10 @@ import { pnt } from './pnt';
 import { qnt } from './qnt';
 import { qt as _qt } from './qt';
 //
-import { repeatedCall64 } from '@lib/r-func';
+import { repeatedCall64, sqrt } from '@lib/r-func';
 
-export function dt(x: number, df: number, ncp = 0, asLog = false): number {
-    return dnt(x, df, ncp, asLog);
+export function dt(x: number, df: number, ncp = 0, log = false): number {
+    return dnt(x, df, ncp, log);
 }
 
 export function pt(q: number, df: number, ncp = 0, lowerTail = true, logP = false): number {
@@ -58,11 +58,10 @@ export function rt(n: number, df: number, ncp?: number): Float64Array {
         const chisq = rchisq(n, df, undefined);
         for (let i = 0; i < n; i++) {
             chisq[i] /= df;
-            chisq[i] = Math.sqrt(chisq[i]);
+            chisq[i] = sqrt(chisq[i]);
             norm[i] /= chisq[i];
         }
         return norm;
     }
 }
 export { rtOne };
-

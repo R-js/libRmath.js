@@ -21,8 +21,8 @@ export { qnorm } from './qnorm';
 import { rnormOne } from './rnorm';
 import { repeatedCall64 } from '@lib/r-func';
 
-export function rnorm(n: number, mu?: number, sigma?: number): Float64Array {
-    return repeatedCall64(n, rnormOne, mu, sigma);
+export function rnorm(n: number, mean = 0, sd = 1): Float64Array {
+    return repeatedCall64(n, rnormOne, mean, sd);
 }
 
 export { rnormOne };

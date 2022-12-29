@@ -149,8 +149,8 @@ import {
 } from './lib/distributions/poisson';
 
 import {
-    useWasmBackend as useSignRankBackend,
-    clearBackend as clearSignRankBackend,
+    useWasmBackendSignRank,
+    clearBackendSignRank,
     dsignrank,
     psignrank,
     qsignrank,
@@ -321,8 +321,8 @@ const defaultObservableNoteBook = {
     useWasmBackendHyperGeom,
     clearBackendHyperGeom,
     //
-    useSignRankBackend,
-    clearSignRankBackend,
+    useWasmBackendSignRank,
+    clearBackendSignRank,
     dsignrank,
     psignrank,
     qsignrank,
@@ -506,8 +506,8 @@ export {
     useWasmBackendHyperGeom,
     clearBackendHyperGeom,
     //
-    useSignRankBackend,
-    clearSignRankBackend,
+    useWasmBackendSignRank,
+    clearBackendSignRank,
     dsignrank,
     psignrank,
     qsignrank,

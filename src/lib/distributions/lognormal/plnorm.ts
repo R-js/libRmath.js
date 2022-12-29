@@ -16,19 +16,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { debug } from '@mangos/debug';
 import { ML_ERR_return_NAN2, lineInfo4 } from '@common/logger';
-import { R_DT_0 } from '@lib/r-func';
+import { R_DT_0, log as _log, isNaN } from '@lib/r-func';
 import { pnorm5 as pnorm } from '@dist/normal/pnorm';
-
-const { isNaN: ISNAN } = Number;
-const { log } = Math;
 
 const printer = debug('plnorm');
 
-export function plnorm(x: number, meanlog = 0, sdlog = 1, lower_tail = true, log_p = false): number {
-    if (ISNAN(x) || ISNAN(meanlog) || ISNAN(sdlog)) return x + meanlog + sdlog;
+export function plnorm(q: number, meanlog = 0, sdlog = 1, lowerTail = true, logP = false): number {
+    if (isNaN(q) || isNaN(meanlog) || isNaN(sdlog)) return q + meanlog + sdlog;
 
     if (sdlog < 0) return ML_ERR_return_NAN2(printer, lineInfo4);
 
-    if (x > 0) return pnorm(log(x), meanlog, sdlog, lower_tail, log_p);
-    return R_DT_0(lower_tail, log_p);
+    if (q > 0) return pnorm(_log(q), meanlog, sdlog, lowerTail, logP);
+    return R_DT_0(lowerTail, logP);
 }

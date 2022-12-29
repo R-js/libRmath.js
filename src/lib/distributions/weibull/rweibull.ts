@@ -23,7 +23,7 @@ import { globalUni } from '@rng/global-rng';
 
 const printer = debug('rweibull');
 
-export function rweibullOne(shape: number, scale: number): number {
+export function rweibullOne(shape: number, scale = 1): number {
     const rng = globalUni();
     if (!isFinite(shape) || !isFinite(scale) || shape <= 0 || scale <= 0)
     {
