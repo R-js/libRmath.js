@@ -26,6 +26,8 @@ npm-debug.log*
 *.pdf
 *.PNG
 *.png
+!ptukey-01.png
+!dsignrank-01.png
 
 # Runtime data
 pids
