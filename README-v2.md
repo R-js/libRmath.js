@@ -185,13 +185,8 @@ const answ = BesselJ(3, 0.4);
     - [The Uniform Distribution](#the-uniform-distribution)
     - [The Weibull Distribution](#the-weibull-distribution)
     - [Distribution of the Wilcoxon Rank Sum Statistic](#distribution-of-the-wilcoxon-rank-sum-statistic)
-- [END OF OLD DOC](#end-of-old-doc)
   - [Special Functions of Mathematics](#special-functions-of-mathematics)
     - [Bessel functions](#bessel-functions)
-      - [`besselJ`](#besselj)
-      - [`besselY`](#bessely)
-      - [`besselI`](#besseli)
-      - [`besselK`](#besselk)
     - [Beta functions](#beta-functions)
       - [`beta`](#beta)
       - [`lbeta`](#lbeta)
@@ -1247,7 +1242,7 @@ console.log(violation);
 | density function         | `function dwilcox(x: number, m: number, n: number, log = false): number`                    |
 | distribution function    | `function pwilcox(q: number, m: number, n: number, lowerTail = true, logP = false): number` |
 | quantile function        | `function qwilcox(x: number, m: number, n: number, lowerTail = true, logP = false): number` |
-| random generation (bulk) | `function rwilcox(nn: number, m: number, n: number): Float32Array`                           |
+| random generation (bulk) | `function rwilcox(nn: number, m: number, n: number): Float32Array`                          |
 | random generation        | `function rwilcoxOne(m: number, n: number): number`                                         |
 
 Arguments:
@@ -1286,9 +1281,6 @@ for (let x = -1; x <= 4*6 + 1; x += 4){
 // 0.004761904761904762
 ```
 
-# END OF OLD DOC
-
-
 ## Special Functions of Mathematics
 
 Special functions are particular mathematical functions which have more or less established names and notations due to their importance in mathematical analysis, functional analysis, physics, or other applications.
@@ -1297,348 +1289,55 @@ There is no general formal definition, but the list of mathematical functions co
 
 ### Bessel functions
 
-`besselJ, besselY, besselI, besselK`
+Bessel Functions of integer and fractional order, of first and second kind, $J_{\nu}$ and $Y_{\nu}$, and Modified Bessel functions (of first and third kind), $I_{\nu}$ and $K_{\nu}$.
 
-Bessel Functions of integer and fractional order, of first and second kind, J(nu) and Y(nu), and Modified Bessel functions (of first and third kind), I(nu) and K(nu). See [R doc](https://stat.ethz.ch/R-manual/R-devel/library/base/html/Bessel.html).
+| type                                                 | function spec                                                             |
+| ---------------------------------------------------- | ------------------------------------------------------------------------- |
+| Modified Bessel function of the first kind $I_{\nu}$ | `function BesselI(x: number, nu: number, exponScaled = false): number` |
+| Modified Bessel function of the third kind $K_{\nu}$ | `function BesselK(x: number, nu: number, exponScaled = false): number` |
+| Bessel function of the first kind $J_{\nu}$          | `function BesselJ(x: number, nu: number): number`                      |
+| Bessel function of the second kind $Y_{\nu}$         | `function BesselY(x: number, nu: number): number`        |
 
-Usage:
+Arguments:
+- `x`: must be ≥ 0.
+- `nu`: The order (maybe fractional and negative) of the corresponding Bessel function.
+- `exponScaled`: if `true`, the results are exponentially scaled in order to avoid overflow ($I_{\nu}$) or underflow ($K_{\nu}$), respectively.
 
-```javascript
-const libR = require("lib-r-math.js");
-const {
-  special: { besselJ, besselK, besselI, besselY },
-} = libR;
-```
+Details:
+If `exponScaled = true`, $e^{-x} \cdot I_{\nu}(x)$ or $e^{x} \cdot K_{\nu}(x)$ are returned.
 
-#### `besselJ`
+For $\nu < 0$, formulae 9.1.2 and 9.6.2 from Abramowitz & Stegun are applied (which is probably suboptimal), except for `besselK` which is symmetric in `nu`.
 
-[Bessel function](https://en.wikipedia.org/wiki/Bessel_function) of first kind. See [R doc](https://stat.ethz.ch/R-manual/R-devel/library/base/html/Bessel.html).
+The current algorithms will give warnings about accuracy loss for large arguments. In some cases, these warnings are exaggerated, and the precision is perfect. For large `nu`, say in the order of millions, the current algorithms are rarely useful.
 
-_typescript decl_
+Example:
 
-```typescript
-declare function besselJ(
-  x: number | number[],
-  nu: number | number[]
-): number | number[];
-```
-
-- `x`: input value x ≥ 0.
-- `nu`: order, (may be fractional!)
-
-_**Note:** if `x` and `nu` are arrays or (scalar/array combinations)
-of unequal length then R argument cycling rules apply._
-
-Usage:
-
-```javascript
-const libR = require("lib-r-math.js");
-const {
-  special: { besselJ, besselK, besselI, besselY },
-  R: { map, numberPrecision, c },
-} = libR;
-
-const _9 = numberPrecision(9);
-
-let xJ = c(
-  1,
-  7.389,
-  20.09,
-  7.389,
-  403.4,
-  1097,
-  0.3679,
-  8103,
-  22030,
-  0.04979,
-  7.389,
-  1097
-);
-
-let nuJ = c(
-  11.02,
-  0.1353,
-  0.4066,
-  54.6,
-  63.43,
-  73.7,
-  -3.669,
-  -0.4066,
-  -1.221,
-  -63.43,
-  -54.6,
-  -73.7
-);
-
-const bJ = _9(besselJ(xJ, nuJ));
-/*[
-  1.12519947e-11,  0.291974134,     0.174941202,    2.98608934e-42,
-  0.0397764164,   -0.0222595064,    -557.732938,    -0.00685960111,
-  -0.00352068533, -3.14515803e+187, 1.87402835e+39, -0.00557447564 ]*/
-```
-
-_Equivalent in R_
-
+R console:
 ```R
-# define data
-x = c(1, 7.389, 20.09, 7.389, 403.4, 1097, 0.3679, 8103, 22030, 0.04979, 7.389, 1097);
-nu = c(11.02, 0.1353, 0.4066, 54.6, 63.43, 73.7, -3.669, -0.4066, -1.221, -63.43, -54.6, -73.7);
-
-besselJ(x,nu);
-# [1]   1.12519947e-11   2.91974134e-01   1.74941202e-01   2.98608934e-42
-# [5]   3.97764164e-02  -2.22595064e-02  -5.57732938e+02  -6.85960111e-03
-# [9]  -3.52068533e-03 -3.14515803e+187   1.87402835e+39  -5.57447564e-03
+> data.frame(besselI(0, 0:4), besselI(1, 0:4), besselI(2, 0:4), besselI(3, 0:4), besselI(4, 0:4))
+  besselI.0..0.4.     besselI.1..0.4.    besselI.2..0.4.   besselI.3..0.4.   besselI.4..0.4.
+1               1 1.26606587775200818 2.2795853023360673 4.880792585865024 11.30192195213633
+2               0 0.56515910399248503 1.5906368546373291 3.953370217402609  9.75946515370445
+3               0 0.13574766976703828 0.6889484476987382 2.245212440929951  6.42218937528411
+4               0 0.02216842492433190 0.2127399592398526 0.959753629496008  3.33727577842035
+5               0 0.00273712022104687 0.0507285699791802 0.325705181937935  1.41627570765359
 ```
 
-#### `besselY`
-
-[Bessel function](https://en.wikipedia.org/wiki/Bessel_function) of the second kind. See [R doc](https://stat.ethz.ch/R-manual/R-devel/library/base/html/Bessel.html).
-
-_typescript decl_
-
+Equivalence in js:
 ```typescript
-export function besselY(
-  x: number | number[],
-  nu: number | number[]
-): number | number[];
-```
+import { BesselI } from "lib-r-math.js";
 
-- `x`: input value x ≥ 0.
-- `nu`: order, (may be fractional!)
-
-_**Note:** if `x`, `nu`, or `expo` are arrays or (scalar/array combinations)
-of unequal length then R argument cycling rules apply._
-
-Usage:
-
-```javascript
-const libR = require("lib-r-math.js");
-const {
-  special: { besselJ, besselK, besselI, besselY },
-  R: { map, numberPrecision, c },
-} = libR;
-
-const _9 = numberPrecision(9);
-
-let xY = c(
-  0.1353,
-  148.4,
-  22030,
-  20.09,
-  403.4,
-  1097,
-  0.1353,
-  2.718,
-  2981,
-  1,
-  8103,
-  22030
-);
-let nuY = c(
-  1.221,
-  3.669,
-  1.221,
-  63.43,
-  63.43,
-  73.7,
-  -1.221,
-  -33.12,
-  -0.1353,
-  -63.43,
-  -63.43,
-  -73.7
-);
-
-const bY = _9(besselY(xY, nuY));
-/*[
-  -7.91004116,      -0.0327873748,   -0.00537461924,
-  -8.53963626e+22,  0.0039810489,     0.00928204725,
-  6.05755099,       4.84943314e+30,   0.0118386468,
-  1.61596294e+104,  0.00500459988,  -0.000101862107 ]*/
-```
-
-_Equivalent in R_
-
-```R
-#data
-xY = c(0.1353, 148.4, 22030, 20.09, 403.4, 1097, 0.1353, 2.718, 2981, 1, 8103, 22030);
-nuY = c(1.221, 3.669,  1.221, 63.43, 63.43,
-73.7, -1.221, -33.12, -0.1353, -63.43, -63.43, -73.7);
-
-#1
-besselY(xY, nuY);
-# [1]  -7.91004116e+00  -3.27873748e-02  -5.37461924e-03  -8.53963626e+22
-# [5]   3.98104890e-03   9.28204725e-03   6.05755099e+00   4.84943314e+30
-# [9]   1.18386468e-02  1.61596294e+104   5.00459988e-03  -1.01862107e-04
-```
-
-#### `besselI`
-
-Modified Bessel functions of first kind. See [R doc](https://stat.ethz.ch/R-manual/R-devel/library/base/html/Bessel.html).
-
-_typescript decl_
-
-```typescript
-declare function besselI(
-  x: number | number[],
-  nu: number | number[],
-  expo: boolean | boolean[] = false
-): number;
-```
-
-- `x`: input value x ≥ 0.
-- `nu`: order, (may be fractional!)
-- `expo`: if TRUE, the results are scaled in order to avoid overflow `exp(-x)*BesselI(x;nu)`.
-
-_**Note:** if `x`, `nu`, or `expo` are arrays or (scalar/array combinations)
-of unequal length then R argument cycling rules apply._
-
-Usage:
-
-```javascript
-const libR = require("lib-r-math.js");
-const {
-  special: { besselJ, besselK, besselI, besselY },
-  R: { map, numberPrecision, c },
-} = libR;
-
-const _9 = numberPrecision(9);
-
-//just to show parameter combinations
-let xI = c(
-  0.3679,
-  1,
-  22030,
-  0.04979,
-  54.6,
-  403.4,
-  0.04979,
-  2981,
-  8103,
-  0.1353,
-  0.3679,
-  2.718
-);
-let nuI = c(
-  3.669,
-  11.02,
-  1.221,
-  63.43,
-  73.7,
-  63.43,
-  -0.4066,
-  -0.1353,
-  -0.4066,
-  -73.7,
-  -54.6,
-  -73.7
-);
-
-// besselI doesnt take vactorized input like R counterpart. So we use a map
-const bI = _9(besselI(xI, nuI, true));
-/*[
-  0.0000947216027,  4.31519634e-12,  0.00268776062,     1.48153081e-190,
-  1.82886482e-21,   0.000136207159,  2.8416423,         0.00730711526,
-  0.00443189452,   -4.48726014e+190, 1.37338633e+110,  -3.10304642e+93 ]*/
-```
-
-_Equivalent in R_
-
-```R
-xI=c(0.3679, 1, 22030,  0.04979,  54.6,  403.4,
-  0.04979,  2981,  8103, 0.1353, 0.3679, 2.718);
-nuI=c(3.669, 11.02, 1.221, 63.43, 73.7, 63.43,
-  -0.4066, -0.1353, -0.4066, -73.7, -54.6, -73.7);
-
-besselI(xI, nuI, TRUE)
-# [1]   9.47216027e-05   4.31519634e-12   2.68776062e-03  1.48153081e-190
-# [5]   1.82886482e-21   1.36207159e-04   2.84164230e+00   7.30711526e-03
-# [9]   4.43189452e-03 -4.48726014e+190  1.37338633e+110  -3.10304642e+93
-```
-
-#### `besselK`
-
-Modified Bessel functions of third kind. See [R doc](https://stat.ethz.ch/R-manual/R-devel/library/base/html/Bessel.html).
-
-_typescript decl_
-
-```typescript
-declare function besselK(
-  x: number | number[],
-  nu: number | number[],
-  expo: boolean | boolean[] = false
-): number;
-```
-
-- `x`: input value x ≥ 0.
-- `nu`: order, (may be fractional!)
-- `expo`: if TRUE, the results are scaled in order to avoid underflow `exp(x)*BesselK(x;nu)`.
-
-_**Note:** if `x`, `nu`, or `expo` are arrays or (scalar/array combinations)
-of unequal length then R argument cycling rules apply._
-
-Usage:
-
-```javascript
-const libR = require("lib-r-math.js");
-const {
-  special: { besselJ, besselK, besselI, besselY },
-  R: { map, numberPrecision, flatten: c },
-} = libR;
-
-const _9 = numberPrecision(9);
-
-let xK = c(
-  0.3679,
-  2.718,
-  403.4,
-  1,
-  54.6,
-  2981,
-  0.3679,
-  148.4,
-  22030,
-  0.1353,
-  2.718,
-  148.4
-);
-
-let nuK = c(
-  3.669,
-  33.12,
-  11.02,
-  63.43,
-  73.7,
-  54.6,
-  -3.669,
-  -3.669,
-  -1.221,
-  -73.7,
-  -73.7,
-  -54.6
-);
-
-const bK = _9(besselK(xK, nuK, true));
-/*[
-  1430.97872,     1.10637213e+32,  0.0725008692,    3.13780349e+105,
-  2.98065514e+18, 0.0378422686,    1430.97872,      0.107549709,
-  0.00844432462,  1.14199333e+191, 1.38285074e+96,  2056.65995 ]
+for (let nu=0; nu <= 4; nu++){
+    const row = [0, 1, 2, 3, 4].map( x => BesselI(x, nu) + '\t');
+    console.log(...row);    
+}
+/*
+1        1.2660658777520082      2.2795853023360673      4.880792585865024       11.301921952136333
+0        0.565159103992485       1.590636854637329       3.9533702174026093      9.75946515370445
+0        0.13574766976703828     0.6889484476987382      2.245212440929951       6.422189375284106
+0        0.022168424924331902    0.21273995923985264     0.959753629496008       3.337275778420345
+0        0.002737120221046866    0.05072856997918024     0.32570518193793546     1.4162757076535895
 */
-```
-
-_Equivalent in R_
-
-```R
-options(digits=9)
-xK=c(0.3679,  2.718,  403.4,  1,  54.6,  2981,  0.3679,  148.4,
-  22030,  0.1353,  2.718,  148.4 );
-nuK= c(3.669, 33.12, 11.02, 63.43, 73.7, 54.6, -3.669, -3.669, -1.221, -73.7, -73.7, -54.6);
-
-#1
-besselK(xK, nuK, TRUE);
-# [1]  1.43097872e+03  1.10637213e+32  7.25008692e-02 3.13780349e+105
-# [5]  2.98065514e+18  3.78422686e-02  1.43097872e+03  1.07549709e-01
-# [9]  8.44432462e-03 1.14199333e+191  1.38285074e+96  2.05665995e+03
 ```
 
 ### Beta functions
