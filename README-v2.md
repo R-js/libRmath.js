@@ -5,7 +5,7 @@ This R statistical [`nmath`][librmath.so] re-created in typescript/javascript.
 If you were not using a previous version to 2.0.0, you can skip _breaking changes_ and go to:
 
 - [Installation and usage](#installation-and-usage)
-- [Table of contents](table-of-contents) 
+- [Table of contents](#table-of-contents) 
 
 ## BREAKING CHANGES For version 2.0
 
