@@ -41,6 +41,5 @@ export function qweibull(p: number, shape: number, scale = 1, lowerTail = true, 
     if (rc !== undefined) {
         return rc;
     }
-
     return scale * pow(-R_DT_Clog(lowerTail, logP, p), 1 / shape);
 }

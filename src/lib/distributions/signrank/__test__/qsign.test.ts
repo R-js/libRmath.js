@@ -6,7 +6,7 @@ import { resolve } from 'path';
 import { cl, select } from '@common/debug-mangos-select';
 
 
-import { qsignrank, useWasmBackend, clearBackend, psignrank } from '..';
+import { qsignrank, useWasmBackendSignRank, clearBackendSignRank, psignrank } from '..';
 
 import { log, DBL_EPSILON } from '@lib/r-func';
 
@@ -98,7 +98,7 @@ describe('qsignrank (wilcox sign rank)', function () {
         });
         it.todo('upstream qsignrank(log(0), asLogP=true) should not return a NaN');
         it('(wasm) n = 1074', async () => {
-            await useWasmBackend();
+            await useWasmBackendSignRank();
             const start0 = Date.now();
             const [x, xCalc] = await loadData(resolve(__dirname, 'fixture-generation', 'qsign1b.R'), /\s+/, 1, 2);
             const p = x.map(_x => psignrank(_x, 1074));
@@ -106,7 +106,7 @@ describe('qsignrank (wilcox sign rank)', function () {
             const xCalcActual = p.map(_p => qsignrank(_p, 1074));
             console.log(`(wasm) psignrank lasted ${ms(Date.now() - start0)} and qsignrank lasted ${ms(Date.now() - start1)}`);
             expect(xCalcActual).toEqualFloatingPointBinary(xCalc);
-            clearBackend();
+            clearBackendSignRank();
         });   
         it('(no wasm) n = 1074', async () => {
             const start0 = Date.now();

@@ -100,26 +100,7 @@ function qinv(p: number, c: number, v: number): number {
  *  the search is terminated
  */
 
-
-
-/**
-> qtukey
-function (p, nmeans, df, nranges = 1, lower.tail = TRUE, log.p = FALSE)
-.Call(C_qtukey, p, nranges, nmeans, df, lower.tail, log.p)
-<bytecode: 0x000000001cde4a80>
-<environment: namespace:stats>
-
-*/
-
-
-export function qtukey(
-    p: number, //p
-    nmeans: number, //nmeans
-    df: number, //df
-    nranges = 1, //ranges
-    lower_tail = true, //lower.tail
-    log_p = false, //log.p
-): number {
+export function qtukey(p: number, nmeans: number, df: number, nranges = 1, lowerTail = true, logP = false): number {
     const eps = 0.0001;
     const maxiter = 50;
 
@@ -143,13 +124,13 @@ export function qtukey(
         return ML_ERR_return_NAN2(printer, lineInfo4);
     }
 
-    const rc = R_Q_P01_boundaries(lower_tail, log_p, p, 0, Infinity);
+    const rc = R_Q_P01_boundaries(lowerTail, logP, p, 0, Infinity);
     if (rc !== undefined)
     {
         return rc;
     }
 
-    p = R_DT_qIv(lower_tail, log_p, p); /* lower_tail,non-log "p" */
+    p = R_DT_qIv(lowerTail, logP, p); /* lowerTail,non-log "p" */
 
     /* Initial value */
 
@@ -157,7 +138,7 @@ export function qtukey(
 
     /* Find prob(value < x0) */
 
-    valx0 = ptukey(x0, nmeans, df, nranges,  /*LOWER*/ true, /*LOG_P*/ false) - p;
+    valx0 = ptukey(x0, nmeans, df, nranges,  /*LOWER*/ true, /*logP*/ false) - p;
 
     /* Find the second iterate and prob(value < x1). */
     /* If the first iterate has probability value */
@@ -175,7 +156,7 @@ export function qtukey(
          
     }
     
-    valx1 = ptukey(x1, nmeans, df, nranges, /*LOWER*/ true, /*LOG_P*/ false) - p;
+    valx1 = ptukey(x1, nmeans, df, nranges, /*LOWER*/ true, /*logP*/ false) - p;
 
     /* Find new iterate */
 
@@ -192,7 +173,7 @@ export function qtukey(
         }
         /* Find prob(value < new iterate) */
 
-        valx1 = ptukey(ans, nmeans, df, nranges, /*LOWER*/ true, /*LOG_P*/ false) - p;
+        valx1 = ptukey(ans, nmeans, df, nranges, /*LOWER*/ true, /*logP*/ false) - p;
         x1 = ans;
 
         /* If the difference between two successive */

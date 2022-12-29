@@ -28,4 +28,3 @@ export { rweibullOne };
 export function rweibull(n: number, shape: number, scale = 1): Float64Array {
     return repeatedCall64(n, rweibullOne, shape, scale);
 }
-

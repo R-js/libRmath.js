@@ -27,3 +27,9 @@ export function rpois(n: number, lamda: number): Float32Array {
 }
 
 export { rpoisOne };
+
+// function dpois(x: number, lambda: number, log = false): number 
+// function ppois(q: number,lambda: number, lowerTail = true, logP = false): number
+// function qpois(p: number, lambda: number, lowerTail = true, logP = false): number 
+// function rpois(n: number, lamda: number): Float32Array
+// function rpoisOne(lambda: number): number

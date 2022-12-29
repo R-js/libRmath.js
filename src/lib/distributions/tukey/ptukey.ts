@@ -73,7 +73,7 @@ const alegq = [
     0.189450610455068496285396723208,
 ];
 
-export function ptukey(q: number, nmeans: number, df: number, nrnages =1, lower_tail = true, log_p = false): number {
+export function ptukey(q: number, nmeans: number, df: number, nrnages = 1, lowerTail = true, logP = false): number {
     /*  function ptukey() [was qprob() ]:
         q = value of studentized range
         nrnages = no. of rows or groups
@@ -157,7 +157,7 @@ export function ptukey(q: number, nmeans: number, df: number, nrnages =1, lower_
 
     if (q <= 0)
     {
-        return R_DT_0(lower_tail, log_p);
+        return R_DT_0(lowerTail, logP);
     }
 
     /* df must be > 1 */
@@ -170,12 +170,12 @@ export function ptukey(q: number, nmeans: number, df: number, nrnages =1, lower_
 
     if (!isFinite(q))
     {
-        return R_DT_1(lower_tail, log_p);
+        return R_DT_1(lowerTail, logP);
     }
 
     if (df > dlarg)
     {
-        return R_DT_val(lower_tail, log_p, wprob(q, nrnages, nmeans));
+        return R_DT_val(lowerTail, logP, wprob(q, nrnages, nmeans));
     }
 
     /* calculate leading constant */
@@ -273,5 +273,5 @@ export function ptukey(q: number, nmeans: number, df: number, nrnages =1, lower_
         ML_ERROR2(ME.ME_PRECISION, 'ptukey', printer_ptukey);
     }
     ans = min(1, ans);
-    return R_DT_val(lower_tail, log_p, ans);
+    return R_DT_val(lowerTail, logP, ans);
 }

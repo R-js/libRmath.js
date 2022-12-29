@@ -21,6 +21,7 @@ import { debug } from '@mangos/debug';
 import { rchisqOne } from '@dist/chi-2/rchisq';
 import { ML_ERR_return_NAN2, lineInfo4 } from '@common/logger';
 import { globalNorm } from '@rng/global-rng';
+import { sqrt } from '@lib/r-func';
 
 const printer = debug('rt');
 
@@ -40,5 +41,5 @@ export function rtOne(df: number): number {
     
     /* Some compilers (including MW6) evaluated this from right to left
         return norm_rand() / Math.sqrt((rchisq(df) / df); */
-    return (num / Math.sqrt(chOne/ df));
+    return (num / sqrt(chOne/ df));
 }

@@ -49,12 +49,7 @@ function do_search(y: number, z: NumberW, p: number, lambda: number, incr: numbe
 
 const printer = debug('qpois');
 
-export function qpois(
-    p: number,
-    lambda: number,
-    lower_tail = true,
-    log_p = false
-): number {
+export function qpois(p: number, lambda: number, lowerTail = true, logP = false): number {
     let y;
     const z = new NumberW(0);
 
@@ -66,7 +61,7 @@ export function qpois(
     if (lambda < 0) return ML_ERR_return_NAN2(printer, lineInfo4);
     if (lambda === 0) return 0;
 
-    const rc = R_Q_P01_boundaries(lower_tail, log_p, p, 0, Infinity);
+    const rc = R_Q_P01_boundaries(lowerTail, logP, p, 0, Infinity);
     if (rc !== undefined) {
         return rc;
     }
@@ -74,8 +69,8 @@ export function qpois(
     /* Note : "same" code in qpois.c, qbinom.c, qnbinom.c --
      * FIXME: This is far from optimal [cancellation for p ~= 1, etc]: */
     // normalize
-    if (!lower_tail || log_p) {
-        p = R_DT_qIv(lower_tail, log_p, p); /* need check again (cancellation!): */
+    if (!lowerTail || logP) {
+        p = R_DT_qIv(lowerTail, logP, p); /* need check again (cancellation!): */
         // for example exp(p=-10_000) is 0 or 1 if it is flipped with lower_tail = false
         if (p === 0) return 0;
         if (p === 1) return Infinity;

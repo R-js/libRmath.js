@@ -28,18 +28,18 @@ import { repeatedCall64 } from '@lib/r-func';
 import { initWasm as initSignRankBackend } from './csignrank_wasm';
 import type { CSignRankMap } from './csignrank_wasm';
 
-export function rsignrank(N: number, n: number): Float64Array {
-   return repeatedCall64(N, rsignrankOne,  n);
+export function rsignrank(nn: number, n: number): Float64Array {
+   return repeatedCall64(nn, rsignrankOne,  n);
 }
 
-async function useWasmBackend(): Promise<void> {
+async function useWasmBackendSignRank(): Promise<void> {
    const fns: CSignRankMap = await initSignRankBackend();
    register_dsign_backend(fns);
    register_qsign_backend(fns);
    register_psign_backend(fns);
 }
 
-function clearBackend(): boolean {
+function clearBackendSignRank(): boolean {
    let rc =0;
    if (unregister_dsign_backend()){
       rc++;
@@ -53,4 +53,4 @@ function clearBackend(): boolean {
    return (rc === 3) ? true: false;
 }
 
-export { useWasmBackend, clearBackend, rsignrankOne }
+export { useWasmBackendSignRank, clearBackendSignRank, rsignrankOne }

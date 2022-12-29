@@ -177,30 +177,15 @@ const answ = BesselJ(3, 0.4);
     - [The Log Normal Distribution](#the-log-normal-distribution)
     - [The Multinomial Distribution](#the-multinomial-distribution)
     - [The Normal Distribution](#the-normal-distribution)
+    - [The Poisson distribution](#the-poisson-distribution)
+    - [Distribution of the Wilcoxon Signed Rank Statistic](#distribution-of-the-wilcoxon-signed-rank-statistic)
+      - [Web Assembly backend](#web-assembly-backend-1)
+    - [The Student t Distribution](#the-student-t-distribution)
+    - [The Studentized Range Distribution](#the-studentized-range-distribution)
+    - [The Uniform Distribution](#the-uniform-distribution)
+    - [The Weibull Distribution](#the-weibull-distribution)
+    - [Distribution of the Wilcoxon Rank Sum Statistic](#distribution-of-the-wilcoxon-rank-sum-statistic)
 - [END OF OLD DOC](#end-of-old-doc)
-    - [Wilcoxon signed rank statistic distribution](#wilcoxon-signed-rank-statistic-distribution)
-      - [`dsignrank`](#dsignrank)
-      - [`psignrank`](#psignrank)
-      - [`qsignrank`](#qsignrank)
-      - [`rsignrank`](#rsignrank)
-    - [Student T distribution](#student-t-distribution)
-      - [`dt`](#dt)
-      - [`pt`](#pt)
-      - [`qt`](#qt)
-      - [`rt`](#rt)
-    - [Studentized Range distribution, (_Tukey HSD_)](#studentized-range-distribution-tukey-hsd)
-      - [`ptukey`](#ptukey)
-      - [`qtukey`](#qtukey)
-    - [Weibull distribution](#weibull-distribution)
-      - [`dweibull`](#dweibull)
-      - [`pweibull`](#pweibull)
-      - [`qweibull`](#qweibull)
-      - [`rweibull`](#rweibull)
-    - [Wilcoxon `rank sum statistic` distribution](#wilcoxon-rank-sum-statistic-distribution)
-      - [`dwilcox`](#dwilcox)
-      - [`pwilcox`](#pwilcox)
-      - [`qwilcox`](#qwilcox)
-      - [`rwilcox`](#rwilcox)
   - [Special Functions of Mathematics](#special-functions-of-mathematics)
     - [Bessel functions](#bessel-functions)
       - [`besselJ`](#besselj)
@@ -340,7 +325,7 @@ All distribution functions follow a prefix pattern:
 | distribution function    | `function pbeta(q: number, shape1: number, shape2: number, ncp?: number, lowerTail = true, logP = false): number` |
 | quantile function        | `function qbeta(p: number, shape1: number, shape2: number, ncp?: number, lowerTail = true, logP = false): number` |
 | random generation (bulk) | `function rbeta(n: number, shape1: number, shape2: number, ncp?: number): Float32Array`                           |
-| ranom generation         | `function rbetaOne(shape1: number, shape2: number): number`                                                       |
+| random generation        | `function rbetaOne(shape1: number, shape2: number): number`                                                       |
 
 - Arguments:
   - `x, q`: quantile value
@@ -368,7 +353,7 @@ dbeta(0.5, 2, 2);
 | distribution function    | `function pbinom(q: number, n: number, prob: number, lowerTail = true, logP = false): number`     |
 | quantile function        | `function qbinom(p: number, size: number, prob: number, lower_tail = true, logP = false): number` |
 | random generation (bulk) | `function rbinom(n: number, size: number, prob: number): Float64Array`                            |
-| ranom generation         | `function rbinomOne(size: number, prob: number): number`                                          |
+| random generation        | `function rbinomOne(size: number, prob: number): number`                                          |
 
 - Arguments:
   - `x, q`: quantile value
@@ -396,7 +381,7 @@ dbinom(50, 100, 0.5);
 | distribution function    | `function pnbinom(q: number, size: number, prob?: number, mu?: number, lowerTail = true, logP = false): number` |
 | quantile function        | `function qnbinom(p: number, size: number, prob?: number, mu?: number, lowerTail = true, logP = false): number` |
 | random generation (bulk) | `function rnbinom(n: number, size: number, prob?: number, mu?: number): Float64Array`                           |
-| ranom generation         | `function rnbinom(size: number, prob?: number, mu?: number): number`                                            |
+| random generation        | `function rnbinom(size: number, prob?: number, mu?: number): number`                                            |
 
 Arguments:
 - `x, q`: quantile value.
@@ -426,7 +411,7 @@ R console:
 [9] 14336.0000000000145519152
 ```
 
-Equivalent in js (fidelity):
+Equivalence in js (fidelity):
 
 ```typescript
 import { dnbinom } from 'lib-r-math.js';
@@ -446,7 +431,7 @@ console.log(
 | distribution function    | `function pcauchy(x: number, location = 0, scale = 1, lowerTail = true, logP = false): number` |
 | quantile function        | `function qcauchy(p: number, location = 0, scale = 1, lowerTail = true, logP = false): number` |
 | random generation (bulk) | `function rcauchy(n: number, location = 0, scale = 1): Float32Array`                           |
-| ranom generation         | `function rcauchyOne(location = 0, scale = 1): number`                                         |
+| random generation        | `function rcauchyOne(location = 0, scale = 1): number`                                         |
 
 Arguments:
 - `x, q`: quantile value.
@@ -465,7 +450,7 @@ dcauchy(-1:4)
 [5] 0.03183098861837906773387 0.01872411095198768526959
 ```
 
-Equivalent in js (fidelity):
+Equivalence in js (fidelity):
 ```typescript
 import { dcauchy } from 'lib-r-math.js';
 
@@ -481,7 +466,7 @@ console.log(  [-1,0,1,2,3,4].map(x => dcauchy(x))  );
 | distribution function    | `function pchisq(p: number, df: number, ncp?: number, lowerTail = true, logP = false ): number` |
 | quantile function        | `function qchisq(p: number, df: number, ncp?: number, lowerTail = true, logP = false ): number` |
 | random generation (bulk) | `function rchisq(n: number, df: number, ncp?: number): Float64Array`                            |
-| ranom generation         | `function rchisqOne(df: number, ncp?: number): number `                                         |
+| random generation        | `function rchisqOne(df: number, ncp?: number): number `                                         |
 
 
 Arguments:
@@ -501,7 +486,7 @@ dchisq(1, df = 1:3)
 [1] 0.2419707 0.3032653 0.2419707
 ```
 
-Equivalent in js (fidelity):
+Equivalence in js (fidelity):
 ```typescript
 import { dchisq } from 'lib-r-math.js';
 
@@ -517,7 +502,7 @@ console.log(   [1,2,3].map( df => dchisq(1, df))  );
 | distribution function    | `function pexp(q: number, rate = 1, lowerTail = true, logP = false): number` |
 | quantile function        | `function qexp(p: number, rate = 1, lowerTail = true, logP = false): number` |
 | random generation (bulk) | `function rexp(n: number, rate = 1):Float64Array`                            |
-| ranom generation         | `function rexpOne(rate = 1): number `                                        |
+| random generation        | `function rexpOne(rate = 1): number `                                        |
 
 Arguments:
 - `x, q`: quantile.
@@ -531,12 +516,12 @@ Examples
 
 R console:
 
-``R
+```R
 dexp(1) - exp(-1)
 [1] 0
 ```
 
-Equivalent in js (fidelity):
+Equivalence in js (fidelity):
 ```typescript
 import { dexp } from 'lib-r-math.js';
 
@@ -552,7 +537,7 @@ console.log( dexp(1) - Math.exp(-1)  );
 | distribution function    | `function pf(q: number, df1: number, df2: number, ncp?: number, lowerTail = true, logP = false): number` |
 | quantile function        | `function qf(p: number, df1: number, df2: number, ncp?: number, lowerTail = true, logP = false): number` |
 | random generation (bulk) | `function rf(n: number, df1: number, df2: number, ncp?: number): Float64Array`                           |
-| ranom generation         | `function rfOne(df1: number, df2: number, ncp?: number): number`                                         |
+| random generation        | `function rfOne(df1: number, df2: number, ncp?: number): number`                                         |
 
 Arguments:
 - `x, q`: quantile.
@@ -576,7 +561,7 @@ stopifnot(all.equal(pf(qF, n1, n2, lower.tail=FALSE),
                     pbeta(x, n2/2, n1/2)))
 ```
 
-Equivalent in js (fidelity):
+Equivalence in js (fidelity):
 ```typescript
 import { pf, pbeta } from "lib-r-math.js";
 
@@ -607,7 +592,7 @@ console.log(fisher.map((f,i) => f - betas[i]));
 | distribution function    | `function pgamma(q: number, shape: number, rate?: number, scale?: number, lowerTail = true, logP = false): number` |
 | quantile function        | `function qgamma(p: number, shape: number, rate?: number, scale?: number, lowerTail = true, logP = false): number` |
 | random generation (bulk) | `function rgamma(n: number, shape: number, rate?: number, scale?: number): Float64Array`                           |
-| ranom generation         | `function rgammaOne(shape: number, rate?: number, scale?: number): number`                                         |
+| random generation        | `function rgammaOne(shape: number, rate?: number, scale?: number): number`                                         |
 
 
 Arguments:
@@ -627,14 +612,14 @@ R console:
 [1] 1 2 3 4
 ```
 
-Equivalent in js (fidelity):
+Equivalence in js (fidelity):
 ```typescript
 import { dgamma } from "lib-r-math.js";
 
 let dg = [1,2,3,4].map( x => Math.log( dgamma(x, 1) ));
 // -> [ -1, -2, -3, -4 ]
 //
-// this is equivalent to to 
+// this is Equivalence to to 
 // [1,2,3,4].map (x => dgamma(x, 1, undefined, undefined, true) );
 ```
 
@@ -646,7 +631,7 @@ let dg = [1,2,3,4].map( x => Math.log( dgamma(x, 1) ));
 | distribution function    | `function qgeom(p: number, prob: number, lowerTail = true, logP = false): number ` |
 | quantile function        | `function qgeom(p: number, prob: number, lowerTail = true, logP = false): number`  |
 | random generation (bulk) | `function rgeom(n: number, prob: number): Float64Array`                            |
-| ranom generation         | `function rgeomOne(p: number): number`                                             |
+| random generation        | `function rgeomOne(p: number): number`                                             |
 
 Arguments:
 - `x, q`: quantile
@@ -664,7 +649,7 @@ qgeom((1:9)/10, prob = .2)
 [1]  0  0  1  2  3  4  5  7 10
 ```
 
-Equivalent in js (fidelity):
+Equivalence in js (fidelity):
 ```typescript
 import { qgeom } from "lib-r-math.js";
 
@@ -684,7 +669,7 @@ console.log(dg);
 | distribution function    | `function phyper(q: number, m: number, n: number, k: number, lowerTail = true, logP = false): number` |
 | quantile function        | `function qhyper(p: number, m: number, n: number, k: number, lowerTail = true, logP = false): number` |
 | random generation (bulk) | `function rhyper(nn: number, m: number, n: number, k: number): Float64Array`                          |
-| ranom generation         | `function rhyperOne(m: number, n: number, k: number): number`                                         |
+| random generation        | `function rhyperOne(m: number, n: number, k: number): number`                                         |
 
 Arguments:
 - `x, q`: quantile
@@ -709,7 +694,7 @@ rbind(phyper(x, m, n, k), dhyper(x, m, n, k))
 [2,]    0 0.0004113534 0.01295763 0.103661 0.3023447 0.3628137 0.1814068 0.03455368 0.00185109     0
 ```
 
-Equivalent in js (fidelity):
+Equivalence in js (fidelity):
 ```typescript
 import { phyper, dhyper } from "lib-r-math.js";
 var m = 10;
@@ -739,12 +724,12 @@ import {
 // the functions "qhyper" will be accelerated (on part with native C for node >=16)
 await useWasmBackendHyperGeom();
 
-qhyper(0.5, 2**31-1, 2**31-1, 2**31-1); // 28 sec in wasm big numbers to make it do some work
+qhyper(0.5, 2**31-1, 2**31-1, 2**31-1); // 28 sec (4.3 Ghz Pentium) wasm big numbers to make it do some work
 // -> 1073741806
 
 clearBackendHyperGeom(); // revert to js backend
 
-qhyper(0.5, 2**31-1, 2**31-1, 2**31-1); // this will take 428 sec
+qhyper(0.5, 2**31-1, 2**31-1, 2**31-1); // this will take 428 sec (4.3 Ghz Pentium)
 // -> 1073741806
 ```
 
@@ -756,7 +741,7 @@ qhyper(0.5, 2**31-1, 2**31-1, 2**31-1); // this will take 428 sec
 | distribution function    | `function plogis(x: number, location = 0, scale = 1, lowerTail = true, logP = false): number` |
 | quantile function        | `function qlogis(p: number, location = 0, scale = 1, lowerTail = true, logP = false): number` |
 | random generation (bulk) | `function rlogis(n: number, location = 0, scale = 1): Float64Array`                           |
-| ranom generation         | `function rlogisOne(location = 0, scale = 1): number`                                         |
+| random generation        | `function rlogisOne(location = 0, scale = 1): number`                                         |
 
 
 Arguments:
@@ -778,7 +763,7 @@ R console:
 [1] 80.83207
 ```
 
-Equivalent in js (fidelity):
+Equivalence in js (fidelity):
 ```typescript
 import { setSeed, RNGkind, rlogis } from "lib-r-math.js";
 
@@ -807,7 +792,7 @@ console.log(S);
 | distribution function    | `function plnorm(q: number, meanlog = 0, sdlog = 1, lowerTail = true, logP = false): number` |
 | quantile function        | `function qlnorm(p: number, meanlog = 0, sdlog = 1, lowerTail = true, logP = false): number` |
 | random generation (bulk) | `function rlnorm(n: number, meanlog = 0, sdlog = 1): Float32Array`                           |
-| ranom generation         | `function rlnormOne(meanlog = 0, sdlog = 1): number `                                        |
+| random generation        | `function rlnormOne(meanlog = 0, sdlog = 1): number `                                        |
 
 Arguments:
 - `x, q`: quantile
@@ -825,7 +810,7 @@ dlnorm(1) == dnorm(0)
 [1] TRUE
 ```
 
-Equivalent in js (fidelity):
+Equivalence in js (fidelity):
 ```typescript
 import { dlnorm, dnorm } from "lib-r-math.js";
 console.log(dlnorm(1) === dnorm(0))
@@ -878,7 +863,7 @@ R console:
 > 
 ```
 
-Equivalent in js (fidelity):
+Equivalence in js (fidelity):
 ```typescript
 import { RNGkind, setSeed, rmultinom } from 'lib-r-math.js'
 
@@ -900,13 +885,13 @@ console.log(...answer);
 
 ### The Normal Distribution
 
-| type                     | function spec                                                                          |
-| ------------------------ | -------------------------------------------------------------------------------------- |
-| density function         | `function dnorm(x: number, mean = 0, sd = 1, log = false): number`                     |
+| type                     | function spec                                                                         |
+| ------------------------ | ------------------------------------------------------------------------------------- |
+| density function         | `function dnorm(x: number, mean = 0, sd = 1, log = false): number`                    |
 | distribution function    | `function pnorm(q: number, mean = 0, sd = 1, lowerTail = true, logP = false): number` |
-| quantile function        | `function qnorm(p: number, mean = 0, sd = 1, lowerTail = true, logP = false): number`  |
-| random generation (bulk) | `function rnorm(n: number, mean = 0, sd = 1): Float64Array`                            |
-| ranom generation         | `function rnormOne(mean = 0, sd = 1): number`                                          |
+| quantile function        | `function qnorm(p: number, mean = 0, sd = 1, lowerTail = true, logP = false): number` |
+| random generation (bulk) | `function rnorm(n: number, mean = 0, sd = 1): Float64Array`                           |
+| random generation        | `function rnormOne(mean = 0, sd = 1): number`                                         |
 
 Arguments:
 - `x, q`: quantile
@@ -928,7 +913,7 @@ dnorm(1) == 1/sqrt(2*pi*exp(1))
 [1] TRUE
 ```
 
-Equivalent in js:
+Equivalence in js:
 ```typescript
 import { dnorm } from 'lib-r-math.js';
 
@@ -942,1585 +927,367 @@ console.log( dnorm(1) === 1/sqrt(2*pi*exp(1)) );
 // -> true
 ```
 
+### The Poisson distribution
+
+| type                     | function spec                                                                       |
+| ------------------------ | ----------------------------------------------------------------------------------- |
+| density function         | `function dpois(x: number, lambda: number, log = false): number `                   |
+| distribution function    | `function ppois(q: number,lambda: number, lowerTail = true, logP = false): number`  |
+| quantile function        | `function qpois(p: number, lambda: number, lowerTail = true, logP = false): number` |
+| random generation (bulk) | `function rpois(n: number, lamda: number): Float32Array`                            |
+| random generation        | `function rpoisOne(lambda: number): number`                                         |
+
+Arguments:
+- `x, q`: quantile.
+- `p`: probability.
+- `lambda`: non-negative mean.
+- `n`: number of observations.
+- `log, logP`: if `true`, probabilities/densities `p` are returned as `log(p)`.
+- `lowerTail`: if `true` (default), probabilities are `P[ X ≤ x]`, otherwise, `P[X > x]`.
+
+Example:
+
+R console:
+```R
+> options(digits=20)
+> -log(dpois(0:7, lambda = 1) * gamma(1+ 0:7)) # == 1
+[1] 1.00000000000000000000 1.00000000000000000000 1.00000000000000000000 1.00000000000000000000
+[5] 0.99999999999999977796 1.00000000000000022204 1.00000000000000022204 1.00000000000000000000
+```
+
+Equivalence in js:
+```typescript
+import { dpois, gamma } from 'lib-r-math.js';
+
+const { log } = Math;
+let arr = [0, 1, 2, 3, 4, 5, 6, 7]
+let result = arr.map(x => -log(dpois(x, 1) * gamma( x + 1)));
+console.log(...result)
+//-> 1 1 1 1 0.9999999999999996 1 1.0000000000000009 0.9999999999999989
+```
+
+### Distribution of the Wilcoxon Signed Rank Statistic
+
+| type                     | function spec                                                                      |
+| ------------------------ | ---------------------------------------------------------------------------------- |
+| density function         | `function dsignrank(x: number, n: number, log = false): number`                    |
+| distribution function    | `function psignrank(q: number, n: number, lowerTail = true, logP = false): number` |
+| quantile function        | `function qsignrank(p: number, n: number, lowerTail = true, logP = false): number` |
+| random generation (bulk) | `function rsignrank(nn: number, n: number): Float64Array`                          |
+| random generation        | `function rsignrank(nn, n): number`                                                |
+
+Arguments:
+- `x, q`: quantile.
+- `p`: probability.
+- `nn`: number of observations.
+- `n`: number of observations in the sample. A positive integer.
+- `log, logP`: if `true`, probabilities/densities `p` are returned as `log(p)`.
+- `lowerTail`: if `true` (default), probabilities are `P[ X ≤ x]`, otherwise, `P[X > x]`.
+
+Examples:
+
+R console:
+```R
+> options(digits=20)
+> x=seq(0,5*6/2)
+> y=dsignrank(x, 5)
+> data.frame(x,y)
+    x                       y
+    0 0.031250000000000000000
+    1 0.031250000000000000000
+    2 0.031250000000000000000
+    3 0.062500000000000000000
+    4 0.062500000000000000000
+    5 0.093749999999999986122
+    6 0.093749999999999986122
+    7 0.093749999999999986122
+    8 0.093749999999999986122
+    9 0.093749999999999986122
+   10 0.093749999999999986122
+   11 0.062500000000000000000
+   12 0.062500000000000000000
+   13 0.031250000000000000000
+   14 0.031250000000000000000
+   15 0.031250000000000000000
+```
+
+Equivalence in js:
+```typescript
+import { dsignrank } from "lib-r-math.js";
+const N = 5;
+for (let x = 0; x <= N*(N+1)/2; x++){
+    console.log(x, dsignrank(x, N));
+}
+/*
+0 0.03125
+1 0.03125
+2 0.03125
+3 0.0625
+4 0.0625
+5 0.09374999999999999
+6 0.09374999999999999
+7 0.09374999999999999
+8 0.09374999999999999
+9 0.09374999999999999
+10 0.09374999999999999
+11 0.0625
+12 0.0625
+13 0.03125
+14 0.03125
+15 0.03125
+*/
+```
+
+<div style="font-size:12px">Output As Graphic:
+<img style="display:block" src="./dsignrank-01.png" width="480px" height="320px">
+</div>
+
+#### Web Assembly backend
+
+`dsignrank`, `psignrank` and `qsignrank` have an optional Web Assembly backend, turn this backend on/off with `useWasmBackendSignRank` and `clearBackendSignRank` respectivily.
+
+Example
+
+```typescript
+import { useWasmBackendSignRank, clearBackendSignRank, psignrank } from 'lib-r-math.js';
+
+await useWasmBackendSignRank();
+// all sign rank functions accelerated
+
+const p = psignrank(...); // so something usefull
+
+clearBackendSignRank();
+// use javascript backend for signrank distribution
+```
+
+### The Student t Distribution
+
+| type                     | function spec                                                                              |
+| ------------------------ | ------------------------------------------------------------------------------------------ |
+| density function         | `function dt(x: number, df: number, ncp = 0, log = false): number`                         |
+| distribution function    | `function pt(q: number, df: number, ncp = 0, lowerTail = true, logP = false): number`      |
+| quantile function        | `function qt(p: number, df: number, ncp?: number, lowerTail = true, logP = false): number` |
+| random generation (bulk) | `function rt(n: number, df: number, ncp?: number): Float64Array`                           |
+| random generation        | `function rtOne(df: number): number`                                                       |
+
+Arguments:
+- `x, q`: quantile.
+- `p`: probability.
+- `n`: number of observations.
+- `df`: degrees of freedom (`>0`, maybe non-integer). `df = Inf` is allowed.
+- `ncp`: non-centrality parameter $\delta$; currently except for `rt()`, only for `abs(ncp) <= 37.62`. If omitted, use the central t distribution.
+- `log, logP`: if `true`, probabilities/densities `p` are returned as `log(p)`.
+- `lowerTail`: if `true` (default), probabilities are `P[ X ≤ x]`, otherwise, `P[X > x]`.
+
+
+Example:
+
+R console:
+```R
+1 - pt(1:5, df = 1)
+[1] 0.2499999999999998
+[2] 0.1475836176504333
+[3] 0.1024163823495667
+[4] 0.0779791303773694
+[5] 0.0628329581890011
+```
+
+Equivalence in js:
+```typescript
+import { pt } from 'lib-r-math.js';
+
+for (let q = 1; q <= 5; q++){
+   console.log(1 - pt(q, 1));
+}
+// 0.24999998762491238
+// 0.14758361679076415
+// 0.10241638219629579
+// 0.07797913031910642
+// 0.06283295806783729
+```
+
+### The Studentized Range Distribution
+
+| type                  | function spec                                                                                                  |
+| --------------------- | -------------------------------------------------------------------------------------------------------------- |
+| distribution function | `function ptukey(q: number, nmeans: number, df: number, nrnages = 1, lowerTail = true, logP = false): number ` |
+| quantile function     | `function qt(p: number, df: number, ncp?: number, lowerTail = true, logP = false): number`                     |
+
+Arguments:
+- `q`: quantile.
+- `p`: probability.
+- `nmeans`: sample size for range (same for each group).
+- `df`: degrees of freedom for ss (see below).
+- `nranges`: number of groups whose maximum range is considered.
+- `log, logP`: if `true`, probabilities/densities `p` are returned as `log(p)`.
+- `lowerTail`: if `true` (default), probabilities are `P[ X ≤ x]`, otherwise, `P[X > x]`.
+
+Example:
+
+R console:
+```R
+ ptukey(-1:8, nm = 6, df = 5)
+ [1] 0.0000000000000000 0.0000000000000000 0.0272115020859732
+ [4] 0.2779845061609432 0.6007971569446733 0.8017143642776676
+ [7] 0.9014257065957741 0.9489495069295981 0.9721701726664311
+[10] 0.9840420193770625
+```
+
+Equivalence in js:
+```typescript
+import { ptukey } from "lib-r-math.js";
+
+function* generatePTukeyData() {
+
+  for (let q = -1; q <= 8; q++) {
+    yield ptukey(q, 6, 5);
+  }
+
+}
+
+console.log(...generatePTukeyData());
+// 0                  0                  0.02721150208597321 
+// 0.2779845061609432 0.6007971569446733 0.8017143642776676 
+// 0.9014257065957741 0.9489495069295981 0.9721701726664311
+// 0.9840420193770627
+```
+
+<div style="font-size:12px">Output As Graphic:
+<img style="display:block" src="./ptukey-01.png" width="480px" height="320px">
+</div>
+
+### The Uniform Distribution
+
+| type                     | function spec                                                                         |
+| ------------------------ | ------------------------------------------------------------------------------------- |
+| density function         | `function dunif(x: number, min = 0, max = 1, log = false): number`                    |
+| distribution function    | `function punif(q: number, min = 0, max = 1, lowerTail = true, logP = false): number` |
+| quantile function        | `function qunif(p: number, min = 0, max = 1, lowerTail = true, logP = false): number` |
+| random generation (bulk) | `function runif(n: number, min = 0, max = 1): Float64Array`                           |
+| random generation        | `function runifOne(min: number, max: number): number`                                 |
+
+Arguments:
+- `x,q`: quantile.
+- `p`: probability.
+- `min, max`: lower and upper limits of the distribution. Must be finite.
+- `n`: number of observations.
+- `log, logP`: if `true`, probabilities/densities `p` are returned as `log(p)`.
+- `lowerTail`: if `true` (default), probabilities are `P[ X ≤ x]`, otherwise, `P[X > x]`.
+
+Example:
+
+R console:
+```R
+> RNGkind()
+[1] "Mersenne-Twister" "Inversion"        "Rejection"       
+> set.seed(12345)
+> runif(5)
+[1] 0.720903896261007 0.875773193081841 0.760982328327373 0.886124566197395
+[5] 0.456480960128829
+```
+
+Equivalence in js:
+```typescript
+import { RNGkind, setSeed, runif } from 'lib-r-math.js';
+
+// these are defaults so skip setting via "RNGkind" this set if not changed
+
+const uniform = RNGkind.uniform.MERSENNE_TWISTER;
+const normal = RNGkind.normal.INVERSION;
+RNGkind({ uniform, normal });
+
+// set seed
+setSeed(12345);
+console.log(...runif(5));
+// -> 0.7209038962610066 0.8757731930818409 0.7609823283273727 0.8861245661973953 0.4564809601288289
+```
+
+### The Weibull Distribution
+
+| type                     | function spec                                                                                    |
+| ------------------------ | ------------------------------------------------------------------------------------------------ |
+| density function         | `function dweibull(x: number, shape: number, scale = 1, log = false): number`                    |
+| distribution function    | `function pweibull(q: number, shape: number, scale = 1, lowerTail = true, logP = false): number` |
+| quantile function        | `function qweibull(p: number, shape: number, scale = 1, lowerTail = true, logP = false): number` |
+| random generation (bulk) | `function rweibull(n: number, shape: number, scale = 1): Float64Array`                           |
+| random generation        | `function rweibullOne(shape: number, scale = 1): number`                                         |
+
+Arguments:
+- `x,q`: quantile.
+- `p`: probability.
+- `n`: number of observations.
+- `shape, scale`: shape and scale parameters, the latter defaulting to 1.
+- `log, logP`: if `true`, probabilities/densities `p` are returned as `log(p)`.
+- `lowerTail`: if `true` (default), probabilities are `P[ X ≤ x]`, otherwise, `P[X > x]`.
+
+Example:
+
+R console:
+```R
+x <- c(0, rlnorm(50))
+all.equal(dweibull(x, shape = 1), dexp(x))
+```
+
+Equivalence in js:
+```typescript
+import { rlnorm, dweibull, dexp } from 'lib-r-math.js';
+
+const samples = rlnorm(50);
+
+const violation = samples.find( x => dweibull(x, 1) !== dexp(x));
+
+console.log(violation);
+// -> undefined, no violation!
+```
+
+### Distribution of the Wilcoxon Rank Sum Statistic
+
+| type                     | function spec                                                                               |
+| ------------------------ | ------------------------------------------------------------------------------------------- |
+| density function         | `function dwilcox(x: number, m: number, n: number, log = false): number`                    |
+| distribution function    | `function pwilcox(q: number, m: number, n: number, lowerTail = true, logP = false): number` |
+| quantile function        | `function qwilcox(x: number, m: number, n: number, lowerTail = true, logP = false): number` |
+| random generation (bulk) | `function rwilcox(nn: number, m: number, n: number): Float32Array`                           |
+| random generation        | `function rwilcoxOne(m: number, n: number): number`                                         |
+
+Arguments:
+- `x, q`: quantile.
+- `p`: probability.
+- `nn`: number of observations.
+- `m, n`: numbers of observations in the first and second sample, respectively.
+- `log, logP`: if `true`, probabilities/densities `p` are returned as `log(p)`.
+- `lowerTail`: if `true` (default), probabilities are `P[ X ≤ x]`, otherwise, `P[X > x]`.
+
+Example:
+
+R console:
+```R
+> x <- seq(-1, (4*6 + 1), 4);
+> fx = dwilcox(x,4,6)
+> fx
+[1] 0.00000000000000000 0.01428571428571429 0.04761904761904762 0.07619047619047620 0.06666666666666667
+[6] 0.02857142857142857 0.00476190476190476
+```
+
+Equivalence in js:
+```typescript
+import { dwilcox } from 'lib-r-math.js';
+
+for (let x = -1; x <= 4*6 + 1; x += 4){
+    console.log(dwilcox(x, 4, 6));
+}
+// ->
+// 0
+// 0.014285714285714285
+// 0.047619047619047616
+// 0.0761904761904762
+// 0.06666666666666667
+// 0.02857142857142857
+// 0.004761904761904762
+```
 
 # END OF OLD DOC
 
-
-
-### Wilcoxon signed rank statistic distribution
-
-`dsignrank, psignrank, qsignrank, rsignrank`
-
-Density, distribution function, quantile function and random generation for the distribution of the [Wilcoxon Signed Rank statistic](https://en.wikipedia.org/wiki/Wilcoxon_signed-rank_test). See [R doc](https://stat.ethz.ch/R-manual/R-patched/library/stats/html/SignRank.html).
-
-Usage:
-
-```javascript
-const libR = require("lib-r-math.js");
-const {
-  SignRank,
-  rng: { MarsagliaMultiCarry },
-} = libR;
-
-//helpers
-const precision = libR.R.numberPrecision(9); //restrict to 9 significant digits
-
-//PRNG uses default MersenneTwister (just like R)
-const defaultSR = SignRank();
-
-//explicit use of PRNG
-const mmc = new MarsagliaMultiCarry(4535);
-const explicitSR = SignRank(mmc);
-
-const { dsignrank, psignrank, qsignrank, rsignrank } = explicitSR;
-```
-
-#### `dsignrank`
-
-The probability mass function of the [Wilcoxon Signed Rank statistic](https://en.wikipedia.org/wiki/Wilcoxon_signed-rank_test). See [R doc](https://stat.ethz.ch/R-manual/R-patched/library/stats/html/SignRank.html).
-
-_typescript decl_
-
-```typescript
-declare function dsignrank(
-  x: number | number[],
-  n: number,
-  aslog: boolean = false
-): number | number[];
-```
-
-- `x`: quantiles (scalar or array of values the rank W+).
-- `n`: total number of observations.
-- `asLog`: give probabilities as ln(p). Default is false.
-
-Usage:
-
-```javascript
-const libR = require("lib-r-math.js");
-const { SignRank } = libR;
-
-//some usefull helpers
-const precision = libR.R.numberPrecision(9); //restrict to 9 significant digits
-
-const { dsignrank, psignrank, qsignrank, rsignrank } = SignRank();
-
-//1
-const d1 = dsignrank(seq(0, 5), 9);
-precision(d1);
-/*[
-  0.001953125,
-  0.001953125,
-  0.001953125,
-  0.00390625,
-  0.00390625,
-  0.005859375 ]*/
-
-//2
-const d2 = dsignrank(seq(3, 8), 4);
-precision(d2);
-//[ 0.125, 0.125, 0.125, 0.125, 0.125, 0.0625 ]
-
-//3
-const d3 = dsignrank(seq(15, 20), 11);
-precision(d3);
-/*[
-  0.0107421875,
-  0.0122070312,
-  0.013671875,
-  0.015625,
-  0.0170898438,
-  0.0190429687 ]*/
-```
-
-_Equivalent in R_
-
-```R
-#1
-> dsignrank(seq(0,5), 9);
-[1] 0.001953125 0.001953125 0.001953125 0.003906250 0.003906250 0.005859375
-
-#2
-> dsignrank(seq(3,8), 4);
-[1] 0.1250 0.1250 0.1250 0.1250 0.1250 0.0625
-
-#3
-> dsignrank( seq(15,20) , 11);
-[1] 0.01074219 0.01220703 0.01367187 0.01562500 0.01708984 0.01904297
-```
-
-#### `psignrank`
-
-The cumulative probability function of the [Wilcoxon Signed Rank statistic](https://en.wikipedia.org/wiki/Wilcoxon_signed-rank_test). See [R doc](https://stat.ethz.ch/R-manual/R-patched/library/stats/html/SignRank.html).
-
-_typescript decl_
-
-```typescript
-declare function psignrank(
-  q: number | number[],
-  n: number,
-  lowerTail: boolean = true,
-  logP: boolean = false
-): number | number[];
-```
-
-- `q`: quantiles (scalar or array of values the rank W+).
-- `n`: total number of observations.
-- `lowerTail`: if TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
-- `logP`: if TRUE, probabilities p are given as ln(p).
-
-Usage:
-
-```javascript
-const libR = require("lib-r-math.js");
-const { SignRank } = libR;
-
-//some usefull helpers
-const precision = libR.R.numberPrecision(9); //restrict to 9 significant digits
-
-const { dsignrank, psignrank, qsignrank, rsignrank } = SignRank();
-
-//1
-const p1 = psignrank(seq(0, 5), 9);
-precision(p1);
-/*
-[ 0.001953125,
-  0.00390625,
-  0.005859375,
-  0.009765625,
-  0.013671875,
-  0.01953125 ]*/
-
-//2
-const p2 = psignrank(seq(3, 8), 4);
-precision(p2);
-//[ 0.3125, 0.4375, 0.5625, 0.6875, 0.8125, 0.875 ]
-
-//3
-const p3 = psignrank(seq(15, 20), 11);
-precision(p3);
-/*
-[ 0.0615234375,
-  0.0737304687,
-  0.0874023437,
-  0.103027344,
-  0.120117187,
-  0.139160156 ]
-*/
-```
-
-_Equivalent in R_
-
-```R
-options(scipen=999)
-options(digits=9)
-
-#1
-psignrank(seq(0,5), 9);
-#[1] 0.001953125 0.003906250 0.005859375 0.009765625 0.013671875 0.019531250
-
-#2
-psignrank(seq(3,8), 4)
-#[1] 0.3125 0.4375 0.5625 0.6875 0.8125 0.8750
-
-#3
-psignrank(seq(15, 20), 11);
-#[1] 0.06152344 0.07373047 0.08740234 0.10302734 0.12011719 0.13916016
-```
-
-#### `qsignrank`
-
-The quantile function of the [Wilcoxon Signed Rank statistic](https://en.wikipedia.org/wiki/Wilcoxon_signed-rank_test). See [R doc](https://stat.ethz.ch/R-manual/R-patched/library/stats/html/SignRank.html).
-
-_typescript decl_
-
-```typescript
-declare function qsignrank(
-  p: number | number[],
-  n: number,
-  lowerTail: boolean = true,
-  logP: boolean = false
-): number | number[];
-```
-
-- `p`: probabilities.
-- `n`: total number of observations.
-- `lowerTail`: if TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
-- `logP`: if TRUE, probabilities p are given as ln(p).
-
-Usage:
-
-```javascript
-const libR = require("lib-r-math.js");
-const { SignRank } = libR;
-
-const { dsignrank, psignrank, qsignrank, rsignrank } = SignRank();
-
-//1
-qsignrank(seq(0, 1, 0.2), 9);
-//[ 0, 15, 20, 25, 30, 45 ]
-
-//2
-qsignrank(seq(0, 1, 0.2), 4);
-//[ 0, 15, 20, 25, 30, 45 ]
-
-//3 there is a bug in R, it gives NaN instead of 66
-qsignrank(log(seq(0, 1, 0.2)), 11, false, true);
-//[ 66, 43, 36, 30, 23, 0 ]
-```
-
-_Equivalent in R_
-
-```R
-#1
-> qsignrank(seq(0, 1, 0.2), 9)
-[1]  0 15 20 25 30 45
-
-#2
-> qsignrank(seq(0, 1, 0.2), 4);
-[1]  0  3  4  6  7 10
-
-#3 Bug in R, first NaN should be 66.
-> qsignrank(log(seq(0, 1, 0.2)), 11, FALSE, TRUE);
-[1] NaN  43  36  30  23   0
-```
-
-#### `rsignrank`
-
-Generates random deviates for the [Wilcoxon Signed Rank statistic](https://en.wikipedia.org/wiki/Wilcoxon_signed-rank_test). See [R doc](https://stat.ethz.ch/R-manual/R-patched/library/stats/html/SignRank.html).
-
-_typescript decl_
-
-```typescript
-declare function rsignrank(N: number, n: number): number | number[];
-```
-
-- `N`: Number of deviates to generate..
-- `n`: total number of observations.
-
-Usage:
-
-```javascript
-const libR = require("lib-r-math.js");
-const { SignRank } = libR;
-
-const mmc = new MarsagliaMultiCarry(0);
-
-const explicitSR = SignRank(mmc);
-const { dsignrank, psignrank, qsignrank, rsignrank } = explicitSR;
-
-//1
-mmc.init(4569);
-rsignrank(5, 9);
-//[ 17, 15, 32, 12, 20 ]
-
-//2
-rsignrank(5, 25);
-//[ 140, 80, 125, 198, 157 ]
-
-//3
-rsignrank(5, 4);
-//[ 4, 7, 8, 10, 8 ]
-```
-
-_Equivalent in R_
-
-```R
-RNGkind('Marsaglia-Multicarry');
-set.seed(4569)
-
-#1
-> rsignrank(5, 9);
-[1] 17 15 32 12 20
-
-#2
-> rsignrank(5, 25);
-[1] 140  80 125 198 157
-
-#3
-> rsignrank(5, 4)
-[1]  4  7  8 10  8
-```
-
-### Student T distribution
-
-`dt, pt, qt, rt`
-
-Density, distribution function, quantile function and random generation for the distribution of the [Student T distribution](https://en.wikipedia.org/wiki/Student's_t-distribution). See [R doc](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/TDist.html).
-
-Usage:
-
-```javascript
-const libR = require("lib-r-math.js");
-const {
-  StudentT,
-  rng: { MarsagliaMultiCarry },
-  rng: {
-    normal: { AhrensDieter },
-  },
-} = libR;
-
-//*.Uses default argument "Normal()".
-//*.Normal itself using default arguments.
-const defaultT = StudentT();
-
-//explicit use of PRNG's
-const mmc = new MarsagliaMultiCarry(0);
-const ad = new AhrensDieter(mmc);
-
-//*create explicit functions
-const explicitT = StudentT(ad);
-
-const { dt, pt, qt, rt } = explicitT;
-```
-
-#### `dt`
-
-The density function of the of the [Student T distribution](https://en.wikipedia.org/wiki/Student's_t-distribution). See [R doc](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/TDist.html).
-
-_typescript decl_
-
-```typescript
-declare function dt(
-  x: number | number[],
-  df: number,
-  ncp?: number,
-  asLog = false
-): number | number[];
-```
-
-- `x`: quantiles.(Scalar or array).
-- `df`: degrees of freedom.
-- `ncp`: non-central parameter.
-- `asLog`: return result as ln(p);
-
-Usage:
-
-```javascript
-const libR = require("lib-r-math.js");
-const { StudentT } = libR;
-
-//usefull helpers
-const seq = libR.R.seq()();
-const precision = libR.R.numberPrecision(9);
-
-//init distribution
-const { dt, pt, qt, rt } = StudentT();
-
-//some testdata
-const x = seq(-2, 2, 0.5);
-//[ -2, -1.5, -1, -0.5, 0, 0.5, 1, 1.5, 2 ]
-
-//1 , degrees of freedom=4
-const d1 = dt(x, 4);
-precision(d1);
-/*[ 0.0662912607, 0.12288, 0.214662526,
-    0.322261869,  0.375,   0.322261869,
-    0.214662526,  0.12288, 0.0662912607
-]*/
-
-//2 d.freedom=6, ncp=3 ,  asLog=true
-const d2 = dt(x, 6, 3, true);
-precision(d2);
-/*[ -11.3338746, -10.0457558, -8.60952363,
-    -7.05283449, -5.46041826, -3.98130184,
-    -2.77195465, -1.92218557, -1.4276455 ]
-*/
-
-//3 d.freedom=40, ncp=0 (undefined also works), asLog=true
-const d3 = dt(x, 40, 0, true);
-precision(d3);
-/*[ -2.87904657, -2.04704833, -1.43138644,
-    -1.05291415, -0.925187883, -1.05291415,
-    -1.43138644, -2.04704833,  -2.87904657 ]
-*/
-```
-
-_Equivalent in R_
-
-```R
-options(scipen=999)
-options(digits=9)
-
-x=seq(-2, 2, 0.5);
-
-#1
-dt(x, 4);
-#[1] 0.06629126 0.12288000 0.21466253 0.32226187 0.37500000 0.32226187 0.21466253
-#[8] 0.12288000 0.06629126
-
-#2
-dt(x, 6, 3, TRUE);
-#[1] -11.333147 -10.045168  -8.608932  -7.052112  -5.460418  -3.981268  -2.771953
-#[8]  -1.922185  -1.427645
-
-#3
-dt(x, 40, 0, TRUE);
-#[1] -2.8790466 -2.0470483 -1.4313864 -1.0529142 -0.9251879 -1.0529142 -1.4313864
-#[8] -2.0470483 -2.8790466
-```
-
-#### `pt`
-
-The cumulative probability function of the of the [Student T distribution](https://en.wikipedia.org/wiki/Student's_t-distribution). See [R doc](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/TDist.html).
-
-_cdecl_
-
-```typescript
-declare function pt(
-  q: number | number[],
-  df: number,
-  ncp?: number,
-  lowerTail: boolean = true,
-  logP = false
-): number | number[];
-```
-
-- `q`: quantiles, array or scalar.
-- `df`: degrees of freedom.
-- `ncp`: non central parameter.
-- `lowerTail`: if TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
-- `logP`: if TRUE, probabilities p are given as ln(p).
-
-Usage:
-
-```javascript
-const libR = require("lib-r-math.js");
-const { StudentT } = libR;
-
-//usefull helpers
-const seq = libR.R.seq()();
-const precision = libR.R.numberPrecision(9);
-
-//init distribution
-const { dt, pt, qt, rt } = StudentT();
-
-//some testdata
-const x = seq(-2, 2, 0.5);
-//[ -2, -1.5, -1, -0.5, 0, 0.5, 1, 1.5, 2 ]
-
-//1
-const p1 = pt(x, 4);
-precision(p1);
-/*
-[ 0.0580582573, 0.103999986, 0.186950444,
-  0.321664726,  0.5,         0.678335274,
-  0.813049556,  0.896000014  0.941941743 ]*/
-
-//2
-const p2 = pt(x, 6, 3);
-precision(p2);
-/*[
-  0.00000552398055, 0.0000175658822, 0.000065386889,
-  0.000282969478,   0.00134989803,   0.00630091821,
-  0.0249440265,     0.0757615575,    0.173007342 ]*/
-
-//3
-const p3 = pt(x, 40, 0, true, true);
-precision(p3);
-/*
-[ -3.64347931, -2.64883812,   -1.82225529,
-  -1.17148473, -0.693147181,  -0.370928141,
-  -0.176332425,-0.0733595514, -0.0265094536 ]*/
-```
-
-_Equivalent in R_
-
-```R
-options(scipen=999)
-options(digits=9)
-
-x=seq(-2, 2, 0.5);
-
-#1
-pt(x, 4);
-# [1] 0.0580582618 0.1040000000 0.1869504832 0.3216649816 0.5000000000
-# [6] 0.6783350184 0.8130495168 0.8960000000 0.9419417382
-
-#2
-pt(x, 6, 3, TRUE);
-# [1] 0.0000055286975 0.0000175810923 0.0000654462028 0.0002832948346
-# [5] 0.0013498980316 0.0063005928526 0.0249439672347 0.0757615423360
-# [9] 0.1730073377405
-
-#3
-pt(x, 40, 0, TRUE, TRUE)
-#[1] -3.6434789672 -2.6488375624 -1.8222543111 -1.1714818403 -0.6931471806
-#[6] -0.3709294406 -0.1763326134 -0.0733595937 -0.0265094630
-```
-
-#### `qt`
-
-The quantile function of the of the [Student T distribution](https://en.wikipedia.org/wiki/Student's_t-distribution). See [R doc](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/TDist.html).
-
-_typescript decl_
-
-```typescript
-declare function qt(
-  p: number | number[],
-  df: number,
-  ncp?: number,
-  lowerTail: boolean = true,
-  logP: boolean = false
-): number | number[];
-```
-
-- `p`: probabilities, array or scalar.
-- `df`: degrees of freedom.
-- `ncp`: non central parameter.
-- `lowerTail`: if TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
-- `logP`: if TRUE, probabilities p are given as ln(p).
-
-Usage:
-
-```javascript
-const libR = require("lib-r-math.js");
-const { StudentT } = libR;
-
-//usefull helpers
-const seq = libR.R.seq()();
-const precision = libR.R.numberPrecision(9);
-
-//create instance of this distribution
-const { dt, pt, qt, rt } = StudentT();
-
-const x = seq(-2, 2, 0.5);
-//[ -2, -1.5, -1, -0.5, 0, 0.5, 1, 1.5, 2 ]
-
-//1
-const pp1 = pt(x, 4);
-//qt is the inverse of pt
-const q1 = qt(pp1, 4);
-precision(q1);
-//[ -2, -1.5, -1, -0.5, 0, 0.5, 1, 1.5, 2 ]
-
-//2
-const pp2 = pt(x, 6, 3);
-//qt is the inverse of pt
-const q2 = qt(pp2, 6, 3);
-precision(q2);
-//[ -2, -1.5, -1, -0.5, 4.15840085e-162, 0.5, 1, 1.5, 2 ]
-
-//3
-const pp3 = pt(x, 40, 0, true, true);
-//qt is the inverse of pt
-const q3 = qt(pp3, 40, 0, true, true);
-precision(q3);
-//[ -2, -1.5, -1, -0.5, 0, 0.5, 1, 1.5, 2 ]
-```
-
-_Equivalent in R_
-
-```R
-options(scipen=999)
-options(digits=9)
-
-x=seq(-2, 2, 0.5);
-
-#1
-pp1= pt(x, 4);
-qt(pp1, 4)
-#[1] -2.0 -1.5 -1.0 -0.5  0.0  0.5  1.0  1.5  2.0
-
-#2
-pp2=pt(x,6,3)
-qt(pp2, 6, 3)
-#[1] -2.00000000e+00 -1.50000000e+00 -1.00000000e+00 -5.00000000e-01
-#[5]  2.54875259e-17  5.00000000e-01  1.00000000e+00  1.50000000e+00
-#[9]  2.00000000e+00
-
-#3
-pp3 = pt(x, 40, 0, TRUE, TRUE)
-qt(pp3, 40, 0, TRUE, TRUE)
-#[1] -2.0 -1.5 -1.0 -0.5  0.0  0.5  1.0  1.5  2.0
-```
-
-#### `rt`
-
-Generates deviates for the [Student T distribution](https://en.wikipedia.org/wiki/Student's_t-distribution). See [R doc](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/TDist.html).
-
-_typescript decl_
-
-```typescript
-declare function rt(n: number, df: number, ncp?: number): number | number[];
-```
-
-- `n`: number of random deviates to generate.
-- `df`: degrees of freedom.
-- `ncp`: non central parameter.
-
-Usage:
-
-```javascript
-const libR = require("lib-r-math.js");
-const {
-  StudentT,
-  rng: { MarsagliaMultiCarry },
-  rng: {
-    normal: { AhrensDieter },
-  },
-} = libR;
-
-//some usefull helpers
-const precision = libR.R.numberPrecision(9); //restrict to 9 significant digits
-
-//explicit use of PRNG's
-const mmc = new MarsagliaMultiCarry(0);
-const ad = new AhrensDieter(mmc);
-
-const { dt, pt, qt, rt } = StudentT(ad);
-
-//1
-mmc.init(1234);
-const r1 = rt(5, 4);
-precision(r1);
-//[ 0.0231141364, 0.636030741, -0.9389398, 1.89196546, -1.9002538 ]
-
-//2
-mmc.init(4345);
-const r2 = rt(5, 11, 3);
-precision(r2);
-//[ 1.45445526, 2.23117165, 5.10909613, 2.80662548, 4.05546509 ]
-
-//3
-mmc.init(9876);
-const r3 = rt(5, 26, -16);
-precision(r3);
-//[ -14.666857, -14.4664293, -17.9397007, -17.0650828, -19.7422692 ]
-```
-
-_Equivalent in R_
-
-```R
-RNGkind("Marsaglia-Multicarry",normal.kind="Ahrens-Dieter")
-options(scipen=999)
-options(digits=9)
-
-#1.
-set.seed(1234);
-rt(5, 4);
-#[1]  0.0231141364  0.6360307414 -0.9389397997  1.8919654608 -1.9002537980
-
-#2
-set.seed(4345);
-rt(5, 11, 3);
-#[1] 1.45445526 2.23117165 5.10909613 2.80662548 4.05546509
-
-#3
-set.seed(9876)
-rt(5, 26, -16);
-#[1] -14.6668570 -14.4664293 -17.9397007 -17.0650828 -19.7422692
-```
-
-### Studentized Range distribution, (_Tukey HSD_)
-
-`ptukey, qtukey`
-
-The Tukey studentized range (1 - α confidence interval) for post hoc analysis when (for example `1 way anova`).
-Compare individual means to find rejection of $u_{j} \neq u_{i}$. See [R doc](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/Tukey.html) and [wiki](https://en.wikipedia.org/wiki/Studentized_range).
-
-For `1 way anova` having `k` groups containing $n_{i}$ samples and $T_{i}$ group means:
-
-<a href="http://www.codecogs.com/eqnedit.php?latex=$$&space;N&space;=&space;\sum_{i=1}^{i=k}&space;n_{i}&space;\newline&space;T_{i}&space;=&space;\frac{1}{n_{i}}&space;\cdot&space;\sum_{j=1}^{j=k}&space;y_{ij}\newline&space;S^{2}&space;=&space;\frac{1}{(N-k)}&space;\cdot&space;\sum_{i=1}^{i=k}&space;\sum_{j=1}^{j=n_{i}}&space;\left(&space;y_{ij}&space;-&space;T_{i}&space;\right)^{2}&space;\newline&space;v&space;=&space;\frac{N}{k}&space;$$" target="_blank"><img src="http://latex.codecogs.com/svg.latex?$$&space;N&space;=&space;\sum_{i=1}^{i=k}&space;n_{i}&space;\newline&space;T_{i}&space;=&space;\frac{1}{n_{i}}&space;\cdot&space;\sum_{j=1}^{j=k}&space;y_{ij}\newline&space;S^{2}&space;=&space;\frac{1}{(N-k)}&space;\cdot&space;\sum_{i=1}^{i=k}&space;\sum_{j=1}^{j=n_{i}}&space;\left(&space;y_{ij}&space;-&space;T_{i}&space;\right)^{2}&space;\newline&space;v&space;=&space;\frac{N}{k}&space;$$" title="$$ N = \sum_{i=1}^{i=k} n_{i} \newline T_{i} = \frac{1}{n_{i}} \cdot \sum_{j=1}^{j=k} y_{ij}\newline S^{2} = \frac{1}{(N-k)} \cdot \sum_{i=1}^{i=k} \sum_{j=1}^{j=n_{i}} \left( y_{ij} - T_{i} \right)^{2} \newline v = \frac{N}{k} $$" /></a>
-
-Then the (1 - α) confidence interval for each $u_{j} \neq u_{i}$ comparison will be:
-
-$$ \left(T*{i} - T*{j} \right) - q*{\alpha,k,v} \cdot \sqrt{ S^2/k } \lt u*{i} - u*{j} \lt \left(T*{i} - T*{j} \right) + q*{\alpha,k,v} \cdot \sqrt{ S^2/k } $$
-
-With `q(α,k,v)` equal to:
-
-```javascript
-qtukey(1 - α, k, N - k);
-```
-
-#### `ptukey`
-
-The probability function of the [Tukey Studentized Range](https://en.wikipedia.org/wiki/Studentized_range) aka Tukey HSD. Usefull it to find the p-value of the difference of 2 specific treatment means $T_{i}-T_{j}$. See [R-doc](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/Tukey.html).
-
-_typescript decl_
-
-```typescript
-declare function ptukey(
-  q: number | number[],
-  nmeans: number,
-  df: number,
-  nranges: number = 1,
-  lowerTail: boolean = true,
-  logP: boolean = false
-): number | number[];
-```
-
-- `q`: number of random deviates to generate.
-- `nmeans`: sample size for range (same for each group).
-- `df`: degrees of freedom of S².
-- `nranges`: number of groups whose maximum range is considered.
-- `lowerTail`: if TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
-- `logP`: if TRUE, probabilities p are given as log(p).
-
-Usage:
-
-```javascript
-const libR = require("lib-r-math.js");
-const { Tukey } = libR;
-
-const { abs } = Math;
-
-const { qtukey, ptukey } = Tukey();
-
-const differenceOf2Means = -67.46; //Ti - Tj
-const std = 16.69658048823; // = S/sqrt(n) see formula for S²
-const df = 20; //degrees of freedom for std
-const k = 5; // number of treatments in 1-way anova
-
-const pValue = 1 - ptukey(abs(differenceOf2Means) / std, k, df);
-
-// p value = 0.0657, if  α < p-value (example α = 0.05 ) this difference (Ti = Tj) would not rejected.
-```
-
-_R equivalent_
-
-```R
-p_value = 1 - ptukey(abs(-67.46)/16.69658048823, 5, 20)
-# 0.06574507
-```
-
-#### `qtukey`
-
-The quantile function of the [Tukey Studentized Range](https://en.wikipedia.org/wiki/Studentized_range). See [R-doc](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/Tukey.html).
-
-_typescript decl_
-
-```typescript
-declare function qtukey(
-  p: number | number[],
-  nmeans: number,
-  df: number,
-  nranges: number = 1,
-  lowerTail: boolean = true,
-  logP: boolean = false
-): number | number[];
-```
-
-- `q`: probabilities.
-- `nmeans`: sample size for range (same for each group).
-- `df`: degrees of freedom of S².
-- `nranges`: number of groups whose maximum range is considered.
-- `lowerTail`: if TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
-- `logP`: if TRUE, probabilities p are given as log(p).
-
-Usage:
-
-```javascript
-const libR = require("lib-r-math.js");
-const {
-  Tukey,
-  R: { seq: _seq, numberPrecision },
-} = libR;
-
-//some helpers
-const prec3 = numberPrecision(3);
-const seq = _seq()();
-
-const { ptukey, qtukey } = Tukey();
-
-// Generates partial table for Tukey HSD table table 1-α = 0.95
-//df=5
-const row1 = seq(2, 10).map((v) => qtukey(0.95, v, 5));
-prec3(row1);
-
-//[ 3.64, 4.6, 5.22, 5.67, 6.03, 6.33, 6.58, 6.8, 6.99 ]
-
-//df=6
-prec3(seq(2, 10).map((v) => qtukey(0.95, v, 6)));
-//[ 3.46, 4.34, 4.9, 5.3, 5.63, 5.9, 6.12, 6.32, 6.49 ]
-
-//df=7
-prec3(seq(2, 10).map((v) => qtukey(0.95, v, 7)));
-//[ 3.34, 4.16, 4.68, 5.06, 5.36, 5.61, 5.82, 6, 6.16 ]
-
-//df=8
-prec3(seq(2, 10).map((v) => qtukey(0.95, v, 8)));
-//[ 3.34, 4.16, 4.68, 5.06, 5.36, 5.61, 5.82, 6, 6.16 ]
-```
-
-_Equivalent in R_
-
-```R
-options(digits=3)
-
-qtukey(p=0.95, nmeans=2:10, df= 5)
-#[1] 3.64 4.60 5.22 5.67 6.03 6.33 6.58 6.80 6.99
-
-qtukey(p=0.95, nmeans=2:10, df= 6)
-#[1] 3.46 4.34 4.90 5.30 5.63 5.90 6.12 6.32 6.49
-
-qtukey(p=0.95, nmeans=2:10, df= 7)
-#[1] 3.34 4.16 4.68 5.06 5.36 5.61 5.82 6.00 6.16
-
-qtukey(p=0.95, nmeans=2:10, df= 8)
-#[1] 3.26 4.04 4.53 4.89 5.17 5.40 5.60 5.77 5.92
-```
-
-<table>
-    <caption>Tukey HSD for 1-α = 0.95</caption>
-    <thead>
-        <tr colspan="1">
-            <th></th>
-            <th colspan="9">k = Number of treatments</th>
-            <tr>
-                <tr>
-                    <th>df for Error Term</th>
-                    <th>2</th>
-                    <th>3</th>
-                    <th>4</th>
-                    <th>5</th>
-                    <th>6</th>
-                    <th>7</th>
-                    <th>8</th>
-                    <th>9</th>
-                    <th>10</th>
-                </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td>5</td>
-            <td>3.64</td>
-            <td>4.60</td>
-            <td>5.22</td>
-            <td>5.67</td>
-            <td>6.03</td>
-            <td>6.33</td>
-            <td>6.58</td>
-            <td>6.80</td>
-            <td>6.99</td>
-        </tr>
-        <tr>
-            <td>6</td>
-            <td>3.46</td>
-            <td>4.34</td>
-            <td>4.9</td>
-            <td>5.3</td>
-            <td>5.63</td>
-            <td>5.9</td>
-            <td>6.12</td>
-            <td>6.32</td>
-            <td>6.49</td>
-        </tr>
-        <tr>
-            <td>7</td>
-            <td>3.34</td>
-            <td>4.16</td>
-            <td>4.68</td>
-            <td>5.06</td>
-            <td>5.36</td>
-            <td>5.61</td>
-            <td>5.82</td>
-            <td>6</td>
-            <td>6.16</td>
-        </tr>
-        <tr>
-            <td>8</td>
-            <td>3.26</td>
-            <td>4.04</td>
-            <td>4.53</td>
-            <td>4.89</td>
-            <td>5.17</td>
-            <td>5.4</td>
-            <td>5.6</td>
-            <td>5.77</td>
-            <td>5.92</td>
-        </tr>
-    </tbody>
-</table>
-
-### Weibull distribution
-
-`dweibull, pweibull, qweibull, rweibull`
-
-Density, distribution function, quantile function and random generation for the [Weibull distribution](https://en.wikipedia.org/wiki/Weibull_distribution). See [R doc](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/Weibull.html).
-
-Usage:
-
-```javascript
-const libR = require("lib-r-math.js");
-const {
-  Weibull,
-  rng: { WichmannHill },
-} = libR;
-
-const wh = new WichmannHill(1234);
-const explicitW = Weibull(wh);
-
-//uses Mersenne-Twister
-const defaultW = Weibull();
-
-const { dweibull, pweibull, qweibull, rweibull } = explicitW;
-```
-
-#### `dweibull`
-
-The density function of the [Weibull distribution](https://en.wikipedia.org/wiki/Weibull_distribution) with parameters `shape` (λ) and `scale` (k). See [R doc](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/Weibull.html).
-
-![dweibull](https://wikimedia.org/api/rest_v1/media/math/render/svg/c977e84ffb071a505f8614469e75829521fe3c3e)
-
-_typescript decl_
-
-```typescript
-declare function dweibull(
-  x: number | number[],
-  shape: number,
-  scale: number = 1,
-  aslog: boolean = false
-): number | number[];
-```
-
-- `x`: quantiles (scalar or Array)
-- `shape`: shape parameter
-- `scale`: scale parameter
-- `asLog`: return result p as ln(p).
-
-Usage:
-
-```javascript
-const libR = require("lib-r-math.js");
-const {
-  Weibull,
-  R: { seq: _seq, numberPrecision },
-} = libR;
-
-//some usefull helpers
-const seq = _seq()();
-const precision = numberPrecision(9); // restrict to 9 significant digits
-
-const { dweibull, pweibull, qweibull, rweibull } = Weibull();
-
-const x = seq(0, 10, 2);
-const x2 = [...seq(0, 1, 0.2), Infinity];
-
-//1
-const d1 = dweibull(x, 1, 2);
-precision(d1);
-/*[
-  0.5,           0.183939721,     0.0676676416,
-  0.0248935342,  0.00915781944,   0.0033689735 ]*/
-
-//2
-const d2 = dweibull(x, 0.5, 2);
-precision(d2);
-/*[
-  Infinity,    0.57624084,  0.357439558,
-  0.263940781, 0.210009077,  0.174326108 ]*/
-
-//3
-const d3 = dweibull(x2, 1.5, 9);
-precision(d3);
-/*[
-  0,            0.0247630314,  0.0348087379, 0.0422987464,
-  0.0483908235, 0.0535355802,  0 ]*/
-```
-
-_Equivalent in R_
-
-```R
-options(scipen=999)
-options(digits=9)
-x = seq(0, 10, 2);
-x2 = c(seq(0, 1, 0.2), Inf);
-
-#1
-dweibull(x, 1, 2)
-#[1] 0.50000000000 0.18393972059 0.06766764162 0.02489353418 0.00915781944
-#[6] 0.0033689735
-
-#2
-dweibull(x, 0.5, 2)
-#[1]         Inf 0.576240840 0.357439558 0.263940781 0.210009077 0.174326108
-
-#3
-dweibull(x2, 1.5, 9);
-#[1] 0.0000000000 0.0247630314 0.0348087379 0.0422987464 0.0483908235
-#[6] 0.0535355802 0.0000000000
-```
-
-#### `pweibull`
-
-The cummulative probability function of the [Weibull distribution](https://en.wikipedia.org/wiki/Weibull_distribution) with parameters `shape` (λ) and `scale` (k). See [R doc](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/Weibull.html).
-
-_typescript decl_
-
-```typescript
-declare function pweibull(
-  q: number,
-  shape: number,
-  scale: number = 1,
-  lowerTail: boolean = true,
-  logP: boolean = false
-): number | number[];
-```
-
-- `q`: quantiles (scalar or Array)
-- `shape`: shape parameter
-- `scale`: scale parameter
-- `lowerTail`: if TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
-- `logP`: if `true`, probabilities p are given as ln(p).
-
-Usage:
-
-```javascript
-const libR = require("lib-r-math.js");
-const {
-  Weibull,
-  R: { seq: _seq, numberPrecision },
-} = libR;
-
-//some usefull helpers
-const seq = _seq()();
-const precision = numberPrecision(9); // restrict to 9 significant digits
-
-const { dweibull, pweibull, qweibull, rweibull } = Weibull();
-
-const x = seq(0, 10, 2);
-const x2 = [...seq(0, 1, 0.2), Infinity];
-
-//1
-const p1 = pweibull(x, 1, 2);
-precision(p1);
-/*[ 
-  0,            0.632120559,  0.864664717,  0.950212932,
-  0.981684361,  0.993262053 ]*/
-
-//2
-const p2 = pweibull(x, 0.5, 2);
-precision(p2);
-/*[ 
-    0,              0.632120559,    0.756883266,    0.823078794,
-    0.864664717,    0.893122074 ]*/
-
-//3
-const p3 = pweibull(x2, 1.5, 9);
-precision(p3);
-/*[
-  0,            0.00330721239,  0.00932595261,  0.0170659576,
-  0.0261534621, 0.0363595557,   1             ]*/
-```
-
-_Equivalent in R_
-
-```R
-options(scipen=999)
-options(digits=9)
-x = seq(0, 10, 2);
-x2 = c(seq(0, 1, 0.2), Inf);
-
-#1
-pweibull(x, 1, 2)
-#[1] 0.000000000 0.632120559 0.864664717 0.950212932 0.981684361 0.993262053
-
-#2
-pweibull(x, 0.5, 2)
-#[1] 0.000000000 0.632120559 0.756883266 0.823078794 0.864664717 0.893122074
-
-#3
-pweibull(x2, 1.5, 9)
-#[1] 0.00000000000 0.00330721239 0.00932595261 0.01706595756 0.02615346212
-#[6] 0.03635955570 1.00000000000
-```
-
-#### `qweibull`
-
-The quantile function of the [Weibull distribution](https://en.wikipedia.org/wiki/Weibull_distribution) with parameters `shape` (λ) and `scale` (k). See [R doc](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/Weibull.html).
-
-_typescript decl_
-
-```typescript
-declare function qweibull(
-  p: number | number[],
-  shape: number,
-  scale: number = 1,
-  lowerTail: boolean = true,
-  logP: boolean = false
-): number | number[];
-```
-
-- `p`: probabilities (scalar or Array)
-- `shape`: shape parameter
-- `scale`: scale parameter
-- `lowerTail`: if TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
-- `logP`: if `true`, probabilities p are given as ln(p).
-
-Usage:
-
-```javascript
-const libR = require("lib-r-math.js");
-const {
-  Weibull,
-  R: { seq: _seq, numberPrecision },
-} = libR;
-
-//some usefull helpers
-const seq = _seq()();
-const precision = numberPrecision(9); // restrict to 9 significant digits
-
-const { dweibull, pweibull, qweibull, rweibull } = Weibull();
-
-//some data
-const pp = seq(0, 1, 0.2);
-
-//1
-const q1 = qweibull(pp, 1, 2);
-precision(q1);
-//[ 0, 0.446287103, 1.02165125, 1.83258146, 3.21887582, Infinity ]
-
-//2
-const q2 = qweibull(pp, 0.5, 2);
-precision(q2);
-//[ 0, 0.099586089, 0.521885636, 1.67917741, 5.18058079, Infinity ]
-
-const q3 = qweibull(pp, 1.5, 9);
-precision(q3);
-//[ 0, 3.31104744, 5.75118881, 8.49046297, 12.3601952, Infinity ]
-```
-
-_Equivalent in R_
-
-```R
-options(scipen=999)
-options(digits=9)
-pp = seq(0, 1, 0.2);
-
-#1
-qweibull(pp, 1, 2);
-#[1] 0.000000000 0.446287103 1.021651248 1.832581464 3.218875825         Inf
-
-#2
-qweibull(pp, 0.5, 2);
-#[1] 0.000000000 0.099586089 0.521885636 1.679177411 5.180580788         Inf
-
-#3
-qweibull(pp, 1.5, 9);
-#[1]  0.00000000  3.31104744  5.75118881  8.49046297 12.36019515         Inf
-```
-
-#### `rweibull`
-
-Generates random deviates for the [Weibull distribution](https://en.wikipedia.org/wiki/Weibull_distribution) with parameters `shape` (λ) and `scale` (k). See [R doc](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/Weibull.html).
-
-_typescript decl_
-
-```typescript
-declare function rweibull(
-  N: number,
-  shape: number,
-  scale: number = 1
-): number | number[];
-```
-
-- `n`: Number of deviates to generate.
-- `shape`: shape parameter
-- `scale`: scale parameter
-
-Usage:
-
-```javascript
-const libR = require("lib-r-math.js");
-const {
-  Weibull,
-  rng: { WichmannHill },
-  R: { numberPrecision },
-} = libR;
-
-//some usefull helpers
-const precision = numberPrecision(9); // restrict to 9 significant digits
-
-const wh = new WichmannHill(1234);
-
-const { dweibull, pweibull, qweibull, rweibull } = Weibull(wh);
-
-//1
-const r1 = rweibull(5, 1, 2);
-precision(r1);
-//[ 1.76155181, 0.903023096, 0.444343952, 0.290091816, 0.556104098 ]
-
-//2
-const r2 = rweibull(5, 0.5, 2);
-precision(r2);
-//[ 0.271864356, 5.52787221, 0.591076799, 0.801653652, 5.62018481 ]
-
-//3
-const r3 = rweibull(5, 1.5, 9);
-precision(r3);
-//[ 0.0405663748, 12.763942, 4.75492179, 6.86945357, 1.95678715 ]
-```
-
-_Equivalent in R_
-
-```R
-RNGkind("Wichmann-Hill");
-set.seed(1234)
-
-#1
-rweibull(5, 1, 2);
-#[1] 1.761551811 0.903023096 0.444343952 0.290091816 0.556104098
-
-#2
-rweibull(5, 0.5, 2);
-#[1] 0.271864356 5.527872211 0.591076799 0.801653652 5.620184814
-
-#3
-rweibull(5, 1.5, 9);
-#[1]  2.45445219 16.69401443 12.01195335 13.57917051  8.93470820
-```
-
-### Wilcoxon `rank sum statistic` distribution
-
-`dwilcox, pwilcox, qwilcox, rwilcox`
-
-The Wilcoxon rank sum test is also known as the [Mann–Whitney U test](https://en.wikipedia.org/wiki/Mann%E2%80%93Whitney_U_test)
-
-Density, distribution function, quantile function and random generation for the [Wilcoxon rank sum statistic](https://en.wikipedia.org/wiki/Mann%E2%80%93Whitney_U_test). See [R doc](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/Wilcoxon.html).
-
-These functions are members of an object created by the `Wilcoxon` factory method. The factory method needs as optional argument an instance of one of the [uniform PRNG](#uniform-pseudo-random-number-generators) generators.
-
-Note: some small improvements where made to `dwilcox, pwilcox, qwilcox` when porting from R.
-Read about it [here]((#what-is-improved-on-r).
-
-Usage:
-
-```javascript
-const libR = require('lib-r-math.js');
-const {
-  Wilcoxon
-  rng: { SuperDuper }
-} = libR;
-
-//explicit intantiation
-const sp = new SuperDuper(1234);
-const explicitW = Wilcoxon(sp);
-
-//go with defaults uses MersenneTwister
-const defaultW = Wilcoxon();
-
-const { dwilcox, pwilxoc, qwilcox, rwilcox } = defaultW;
-```
-
-#### `dwilcox`
-
-The density function of the [Wilcoxon rank sum statistic](https://en.wikipedia.org/wiki/Mann%E2%80%93Whitney_U_test). See [R doc](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/Wilcoxon.html).
-
-_typescript decl_
-
-```typescript
-declare function dwilcox(
-  x: number | number[],
-  m: number,
-  n: number,
-  asLog: boolean = false
-): number | number[];
-```
-
-- `x`: quantile(s), scalar or array of values.
-- `m`: size of first sample, the convention is to have m ≤ n.
-- `n`: size of the second sample, the convention is n ≥ m.
-- `asLog`: return value as ln(p)
-
-Note: if `m` ≥ `n` the values are swapped internally.
-
-Usage:
-
-```javascript
-const libR = require("lib-r-math.js");
-const {
-  Wilcoxon,
-  R: { seq: _seq, numberPrecision, arrayrify },
-} = libR;
-
-//helper functions
-const seq = _seq()();
-const precision = numberPrecision(9);
-const pow = arrayrify(Math.pow); //allow it to accept "R" like vectorized input
-
-//init
-const { dwilcox, pwilcox, qwilcox, rwilcox } = Wilcoxon();
-
-const x = pow(seq(0, 10, 2), 2);
-//[ 0, 4, 16, 36, 64, 100 ]
-
-//
-const d1 = dwilcox(x, 8, 9);
-precision(d1);
-/*[
-  0.0000411353353,  0.000205676676,  0.0064171123,
-  0.0374331551,     0.000904977376,  0
-]*/
-
-//2
-const d2 = dwilcox(x, 100, 50); // same as dwilcox(x, 50, 100)
-precision(d2);
-/*[
-  4.96804037e-41,  2.48402019e-40,  1.14761733e-38,  8.93104617e-37,
-  8.65063507e-35,  9.41332103e-33 
-]*/
-
-//3
-const d3 = dwilcox(x, 5, 34);
-precision(d3);
-/*[
-  0.00000173684384, 0.00000868421921,  0.000175421228,
-  0.00212589686,    0.0114631694,      0.0136238031
-]*/
-```
-
-_Equivalent in R_
-
-```R
-
-#some data
-x = seq(0,10,2)^2;
-#[1]   0   4  16  36  64 100
-
-#1
-dwilcox(x, 8, 9);
-#[1] 4.113534e-05 2.056767e-04 6.417112e-03 3.743316e-02 9.049774e-04
-#[6] 0.000000e+00
-
-#2
-dwilcox(x, 100, 50);
-#[1] 4.968040e-41 2.484020e-40 1.147617e-38 8.931046e-37 8.650635e-35
-#[6] 9.413321e-33
-
-#3
-dwilcox(x, 5, 34);
-#[1] 1.736844e-06 8.684219e-06 1.754212e-04 2.125897e-03 1.146317e-02
-#[6] 1.362380e-02
-```
-
-#### `pwilcox`
-
-The cumulative probability function of the [Wilcoxon rank sum statistic](https://en.wikipedia.org/wiki/Mann%E2%80%93Whitney_U_test). See [R doc](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/Wilcoxon.html).
-
-_typescript decl_
-
-```typescript
-declare function pwilcox(
-  q: number | number[],
-  m: number,
-  n: number,
-  lowerTail: boolean = true,
-  logP: boolean = false
-): number | number[];
-```
-
-- `q`: quantile(s), scalar or array of values.
-- `m`: size of first sample, the convention is to have m ≤ n.
-- `n`: size of the second sample, the convention is n ≥ m.
-- `lowerTail`: if TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
-- `logP`: if `true`, probabilities p are given as ln(p).
-
-Note: if `m` ≥ `n` the values are swapped internally.
-
-Usage:
-
-```javascript
-const libR = require("lib-r-math.js");
-const {
-  Wilcoxon,
-  R: { seq: _seq, numberPrecision, arrayrify },
-} = libR;
-
-//helper functions
-const seq = _seq()();
-const precision = numberPrecision(9);
-const pow = arrayrify(Math.pow); //allow it to accept "R" like vectorized input
-
-//init
-const { dwilcox, pwilcox, qwilcox, rwilcox } = Wilcoxon();
-
-const q = pow(seq(0, 10, 2), 2);
-
-//1
-const p1 = pwilcox(q, 8, 9);
-precision(p1);
-/*[
-  0.0000411353353,  0.000493624023,  0.0296174414,
-  0.518716578,      0.99814891,      1 ]*/
-
-//2
-const p2 = pwilcox(q, 100, 50); // same as dwilcox(x, 50, 100)
-precision(p2);
-/*[
-  4.96804037e-41,  5.96164844e-40,  4.54575694e-38,
-  4.92496746e-36,  6.11410568e-34,  8.1299269e-32 ]*/
-
-//3
-const p3 = pwilcox(q, 5, 34);
-precision(p3);
-/*[
-  0.00000173684384,  0.0000208421261,  0.000884053516,
-  0.0194092299,      0.200294569,      0.736819526 ]*/
-```
-
-_Equivalent in R_
-
-```R
-options(scipen=999)
-options(digits=9)
-q = seq(0, 10, 2)^2;
-#[1]   0   4  16  36  64 100
-
-#1
-pwilcox(q, 8, 9)
-#[1] 4.113534e-05 4.936240e-04 2.961744e-02 5.187166e-01 9.981489e-01
-#[6] 1.000000e+00
-
-#2
-pwilcox(q, 100, 50);
-#[1] 4.968040e-41 5.961648e-40 4.545757e-38 4.924967e-36 6.114106e-34
-#[6] 8.129927e-32
-
-#3
-pwilcox(q, 5, 34);
-#[1] 1.736844e-06 2.084213e-05 8.840535e-04 1.940923e-02 2.002946e-01
-#[6] 7.368195e-01
-```
-
-#### `qwilcox`
-
-The quantily function of the [Wilcoxon rank sum statistic](https://en.wikipedia.org/wiki/Mann%E2%80%93Whitney_U_test). See [R doc](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/Wilcoxon.html).
-
-_typescript decl_
-
-```typescript
-declare function qwilcox(
-  p: number | number[],
-  m: number,
-  n: number,
-  lowerTail: boolean = true,
-  logP: boolean = false
-): number | number[];
-```
-
-- `p`: probabilities, scalar or array of values.
-- `m`: size of first sample, the convention is to have m ≤ n.
-- `n`: size of the second sample, the convention is n ≥ m.
-- `lowerTail`: if TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
-- `logP`: if `true`, probabilities p are given as ln(p).
-
-Note: if `m` ≥ `n` the values are swapped internally.
-
-Usage:
-
-```javascript
-const libR = require("lib-r-math.js");
-const {
-  Wilcoxon,
-  R: { seq: _seq },
-} = libR;
-
-//helper functions
-const seq = _seq()();
-
-//init
-const { dwilcox, pwilcox, qwilcox, rwilcox } = Wilcoxon();
-
-//probabilities (0, 1)
-const p = seq(0, 1, 0.2);
-//[ 0, 0.2, 0.4, 0.6, 0.8, 1 ]
-
-//1
-const q1 = qwilcox(p, 8, 9);
-//[ 0, 27, 33, 39, 45, 72 ]
-
-//2
-const q2 = qwilcox(p, 100, 50); // same as dwilcox(x, 50, 100)
-//[ 0, 2288, 2436, 2564, 2712, 5000 ]
-
-//3
-const q3 = qwilcox(p, 5, 34);
-//[ 0, 64, 79, 91, 106, 170 ]
-```
-
-_Equivalent in R_
-
-```R
-# probabilities
-p = seq(0,1,0.2);
-#[1] 0.0 0.2 0.4 0.6 0.8 1.0
-
-#1
-qwilcox(p, 8, 9);
-#[1] 0 27 33 39 45 72
-
-#2
-qwilcox(p, 100, 50);
-#[1] 0 2288 2436 2564 2712 5000
-
-#3
-qwilcox(p, 5, 34);
-#[1] 0  64  79  91 106 170
-```
-
-#### `rwilcox`
-
-Generates random deviates for of the [Wilcoxon rank sum statistic](https://en.wikipedia.org/wiki/Mann%E2%80%93Whitney_U_test). See [R doc](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/Wilcoxon.html).
-
-_typescript decl_
-
-```typescript
-declare function rwilcox(nn: number, m: number, n: number): number | number[];
-```
-
-- `nn`: number of deviates to generate.
-- `m`: size of first sample, the convention is to have m ≤ n.
-- `n`: size of the second sample, the convention is n ≥ m.
-
-Note: if `m` ≥ `n` the values are swapped internally.
-
-Usage:
-
-```javascript
-const libR = require("lib-r-math.js");
-const {
-  Wilcoxon,
-  rng: { SuperDuper },
-} = libR;
-
-const sd = new SuperDuper(1234);
-const { dwilcox, pwilcox, qwilcox, rwilcox } = Wilcoxon(sd);
-
-sd.init(1234); // you may do this at any time
-
-//1
-rwilcox(5, 8, 9);
-//[ 48, 27, 60, 20, 43 ]
-
-//2
-rwilcox(5, 100, 50);
-//[ 2521, 2373, 2266, 2136, 2397 ]
-
-//3
-rwilcox(5, 5, 34);
-//[ 138, 73, 83, 72, 99 ]
-```
-
-_Equivalent in R_
-
-```R
-RNGkind("Super-Duper");
-set.seed(1234);
-
-#1
-rwilcox(5, 8, 9);
-#[1] 48 27 60 20 43
-
-#2
-rwilcox(5, 100, 50);
-#[1] 2521 2373 2266 2136 2397
-
-#3
-rwilcox(5, 5, 34);
-#[1] 138  73  83  72  99
-```
-
---
 
 ## Special Functions of Mathematics
 

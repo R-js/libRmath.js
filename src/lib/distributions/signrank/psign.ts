@@ -38,22 +38,21 @@ function unRegisterBackend(): boolean {
 
 export { unRegisterBackend, registerBackend };
 
-
-export function psignrank(x: number, n: number, lowerTail = true, logP = false): number {
-    if (isNaN(x) || isNaN(n)) {
+export function psignrank(q: number, n: number, lowerTail = true, logP = false): number {
+    if (isNaN(q) || isNaN(n)) {
         return NaN;
     }
     if (!isFinite(n) || n <= 0) {
         return ML_ERR_return_NAN2(printer, lineInfo4);
     }
 
-    x = round(x + 1e-7);
+    q = round(q + 1e-7);
 
-    if (x < 0.0) {
+    if (q < 0.0) {
         return R_DT_0(lowerTail, logP);
     }
 
-    if (x >= n * (n + 1) / 2) {
+    if (q >= n * (n + 1) / 2) {
         return R_DT_1(lowerTail, logP); //returns 1 on the edge case or 0 (because log(1)= 0)
     }
 
@@ -70,14 +69,14 @@ export function psignrank(x: number, n: number, lowerTail = true, logP = false):
 
 
     
-    if (x <= u / 2) {
+    if (q <= u / 2) {
         //smaller then mean
-        for (let i = 0; i <= x; i++) {
+        for (let i = 0; i <= q; i++) {
             p += _csignrank(i, n, u, c) * f;
         }
     } else {
-        x = (n * (n + 1)) / 2 - x;
-        for (let i = 0; i < x; i++) {
+        q = (n * (n + 1)) / 2 - q;
+        for (let i = 0; i < q; i++) {
             p += _csignrank(i, n, u, c) * f;
         }
         lowerTail = !lowerTail; /* p = 1 - p; */

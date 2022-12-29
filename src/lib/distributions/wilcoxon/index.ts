@@ -23,6 +23,7 @@ import { repeatedCall } from '@lib/r-func';
 
 
 export { rwilcoxOne };
-export function rwilcox(N: number, m: number, n: number): Float32Array {
-    return repeatedCall(N, rwilcoxOne, m, n);
+export function rwilcox(nn: number, m: number, n: number): Float32Array {
+    return repeatedCall(nn, rwilcoxOne, m, n);
 }
+
