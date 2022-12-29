@@ -1301,7 +1301,7 @@ Bessel Functions of integer and fractional order, of first and second kind, $J_{
 Arguments:
 - `x`: must be ≥ 0.
 - `nu`: The order (maybe fractional and negative) of the corresponding Bessel function.
-- `exponScaled`: if `true`, the results are exponentially scaled in order to avoid overflow ($I_{\nu}$) or underflow ($K_{\nu}$), respectively.
+- `exponScaled`: if `true`, the results are exponentially scaled in order to avoid overflow ( $I_{\nu}$ ) or underflow ( $K_{\nu}$ ), respectively.
 
 Details:
 If `exponScaled = true`, $e^{-x} \cdot I_{\nu}(x)$ or $e^{x} \cdot K_{\nu}(x)$ are returned.
