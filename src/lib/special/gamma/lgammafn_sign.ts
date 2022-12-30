@@ -57,14 +57,13 @@ export function lgammafn_sign(x: number, sgn?: Int32Array): number {
     //   dxrel = sqrt(DBL_EPSILON) = 2^-26 = 5^26 * 1e-26 (is *exact* below !)
     //
 
-    if (sgn) sgn[0] = 1;
-
-    //#ifdef IEEE_754
     if (isNaN(x)) return x;
-    //#endif
 
-    if (sgn && x < 0 && fmod(floor(-x), 2) === 0) {
-        sgn[0] = -1;
+    if (sgn !== undefined && sgn !== null) {
+        sgn[0] = 1;
+        if (x < 0 && fmod(floor(-x), 2) === 0){
+            sgn[0] = -1;
+        }
     }
 
     if (x <= 0 && x === trunc(x)) {
