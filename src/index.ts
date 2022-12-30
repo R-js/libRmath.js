@@ -25,9 +25,6 @@ import { cospi } from './lib/trigonometry/cospi';
 import { sinpi } from './lib/trigonometry/sinpi';
 import { tanpi } from './lib/trigonometry/tanpi';
 
-// Stirling's approximation
-import { stirlerr } from './lib/stirling';
-
 // distributions
 import {
     rbetaOne,
@@ -256,8 +253,6 @@ const defaultObservableNoteBook = {
     cospi,
     sinpi,
     tanpi,
-    // Stirling's approximation
-    stirlerr,
     // beta distribution
     rbetaOne,
     dbeta,
@@ -441,8 +436,6 @@ export {
     cospi,
     sinpi,
     tanpi,
-    // Stirling's approximation
-    stirlerr,
     // beta distribution
     rbetaOne,
     dbeta,
