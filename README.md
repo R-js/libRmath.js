@@ -85,7 +85,7 @@ There is no UMD module from 2.0.0. What module types are available for node and 
 ## Installation and usage
 
 ```bash
-npm i lib-r-math.js
+npm i lib-r-math.js@beta
 ```
 
 lib-r-math.js supports the following module types:
