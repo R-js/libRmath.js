@@ -84,6 +84,8 @@ There is no UMD module from 2.0.0. What module types are available for node and 
 
 ## Installation and usage
 
+Minimal version of node required is `16.18.1`.
+
 ```bash
 npm i lib-r-math.js@beta
 ```
@@ -298,7 +300,7 @@ Exceptions:
 
 All distribution functions follow a prefix pattern:
 
-- `d` (like `dbeta`, `dgamma`) are desnisty functions
+- `d` (like `dbeta`, `dgamma`) are density functions
 - `p` (like `pbeta`, `pgamma`) are (cummulative) distribution function
 - `q` (like `qbeta`, `qgamma`) are quantile functions
 - `r` (like `rbeta/rbetaOne`, `rgamma/rgammaOne`) generates random deviates 
