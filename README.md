@@ -301,7 +301,7 @@ Exceptions:
 All distribution functions follow a prefix pattern:
 
 - `d` (like `dbeta`, `dgamma`) are density functions
-- `p` (like `pbeta`, `pgamma`) are (cummulative) distribution function
+- `p` (like `pbeta`, `pgamma`) are (cumulative) distribution function
 - `q` (like `qbeta`, `qgamma`) are quantile functions
 - `r` (like `rbeta/rbetaOne`, `rgamma/rgammaOne`) generates random deviates 
 
