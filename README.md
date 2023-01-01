@@ -80,7 +80,10 @@ rbinomOne(350, 0.5);
 
 ### UMD module removed
 
-There is no UMD module from 2.0.0. What module types are available for node and browser is listed [here]().
+There is no UMD module from 2.0.0. These are the module types for node and browser
+
+- **node**: esm (multiple files), commonjs
+- **web**: esm (single bundle) and iife ("immediately-invoked Function Expression")
 
 ## Installation and usage
 
@@ -92,7 +95,7 @@ npm i lib-r-math.js@beta
 
 lib-r-math.js supports the following module types:
 
-### ESM for use in [observablehq](www.observablehq.com)
+### ESM for use in [observablehq](https://www.observablehq.com)
 
 ```javascript
 library = import("https://cdn.skypack.dev/lib-r-math.js@beta/dist/web.esm.mjs");
@@ -111,7 +114,7 @@ library.BesselJ(3, 0.4);
 </script>
 ```
 
-### IIFE for use in Browser client
+### IIFE (immediately-invoked Function Expression) for use in Browser client
 
 ```html
 <script src="https://unpkg.dev/lib-r-math.js@beta/dist/web.iife.js"></script>
@@ -174,7 +177,7 @@ const answ = BesselJ(3, 0.4);
     - [The F Distribution](#the-f-distribution)
     - [The Gamma Distribution](#the-gamma-distribution)
     - [The Geometric Distribution](#the-geometric-distribution)
-    - [The Hypergeometric Distribution (Web Assembly accalerated)](#the-hypergeometric-distribution-web-assembly-accalerated)
+    - [The Hypergeometric Distribution (Web Assembly accelerated)](#the-hypergeometric-distribution-web-assembly-accalerated)
       - [Web Assembly backend](#web-assembly-backend)
     - [The Logistic Distribution](#the-logistic-distribution)
     - [The Log Normal Distribution](#the-log-normal-distribution)
@@ -381,7 +384,7 @@ Arguments:
 - `log, logP`: if `true`, probabilities are given as `log(p)`.
 - `lowerTail`: if `true`, probabilities are `P[X ≤ x]`, otherwise, `P[X > x]`.
 
-Details: (from R [doc](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/NegBinomial.html))
+Details: [R doc](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/NegBinomial.html)
 
 A negative binomial distribution can also arise as a mixture of Poisson distributions with mean distributed as a gamma distribution (see pgamma) with scale parameter (1 - prob)/prob and shape parameter size. (This definition allows non-integer values of size.)
 
