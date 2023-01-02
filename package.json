@@ -1,6 +1,6 @@
 {
     "name": "lib-r-math.js",
-    "version": "1.0.91",
+    "version": "1.0.92",
     "description": "Javascript Pure Implementation of Statistical R \"core\" numerical libRmath.so",
     "keywords": [
         "statistics",
@@ -47,13 +47,13 @@
         "weibull distribution",
         "wilcoxon rank sum statistic distribution"
     ],
-    "homepage": "https://github.com/jacobbogers/libRmath.js#readme",
+    "homepage": "https://r.js.org",
     "bugs": {
         "url": "https://github.com/R-js/libRmath.js/issues"
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/jacobbogers/libRmath.js.git"
+        "url": "https://github.com/R-js/libRmath.js.git"
     },
     "license": "GPL-3.0",
     "author": "Jacob K.F. Bogers",
@@ -69,20 +69,20 @@
     "scripts": {
         "build": "webpack --progress --color --display-error-details --config config/webpack/config",
         "build:prod": "webpack --progress --color --display-error-details --config config/webpack/config --env=prod",
+        "codecov": "codecov",
         "preinstall": "echo install",
         "install": "echo install",
         "postinstall": "echo postinstall",
         "lint": "tslint -c tslint.json -p .",
         "lint:fix": "npm run lint -- --fix",
         "lint:report": "npm run lint -- -o .lint-report.txt --force && code .lint-report.txt",
-        "codecov": "codecov",
         "report": "opn coverage/lcov-report/index.html",
         "test": "env NODE_ENV=test TS_NODE_DISABLE_WARNINGS=true mocha",
         "version:tsc": "tsc --version",
         "version:tslint": "tslint --version"
     },
     "dependencies": {
-        "debug": "^3.1.0"
+        "debug": "3.1.0"
     },
     "devDependencies": {
         "@types/chai": "3.5.2",
