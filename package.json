@@ -1,6 +1,6 @@
 {
     "name": "lib-r-math.js",
-    "version": "2.0.0-rc12",
+    "version": "2.0.0-rc13",
     "description": "Javascript Pure Implementation of Statistical R \"core\" numerical libRmath",
     "keywords": [
         "statistics",
@@ -45,22 +45,23 @@
         "wilcox",
         "wilcoxon rank sum"
     ],
-    "homepage": "https://github.com/R-js/libRmath.js#readme",
+    "homepage": "https://r.js.org",
     "bugs": {
         "url": "https://github.com/R-js/libRmath.js/issues"
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/R-js/libRmath.js.git"
+        "url": "https://github.com/R-js/libRmath.js.git"
     },
     "license": "MIT",
-    "author": "Jacob K.F. Bogers <info@mail.jacob-bogers.com>",
+    "author": "Jacob K.F. Bogers <jkfbogers@gmail.com>",
     "contributors": [
         {
             "name": "Richard D. Morey",
             "email": "richarddmorey@gmail.com"
         }
     ],
+    "sideEffects": true,
     "type": "module",
     "exports": {
         "import": "./dist/esm/index.mjs",
@@ -68,7 +69,6 @@
     },
     "browser": "./dist/web.esm.mjs",
     "types": "./dist/types/index.d.ts",
-    "sideEffects": true,
     "files": [
         "dist",
         "CHANGELOG.md",
@@ -76,13 +76,13 @@
         "README.md"
     ],
     "scripts": {
-        "prepublishOnly": "npm run build",
-        "prebuild":"npm run lint",
+        "prebuild": "npm run lint",
         "build": "node --trace-warnings scripts/build.mjs",
         "postbuild": "node --trace-warnings scripts/rollup.build.mjs",
         "lint": "eslint src/**/*.ts",
         "lint:fix": "eslint src/**/*.ts --fix",
         "prepare": "ts-patch install -s",
+        "prepublishOnly": "npm run build",
         "test": "jest --verbose"
     },
     "contributes": {
