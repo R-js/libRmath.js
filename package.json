@@ -93,7 +93,7 @@
         ]
     },
     "dependencies": {
-        "@mangos/debug": "0.0.9-alpha"
+        "@mangos/debug": "0.0.9-rc4"
     },
     "devDependencies": {
         "@mangos/jxpath": "1.0.13",
