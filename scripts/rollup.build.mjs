@@ -67,6 +67,7 @@ const esmOutputOptions = {
     sourcemap: false,
     entryFileNames:`[name].esm.mjs`,
     extend: true,
+    exports: 'named'
 };
 
 
@@ -82,6 +83,7 @@ const esmOutputOptionsMinimal = Object.assign({}, esmOutputOptions, {
     sourcemap: false,
     name: 'R',
     entryFileNames:`[name].iife.js`,
+    exports: 'named',
     extend: true,
 };
 
