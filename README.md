@@ -25,7 +25,7 @@ const ad = new AhrensDieter();
 ad.random();
 
 // NEW way of doing things
-import { RNGkind } from 'lib-r-math.js';
+import { RNGkind, rnorm } from 'lib-r-math.js';
 RNGkind({ normal: "AHRENS_DIETER" }); // R analog to "RNGkind"
 rnorm(8); // get 8 samples, if you only want one sample consider rnormOne()  
 
@@ -1395,7 +1395,7 @@ Arguments:
 
 Arguments:
 - `n,k`: "n over k".
-- For $k \ge 1$ it is defined as $\frac{n(n-1)\cdots(n-k+1)}{k!}$.
+- For $ k \ge 1 $ it is defined as $ \frac{n(n-1)\cdots(n-k+1)}{k!} $.
 - For $k=0$ it is defined as 1.
 - For $k \lt 0$, it is defined as 0.
 
