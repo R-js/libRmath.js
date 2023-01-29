@@ -84,17 +84,17 @@ module.exports = {
     testEnvironment: 'node',
     verbose: true,
     cacheDirectory: '.jest-cache',
-    testPathIgnorePatterns: ['/es6/', '/commonjs/'],
+    testPathIgnorePatterns: ['/esm/', '/commonjs/', '/types/'],
     //testMatch: ['**/__tests__/**/*.[t]s?(x)', '**/?(*.)+(spec|test).[t]s?(x)'],
     testRegex,
-    globals: {
-        'ts-jest': {
+    transform: {
+        "\\.test\\.ts$" :["ts-jest", {
             compiler: 'typescript',
             tsconfig: 'tsconfig.json',
             diagnostics: {
                 ignoreCodes: [151001],
             },
-        },
+        }]
     },
     //resolver: "ts-jest-resolver",
     moduleNameMapper: {
