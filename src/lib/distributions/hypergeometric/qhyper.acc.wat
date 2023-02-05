@@ -1,12 +1,8 @@
 (module
- (type $f64_=>_f64 (func (param f64) (result f64)))
- (type $f64_f64_f64_f64_f64_f64_f64_f64_=>_f64 (func (param f64 f64 f64 f64 f64 f64 f64 f64) (result f64)))
  (import "simple" "log" (func $simple/log (param f64) (result f64)))
  (import "simple" "exp" (func $simple/exp (param f64) (result f64)))
- (memory $0 0)
  (export "calcTinyN" (func $simple/calcTinyN))
  (export "calcBigN" (func $simple/calcBigN))
- (export "memory" (memory $0))
  ;; cpuBackendTinyN(sum: number, term: number, p: number, xr: number, end: number, xb: number, NB: number, NR: number):
  (func $simple/calcTinyN (param $0 f64) (param $1 f64) (param $2 f64) (param $3 f64) (param $4 f64) (param $5 f64) (param $6 f64) (param $7 f64) (result f64)
   loop $while-continue|0
