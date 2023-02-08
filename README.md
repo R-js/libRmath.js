@@ -713,7 +713,7 @@ import {
     } from 'lib-r-math.js'
 
 // the functions "qhyper" will be accelerated (on part with native C for node >=16)
-await useWasmBackendHyperGeom();
+useWasmBackendHyperGeom();
 
 qhyper(0.5, 2**31-1, 2**31-1, 2**31-1); // 28 sec (4.3 Ghz Pentium) wasm big numbers to make it do some work
 // -> 1073741806
@@ -1042,7 +1042,7 @@ Example
 ```typescript
 import { useWasmBackendSignRank, clearBackendSignRank, psignrank } from 'lib-r-math.js';
 
-await useWasmBackendSignRank();
+useWasmBackendSignRank();
 // all sign rank functions accelerated
 
 const p = psignrank(...); // so something usefull

@@ -27,8 +27,8 @@ export function rhyper(nn: number, m: number, n: number, k: number): Float64Arra
    return repeatedCall64(nn, rhyperOne, m, n, k);
 }
 
-export async function useWasmBackendHyperGeom(): Promise<void> {
-   const fns: QHyperFunctionMap = await initWasmQhyper();
+export function useWasmBackendHyperGeom() {
+   const fns: QHyperFunctionMap = initWasmQhyper();
    registerBackend(fns);
 }
 

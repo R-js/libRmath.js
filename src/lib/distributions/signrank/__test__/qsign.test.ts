@@ -98,7 +98,7 @@ describe('qsignrank (wilcox sign rank)', function () {
         });
         it.todo('upstream qsignrank(log(0), asLogP=true) should not return a NaN');
         it('(wasm) n = 1074', async () => {
-            await useWasmBackendSignRank();
+            useWasmBackendSignRank();
             const start0 = Date.now();
             const [x, xCalc] = await loadData(resolve(__dirname, 'fixture-generation', 'qsign1b.R'), /\s+/, 1, 2);
             const p = x.map(_x => psignrank(_x, 1074));

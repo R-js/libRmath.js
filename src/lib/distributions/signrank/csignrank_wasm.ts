@@ -37,17 +37,13 @@ export type CSignRankMap = {
     csignrank: CSingRank;
 }    
     
-export async function initWasm(): Promise<CSignRankMap> {
+export function initWasm(): CSignRankMap {
     const binary = Buffer.from(base64_v2, 'base64');
-    const mod = await WebAssembly.instantiate(binary,  {
-        env: {
-            memory 
-        }
-    });
-    // get the functions from wasm
-    return { 
-        csignrank: mod.instance.exports.csignrank as CSingRank,
-    };
+    const mod = new WebAssembly.Module(binary);
+    const instance = new WebAssembly.Instance(mod,  { env: { memory }});
+    return {
+        csignrank: instance.exports.csignrank as CSingRank
+    }
 }
 
 export { memory }

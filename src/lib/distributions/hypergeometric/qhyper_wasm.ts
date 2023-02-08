@@ -17,19 +17,20 @@ export type CalcQHyper = (
     xb: number,
     NB: number,
     NR: number
-    ) => number;
+) => number;
 
 export type QHyperFunctionMap = {
     calcTinyN: CalcQHyper
     calcBigN: CalcQHyper
-}    
+}
 
-export async function initWasm(): Promise<QHyperFunctionMap> {
+export function initWasm(): QHyperFunctionMap {
     const binary = Buffer.from(base64_v2, 'base64');
-    const mod = await WebAssembly.instantiate(binary, callbacks);
+    const mod = new WebAssembly.Module(binary);
+    const instance = new WebAssembly.Instance(mod, callbacks);
     // get the functions from wasm
-    return { 
-            calcTinyN: mod.instance.exports.calcTinyN as CalcQHyper,
-            calcBigN: mod.instance.exports.calcBigN as CalcQHyper,
+    return {
+        calcTinyN: instance.exports.calcTinyN as CalcQHyper,
+        calcBigN: instance.exports.calcBigN as CalcQHyper,
     };
 }

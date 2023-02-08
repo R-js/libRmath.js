@@ -50,7 +50,7 @@ describe('psignrank (wilcox sign rank)', function () {
         });
         it('(wasm acc) n = 40, 0 < x < n*(n+1)/2 ', async () => {
             const [x, y] = await loadData(resolve(__dirname, 'fixture-generation', 'psign1.csv'), /,/, 1, 2);
-            await useWasmBackendSignRank();
+            useWasmBackendSignRank();
             const start = Date.now();
             const actual = x.map((_x, i) => (Math.abs(psignrank(_x, 40) - y[i])));
             console.log(`(wasm acc) duration=${ms(Date.now() - start)}`);

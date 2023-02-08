@@ -78,7 +78,7 @@ describe('dsignrank (wilcox sign rank)', function () {
             //         sqrt(n*(n+1)*(2*n+1)/24)
             // Z(4025500, 4000)= 0 gives 0.2561791 pnorm(z) = 0.6010937 
             // R gives Inf, so does this algo 
-            await useWasmBackendSignRank();
+            useWasmBackendSignRank();
             const start = Date.now();
             const res = dsignrank(4025500, 4000);
             expect(res).toEqual(Infinity)

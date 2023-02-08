@@ -1,5 +1,6 @@
 (module
  (import "env" "memory" (memory $0 0))
+ (export "memory" (memory $0))
  (export "csignrank" (func $assembly/index/csignrank))
  (func $assembly/index/csignrank (param $0 i32) (param $1 i32) (param $2 i32) (param $3 i32) (result f64)
   (local $4 i32)
