@@ -48,9 +48,9 @@ describe('rhyper', function () {
             const z2 = rhyper(10, 2 ** 31 - 2, 2 ** 31, 1)
             expect(z2).toEqualFloatingPointBinary([1, 1, 1, 1, 1, 1, 1, 0, 0, 1]);
         });
-        it('(wasm) with k=2^31-1 AND m, n, bigger then INT_MAX (2^31-1', async () => { 
+        it('(wasm) with k=2^31-1 AND m, n, bigger then INT_MAX (2^31-1', () => { 
             globalUni().init(1234);
-            await useWasmBackendHyperGeom();
+            useWasmBackendHyperGeom();
             const t0 = Date.now();
             const z3 = rhyper(
                 1, //N

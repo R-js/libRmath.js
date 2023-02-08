@@ -32,8 +32,8 @@ export function rsignrank(nn: number, n: number): Float64Array {
    return repeatedCall64(nn, rsignrankOne,  n);
 }
 
-async function useWasmBackendSignRank(): Promise<void> {
-   const fns: CSignRankMap = await initSignRankBackend();
+function useWasmBackendSignRank() {
+   const fns: CSignRankMap = initSignRankBackend();
    register_dsign_backend(fns);
    register_qsign_backend(fns);
    register_psign_backend(fns);

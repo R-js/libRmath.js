@@ -127,9 +127,9 @@ describe('qhyper(p,m,n,k,log)', function () {
             console.log(`duration: ${duration} sec, result=${result}`);
             expect(result).toBe(1073741806);
         })
-        it('(28 sec) wasm-accelerated test, p=0.5, nr=2**31-1, nb=2**31-1, n=2**31-1',async () => {
+        it('(28 sec) wasm-accelerated test, p=0.5, nr=2**31-1, nb=2**31-1, n=2**31-1', () => {
             // initialize wasm
-            await useWasmBackendHyperGeom();
+            useWasmBackendHyperGeom();
             const start = Date.now();
             const result = qhyper(0.5,2**31-1,2**31-1,2**31-1);
             const stop = Date.now();
