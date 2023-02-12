@@ -32,7 +32,7 @@ export function rsignrank(nn: number, n: number): Float64Array {
    return repeatedCall64(nn, rsignrankOne,  n);
 }
 
-function useWasmBackendSignRank() {
+function useWasmBackendSignRank(): void {
    const fns: CSignRankMap = initSignRankBackend();
    register_dsign_backend(fns);
    register_qsign_backend(fns);
