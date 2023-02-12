@@ -1,3 +1,9 @@
+## version "2.0.0-rc15"
+
+### improved, 12 feb 2023 (Jacob Bogers <jkfbogers@gmail.com>)
+  - initialisation of wasm is not async anymore
+  - cleaned up entries in .gitignore
+
 ## version "1.0.88"
 ### fixed 
 ### PR #41 (Richard D. Morey <richarddmorey@gmail.com>)
