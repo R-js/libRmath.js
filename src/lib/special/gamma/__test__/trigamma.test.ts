@@ -27,7 +27,7 @@ describe('trigamma', function () {
         expect(ac1).toEqualFloatingPointBinary(9.37924664498912363797, 50);
         expect(ac2).toEqualFloatingPointBinary(0.010050166663333566161);
     });
-    it('FP32 arguments should return FP23 results', () => {
+    it('FP32 arguments should return FP32 results', () => {
         const actual = [-1.5, 100].map(trigamma);
         expect(actual).toEqualFloatingPointBinary([9.3792466, 0.01005016], 18);
     });

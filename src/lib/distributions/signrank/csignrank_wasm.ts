@@ -1,6 +1,8 @@
 
 import { ceil } from '@lib/r-func';
 
+import base64ToBinary from '@lib/base64_to_binary';
+
 const memory: WebAssembly.Memory = new WebAssembly.Memory({
     initial: 1 //  one 64k block
 });
@@ -38,7 +40,7 @@ export type CSignRankMap = {
 }    
     
 export function initWasm(): CSignRankMap {
-    const binary = Buffer.from(base64_v2, 'base64');
+    const binary = base64ToBinary(base64_v2);
     const mod = new WebAssembly.Module(binary);
     const instance = new WebAssembly.Instance(mod,  { env: { memory }});
     return {

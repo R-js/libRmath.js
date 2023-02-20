@@ -27,7 +27,7 @@ describe('pentagamma', function () {
         const ac1 = pentagamma(0);
         expect(ac1).toEqualFloatingPointBinary(Infinity);
     });
-    it('FP32 arguments should return FP23 results', () => {
+    it('FP32 arguments should return FP32 results', () => {
         const actual = pentagamma(3.30000000000000026645);
         expect(actual).toEqualFloatingPointBinary(0.085849667336884885604, 20);
     });

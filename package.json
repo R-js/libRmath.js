@@ -1,6 +1,6 @@
 {
     "name": "lib-r-math.js",
-    "version": "2.0.0-rc15",
+    "version": "2.0.0-rc16",
     "description": "Javascript Pure Implementation of Statistical R \"core\" numerical libRmath",
     "keywords": [
         "statistics",
@@ -53,7 +53,7 @@
         "type": "git",
         "url": "https://github.com/R-js/libRmath.js.git"
     },
-    "license": "MIT",
+    "license": "SEE LICENSE IN LICENSE.txt",
     "author": "Jacob K.F. Bogers <jkfbogers@gmail.com>",
     "contributors": [
         {
@@ -74,7 +74,7 @@
         "dsignrank-01.png",
         "ptukey-01.png",
         "CHANGELOG.md",
-        "LICENSE",
+        "LICENSE.txt",
         "README.md"
     ],
     "scripts": {
@@ -95,7 +95,7 @@
         ]
     },
     "dependencies": {
-        "@mangos/debug": "0.0.9-rc4"
+        "@mangos/debug": "0.0.9-rc5"
     },
     "devDependencies": {
         "@mangos/jxpath": "1.0.13",

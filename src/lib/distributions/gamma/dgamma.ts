@@ -51,6 +51,6 @@ export function dgamma(x: number, shape: number, scale: number, aslog: boolean):
     }
     /* else  shape >= 1 */
     pr = dpois_raw(shape - 1, x / scale, aslog);
-    console.log(pr, aslog);
+    //console.log(pr, aslog);
     return aslog ? pr - Math.log(scale) : pr / scale;
 }

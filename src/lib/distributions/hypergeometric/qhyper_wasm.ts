@@ -1,4 +1,7 @@
+import base64ToBinary from "@lib/base64_to_binary";
+
 // wasm module needs these native functions
+
 const callbacks = {
     simple: {
         log: Math.log,
@@ -25,7 +28,7 @@ export type QHyperFunctionMap = {
 }
 
 export function initWasm(): QHyperFunctionMap {
-    const binary = Buffer.from(base64_v2, 'base64');
+    const binary = base64ToBinary(base64_v2);
     const mod = new WebAssembly.Module(binary);
     const instance = new WebAssembly.Instance(mod, callbacks);
     // get the functions from wasm
