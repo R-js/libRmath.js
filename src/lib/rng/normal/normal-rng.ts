@@ -29,7 +29,7 @@ export abstract class IRNGNormal implements IRandom {
     protected _name: string;
 
     // some normal rng's have internal state
-    protected reset(rng?: IRNG, _seed?: number): void
+    protected reset(rng?: IRNG): void
     {     
         if (rng && rng.name !== this._rng.name){
             this._rng = rng;

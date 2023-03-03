@@ -7,7 +7,7 @@ import { nodeResolve } from '@rollup/plugin-node-resolve';
 const builtin = builtinModules.slice()
 builtin.splice(builtinModules.indexOf('crypto'), 1);
 
-import pkg from "../package.json" assert  { type: "json" };
+import pkg from "../package.json" assert { type: "json" };
 
 const version = pkg.version;
 

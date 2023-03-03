@@ -1,7 +1,7 @@
 {
     "name": "lib-r-math.js",
-    "version": "2.0.0-rc16",
-    "description": "Javascript Pure Implementation of Statistical R \"core\" numerical libRmath",
+    "version": "2.0.0-rc17",
+    "description": "Javascript Implementation of Statistical R standalone library rnmath",
     "keywords": [
         "statistics",
         "R",
@@ -81,8 +81,8 @@
         "prebuild": "npm run lint",
         "build": "node --trace-warnings scripts/build.mjs",
         "postbuild": "node --trace-warnings scripts/rollup.build.mjs",
-        "lint": "eslint src/**/*.ts",
-        "lint:fix": "eslint src/**/*.ts --fix",
+        "lint": "eslint .eslintrc.cjs jest.config.cjs scripts/*.mjs  src/**/*.ts",
+        "lint:fix": "npm run lint -- --fix",
         "prepare": "ts-patch install -s",
         "prepublishOnly": "npm run build",
         "test": "jest --verbose"
@@ -98,6 +98,9 @@
         "@mangos/debug": "0.0.9-rc5"
     },
     "devDependencies": {
+        "@babel/core": "7.21.0",
+        "@babel/eslint-parser": "7.19.1",
+        "@babel/eslint-plugin": "7.19.1",
         "@mangos/jxpath": "1.0.13",
         "@rollup/plugin-node-resolve": "15.0.1",
         "@rollup/plugin-terser": "0.1.0",

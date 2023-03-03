@@ -1,3 +1,21 @@
+# Changelog
+
+All notable changes to this project will be documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## version 2.0.0-rc17 - 2023-03-03
+
+### improved (Jacob Bogers <jkfbogers@gmail.com>)
+
+- `./scripts/build.mjs`,`./scripts/rollup.build.mjs`, `./.eslintrc.cjs` and `jest.config.cjs` will now be linted using `@babel/eslint-parser`
+-  import statements using `assert { type: "json" }` are correctly linted
+
+### fixed (Jacob Bogers <jkfbogers@gmail.com>)
+
+- removed second `_seed` argument from rng `reset` function not going to be used 
+
 ## version "2.0.0-rc16"
 
 ### improved, 20 feb 2023 (Jacob Bogers <jkfbogers@gmail.com>)
