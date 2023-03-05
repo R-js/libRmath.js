@@ -1,24 +1,24 @@
 dist/
-logs
 *.tsbuildinfo
-*.log
 TODO
 npm-debug.log*
 *.pem
 .*
 !/.gitignore
 !/.npmignore
-!/.nycrc
 !/.travis.yml
-!/.codecov.yml
 !.eslintrc.cjs
-!.prettierrc.js
 
 *.pdf
 *.PNG
 *.png
 !ptukey-01.png
 !dsignrank-01.png
+
+# Logs
+logs
+*.log
+npm-debug.log*
 
 # Runtime data
 pids
