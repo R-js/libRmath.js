@@ -12,12 +12,14 @@ describe('log1p', function () {
         it('x < -1 should be a NaN', () => {
             const l = log1p(-1.5);
             expect(l).toEqualFloatingPointBinary(NaN);
-            expect(dlog1pDomain()).toEqual([
-                [
-                    "argument out of domain in '%s'",
-                    'log1p, line:89, col:42'
-                ]
-            ]);
+            expect(dlog1pDomain()).toMatchInlineSnapshot(`
+[
+  [
+    "argument out of domain in '%s'",
+    "log1p, line:72, col:42",
+  ],
+]
+`);
         });
         it('x = -1 should be a -Infinity', () => {
             const l = log1p(-1);
@@ -26,12 +28,14 @@ describe('log1p', function () {
         it('x < -0.999999985 causes precision failure warning', () => {
             const l = log1p(-0.999999999);
             expect(l).toEqualFloatingPointBinary(-20.723265865228342);
-            expect(dlog1pDomain()).toEqual([
-                [
-                    "full precision may not have been achieved in '%s'",
-                    'log1p, line:103, col:18'
-                ]
-            ]);
+            expect(dlog1pDomain()).toMatchInlineSnapshot(`
+[
+  [
+    "full precision may not have been achieved in '%s'",
+    "log1p, line:86, col:18",
+  ],
+]
+`);
         })
     });
     describe('fidelity', () => {

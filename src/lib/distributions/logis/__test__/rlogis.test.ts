@@ -36,13 +36,30 @@ describe('rlogis', function () {
     it('n = 5, location = nan', () => {
         const nans = rlogis(5, NaN);
         expect(nans).toEqualFloatingPointBinary([NaN, NaN, NaN, NaN, NaN]);
-        expect(rLogisDomainWarns()).toEqual([
-            ["argument out of domain in '%s'", 'rlogisOne, line:26, col:34'],
-            ["argument out of domain in '%s'", 'rlogisOne, line:26, col:34'],
-            ["argument out of domain in '%s'", 'rlogisOne, line:26, col:34'],
-            ["argument out of domain in '%s'", 'rlogisOne, line:26, col:34'],
-            ["argument out of domain in '%s'", 'rlogisOne, line:26, col:34']
-        ]);
+        expect(rLogisDomainWarns()).toMatchInlineSnapshot(`
+[
+  [
+    "argument out of domain in '%s'",
+    "rlogisOne, line:10, col:34",
+  ],
+  [
+    "argument out of domain in '%s'",
+    "rlogisOne, line:10, col:34",
+  ],
+  [
+    "argument out of domain in '%s'",
+    "rlogisOne, line:10, col:34",
+  ],
+  [
+    "argument out of domain in '%s'",
+    "rlogisOne, line:10, col:34",
+  ],
+  [
+    "argument out of domain in '%s'",
+    "rlogisOne, line:10, col:34",
+  ],
+]
+`);
     });
 
     it('n = 0', () => {
