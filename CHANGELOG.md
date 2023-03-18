@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - `./scripts/build.mjs`,`./scripts/rollup.build.mjs`, `./.eslintrc.cjs` and `jest.config.cjs` will now be linted using `@babel/eslint-parser`
 -  import statements using `assert { type: "json" }` are correctly linted
+-  removed unneeded "bundle.generate" step from `scripts/rollup.build.mjs`
 
 ### fixed (Jacob Bogers <jkfbogers@gmail.com>)
 

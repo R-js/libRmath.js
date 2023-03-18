@@ -96,9 +96,7 @@ const iifeOutputOptionsMinimal = Object.assign({}, iifeOutputOptions, {
 
 async function build() {
     const bundle = await rollup(inputOptions);
-    await bundle.generate(esmOutputOptions);
     await bundle.write(esmOutputOptions);
-    await bundle.generate(iifeOutputOptions);
     await bundle.write(iifeOutputOptions);
 }
 
