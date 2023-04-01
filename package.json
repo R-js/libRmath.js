@@ -1,6 +1,6 @@
 {
     "name": "lib-r-math.js",
-    "version": "2.0.0-rc17",
+    "version": "2.0.0",
     "description": "Javascript Implementation of Statistical R standalone library rnmath",
     "keywords": [
         "statistics",

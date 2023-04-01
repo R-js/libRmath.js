@@ -30,7 +30,7 @@ function shims() {
     return {
         name: 'stubbing for browser',
         async resolveId(source, importer) {
-           // console.log(`${importer} <- ${source}`);
+            // console.log(`${importer} <- ${source}`);
             if (!importer) {
                 return null; // skip entry files
             }
@@ -50,54 +50,54 @@ function shims() {
 // see below for details on the options
 const inputOptions = {
     input: {
-         'web': 'dist/esm/index.mjs',
+        'web': 'dist/esm/index.mjs',
     },
     external: (id) => {
         return builtin.includes(id);
     },
-   plugins: [
-    shims(),
-    nodeResolve({ dedupe:[ "@mangos/debug", "ms" ],  exportConditions:["import"] })
-],
+    plugins: [
+        shims(),
+        nodeResolve({ dedupe: ["@mangos/debug", "ms"], exportConditions: ["import"] })
+    ],
 };
 
 const esmOutputOptions = {
     format: 'es',
     dir: 'dist',
     sourcemap: false,
-    entryFileNames:`[name].esm.mjs`,
+    entryFileNames: `[name].esm.mjs`,
     extend: true,
     exports: 'named'
 };
 
 
-const esmOutputOptionsMinimal = Object.assign({}, esmOutputOptions, { 
+const esmOutputOptionsMinimal = Object.assign({}, esmOutputOptions, {
     compact: true,
-    entryFileNames:`[name].min.mjs` 
-   ,plugins: [ terser() ]
- });
+    entryFileNames: `[name].mjs`
+    , plugins: [terser()]
+});
 
- const iifeOutputOptions = {
+const iifeOutputOptions = {
     format: 'iife',
     dir: 'dist',
     sourcemap: false,
     name: 'R',
-    entryFileNames:`[name].iife.js`,
+    entryFileNames: `[name].iife.js`,
     exports: 'named',
     extend: true,
 };
 
-const iifeOutputOptionsMinimal = Object.assign({}, iifeOutputOptions, { 
+const iifeOutputOptionsMinimal = Object.assign({}, iifeOutputOptions, {
     compact: true,
-    entryFileNames:`[name]-iife.min.js`, 
-    plugins: [ terser() ]
- });
+    entryFileNames: `[name]-iife.js`,
+    plugins: [terser()]
+});
 
 
 async function build() {
     const bundle = await rollup(inputOptions);
-    await bundle.write(esmOutputOptions);
-    await bundle.write(iifeOutputOptions);
+    await bundle.write(esmOutputOptionsMinimal);
+    await bundle.write(iifeOutputOptionsMinimal);
 }
 
 build();

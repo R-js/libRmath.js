@@ -90,7 +90,7 @@ There is no UMD module from 2.0.0. These are the module types for node and brows
 Minimal version of node required is `16.18.1`.
 
 ```bash
-npm i lib-r-math.js@beta
+npm i lib-r-math.js
 ```
 
 lib-r-math.js supports the following module types:
@@ -98,7 +98,7 @@ lib-r-math.js supports the following module types:
 ### ESM for use in [observablehq](https://www.observablehq.com)
 
 ```javascript
-library = import("https://cdn.skypack.dev/lib-r-math.js@beta/dist/web.esm.mjs");
+library = import("https://cdn.skypack.dev/lib-r-math.js@latest/dist/web.esm.mjs");
 library.BesselJ(3, 0.4);
 //-> -0.30192051329163955
 ```
@@ -107,7 +107,7 @@ library.BesselJ(3, 0.4);
 
 ```html
 <script type="module">
-  import { BesselJ } from "https://unpkg.dev/lib-r-math.js@beta/dist/web.esm.mjs";
+  import { BesselJ } from "https://unpkg.dev/lib-r-math.js@latest/dist/web.esm.mjs";
 
   console.log(BesselJ(3, 0.4));
   //-> -0.30192051329163955
@@ -117,7 +117,7 @@ library.BesselJ(3, 0.4);
 ### IIFE (immediately-invoked Function Expression) for use in Browser client
 
 ```html
-<script src="https://unpkg.dev/lib-r-math.js@beta/dist/web.iife.js"></script>
+<script src="https://unpkg.dev/lib-r-math.js@latest/dist/web.iife.js"></script>
 <script>
   const answ = window.R.BesselJ(3, 0.4);
   console.log(answ);
