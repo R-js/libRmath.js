@@ -70,6 +70,7 @@ const collectCoverageFrom = [
 ];
 
 module.exports = {
+    bail: true,
     automock: false,
     collectCoverage: true,
     maxWorkers: '50%',

@@ -24,13 +24,13 @@ describe('plogis', function () {
             const nan = plogis(0, undefined, -0.5);
             expect(nan).toBeNaN();
             expect(pLogisDomainWarns()).toMatchInlineSnapshot(`
-[
-  [
-    "argument out of domain in '%s'",
-    "plogis, line:19, col:34",
-  ],
-]
-`);
+                [
+                  [
+                    "argument out of domain in '%s'",
+                    "plogis, line:18, col:34",
+                  ],
+                ]
+            `);
         });
         it('x = -Infinity and x = Infinity', () => {
             const zero = plogis(-Infinity);

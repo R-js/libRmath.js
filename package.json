@@ -81,10 +81,11 @@
         "prebuild": "npm run lint",
         "build": "node --trace-warnings scripts/build.mjs",
         "postbuild": "node --trace-warnings scripts/rollup.build.mjs",
-        "lint": "eslint .eslintrc.cjs jest.config.cjs scripts/*.mjs  src/**/*.ts",
+        "lint": "eslint-config-prettier .eslintrc.cjs jest.config.cjs scripts/*.mjs  src/**/*.ts",
         "lint:fix": "npm run lint -- --fix",
         "prepublishOnly": "npm run build",
-        "test": "jest --verbose"
+        "test": "jest --verbose",
+        "pretty": "prettier -w ."
     },
     "contributes": {
         "typescriptServerPlugins": [
@@ -114,7 +115,7 @@
         "eslint-plugin-prettier": "5.0.0",
         "jest": "29.3.1",
         "ms": "3.0.0-canary.1",
-        "prettier": "3.0.0",
+        "prettier": "2.8.8",
         "rollup": "3.6.0",
         "ts-jest": "29.0.3",
         "ts-node": "10.9.1",

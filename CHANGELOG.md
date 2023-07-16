@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## version 2.0.1 -
+
+### improved (Jacob Bogers <jkfbogers@gmail.com>)
+
+-   removed `ts-patch` to resolve alias path, use `ts-node` instead
+-   introduced `prettier`
+-   use prettier semver 2.8.8 to make it work with current libs
+
 ## version 2.0.0 - 2023-03-03
 
 ### improved (Jacob Bogers <jkfbogers@gmail.com>)

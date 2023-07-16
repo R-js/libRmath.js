@@ -28,13 +28,13 @@ describe('dlogis', function () {
             const nan = dlogis(0, undefined, -0.5);
             expect(nan).toBeNaN();
             expect(dLogisDomainWarns()).toMatchInlineSnapshot(`
-[
-  [
-    "argument out of domain in '%s'",
-    "dlogis, line:12, col:34",
-  ],
-]
-`);
+                [
+                  [
+                    "argument out of domain in '%s'",
+                    "dlogis, line:10, col:34",
+                  ],
+                ]
+            `);
         });
     });
     describe('fidelity', () => {

@@ -38,13 +38,13 @@ describe('qlogis', function () {
             const nan = qlogis(0.3, undefined, -1);
             expect(nan).toEqualFloatingPointBinary(NaN);
             expect(qLogisDomainWarns()).toMatchInlineSnapshot(`
-[
-  [
-    "argument out of domain in '%s'",
-    "qlogis, line:21, col:34",
-  ],
-]
-`);
+                [
+                  [
+                    "argument out of domain in '%s'",
+                    "qlogis, line:20, col:34",
+                  ],
+                ]
+            `);
         });
         it('scale == 0', () => {
             const location = qlogis(0.2, 4, 0);
