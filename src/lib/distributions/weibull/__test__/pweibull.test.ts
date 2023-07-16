@@ -4,7 +4,6 @@ import { pweibull } from '..';
 
 const pweibullDomainWarns = select('pweibull')("argument out of domain in '%s'");
 
-
 describe('pweibull', function () {
     describe('invalid input and edge cases', () => {
         beforeEach(() => {
@@ -50,7 +49,7 @@ describe('pweibull', function () {
             const ans = pweibull(34, 23.9, 45, true, true);
             expect(ans).toEqualFloatingPointBinary(-6.6998328420167095);
         });
-        
+
         it('x=22, shape=0.123, scale= 10, lower_tail=false, givelog=true', () => {
             const ans = pweibull(22, 0.123, 10, false, true);
             expect(ans).toEqualFloatingPointBinary(-1.1018386179606035);

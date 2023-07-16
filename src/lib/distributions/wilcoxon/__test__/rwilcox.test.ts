@@ -4,7 +4,7 @@ import { resolve } from 'path';
 import { cl, select } from '@common/debug-mangos-select';
 import { rwilcoxOne, rwilcox } from '..';
 
-import { setSeed, RNGkind} from '@rng/global-rng';
+import { setSeed, RNGkind } from '@rng/global-rng';
 
 const rwilcoxDomainWarns = select('rwilcox')("argument out of domain in '%s'");
 
@@ -12,10 +12,9 @@ describe('rwilcox', function () {
     beforeEach(() => {
         cl.clear('rwilcox');
         setSeed(12345);
-        RNGkind({sampleKind: "ROUNDING"});
+        RNGkind({ sampleKind: 'ROUNDING' });
     });
     describe('invalid input and edge cases', () => {
-      
         it('m=NaN|m=NaN|n=NaN', () => {
             const nan1 = rwilcoxOne(NaN, 4);
             const nan2 = rwilcoxOne(4, NaN);
@@ -25,7 +24,7 @@ describe('rwilcox', function () {
         it('m < 0 | n < 0', () => {
             const nan1 = rwilcoxOne(-1, 3);
             const nan2 = rwilcoxOne(5, -4);
-            expect(nan1).toBeNaN()
+            expect(nan1).toBeNaN();
             expect(nan2).toBeNaN();
             expect(rwilcoxDomainWarns()).toHaveLength(2);
         });
@@ -49,11 +48,11 @@ describe('rwilcox', function () {
         });
         it('n=100, m = 100 & n= 20, sample.kind=rejection', async () => {
             const [r] = await loadData(resolve(__dirname, 'fixture-generation', 'rwilcox2.R'), /\s+/, 1);
-            RNGkind({sampleKind: "REJECTION"});
+            RNGkind({ sampleKind: 'REJECTION' });
             const ans = rwilcox(100, 100, 20);
             expect(ans).toEqualFloatingPointBinary(r);
         });
-        it.todo('for rwilcox we are diverging for R for high population number 2**20 etc, investigate')
+        it.todo('for rwilcox we are diverging for R for high population number 2**20 etc, investigate');
         /*it.only('(takes time) n=4, sample.kind=rounding, (m+n) > cut (2^25-1) of Marsaglia multicarry', async () => {
             const rc = RNGkind({ uniform: IRNGTypeEnum.KNUTH_TAOCP2002, normal: IRNGSampleKindTypeEnum.ROUNDING});
             rc.uniform.init(12345);

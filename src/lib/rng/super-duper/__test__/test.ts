@@ -26,7 +26,7 @@ describe('rng super-duper', function () {
         const sd = new SuperDuper(7895);
         expect(sd.name).toBe('Super-Duper');
         expect(() => (sd.seed = new Int32Array(6))).toThrow(
-            'the seed is not an array of proper size for rng Super-Duper',
+            'the seed is not an array of proper size for rng Super-Duper'
         );
         // set seed to all zeros , will trigger internal correction
         expect(() => (sd.seed = new Int32Array(2))).not.toThrow();

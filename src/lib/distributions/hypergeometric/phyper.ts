@@ -1,4 +1,3 @@
-
 import { debug } from '@mangos/debug';
 import { ML_ERR_return_NAN2, lineInfo4 } from '@common/logger';
 import { R_D_Lval, R_DT_0, R_DT_1 } from '@lib/r-func';
@@ -44,31 +43,14 @@ export function phyper(q: number, m: number, n: number, k: number, lowerTail = t
     /* Sample of  n balls from  NR red  and	 NB black ones;	 q are red */
     let lower_tail = lowerTail; //copy it gets changed
 
-        
-    if (isNaN(q)
-        ||
-        isNaN(m)
-        ||
-        isNaN(n)
-        ||
-        isNaN(k)
-    ) return NaN;
+    if (isNaN(q) || isNaN(m) || isNaN(n) || isNaN(k)) return NaN;
 
     q = Math.floor(q + 1e-7);
     m = Math.round(m);
     n = Math.round(n);
     k = Math.round(k);
 
-    if (
-        m < 0
-        ||
-        n < 0
-        ||
-        !isFinite(m + n)
-        ||
-        k < 0
-        ||
-        k > m + n) {
+    if (m < 0 || n < 0 || !isFinite(m + n) || k < 0 || k > m + n) {
         return ML_ERR_return_NAN2(printer_phyper, lineInfo4);
     }
 
@@ -102,23 +84,20 @@ export function phyper(q: number, m: number, n: number, k: number, lowerTail = t
     // if q>=m then also q>=k (this is true at the same time because of condition A)
     // these clauses cannot be true at the same time:
     //   1. condition A ot be not true
-    //   2. (q >= k AND q < m) 
-    if (q >= m){
+    //   2. (q >= k AND q < m)
+    if (q >= m) {
         return R_DT_1(lower_tail, logP);
     }
 
-    if(q >= k) { // this condition does not happen? (see above)
+    if (q >= k) {
+        // this condition does not happen? (see above)
         printer_phyper('trace q>=k q=%d m=%d n=%d k=%d', ox, onr, onb, onn);
         return R_DT_1(lower_tail, logP);
     }
 
     const d = dhyper(q, m, n, k, logP);
 
-    if (
-        (!logP && d == 0.)
-        ||
-        (logP && d == -Infinity)
-    ) {
+    if ((!logP && d == 0) || (logP && d == -Infinity)) {
         return R_DT_0(lowerTail, logP);
     }
 

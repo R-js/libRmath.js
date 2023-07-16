@@ -3,10 +3,8 @@ import { M_LN2, R_D_Cval, R_D_log, R_D_Lval } from '@lib/r-func';
 const { exp, expm1, log, log1p } = Math;
 
 function R_DT_qIv(lower_tail: boolean, log_p: boolean, p: number): number {
-    if (log_p) 
-    {
-        return lower_tail ? exp(p): -expm1(p);
-        
+    if (log_p) {
+        return lower_tail ? exp(p) : -expm1(p);
     }
     /*
     if (lower_tail)

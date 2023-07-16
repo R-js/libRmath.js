@@ -8,8 +8,7 @@ import type { IRNGNormalType } from '@lib/rng/normal/rng-types';
 const BIG = 134217728; /* 2^27 */
 
 export class Inversion extends IRNGNormal {
-
-    public static override kind: IRNGNormalType = "INVERSION";
+    public static override kind: IRNGNormalType = 'INVERSION';
 
     constructor(_rng: IRNG) {
         super(_rng, 'Inversion');

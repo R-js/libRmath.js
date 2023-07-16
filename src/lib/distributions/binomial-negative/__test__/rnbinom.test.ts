@@ -27,18 +27,9 @@ describe('rnbinom', function () {
             expect(r).toEqualFloatingPointBinary([4, 8, 3, 5, 4, 3, 6, 4, 2, 5]);
         });
         it('n=10, size=400E+3, prob=0.5', () => {
-            const r = rnbinom(10, 400E3, 0.5);
+            const r = rnbinom(10, 400e3, 0.5);
             expect(r).toEqualFloatingPointBinary([
-                400308,
-                401016,
-                399030,
-                399988,
-                399968,
-                400430,
-                401002,
-                399588,
-                398948,
-                399601
+                400308, 401016, 399030, 399988, 399968, 400430, 401002, 399588, 398948, 399601
             ]);
         });
         it('n=1, size=Infinity, prob=0.5', () => {
@@ -50,12 +41,10 @@ describe('rnbinom', function () {
             expect(z).toEqualFloatingPointBinary(0);
         });
         it('n=1, size=1, prob=1', () => {
-            RNGkind({ uniform: "SUPER_DUPER", normal: "BOX_MULLER" });
+            RNGkind({ uniform: 'SUPER_DUPER', normal: 'BOX_MULLER' });
             setSeed(1234);
             const z = rnbinom(10, 8, 0.2, undefined);
-            expect(z).toEqualFloatingPointBinary([
-                21, 39, 44, 20, 26, 42, 59, 23, 22, 35
-            ]);
+            expect(z).toEqualFloatingPointBinary([21, 39, 44, 20, 26, 42, 59, 23, 22, 35]);
         });
     });
     describe('using mu, not "prob" parameter', () => {
@@ -64,7 +53,7 @@ describe('rnbinom', function () {
             cl.clear('rnbinom_mu');
         });
         it('n=10, size=8, mu=12 (prob=0.6)', () => {
-            RNGkind({ uniform: "SUPER_DUPER", normal: "BOX_MULLER" });
+            RNGkind({ uniform: 'SUPER_DUPER', normal: 'BOX_MULLER' });
             setSeed(1234);
             const z = rnbinom(10, 8, undefined, 12);
             expect(z).toEqualFloatingPointBinary([10, 10, 17, 6, 9, 14, 10, 12, 3, 5]);

@@ -60,14 +60,14 @@ export function qpois(p: number, lambda: number, lowerTail = true, logP = false)
         if (p === 1) return Infinity;
     }
 
-     /* temporary hack --- FIXME --- */
+    /* temporary hack --- FIXME --- */
     if (p + 1.01 * DBL_EPSILON >= 1) return Infinity;
 
     const mu = lambda;
     const sigma = sqrt(lambda);
     /* gamma = sigma; PR#8058 should be kurtosis which is mu^-0.5 */
     const gamma = 1.0 / sigma;
-    
+
     /* y := approx.value (Cornish-Fisher expansion) :  */
     z.val = qnorm(p, 0, 1, /*lower_tail*/ true, /*log_p*/ false);
 

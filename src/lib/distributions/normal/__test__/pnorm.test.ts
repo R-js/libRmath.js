@@ -7,7 +7,6 @@ import { pnorm } from '..';
 const pnormLogs = select('pnorm');
 const pnormDomainWarns = pnormLogs("argument out of domain in '%s'");
 
-
 describe('pnorm', function () {
     describe('invalid input check and edge cases', () => {
         beforeEach(() => {
@@ -54,24 +53,24 @@ describe('pnorm', function () {
         });
     });
     describe('fidelity', () => {
-        it('-10 < z < 10, mhu=0, sd=1, lower=T, aslog=F', async ()=>{
+        it('-10 < z < 10, mhu=0, sd=1, lower=T, aslog=F', async () => {
             const [x, y] = await loadData(resolve(__dirname, 'fixture-generation', 'pnorm1.R'), /\s+/, 1, 2);
-            const result = x.map(_x => pnorm(_x, 0, 1, true, false));
+            const result = x.map((_x) => pnorm(_x, 0, 1, true, false));
             expect(result).toEqualFloatingPointBinary(y, 45);
-        });  
-        it('-10 < z < 10, mhu=0, sd=1, lower=F, aslog=F', async ()=>{
+        });
+        it('-10 < z < 10, mhu=0, sd=1, lower=F, aslog=F', async () => {
             const [x, y] = await loadData(resolve(__dirname, 'fixture-generation', 'pnorm2.R'), /\s+/, 1, 2);
-            const result = x.map(_x => pnorm(_x, 0, 1, false, false));
+            const result = x.map((_x) => pnorm(_x, 0, 1, false, false));
             expect(result).toEqualFloatingPointBinary(y, 45);
-        });  
-        it('-10 < z < 10, mhu=0, sd=1, lower=T, aslog=T', async ()=>{
+        });
+        it('-10 < z < 10, mhu=0, sd=1, lower=T, aslog=T', async () => {
             const [x, y] = await loadData(resolve(__dirname, 'fixture-generation', 'pnorm3.R'), /\s+/, 1, 2);
-            const result = x.map(_x => pnorm(_x, 0, 1, true, true));
+            const result = x.map((_x) => pnorm(_x, 0, 1, true, true));
             expect(result).toEqualFloatingPointBinary(y, 45);
-        });  
-        it('-10 < z < 10, mhu=0, sd=1, lower=F, aslog=T', async ()=>{
+        });
+        it('-10 < z < 10, mhu=0, sd=1, lower=F, aslog=T', async () => {
             const [x, y] = await loadData(resolve(__dirname, 'fixture-generation', 'pnorm4.R'), /\s+/, 1, 2);
-            const result = x.map(_x => pnorm(_x, 0, 1, false, true));
+            const result = x.map((_x) => pnorm(_x, 0, 1, false, true));
             expect(result).toEqualFloatingPointBinary(y, 42);
         });
     });

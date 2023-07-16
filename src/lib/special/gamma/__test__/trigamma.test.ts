@@ -1,7 +1,6 @@
 import { resolve } from 'path';
 import { loadData } from '@common/load';
 
-
 //app
 import { trigamma } from '@special/gamma';
 
@@ -10,10 +9,10 @@ describe('trigamma', function () {
         /* load data from fixture */
         const [x, y] = await loadData(resolve(__dirname, 'fixture-generation', 'trigamma.R'), /\s+/, 1, 2);
         const actual = x.map(trigamma);
-        expect(actual).toEqualFloatingPointBinary(y,35);
+        expect(actual).toEqualFloatingPointBinary(y, 35);
     });
     it('return infinity at -4,-3,-2,-1,0', () => {
-        const actual = [-4, -3, -2, -1, 0].map(trigamma)
+        const actual = [-4, -3, -2, -1, 0].map(trigamma);
         expect(actual).toEqualFloatingPointBinary(Infinity);
     });
     it('ranges [-4,-3], [-2,-1] [-1,0]', async () => {

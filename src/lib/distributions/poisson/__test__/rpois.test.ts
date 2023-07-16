@@ -30,7 +30,7 @@ describe('rpois', function () {
     });
     describe('fidelity', () => {
         beforeEach(() => {
-            RNGkind({ uniform: "MERSENNE_TWISTER", normal: "INVERSION" });
+            RNGkind({ uniform: 'MERSENNE_TWISTER', normal: 'INVERSION' });
             globalUni().init(123456);
         });
         it('mhu = 15', async () => {

@@ -2,21 +2,14 @@ import { debug } from '@mangos/debug';
 
 import { ML_ERR_return_NAN2, lineInfo4 } from '@common/logger';
 
-import {
-    M_LN_2PI,
-    R_D__0,
-    R_D__1,
-    R_D_exp,
-    R_D_negInonint,
-    R_D_nonint_check,
-} from '@lib/r-func';
+import { M_LN_2PI, R_D__0, R_D__1, R_D_exp, R_D_negInonint, R_D_nonint_check } from '@lib/r-func';
 
 import { bd0 } from '@lib/deviance';
 import { stirlerr } from '@lib/stirling';
 
 const printer = debug('dbinom');
 
- function dbinom_raw(x: number, n: number, p: number, q: number, give_log: boolean): number {
+function dbinom_raw(x: number, n: number, p: number, q: number, give_log: boolean): number {
     let lc: number;
 
     if (p === 0) return x === 0 ? R_D__1(give_log) : R_D__0(give_log);
@@ -56,7 +49,7 @@ function dbinom(x: number, n: number, prob: number, log = false): number {
     if (prob < 0 || prob > 1 || R_D_negInonint(n)) return ML_ERR_return_NAN2(printer, lineInfo4);
 
     const ch = R_D_nonint_check(log, x, printer);
-    if (ch !== undefined){
+    if (ch !== undefined) {
         return ch;
     }
     if (x < 0 || !isFinite(x)) return R_D__0(log);
@@ -67,4 +60,4 @@ function dbinom(x: number, n: number, prob: number, log = false): number {
     return dbinom_raw(x, n, prob, 1 - prob, log);
 }
 
-export { dbinom_raw , dbinom };
+export { dbinom_raw, dbinom };

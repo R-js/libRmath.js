@@ -1,5 +1,4 @@
-
-export { };
+export {};
 
 import type { MatcherHintOptions } from 'jest-matcher-utils';
 import { isTypedArray } from 'util/types';
@@ -35,19 +34,19 @@ function isNumber(o: unknown): o is number {
 }
 
 function isNull(o: unknown): o is null {
-    return (o === null);
+    return o === null;
 }
 
 function isUndefined(o: unknown): o is undefined {
-    return (o === undefined);
+    return o === undefined;
 }
 
 function isFloat32(o: unknown): o is Float32Array {
-    return (o instanceof Float32Array);
+    return o instanceof Float32Array;
 }
 
 function isFloat64(o: unknown): o is Float64Array {
-    return (o instanceof Float64Array);
+    return o instanceof Float64Array;
 }
 
 function isNonEmptyNumberArr(o: unknown): o is number[] {
@@ -62,21 +61,26 @@ function isNonEmptyNumberArr(o: unknown): o is number[] {
         if (i === o.length) {
             return true;
         }
-
     }
     return false;
 }
 
 function isEmptyArray(o: unknown): o is EmptyArray {
-    return (
-        (Array.isArray(o) && o.length === 0)
-        ||
-        (isTypedArray(o) && o.length === 0)
-    );
+    return (Array.isArray(o) && o.length === 0) || (isTypedArray(o) && o.length === 0);
 }
 
-function isNotNumberType<T>(o: T): o is Exclude<typeof o, EmptyArray | number[] | Float64Array | Float32Array | number> {
-    return !isEmptyArray(o) && !isNonEmptyNumberArr(o) && !isFloat32(o) && !isFloat64(o) && !isUndefined(o) && !isNull(o) && !(typeof o === 'number');
+function isNotNumberType<T>(
+    o: T
+): o is Exclude<typeof o, EmptyArray | number[] | Float64Array | Float32Array | number> {
+    return (
+        !isEmptyArray(o) &&
+        !isNonEmptyNumberArr(o) &&
+        !isFloat32(o) &&
+        !isFloat64(o) &&
+        !isUndefined(o) &&
+        !isNull(o) &&
+        !(typeof o === 'number')
+    );
 }
 
 function typeOf(o: unknown): ObjectTypes {
@@ -233,17 +237,22 @@ function toScalar(o: NumArray, alt: string) {
 expect.extend({
     toEqualFloatingPointBinary(
         // we do this because these parames have inferred types (it is a custom matcher) but we cannot override with (example mantissa: number = Infinity)
-        // because eslint will complain with 
+        // because eslint will complain with
         //   -> "error  Type number trivially inferred from a number literal, remove type annotation  @typescript-eslint/no-inferrable-types"
         //
         // this is ugly though, lets change it
         //...[received, expected, mantissa = Infinity, cycle = true, hf = true]: [received: unknown, expected: unknown, mantissa: number, cycle: boolean, hf: boolean]) {
         // eslint-disable-next-line @typescript-eslint/no-inferrable-types
-        received: unknown, expected: unknown, mantissa: number = Infinity, cycle: boolean = true, hf: boolean = true) {
+        received: unknown,
+        expected: unknown,
+        mantissa: number = Infinity,
+        cycle: boolean = true,
+        hf: boolean = true
+    ) {
         const options: MatcherHintOptions = {
             isNot: this.isNot as boolean,
             promise: this.promise as string,
-            comment: '',
+            comment: ''
         };
         const typeR = typeOf(received);
         const typeE = typeOf(expected);
@@ -262,7 +271,7 @@ expect.extend({
             return {
                 message: () =>
                     this.utils.matcherHint('toEqualFloatingPointBinary', typeR, typeE, options) + '\n\n' + errMsg,
-                pass: this.isNot ? true : false,
+                pass: this.isNot ? true : false
             };
         }
         // check 2
@@ -273,7 +282,7 @@ expect.extend({
             return {
                 message: () =>
                     this.utils.matcherHint('toEqualFloatingPointBinary', typeR, typeE, options) + '\n\n' + errMsg,
-                pass: this.isNot ? true : false,
+                pass: this.isNot ? true : false
             };
         }
         // check 3
@@ -284,7 +293,7 @@ expect.extend({
             return {
                 message: () =>
                     this.utils.matcherHint('toEqualFloatingPointBinary', typeR, typeE, options) + '\n\n' + errMsg,
-                pass: this.isNot ? true : false,
+                pass: this.isNot ? true : false
             };
         }
         // check 4 , mirror of check 2
@@ -295,7 +304,7 @@ expect.extend({
             return {
                 message: () =>
                     this.utils.matcherHint('toEqualFloatingPointBinary', typeR, typeE, options) + '\n\n' + errMsg,
-                pass: this.isNot ? true : false,
+                pass: this.isNot ? true : false
             };
         }
         // check 5 , mirror of check 3
@@ -306,7 +315,7 @@ expect.extend({
             return {
                 message: () =>
                     this.utils.matcherHint('toEqualFloatingPointBinary', typeR, typeE, options) + '\n\n' + errMsg,
-                pass: this.isNot ? true : false,
+                pass: this.isNot ? true : false
             };
         }
         // check 6 , 2 empty arrays are always equal
@@ -315,7 +324,7 @@ expect.extend({
             return {
                 pass: true,
                 message: () =>
-                    this.utils.matcherHint('toEqualFloatingPointBinary', '[]', '[]', options) + '\n\n' + errMsg,
+                    this.utils.matcherHint('toEqualFloatingPointBinary', '[]', '[]', options) + '\n\n' + errMsg
             };
         }
         // check 7: if one of the arrays is empty thats an error
@@ -328,10 +337,10 @@ expect.extend({
                         'toEqualFloatingPointBinary',
                         isEmptyArray(received) ? '[]' : typeR,
                         isEmptyArray(expected) ? '[]' : typeE,
-                        options,
+                        options
                     ) +
                     '\n\n' +
-                    errMsg,
+                    errMsg
             };
         }
 
@@ -339,25 +348,25 @@ expect.extend({
         const bpeE = (expected as typedFPArrays).BYTES_PER_ELEMENT || (hf ? 8 : 4);
         const bpe: 4 | 8 = Math.min(bpeE, bpeR) as 4 | 8;
 
-        const mantissa2 = Math.min(mantissa, (bpe === 4 || hf === false) ? 23 : 52);
+        const mantissa2 = Math.min(mantissa, bpe === 4 || hf === false ? 23 : 52);
 
         if (mantissa2 !== mantissa) {
             errMsg += `Mantissa forced to ${mantissa2} bits`;
         }
         // if received = number promote to number[]
-        const rec = isNumber(received) ? [received] : received as number[];
+        const rec = isNumber(received) ? [received] : (received as number[]);
         // if expected = number promote to number[]
-        const exp = isNumber(expected) ? [expected] : expected as number[];
+        const exp = isNumber(expected) ? [expected] : (expected as number[]);
         try {
             const min = compareFP(rec, exp, bpe, mantissa2);
             errMsg += `Received: [${toScalar(rec, typeR)}] should not be equal to Expected: [${toScalar(
                 exp,
-                typeE,
+                typeE
             )}] within ${min} bits ${min > mantissa2 ? `(larger then specified ${mantissa2} bits)` : ''}`;
             return {
                 pass: true,
                 message: () =>
-                    this.utils.matcherHint('toEqualFloatingPointBinary', typeR, typeE, options) + '\n\n' + errMsg,
+                    this.utils.matcherHint('toEqualFloatingPointBinary', typeR, typeE, options) + '\n\n' + errMsg
             };
         } catch (err) {
             const [rc, aIdx, bIdx, recv, expv] = err as number[];
@@ -376,8 +385,8 @@ expect.extend({
             return {
                 pass: false,
                 message: () =>
-                    this.utils.matcherHint('toEqualFloatingPointBinary', typeR, typeE, options) + '\n\n' + errMsg,
+                    this.utils.matcherHint('toEqualFloatingPointBinary', typeR, typeE, options) + '\n\n' + errMsg
             };
         }
-    },
+    }
 });

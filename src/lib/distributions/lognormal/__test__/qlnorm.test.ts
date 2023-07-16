@@ -43,19 +43,14 @@ describe('qlnorm', () => {
             expect(zero1).toBe(0);
             expect(warnings()).toHaveLength(3);
         });
-
     });
     describe('fidelity (defer to qnorm for most)', () => {
         it('x = [0,1, step 0.1], mhu=4, sd=8', async () => {
-            const [x, y1, y2] = await loadData(
-                resolve(__dirname, 'fixture-generation', 'qlnorm.R'),
-                /\s+/,
-                1, 2, 3
-            );
-            const actual1 = x.map(_x => qlnorm(_x, 4, 8));
-            const actual2 = x.map(_x => qlnorm(Math.log(_x), 4, 8, false, true));
+            const [x, y1, y2] = await loadData(resolve(__dirname, 'fixture-generation', 'qlnorm.R'), /\s+/, 1, 2, 3);
+            const actual1 = x.map((_x) => qlnorm(_x, 4, 8));
+            const actual2 = x.map((_x) => qlnorm(Math.log(_x), 4, 8, false, true));
             expect(actual1).toEqualFloatingPointBinary(y1, 50);
             expect(actual2).toEqualFloatingPointBinary(y2, 47);
-        })
+        });
     });
 });

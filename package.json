@@ -61,7 +61,7 @@
             "email": "richarddmorey@gmail.com"
         }
     ],
-    "sideEffects": true,
+    "sideEffects": false,
     "type": "module",
     "exports": {
         "import": "./dist/esm/index.mjs",
@@ -83,7 +83,6 @@
         "postbuild": "node --trace-warnings scripts/rollup.build.mjs",
         "lint": "eslint .eslintrc.cjs jest.config.cjs scripts/*.mjs  src/**/*.ts",
         "lint:fix": "npm run lint -- --fix",
-        "prepare": "ts-patch install -s",
         "prepublishOnly": "npm run build",
         "test": "jest --verbose"
     },
@@ -111,11 +110,14 @@
         "acorn": "8.8.1",
         "escodegen": "2.0.0",
         "eslint": "8.29.0",
+        "eslint-config-prettier": "8.8.0",
+        "eslint-plugin-prettier": "5.0.0",
         "jest": "29.3.1",
         "ms": "3.0.0-canary.1",
+        "prettier": "3.0.0",
         "rollup": "3.6.0",
         "ts-jest": "29.0.3",
-        "ts-patch": "2.0.2",
+        "ts-node": "10.9.1",
         "typescript": "4.4.4",
         "typescript-eslint-language-service": "4.1.5",
         "typescript-transform-paths": "3.4.4"

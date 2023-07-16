@@ -8,7 +8,6 @@ import { dgamma } from '@dist/gamma/dgamma';
 
 const printer = debug('dnf');
 
-
 export function dnf(x: number, df1: number, df2: number, ncp: number, giveLog: boolean): number {
     let z: number;
     let f: number;

@@ -7,7 +7,7 @@ import {
     exparg_BESS,
     nsig_BESS,
     rtnsig_BESS,
-    xlrg_BESS_IJ,
+    xlrg_BESS_IJ
 } from '../bessel-constants';
 import type { IBesselRC } from '../IBesselRC';
 

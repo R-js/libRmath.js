@@ -10,76 +10,22 @@ import { sinpi } from './lib/trigonometry/sinpi';
 import { tanpi } from './lib/trigonometry/tanpi';
 
 // distributions
-import {
-    rbetaOne,
-    dbeta,
-    pbeta,
-    qbeta,
-    rbeta
-} from './lib/distributions/beta';
-import {
-    dbinom,
-    pbinom,
-    qbinom,
-    rbinom,
-    rbinomOne
-} from './lib/distributions/binomial';
+import { rbetaOne, dbeta, pbeta, qbeta, rbeta } from './lib/distributions/beta';
+import { dbinom, pbinom, qbinom, rbinom, rbinomOne } from './lib/distributions/binomial';
 
-import {
-    dnbinom,
-    pnbinom,
-    qnbinom,
-    rnbinom,
-    rnbinomOne
-} from './lib/distributions/binomial-negative';
+import { dnbinom, pnbinom, qnbinom, rnbinom, rnbinomOne } from './lib/distributions/binomial-negative';
 
-import {
-    dcauchy,
-    pcauchy,
-    qcauchy,
-    rcauchy,
-    rcauchyOne
-} from './lib/distributions/cauchy';
+import { dcauchy, pcauchy, qcauchy, rcauchy, rcauchyOne } from './lib/distributions/cauchy';
 
-import {
-    dchisq,
-    pchisq,
-    qchisq,
-    rchisq,
-    rchisqOne
-} from './lib/distributions/chi-2';
+import { dchisq, pchisq, qchisq, rchisq, rchisqOne } from './lib/distributions/chi-2';
 
-import {
-    dexp,
-    pexp,
-    qexp,
-    rexp,
-    rexpOne
-} from './lib/distributions/exp';
+import { dexp, pexp, qexp, rexp, rexpOne } from './lib/distributions/exp';
 
-import {
-    df,
-    pf,
-    qf,
-    rf,
-    rfOne
-} from './lib/distributions/f-distro';
+import { df, pf, qf, rf, rfOne } from './lib/distributions/f-distro';
 
-import {
-    dgamma,
-    pgamma,
-    qgamma,
-    rgamma,
-    rgammaOne
-} from './lib/distributions/gamma';
+import { dgamma, pgamma, qgamma, rgamma, rgammaOne } from './lib/distributions/gamma';
 
-import {
-    dgeom,
-    pgeom,
-    qgeom,
-    rgeom,
-    rgeomOne
-} from './lib/distributions/geometric';
+import { dgeom, pgeom, qgeom, rgeom, rgeomOne } from './lib/distributions/geometric';
 
 import {
     dhyper,
@@ -91,43 +37,15 @@ import {
     clearBackendHyperGeom
 } from './lib/distributions/hypergeometric';
 
-import {
-    dlogis,
-    plogis,
-    qlogis,
-    rlogis,
-    rlogisOne
-} from './lib/distributions/logis';
+import { dlogis, plogis, qlogis, rlogis, rlogisOne } from './lib/distributions/logis';
 
-import {
-    dlnorm,
-    plnorm,
-    qlnorm,
-    rlnorm,
-    rlnormOne
-} from './lib/distributions/lognormal';
+import { dlnorm, plnorm, qlnorm, rlnorm, rlnormOne } from './lib/distributions/lognormal';
 
-import {
-    dmultinom,
-    dmultinomLikeR,
-    rmultinom
-} from './lib/distributions/multinom';
+import { dmultinom, dmultinomLikeR, rmultinom } from './lib/distributions/multinom';
 
-import {
-    dnorm,
-    pnorm,
-    qnorm,
-    rnorm,
-    rnormOne
-} from './lib/distributions/normal';
+import { dnorm, pnorm, qnorm, rnorm, rnormOne } from './lib/distributions/normal';
 
-import {
-    dpois,
-    ppois,
-    qpois,
-    rpois,
-    rpoisOne
-} from './lib/distributions/poisson';
+import { dpois, ppois, qpois, rpois, rpoisOne } from './lib/distributions/poisson';
 
 import {
     useWasmBackendSignRank,
@@ -139,42 +57,15 @@ import {
     rsignrankOne
 } from './lib/distributions/signrank';
 
-import {
-    dt,
-    pt,
-    qt,
-    rt,
-    rtOne
-} from './lib/distributions/student-t';
+import { dt, pt, qt, rt, rtOne } from './lib/distributions/student-t';
 
-import {
-    ptukey,
-    qtukey
-} from './lib/distributions/tukey';
+import { ptukey, qtukey } from './lib/distributions/tukey';
 
-import {
-    dunif,
-    punif,
-    qunif,
-    runif,
-    runifOne
-} from './lib/distributions/uniform';
+import { dunif, punif, qunif, runif, runifOne } from './lib/distributions/uniform';
 
-import {
-    dweibull,
-    pweibull,
-    qweibull,
-    rweibull,
-    rweibullOne,
-} from './lib/distributions/weibull';
+import { dweibull, pweibull, qweibull, rweibull, rweibullOne } from './lib/distributions/weibull';
 
-import {
-    dwilcox,
-    pwilcox,
-    qwilcox,
-    rwilcox,
-    rwilcoxOne,
-} from './lib/distributions/wilcoxon';
+import { dwilcox, pwilcox, qwilcox, rwilcox, rwilcoxOne } from './lib/distributions/wilcoxon';
 
 //rng (uniform)
 /*import { KnuthTAOCP } from './lib/rng/knuth-taocp';
@@ -200,34 +91,16 @@ import { IRNGNormal } from './lib/rng/normal/normal-rng';
 import type { IRNGNormalType } from './lib/rng/normal/rng-types';
 
 // globalRNG
-import {
-    RNGkind,
-    setSeed,
-    randomSeed
-} from './lib/rng/global-rng';
+import { RNGkind, setSeed, randomSeed } from './lib/rng/global-rng';
 
 // special
-import {
-    BesselJ,
-    BesselI,
-    BesselK,
-    besselY
-} from './lib/special/bessel';
+import { BesselJ, BesselI, BesselK, besselY } from './lib/special/bessel';
 
 import { beta, lbeta } from './lib/special/beta';
-import  { lchoose, choose }  from './lib/special/choose';
-import { 
-    gamma,
-    digamma,
-    pentagamma,
-    psigamma,
-    tetragamma,
-    trigamma,
-    lgamma
-}  from './lib/special/gamma';
+import { lchoose, choose } from './lib/special/choose';
+import { gamma, digamma, pentagamma, psigamma, tetragamma, trigamma, lgamma } from './lib/special/gamma';
 
 export type { IRNGNormalType };
-
 
 const defaultObservableNoteBook = {
     // R versions of log1p and hypot
@@ -329,7 +202,7 @@ const defaultObservableNoteBook = {
     qnorm,
     rnorm,
     rnormOne,
-    //    
+    //
     dpois,
     ppois,
     qpois,
@@ -403,7 +276,7 @@ const defaultObservableNoteBook = {
     //
     lchoose,
     choose,
-    // 
+    //
     gamma,
     digamma,
     pentagamma,
@@ -411,7 +284,7 @@ const defaultObservableNoteBook = {
     tetragamma,
     trigamma,
     lgamma
-}
+};
 
 export {
     // R versions of log1p and hypot
@@ -597,6 +470,3 @@ export {
     lgamma
 };
 export { defaultObservableNoteBook as default };
-
-
-

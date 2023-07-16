@@ -5,14 +5,13 @@ import {
     rnormAfterSeed123,
     rnormAfterUniformRNGBleed,
     rnormAfterUniformRNGBleed2,
-    rnormAfterUniformRNGReset,
+    rnormAfterUniformRNGReset
 } from './fixture';
-
 
 describe('rng box-muller', function () {
     let rng: IRNG;
-    beforeAll(()=>{
-        rng = new MersenneTwister(0)
+    beforeAll(() => {
+        rng = new MersenneTwister(0);
     });
     it('compare 100 samples seed=0', () => {
         const bm = new BoxMuller(rng); // by default will use Mersenne-Twister like in R
@@ -41,7 +40,7 @@ describe('rng box-muller', function () {
         expect(normVar1).toEqualFloatingPointBinary(0.735828171633, 22, false, false);
 
         expect(bm.name).toBe('Box-Muller');
-        
+
         bm.uniform_rng.init(1234);
         const normVar2 = bm.randoms(-1);
         expect(normVar2).toEqualFloatingPointBinary(0.735828171633, 22, false, false);

@@ -11,7 +11,7 @@ const printer = debug('pnbeta_raw');
 const printer_pnbeta2 = debug('pnbeta2');
 
 /* change errmax and itrmax if desired;
-   * original (AS 226, R84) had  (errmax; itrmax) = (1e-6; 100) */
+ * original (AS 226, R84) had  (errmax; itrmax) = (1e-6; 100) */
 const errmax = 1.0e-9;
 const itrmax = 10000; /* 100 is not enough for pf(ncp=200)
                    see PR#11277 */
@@ -73,8 +73,6 @@ function pnbeta_raw(x: number, o_x: number, a: number, b: number, ncp: number): 
     return ans;
 }
 
-
-
 export function pnbeta2(
     x: number,
     o_x: number,
@@ -82,7 +80,7 @@ export function pnbeta2(
     b: number,
     ncp: number /* o_x  == 1 - x  but maybe more accurate */,
     lower_tail: boolean,
-    log_p: boolean,
+    log_p: boolean
 ): number {
     let ans = pnbeta_raw(x, o_x, a, b, ncp);
     if (isNaN(ans)) return NaN;

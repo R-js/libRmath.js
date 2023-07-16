@@ -35,7 +35,7 @@ describe('qlogis', function () {
             expect(nan2).toEqualFloatingPointBinary(NaN);
         });
         it('scale <= 0', () => {
-            const nan = qlogis(0.3,undefined, -1);
+            const nan = qlogis(0.3, undefined, -1);
             expect(nan).toEqualFloatingPointBinary(NaN);
             expect(qLogisDomainWarns()).toMatchInlineSnapshot(`
 [

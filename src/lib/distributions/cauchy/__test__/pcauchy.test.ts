@@ -14,7 +14,7 @@ describe('pcauchy', function () {
     });
     it('ranges x ∊ [-40, 40, step 1] location=2, scale=3, log=false', async () => {
         const [x, y] = await loadData(resolve(__dirname, 'fixture-generation', 'pcauchy1.R'), /\s+/, 1, 2);
-        const actual = x.map(_x => pcauchy(_x, 2, 3));
+        const actual = x.map((_x) => pcauchy(_x, 2, 3));
         expect(actual).toEqualFloatingPointBinary(y);
     });
     it('x=NaN', () => {
@@ -32,7 +32,6 @@ describe('pcauchy', function () {
         expect(pcauchyDomainWarns()).toHaveLength(1);
     });
 
-    
     it('x=Infinity, rest=default', () => {
         const z = pcauchy(Infinity);
         expect(z).toBe(1);

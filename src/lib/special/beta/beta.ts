@@ -9,7 +9,6 @@ import { exp } from '@lib/r-func';
 const xmax = 171.61447887182298;
 const lnsml = -708.39641853226412;
 
-
 const printer_beta = debug('beta');
 
 function beta(a: number, b: number): number {

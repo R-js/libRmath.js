@@ -10,10 +10,8 @@ const printer = debug('rweibull');
 
 export function rweibullOne(shape: number, scale = 1): number {
     const rng = globalUni();
-    if (!isFinite(shape) || !isFinite(scale) || shape <= 0 || scale <= 0)
-    {
-        if (scale === 0)
-        {
+    if (!isFinite(shape) || !isFinite(scale) || shape <= 0 || scale <= 0) {
+        if (scale === 0) {
             return 0;
         }
         /* else */

@@ -2,13 +2,10 @@ import { cl, select } from '@common/debug-mangos-select';
 
 import { qunif } from '..';
 
-
 const qunifDomainWarns = select('qunif')("argument out of domain in '%s'");
 const qbounderyWarns = select('R_Q_P01_check')("argument out of domain in '%s'");
 
-
 describe('qunif', function () {
-
     describe('invalid input and edge cases', () => {
         beforeEach(() => {
             cl.clear('qunif');
@@ -47,7 +44,7 @@ describe('qunif', function () {
         });
     });
     describe('fidelity', () => {
-        it('p=log(0.8), min=11, max=11.5 lowerTail=false, pAslog=true',()=>{
+        it('p=log(0.8), min=11, max=11.5 lowerTail=false, pAslog=true', () => {
             const ans = qunif(Math.log(0.8), 11, 11.5, false, true);
             expect(ans).toBe(11.1);
         });

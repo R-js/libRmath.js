@@ -27,8 +27,7 @@ function is_odd(x: number): boolean {
 }
 
 export class KnuthTAOCP2002 extends IRNG {
-
-    public static override kind: IRNGType = "KNUTH_TAOCP2002";
+    public static override kind: IRNGType = 'KNUTH_TAOCP2002';
     //
     //
     private qualityBuffer: ArrayBuffer;
@@ -179,6 +178,6 @@ export class KnuthTAOCP2002 extends IRNG {
     }
 
     public get cut(): number {
-        return 2**25-1;
+        return 2 ** 25 - 1;
     }
 }

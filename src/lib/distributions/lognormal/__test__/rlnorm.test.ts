@@ -27,18 +27,13 @@ describe('rlnorm', () => {
     });
     describe('fidelity (defer to rnorm[One] for most)', () => {
         beforeEach(() => {
-            RNGkind({ uniform: "MERSENNE_TWISTER", normal: "INVERSION" });
+            RNGkind({ uniform: 'MERSENNE_TWISTER', normal: 'INVERSION' });
             globalUni().init(123456);
         });
         it('n=50, mhu=4, sd=8', async () => {
-            const [ y ] = await loadData(
-                resolve(__dirname, 'fixture-generation', 'rlnorm.R'),
-                /\s+/,
-                1
-            );
+            const [y] = await loadData(resolve(__dirname, 'fixture-generation', 'rlnorm.R'), /\s+/, 1);
             const actual = rlnorm(50, 4, 8);
             expect(actual).toEqualFloatingPointBinary(y, 50);
-            
-        })
+        });
     });
 });

@@ -6,18 +6,17 @@ import {
     rnormAfterSeed1234,
     rnormAfterUniformRNGBleed,
     rnormAfterUniformRNGBleed2,
-    rnormAfterUniformRNGReset,
+    rnormAfterUniformRNGReset
 } from './fixture';
-
 
 describe('rng ahrens-dieter', function () {
     let rng: IRNG;
-    beforeAll(()=>{
+    beforeAll(() => {
         rng = new MersenneTwister(0);
-    })
+    });
     it('compare 1000 samples seed=1234', () => {
         //1000 samples hits all pathways in the algorithm
-        const ad = new AhrensDieter(rng); 
+        const ad = new AhrensDieter(rng);
         ad.uniform_rng.init(1234);
         const result = ad.randoms(1e3);
         expect(result).toEqualFloatingPointBinary(_1000Samples, 22, false, false);
@@ -29,14 +28,14 @@ describe('rng ahrens-dieter', function () {
         expect(result1).toEqualFloatingPointBinary(rnormAfterSeed1234, 22, false, false);
     });
     it('get from underlying uniform rng', () => {
-        const ad = new AhrensDieter(rng); 
+        const ad = new AhrensDieter(rng);
         ad.uniform_rng.init(1234);
         ad.randoms(10);
         const univar1 = ad.uniform_rng.random();
         expect(univar1).toEqualFloatingPointBinary(0.28273358359, 22, false, false);
     });
     it('get from normal rng after get from underlying uniform rng', () => {
-        const ad = new AhrensDieter(rng); 
+        const ad = new AhrensDieter(rng);
         ad.uniform_rng.init(1234);
         ad.randoms(10);
         ad.uniform_rng.random();

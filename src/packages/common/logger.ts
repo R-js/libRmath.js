@@ -5,12 +5,11 @@ import { getLineInfo } from '@mangos/debug';
 const debug_R_Q_P01_boundaries = debug('R_Q_P01_boundaries');
 const debug_R_Q_P01_check = debug('R_Q_P01_check');
 
-
-export function createLineInfo(n: number){
-    return function () : string {
-     const info = getLineInfo(n) as Required<LineInfo>;
-     return `${info.fnName}, line:${info.line}, col:${info.column}`;
-    }
+export function createLineInfo(n: number) {
+    return function (): string {
+        const info = getLineInfo(n) as Required<LineInfo>;
+        return `${info.fnName}, line:${info.line}, col:${info.column}`;
+    };
 }
 
 const lineInfo4 = createLineInfo(4);
@@ -22,7 +21,7 @@ export enum ME {
     ME_RANGE = 2, //  value out of range
     ME_NOCONV = 4, //process did not converge
     ME_PRECISION = 8, //does not have "full" precision
-    ME_UNDERFLOW = 16, // and underflow occured (important for IEEE)
+    ME_UNDERFLOW = 16 // and underflow occured (important for IEEE)
 }
 /*
 export const min0 = (x: number, y: number): number => {
@@ -38,15 +37,19 @@ export const mapErr = new Map([
     [ME.ME_RANGE, "argument out of range in '%s'"],
     [ME.ME_NOCONV, "convergence failed in '%s'"],
     [ME.ME_PRECISION, "full precision may not have been achieved in '%s'"],
-    [ME.ME_UNDERFLOW, "underflow occurred in '%s'"],
+    [ME.ME_UNDERFLOW, "underflow occurred in '%s'"]
 ]);
 
-export function ML_ERROR2<T extends string | Record<string, unknown> | (() => string)>(x: ME, s: T, printer: Printer): void {
+export function ML_ERROR2<T extends string | Record<string, unknown> | (() => string)>(
+    x: ME,
+    s: T,
+    printer: Printer
+): void {
     if (!printer.enabled) {
         return;
     }
     const str = mapErr.get(x);
-    const val = (typeof s === 'function') ? s() : s;
+    const val = typeof s === 'function' ? s() : s;
     if (str) {
         printer(str, val);
     }
@@ -54,7 +57,7 @@ export function ML_ERROR2<T extends string | Record<string, unknown> | (() => st
 
 export function ML_ERR_return_NAN2(printer: Printer, getExtraInfo: () => string): number {
     if (printer.enabled) {
-      ML_ERROR2(ME.ME_DOMAIN, getExtraInfo(), printer);
+        ML_ERROR2(ME.ME_DOMAIN, getExtraInfo(), printer);
     }
     return NaN;
 }
@@ -64,7 +67,7 @@ export function R_Q_P01_boundaries(
     log_p: boolean,
     p: number,
     _LEFT_: number,
-    _RIGHT_: number,
+    _RIGHT_: number
 ): number | undefined {
     if (log_p) {
         if (p > 0) {
@@ -86,10 +89,7 @@ export function R_Q_P01_boundaries(
 }
 
 export function R_Q_P01_check(logP: boolean, p: number): number | undefined {
-    if (
-        (logP && p > 0) 
-        || 
-        (!logP && (p < 0 || p > 1))) {
+    if ((logP && p > 0) || (!logP && (p < 0 || p > 1))) {
         return ML_ERR_return_NAN2(debug_R_Q_P01_check, lineInfo4);
     }
     return undefined;

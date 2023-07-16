@@ -10,14 +10,14 @@ const qnbetaDomainWarns = select('qnbeta')("argument out of domain in '%s'");
 //app
 import { qbeta } from '..';
 
-describe('qbeta, ncp != undefined',  function () {
-    beforeEach(()=>{
+describe('qbeta, ncp != undefined', function () {
+    beforeEach(() => {
         cl.clear('qnbeta');
     });
     it('ranges x ∊ [0, 1], shape1=1, shape2=2, ncp=3', async () => {
         /* load data from fixture */
         const [x, y] = await loadData(resolve(__dirname, 'fixture-generation', 'qnbeta.R'), /\s+/, 1, 2);
-        const actual = x.map(_x => qbeta(_x, 1, 2, 3));
+        const actual = x.map((_x) => qbeta(_x, 1, 2, 3));
         expect(actual).toEqualFloatingPointBinary(y, 6);
     });
     it('x = 0.5, shape1=NaN, shape2=2, ncp=3', () => {

@@ -6,9 +6,8 @@ import { globalUni } from '@rng/global-rng';
 
 import { qbinom } from './qbinom';
 
-
 const printer_rbinom = debug('rbinom');
- 
+
 export function rbinomOne(size: number, prob: number): number {
     const rng = globalUni();
     // double
@@ -56,7 +55,6 @@ export function rbinomOne(size: number, prob: number): number {
     let ix = 0;
     let k;
 
-
     if (!isFinite(size)) return ML_ERR_return_NAN2(printer_rbinom, lineInfo4);
     r = Math.round(size);
     if (r !== size) return ML_ERR_return_NAN2(printer_rbinom, lineInfo4);
@@ -77,13 +75,7 @@ export function rbinomOne(size: number, prob: number): number {
             and r == INT_MAX gave only even values */
         const _p = rng.random(); //between 0 and 1
         printer_rbinom('Evade overflow:%d > MAX_SAFE_INTEGER', r);
-        const retv = qbinom(
-            _p,
-            r,
-            prob,
-            /*lower_tail*/ false,
-            /*log_p*/ false,
-        );
+        const retv = qbinom(_p, r, prob, /*lower_tail*/ false, /*log_p*/ false);
         return retv;
     }
     /* else */
@@ -105,7 +97,7 @@ export function rbinomOne(size: number, prob: number): number {
             ix = n - ix;
         }
         return ix;
-    }
+    };
     const L_np_small = () => {
         //L_np_small:
         /*---------------------- np = n*p < 30 : ------------------------- */
@@ -203,7 +195,7 @@ export function rbinomOne(size: number, prob: number): number {
                 for (i = ix + 1; i <= m; i++) f /= g / i - r;
             }
             if (v <= f) {
-                return finis()
+                return finis();
                 //goto finis;
             }
         } else {
@@ -229,12 +221,12 @@ export function rbinomOne(size: number, prob: number): number {
                 if (
                     alv <=
                     xm * Math.log(f1 / x1) +
-                    (n - m + 0.5) * Math.log(z / w) +
-                    (ix - m) * Math.log((w * p) / (x1 * q)) +
-                    (13860.0 - (462.0 - (132.0 - (99.0 - 140.0 / f2) / f2) / f2) / f2) / f1 / 166320.0 +
-                    (13860.0 - (462.0 - (132.0 - (99.0 - 140.0 / z2) / z2) / z2) / z2) / z / 166320.0 +
-                    (13860.0 - (462.0 - (132.0 - (99.0 - 140.0 / x2) / x2) / x2) / x2) / x1 / 166320.0 +
-                    (13860.0 - (462.0 - (132.0 - (99.0 - 140.0 / w2) / w2) / w2) / w2) / w / 166320
+                        (n - m + 0.5) * Math.log(z / w) +
+                        (ix - m) * Math.log((w * p) / (x1 * q)) +
+                        (13860.0 - (462.0 - (132.0 - (99.0 - 140.0 / f2) / f2) / f2) / f2) / f1 / 166320.0 +
+                        (13860.0 - (462.0 - (132.0 - (99.0 - 140.0 / z2) / z2) / z2) / z2) / z / 166320.0 +
+                        (13860.0 - (462.0 - (132.0 - (99.0 - 140.0 / x2) / x2) / x2) / x2) / x1 / 166320.0 +
+                        (13860.0 - (462.0 - (132.0 - (99.0 - 140.0 / w2) / w2) / w2) / w2) / w / 166320
                 ) {
                     return finis(); // goto finis
                 }
@@ -245,5 +237,4 @@ export function rbinomOne(size: number, prob: number): number {
     // throw new Error(`internal error unreachable code`)
     //L_np_small();
     //return finis();
-
 }

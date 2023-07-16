@@ -1,7 +1,6 @@
 import { resolve } from 'path';
 import { loadData } from '@common/load';
 
-
 //app
 import { tetragamma } from '@special/gamma';
 

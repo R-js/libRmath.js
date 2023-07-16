@@ -1,17 +1,8 @@
-import { debug  } from '@mangos/debug';
+import { debug } from '@mangos/debug';
 import { ML_ERR_return_NAN2, lineInfo4 } from '@common/logger';
 import { exp, round, log as _log, sqrt, abs } from '@lib/r-func';
 
-
-import {
-    DBL_MANT_DIG,
-    DBL_MIN_EXP,
-    ldexp,
-    M_1_SQRT_2PI,
-    M_LN2,
-    M_LN_SQRT_2PI,
-    R_D__0
-} from '@lib/r-func';
+import { DBL_MANT_DIG, DBL_MIN_EXP, ldexp, M_1_SQRT_2PI, M_LN2, M_LN_SQRT_2PI, R_D__0 } from '@lib/r-func';
 
 const printer = debug('dnorm');
 

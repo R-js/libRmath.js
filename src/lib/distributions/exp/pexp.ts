@@ -1,5 +1,5 @@
-import { ML_ERR_return_NAN2, lineInfo4} from '@common/logger';
-import { R_D_exp, R_DT_0  } from '@lib/r-func';
+import { ML_ERR_return_NAN2, lineInfo4 } from '@common/logger';
+import { R_D_exp, R_DT_0 } from '@lib/r-func';
 
 import { debug } from '@mangos/debug';
 import { R_Log1_Exp } from './expm1';

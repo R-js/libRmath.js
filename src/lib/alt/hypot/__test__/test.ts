@@ -17,13 +17,13 @@ describe('hypot', function () {
     });
     describe('fidelity', () => {
         it('hypot(3,2)', () => {
-            expect(hypot(3,2)).toEqualFloatingPointBinary(Math.sqrt(3**2+2**2));
+            expect(hypot(3, 2)).toEqualFloatingPointBinary(Math.sqrt(3 ** 2 + 2 ** 2));
         });
         it('hypot(3E3,2E9)', () => {
-            expect(hypot(3E3,2E9)).toEqualFloatingPointBinary(Math.sqrt(3E3**2+2E9**2), 50);
+            expect(hypot(3e3, 2e9)).toEqualFloatingPointBinary(Math.sqrt(3e3 ** 2 + 2e9 ** 2), 50);
         });
         it('hypot(3E-3,2E-9)', () => {
-            expect(hypot(3E-3,2E-9)).toEqualFloatingPointBinary(Math.sqrt(3E-3**2+2E-9**2), 49);
+            expect(hypot(3e-3, 2e-9)).toEqualFloatingPointBinary(Math.sqrt(3e-3 ** 2 + 2e-9 ** 2), 49);
         });
     });
 });

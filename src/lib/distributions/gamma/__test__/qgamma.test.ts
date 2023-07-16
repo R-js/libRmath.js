@@ -57,22 +57,21 @@ describe('qgamma', function () {
     });
     describe('with fixtures', () => {
         it('0 < p < 1, various shape={9}, lower={false,true}, log={false,true}', async () => {
-            const [p,y1, y2] = await loadData(
-                resolve(
-                    __dirname,
-                    'fixture-generation',
-                    'qgamma1.R'
-                ),
+            const [p, y1, y2] = await loadData(
+                resolve(__dirname, 'fixture-generation', 'qgamma1.R'),
                 /\s+/,
-                1, /*y1*/2, 3, 4
+                1,
+                /*y1*/ 2,
+                3,
+                4
             );
-            const a1 = p.map(_p => qgamma(_p, 9));
+            const a1 = p.map((_p) => qgamma(_p, 9));
             expect(a1).toEqualFloatingPointBinary(y1, 45);
 
-            const a2 = p.map(_p => qgamma(_p, 9, undefined, undefined, false));
+            const a2 = p.map((_p) => qgamma(_p, 9, undefined, undefined, false));
             expect(a2).toEqualFloatingPointBinary(y2, 45);
 
-            const a3 = p.map(_p => qgamma(Math.log(_p), 9, undefined, undefined, false, true));
+            const a3 = p.map((_p) => qgamma(Math.log(_p), 9, undefined, undefined, false, true));
             expect(a3).toEqualFloatingPointBinary(y2, 45);
         });
     });

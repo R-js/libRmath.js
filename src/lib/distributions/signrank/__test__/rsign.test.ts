@@ -15,14 +15,14 @@ const rsignrankDomainWarns = rsignrankLogs("argument out of domain in '%s'");
 describe('rsignrank (wilcox sign rank)', function () {
     beforeEach(() => {
         cl.clear('rsignrank');
-    })
+    });
     describe('invalid input and edge cases', () => {
         it('n = NaN', () => {
             const nan1 = rsignrank(1, NaN);
             expect(nan1).toEqualFloatingPointBinary(NaN);
         });
         it('n > INT_MAX return 0', () => {
-            const zero = rsignrank(1, INT_MAX+1);
+            const zero = rsignrank(1, INT_MAX + 1);
             expect(zero).toEqualFloatingPointBinary(0);
         });
         it('n < 0', () => {
@@ -37,7 +37,7 @@ describe('rsignrank (wilcox sign rank)', function () {
     });
     describe('fidelity', () => {
         beforeEach(() => {
-            RNGkind({ uniform: "MERSENNE_TWISTER", normal: "INVERSION"});
+            RNGkind({ uniform: 'MERSENNE_TWISTER', normal: 'INVERSION' });
             globalUni().init(123456);
         });
         it('N = 50, n = 3000', async () => {
@@ -45,5 +45,5 @@ describe('rsignrank (wilcox sign rank)', function () {
             const actual = rsignrank(50, 3000);
             expect(actual).toEqualFloatingPointBinary(y);
         });
-    })
+    });
 });

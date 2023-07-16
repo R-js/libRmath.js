@@ -5,7 +5,6 @@ import { pbeta } from '@dist/beta/pbeta';
 import { M_LN2, R_D_Cval, log, log1p, exp, abs } from '@lib/r-func';
 import { pnorm5 as pnorm } from '@dist/normal/pnorm';
 
-
 export function pt(x: number, n: number, lower_tail: boolean, log_p: boolean): number {
     /* return  P[ T <= x ]	where
      * T ~ t_{n}  (t distrib. with n degrees of freedom).
@@ -19,7 +18,7 @@ export function pt(x: number, n: number, lower_tail: boolean, log_p: boolean): n
         return pnorm(x, 0.0, 1.0, lower_tail, log_p);
     }
 
-/*
+    /*
 Note: fidelity is higher if we omit the #ifdef condition below (look in the unit test for df > 4e5)
 
 #ifdef R_version_le_260
@@ -30,8 +29,8 @@ Note: fidelity is higher if we omit the #ifdef condition below (look in the unit
         return pnorm((x * (1 - val)) / sqrt(1 + x * x * 2 * val), 0.0, 1.0, lower_tail, log_p);
     }
 #endif 
-*/   
-/*
+*/
+    /*
 example
  1+(x/df)*x > 1e100
  x/df*x > 1e100 -1
@@ -55,8 +54,8 @@ example
            with z = 1/nx,  a = n/2,  b= 1/2 :
         */
         //let lval;
-        const lb = lbeta(0.5 * n, 0.5)
-        const l05n = log(0.5* n);
+        const lb = lbeta(0.5 * n, 0.5);
+        const l05n = log(0.5 * n);
         const labsx = log(abs(x));
         const logn = log(n);
 
@@ -64,8 +63,8 @@ example
         val = log_p ? lval : exp(lval);
     } else {
         val =
-            (n > x * x)
-                ? pbeta(x * x / (n + x * x), 0.5, n / 2, /*lower_tail*/ false, log_p)
+            n > x * x
+                ? pbeta((x * x) / (n + x * x), 0.5, n / 2, /*lower_tail*/ false, log_p)
                 : pbeta(1 / nx, n / 2, 0.5, /*lower_tail*/ true, log_p);
     }
 

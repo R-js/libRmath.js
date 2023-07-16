@@ -21,7 +21,6 @@ describe('pgamma', function () {
             expect(nan).toBeNaN();
             expect(pgammaDomainWarns()).toHaveLength(1);
         });
-
     });
     describe('edge cases', () => {
         it('x=4(>0), shape=0, log=true', () => {
@@ -41,34 +40,36 @@ describe('pgamma', function () {
             const z1 = pgamma(Infinity, 34);
             expect(z1).toBe(1);
         });
-        it('x=1e-308, shape=1',()=>{
-            const z= pgamma(1e-308,1);
-            expect(z).toEqualFloatingPointBinary(9.9999999999998657e-309)
-        })
-        
+        it('x=1e-308, shape=1', () => {
+            const z = pgamma(1e-308, 1);
+            expect(z).toEqualFloatingPointBinary(9.9999999999998657e-309);
+        });
     });
     describe('with fixtures', () => {
         describe('region: 0 < x < 1', () => {
             it('0 < x < 1, various shape={5,0.8}, lower=true, log={false,true}', async () => {
                 const [p, y1, y2, y3, y4, y5, y6, y7] = await loadData(
-                    resolve(
-                        __dirname,
-                        'fixture-generation',
-                        'pgamma-region1-1.R'
-                    ),
+                    resolve(__dirname, 'fixture-generation', 'pgamma-region1-1.R'),
                     /\s+/,
-                    1, /*y1*/2, 3, 4, 5, 6, 7, 8
+                    1,
+                    /*y1*/ 2,
+                    3,
+                    4,
+                    5,
+                    6,
+                    7,
+                    8
                 );
                 // lower=true
-                const a1 = p.map(_p => pgamma(_p, 5));
-                const a2 = p.map(_p => pgamma(_p, 5, undefined, undefined, undefined, true));
-                const a3 = p.map(_p => pgamma(_p, 0.8, undefined, undefined, undefined, false));
-                const a4 = p.map(_p => pgamma(_p, 0.8, undefined, undefined, undefined, true));
+                const a1 = p.map((_p) => pgamma(_p, 5));
+                const a2 = p.map((_p) => pgamma(_p, 5, undefined, undefined, undefined, true));
+                const a3 = p.map((_p) => pgamma(_p, 0.8, undefined, undefined, undefined, false));
+                const a4 = p.map((_p) => pgamma(_p, 0.8, undefined, undefined, undefined, true));
 
                 // lower=false
-                const a5 = p.map(_p => pgamma(_p, 0.8, undefined, undefined, false, false));
-                const a6 = p.map(_p => pgamma(_p, 0.8, undefined, undefined, false, true));
-                const a7 = p.map(_p => pgamma(_p, 0.4, undefined, undefined, false, true));
+                const a5 = p.map((_p) => pgamma(_p, 0.8, undefined, undefined, false, false));
+                const a6 = p.map((_p) => pgamma(_p, 0.8, undefined, undefined, false, true));
+                const a7 = p.map((_p) => pgamma(_p, 0.4, undefined, undefined, false, true));
 
                 //checks
                 expect(a1).toEqualFloatingPointBinary(y1, 49);
@@ -83,70 +84,74 @@ describe('pgamma', function () {
         describe('region A: x >=1 && x > shape - 1  && x < 0.8*(shape + 50)', () => {
             it('shape=196, 4 < x < 195, variations: log={true, false}, lower={true,false}', async () => {
                 const [p, y1, y2, y3, y4] = await loadData(
-                    resolve(
-                        __dirname,
-                        'fixture-generation',
-                        'pgamma-region2-1.R'
-                    ),
+                    resolve(__dirname, 'fixture-generation', 'pgamma-region2-1.R'),
                     /\s+/,
-                    1, /*y1*/2, 3, 4, 5
+                    1,
+                    /*y1*/ 2,
+                    3,
+                    4,
+                    5
                 );
-                const a1 = p.map(_p => pgamma(_p, 196));
+                const a1 = p.map((_p) => pgamma(_p, 196));
                 expect(a1).toEqualFloatingPointBinary(y1, 45);
-                const a2 = p.map(_p => pgamma(_p, 196, undefined, undefined, false));
+                const a2 = p.map((_p) => pgamma(_p, 196, undefined, undefined, false));
                 expect(a2).toEqualFloatingPointBinary(y2, 45);
-                const a3 = p.map(_p => pgamma(_p, 196, undefined, undefined, false, true));
+                const a3 = p.map((_p) => pgamma(_p, 196, undefined, undefined, false, true));
                 expect(a3).toEqualFloatingPointBinary(y3, 45);
-                const a4 = p.map(_p => pgamma(_p, 196, undefined, undefined, true, true));
+                const a4 = p.map((_p) => pgamma(_p, 196, undefined, undefined, true, true));
                 expect(a4).toEqualFloatingPointBinary(y4, 45);
             });
         });
         describe('region B: 1 <= x && shape - 1 < x && shape*1.25 -50 < x', () => {
             it('shape={0.5, 1.5} x ∈ [2,10], variations: log={true, false}, lower={true,false}', async () => {
                 const [p, y1, y2, y3, y4, y5, y6] = await loadData(
-                    resolve(
-                        __dirname,
-                        'fixture-generation',
-                        'pgamma-region3-1.R'
-                    ),
+                    resolve(__dirname, 'fixture-generation', 'pgamma-region3-1.R'),
                     /\s+/,
-                    1, /*y1*/2, 3, 4, 5, 6, 7
+                    1,
+                    /*y1*/ 2,
+                    3,
+                    4,
+                    5,
+                    6,
+                    7
                 );
-                const a1 = p.map(_p => pgamma(_p, 0.5));
-                const a2 = p.map(_p => pgamma(_p, 0.5, undefined, undefined, undefined, true));
+                const a1 = p.map((_p) => pgamma(_p, 0.5));
+                const a2 = p.map((_p) => pgamma(_p, 0.5, undefined, undefined, undefined, true));
                 expect(a1).toEqualFloatingPointBinary(y1);
                 expect(a2).toEqualFloatingPointBinary(y2, 48);
 
-                const a3 = p.map(_p => pgamma(_p, 1.5));
+                const a3 = p.map((_p) => pgamma(_p, 1.5));
                 expect(a3).toEqualFloatingPointBinary(y3, 48);
 
-                const a4 = p.map(_p => pgamma(_p, 1.5, undefined, undefined, undefined, true));
+                const a4 = p.map((_p) => pgamma(_p, 1.5, undefined, undefined, undefined, true));
                 expect(a4).toEqualFloatingPointBinary(y4, 48);
                 //lower = false
-                const a5 = p.map(_p => pgamma(_p, 1.5, undefined, undefined, false, true));
+                const a5 = p.map((_p) => pgamma(_p, 1.5, undefined, undefined, false, true));
                 expect(a5).toEqualFloatingPointBinary(y5, 48);
-                const a6 = p.map(_p => pgamma(_p, 1.5, undefined, undefined, false, false));
+                const a6 = p.map((_p) => pgamma(_p, 1.5, undefined, undefined, false, false));
                 expect(a6).toEqualFloatingPointBinary(y6, 48);
             });
             it('shape = 0.5, x=(1-shape)/EPSILON*1.2', () => {
-                const z = pgamma(0.5 * 1.2 / Number.EPSILON, 0.5);
+                const z = pgamma((0.5 * 1.2) / Number.EPSILON, 0.5);
                 expect(z).toBe(1);
             });
         });
         describe('regionC:1 <= x && (not in region A and region B, aka shape >= 196)', () => {
             it('shape=300(>196) for this shape, x must be ∈ [200,325]', async () => {
                 const [x, y1, y2] = await loadData(
-                    resolve(
-                        __dirname,
-                        'fixture-generation',
-                        'pgamma-region4-1.R'
-                    ),
+                    resolve(__dirname, 'fixture-generation', 'pgamma-region4-1.R'),
                     /\s+/,
-                    1, /*y1*/2, 3, 4, 5, 6, 7
+                    1,
+                    /*y1*/ 2,
+                    3,
+                    4,
+                    5,
+                    6,
+                    7
                 );
-                const a1 = x.map(_x => pgamma(_x, 300));
+                const a1 = x.map((_x) => pgamma(_x, 300));
                 expect(a1).toEqualFloatingPointBinary(y1, 44);
-                const a2 = x.map(_x => pgamma(_x, 300, undefined, undefined, false, true));
+                const a2 = x.map((_x) => pgamma(_x, 300, undefined, undefined, false, true));
                 expect(a2).toEqualFloatingPointBinary(y2, 35);
             });
         });

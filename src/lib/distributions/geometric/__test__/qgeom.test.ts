@@ -38,10 +38,17 @@ describe('qgeom', function () {
 
     describe('with fixtures', () => {
         it('x ∈ [-1, 10], prob={0.3,0.5}', async () => {
-            const [p, y1, y2, y3] = await loadData(resolve(__dirname, 'fixture-generation', 'qgeom.R'), /\s+/, 1, 2, 3, 4);
-            const a1 = p.map(_p => qgeom(_p, 0.3, false, false));
-            const a2 = p.map(_p => qgeom(_p, 0.3, true, false));
-            const a3 = p.map(_p => qgeom(Math.log(_p), 0.3, false, true));
+            const [p, y1, y2, y3] = await loadData(
+                resolve(__dirname, 'fixture-generation', 'qgeom.R'),
+                /\s+/,
+                1,
+                2,
+                3,
+                4
+            );
+            const a1 = p.map((_p) => qgeom(_p, 0.3, false, false));
+            const a2 = p.map((_p) => qgeom(_p, 0.3, true, false));
+            const a3 = p.map((_p) => qgeom(Math.log(_p), 0.3, false, true));
             expect(a1).toEqualFloatingPointBinary(y1);
             expect(a2).toEqualFloatingPointBinary(y2);
             expect(a3).toEqualFloatingPointBinary(y3);

@@ -27,7 +27,7 @@ export class WichmannHill extends IRNG {
     }
 
     constructor(_seed: number = seed()) {
-        super('Wichmann-Hill', );
+        super('Wichmann-Hill');
         this.m_seed = new Uint32Array(SEED_LEN);
         this.init(_seed);
     }

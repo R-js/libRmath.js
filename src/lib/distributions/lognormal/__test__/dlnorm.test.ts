@@ -45,17 +45,13 @@ describe('dlnorm', () => {
             expect(negInf).toBe(-Infinity);
         });
     });
-    describe('fidelity', ()=>{
+    describe('fidelity', () => {
         it('x = [0,100, step 1], mhu=4, sd=8', async () => {
-            const [x,y1,y2] = await loadData(
-                resolve(__dirname, 'fixture-generation', 'dlnorm.R'),
-                /\s+/,
-                1,2,3
-            );
-            const actual1 = x.map(_x => dlnorm(_x, 4, 8));
-            const actual2 = x.map(_x => dlnorm(_x, 4, 8, true));
+            const [x, y1, y2] = await loadData(resolve(__dirname, 'fixture-generation', 'dlnorm.R'), /\s+/, 1, 2, 3);
+            const actual1 = x.map((_x) => dlnorm(_x, 4, 8));
+            const actual2 = x.map((_x) => dlnorm(_x, 4, 8, true));
             expect(actual1).toEqualFloatingPointBinary(y1);
-            expect(actual2).toEqualFloatingPointBinary(y2, 51); 
-        })
-    })
+            expect(actual2).toEqualFloatingPointBinary(y2, 51);
+        });
+    });
 });

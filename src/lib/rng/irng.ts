@@ -2,7 +2,7 @@ import type { IRNGType } from './rng-types';
 import type { IRandom } from './IRandom';
 
 export enum MessageType {
-    INIT = '@@INIT@@',
+    INIT = '@@INIT@@'
 }
 
 export abstract class IRNG implements IRandom {
@@ -32,7 +32,7 @@ export abstract class IRNG implements IRandom {
     }
 
     random(): number {
-        throw new Error(`override this function in ${this.constructor.name}`)
+        throw new Error(`override this function in ${this.constructor.name}`);
     }
 
     public emit(event: MessageType, ...args: unknown[]): void {

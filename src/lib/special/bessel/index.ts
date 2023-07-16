@@ -10,7 +10,7 @@ import BesselI from './besselI';
 import BesselK from './besselI';
 import besselY from './besselY';
 
-export  { BesselJ, BesselI, BesselK, besselY };
+export { BesselJ, BesselI, BesselK, besselY };
 
 // Modified Bessel Function of the second kind
 //export * from './besselK';

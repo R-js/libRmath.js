@@ -1,8 +1,32 @@
 import type { Printer } from '@mangos/debug';
 
-const { isInteger, parseFloat, parseInt, MIN_VALUE, MAX_VALUE, isNaN, isFinite, EPSILON, MAX_SAFE_INTEGER, NEGATIVE_INFINITY, POSITIVE_INFINITY } = Number;
+const {
+    isInteger,
+    parseFloat,
+    parseInt,
+    MIN_VALUE,
+    MAX_VALUE,
+    isNaN,
+    isFinite,
+    EPSILON,
+    MAX_SAFE_INTEGER,
+    NEGATIVE_INFINITY,
+    POSITIVE_INFINITY
+} = Number;
 
-export { isInteger, parseFloat, parseInt, MIN_VALUE, MAX_VALUE, isNaN, isFinite, EPSILON, MAX_SAFE_INTEGER, NEGATIVE_INFINITY, POSITIVE_INFINITY };
+export {
+    isInteger,
+    parseFloat,
+    parseInt,
+    MIN_VALUE,
+    MAX_VALUE,
+    isNaN,
+    isFinite,
+    EPSILON,
+    MAX_SAFE_INTEGER,
+    NEGATIVE_INFINITY,
+    POSITIVE_INFINITY
+};
 
 const {
     abs,
@@ -35,7 +59,8 @@ const {
     atan
 } = Math;
 
-export {  abs,
+export {
+    abs,
     cbrt,
     ceil,
     exp,
@@ -109,7 +134,7 @@ export enum LogLevel {
     ERROR,
     WARN,
     INFO,
-    DEBUG,
+    DEBUG
 }
 
 /*export abstract class Sum implements ISummary {
@@ -187,7 +212,11 @@ export function Welch_Satterthwaite(s: number[], n: number[]): number {
     return pow(sum(elts), 2) / sum(dom);
 }
 
-export function repeatedCall<F extends (...args: any[]) => number>(n: number, fn: F, ...arg: Parameters<F>): Float32Array {
+export function repeatedCall<F extends (...args: any[]) => number>(
+    n: number,
+    fn: F,
+    ...arg: Parameters<F>
+): Float32Array {
     let result: Float32Array;
 
     if (n === 0) {
@@ -203,7 +232,11 @@ export function repeatedCall<F extends (...args: any[]) => number>(n: number, fn
     return result;
 }
 
-export function repeatedCall64<F extends (...args: any[]) => number>(n: number, fn: F, ...args: Parameters<F>): Float64Array {
+export function repeatedCall64<F extends (...args: any[]) => number>(
+    n: number,
+    fn: F,
+    ...args: Parameters<F>
+): Float64Array {
     let result: Float64Array;
 
     if (n === 0) {
@@ -259,14 +292,16 @@ export function isEmptyArray(x: NumArray): boolean {
 export const M_SQRT2 = 1.41421356237309504880168872421; /* sqrt(2) */
 
 //ok
-export function frac(x: number): number { return x - trunc(x) }
+export function frac(x: number): number {
+    return x - trunc(x);
+}
 
 //ok
 export const M_SQRT_32 = 5.656854249492380195206754896838; /* sqrt(32) */
 
 //gamma
 //ok
-export const DBL_EPSILON = 2.2204460492503131e-016;
+export const DBL_EPSILON = 2.2204460492503131e-16;
 
 //ok
 export const DBL_MANT_DIG = 18;
@@ -274,7 +309,7 @@ export const DBL_MANT_DIG = 18;
 //ok
 export const DBL_MIN = 2.2250738585072014e-308;
 
-export const DBL_MAX = 1.7976931348623158e+308;
+export const DBL_MAX = 1.7976931348623158e308;
 
 //ok
 export const M_LN2 = 0.693147180559945309417; /* ln(2) */
@@ -353,7 +388,7 @@ export function R_D_val(log_p: boolean, x: number): number {
 
 //ok
 export function R_D_Clog(log_p: boolean, p: number): number {
-    return log_p ? log1p(-p) : (0.5 - p + 0.5); /* [log](1-p) */
+    return log_p ? log1p(-p) : 0.5 - p + 0.5; /* [log](1-p) */
 }
 
 //ok
@@ -400,7 +435,7 @@ export function R_P_bounds_01(
     log_p: boolean,
     x: number,
     x_min: number,
-    x_max: number,
+    x_max: number
 ): number | undefined {
     if (x <= x_min) return R_DT_0(lower_tail, log_p);
     if (x >= x_max) return R_DT_1(lower_tail, log_p);
@@ -411,7 +446,6 @@ export function R_P_bounds_01(
 export const R_D_exp = (log_p: boolean, x: number): number => {
     return log_p ? x : exp(x);
 };
-
 
 //ok
 export function R_D_nonint_check(log: boolean, x: number, printer: Printer): number | undefined {
@@ -438,7 +472,7 @@ export function imax2(x: number, y: number): number {
 // #define ODD(_K_) ((_K_) != 2 * floor((_K_) / 2.))
 // odd is everything that is not precisely even
 export function isOdd(k: number): boolean {
-    return floor(k/2)*2 !== k;
+    return floor(k / 2) * 2 !== k;
 }
 
 //ok
@@ -548,7 +582,7 @@ export function R_D_log(log_p: boolean, p: number): number {
     return log_p ? p : log(p); /* log(p) */
 }
 
-//ok 
+//ok
 export function R_D_qIv(logP: boolean, p: number): number {
     return logP ? exp(p) : p;
 }

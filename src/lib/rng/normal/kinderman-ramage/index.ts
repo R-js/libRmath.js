@@ -18,7 +18,7 @@ const C2 = 0.180025191068563;
  *    JASA 71, 893-896.
  */
 export class KindermanRamage extends IRNGNormal {
-    public static override kind: IRNGNormalType = "KINDERMAN_RAMAGE";
+    public static override kind: IRNGNormalType = 'KINDERMAN_RAMAGE';
 
     constructor(_rng: IRNG) {
         super(_rng, 'KinderMan Ramage');

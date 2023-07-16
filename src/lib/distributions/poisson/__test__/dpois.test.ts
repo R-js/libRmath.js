@@ -14,7 +14,7 @@ const dpoisNonInt = dpoisLogs('non-integer x = %d');
 describe('dpois', function () {
     beforeEach(() => {
         cl.clear('dpois');
-    })
+    });
     describe('invalid input and edge cases', () => {
         it('x and lambda are NaN', () => {
             const nan1 = dpois(NaN, 2);
@@ -46,34 +46,33 @@ describe('dpois', function () {
     describe('fidelity', () => {
         it('x > 0 lambda = 0', async () => {
             const [x, y] = await loadData(resolve(__dirname, 'fixture-generation', 'dpois1.R'), /\s+/, 1, 2);
-            const result = x.map(_x => dpois(_x, 0));
+            const result = x.map((_x) => dpois(_x, 0));
             expect(result).toEqualFloatingPointBinary(y);
         });
         it('x > 0 lambda = 1', async () => {
             const [x, y] = await loadData(resolve(__dirname, 'fixture-generation', 'dpois2.R'), /\s+/, 1, 2);
-            const result = x.map(_x => dpois(_x, 1));
+            const result = x.map((_x) => dpois(_x, 1));
             expect(result).toEqualFloatingPointBinary(y, 50);
         });
         it('x > 0 lambda = 2', async () => {
             const [x, y] = await loadData(resolve(__dirname, 'fixture-generation', 'dpois3.R'), /\s+/, 1, 2);
-            const result = x.map(_x => dpois(_x, 2));
+            const result = x.map((_x) => dpois(_x, 2));
             expect(result).toEqualFloatingPointBinary(y, 51);
         });
         it('x > 0 lambda = 4', async () => {
             const [x, y] = await loadData(resolve(__dirname, 'fixture-generation', 'dpois4.R'), /\s+/, 1, 2);
-            const result = x.map(_x => dpois(_x, 4));
+            const result = x.map((_x) => dpois(_x, 4));
             expect(result).toEqualFloatingPointBinary(y, 51);
         });
         it('x > 0 lambda = 10', async () => {
             const [x, y] = await loadData(resolve(__dirname, 'fixture-generation', 'dpois5.R'), /\s+/, 1, 2);
-            const result = x.map(_x => dpois(_x, 10));
+            const result = x.map((_x) => dpois(_x, 10));
             expect(result).toEqualFloatingPointBinary(y, 46);
         });
         it('lambda < MAX_SAFE_INTEGER * DBL_MIN', () => {
             const ans1 = dpois(
                 MAX_SAFE_INTEGER, // x
-                DBL_MIN * (trunc(MAX_SAFE_INTEGER - 1) // lambda
-                )
+                DBL_MIN * trunc(MAX_SAFE_INTEGER - 1) // lambda
             );
             expect(ans1).toBe(0);
             const ans2 = dpois_raw(

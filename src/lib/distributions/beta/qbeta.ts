@@ -35,7 +35,6 @@ const MLOGICAL_NA = -1;
 
 const printer_qbeta = debug('qbeta');
 
-
 export function qbeta(p: number, shape1: number, shape2: number, lower_tail: boolean, log_p: boolean): number {
     /* test for admissibility of parameters */
 
@@ -88,8 +87,8 @@ function return_q_0(_give_log_q: boolean, qb: NumArray): void {
     //    qb[0] = -Infinity;
     //    qb[1] = 0;
     //} else {
-        qb[0] = 0;
-        qb[1] = 1;
+    qb[0] = 0;
+    qb[1] = 1;
     //}
     return;
 }
@@ -99,8 +98,8 @@ function return_q_1(_give_log_q: boolean, qb: NumArray): void {
     //    qb[0] = 0;
     //    qb[1] = -Infinity;
     //} else {
-        qb[0] = 1;
-        qb[1] = 0;
+    qb[0] = 1;
+    qb[1] = 0;
     //}
     return;
 }
@@ -109,7 +108,7 @@ function return_q_half(_give_log_q: boolean, qb: NumArray): void {
     //if (give_log_q) {
     //    qb[0] = qb[1] = -M_LN2;
     //} else {
-        qb[0] = qb[1] = 0.5;
+    qb[0] = qb[1] = 0.5;
     //}
     return;
 }
@@ -128,7 +127,7 @@ function qbeta_raw(
                    otherwise, if finite: the bound for
                    switching to Math.log(x)-scale; see use_log_x */,
     n_N: number, // number of "unconstrained" Newton steps before switching to constrained
-    qb: NumArray, // = qb[0:1] = { qbeta(), 1 - qbeta() }
+    qb: NumArray // = qb[0:1] = { qbeta(), 1 - qbeta() }
 ): void {
     // booleans
     const swap_choose: boolean = swap_01 === MLOGICAL_NA;
@@ -173,9 +172,7 @@ function qbeta_raw(
     }
 
     // check alpha {*before* transformation which may all accuracy}:
-    if (
-        (log_p && alpha > 0) ||
-        (!log_p && (alpha < 0 || alpha > 1))) {
+    if ((log_p && alpha > 0) || (!log_p && (alpha < 0 || alpha > 1))) {
         // alpha is outside
         printer_qbeta_raw(
             'qbeta(alpha=%d, %d, %d, .., log_p=%d): %s%s',
@@ -184,7 +181,7 @@ function qbeta_raw(
             q,
             log_p,
             'alpha not in ',
-            log_p ? '[-Inf, 0]' : '[0,1]',
+            log_p ? '[-Inf, 0]' : '[0,1]'
         );
         // ML_ERR_return_NAN :
         ML_ERROR2(ME.ME_DOMAIN, lineInfo4, printer_qbeta_raw);
@@ -201,7 +198,7 @@ function qbeta_raw(
             p,
             q,
             lower_tail,
-            log_p,
+            log_p
         );
         if (p === 0 && q === 0) {
             // point mass 1/2 at each of {0,1} :
@@ -213,15 +210,12 @@ function qbeta_raw(
             }
             // else:  alpha === "1/2"
             return return_q_half(give_log_q, qb);
-
         } else if (p === 0 || p / q === 0) {
             // point mass 1 at 0 - "flipped around"
             return return_q_0(give_log_q, qb);
-
         } else if (q === 0 || q / p === 0) {
             // point mass 1 at 0 - "flipped around"
             return return_q_1(give_log_q, qb);
-
         }
         // else:  p = q = Inf : point mass 1 at 1/2
         return return_q_half(give_log_q, qb);
@@ -282,11 +276,10 @@ function qbeta_raw(
         la,
         u0,
         (t * log_eps_c - Math.log(Math.abs((pp * (1 - qq) * (2 - qq)) / (2 * (pp + 2))))) / 2,
-        t * log_eps_c - Math.log(Math.abs(r)),
+        t * log_eps_c - Math.log(Math.abs(r))
     );
 
     const L_return = () => {
-
         /*if (give_log_q) {
             // ==> use_log_x , too
             if (!use_log_x)
@@ -301,51 +294,52 @@ function qbeta_raw(
                 qb[1] = r;
             }
         } else {*/
-            if (use_log_x) {
-                if (add_N_step) {
-                    /* add one last Newton step on original x scale, e.g., for
+        if (use_log_x) {
+            if (add_N_step) {
+                /* add one last Newton step on original x scale, e.g., for
                        qbeta(2^-98, 0.125, 2^-96) */
-                    xinbta = Math.exp(u_n);
-                    y = pbeta_raw(xinbta, pp, qq, /*lower_tail = */ true, log_p);
-                    w = log_p
-                        ? (y - la) * Math.exp(y + logbeta + r * Math.log(xinbta) + t * Math.log1p(-xinbta))
-                        : (y - a) * Math.exp(logbeta + r * Math.log(xinbta) + t * Math.log1p(-xinbta));
-                    tx = xinbta - w;
-                    R_ifDEBUG_printf(
-                        'Final Newton correction(non-log scale): xinbta=%.16g, y=%g, w=%g. => new tx=%.16g\n',
-                        xinbta,
-                        y,
-                        w,
-                        tx,
-                    );
-                } else {
-                    if (swap_tail) {
-                        qb[0] = -Math.expm1(u_n);
-                        qb[1] = Math.exp(u_n);
-                    } else {
-                        qb[0] = Math.exp(u_n);
-                        qb[1] = -Math.expm1(u_n);
-                    }
-                    return;
-                }
-            }
-            if (swap_tail) {
-                qb[0] = 1 - tx;
-                qb[1] = tx;
+                xinbta = Math.exp(u_n);
+                y = pbeta_raw(xinbta, pp, qq, /*lower_tail = */ true, log_p);
+                w = log_p
+                    ? (y - la) * Math.exp(y + logbeta + r * Math.log(xinbta) + t * Math.log1p(-xinbta))
+                    : (y - a) * Math.exp(logbeta + r * Math.log(xinbta) + t * Math.log1p(-xinbta));
+                tx = xinbta - w;
+                R_ifDEBUG_printf(
+                    'Final Newton correction(non-log scale): xinbta=%.16g, y=%g, w=%g. => new tx=%.16g\n',
+                    xinbta,
+                    y,
+                    w,
+                    tx
+                );
             } else {
-                qb[0] = tx;
-                qb[1] = 1 - tx;
+                if (swap_tail) {
+                    qb[0] = -Math.expm1(u_n);
+                    qb[1] = Math.exp(u_n);
+                } else {
+                    qb[0] = Math.exp(u_n);
+                    qb[1] = -Math.expm1(u_n);
+                }
+                return;
             }
+        }
+        if (swap_tail) {
+            qb[0] = 1 - tx;
+            qb[1] = tx;
+        } else {
+            qb[0] = tx;
+            qb[1] = 1 - tx;
+        }
         //}
-    }
+    };
 
-    const L_converged = () => { //L_converged:
+    const L_converged = () => {
+        //L_converged:
         log_ = log_p || use_log_x; // only for printing
         R_ifDEBUG_printf(
             ' %s: Final delta(y) = %g%s\n',
             warned ? '_NO_ convergence' : 'converged',
             y - (log_ ? la : a),
-            log_ ? ' (log_)' : '',
+            log_ ? ' (log_)' : ''
         );
         if ((log_ && y === -Infinity) || (!log_ && y === 0)) {
             // stuck at left, try if smallest positive number is "better"
@@ -355,24 +349,27 @@ function qbeta_raw(
                 u_n = DBL_log_v_MIN; // = Math.log(DBL_very_MIN)
             }
             add_N_step = false; // not trying to do better anymore
-        }
-        else if (!warned && (log_ ? Math.abs(y - la) > 3 : Math.abs(y - a) > 1e-4)) {
-            if (!(log_ && y === -Infinity &&
-                // e.g. qbeta(-1e-10, .2, .03, log=TRUE) cannot get accurate ==> do NOT warn
-                pbeta_raw(
-                    DBL_1__eps, // = 1 - eps
-                    pp,
-                    qq,
-                    true,
-                    true,
-                ) >
-                la + 2
-            ))
+        } else if (!warned && (log_ ? Math.abs(y - la) > 3 : Math.abs(y - a) > 1e-4)) {
+            if (
+                !(
+                    log_ &&
+                    y === -Infinity &&
+                    // e.g. qbeta(-1e-10, .2, .03, log=TRUE) cannot get accurate ==> do NOT warn
+                    pbeta_raw(
+                        DBL_1__eps, // = 1 - eps
+                        pp,
+                        qq,
+                        true,
+                        true
+                    ) >
+                        la + 2
+                )
+            )
                 printer_qbeta_raw(
                     // low accuracy for more platform independent output:
                     'qbeta(a, *) =: x0 with |pbeta(x0,* %s) - alpha| = %d is not accurate',
                     log_ ? ', log_' : '',
-                    Math.abs(y - (log_ ? la : a)),
+                    Math.abs(y - (log_ ? la : a))
                 );
         }
     };
@@ -405,10 +402,8 @@ function qbeta_raw(
                     y === -Infinity // y = -Inf  well possible: we are on log scale!
                         ? 0
                         : (y - la) * Math.exp(y - u + logbeta + r * u + t * R_Log1_Exp(u));
-                if (!isFinite(w))
-                    break;
-                if (i_pb >= n_N && w * wprev <= 0)
-                    prev = Math.max(Math.abs(adj), fpu);
+                if (!isFinite(w)) break;
+                if (i_pb >= n_N && w * wprev <= 0) prev = Math.max(Math.abs(adj), fpu);
                 R_ifDEBUG_printf(
                     'N(i=%2d): u=%#20.16g, pb(e^u)=%#12.6g, w=%#15.9g, %s prev=%11g,',
                     i_pb,
@@ -416,7 +411,7 @@ function qbeta_raw(
                     y,
                     w,
                     w * wprev <= 0 ? 'new' : 'old',
-                    prev,
+                    prev
                 );
                 g = 1;
                 for (i_inn = 0; i_inn < 1000; i_inn++) {
@@ -424,7 +419,8 @@ function qbeta_raw(
                     // take full Newton steps at the beginning; only then safe guard:
                     if (i_pb < n_N || Math.abs(adj) < prev) {
                         u_n = u - adj; // u_{n+1} = u_n - g*w
-                        if (u_n <= 0) { // <==> 0 <  xinbta := e^u  <= 1
+                        if (u_n <= 0) {
+                            // <==> 0 <  xinbta := e^u  <= 1
                             if (prev <= acu || Math.abs(w) <= acu) {
                                 /* R_ifDEBUG_printf(" -adj=%g, %s <= acu  ==> convergence\n", */
                                 /*	 -adj, (prev <= acu) ? "prev" : "|w|"); */
@@ -432,7 +428,7 @@ function qbeta_raw(
                                     ' it{in}=%d, -adj=%g, %s <= acu  ==> convergence\n',
                                     i_inn,
                                     -adj,
-                                    prev <= acu ? 'prev' : '|w|',
+                                    prev <= acu ? 'prev' : '|w|'
                                 );
                                 return; //goto L_converged;
                             }
@@ -446,8 +442,7 @@ function qbeta_raw(
                 const D = Math.min(Math.abs(adj), Math.abs(u_n - u));
                 /* R_ifDEBUG_printf(" delta(u)=%g\n", u_n - u); */
                 R_ifDEBUG_printf(' it{in}=%d, delta(u)=%9.3g, D/|.|=%.3g\n', i_inn, u_n - u, D / Math.abs(u_n + u));
-                if (D <= 4e-16 * Math.abs(u_n + u))
-                    return; //goto L_converged ;
+                if (D <= 4e-16 * Math.abs(u_n + u)) return; //goto L_converged ;
                 u = u_n;
                 xinbta = Math.exp(u);
                 wprev = w;
@@ -479,7 +474,7 @@ function qbeta_raw(
                     y,
                     w,
                     w * wprev <= 0 ? 'new' : 'old',
-                    prev,
+                    prev
                 );
                 g = 1;
                 for (i_inn = 0; i_inn < 1000; i_inn++) {
@@ -493,7 +488,7 @@ function qbeta_raw(
                                     ' it{in}=%d, delta(x)=%g, %s <= acu  ==> convergence\n',
                                     i_inn,
                                     -adj,
-                                    prev <= acu ? 'prev' : '|w|',
+                                    prev <= acu ? 'prev' : '|w|'
                                 );
                                 return; // goto L_converged;
                             }
@@ -503,10 +498,12 @@ function qbeta_raw(
                     g /= 3;
                 } //for(i_inn)
                 R_ifDEBUG_printf(' it{in}=%d, delta(x)=%g\n', i_inn, tx - xinbta);
-                if (Math.abs(tx - xinbta) <= 4e-16 * (tx + xinbta)) // "<=" : (.) === 0
-                    return //goto L_converged ;
+                if (Math.abs(tx - xinbta) <= 4e-16 * (tx + xinbta))
+                    // "<=" : (.) === 0
+                    return; //goto L_converged ;
                 xinbta = tx;
-                if (tx === 0) // "we have lost"
+                if (tx === 0)
+                    // "we have lost"
                     break;
                 wprev = w;
             } //for
@@ -514,16 +511,14 @@ function qbeta_raw(
         /*-- NOT converged: Iteration count --*/
         warned = true;
         ML_ERROR2(ME.ME_PRECISION, 'qbeta', printer_qbeta_raw);
-    }
-
-
+    };
 
     if (
         M_LN2 * DBL_MIN_EXP < u0 && // cannot allow Math.exp(u0) = 0 ==> Math.exp(u1) = Math.exp(u0) = 0
         u0 < -0.01 && // (must: u0 < 0, but too close to 0 <==> x = Math.exp(u0) = 0.99..)
         // qq <= 2 && // <--- "arbitrary"
         // u0 <  t*log_eps_c - Math.log(Math.abs(r)) &&
-        u0 < (t * log_eps_c - log(fabs(pp * (1. - qq) * (2. - qq) / (2. * (pp + 2.))))) / 2.
+        u0 < (t * log_eps_c - log(fabs((pp * (1 - qq) * (2 - qq)) / (2 * (pp + 2))))) / 2
     ) {
         // TODO: maybe jump here from below, when initial u "fails" ?
         // L_tail_u:
@@ -549,25 +544,25 @@ function qbeta_raw(
     r = Math.sqrt(-2 * la);
     y = r - (const1 + const2 * r) / (1 + (const3 + const4 * r) * r);
 
-    if (pp > 1 && qq > 1) { // use  Carter(1947), see AS 109, remark '5.'
+    if (pp > 1 && qq > 1) {
+        // use  Carter(1947), see AS 109, remark '5.'
         r = (y * y - 3) / 6;
         s = 1 / (pp + pp - 1);
         t = 1 / (qq + qq - 1);
         h = 2 / (s + t);
-        w = y * Math.sqrt(h + r) / h - (t - s) * (r + 5.0 / 6.0 - 2.0 / (3 * h));
+        w = (y * Math.sqrt(h + r)) / h - (t - s) * (r + 5.0 / 6.0 - 2.0 / (3 * h));
         printer_qbeta_raw('p,q > 1 => w=%d', w);
         if (w > 300) {
             // Math.exp(w+w) is huge or overflows
             t = w + w + Math.log(qq) - Math.log(pp); // = argument of log1pMath.exp(.)
             u = t <= 18 ? -Math.log1p(Math.exp(t)) : -t - Math.exp(-t); // Math.log(xinbta) = - Math.log1p(qq/pp * Math.exp(w+w)) = -Math.log(1 + Math.exp(t))
             xinbta = Math.exp(u);
-        }
-        else {
+        } else {
             xinbta = pp / (pp + qq * Math.exp(w + w));
-            u = -Math.log1p(qq / pp * Math.exp(w + w)); // Math.log(xinbta)
+            u = -Math.log1p((qq / pp) * Math.exp(w + w)); // Math.log(xinbta)
         }
-    }
-    else { // use the original AS 64 proposal, Scheffé-Tukey (1944) and Wilson-Hilferty
+    } else {
+        // use the original AS 64 proposal, Scheffé-Tukey (1944) and Wilson-Hilferty
         r = qq + qq;
         /* A slightly more stable version of  t := \chi^2_{alpha} of AS 64
          * t = 1. / (9. * qq); t = r * R_pow_di(1. - t + y * Math.sqrt(t), 3);  */
@@ -582,32 +577,27 @@ function qbeta_raw(
             let l1ma: number;
             /* := Math.log(1-a), directly from alpha (as 'la' above):
              * FIXME: not worth it? Math.log1p(-a) always the same ?? */
-            if (swap_tail)
-                l1ma = R_DT_log(lower_tail, log_p, alpha);
-            else
-                l1ma = R_DT_Clog(lower_tail, log_p, alpha);
+            if (swap_tail) l1ma = R_DT_log(lower_tail, log_p, alpha);
+            else l1ma = R_DT_Clog(lower_tail, log_p, alpha);
             R_ifDEBUG_printf(' t <= 0 : Math.log1p(-a)=%.15g, better l1ma=%.15g\n', Math.log1p(-a), l1ma);
             const xx: number = (l1ma + Math.log(qq) + logbeta) / qq;
             if (xx <= 0) {
                 xinbta = -Math.expm1(xx);
                 u = R_Log1_Exp(xx); // =  Math.log(xinbta) = Math.log(1 - Math.exp(...A...))
-            }
-            else {
+            } else {
                 // xx > 0 ==> 1 - e^xx < 0 .. is nonsense
                 R_ifDEBUG_printf(' xx=%g > 0: xinbta:= 1-e^xx < 0\n', xx);
                 xinbta = 0;
                 u = -Infinity; /// FIXME can do better?
             }
-        }
-        else {
+        } else {
             t = s / t;
             R_ifDEBUG_printf(' t > 0 or s < t < 0:  new t = %g ( > 1 ?)\n', t);
             if (t <= 1) {
                 // cannot use chisq, either
                 u = (la + Math.log(pp) + logbeta) / pp;
                 xinbta = Math.exp(u);
-            }
-            else {
+            } else {
                 // (1+x0)/(1-x0) = t,  solved for x0 :
                 xinbta = 1 - 2 / (t + 1);
                 u = Math.log1p(-2 / (t + 1));
@@ -620,7 +610,8 @@ function qbeta_raw(
         swap_choose &&
         ((swap_tail && u >= -Math.exp(log_q_cut)) || // ==> "swap back"
             (!swap_tail && u >= -Math.exp(4 * log_q_cut) && pp / qq < 1000))
-    ) {  // ==> "swap now" (much less easily)
+    ) {
+        // ==> "swap now" (much less easily)
         // "revert swap" -- and use_log_x
         swap_tail = !swap_tail;
         R_ifDEBUG_printf(' u = %g (e^u = xinbta = %.16g) ==> ', u, xinbta);
@@ -629,8 +620,7 @@ function qbeta_raw(
             la = R_DT_Clog(lower_tail, log_p, alpha);
             pp = q;
             qq = p;
-        }
-        else {
+        } else {
             a = p_;
             la = R_DT_log(lower_tail, log_p, alpha);
             pp = p;
@@ -649,8 +639,7 @@ function qbeta_raw(
         */
     }
 
-    if (!use_log_x)
-        use_log_x = u < log_q_cut; //(per default) <==> xinbta = e^u < 4.54e-5
+    if (!use_log_x) use_log_x = u < log_q_cut; //(per default) <==> xinbta = e^u < 4.54e-5
     const bad_u = !isFinite(u);
     const bad_init = bad_u || xinbta > p_hi;
 
@@ -659,7 +648,7 @@ function qbeta_raw(
         u,
         xinbta,
         acu,
-        bad_u ? ', ** bad u **' : use_log_x ? ', on u = Math.log(x) scale' : '',
+        bad_u ? ', ** bad u **' : use_log_x ? ', on u = Math.log(x) scale' : ''
     );
 
     u_n = 1; // -Wall
@@ -677,8 +666,7 @@ function qbeta_raw(
                 // DBL_very_MIN is better than 0
                 tx = DBL_very_MIN;
                 u_n = DBL_log_v_MIN; // = Math.log(DBL_very_MIN)
-            }
-            else {
+            } else {
                 tx = 0;
                 u_n = -Infinity;
             }
@@ -687,8 +675,7 @@ function qbeta_raw(
             //goto L_return;
             L_return();
             return;
-        }
-        else {
+        } else {
             R_ifDEBUG_printf(' pbeta(smallest pos.) = %g <= %g  --> continuing\n', w, log_p ? la : a);
             if (u < DBL_log_v_MIN) {
                 u = DBL_log_v_MIN; // = Math.log(DBL_very_MIN)
@@ -703,21 +690,19 @@ function qbeta_raw(
             R_ifDEBUG_printf('  u = -Inf;');
             u = M_LN2 * DBL_MIN_EXP;
             xinbta = Number.MIN_VALUE;
-        }
-        else {
+        } else {
             R_ifDEBUG_printf(' bad_init: u=%g, xinbta=%g;', u, xinbta);
             xinbta =
                 xinbta > 1.1 // i.e. "way off"
                     ? 0.5 // otherwise, keep the respective boundary:
-                    : ((xinbta < p_lo)
-                        ? Math.exp(u)
-                        : p_hi);
+                    : xinbta < p_lo
+                    ? Math.exp(u)
+                    : p_hi;
             if (bad_u) u = Math.log(xinbta);
             // otherwise: not changing "potentially better" u than the above
         }
         R_ifDEBUG_printf(' -> (partly)new u=%g, xinbta=%g\n', u, xinbta);
     }
-
 
     L_Newton();
     L_converged();

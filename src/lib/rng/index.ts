@@ -21,4 +21,3 @@ export type { IRNGNormalType } from './normal/rng-types';
 // globalRNG
 export { globalUni, globalNorm, RNGkind } from './global-rng';
 export type { SampleKindType } from './sample-kind-type';
-

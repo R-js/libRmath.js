@@ -9,7 +9,7 @@ import { sinpi } from '@trig/sinpi';
 import BesselY from '../besselY';
 import { J_bessel } from './Jbessel';
 
-import { floor } from '@lib/r-func'
+import { floor } from '@lib/r-func';
 
 const printer = debug('BesselJ');
 
@@ -29,8 +29,7 @@ function BesselJ(x: number, nu: number): number {
         // happens when (nu < 0) = -0.5, -1.5, -2.5, -3.5, etc
         if (nu - na === 0.5) {
             rc = 0;
-        }
-        else {
+        } else {
             // nu not equal to -0.5, -1.5, -2.5 etc
             rc = BesselJ(x, -nu) * cospi(nu);
         }
@@ -45,17 +44,16 @@ function BesselJ(x: number, nu: number): number {
     }
     // nb = 1 + Math.floor(nu);
     const nb = 1 + na; /* nb-1 <= nu < nb */
-    // nu = -na 
+    // nu = -na
     nu -= na; // ==> nu' in [0, 1) because na = Math.floor(nu)
     const rc = J_bessel(x, nu, nb);
     printer('debug (nu=%d, na=%d, nb=%d, rc=%j', nu, na, nb, rc);
-    
+
     if (rc.ncalc !== nb) {
         /* error input */
         if (rc.ncalc < 0) {
             printer('bessel_j(%d): ncalc (=%d) != nb (=%d); nu=%d. Arg. out of range?', x, rc.ncalc, rc.nb, nu);
-        }
-        else {
+        } else {
             printer('bessel_j(%d,nu=%d): precision lost in result', x, nu + nb - 1);
         }
     }

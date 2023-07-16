@@ -4,16 +4,15 @@ import { df } from '..';
 
 import { cl, select } from '@common/debug-mangos-select';
 
-
 const dfLogs = select('dnf');
 const dfDomainWarns = dfLogs("argument out of domain in '%s'");
 describe('dnf (df with ncp is finite)', function () {
     beforeEach(() => {
         cl.clear('dnf');
-    })
+    });
     it('x ∈ [-0.125, 3.1250], df1=23, df2=52, ncp=98', async () => {
         const [p, y1] = await loadData(resolve(__dirname, 'fixture-generation', 'dnf.R'), /\s+/, 1, 2);
-        const a1 = p.map(_p => df(_p, 23, 52, 98));
+        const a1 = p.map((_p) => df(_p, 23, 52, 98));
         expect(a1).toEqualFloatingPointBinary(y1, 43);
     });
     it('x=1, df1=NaN, df2=4, ncp=98', () => {
@@ -40,7 +39,7 @@ describe('dnf (df with ncp is finite)', function () {
     });
     it('x=1, df1=44, df2=inf, ncp=98', () => {
         const z = df(1, 44, Infinity, 98);
-        expect(z).toEqualFloatingPointBinary(4.0763819395105776401e-08);
+        expect(z).toEqualFloatingPointBinary(4.0763819395105776401e-8);
     });
     it('x=1, df1=1e15, df2=234, ncp=98', () => {
         const z = df(1, 1e15, 234, 98);

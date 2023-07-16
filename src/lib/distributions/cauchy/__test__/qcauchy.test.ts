@@ -8,13 +8,12 @@ const qcauchyDomainWarns = select('qcauchy')("argument out of domain in '%s'");
 import { qcauchy } from '..';
 
 describe('qcauchy', function () {
-
     beforeEach(() => {
         cl.clear('qcauchy');
     });
     it('ranges p ∊ [0, 1, step 0.02] defaults', async () => {
         const [x, y] = await loadData(resolve(__dirname, 'fixture-generation', 'qcauchy.R'), /\s+/, 1, 2);
-        const actual = x.map(_x => qcauchy(_x));
+        const actual = x.map((_x) => qcauchy(_x));
         expect(actual).toEqualFloatingPointBinary(y, 47);
     });
     it('p=NaN, defaults', () => {
@@ -46,15 +45,15 @@ describe('qcauchy', function () {
         expect(nan).toBe(0);
     });
     it('p=-0.66, log=true, defaults', () => {
-        const z = qcauchy(-0.66, undefined, undefined,undefined, true);
+        const z = qcauchy(-0.66, undefined, undefined, undefined, true);
         expect(z).toEqualFloatingPointBinary(0.052989541547587254);
     });
     it('p=-1.66, log=true, defaults', () => {
-        const z = qcauchy(-1.66, undefined, undefined,undefined, true);
+        const z = qcauchy(-1.66, undefined, undefined, undefined, true);
         expect(z).toEqualFloatingPointBinary(-1.4700742254066812, 50);
     });
     it('p=0, log=true, defaults', () => {
-        const z = qcauchy(0, undefined, undefined,undefined, true);
+        const z = qcauchy(0, undefined, undefined, undefined, true);
         expect(z).toBe(Infinity);
     });
 });

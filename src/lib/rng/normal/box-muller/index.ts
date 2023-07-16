@@ -10,12 +10,11 @@ const DBL_MIN = 2.22507e-308;
 const M_PI = 3.14159265358979323846264338327950288;
 
 export class BoxMuller extends IRNGNormal {
-
-    public static override kind: IRNGNormalType = "BOX_MULLER";
+    public static override kind: IRNGNormalType = 'BOX_MULLER';
 
     private BM_norm_keep: number;
 
-    public override reset(rng :IRNG):void {
+    public override reset(rng: IRNG): void {
         super.reset(rng);
         this.BM_norm_keep = 0;
     }

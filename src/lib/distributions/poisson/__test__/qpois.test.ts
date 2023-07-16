@@ -5,7 +5,6 @@ import { cl, select } from '@common/debug-mangos-select';
 import { qpois } from '..';
 import { EPSILON, log } from '@lib/r-func';
 
-
 const qpoisLogs = select('qpois');
 const qpoisDomainWarns = qpoisLogs("argument out of domain in '%s'");
 
@@ -59,16 +58,16 @@ describe('qpois', function () {
     describe('fidelity', () => {
         it('p = [0,1] lambda = 4', async () => {
             const [x, y] = await loadData(resolve(__dirname, 'fixture-generation', 'qpois1.R'), /\s+/, 1, 2);
-            const result1 = x.map(_x => qpois(_x, 4));
+            const result1 = x.map((_x) => qpois(_x, 4));
             expect(result1).toEqualFloatingPointBinary(y);
-            const result2 = x.map(_x => qpois(log(_x), 4, true, true));
+            const result2 = x.map((_x) => qpois(log(_x), 4, true, true));
             expect(result2).toEqualFloatingPointBinary(y);
         });
         it('p = [0,1] lambda > 1e5 (1e6)', async () => {
             const [x, y] = await loadData(resolve(__dirname, 'fixture-generation', 'qpois2.R'), /\s+/, 1, 2);
-            const result1 = x.map(_x => qpois(_x, 1e6));
+            const result1 = x.map((_x) => qpois(_x, 1e6));
             expect(result1).toEqualFloatingPointBinary(y);
-            const result2 = x.map(_x => qpois(log(_x), 1e6, true, true));
+            const result2 = x.map((_x) => qpois(log(_x), 1e6, true, true));
             expect(result2).toEqualFloatingPointBinary(y);
         });
     });

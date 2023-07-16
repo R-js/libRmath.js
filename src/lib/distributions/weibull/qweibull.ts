@@ -9,15 +9,12 @@ import { pow } from '@lib/r-func';
 
 const printer = debug('qweibull');
 
-export function qweibull(p: number, shape: number, scale = 1, lowerTail = true, logP = false): number
-{
-    if (isNaN(p) || isNaN(shape) || isNaN(scale))
-    {
+export function qweibull(p: number, shape: number, scale = 1, lowerTail = true, logP = false): number {
+    if (isNaN(p) || isNaN(shape) || isNaN(scale)) {
         return p + shape + scale;
     }
 
-    if (shape <= 0 || scale <= 0)
-    {
+    if (shape <= 0 || scale <= 0) {
         return ML_ERR_return_NAN2(printer, lineInfo4);
     }
 

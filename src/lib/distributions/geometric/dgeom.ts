@@ -7,7 +7,6 @@ import { R_D__0, R_D_nonint_check, log as _log, round } from '@lib/r-func';
 const printer = debug('dgeom');
 
 export function dgeom(x: number, p: number, log = false): number {
-
     if (isNaN(x) || isNaN(p)) return x + p;
 
     if (p <= 0 || p > 1) {

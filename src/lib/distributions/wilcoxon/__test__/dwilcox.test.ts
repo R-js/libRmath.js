@@ -51,9 +51,9 @@ describe('dwilcox', function () {
     describe('fidelity', () => {
         it('n=4, m=5', async () => {
             const [x, y] = await loadData(resolve(__dirname, 'fixture-generation', 'dwilcox1.R'), /\s+/, 1, 2);
-            const answer = x.map(_x => dwilcox(_x, 4, 5));
+            const answer = x.map((_x) => dwilcox(_x, 4, 5));
             expect(answer).toEqualFloatingPointBinary(y);
-            const answer2 = x.map(_x => exp(dwilcox(_x, 4, 5, true)));
+            const answer2 = x.map((_x) => exp(dwilcox(_x, 4, 5, true)));
             expect(answer2).toEqualFloatingPointBinary(y, 51);
         });
     });

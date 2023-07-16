@@ -9,8 +9,6 @@ const printer_dnchisq = debug('dnchisq');
 const eps = 5e-15;
 
 export function dnchisq(x: number, df: number, ncp: number, give_log: boolean): number {
-  
-
     let i: number;
     //let ncp2: number;
     let q: number;
@@ -21,7 +19,7 @@ export function dnchisq(x: number, df: number, ncp: number, give_log: boolean): 
     let term: number;
 
     if (isNaN(x) || isNaN(df) || isNaN(ncp)) {
-        return x + df + ncp;                          
+        return x + df + ncp;
     }
 
     if (!isFinite(df) || !isFinite(ncp) || ncp < 0 || df < 0) {
@@ -45,19 +43,15 @@ export function dnchisq(x: number, df: number, ncp: number, give_log: boolean): 
     // example:
     // if df=20 and ncp=8 , x=19
     //   then imax=NaN
-    imax = Math.ceil(
-        (
-            -(2 + df) + Math.sqrt((2 - df) * (2 - df) + 4 * ncp * x)
-        )/4
-    );
+    imax = Math.ceil((-(2 + df) + Math.sqrt((2 - df) * (2 - df) + 4 * ncp * x)) / 4);
     if (imax < 0) imax = 0;
-    //         
+    //
     if (isFinite(imax)) {
         dfmid = df + 2 * imax;
         mid = dpois_raw(imax, ncp2, false) * dchisq(x, dfmid, false);
     } else {
         throw new Error(`Internal Error IE989: imax=${imax}`);
-     /*
+        /*
         
         if (give_log || ncp > 1000) {
             const nl = df + ncp;

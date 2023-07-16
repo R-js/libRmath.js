@@ -1,4 +1,3 @@
-
 export { dhyper } from './dhyper';
 export { phyper } from './phyper';
 export { qhyper } from './qhyper';
@@ -9,16 +8,16 @@ import { initWasm as initWasmQhyper } from './qhyper_wasm';
 import type { QHyperFunctionMap } from './qhyper_wasm';
 
 export function rhyper(nn: number, m: number, n: number, k: number): Float64Array {
-   return repeatedCall64(nn, rhyperOne, m, n, k);
+    return repeatedCall64(nn, rhyperOne, m, n, k);
 }
 
 export function useWasmBackendHyperGeom(): void {
-   const fns: QHyperFunctionMap = initWasmQhyper();
-   registerBackend(fns);
+    const fns: QHyperFunctionMap = initWasmQhyper();
+    registerBackend(fns);
 }
 
 export function clearBackendHyperGeom(): boolean {
-   return unRegisterBackend();
+    return unRegisterBackend();
 }
 
-export  { rhyperOne };
+export { rhyperOne };

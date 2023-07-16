@@ -8,8 +8,8 @@ const { rnorm10, runif1, rnorm4, runif1_2, rnorm2, rnorm2AfterResetSeedTo0 } = t
 
 describe('rng buggy kinderman-ramage', function () {
     let rng: IRNG;
-    beforeAll(()=>{
-        rng = new MersenneTwister(0)
+    beforeAll(() => {
+        rng = new MersenneTwister(0);
     });
     it('compare 10 samples seed=1234', () => {
         const bkm = new BuggyKindermanRamage(rng); // by default will use Mersenne-Twister like in R

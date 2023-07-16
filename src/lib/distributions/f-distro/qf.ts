@@ -8,7 +8,6 @@ import { qchisq } from '@dist/chi-2/qchisq';
 const printer = debug('qf');
 
 export function qf(p: number, df1: number, df2: number, lower_tail: boolean, log_p: boolean): number {
-
     if (isNaN(p) || isNaN(df1) || isNaN(df2)) return p + df1 + df2;
 
     if (df1 <= 0 || df2 <= 0) return ML_ERR_return_NAN2(printer, lineInfo4);

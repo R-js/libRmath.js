@@ -5,11 +5,9 @@ import { cl, select } from '@common/debug-mangos-select';
 
 import { runif } from '..';
 
-
 import { globalUni, RNGkind } from '@rng/global-rng';
 
 const runifDomainWarns = select('runif')("argument out of domain in '%s'");
-
 
 describe('runif', function () {
     describe('invalid input and edge cases', () => {
@@ -26,7 +24,7 @@ describe('runif', function () {
         it('n=0', () => {
             expect(runif(0)).toEqualFloatingPointBinary([]);
         });
-        it('a = Infinite| b = Infinite| a > b',()=>{
+        it('a = Infinite| b = Infinite| a > b', () => {
             const nan1 = runif(1, Infinity);
             // its a Float64Array
             expect(nan1).toEqualFloatingPointBinary(NaN);
@@ -40,10 +38,9 @@ describe('runif', function () {
             expect(nan3).toEqualFloatingPointBinary(NaN);
 
             expect(runifDomainWarns()).toHaveLength(3);
-
         });
 
-        it('a = Infinite| b = Infinite| a > b',()=>{
+        it('a = Infinite| b = Infinite| a > b', () => {
             const nan1 = runif(1, Infinity);
             // its a Float64Array
             expect(nan1).toEqualFloatingPointBinary(NaN);
@@ -57,17 +54,14 @@ describe('runif', function () {
         });
     });
     describe('fidelity', () => {
-        beforeEach(()=>{
-            RNGkind({ uniform: "MERSENNE_TWISTER", normal: "INVERSION"});
+        beforeEach(() => {
+            RNGkind({ uniform: 'MERSENNE_TWISTER', normal: 'INVERSION' });
             globalUni().init(111111);
         });
-        it('default input', async ()=>{
+        it('default input', async () => {
             const [x] = await loadData(resolve(__dirname, 'fixture-generation', 'runif1.R'), /\s+/, 1);
             const ans = runif(30);
-            expect(ans).toEqualFloatingPointBinary(x)
+            expect(ans).toEqualFloatingPointBinary(x);
         });
     });
 });
-
-
-        

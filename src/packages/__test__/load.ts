@@ -5,10 +5,10 @@ const matchNaN = /^(-|\+)?NaN$/i;
 const matchInf = /^(-|\+)?Inf$/i;
 
 export function loadData(fullPath: string, sep = /,/, ...columns: number[]): Promise<Float64Array[]> {
-    let resolve: (value: Float64Array[] | PromiseLike<Float64Array[]>) => void
+    let resolve: (value: Float64Array[] | PromiseLike<Float64Array[]>) => void;
 
     const reader = createInterface({
-        input: createReadStream(fullPath, { encoding: 'utf8' }),
+        input: createReadStream(fullPath, { encoding: 'utf8' })
     });
     const lines: string[] = [];
     reader.on('line', (input: string) => {

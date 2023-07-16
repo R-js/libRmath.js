@@ -12,8 +12,7 @@ export function rmultinom(n: number, size: number, prob: Float64Array): Float64A
     if (prob.length === 0) {
         throw new Error('no positive probabilities');
     }
-    if (prob.every(_p => _p >= 0) === false
-    ) {
+    if (prob.every((_p) => _p >= 0) === false) {
         throw new Error('negative probability');
     }
 
@@ -35,7 +34,7 @@ export function rmultinom(n: number, size: number, prob: Float64Array): Float64A
     const rc = new Float64Array(n * prob.length);
     let K = size;
     let pTotal = s;
-    for (let i = 0; i < n*prob.length; i++) {
+    for (let i = 0; i < n * prob.length; i++) {
         const i2 = i % prob.length;
         if (i2 === 0) {
             K = size;
@@ -44,10 +43,9 @@ export function rmultinom(n: number, size: number, prob: Float64Array): Float64A
         if (prob[i2] === 0) {
             continue;
         }
-        if (prob[i2] === pTotal){
+        if (prob[i2] === pTotal) {
             rc[i] = K;
-        }
-        else {
+        } else {
             const pp = prob[i2] / pTotal;
             rc[i] = rbinomOne(K, pp);
         }

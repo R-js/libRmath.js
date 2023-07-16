@@ -1,4 +1,3 @@
-
 import { debug } from '@mangos/debug';
 import { ML_ERR_return_NAN2, lineInfo4, R_Q_P01_boundaries } from '@common/logger';
 import { lfastchoose } from '@lib/special/choose';
@@ -35,9 +34,18 @@ export function unRegisterBackend(): boolean {
     return previous;
 }
 
-function cpuBackendTinyN(sum: number, term: number, p: number, xr: number, end: number, xb: number, NB: number, NR: number): number {
+function cpuBackendTinyN(
+    sum: number,
+    term: number,
+    p: number,
+    xr: number,
+    end: number,
+    xb: number,
+    NB: number,
+    NR: number
+): number {
     while (sum < p && xr < end) {
-        //xr++ 
+        //xr++
         xr++;
 
         NB++;
@@ -49,7 +57,16 @@ function cpuBackendTinyN(sum: number, term: number, p: number, xr: number, end: 
     return xr;
 }
 
-function cpuBackendBigN(sum: number, term: number, p: number, xr: number, end: number, xb: number, NB: number, NR: number): number {
+function cpuBackendBigN(
+    sum: number,
+    term: number,
+    p: number,
+    xr: number,
+    end: number,
+    xb: number,
+    NB: number,
+    NR: number
+): number {
     while (sum < p && xr < end) {
         xr++;
         NB++;
@@ -61,16 +78,7 @@ function cpuBackendBigN(sum: number, term: number, p: number, xr: number, end: n
     return xr;
 }
 
-
-export function qhyper(
-    p: number,
-    m: number,
-    n: number,
-    k: number,
-    lowerTail = true,
-    logP = false
-): number {
-
+export function qhyper(p: number, m: number, n: number, k: number, lowerTail = true, logP = false): number {
     if (isNaN(p) || isNaN(m) || isNaN(n) || isNaN(k)) {
         return NaN;
     }
@@ -104,12 +112,7 @@ export function qhyper(
     const small_N = N < 1000; /* won't have underflow in product below */
     /* if N is small,  term := product.ratio( bin.coef );
        otherwise work with its logarithm to protect against underflow */
-    _d[iterm] =
-        lfastchoose(_d[iNR], _d[ixr])
-        +
-        lfastchoose(_d[iNB], _d[ixb])
-        -
-        lfastchoose(N, k);
+    _d[iterm] = lfastchoose(_d[iNR], _d[ixr]) + lfastchoose(_d[iNB], _d[ixb]) - lfastchoose(N, k);
     if (small_N) _d[iterm] = Math.exp(_d[iterm]);
     _d[iNR] -= _d[ixr];
     _d[iNB] -= _d[ixb];
@@ -121,24 +124,7 @@ export function qhyper(
     _d[isum] = small_N ? _d[iterm] : Math.exp(_d[iterm]);
 
     // for speed, removed if (small_N) out of the while loop
-    return (small_N) ? backendTinyN(
-        _d[isum],
-        _d[iterm],
-        p,
-        _d[ixr],
-        xend,
-        _d[ixb],
-        _d[iNB],
-        _d[iNR]
-    ) : backendBigN(
-        _d[isum],
-        _d[iterm],
-        p,
-        _d[ixr],
-        xend,
-        _d[ixb],
-        _d[iNB],
-        _d[iNR]
-    );
+    return small_N
+        ? backendTinyN(_d[isum], _d[iterm], p, _d[ixr], xend, _d[ixb], _d[iNB], _d[iNR])
+        : backendBigN(_d[isum], _d[iterm], p, _d[ixr], xend, _d[ixb], _d[iNB], _d[iNR]);
 }
-

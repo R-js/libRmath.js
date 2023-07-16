@@ -9,8 +9,7 @@ const printer = debug('runif');
 export function runifOne(min: number, max: number): number {
     const u = globalUni();
 
-    if (!(isFinite(min) && isFinite(max) && max > min))
-    {
+    if (!(isFinite(min) && isFinite(max) && max > min)) {
         return ML_ERR_return_NAN2(printer, lineInfo4);
     }
     const s = u.random();

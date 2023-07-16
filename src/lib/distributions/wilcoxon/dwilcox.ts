@@ -11,7 +11,6 @@ import { WilcoxonCache } from './WilcoxonCache';
 const printer_dwilcox = debug('dwilcox');
 
 export function dwilcox(x: number, m: number, n: number, log = false): number {
-
     m = round(m);
     n = round(n);
 
@@ -45,7 +44,5 @@ export function dwilcox(x: number, m: number, n: number, log = false): number {
     //const c1 = cwilcox(x, m, n, w);
 
     //console.log(`4. c1:${c1} <- x:${x}, m:${m}, n:${n}`);
-    return log
-        ? _log(cwilcox(x, m, n, w)) - lchoose(m + n, n)
-        : cwilcox(x, m, n, w) / choose(m + n, n);
+    return log ? _log(cwilcox(x, m, n, w)) - lchoose(m + n, n) : cwilcox(x, m, n, w) / choose(m + n, n);
 }

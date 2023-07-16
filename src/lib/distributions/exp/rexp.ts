@@ -5,7 +5,6 @@ import { exp_rand } from './sexp';
 
 import { globalUni } from '@rng/global-rng';
 
-
 const printer = debug('rexp');
 
 export function rexpOne(rate: number): number {

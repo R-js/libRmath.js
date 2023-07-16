@@ -1,7 +1,7 @@
 import { debug } from '@mangos/debug';
 
 import { ML_ERR_return_NAN2, lineInfo4 } from '@common/logger';
-import {  R_D_val, R_DT_0, R_DT_1  } from '@lib/r-func';
+import { R_D_val, R_DT_0, R_DT_1 } from '@lib/r-func';
 
 import { R_D_Clog } from '@lib/r-func';
 import { atanpi } from '@trig/tanpi';

@@ -1,4 +1,3 @@
-
 import { loadData } from '@common/load';
 import { resolve } from 'path';
 import { cl, select } from '@common/debug-mangos-select';
@@ -40,15 +39,12 @@ describe('rgeom', function () {
     });
 
     describe('with fixtures', () => {
-        beforeAll(()=>{
-            RNGkind({ uniform: "MERSENNE_TWISTER", normal: "INVERSION"});
+        beforeAll(() => {
+            RNGkind({ uniform: 'MERSENNE_TWISTER', normal: 'INVERSION' });
             globalUni().init(12345);
         });
         it('n=100, prob={0.3,0.6}', async () => {
-            const [y1, y2] = await loadData(
-                resolve(__dirname, 'fixture-generation', 'rgeom.R'),
-                 /\s+/,
-                 1, 2);
+            const [y1, y2] = await loadData(resolve(__dirname, 'fixture-generation', 'rgeom.R'), /\s+/, 1, 2);
             const a1 = rgeom(100, 0.3);
             const a2 = rgeom(100, 0.6);
             expect(a1).toEqualFloatingPointBinary(y1);

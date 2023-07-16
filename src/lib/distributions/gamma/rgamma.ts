@@ -1,4 +1,3 @@
-
 import { debug } from '@mangos/debug';
 import { ML_ERR_return_NAN2, lineInfo4 } from '@common/logger';
 import { exp_rand } from '@dist/exp/sexp';
@@ -65,7 +64,7 @@ export function rgamma(a: number, scale: number): number {
     if (a < 1) {
         /* GS algorithm for parameters a < 1 */
         e = 1.0 + exp_m1 * a;
-        for (; ;) {
+        for (;;) {
             p = e * rng.uniform_rng.random();
             if (p >= 1.0) {
                 x = -Math.log((e - p) / a);
@@ -130,12 +129,9 @@ export function rgamma(a: number, scale: number): number {
     if (x > 0.0) {
         /* Step 6: calculation of v and quotient q */
         v = t / (s + s);
-        if (Math.abs(v) <= 0.25)
-        {
+        if (Math.abs(v) <= 0.25) {
             q = q0 + 0.5 * t * t * ((((((a7 * v + a6) * v + a5) * v + a4) * v + a3) * v + a2) * v + a1) * v;
-        }
-        else 
-        {
+        } else {
             q = q0 - s * t + 0.25 * t * t + (s2 + s2) * Math.log(1.0 + v);
         }
 

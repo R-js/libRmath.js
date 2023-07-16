@@ -1,7 +1,7 @@
 'use strict';
 
 import { debug } from '@mangos/debug';
-import { ML_ERR_return_NAN2, lineInfo4, } from '@common/logger';
+import { ML_ERR_return_NAN2, lineInfo4 } from '@common/logger';
 import { M_LN_SQRT_PI, R_D__0, sqrt, abs, DBL_EPSILON, exp, log } from '@lib/r-func';
 import { lgammafn_sign as lgamma } from '@special/gamma';
 import { dnorm } from '@dist/normal';
@@ -11,7 +11,6 @@ import { pnt } from './pnt';
 const printer_dnt = debug('dnt');
 
 export function dnt(x: number, df: number, ncp = 0, giveLog = false): number {
-
     if (isNaN(x) || isNaN(df) || isNaN(ncp)) {
         return x + df + ncp;
     }

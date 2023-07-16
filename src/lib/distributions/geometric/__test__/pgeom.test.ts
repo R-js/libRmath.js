@@ -43,8 +43,8 @@ describe('pgeom', function () {
     describe('with fixtures', () => {
         it('x ∈ [-1, 10], prob=0.5, log={true|false}', async () => {
             const [p, y1, y2] = await loadData(resolve(__dirname, 'fixture-generation', 'pgeom.R'), /\s+/, 1, 2, 3);
-            const a1 = p.map(_p => pgeom(_p, 0.5));
-            const a2 = p.map(_p => pgeom(_p, 0.5, false, false));
+            const a1 = p.map((_p) => pgeom(_p, 0.5));
+            const a2 = p.map((_p) => pgeom(_p, 0.5, false, false));
             expect(a1).toEqualFloatingPointBinary(y1);
             expect(a2).toEqualFloatingPointBinary(y2);
         });

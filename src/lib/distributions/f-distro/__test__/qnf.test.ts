@@ -9,10 +9,10 @@ const qnfDomainWarns = qnfLogs("argument out of domain in '%s'");
 describe('qf ncp is defined', function () {
     beforeEach(() => {
         cl.clear('qnf');
-    })
+    });
     it('p ∈ [-0.125, 1.125], df1=3, df2=5, ncp=25', async () => {
         const [p, y1] = await loadData(resolve(__dirname, 'fixture-generation', 'qnf.R'), /\s+/, 1, 2);
-        const a1 = p.map(_p => qf(_p, 3, 5, 25));
+        const a1 = p.map((_p) => qf(_p, 3, 5, 25));
         expect(a1).toEqualFloatingPointBinary(y1, 23);
     });
     it('p=0.2 df1=Nan, df2=231, ncp=25', () => {
@@ -30,7 +30,7 @@ describe('qf ncp is defined', function () {
         expect(qnfDomainWarns()).toHaveLength(1);
     });
     it('p=0.2, df1=2.4e8, df2=2E8, ncp=2e9', () => {
-        const z = qf(0.2, 2.4,2e8, 290);
+        const z = qf(0.2, 2.4, 2e8, 290);
         expect(z).toEqualFloatingPointBinary(109.75391976731237);
     });
 });

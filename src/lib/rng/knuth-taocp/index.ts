@@ -23,8 +23,7 @@ const mod_diff = (x: number, y: number) => (x - y) & (MM - 1);
 const SEED_LEN = 101;
 
 export class KnuthTAOCP extends IRNG {
-
-    public static override kind: IRNGType = "KNUTH_TAOCP";
+    public static override kind: IRNGType = 'KNUTH_TAOCP';
     //private buf: ArrayBuffer;
 
     private m_seed: Uint32Array;

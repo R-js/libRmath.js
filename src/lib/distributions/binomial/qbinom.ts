@@ -36,7 +36,6 @@ function do_search(y: number, z: NumberW, p: number, n: number, pr: number, incr
 const printer_qbinom = debug('qbinom');
 
 export function qbinom(p: number, size: number, prob: number, lowerTail = true, logP = false): number {
-
     const z = new NumberW(0);
     let y: number;
 
@@ -83,7 +82,7 @@ export function qbinom(p: number, size: number, prob: number, lowerTail = true, 
         lowerTail,
         logP,
         sigma,
-        gamma,
+        gamma
     );
 
     /* Note : "same" code in qpois.c, qbinom.c, qnbinom.c --
@@ -95,7 +94,7 @@ export function qbinom(p: number, size: number, prob: number, lowerTail = true, 
     }
     /* temporary hack --- FIXME --- */
     //if (p + 1.01 * Number.EPSILON >= 1.) return size;
-    if ((1-p) < Number.EPSILON) {
+    if (1 - p < Number.EPSILON) {
         return size;
     }
 

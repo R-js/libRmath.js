@@ -4,13 +4,12 @@ import { builtinModules } from 'module';
 import terser from '@rollup/plugin-terser';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 
-const builtin = builtinModules.slice()
+const builtin = builtinModules.slice();
 builtin.splice(builtinModules.indexOf('crypto'), 1);
 
-import pkg from "../package.json" assert { type: "json" };
+import pkg from '../package.json' assert { type: 'json' };
 
 const version = pkg.version;
-
 
 function shims() {
     // for browser, mimic with WebApi the nodejs "crypto" https://nodejs.org/api/crypto.html#crypto_crypto_randombytes_size_callback
@@ -44,21 +43,24 @@ function shims() {
                 return cryptoStub;
             }
             return null;
-        },
+        }
     };
 }
 // see below for details on the options
 const inputOptions = {
     input: {
-        'web': 'dist/esm/index.mjs',
+        web: 'dist/esm/index.mjs'
     },
     external: (id) => {
         return builtin.includes(id);
     },
     plugins: [
         shims(),
-        nodeResolve({ dedupe: ["@mangos/debug", "ms"], exportConditions: ["import"] })
-    ],
+        nodeResolve({
+            dedupe: ['@mangos/debug', 'ms'],
+            exportConditions: ['import']
+        })
+    ]
 };
 
 const esmOutputOptions = {
@@ -70,11 +72,10 @@ const esmOutputOptions = {
     exports: 'named'
 };
 
-
 const esmOutputOptionsMinimal = Object.assign({}, esmOutputOptions, {
     compact: true,
-    entryFileNames: `[name].mjs`
-    , plugins: [terser()]
+    entryFileNames: `[name].mjs`,
+    plugins: [terser()]
 });
 
 const iifeOutputOptions = {
@@ -84,7 +85,7 @@ const iifeOutputOptions = {
     name: 'R',
     entryFileNames: `[name].iife.js`,
     exports: 'named',
-    extend: true,
+    extend: true
 };
 
 const iifeOutputOptionsMinimal = Object.assign({}, iifeOutputOptions, {
@@ -92,7 +93,6 @@ const iifeOutputOptionsMinimal = Object.assign({}, iifeOutputOptions, {
     entryFileNames: `[name]-iife.js`,
     plugins: [terser()]
 });
-
 
 async function build() {
     const bundle = await rollup(inputOptions);

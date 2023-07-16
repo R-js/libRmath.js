@@ -17,8 +17,7 @@ const a21 = 527612;
 const a23n = 1370589;
 
 export class LecuyerCMRG extends IRNG {
-
-    public static override kind: IRNGType = "LECUYER_CMRG";
+    public static override kind: IRNGType = 'LECUYER_CMRG';
 
     private m_seed: Int32Array;
 

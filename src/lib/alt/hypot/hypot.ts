@@ -1,12 +1,6 @@
+import { abs as fabs, max as fmax2, min as fmin2 } from '@lib/r-func';
 
-import { abs as fabs, max as fmax2, min as fmin2, } from '@lib/r-func';
-
-import {
-    POSITIVE_INFINITY,
-    EPSILON,
-    isNaN,
-    isFinite,
-} from '@lib/r-func';
+import { POSITIVE_INFINITY, EPSILON, isNaN, isFinite } from '@lib/r-func';
 /* Used as a substitute for the C99 function hypot, which all currently
    known platforms have */
 
@@ -14,7 +8,7 @@ import {
  *		without overflow or destructive underflow.
  */
 
- export default function hypot(a: number, b: number): number {
+export default function hypot(a: number, b: number): number {
     let p: number;
     let r: number;
     let s: number;

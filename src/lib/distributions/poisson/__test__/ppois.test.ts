@@ -1,7 +1,7 @@
 import { loadData } from '@common/load';
 import { resolve } from 'path';
 
-import { cl , select } from '@common/debug-mangos-select';
+import { cl, select } from '@common/debug-mangos-select';
 import { ppois } from '..';
 
 const ppoisLogs = select('ppois');
@@ -45,17 +45,17 @@ describe('ppois', function () {
     describe('fidelity', () => {
         it('x > 0 lambda = 10', async () => {
             const [x, y] = await loadData(resolve(__dirname, 'fixture-generation', 'ppois1.R'), /\s+/, 1, 2);
-            const result = x.map(_x => ppois(_x, 10));
+            const result = x.map((_x) => ppois(_x, 10));
             expect(result).toEqualFloatingPointBinary(y, 51);
         });
         it('x > 0 lambda = 5', async () => {
             const [x, y] = await loadData(resolve(__dirname, 'fixture-generation', 'ppois2.R'), /\s+/, 1, 2);
-            const result = x.map(_x => ppois(_x, 5, false));
+            const result = x.map((_x) => ppois(_x, 5, false));
             expect(result).toEqualFloatingPointBinary(y, 44);
         });
         it('x > 0 lambda = 20', async () => {
             const [x, y] = await loadData(resolve(__dirname, 'fixture-generation', 'ppois3.R'), /\s+/, 1, 2);
-            const result = x.map(_x => ppois(_x, 20, false, true));
+            const result = x.map((_x) => ppois(_x, 20, false, true));
             expect(result).toEqualFloatingPointBinary(y, 49);
         });
     });

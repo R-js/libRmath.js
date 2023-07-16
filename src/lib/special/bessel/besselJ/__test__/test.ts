@@ -5,7 +5,7 @@
 //import { loadData } from '@common/load';
 import { cl, select } from '@common/debug-mangos-select';
 
-const regexpAll = /^.*$/
+const regexpAll = /^.*$/;
 const msgBesselJ = select('BesselJ')(regexpAll);
 const msgBesselJInternal = select('J_bessel')(regexpAll);
 
@@ -32,7 +32,7 @@ describe('bessel function of first kind (besselJ)', function () {
             expect(actual).toEqualFloatingPointBinary(NaN);
         });
         it('x=4E5,nu=-52 gives warning', () => {
-            const actual = besselJ(4E5, -52);
+            const actual = besselJ(4e5, -52);
             // check error log
             expect(actual).toEqualFloatingPointBinary(0);
             expect(msgBesselJInternal()).toEqual([["argument out of range in '%s'", 'J_bessel_err_nr=1000']]);
@@ -41,7 +41,7 @@ describe('bessel function of first kind (besselJ)', function () {
             const actual = besselJ(27.595, 398.5);
             expect(actual).toBe(0);
             expect(msgBesselJ()).toEqual([
-                ['debug (nu=%d, na=%d, nb=%d, rc=%j', 0.5, 398, 399, { nb: 399, ncalc: 320, x: 0 } ],
+                ['debug (nu=%d, na=%d, nb=%d, rc=%j', 0.5, 398, 399, { nb: 399, ncalc: 320, x: 0 }],
                 ['bessel_j(%d,nu=%d): precision lost in result', 27.595, 398.5]
             ]);
             expect(msgBesselJInternal()).toEqual([['rest: x=%d, nb=%d\t', 27.595, 399]]);
@@ -57,12 +57,12 @@ describe('bessel function of first kind (besselJ)', function () {
             expect(actual).toEqualFloatingPointBinary(1.5191602453485768542);
         });
         it('x< 1E-4, nu=-4.9', () => {
-            const actual = besselJ(1E-4/2.1, 4.9);
+            const actual = besselJ(1e-4 / 2.1, 4.9);
             expect(actual).toEqualFloatingPointBinary(2.1907703120848136824e-25);
         });
-        it('x > 25, nu = 3', ()=>{
+        it('x > 25, nu = 3', () => {
             const actual = besselJ(40, 3);
             expect(actual).toEqualFloatingPointBinary(-0.12614481550582079539);
-        })
+        });
     });
 });

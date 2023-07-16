@@ -1,16 +1,15 @@
 import { KindermanRamage } from '@rng/normal/kinderman-ramage';
 import { testData } from './fixture';
-import  { _1000Samples } from './_1000flushSample';
+import { _1000Samples } from './_1000flushSample';
 import type { IRNG } from '@rng/irng';
 import { MersenneTwister } from '../../../mersenne-twister/index';
 const { rnorm10, runif1, rnorm4, runif1_2, rnorm2, rnorm2AfterResetSeedTo0 } = testData;
 
-
 describe('rng kinderman ramage', function () {
     let rng: IRNG;
-    beforeAll(()=>{
+    beforeAll(() => {
         rng = new MersenneTwister(0);
-    })
+    });
     it('compare 10 samples seed=1234', () => {
         const kr = new KindermanRamage(rng); // by default will use Mersenne-Twister like in R
         kr.uniform_rng.init(1234);

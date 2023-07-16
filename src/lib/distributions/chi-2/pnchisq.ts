@@ -1,13 +1,6 @@
 import { debug } from '@mangos/debug';
-import { ML_ERR_return_NAN2, lineInfo4, ML_ERROR2, ME } from '@common/logger'
-import {
-    M_LN_SQRT_2PI,
-    R_D__1,
-    R_D_exp,
-    R_DT_0,
-    R_DT_1,
-    R_DT_val,
-} from '@lib/r-func';
+import { ML_ERR_return_NAN2, lineInfo4, ML_ERROR2, ME } from '@common/logger';
+import { M_LN_SQRT_2PI, R_D__1, R_D_exp, R_DT_0, R_DT_1, R_DT_val } from '@lib/r-func';
 
 import { R_Log1_Exp } from '@dist/exp/expm1';
 import { lgammafn_sign as lgammafn } from '@special/gamma/lgammafn_sign';
@@ -68,7 +61,7 @@ export function pnchisq_raw(
     reltol: number,
     itrmax: number,
     lower_tail: boolean,
-    log_p: boolean,
+    log_p: boolean
 ): number {
     //double
     let term;
@@ -119,8 +112,8 @@ export function pnchisq_raw(
         // <==>        log(x/2) < 2/f*(log(Gamma(f/2+1)) + log(eps))
         // <==> log(x) < log(2) + 2/f*(log(Gamma(f/2+1)) + log(eps))
         const p1 = lgammafn(f / 2 + 1);
-        const p2 =  Math.LN2 + (2 / f)*(p1 + _dbl_min_exp);
-        const p3 = Math.log(x)
+        const p2 = Math.LN2 + (2 / f) * (p1 + _dbl_min_exp);
+        const p3 = Math.log(x);
         if (lower_tail && f > 0 && p3 < p2) {
             // all  pchisq(x, f+2*i, lower_tail, FALSE), i=0,...,110 would underflow to 0.
             // === = > work in log scale
@@ -145,7 +138,7 @@ export function pnchisq_raw(
                 theta,
                 i,
                 sum,
-                sum2,
+                sum2
             );
 
             return log_p ? ans : Math.exp(ans);
@@ -254,7 +247,7 @@ export function pnchisq_raw(
                     bound,
                     is_b ? '<= errmax' : '',
                     term / ans,
-                    is_r ? '<= reltol' : '',
+                    is_r ? '<= reltol' : ''
                 );
                 break; /* out completely */
             }

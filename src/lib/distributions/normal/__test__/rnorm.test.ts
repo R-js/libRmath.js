@@ -12,12 +12,12 @@ import { globalUni, RNGkind } from '@rng/global-rng';
 
 describe('rnorm', function () {
     describe('invalid input check and edge cases', () => {
-        beforeAll(()=>{
-            RNGkind({ uniform: "MERSENNE_TWISTER", normal: "INVERSION"});
+        beforeAll(() => {
+            RNGkind({ uniform: 'MERSENNE_TWISTER', normal: 'INVERSION' });
             globalUni().init(123456);
             cl.clear('rnorm');
         });
-        it('mhu = NaN | sigma = NaN | sigma < 0',()=>{
+        it('mhu = NaN | sigma = NaN | sigma < 0', () => {
             const nan1 = rnorm(1, NaN);
             const nan2 = rnorm(1, undefined, NaN);
             const nan3 = rnorm(1, undefined, -1);
@@ -26,16 +26,16 @@ describe('rnorm', function () {
             expect(nan3).toEqualFloatingPointBinary(NaN);
             expect(rnormDomainWarns()).toHaveLength(3);
         });
-        it('mhu = Infinity | sigma = 0',()=>{
+        it('mhu = Infinity | sigma = 0', () => {
             const mhu1 = rnorm(1, Infinity);
             const mhu2 = rnorm(1, 3, 0);
             expect(mhu1).toEqualFloatingPointBinary(Infinity);
             expect(mhu2).toEqualFloatingPointBinary(3);
-        })
+        });
     });
-    describe('fidelity',()=>{
-        beforeAll(()=>{
-            RNGkind({ uniform: "MERSENNE_TWISTER", normal: "INVERSION"});
+    describe('fidelity', () => {
+        beforeAll(() => {
+            RNGkind({ uniform: 'MERSENNE_TWISTER', normal: 'INVERSION' });
             globalUni().init(123456);
         });
         it('100 samples', async () => {

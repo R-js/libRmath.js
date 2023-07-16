@@ -70,7 +70,7 @@ describe('pnbinom', function () {
         });
         it('x= [0,200], prob=0.2, size=30', async () => {
             const [x, y] = await loadData(resolve(__dirname, 'fixture-generation', 'pnbinom1.R'), /\s+/, 1, 2);
-            const actual = x.map(_x => pnbinom(_x, 30, 0.2));
+            const actual = x.map((_x) => pnbinom(_x, 30, 0.2));
             expect(actual).toEqualFloatingPointBinary(y, 15);
         });
     });
@@ -151,12 +151,12 @@ describe('pnbinom', function () {
         it('x=4, size=35, mu=f(size=35, prob=0.3), lower=false, log=true', () => {
             const mu = prob2mu(35, 0.3); //15
             const z = pnbinom(4, 35, undefined, mu, false, true);
-            expect(z).toEqualFloatingPointBinary( -0.0033235576300175533, 45);
+            expect(z).toEqualFloatingPointBinary(-0.0033235576300175533, 45);
         });
         it('x= [0,100, step10], psize=300, mu=35 (prob=0.5384615384615384)', async () => {
             const [x, y] = await loadData(resolve(__dirname, 'fixture-generation', 'pnbinom2.R'), /\s+/, 1, 2);
-            const actual = x.map(_x => pnbinom(_x, 300, undefined, 350));
-            expect(actual).toEqualFloatingPointBinary(y,25);
+            const actual = x.map((_x) => pnbinom(_x, 300, undefined, 350));
+            expect(actual).toEqualFloatingPointBinary(y, 25);
         });
     });
 });

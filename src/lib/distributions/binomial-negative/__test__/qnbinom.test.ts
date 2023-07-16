@@ -5,7 +5,6 @@ const do_searchDomainWarns = select('do_search')("argument out of domain in '%s'
 qnbinomDomainWarns;
 do_searchDomainWarns;
 
-
 import { qnbinom } from '..';
 
 describe('qnbinom', function () {
@@ -65,19 +64,19 @@ describe('qnbinom', function () {
             expect(z).toBe(6);
         });
         it('p=log(1), prob=0.3, size=5, lower=true, log.p=true', () => {
-            const z = qnbinom(0 ,5,0.3, undefined, true, true);
+            const z = qnbinom(0, 5, 0.3, undefined, true, true);
             expect(z).toBe(Infinity);
         });
         it('p=log(1), prob=0.3, size=5, lower=false, log.p=true', () => {
-            const z = qnbinom(0 ,5,0.3, undefined, false, true);
+            const z = qnbinom(0, 5, 0.3, undefined, false, true);
             expect(z).toBe(0);
         });
         it('p=1-epsilon/2, prob=0.3, size=5', () => {
-            const z = qnbinom(1-Number.EPSILON/2 ,5,0.3);
+            const z = qnbinom(1 - Number.EPSILON / 2, 5, 0.3);
             expect(z).toBe(Infinity);
         });
         it('p=0.8, prob=0.0003, size=50', () => {
-            const z = qnbinom(0.8 ,50,0.0003);
+            const z = qnbinom(0.8, 50, 0.0003);
             expect(z).toBe(186128);
         });
     });
@@ -87,7 +86,7 @@ describe('qnbinom', function () {
             cl.clear('do_search');
         });
         it('p=0.8, size=500, mu=600, (prob=0.5454545454545454)', () => {
-            const z = qnbinom(0.8,500,undefined, 600);
+            const z = qnbinom(0.8, 500, undefined, 600);
             expect(z).toBe(630);
         });
     });

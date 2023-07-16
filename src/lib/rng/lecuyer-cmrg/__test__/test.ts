@@ -1,7 +1,6 @@
 import { LecuyerCMRG } from '../..';
 import { sample100, seedFixture } from './fixture';
 
-
 describe('rng lecuyer-cmrg', function () {
     it('compare 100 samples seed=0', () => {
         const lcmrg = new LecuyerCMRG();

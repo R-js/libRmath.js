@@ -1,6 +1,5 @@
 'use strict';
 
-
 import { INT_MAX } from '@lib/r-func';
 import { fixup, i2_32m1 } from '../fixup';
 import { IRNG } from '../irng';
@@ -11,8 +10,7 @@ import { seedCheck } from '../seedcheck';
 const SEED_LEN = 2;
 
 export class MarsagliaMultiCarry extends IRNG {
-
-    public static override kind: IRNGType = "MARSAGLIA_MULTICARRY";
+    public static override kind: IRNGType = 'MARSAGLIA_MULTICARRY';
     private m_seed: Int32Array;
 
     private fixupSeeds(): void {
@@ -28,7 +26,7 @@ export class MarsagliaMultiCarry extends IRNG {
         this.init(_seed);
     }
 
-    public override init(_seed: number = seed()):void {
+    public override init(_seed: number = seed()): void {
         /* Initial scrambling */
         const s = new Int32Array([_seed]);
         for (let j = 0; j < 50; j++) {

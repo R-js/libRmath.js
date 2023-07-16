@@ -339,4 +339,4 @@ const _1000Samples = _1000SamplesRaw
     .split(/\s+/)
     .filter((f) => !!f)
     .map(parseFloat);
-export { _1000Samples};
+export { _1000Samples };

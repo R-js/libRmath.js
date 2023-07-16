@@ -1,5 +1,5 @@
 import { debug } from '@mangos/debug';
-import { ML_ERR_return_NAN2, lineInfo4  } from '@common/logger';
+import { ML_ERR_return_NAN2, lineInfo4 } from '@common/logger';
 import { dpois_raw } from '@dist/poisson/dpois';
 import { R_D__0 } from '@lib/r-func';
 

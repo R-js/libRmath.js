@@ -4,7 +4,6 @@ import { sinpi } from '@trig/sinpi';
 import BesselK from '../besselK';
 import { I_bessel } from './IBessel';
 
-
 import { exp, trunc, floor, PI } from '@lib/r-func';
 
 const printer = debug('besselI');

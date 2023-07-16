@@ -3,21 +3,9 @@
 import { debug } from '@mangos/debug';
 import { wprob } from './wprob';
 
-import {
-    ME,
-    ML_ERR_return_NAN2, lineInfo4,
-    ML_ERROR2,
-} from '@common/logger';
+import { ME, ML_ERR_return_NAN2, lineInfo4, ML_ERROR2 } from '@common/logger';
 
-import {
-    R_DT_val, R_DT_0,
-    R_DT_1,
-    log,
-    M_LN2,
-    sqrt,
-    exp,
-    min
-} from '@lib/r-func';
+import { R_DT_val, R_DT_0, R_DT_1, log, M_LN2, sqrt, exp, min } from '@lib/r-func';
 
 import { lgammafn_sign } from '@special/gamma';
 
@@ -37,24 +25,14 @@ const ulen2 = 0.5;
 const ulen3 = 0.25;
 const ulen4 = 0.125;
 const xlegq = [
-    0.98940093499164993259615417345,
-    0.944575023073232576077988415535,
-    0.865631202387831743880467897712,
-    0.755404408355003033895101194847,
-    0.617876244402643748446671764049,
-    0.458016777657227386342419442984,
-    0.28160355077925891323046050146,
-    0.95012509837637440185319335425e-1,
+    0.98940093499164993259615417345, 0.944575023073232576077988415535, 0.865631202387831743880467897712,
+    0.755404408355003033895101194847, 0.617876244402643748446671764049, 0.458016777657227386342419442984,
+    0.28160355077925891323046050146, 0.95012509837637440185319335425e-1
 ];
 const alegq = [
-    0.27152459411754094851780572456e-1,
-    0.622535239386478928628438369944e-1,
-    0.951585116824927848099251076022e-1,
-    0.124628971255533872052476282192,
-    0.149595988816576732081501730547,
-    0.16915651939500253818931207903,
-    0.182603415044923588866763667969,
-    0.189450610455068496285396723208,
+    0.27152459411754094851780572456e-1, 0.622535239386478928628438369944e-1, 0.951585116824927848099251076022e-1,
+    0.124628971255533872052476282192, 0.149595988816576732081501730547, 0.16915651939500253818931207903,
+    0.182603415044923588866763667969, 0.189450610455068496285396723208
 ];
 
 export function ptukey(q: number, nmeans: number, df: number, nrnages = 1, lowerTail = true, logP = false): number {
@@ -118,7 +96,7 @@ export function ptukey(q: number, nmeans: number, df: number, nrnages = 1, lower
         if degrees of freedom large, approximate integral
         with range distribution.
      */
-   
+
     //double
     let ans: number;
     //let f2: number;
@@ -134,31 +112,26 @@ export function ptukey(q: number, nmeans: number, df: number, nrnages = 1, lower
     let wprb: number;
     //let j: number;
 
-    if (isNaN(q) || isNaN(nrnages) || isNaN(nmeans) || isNaN(df))
-    {
+    if (isNaN(q) || isNaN(nrnages) || isNaN(nmeans) || isNaN(df)) {
         return ML_ERR_return_NAN2(printer_ptukey, lineInfo4);
     }
 
-    if (q <= 0)
-    {
+    if (q <= 0) {
         return R_DT_0(lowerTail, logP);
     }
 
     /* df must be > 1 */
     /* there must be at least two values */
 
-    if (df < 2 || nrnages < 1 || nmeans < 2)
-    {
+    if (df < 2 || nrnages < 1 || nmeans < 2) {
         return ML_ERR_return_NAN2(printer_ptukey, lineInfo4);
     }
 
-    if (!isFinite(q))
-    {
+    if (!isFinite(q)) {
         return R_DT_1(lowerTail, logP);
     }
 
-    if (df > dlarg)
-    {
+    if (df > dlarg) {
         return R_DT_val(lowerTail, logP, wprob(q, nrnages, nmeans));
     }
 
@@ -174,20 +147,16 @@ export function ptukey(q: number, nmeans: number, df: number, nrnages = 1, lower
     /* degrees of freedom. */
 
     const ff4 = df * 0.25;
-    if (df <= dhaf) // 100.0
-    { 
+    if (df <= dhaf) {
+        // 100.0
         ulen = ulen1;
-    }
-    else if (df <= dquar)// 800.0
-    {
+    } else if (df <= dquar) {
+        // 800.0
         ulen = ulen2;
-    }
-    else if (df <= deigh)// 5000.0
-    {
+    } else if (df <= deigh) {
+        // 5000.0
         ulen = ulen3;
-    }
-    else
-    {
+    } else {
         ulen = ulen4;
     }
 
@@ -197,8 +166,7 @@ export function ptukey(q: number, nmeans: number, df: number, nrnages = 1, lower
 
     ans = 0.0;
     otsum = 0.0; // to let typscript linting know it is used , it is within the for loop
-    for (let i = 1; i <= 50; i++)
-    {
+    for (let i = 1; i <= 50; i++) {
         otsum = 0.0;
 
         /* legendre quadrature with order = nlegq */
@@ -206,8 +174,7 @@ export function ptukey(q: number, nmeans: number, df: number, nrnages = 1, lower
 
         twa1 = (2 * i - 1) * ulen;
 
-        for (let jj = 1; jj <= nlegq; jj++)
-        {
+        for (let jj = 1; jj <= nlegq; jj++) {
             const j = ihalfq < jj ? jj - ihalfq - 1 : jj - 1;
             const t1 =
                 ihalfq < jj
@@ -215,14 +182,10 @@ export function ptukey(q: number, nmeans: number, df: number, nrnages = 1, lower
                     : f2lf + f21 * log(twa1 - xlegq[j] * ulen) + (xlegq[j] * ulen - twa1) * ff4;
 
             /* if exp(t1) < 9e-14, then doesn't contribute to integral */
-            if (t1 >= eps1)
-            {
-                if (ihalfq < jj)
-                {
+            if (t1 >= eps1) {
+                if (ihalfq < jj) {
                     qsqz = q * sqrt((xlegq[j] * ulen + twa1) * 0.5);
-                }
-                else
-                {
+                } else {
                     qsqz = q * sqrt((-(xlegq[j] * ulen) + twa1) * 0.5);
                 }
 
@@ -240,8 +203,7 @@ export function ptukey(q: number, nmeans: number, df: number, nrnages = 1, lower
          * However, in order to avoid small area under left tail,
          * at least  1 / ulen  intervals are calculated.
          */
-        if (i * ulen >= 1.0 && otsum <= eps2)
-        {
+        if (i * ulen >= 1.0 && otsum <= eps2) {
             break;
         }
 
@@ -251,9 +213,7 @@ export function ptukey(q: number, nmeans: number, df: number, nrnages = 1, lower
         ans += otsum;
     } //for
 
-    if (otsum > eps2)
-    {
-       
+    if (otsum > eps2) {
         ML_ERROR2(ME.ME_PRECISION, 'ptukey', printer_ptukey);
     }
     ans = min(1, ans);

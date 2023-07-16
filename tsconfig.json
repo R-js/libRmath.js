@@ -1,79 +1,77 @@
 {
-  "include": ["src/lib/**/*.ts", "src/packages/**/*.ts", "src/index.ts"],
-  "files": ["src/index.ts"],
-  "typeAcquisition": {
-    "enable": true,
-    "disableFilenameBasedTypeAcquisition": true
-  },
-  "compilerOptions": {
-    "allowUnreachableCode": true,
-    "allowUnusedLabels": true,
-    "exactOptionalPropertyTypes": true,
-    "noImplicitAny": true,
-    "noImplicitOverride": true,
-    "noImplicitThis": false,
-    "noPropertyAccessFromIndexSignature": false,
-    "noUncheckedIndexedAccess": false,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-
-    "strict": true,
-
-    "allowUmdGlobalAccess": false,
-    "baseUrl": "./src",
-    "module": "ESNext",
-    "moduleResolution": "node",
-    "paths": {
-      "@common/*": ["lib/common/*", "packages/common/*", "packages/__test__/*"],
-      "@lib/*": ["lib/*"],
-      "@rng/*": ["lib/rng/*"],
-      "@special/*": ["lib/special/*"],
-      "@trig/*": ["lib/trigonometry/*"],
-      "@dist/*": ["lib/distributions/*"]
+    "include": ["src/lib/**/*.ts", "src/packages/**/*.ts", "src/index.ts"],
+    "files": ["src/index.ts"],
+    "typeAcquisition": {
+        "enable": true,
+        "disableFilenameBasedTypeAcquisition": true
     },
-    "resolveJsonModule": true,
-    "types": ["node", "jest"],
-    "typeRoots": ["src/packages/__test__/jest-ext.d.ts", "node_modules/@types"],
+    "ts-node": {
+        "transpileOnly": true,
+        "require": ["typescript-transform-paths/register"]
+    },
+    "compilerOptions": {
+        "allowUnreachableCode": true,
+        "allowUnusedLabels": true,
+        "exactOptionalPropertyTypes": true,
+        "noImplicitAny": true,
+        "noImplicitOverride": true,
+        "noImplicitThis": false,
+        "noPropertyAccessFromIndexSignature": false,
+        "noUncheckedIndexedAccess": false,
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
 
-    "declaration": false,
-    "outDir": "dist/tsc",
-    "preserveConstEnums": true,
-    "stripInternal": true,
+        "strict": true,
 
+        "allowUmdGlobalAccess": false,
+        "baseUrl": "./src",
+        "module": "ESNext",
+        "moduleResolution": "node",
+        "paths": {
+            "@common/*": ["lib/common/*", "packages/common/*", "packages/__test__/*"],
+            "@lib/*": ["lib/*"],
+            "@rng/*": ["lib/rng/*"],
+            "@special/*": ["lib/special/*"],
+            "@trig/*": ["lib/trigonometry/*"],
+            "@dist/*": ["lib/distributions/*"]
+        },
+        "resolveJsonModule": true,
+        "types": ["node", "jest"],
+        "typeRoots": ["src/packages/__test__/jest-ext.d.ts", "node_modules/@types"],
 
+        "declaration": false,
+        "outDir": "dist/tsc",
+        "preserveConstEnums": true,
+        "stripInternal": true,
 
-    "checkJs": true,
+        "checkJs": true,
 
+        "plugins": [
+            {
+                "name": "typescript-eslint-language-service"
+            },
+            // Transform paths in output .js files
+            { "transform": "typescript-transform-paths" },
 
+            // Transform paths in output .d.ts files (Include this line if you output declarations files)
+            { "transform": "typescript-transform-paths", "afterDeclarations": true }
+        ],
 
-    "plugins": [
-      {
-        "name": "typescript-eslint-language-service"
-      },
-      {
-        "transform": "typescript-transform-paths"
-      },
-      {
-        "transform": "typescript-transform-paths",
-        "afterDeclarations": true
-      }
-    ],
+        "allowSyntheticDefaultImports": false,
+        "esModuleInterop": false,
+        "forceConsistentCasingInFileNames": true,
+        "preserveSymlinks": true,
 
-    "allowSyntheticDefaultImports": false,
-    "esModuleInterop": false,
-    "forceConsistentCasingInFileNames": true,
-    "preserveSymlinks": true,
+        "lib": ["esnext", "dom"],
+        "target": "esnext",
 
-    "lib": ["esnext", "dom"],
-    "target": "esnext",
+        "explainFiles": false,
+        "extendedDiagnostics": true,
+        "listEmittedFiles": true,
+        "listFiles": true,
+        "traceResolution": false,
 
-    "explainFiles": false,
-    "extendedDiagnostics": true,
-    "listEmittedFiles": true,
-    "listFiles": true,
-    "traceResolution": false,
-
-    "composite": false,
-    "incremental": false
-  }
+        "composite": false,
+        "incremental": false
+    }
 }

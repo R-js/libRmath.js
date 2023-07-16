@@ -4,7 +4,10 @@ import {
     fmod,
     M_LN_SQRT_2PI, // no math alias for this
     M_LN_SQRT_PId2,
-    trunc, floor, abs, log 
+    trunc,
+    floor,
+    abs,
+    log
 } from '@lib/r-func';
 
 import { ME, ML_ERROR2 } from '@common/logger';
@@ -13,13 +16,11 @@ import { sinpi } from '@trig/sinpi';
 import { lgammacor } from './lgammacor';
 import { gammafn } from './gamma_fn';
 
-
 const printer_sign = debug('lgammafn_sign');
 
 const xmax = 2.5327372760800758e305;
 const dxrel = 1.490116119384765625e-8;
 const ML_POSINF = Infinity;
-
 
 export function lgammafn_sign(x: number, sgn?: Int32Array): number {
     //let ans: number;
@@ -45,7 +46,7 @@ export function lgammafn_sign(x: number, sgn?: Int32Array): number {
 
     if (sgn !== undefined && sgn !== null) {
         sgn[0] = 1;
-        if (x < 0 && fmod(floor(-x), 2) === 0){
+        if (x < 0 && fmod(floor(-x), 2) === 0) {
             sgn[0] = -1;
         }
     }

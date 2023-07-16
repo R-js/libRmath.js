@@ -14,24 +14,20 @@ const accu = 1e-13;
 const Eps = 1e-11; /* must be > accu */
 
 export function qnt(p: number, df: number, ncp: number, lower_tail: boolean, log_p: boolean): number {
-    
     let ux;
     let lx;
     let nx;
     let pp;
 
-    if (isNaN(p) || isNaN(df) || isNaN(ncp))
-    {
+    if (isNaN(p) || isNaN(df) || isNaN(ncp)) {
         return p + df + ncp;
     }
 
-    if (df <= 0)
-    {
+    if (df <= 0) {
         return ML_ERR_return_NAN2(printer, lineInfo4);
     }
 
-    if (ncp === 0 && df >= 1)
-    {
+    if (ncp === 0 && df >= 1) {
         return qt(p, df, lower_tail, log_p);
     }
 
@@ -40,10 +36,7 @@ export function qnt(p: number, df: number, ncp: number, lower_tail: boolean, log
         return rc;
     }
 
-    
-
-    if (!isFinite(df))
-    {
+    if (!isFinite(df)) {
         // df = Inf ==> limit N(ncp,1)
         return qnorm(p, ncp, 1, lower_tail, log_p);
     }
@@ -52,36 +45,24 @@ export function qnt(p: number, df: number, ncp: number, lower_tail: boolean, log
 
     /* Invert pnt(.) :
      * 1. finding an upper and lower bound */
-    if (p > 1 - DBL_EPSILON)
-    {
+    if (p > 1 - DBL_EPSILON) {
         return Infinity;
     }
 
     pp = min(1 - DBL_EPSILON, p * (1 + Eps));
 
-    for (
-        ux = max(1, ncp);
-        ux < DBL_MAX && pnt(ux, df, ncp, true, false) < pp;
-        ux *= 2
-    );
+    for (ux = max(1, ncp); ux < DBL_MAX && pnt(ux, df, ncp, true, false) < pp; ux *= 2);
 
     pp = p * (1 - Eps);
 
-    for (
-        lx = min(-1, -ncp);
-        lx > -DBL_MAX && pnt(lx, df, ncp, true, false) > pp;
-        lx *= 2
-    );
+    for (lx = min(-1, -ncp); lx > -DBL_MAX && pnt(lx, df, ncp, true, false) > pp; lx *= 2);
 
     /* 2. interval (lx,ux)  halving : */
     do {
         nx = 0.5 * (lx + ux); // could be zero
-        if (pnt(nx, df, ncp, true, false) > p)
-        {
+        if (pnt(nx, df, ncp, true, false) > p) {
             ux = nx;
-        }
-        else
-        {
+        } else {
             lx = nx;
         }
     } while (ux - lx > accu * max(abs(lx), abs(ux)));

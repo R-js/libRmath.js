@@ -7,8 +7,8 @@ const { rnorm10, runif1, rnorm4, runif1_2, rnorm2, rnorm2AfterResetSeedTo0 } = t
 
 describe('rng inversion', function () {
     let rng: IRNG;
-    
-    beforeAll(()=>{
+
+    beforeAll(() => {
         rng = new MersenneTwister(0);
     });
 

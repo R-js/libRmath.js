@@ -8,24 +8,23 @@ const prepared = select('pnchisq');
 const pnchisqDomainWarns = prepared("argument out of domain in '%s'");
 const pnchisqPrecisionWarns = prepared("full precision may not have been achieved in '%s'");
 
-
 describe('pnchisq', function () {
     beforeEach(() => {
         cl.clear('pnchisq');
-    })
+    });
     it('ranges x ∊ [0, 40, step 0.5] df=13, ncp=8', async () => {
         const [x, y] = await loadData(resolve(__dirname, 'fixture-generation', 'pnchisq.R'), /\s+/, 1, 2);
-        const actual = x.map(_x => pchisq(_x, 13, 8));
+        const actual = x.map((_x) => pchisq(_x, 13, 8));
         expect(actual).toEqualFloatingPointBinary(y, 44);
     });
     it('ranges x ∊ [0, 40, step 0.5] df=13, ncp=8, log=true', async () => {
         const [x, y] = await loadData(resolve(__dirname, 'fixture-generation', 'pnchisq2.R'), /\s+/, 1, 2);
-        const actual = x.map(_x => pchisq(_x, 13, 8, true, true));
+        const actual = x.map((_x) => pchisq(_x, 13, 8, true, true));
         expect(actual).toEqualFloatingPointBinary(y, 43);
     });
     it('ranges x ∊ [80, 100] df=13, ncp=8, log=true', async () => {
         const [x, y] = await loadData(resolve(__dirname, 'fixture-generation', 'pnchisq3.R'), /\s+/, 1, 2);
-        const actual = x.map(_x => pchisq(_x, 13, 8, true, true));
+        const actual = x.map((_x) => pchisq(_x, 13, 8, true, true));
         expect(actual).toEqualFloatingPointBinary(y, 20);
     });
     it('x=NaN df=13, ncp=8, log=true', () => {
@@ -44,7 +43,7 @@ describe('pnchisq', function () {
     });
     it('ranges x ∊ [80, 100], df=13, ncp=85(>80) log=true', async () => {
         const [x, y] = await loadData(resolve(__dirname, 'fixture-generation', 'pnchisq4.R'), /\s+/, 1, 2);
-        const actual = x.map(_x => pchisq(_x, 13, 85, true, true));
+        const actual = x.map((_x) => pchisq(_x, 13, 85, true, true));
         expect(actual).toEqualFloatingPointBinary(y, 8);
     });
     it('(precison warning): x = 490, df=13, ncp=85, lower=false, log=false', () => {

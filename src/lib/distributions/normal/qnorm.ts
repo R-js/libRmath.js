@@ -64,17 +64,14 @@ export function qnorm(p: number, mean = 0, sd = 1, lowerTail = true, logP = fals
         /* closer than 0.075 from {0,1} boundary */
 
         /* r = min(p, 1-p) < 0.075 */
-        if (q > 0)
-        {
+        if (q > 0) {
             r = R_DT_CIv(lowerTail, logP, p);
-        }
-        /* 1-p */
-        else
-        {
+        } else {
+            /* 1-p */
             r = p_; /* = R_DT_Iv(p) ^=  p */
         }
 
-        r = sqrt(-(logP && ((lowerTail && q <= 0) || (!lowerTail && q > 0)) ? p : /* else */ _log(r) ) );
+        r = sqrt(-(logP && ((lowerTail && q <= 0) || (!lowerTail && q > 0)) ? p : /* else */ _log(r)));
         /* r = sqrt(-log(r))  <==>  min(p, 1-p) = exp( - r^2 ) */
 
         printer('close to 0 or 1: r = %7d', r);

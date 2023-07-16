@@ -1,4 +1,3 @@
-
 const testRegex = [
     'src/lib/alt/(.*)/__test__/test.ts',
     'src/lib/distributions/beta/__test__/.*.test.ts',
@@ -32,9 +31,9 @@ const testRegex = [
     'src/lib/rng/super-duper/__test__/test.ts',
     'src/lib/rng/wichman-hill/__test__/test.ts',
     'src/lib/special/bessel/(.*)/__test__/test.ts',
-    'src/lib/special/beta/__test__/.*\.test.ts',
-    'src/lib/special/choose/__test__/.*\.test.ts',
-    'src/lib/special/gamma/__test__/.*\.test.ts'
+    'src/lib/special/beta/__test__/.*.test.ts',
+    'src/lib/special/choose/__test__/.*.test.ts',
+    'src/lib/special/gamma/__test__/.*.test.ts'
 ];
 
 const collectCoverageFrom = [
@@ -73,7 +72,7 @@ const collectCoverageFrom = [
 module.exports = {
     automock: false,
     collectCoverage: true,
-    maxWorkers: "50%",
+    maxWorkers: '50%',
     collectCoverageFrom,
     coveragePathIgnorePatterns: ['node_modules', 'test', 'doc.ts', 'IRandom.ts', 'IBesselRC.ts'],
     coverageDirectory: 'coverage',
@@ -88,34 +87,33 @@ module.exports = {
     //testMatch: ['**/__tests__/**/*.[t]s?(x)', '**/?(*.)+(spec|test).[t]s?(x)'],
     testRegex,
     transform: {
-        "\\.test\\.ts$" :["ts-jest", {
-            compiler: 'typescript',
-            tsconfig: 'tsconfig.json',
-            diagnostics: {
-                ignoreCodes: [151001],
-            },
-        }]
+        '\\.test\\.ts$': [
+            'ts-jest',
+            {
+                compiler: 'typescript',
+                tsconfig: 'tsconfig.json',
+                diagnostics: {
+                    ignoreCodes: [151001]
+                }
+            }
+        ]
     },
-    //resolver: "ts-jest-resolver",
     moduleNameMapper: {
         '^@dist/(.*)$': '<rootDir>/src/lib/distributions/$1',
         '^@common/(.*)$': [
             '<rootDir>/src/packages/common/$1',
             '<rootDir>/src/lib/common/$1',
-            '<rootDir>/src/packages/__test__/$1',
+            '<rootDir>/src/packages/__test__/$1'
         ],
         '^@special/(.*)$': '<rootDir>/src/lib/special/$1',
         '^@trig/(.*)$': '<rootDir>/src/lib/trigonometry/$1',
         '^@rng/(.*)$': '<rootDir>/src/lib/rng/$1',
         '^@lib/(.*)$': '<rootDir>/src/lib/$1',
         '^lib/(.*)$': '<rootDir>/src/lib/$1'
-
     },
     setupFiles: ['<rootDir>/src/packages/__test__/jest-ext.d.ts'],
     setupFilesAfterEnv: [
         '<rootDir>/src/packages/__test__/jest-extension.ts',
         '<rootDir>/src/packages/__test__/mock-of-debug.ts'
-    ],
+    ]
 };
-
-

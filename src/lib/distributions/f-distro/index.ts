@@ -1,4 +1,3 @@
-
 //needed for rf
 import { rchisqOne } from '../chi-2/rchisq';
 import { rnchisqOne } from '../chi-2/rnchisq';
@@ -36,7 +35,6 @@ export function qf(p: number, df1: number, df2: number, ncp?: number, lowerTail 
 }
 
 export function rf(n: number, df1: number, df2: number, ncp?: number): Float64Array {
-
     if (ncp === undefined) {
         return repeatedCall64(n, _rfOne, df1, df2);
     }
@@ -57,7 +55,7 @@ export function rf(n: number, df1: number, df2: number, ncp?: number): Float64Ar
 
 export function rfOne(df1: number, df2: number, ncp?: number): number {
     if (ncp === undefined) {
-        return _rfOne( df1, df2);
+        return _rfOne(df1, df2);
     }
     if (isNaN(ncp) || isNaN(df1) || isNaN(df2) || !isFinite(df1) || !isFinite(df2)) {
         return NaN;

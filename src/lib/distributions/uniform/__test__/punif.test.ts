@@ -2,13 +2,11 @@ import { cl, select } from '@common/debug-mangos-select';
 
 import { punif } from '..';
 
-
 const punifDomainWarns = select('punif')("argument out of domain in '%s'");
 
 describe('punif', function () {
-
     describe('invalid input and edge cases', () => {
-        beforeEach(()=>{
+        beforeEach(() => {
             cl.clear('punif');
         });
         it('x=Nan|min=NaN|max=NaN', () => {
@@ -27,7 +25,7 @@ describe('punif', function () {
         it('x = min | x = max', () => {
             const ans1 = punif(4, 4, 9);
             expect(ans1).toBe(0);
-            const ans2 = punif(9, 4,9);
+            const ans2 = punif(9, 4, 9);
             expect(ans2).toBe(1);
         });
         it('min >= max', () => {
@@ -44,19 +42,18 @@ describe('punif', function () {
             expect(nan2).toBeNaN();
             expect(punifDomainWarns()).toHaveLength(2);
         });
-        
     });
     describe('fidelity', () => {
         //
-        it('x = 9, a=10, b=11, lowerTail=false|log=true', ()=>{
+        it('x = 9, a=10, b=11, lowerTail=false|log=true', () => {
             const zero = punif(9, 10, 11, false, true);
             expect(zero).toBe(zero);
         });
-        it('4 < x < 4.001, lowerTail=false, giveLog=True',()=>{
+        it('4 < x < 4.001, lowerTail=false, giveLog=True', () => {
             const ans = punif(4.00001, 4, 4.001, false, true);
             expect(ans).toEqualFloatingPointBinary(-0.010050335853115676, 35);
         });
-        it('4 < x < 4.001, lowerTail=true, giveLog=True',()=>{
+        it('4 < x < 4.001, lowerTail=true, giveLog=True', () => {
             const ans = punif(4.00001, 4, 4.001, true, true);
             expect(ans).toEqualFloatingPointBinary(-4.6051701860262826, 37);
         });

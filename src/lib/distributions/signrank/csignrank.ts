@@ -18,8 +18,8 @@ export function cpu_csignrank(k: number, n: number, u: number, c: number): numbe
     w[0] = w[1] = 1;
     for (let j = 2; j < n + 1; ++j) {
         let i;
-        const end = imin2(j * (j + 1)/ 2, c);
-        for (i = end; i >= j; --i){
+        const end = imin2((j * (j + 1)) / 2, c);
+        for (i = end; i >= j; --i) {
             w[i] += w[i - j];
         }
     }

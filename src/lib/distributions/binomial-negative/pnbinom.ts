@@ -30,7 +30,6 @@ export function pnbinom(x: number, size: number, prob: number, lowerTail: boolea
 const printer_pnbinom_mu = debug('pnbinom_mu');
 
 export function pnbinom_mu(x: number, size: number, mu: number, lowerTail: boolean, logP: boolean): number {
-
     if (isNaN(x) || isNaN(size) || isNaN(mu)) return x + size + mu;
     if (!isFinite(size) || !isFinite(mu)) return ML_ERR_return_NAN2(printer_pnbinom_mu, lineInfo4);
 
@@ -63,5 +62,4 @@ export function pnbinom_mu(x: number, size: number, mu: number, lowerTail: boole
         }
         return lowerTail ? w.val : wc.val;
     }
-
 }

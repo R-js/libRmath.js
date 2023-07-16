@@ -1,4 +1,3 @@
-
 import { loadData } from '@common/load';
 import { resolve } from 'path';
 
@@ -28,11 +27,10 @@ describe('rmultinom', function () {
             const prob = new Float64Array([0, 0]);
             expect(() => rmultinom(1, 1, prob)).toThrowError('no positive probabilities');
         });
-
     });
     describe('fidelity', () => {
         beforeEach(() => {
-            RNGkind({ uniform: "MERSENNE_TWISTER", normal: "INVERSION" });
+            RNGkind({ uniform: 'MERSENNE_TWISTER', normal: 'INVERSION' });
             globalUni().init(123456);
         });
         it('probs = [0.4,0.4,0.0], size = 0, n = 0, empty array output', () => {
@@ -45,21 +43,13 @@ describe('rmultinom', function () {
         });
         it('probs=c(0.25,4,9,8), size=100, n = 1', async () => {
             const ans = rmultinom(5, 100, new Float64Array([0.25, 4, 9, 8]));
-            const [y] = await loadData(
-                resolve(__dirname, 'fixture-generation', 'rmultinom1.R'),
-                /\s+/,
-                1
-            );
+            const [y] = await loadData(resolve(__dirname, 'fixture-generation', 'rmultinom1.R'), /\s+/, 1);
             expect(ans).toEqualFloatingPointBinary(y);
         });
         it('probs=c(0.25,4,0,8), size=100, n = 1', async () => {
             const ans = rmultinom(5, 100, new Float64Array([0.25, 4, 0, 8]));
-            const [y] = await loadData(
-                resolve(__dirname, 'fixture-generation', 'rmultinom2.R'),
-                /\s+/,
-                1
-            );
+            const [y] = await loadData(resolve(__dirname, 'fixture-generation', 'rmultinom2.R'), /\s+/, 1);
             expect(ans).toEqualFloatingPointBinary(y);
         });
-    })
+    });
 });

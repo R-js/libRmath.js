@@ -7,23 +7,20 @@ import type { IRNGNormalType } from '@lib/rng/normal/rng-types';
 import type { IRandom } from '@rng/IRandom';
 
 export abstract class IRNGNormal implements IRandom {
-
     public static kind: IRNGNormalType;
 
     protected _rng!: IRNG;
     protected _name: string;
 
     // some normal rng's have internal state
-    protected reset(rng?: IRNG): void
-    {     
-        if (rng && rng.name !== this._rng.name){
+    protected reset(rng?: IRNG): void {
+        if (rng && rng.name !== this._rng.name) {
             this._rng = rng;
         }
     }
-    
-    constructor(_rng: IRNG, name: string)
-    {
-        if (this.constructor.name === 'IRNGNormal'){
+
+    constructor(_rng: IRNG, name: string) {
+        if (this.constructor.name === 'IRNGNormal') {
             throw new TypeError(`Cannot instantiate class "IRNGNormal" directly`);
         }
         this._name = name;
@@ -57,8 +54,8 @@ export abstract class IRNGNormal implements IRandom {
         return rc;
     }
 
-    random(): number{
-        throw new Error(`override this function in ${this.constructor.name}`)
+    random(): number {
+        throw new Error(`override this function in ${this.constructor.name}`);
     }
 
     public get name(): string {
@@ -68,5 +65,4 @@ export abstract class IRNGNormal implements IRandom {
     public get uniform_rng(): IRNG {
         return this._rng;
     }
-
 }

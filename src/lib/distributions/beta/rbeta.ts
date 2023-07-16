@@ -9,8 +9,8 @@ export const expmax = DBL_MAX_EXP * Math.LN2; /* = log(DBL_MAX) */
 
 export function rbetaOne(shape1: number, shape2: number): number {
     const rng = globalUni();
-    
-    if (isNaN(shape1)|| isNaN(shape2)){
+
+    if (isNaN(shape1) || isNaN(shape2)) {
         return ML_ERR_return_NAN2(printer, lineInfo4);
     }
     if (shape1 < 0 || shape2 < 0) {
@@ -26,7 +26,6 @@ export function rbetaOne(shape1: number, shape2: number): number {
     if (!isFinite(shape1) || shape2 === 0) return 1.0;
     if (!isFinite(shape2) || shape1 === 0) return 0.0;
 
-  
     let r;
     let s;
     let t;

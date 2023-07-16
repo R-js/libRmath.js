@@ -5,7 +5,7 @@ import { fixup, i2_32m1 } from '../fixup';
 class MyIRNG extends IRNG {
     public static override kind: IRNGType = 'USER_DEFINED' as IRNGType; // force extra kind
     public get cut(): number {
-        return 2**25-1;
+        return 2 ** 25 - 1;
     }
     private _seed: Uint32Array;
     constructor() {
@@ -33,7 +33,7 @@ describe('irng', function n() {
         expect(mockCallback).toHaveBeenCalledTimes(1);
         expect(mockCallback).toHaveBeenCalledWith(usr, 1234);
     });
-    
+
     it('test unregister specific callback', () => {
         const usr = new MyIRNG();
         const fn = (seed: number) => seed;

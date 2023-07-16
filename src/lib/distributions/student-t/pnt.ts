@@ -2,12 +2,7 @@
 
 import { debug } from '@mangos/debug';
 import { pbeta } from '@dist/beta/pbeta';
-import {
-    ME,
-    ML_ERR_return_NAN2,
-    lineInfo4,
-    ML_ERROR2
-} from '@common/logger';
+import { ME, ML_ERR_return_NAN2, lineInfo4, ML_ERROR2 } from '@common/logger';
 import {
     M_LN_SQRT_PI,
     M_SQRT_2dPI,
@@ -35,10 +30,9 @@ const DBL_MIN_EXP = -1021;
 const itrmax = 1000;
 const errmax = 1e-12;
 
-function finis(tnc: number, del: number, lower_tail: boolean, negdel: boolean, log_p: boolean): number
-{
+function finis(tnc: number, del: number, lower_tail: boolean, negdel: boolean, log_p: boolean): number {
     const pn = pnorm(-del, 0, 1, /*lower*/ true, /*log_p*/ false);
-    printer_pnt('pnorm(%d,0,1)=%d',-del, pn);
+    printer_pnt('pnorm(%d,0,1)=%d', -del, pn);
     tnc += pn;
     printer_pnt('tnc=%d', tnc);
     lower_tail = lower_tail !== negdel; /* xor */
@@ -80,13 +74,11 @@ export function pnt(t: number, df: number, ncp: number, lower_tail: boolean, log
 
     /* note - itrmax and errmax may be changed to suit one's needs. */
     // TODO: added isNaN(ncp) check, apply to upstream
-    if (isNaN(t) || isNaN(df) ||isNaN(ncp))
-    {
+    if (isNaN(t) || isNaN(df) || isNaN(ncp)) {
         return t + df + ncp;
     }
 
-    if (df <= 0.0)
-    {
+    if (df <= 0.0) {
         return ML_ERR_return_NAN2(printer_pnt, lineInfo4);
     }
 
@@ -102,17 +94,14 @@ export function pnt(t: number, df: number, ncp: number, lower_tail: boolean, log
     let del: number;
     let tt: number;
 
-    if (t >= 0)
-    {
+    if (t >= 0) {
         negdel = false;
         tt = t;
         del = ncp;
-    }
-    else
-    {
+    } else {
         /* We deal quickly with left tail if extreme,
              since pt(q, df, ncp) <= pt(0, df, ncp) = \Phi(-ncp) */
-   
+
         if (ncp > 40 && (!log_p || !lower_tail)) {
             printer_pnt('if x <=0 and solution for edge ncp > 40');
             return R_DT_0(lower_tail, log_p);
@@ -129,7 +118,7 @@ export function pnt(t: number, df: number, ncp: number, lower_tail: boolean, log
             del,
             ncp * ncp,
             del * del,
-            2 * M_LN2 * -DBL_MIN_EXP,
+            2 * M_LN2 * -DBL_MIN_EXP
         );
 
         // in JS its del >= 38.604  then 0.5*exp(-0.5(del*del)) === 0
@@ -158,8 +147,7 @@ export function pnt(t: number, df: number, ncp: number, lower_tail: boolean, log
     // x will be always >= 0
     // because df >0
     // edge case is x==0, then we skip this
-    if (x > 0)
-    {
+    if (x > 0) {
         printer_pnt('x > 0 branch');
         /* <==>  t != 0 */
         const lambda = del * del;
@@ -167,8 +155,7 @@ export function pnt(t: number, df: number, ncp: number, lower_tail: boolean, log
 
         printer_pnt('p=%d', p);
 
-        if (p === 0)
-        {
+        if (p === 0) {
             /* underflow! */
             printer_pnt('p=%d, underflow protection', p);
             /*========== really use an other algorithm for this case !!! */
@@ -180,64 +167,59 @@ export function pnt(t: number, df: number, ncp: number, lower_tail: boolean, log
         printer_pnt(
             'it  1e5*(godd,   geven)|          p           q           s' +
                 /* 1.3 1..4..7.9 1..4..7.9|1..4..7.901 1..4..7.901 1..4..7.901 */
-                '        pnt(*)     errbd',
+                '        pnt(*)     errbd'
         );
         /* 1..4..7..0..34 1..4..7.9*/
 
         q = M_SQRT_2dPI * p * del;
         s = 0.5 - p;
         /* s = 0.5 - p = 0.5*(1 - exp(-.5 L)) =  -0.5*expm1(-.5 L)) */
-        if (s < 1e-7)
-        {
+        if (s < 1e-7) {
             s = -0.5 * expm1(-0.5 * lambda);
-        } 
+        }
         let a = 0.5;
-        
+
         const b = 0.5 * df;
         /* rxb = (1 - x) ^ b   [ ~= 1 - b*x for tiny x --> see 'xeven' below]
          *       where '(1 - x)' =: rxb {accurately!} above */
         rxb = pow(rxb, b);
-        
+
         const albeta = M_LN_SQRT_PI + lgamma(b) - lgamma(0.5 + b);
-        
-        printer_pnt('%d = lgamma(%d)-lgamma(0.5+%d)+0.572364942924700087071713675677',albeta, b,b);
+
+        printer_pnt('%d = lgamma(%d)-lgamma(0.5+%d)+0.572364942924700087071713675677', albeta, b, b);
 
         xodd = pbeta(x, a, b, /*lower*/ true, /*log_p*/ false);
-        
+
         printer_pnt('return from pbeta:%d', xodd);
-        
+
         godd = 2 * rxb * exp(a * log(x) - albeta);
-        
+
         tnc = b * x;
-        
+
         xeven = tnc < DBL_EPSILON ? tnc : 1 - rxb;
         geven = tnc * rxb;
         tnc = p * xodd + q * xeven;
 
-       
         /* repeat until convergence or iteration limit */
-        for (let it = 1; it <= itrmax; it++)
-        {
+        for (let it = 1; it <= itrmax; it++) {
             a += 1;
             xodd -= godd;
             xeven -= geven;
-            godd *= x * (a + b - 1) / a;
-            geven *= x * (a + b - 0.5) / (a + 0.5);
+            godd *= (x * (a + b - 1)) / a;
+            geven *= (x * (a + b - 0.5)) / (a + 0.5);
             p *= lambda / (2 * it);
             q *= lambda / (2 * it + 1);
             tnc += p * xodd + q * xeven;
             s -= p;
             /* R 2.4.0 added test for rounding error here. */
 
-            if (s < -1e-10)
-            {
+            if (s < -1e-10) {
                 /* happens e.g. for (t,df,ncp)=(40,10,38.5), after 799 it.*/
                 ML_ERROR2(ME.ME_PRECISION, 'pnt', printer_pnt);
                 printer_pnt('goto:true, s = %d < 0 !!! ---> non-convergence!!', s);
                 return finis(tnc, del, lower_tail, negdel, log_p);
             }
-            if (s <= 0 && it > 1)
-            {
+            if (s <= 0 && it > 1) {
                 printer_pnt('goto:true, s:%d < 0 && it:%d>1', s, it);
                 return finis(tnc, del, lower_tail, negdel, log_p);
             }
@@ -245,16 +227,14 @@ export function pnt(t: number, df: number, ncp: number, lower_tail: boolean, log
 
             printer_pnt('%d %d %d|%d %d %d %d %d', it, 1e5 * godd, 1e5 * geven, p, q, s, tnc, errbd);
 
-            if (abs(errbd) < errmax)
-            {
+            if (abs(errbd) < errmax) {
                 printer_pnt('goto:true, errbd:%d < errmax:%d', errbd, errmax);
                 return finis(tnc, del, lower_tail, negdel, log_p);
             }
         } //for (it = 1; it <= itrmax; it++)
         /* non-convergence:*/
         ML_ERROR2(ME.ME_NOCONV, 'pnt', printer_pnt);
-    }
-    else {
+    } else {
         tnc = 0;
     }
     return finis(tnc, del, lower_tail, negdel, log_p);

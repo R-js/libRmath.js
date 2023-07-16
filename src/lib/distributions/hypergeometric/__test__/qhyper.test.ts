@@ -7,8 +7,7 @@ import { qhyper, useWasmBackendHyperGeom, clearBackendHyperGeom } from '..';
 
 const qhyperLogs = select('qhyper');
 const qhyperWarns = qhyperLogs("argument out of domain in '%s'");
-const p01bounderies = select('R_Q_P01_boundaries')("argument out of domain in '%s'")
-                      
+const p01bounderies = select('R_Q_P01_boundaries')("argument out of domain in '%s'");
 
 /**
  * function qhyper(p, m, n, k, lower.tail = TRUE, log.p = FALSE)
@@ -18,7 +17,7 @@ const p01bounderies = select('R_Q_P01_boundaries')("argument out of domain in '%
  * k            = total number of balls drawn (k-x)=number of non-white balls
  * lower.tail   =  if TRUE (default), probabilities are P[X <= x], otherwise, P[X > x].
  * log.p        =  probabilities as log(p);
- * 
+ *
  * return descrete quantile
  */
 
@@ -60,7 +59,7 @@ describe('qhyper(p,m,n,k,log)', function () {
             expect(p01bounderies()).toHaveLength(2);
         });
     });
-   describe('edge cases', () => {
+    describe('edge cases', () => {
         it('(p=1 and p=1, m=300 n=150, k=400', () => {
             // the minimum output is Max(0,  (nn-nb) )
             // the maximum output is min(nn, nr)
@@ -73,67 +72,72 @@ describe('qhyper(p,m,n,k,log)', function () {
         });
     });
     describe('with fixtures', () => {
-
         it('p ∈ [0,1], m=300, n=150, k=400 (k < 1000, "small"), lower={true|false}, log={true|false}', async () => {
             const [p, y1, y2, y3, y4] = await loadData(
                 resolve(__dirname, 'fixture-generation', 'qhyper.R'),
                 /\s+/,
-                1, 2, 3, 4, 5
+                1,
+                2,
+                3,
+                4,
+                5
             );
             // log.p = false
-            const a1 = p.map(_p => qhyper(_p, 300, 150, 400));
-            const a2 = p.map(_p => qhyper(_p, 300, 150, 400, false));
+            const a1 = p.map((_p) => qhyper(_p, 300, 150, 400));
+            const a2 = p.map((_p) => qhyper(_p, 300, 150, 400, false));
             // log.p = true
-            const a3 = p.map(_p => qhyper(Math.log(_p), 300, 150, 400, true, true));
-            const a4 = p.map(_p => qhyper(Math.log(_p), 300, 150, 400, false, true));
+            const a3 = p.map((_p) => qhyper(Math.log(_p), 300, 150, 400, true, true));
+            const a4 = p.map((_p) => qhyper(Math.log(_p), 300, 150, 400, false, true));
             expect(a1).toEqualFloatingPointBinary(y1, 45);
             expect(a2).toEqualFloatingPointBinary(y2, 45);
             expect(a3).toEqualFloatingPointBinary(y3, 45);
             expect(a4).toEqualFloatingPointBinary(y4, 45);
         });
         it('p ∈ [0,1], m=1300, n=150, k=1400 (k >= 1000, "big"), lower={true|false}, log={true|false}', async () => {
-            
-            
             const [p, y1, y2, y3, y4] = await loadData(
                 resolve(__dirname, 'fixture-generation', 'qhyper2.R'),
                 /\s+/,
-                1, 2, 3, 4, 5
+                1,
+                2,
+                3,
+                4,
+                5
             );
-           
+
             const m = 1300;
             const n = 150;
             const k = 1400;
-            
+
             // log.p = false
-            const a1 = p.map(_p => qhyper(_p, m, n, k));
-            const a2 = p.map(_p => qhyper(_p, m, n, k, false));
+            const a1 = p.map((_p) => qhyper(_p, m, n, k));
+            const a2 = p.map((_p) => qhyper(_p, m, n, k, false));
             // log.p = true
-            const a3 = p.map(_p => qhyper(Math.log(_p), m, n, k, true, true));
-            const a4 = p.map(_p => qhyper(Math.log(_p), m, n, k, false, true));
+            const a3 = p.map((_p) => qhyper(Math.log(_p), m, n, k, true, true));
+            const a4 = p.map((_p) => qhyper(Math.log(_p), m, n, k, false, true));
             expect(a1).toEqualFloatingPointBinary(y1, 45);
             expect(a2).toEqualFloatingPointBinary(y2, 45);
             expect(a3).toEqualFloatingPointBinary(y3, 45);
             expect(a4).toEqualFloatingPointBinary(y4, 45);
         });
     });
-    describe('wasm accelerator test', ()=> {
-        it.skip('(481 sec) non wasm-accelerated test, n=1, nr=2**31-1, nb=2**31-1, n=2**31-1',() => {
+    describe('wasm accelerator test', () => {
+        it.skip('(481 sec) non wasm-accelerated test, n=1, nr=2**31-1, nb=2**31-1, n=2**31-1', () => {
             const start = new Date();
             //console.log(`start at: ${start.toISOString()}`)
-            const result = qhyper(0.5,2**31-1,2**31-1,2**31-1);
+            const result = qhyper(0.5, 2 ** 31 - 1, 2 ** 31 - 1, 2 ** 31 - 1);
             const stop = new Date();
-            const duration = Math.round((stop.valueOf()-start.valueOf())/1000);
+            const duration = Math.round((stop.valueOf() - start.valueOf()) / 1000);
             //console.log(`stop at: ${stop.toISOString()}`)
             console.log(`duration: ${duration} sec, result=${result}`);
             expect(result).toBe(1073741806);
-        })
+        });
         it('(28 sec) wasm-accelerated test, p=0.5, nr=2**31-1, nb=2**31-1, n=2**31-1', () => {
             // initialize wasm
             useWasmBackendHyperGeom();
             const start = Date.now();
-            const result = qhyper(0.5,2**31-1,2**31-1,2**31-1);
+            const result = qhyper(0.5, 2 ** 31 - 1, 2 ** 31 - 1, 2 ** 31 - 1);
             const stop = Date.now();
-            console.log(`(wasm) duration: ${ms(stop-start)}`);
+            console.log(`(wasm) duration: ${ms(stop - start)}`);
             clearBackendHyperGeom();
             expect(result).toBe(1073741806);
         });

@@ -1,7 +1,7 @@
 import { debug } from '@mangos/debug';
 
 import { ML_ERR_return_NAN2, lineInfo4, R_Q_P01_boundaries } from '@common/logger';
-import { R_DT_0, R_DT_1  }  from '@lib/r-func';
+import { R_DT_0, R_DT_1 } from '@lib/r-func';
 
 import { NumberW } from '@common/toms708/NumberW';
 
@@ -23,7 +23,7 @@ function do_search(y: number, z: NumberW, p: number, n: number, pr: number, incr
                     n,
                     pr,
                     true, ///log_p,
-                    false,
+                    false
                 )) < p
             ) {
                 printer_do_search('exit1');
@@ -42,7 +42,7 @@ function do_search(y: number, z: NumberW, p: number, n: number, pr: number, incr
                     n,
                     pr, //l._t.
                     true,
-                    false,
+                    false
                 )) >= p
             ) {
                 printer_do_search('exit2');
@@ -55,7 +55,6 @@ function do_search(y: number, z: NumberW, p: number, n: number, pr: number, incr
 const printer_qnbinom = debug('qnbinom');
 
 export function qnbinom(p: number, size: number, prob: number, lower_tail: boolean, log_p: boolean): number {
-
     let y;
 
     const z = new NumberW(0);

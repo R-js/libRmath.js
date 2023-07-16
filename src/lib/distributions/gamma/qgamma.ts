@@ -1,4 +1,3 @@
-
 import { debug } from '@mangos/debug';
 
 import { ML_ERR_return_NAN2, lineInfo4, R_Q_P01_boundaries, R_Q_P01_check } from '@common/logger';
@@ -107,13 +106,7 @@ const i420 = 1 / 420;
 const i2520 = 1 / 2520;
 const i5040 = 1 / 5040;
 
-export function qgamma(
-    p: number,
-    alpha: number,
-    scale: number,
-    lower_tail: boolean,
-    log_p: boolean
-): number {
+export function qgamma(p: number, alpha: number, scale: number, lower_tail: boolean, log_p: boolean): number {
     let p_;
     let a;
     let b;
@@ -196,10 +189,14 @@ export function qgamma(
                 t = log_p ? p1 * Math.exp(p_ - g) : p1 / g; /* = "delta x" */
                 t = lower_tail ? x - t : x + t;
                 p_ = pgamma(t, alpha, scale, lower_tail, log_p);
-                if (Math.abs(p_ - p) > Math.abs(p1) || (i > 1 && Math.abs(p_ - p) === Math.abs(p1)) /* <- against flip-flop */) {
+                if (
+                    Math.abs(p_ - p) > Math.abs(p1) ||
+                    (i > 1 && Math.abs(p_ - p) === Math.abs(p1)) /* <- against flip-flop */
+                ) {
                     /* no improvement */
 
-                    if (i === 1 && max_it_Newton > 1) printer_qgamma('no Newton step done since delta{p} >= last delta');
+                    if (i === 1 && max_it_Newton > 1)
+                        printer_qgamma('no Newton step done since delta{p} >= last delta');
 
                     break;
                 } /* else : */
@@ -213,7 +210,7 @@ export function qgamma(
             }
         }
         return x;
-    }
+    };
 
     if (alpha < 1e-10) {
         /* Warning seems unnecessary now: */
@@ -245,7 +242,6 @@ export function qgamma(
         // goto END;/* and do Newton steps */
     }
 
-
     /* FIXME: This (cutoff to {0, +Inf}) is far from optimal
      * -----  when log_p or !lower_tail, but NOT doing it can be even worse */
 
@@ -255,8 +251,6 @@ export function qgamma(
         return fn_end();
         //goto END;/* and do Newton steps */
     }
-
-
 
     printer_qgamma('\t==> ch = %d:', ch);
 
@@ -309,8 +303,6 @@ export function qgamma(
     /* was
      *    ML_ERROR2(ME_PRECISION, "qgamma");
      * does nothing in R !*/
-
-
 
     return fn_end();
 }

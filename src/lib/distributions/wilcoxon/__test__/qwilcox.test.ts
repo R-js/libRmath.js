@@ -21,7 +21,7 @@ describe('qwilcox', function () {
             expect(nan3).toBeNaN();
         });
         it('x=Inf | m = Inf | n = Inf', () => {
-            const nan1 = qwilcox(Infinity, 2, 1)
+            const nan1 = qwilcox(Infinity, 2, 1);
             const nan2 = qwilcox(0.5, Infinity, 1);
             const nan3 = qwilcox(0.5, 1, Infinity);
             expect(nan1).toBeNaN();
@@ -31,13 +31,13 @@ describe('qwilcox', function () {
         });
         it('m <= 0 | n <= 0', () => {
             const nan1 = qwilcox(0.1, -4, 5);
-            const nan2 = qwilcox(0.5 , 4, -5);
-            expect(nan1).toBeNaN()
+            const nan2 = qwilcox(0.5, 4, -5);
+            expect(nan1).toBeNaN();
             expect(nan2).toBeNaN();
             //
             const nan3 = qwilcox(0.1, -4, 5);
-            const nan4 = qwilcox(0.5 , 4, -5);
-            expect(nan3).toBeNaN()
+            const nan4 = qwilcox(0.5, 4, -5);
+            expect(nan3).toBeNaN();
             expect(nan4).toBeNaN();
             //
             expect(qwilcoxDomainWarns()).toHaveLength(4);
@@ -45,7 +45,7 @@ describe('qwilcox', function () {
         it('q < 0 || q > 1', () => {
             const nan1 = qwilcox(-1, 4, 5);
             const nan2 = qwilcox(1.2, 4, 5);
-            expect(nan1).toBeNaN()
+            expect(nan1).toBeNaN();
             expect(nan2).toBeNaN();
             expect(qwilcoxCheck()).toHaveLength(2);
         });
@@ -59,7 +59,7 @@ describe('qwilcox', function () {
     describe('fidelity', () => {
         it('p=(0,1) qwilcox(p, 10, 10)', async () => {
             const [p, y] = await loadData(resolve(__dirname, 'fixture-generation', 'qwilcox1.R'), /\s+/, 1, 2);
-            const answer = p.map(_p => qwilcox(_p, 10, 10));
+            const answer = p.map((_p) => qwilcox(_p, 10, 10));
             expect(answer).toEqualFloatingPointBinary(y);
         });
     });

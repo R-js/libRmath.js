@@ -1,12 +1,11 @@
 import { debug } from '@mangos/debug';
 import { ML_ERR_return_NAN2, lineInfo4 } from '@common/logger';
-import { R_P_bounds_01} from '@lib/r-func';
+import { R_P_bounds_01 } from '@lib/r-func';
 import { pnbeta2 } from '@dist/beta/pnbeta';
 import { pnchisq } from '@dist/chi-2/pnchisq';
 
 const printer_pnf = debug('pnf');
 export function pnf(x: number, df1: number, df2: number, ncp: number, lowerTail: boolean, logP: boolean): number {
-
     if (isNaN(x) || isNaN(df1) || isNaN(df2) || isNaN(ncp)) return x + df2 + df1 + ncp;
 
     if (df1 <= 0 || df2 <= 0 || ncp < 0) return ML_ERR_return_NAN2(printer_pnf, lineInfo4);

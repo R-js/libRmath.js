@@ -2,7 +2,6 @@ import { cl, select } from '@common/debug-mangos-select';
 
 import { plogis } from '..';
 
-
 const pLogisLogs = select('plogis');
 const pLogisDomainWarns = pLogisLogs("argument out of domain in '%s'");
 
@@ -22,7 +21,7 @@ describe('plogis', function () {
             expect(nan3).toBeNaN();
         });
         it('scale <= 0', () => {
-            const nan = plogis(0,undefined, -0.5);
+            const nan = plogis(0, undefined, -0.5);
             expect(nan).toBeNaN();
             expect(pLogisDomainWarns()).toMatchInlineSnapshot(`
 [

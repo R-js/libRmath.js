@@ -1,8 +1,7 @@
-
 export { gammafn as gamma } from './gamma_fn';
 export { digamma, pentagamma, psigamma, tetragamma, trigamma } from './polygamma';
-export { lgammafn_sign, lgammafn_sign as lgamma  } from './lgammafn_sign';
- 
+export { lgammafn_sign, lgammafn_sign as lgamma } from './lgammafn_sign';
+
 // function gamma(x: number): number
 // function lgamma(x: number, sgn?: Int32Array): number
 
@@ -11,7 +10,3 @@ export { lgammafn_sign, lgammafn_sign as lgamma  } from './lgammafn_sign';
  *    to the address in the second argument if this is not null or undefined.
  */
 // function psigamma(x, deriv = 0)
-
-
-
-

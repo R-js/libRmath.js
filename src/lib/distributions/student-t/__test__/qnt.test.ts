@@ -8,9 +8,9 @@ import { qt } from '..';
 
 const qntDomainWarns = select('qnt')("argument out of domain in '%s'");
 const qntboundaryWarns = select('R_Q_P01_boundaries')("argument out of domain in '%s'");
-qntDomainWarns
+qntDomainWarns;
 
-function partialQntf(p: number, df: number, ncp: number, lowerTail = true, logP = false){
+function partialQntf(p: number, df: number, ncp: number, lowerTail = true, logP = false) {
     return qt(p, df, ncp, lowerTail, logP);
 }
 
@@ -56,10 +56,10 @@ describe('qnt(x, df, ncp, lower.tail, log.p)', () => {
             const posInf = partialQntf(1 - DBL_EPSILON / 2, 10, 7);
             expect(posInf).toBe(Infinity);
         });
-        it('ncp = 0, df >= 1', ()=>{
-            const qt =  partialQntf(0.4, 1, 6, true, false);
+        it('ncp = 0, df >= 1', () => {
+            const qt = partialQntf(0.4, 1, 6, true, false);
             expect(qt).toEqualFloatingPointBinary(7.0586141707150034, 35);
-        })
+        });
     });
     describe('fidelity', () => {
         it('p=seq(0,1) df=4 ncp=6', async () => {

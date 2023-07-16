@@ -9,7 +9,7 @@ const phyperWarns = phyperLogs("argument out of domain in '%s'");
 //const nonIntWarns = phyperLogs('non-integer x = %d');
 
 /**
- * function phyper(x, m, n, k, lower.tail = TRUE, log.p = FALSE) 
+ * function phyper(x, m, n, k, lower.tail = TRUE, log.p = FALSE)
  * x            = vector of quantiles
  * m            = number of white balls in the population
  * n            = number of black balls in the population
@@ -101,11 +101,14 @@ describe('phyper(x,m,n,k,log)', function () {
             const [x, y1, y2, y3] = await loadData(
                 resolve(__dirname, 'fixture-generation', 'phyper.R'),
                 /,/,
-                1, 2, 3, 4
+                1,
+                2,
+                3,
+                4
             );
-            const a1 = x.map(_x => phyper(_x, 15, 20, 15));
-            const a2 = x.map(_x => phyper(_x, 15, 20, 15, false));
-            const a3 = x.map(_x => phyper(_x, 15, 20, 15, false, true));
+            const a1 = x.map((_x) => phyper(_x, 15, 20, 15));
+            const a2 = x.map((_x) => phyper(_x, 15, 20, 15, false));
+            const a3 = x.map((_x) => phyper(_x, 15, 20, 15, false, true));
             expect(a1).toEqualFloatingPointBinary(y1, 45);
             expect(a2).toEqualFloatingPointBinary(y2, 45);
             expect(a3).toEqualFloatingPointBinary(y3, 45);

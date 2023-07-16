@@ -1,7 +1,6 @@
 import { resolve } from 'path';
 import { loadData } from '@common/load';
 
-
 //app
 import { digamma } from '..';
 
@@ -14,8 +13,8 @@ describe('digamma', function () {
     });
     it('value 0,-1,-2  single values', () => {
         const g1 = digamma(-0);
-        const g2 = digamma(-1 );
-        const g3 = digamma(-100.2 );
+        const g2 = digamma(-1);
+        const g3 = digamma(-100.2);
         expect(g1).toEqualFloatingPointBinary(NaN);
         expect(g2).toEqualFloatingPointBinary(NaN);
         expect(g3).toEqualFloatingPointBinary(8.9361812384800352049);

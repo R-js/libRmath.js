@@ -29,7 +29,7 @@ const printer_rpois = debug('rpois');
 const fact = [1, 1, 2, 6, 24, 120, 720, 5040, 40320, 362880];
 
 export function rpoisOne(lambda: number): number {
-    const rng =globalNorm();  
+    const rng = globalNorm();
 
     /* In Original C code these are static (why? perf improvement?) --- persistent between calls for same lambda : */
     let l = 0;
@@ -49,7 +49,6 @@ export function rpoisOne(lambda: number): number {
     let d = 0;
     let omega = 0;
     let big_l = 0; /* integer "w/o overflow" */
-  
 
     /* Local Vars  [initialize some for -Wall]: */
     let del;
@@ -68,14 +67,14 @@ export function rpoisOne(lambda: number): number {
     let pois = -1;
     let k;
     let kflag = 0;
-    
+
     if (!isFinite(lambda) || lambda < 0) {
         return ML_ERR_return_NAN2(printer_rpois, lineInfo4);
     }
     if (lambda === 0) return 0;
 
     const big_mu = lambda >= 10;
-   
+
     if (big_mu) {
         /* Case A. (recalculation of s,d,l	because lambda has changed):
          * The poisson probabilities pk exceed the discrete normal

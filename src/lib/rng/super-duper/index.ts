@@ -10,8 +10,7 @@ import { INT_MAX } from '@lib/r-func';
 const SEED_LEN = 2;
 
 export class SuperDuper extends IRNG {
-
-    public static override kind: IRNGType = "SUPER_DUPER";
+    public static override kind: IRNGType = 'SUPER_DUPER';
 
     private m_seed: Int32Array;
 
@@ -45,7 +44,7 @@ export class SuperDuper extends IRNG {
         return;
     }
 
-    public override init(_seed: number = seed()):void {
+    public override init(_seed: number = seed()): void {
         /* Initial scrambling */
         const s = new Uint32Array([_seed]);
         for (let j = 0; j < 50; j++) {
@@ -65,7 +64,7 @@ export class SuperDuper extends IRNG {
         this.fixupSeeds();
     }
 
-    public get seed(): Int32Array|Uint32Array {
+    public get seed(): Int32Array | Uint32Array {
         return this.m_seed.slice();
     }
 

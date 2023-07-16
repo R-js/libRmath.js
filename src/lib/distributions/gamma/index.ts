@@ -12,7 +12,6 @@ function gammaNormalizeParams(rate?: number, scale?: number): number {
     //  | scale= undefined | return 1       | return 1/rate |
     //  | scale= vale      | return scale   | throw error   |
 
-
     if (scale === undefined) {
         if (rate === undefined) {
             return 1;
@@ -31,33 +30,36 @@ export function dgamma(x: number, shape: number, rate?: number, scale?: number, 
     return _dgamma(x, shape, _scale, log);
 }
 
-export function qgamma(p: number, shape: number, rate?: number, scale?: number, lowerTail = true, logP = false): number {
+export function qgamma(
+    p: number,
+    shape: number,
+    rate?: number,
+    scale?: number,
+    lowerTail = true,
+    logP = false
+): number {
     const _scale = gammaNormalizeParams(rate, scale);
     return _qgamma(p, shape, _scale, lowerTail, logP);
 }
 
-export function pgamma(q: number, shape: number, rate?: number, scale?: number, lowerTail = true, logP = false): number {
+export function pgamma(
+    q: number,
+    shape: number,
+    rate?: number,
+    scale?: number,
+    lowerTail = true,
+    logP = false
+): number {
     const _scale = gammaNormalizeParams(rate, scale);
     return _pgamma(q, shape, _scale, lowerTail, logP);
 }
 
-export function rgamma(
-    n: number,
-    shape: number,
-    rate?: number,
-    scale?: number
-): Float64Array {
+export function rgamma(n: number, shape: number, rate?: number, scale?: number): Float64Array {
     const _scale = gammaNormalizeParams(rate, scale);
     return repeatedCall64(n, _rgamma, shape, _scale);
 }
 
-export function rgammaOne(
-    shape: number,
-    rate?: number,
-    scale?: number): number {
+export function rgammaOne(shape: number, rate?: number, scale?: number): number {
     const _scale = gammaNormalizeParams(rate, scale);
     return _rgamma(shape, _scale);
 }
-
-
-

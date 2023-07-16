@@ -1,4 +1,3 @@
-
 import { R_Q_P01_boundaries } from '@common/logger';
 import { exp } from '@lib/r-func';
 import { qnorm } from '@dist/normal/qnorm';

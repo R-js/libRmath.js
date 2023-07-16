@@ -5,7 +5,6 @@ import { resolve } from 'path';
 
 import { cl, select } from '@common/debug-mangos-select';
 
-
 import { qsignrank, useWasmBackendSignRank, clearBackendSignRank, psignrank } from '..';
 
 import { log, DBL_EPSILON } from '@lib/r-func';
@@ -18,7 +17,7 @@ describe('qsignrank (wilcox sign rank)', function () {
     beforeEach(() => {
         cl.clear('qsignrank');
         cl.clear('R_Q_P01_check');
-    })
+    });
     describe('invalid input and edge cases', () => {
         it('p = NaN | n = NaN', () => {
             const nan1 = qsignrank(NaN, 2);
@@ -71,7 +70,7 @@ describe('qsignrank (wilcox sign rank)', function () {
             const res = qsignrank(DBL_EPSILON * 12, 1074);
             expect(res).toEqualFloatingPointBinary(207584);
         });
-        it.todo('(diverge from fedility) qsignrank((log(0), 4, lowerTail=true, pAsLog = TRUE) sould be 0 not a NaN')
+        it.todo('(diverge from fedility) qsignrank((log(0), 4, lowerTail=true, pAsLog = TRUE) sould be 0 not a NaN');
         it.todo('n > 1074 should give NaN add to upstream');
     });
     describe('fidelity', () => {
@@ -82,17 +81,17 @@ describe('qsignrank (wilcox sign rank)', function () {
         });
         it('n = 40, check via qsignrank(psignrank(x, 40) === x, 40)', async () => {
             const [x] = await loadData(resolve(__dirname, 'fixture-generation', 'qsign1a.R'), /\s+/, 1);
-            const p = x.map(_x => psignrank(_x, 40));
+            const p = x.map((_x) => psignrank(_x, 40));
             // reverse
-            const xCalc = p.map(_p => qsignrank(_p, 40));
+            const xCalc = p.map((_p) => qsignrank(_p, 40));
             expect(x).toEqual(xCalc);
         });
         it('n = 40, check via qsignrank(psignrank(x, 40) === x, 40)', async () => {
             const [x] = await loadData(resolve(__dirname, 'fixture-generation', 'qsign1a.R'), /\s+/, 1);
-            const p = x.map(_x => psignrank(_x, 40));
+            const p = x.map((_x) => psignrank(_x, 40));
             // reverse
-            const xCalc = p.map(_p => qsignrank(_p, 40));
-            const xCalc2 = p.map(_p => qsignrank(log(_p), 40, undefined, true));
+            const xCalc = p.map((_p) => qsignrank(_p, 40));
+            const xCalc2 = p.map((_p) => qsignrank(log(_p), 40, undefined, true));
             expect(x).toEqual(xCalc);
             expect(x).toEqual(xCalc2);
         });
@@ -101,21 +100,25 @@ describe('qsignrank (wilcox sign rank)', function () {
             useWasmBackendSignRank();
             const start0 = Date.now();
             const [x, xCalc] = await loadData(resolve(__dirname, 'fixture-generation', 'qsign1b.R'), /\s+/, 1, 2);
-            const p = x.map(_x => psignrank(_x, 1074));
+            const p = x.map((_x) => psignrank(_x, 1074));
             const start1 = Date.now();
-            const xCalcActual = p.map(_p => qsignrank(_p, 1074));
-            console.log(`(wasm) psignrank lasted ${ms(Date.now() - start0)} and qsignrank lasted ${ms(Date.now() - start1)}`);
+            const xCalcActual = p.map((_p) => qsignrank(_p, 1074));
+            console.log(
+                `(wasm) psignrank lasted ${ms(Date.now() - start0)} and qsignrank lasted ${ms(Date.now() - start1)}`
+            );
             expect(xCalcActual).toEqualFloatingPointBinary(xCalc);
             clearBackendSignRank();
-        });   
+        });
         it('(no wasm) n = 1074', async () => {
             const start0 = Date.now();
             const [x, xCalc] = await loadData(resolve(__dirname, 'fixture-generation', 'qsign1b.R'), /\s+/, 1, 2);
-            const p = x.map(_x => psignrank(_x, 1074));
+            const p = x.map((_x) => psignrank(_x, 1074));
             const start1 = Date.now();
-            const xCalcActual = p.map(_p => qsignrank(_p, 1074));
-            console.log(`(no wasm) psignrank lasted ${ms(Date.now() - start0)} and qsignrank lasted ${ms(Date.now() - start1)}`);
+            const xCalcActual = p.map((_p) => qsignrank(_p, 1074));
+            console.log(
+                `(no wasm) psignrank lasted ${ms(Date.now() - start0)} and qsignrank lasted ${ms(Date.now() - start1)}`
+            );
             expect(xCalcActual).toEqualFloatingPointBinary(xCalc);
         });
-    })
+    });
 });

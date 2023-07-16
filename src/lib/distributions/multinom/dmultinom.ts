@@ -71,21 +71,14 @@ export function dmultinomLikeR(x: Float32Array, prob: Float32Array, log = false)
 }
 
 export function dmultinom(x: Float32Array, prob: Float32Array, log = false): number {
-   
     // prob and x must be the same length
     if (x.length !== prob.length) {
-        printer("x[] and prob[] must be equal length vectors.");
+        printer('x[] and prob[] must be equal length vectors.');
         return NaN;
     }
     const s = sumfp(prob);
-    if (
-        prob.every(isFinite) === false
-        ||
-        prob.every(_p => _p >= 0) === false
-        ||
-        s === 0
-    ) {
-        printer("probabilities must be finite, non-negative and not all 0");
+    if (prob.every(isFinite) === false || prob.every((_p) => _p >= 0) === false || s === 0) {
+        printer('probabilities must be finite, non-negative and not all 0');
         return NaN;
     }
     //modify in place
@@ -106,7 +99,7 @@ export function dmultinom(x: Float32Array, prob: Float32Array, log = false): num
 
     const N = sumfp(x);
 
-    // if for any of the probabilities of null the bin is non zero 
+    // if for any of the probabilities of null the bin is non zero
     let rc = lgammafn_sign(N + 1);
     for (let i = 0; i < prob.length; i++) {
         if (prob[i] === 0) {
@@ -115,7 +108,7 @@ export function dmultinom(x: Float32Array, prob: Float32Array, log = false): num
             }
             continue;
         }
-        rc += x[i] * _log(prob[i]) - lgammafn_sign(x[i] + 1)
+        rc += x[i] * _log(prob[i]) - lgammafn_sign(x[i] + 1);
     }
     /*if (N === 0) {
         return asLog ? 0 : 1;

@@ -1,21 +1,20 @@
 import { debug } from '@mangos/debug';
 
-import { ML_ERR_return_NAN2, lineInfo4} from '@common/logger';
+import { ML_ERR_return_NAN2, lineInfo4 } from '@common/logger';
 import { R_D__0, R_D__1, R_D_exp, R_D_nonint_check } from '@lib/r-func';
 import { dbinom_raw } from '@dist/binomial/dbinom';
 import { lgammafn_sign } from '@special/gamma/lgammafn_sign';
 
 const printer = debug('dnbinom');
 /**
- * 
- * @param {number} x - The number of failures after of "size" successes. When number of failures is reached stop 
- * @param {number} size - number of success while accumulating all the failures 
+ *
+ * @param {number} x - The number of failures after of "size" successes. When number of failures is reached stop
+ * @param {number} size - number of success while accumulating all the failures
  * @param prob - probability of success
  * @param give_log - x given as log
  * @returns {number} - returns probability
  */
 export function dnbinom(x: number, size: number, prob: number, give_log: boolean): number {
-
     if (isNaN(x) || isNaN(size) || isNaN(prob)) {
         return x + size + prob;
     }
@@ -49,11 +48,9 @@ export function dnbinom(x: number, size: number, prob: number, give_log: boolean
 const printer_dnbinom_mu = debug('dnbinom_mu');
 
 export function dnbinom_mu(x: number, size: number, mu: number, give_log: boolean): number {
-
-
     /* originally, just set  prob :=  size / (size + mu)  and called dbinom_raw(),
      * but that suffers from cancellation when   mu << size  */
- 
+
     let p: number;
 
     if (isNaN(x) || isNaN(size) || isNaN(mu)) {
@@ -108,5 +105,4 @@ export function dnbinom_mu(x: number, size: number, mu: number, give_log: boolea
     p = size / (size + x);
 
     return give_log ? Math.log(p) + ans : p * ans;
-
 }

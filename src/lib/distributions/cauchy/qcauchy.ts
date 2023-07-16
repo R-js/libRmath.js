@@ -34,8 +34,7 @@ export function qcauchy(p: number, location = 0, scale = 1, lowerTail = true, lo
             }
             lower_tail = !lower_tail;
             p = -Math.expm1(p);
-        } 
-        else {
+        } else {
             p = Math.exp(p);
         }
     } else {

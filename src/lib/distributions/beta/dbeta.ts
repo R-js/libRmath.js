@@ -14,7 +14,7 @@ export function dbeta_scalar(x: number, a: number, b: number, asLog: boolean): n
     if (isNaN(x) || isNaN(a) || isNaN(b)) return x + a + b;
 
     if (a < 0 || b < 0) return ML_ERR_return_NAN2(printer, lineInfo4);
-    if (x < 0 || x > 1) return  asLog ? 0 : 1.0;
+    if (x < 0 || x > 1) return asLog ? 0 : 1.0;
 
     // limit cases for (a,b), leading to point masses
 

@@ -1,6 +1,6 @@
 import log1p from '../log1p';
 import { cl, select } from '@common/debug-mangos-select';
-const dlog1pDomain = select('log1p')(/.*/)
+const dlog1pDomain = select('log1p')(/.*/);
 
 //hypot
 
@@ -36,11 +36,11 @@ describe('log1p', function () {
   ],
 ]
 `);
-        })
+        });
     });
     describe('fidelity', () => {
         it('log1p(0)', () => {
-            expect(log1p(0)).toEqualFloatingPointBinary(0)
+            expect(log1p(0)).toEqualFloatingPointBinary(0);
         });
         it('log1p(1)', () => {
             expect(log1p(1)).toEqualFloatingPointBinary(0.6931471805599453);
@@ -52,10 +52,10 @@ describe('log1p', function () {
             expect(log1p(0.2)).toEqualFloatingPointBinary(0.18232155679395462, 51);
         });
         it('fabs(x) < 0.5 EPSILON)', () => {
-            expect(log1p(0.4*Number.EPSILON)).toEqualFloatingPointBinary(8.881784197001253e-17);
+            expect(log1p(0.4 * Number.EPSILON)).toEqualFloatingPointBinary(8.881784197001253e-17);
         });
         it('fabs(x) < 0.5 EPSILON)', () => {
-            expect(log1p(0.4*Number.EPSILON)).toEqualFloatingPointBinary(8.881784197001253e-17);
+            expect(log1p(0.4 * Number.EPSILON)).toEqualFloatingPointBinary(8.881784197001253e-17);
         });
         it('0 < x < 1e-8)', () => {
             expect(log1p(0.5e-8)).toEqualFloatingPointBinary(4.9999999875e-9);

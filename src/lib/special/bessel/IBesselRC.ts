@@ -1,4 +1,3 @@
-
 export interface IBesselRC {
     x: number;
     nb: number;

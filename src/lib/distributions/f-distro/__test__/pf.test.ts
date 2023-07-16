@@ -9,10 +9,10 @@ const pfDomainWarns = pfLogs("argument out of domain in '%s'");
 describe('pf', function () {
     beforeEach(() => {
         cl.clear('pf');
-    })
+    });
     it('x ∈ [-0.125, 3.1250], df1=23, df2=52', async () => {
         const [p, y1] = await loadData(resolve(__dirname, 'fixture-generation', 'pf.R'), /\s+/, 1, 2);
-        const a1 = p.map(_p => pf(_p, 23, 52));
+        const a1 = p.map((_p) => pf(_p, 23, 52));
         expect(a1).toEqualFloatingPointBinary(y1, 23);
     });
     it('x=1, df1=NaN, df2=4', () => {

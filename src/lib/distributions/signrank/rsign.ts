@@ -5,7 +5,6 @@ import { ML_ERR_return_NAN2, lineInfo4 } from '@common/logger';
 import { globalUni } from '@rng/global-rng';
 import { floor, trunc, round, isNaN, INT_MAX } from '@lib/r-func';
 
-
 const printer = debug('rsignrank');
 
 export function rsignrankOne(n: number): number {
@@ -27,8 +26,8 @@ export function rsignrankOne(n: number): number {
     }
     let r = 0.0;
     const k = trunc(n);
-    for (let i = 0; i < k /**/;) {
-        r += (++i) * floor(rng.random() + 0.5);
+    for (let i = 0; i < k /**/; ) {
+        r += ++i * floor(rng.random() + 0.5);
     }
     return r;
 }

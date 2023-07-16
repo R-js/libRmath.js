@@ -28,8 +28,8 @@ describe('pwilcox', function () {
         });
         it('m < 0 | n < 0', () => {
             const nan1 = pwilcox(3, -4, 5);
-            const nan2 = pwilcox(3 , 4, -5);
-            expect(nan1).toBeNaN()
+            const nan2 = pwilcox(3, 4, -5);
+            expect(nan1).toBeNaN();
             expect(nan2).toBeNaN();
         });
         it('q < 0 || q > m*n', () => {
@@ -43,11 +43,11 @@ describe('pwilcox', function () {
     });
     describe('fidelity', () => {
         it('q <= (m*n)/2, n=4, m=5', () => {
-            const answer = pwilcox(4*5/2, 4, 5);
+            const answer = pwilcox((4 * 5) / 2, 4, 5);
             expect(answer).toEqualFloatingPointBinary(0.54761904761904767);
         });
         it('q > (m*n)/2, n=4, m=5', () => {
-            const answer = pwilcox(trunc(4*5*0.8), 4, 5);
+            const answer = pwilcox(trunc(4 * 5 * 0.8), 4, 5);
             expect(answer).toEqualFloatingPointBinary(0.94444444444444442);
         });
     });

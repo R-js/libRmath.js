@@ -47,8 +47,6 @@ export function pbeta_raw(x: number, a: number, b: number, lower_tail: boolean, 
     return lower_tail ? w.val : wc.val;
 } /* pbeta_raw() */
 
-
-
 export function pbeta(q: number, a: number, b: number, lowerTail = true, logP = false): number {
     printer_pbeta('pbeta(q=%d, a=%d, b=%d, l.t=%s, ln=%s)', q, a, b, lowerTail, logP);
     if (isNaN(q) || isNaN(a) || isNaN(b)) return NaN;

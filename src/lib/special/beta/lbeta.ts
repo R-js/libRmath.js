@@ -1,4 +1,3 @@
-
 import { debug } from '@mangos/debug';
 
 import { ML_ERR_return_NAN2, lineInfo4 } from '@common/logger';
@@ -33,7 +32,9 @@ function lbeta(a: number, b: number): number {
     if (p >= 10) {
         // p and q are big.
         corr = lgammacor(p) + lgammacor(q) - lgammacor(p + q);
-        return Math.log(q) * -0.5 + M_LN_SQRT_2PI + corr + (p - 0.5) * Math.log(p / (p + q)) + q * Math.log1p(-p / (p + q));
+        return (
+            Math.log(q) * -0.5 + M_LN_SQRT_2PI + corr + (p - 0.5) * Math.log(p / (p + q)) + q * Math.log1p(-p / (p + q))
+        );
     } else if (q >= 10) {
         // p is small, but q is big.
         corr = lgammacor(q) - lgammacor(p + q);
@@ -41,8 +42,8 @@ function lbeta(a: number, b: number): number {
     } else {
         // p and q are small: p <= q < 10.
         // R change for very small args
-        // removed 
-        if (p < 1e-306) return lgammafn_sign(p) + (lgammafn_sign(q) - lgammafn_sign(p+q))
+        // removed
+        if (p < 1e-306) return lgammafn_sign(p) + (lgammafn_sign(q) - lgammafn_sign(p + q));
         else return Math.log(gamma(p) * (gamma(q) / gamma(p + q)));
     }
 }

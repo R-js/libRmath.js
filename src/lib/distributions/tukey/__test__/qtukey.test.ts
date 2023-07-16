@@ -1,15 +1,11 @@
-
 import { cl, select } from '@common/debug-mangos-select';
 
 import { qtukey } from '..';
 
-
 const qtukeyDomainWarns = select('qtukey')("argument out of domain in '%s'");
-const qtukeyBounderyWarns = select('R_Q_P01_boundaries')("argument out of domain in '%s'")
-
+const qtukeyBounderyWarns = select('R_Q_P01_boundaries')("argument out of domain in '%s'");
 
 describe('qtukey', function () {
-
     describe('invalid input and edge cases', () => {
         beforeEach(() => {
             cl.clear('qtukey');
@@ -28,7 +24,7 @@ describe('qtukey', function () {
             const nan3 = qtukey(0.9, 1, 2, 0);
             expect([nan1, nan2, nan3]).toEqualFloatingPointBinary(NaN);
             expect(qtukeyDomainWarns()).toHaveLength(3);
-        })
+        });
         it('p > 1 | p < 0', () => {
             const nan1 = qtukey(-1, 4, 2);
             const nan2 = qtukey(1.2, 4, 2);
@@ -55,7 +51,6 @@ describe('qtukey', function () {
             const ans = qtukey(0.01, 4, 2, 1, true, false);
             expect(ans).toEqualFloatingPointBinary(0.3994104987821519);
         });
-      
 
         it('p=0.02,nmeans=4,df=2,nranges=1,lower_tail=true,log_p=false', () => {
             const ans = qtukey(0.02, 4, 2, 1, true, false);
@@ -71,8 +66,8 @@ describe('qtukey', function () {
             const nan = qtukey(0.01, 72, 8, 1, true, false);
             expect(nan).toBe(NaN);
         });
-       
-        it('p=0.9 means=3, df=2', ()=>{
+
+        it('p=0.9 means=3, df=2', () => {
             const ans = qtukey(0.9, 3, 2);
             expect(ans).toEqualFloatingPointBinary(5.732649, 24);
         });

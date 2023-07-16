@@ -45,22 +45,22 @@ describe('dgamma', function () {
     describe('fixture-tests', () => {
         it('x ∈ [-2,2], shape=1.6, rate=1.5', async () => {
             const [p, y1] = await loadData(resolve(__dirname, 'fixture-generation', 'dgamma.R'), /\s+/, 1, 2);
-            const a1 = p.map(_p => dgamma(_p, 1.6, 1.5));
+            const a1 = p.map((_p) => dgamma(_p, 1.6, 1.5));
             expect(a1).toEqualFloatingPointBinary(y1);
         });
         it('x ∈ [1,5], shape=0.1, scale=4', async () => {
             const [x, y1] = await loadData(resolve(__dirname, 'fixture-generation', 'dgamma2.R'), /\s+/, 1, 2);
-            const z = x.map(_x => dgamma(_x, 0.1, undefined, 4, false));
+            const z = x.map((_x) => dgamma(_x, 0.1, undefined, 4, false));
             expect(z).toEqualFloatingPointBinary(y1, 47);
         });
         it('x ∈ [1,5], shape=0.1, scale=4, log=true', async () => {
             const [x, y1] = await loadData(resolve(__dirname, 'fixture-generation', 'dgamma3.R'), /\s+/, 1, 2);
-            const z = x.map(_x => dgamma(_x, 0.1, undefined, 4, true));
+            const z = x.map((_x) => dgamma(_x, 0.1, undefined, 4, true));
             expect(z).toEqualFloatingPointBinary(y1, 49);
         });
         it('x ∈ [1,5], shape=5, scale=400, log=true', async () => {
             const [x, y1] = await loadData(resolve(__dirname, 'fixture-generation', 'dgamma4.R'), /\s+/, 1, 2);
-            const z = x.map(_x => dgamma(_x, 5, undefined, 400, true));
+            const z = x.map((_x) => dgamma(_x, 5, undefined, 400, true));
             expect(z).toEqualFloatingPointBinary(y1);
         });
     });
@@ -86,5 +86,4 @@ describe('dgamma', function () {
             expect(z).toEqualFloatingPointBinary(Math.log(1 / 100), 50);
         });
     });
-
 });

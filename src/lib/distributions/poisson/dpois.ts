@@ -3,16 +3,7 @@
 import { debug } from '@mangos/debug';
 
 import { ML_ERR_return_NAN2, lineInfo4 } from '@common/logger';
-import {
-    R_D__0,
-    R_D__1,
-    R_D_exp,
-    R_D_fexp,
-    R_D_nonint_check,
-    DBL_MIN,
-    M_2PI,
-    log
-} from '@lib/r-func';
+import { R_D__0, R_D__1, R_D_exp, R_D_fexp, R_D_nonint_check, DBL_MIN, M_2PI, log } from '@lib/r-func';
 import { bd0 } from '@lib/deviance';
 import { lgammafn_sign as lgammafn } from '@special/gamma/lgammafn_sign';
 import { stirlerr } from '@lib/stirling';
@@ -40,8 +31,8 @@ export function dpois_raw(x: number, lambda: number, give_log: boolean): number 
         if (!isFinite(x)) {
             return R_D__0(give_log);
         }
-        const gammafn =  lgammafn(x + 1);
-        const xlogLambda = x*log(lambda);
+        const gammafn = lgammafn(x + 1);
+        const xlogLambda = x * log(lambda);
         const inp = -lambda + xlogLambda - gammafn;
         return R_D_exp(give_log, inp);
     }
