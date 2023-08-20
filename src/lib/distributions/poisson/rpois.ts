@@ -1,8 +1,6 @@
-'use strict';
+import createNs from '@mangos/debug-frontend';
 
-import { debug } from '@mangos/debug';
-
-import { ML_ERR_return_NAN2, lineInfo4 } from '@common/logger';
+import { ME, mapErrV2 } from '@common/logger';
 import { globalNorm } from '@rng/global-rng';
 
 import { imax2, imin2, M_1_SQRT_2PI, trunc, log, abs, pow, exp, floor, sqrt, isFinite } from '@lib/r-func';
@@ -23,7 +21,7 @@ const one_7 = 0.1428571428571428571;
 const one_12 = 0.0833333333333333333;
 const one_24 = 0.0416666666666666667;
 
-const printer_rpois = debug('rpois');
+const debug_rpois = createNs('rpois');
 
 /* Factorial Table (0:9)! */
 const fact = [1, 1, 2, 6, 24, 120, 720, 5040, 40320, 362880];
@@ -69,7 +67,8 @@ export function rpoisOne(lambda: number): number {
     let kflag = 0;
 
     if (!isFinite(lambda) || lambda < 0) {
-        return ML_ERR_return_NAN2(printer_rpois, lineInfo4);
+        debug_rpois(mapErrV2[ME.ME_DOMAIN], debug_rpois.namespace);
+        return NaN;
     }
     if (lambda === 0) return 0;
 

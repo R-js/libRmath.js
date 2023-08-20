@@ -1,25 +1,13 @@
-import { debug } from '@mangos/debug';
+import createNs from '@mangos/debug-frontend';
+import { ME, mapErrV2 } from '@common/logger';
 
-import { ML_ERR_return_NAN2, lineInfo4 } from '@common/logger';
-
-import {
-    R_D__0,
-    R_D__1,
-    R_D_exp,
-    R_DT_0,
-    R_DT_1,
-    R_P_bounds_01,
-    DBL_MAX_EXP,
-    M_LN2,
-    DBL_MIN
-} from '@lib/r-func';
+import { R_D__0, R_D__1, R_D_exp, R_DT_0, R_DT_1, R_P_bounds_01, DBL_MAX_EXP, M_LN2, DBL_MIN } from '@lib/r-func';
 
 import { R_Log1_Exp } from '@dist/exp/expm1';
 import { dnorm4 as dnorm } from '@dist/normal/dnorm';
 import { pnorm5 as pnorm } from '@dist/normal/pnorm';
 import { dpois_raw } from '@dist/poisson/dpois';
 import { lgammafn_sign as lgammafn } from '@special/gamma/lgammafn_sign';
-
 
 const scalefactor = 4294967296.0 ** 8;
 
@@ -101,45 +89,26 @@ function log1pmx(x: number) {
 
 const coeffs = new Float64Array([
     0.3224670334241132182362075833230126 /* = (zeta(2)-1)/2 */,
-    0.6735230105319809513324605383715e-1 /* = (zeta(3)-1)/3 */,
-    0.2058080842778454787900092413529198e-1,
-    0.7385551028673985266273097291406834e-2,
-    0.2890510330741523285752988298486755e-2,
-    0.1192753911703260977113935692828109e-2,
-    0.5096695247430424223356548135815582e-3,
-    0.2231547584535793797614188036013401e-3,
-    0.994575127818085337145958900319017e-4,
-    0.4492623673813314170020750240635786e-4,
-    0.2050721277567069155316650397830591e-4,
-    0.9439488275268395903987425104415055e-5,
-    0.4374866789907487804181793223952411e-5,
-    0.2039215753801366236781900709670839e-5,
-    0.9551412130407419832857179772951265e-6,
-    0.4492469198764566043294290331193655e-6,
-    0.2120718480555466586923135901077628e-6,
-    0.1004322482396809960872083050053344e-6,
-    0.476981016936398056576019341724673e-7,
-    0.2271109460894316491031998116062124e-7,
-    0.1083865921489695409107491757968159e-7,
-    0.5183475041970046655121248647057669e-8,
-    0.2483674543802478317185008663991718e-8,
-    0.119214014058609120744254820277464e-8,
-    0.5731367241678862013330194857961011e-9,
-    0.2759522885124233145178149692816341e-9,
-    0.1330476437424448948149715720858008e-9,
-    0.6422964563838100022082448087644648e-10,
-    0.3104424774732227276239215783404066e-10,
-    0.1502138408075414217093301048780668e-10,
-    0.7275974480239079662504549924814047e-11,
-    0.3527742476575915083615072228655483e-11,
-    0.1711991790559617908601084114443031e-11,
-    0.8315385841420284819798357793954418e-12,
-    0.4042200525289440065536008957032895e-12,
-    0.1966475631096616490411045679010286e-12,
-    0.9573630387838555763782200936508615e-13,
-    0.4664076026428374224576492565974577e-13,
-    0.2273736960065972320633279596737272e-13,
-    0.1109139947083452201658320007192334e-13 /* = (zeta(40+1)-1)/(40+1) */,
+    0.6735230105319809513324605383715e-1 /* = (zeta(3)-1)/3 */, 0.2058080842778454787900092413529198e-1,
+    0.7385551028673985266273097291406834e-2, 0.2890510330741523285752988298486755e-2,
+    0.1192753911703260977113935692828109e-2, 0.5096695247430424223356548135815582e-3,
+    0.2231547584535793797614188036013401e-3, 0.994575127818085337145958900319017e-4,
+    0.4492623673813314170020750240635786e-4, 0.2050721277567069155316650397830591e-4,
+    0.9439488275268395903987425104415055e-5, 0.4374866789907487804181793223952411e-5,
+    0.2039215753801366236781900709670839e-5, 0.9551412130407419832857179772951265e-6,
+    0.4492469198764566043294290331193655e-6, 0.2120718480555466586923135901077628e-6,
+    0.1004322482396809960872083050053344e-6, 0.476981016936398056576019341724673e-7,
+    0.2271109460894316491031998116062124e-7, 0.1083865921489695409107491757968159e-7,
+    0.5183475041970046655121248647057669e-8, 0.2483674543802478317185008663991718e-8,
+    0.119214014058609120744254820277464e-8, 0.5731367241678862013330194857961011e-9,
+    0.2759522885124233145178149692816341e-9, 0.1330476437424448948149715720858008e-9,
+    0.6422964563838100022082448087644648e-10, 0.3104424774732227276239215783404066e-10,
+    0.1502138408075414217093301048780668e-10, 0.7275974480239079662504549924814047e-11,
+    0.3527742476575915083615072228655483e-11, 0.1711991790559617908601084114443031e-11,
+    0.8315385841420284819798357793954418e-12, 0.4042200525289440065536008957032895e-12,
+    0.1966475631096616490411045679010286e-12, 0.9573630387838555763782200936508615e-13,
+    0.4664076026428374224576492565974577e-13, 0.2273736960065972320633279596737272e-13,
+    0.1109139947083452201658320007192334e-13 /* = (zeta(40+1)-1)/(40+1) */
 ]);
 
 /* Compute  log(gamma(a+1))  accurately also for small a (0 < a < 0.5). */
@@ -148,7 +117,6 @@ export function lgamma1p(a: number): number {
 
     /* coeffs[i] holds (zeta(i+2)-1)/(i+2) , i = 0:(N-1), N = 40 : */
     const N = 40;
-
 
     const c = 0.2273736845824652515226821577978691e-12; /* zeta(N+2)-1 */
     const tol_logcf = 1e-14;
@@ -204,7 +172,7 @@ function logspace_sum(logx: number[], n: number): number {
  *
  * and  dpois*(.., give_log = TRUE) :=  Math.log( dpois*(..) )
  */
-const pr_dpois_wrap = debug('dpois_wrap');
+const pr_dpois_wrap = createNs('dpois_wrap');
 
 function dpois_wrap(x_plus_1: number, lambda: number, give_log: boolean): number {
     pr_dpois_wrap('dpois_wrap(x+1=%d, lambda=%d, log=%s)', x_plus_1, lambda, give_log);
@@ -224,7 +192,7 @@ function dpois_wrap(x_plus_1: number, lambda: number, give_log: boolean): number
 /*
  * Abramowitz and Stegun 6.5.29 [right]
  */
-const pr_pgamma_smallx = debug('pgamma_smallx');
+const pr_pgamma_smallx = createNs('pgamma_smallx');
 
 function pgamma_smallx(x: number, alph: number, lowerTail: boolean, logP: boolean): number {
     let sum = 0;
@@ -253,11 +221,9 @@ function pgamma_smallx(x: number, alph: number, lowerTail: boolean, logP: boolea
         if (alph > 1) {
             f2 = dpois_raw(alph, x, logP);
             f2 = logP ? f2 + x : f2 * Math.exp(x);
-        }
-        else if (logP) {
+        } else if (logP) {
             f2 = alph * Math.log(x) - lgamma1p(alph);
-        }
-        else {
+        } else {
             f2 = Math.pow(x, alph) / Math.exp(lgamma1p(alph));
         }
         pr_pgamma_smallx(' (f1,f2)= (%d,%d)', f1, f2);
@@ -298,7 +264,7 @@ function pd_upper_series(x: number, y: number, logP: boolean): number {
  *    scaled upper-tail F_{gamma}
  *  ~=  (y / d) * [1 +  (1-y)/d +  O( ((1-y)/d)^2 ) ]
  */
-const pr_pd_lower_cf = debug('pd_lower_cf');
+const pr_pd_lower_cf = createNs('pd_lower_cf');
 
 function pd_lower_cf(y: number, d: number): number {
     let f = 0.0; /* -Wall */
@@ -377,7 +343,7 @@ function pd_lower_cf(y: number, d: number): number {
     return f; /* should not happen ... */
 } /* pd_lower_cf() */
 
-const pr_pd_lower_series = debug('pd_lower_series');
+const pr_pd_lower_series = createNs('pd_lower_series');
 
 function pd_lower_series(lambda: number, y: number): number {
     let term = 1;
@@ -435,7 +401,6 @@ function dpnorm(x: number, lowerTail: boolean, lp: number): number {
     // but use it only in the non-critical case where either x is small
     // or p==exp(lp) is close to 1.
 
-
     if (x < 0) {
         x = -x;
         lowerTail = !lowerTail;
@@ -466,7 +431,7 @@ function dpnorm(x: number, lowerTail: boolean, lp: number): number {
  * http://members.aol.com/iandjmsmith/PoissonApprox.htm
  */
 
-const pr_ppois_asymp = debug('ppois_asymp');
+const pr_ppois_asymp = createNs('ppois_asymp');
 const coefs_a = new Float64Array([
     -1e99, // placeholder used for 1-indexing
     2 / 3,
@@ -475,22 +440,21 @@ const coefs_a = new Float64Array([
     16 / 8505,
     -8992 / 12629925,
     -334144 / 492567075,
-    698752 / 1477701225,
+    698752 / 1477701225
 ]);
 
 const coefs_b = new Float64Array([
-    -1e99,// placeholder
+    -1e99, // placeholder
     1 / 12,
     1 / 288,
     -139 / 51840,
     -571 / 2488320,
     163879 / 209018880,
     5246819 / 75246796800,
-    -534703531 / 902961561600,
+    -534703531 / 902961561600
 ]);
 
 function ppois_asymp(x: number, lambda: number, lowerTail: boolean, logP: boolean): number {
-
     let elfb: number;
     let elfb_term: number;
     let res12: number;
@@ -550,7 +514,7 @@ function ppois_asymp(x: number, lambda: number, lowerTail: boolean, logP: boolea
 }
 /* ppois_asymp() */
 
-const pr_pgamma_raw = debug('pgamma_raw');
+const pr_pgamma_raw = createNs('pgamma_raw');
 
 export function pgamma_raw(x: number, alph: number, lowerTail: boolean, logP: boolean): number {
     /* Here, assume that  (x,alph) are not NA  &  alph > 0 . */
@@ -566,22 +530,17 @@ export function pgamma_raw(x: number, alph: number, lowerTail: boolean, logP: bo
 
     if (x < 1) {
         res = pgamma_smallx(x, alph, lowerTail, logP);
-    }
-    else if (x <= alph - 1 && x < 0.8 * (alph + 50)) {
-
+    } else if (x <= alph - 1 && x < 0.8 * (alph + 50)) {
         /* incl. large alph compared to x */
         const sum = pd_upper_series(x, alph, logP); /* = x/alph + o(x/alph) */
         const d = dpois_wrap(alph, x, logP);
         pr_pgamma_raw(' alph "large": sum=pd_upper*()= %d, d=dpois_w(*)= %d', sum, d);
         if (!lowerTail) {
             res = logP ? R_Log1_Exp(d + sum) : 1 - d * sum;
-        }
-        else {
+        } else {
             res = logP ? sum + d : sum * d;
         }
-    }
-    else if (alph - 1 < x && alph < 0.8 * (x + 50)) {
-
+    } else if (alph - 1 < x && alph < 0.8 * (x + 50)) {
         /* incl. large x compared to alph */
         let sum;
         const d = dpois_wrap(alph, x, logP);
@@ -602,8 +561,7 @@ export function pgamma_raw(x: number, alph: number, lowerTail: boolean, logP: bo
         pr_pgamma_raw(', sum= %d', sum);
         if (!lowerTail) res = logP ? sum + d : sum * d;
         else res = logP ? R_Log1_Exp(d + sum) : 1 - d * sum;
-    }
-    else {
+    } else {
         /* x >= 1 and x fairly near alph. */
 
         pr_pgamma_raw(' using ppois_asymp()');
@@ -624,21 +582,21 @@ export function pgamma_raw(x: number, alph: number, lowerTail: boolean, logP: bo
     } else return res;
 }
 
-const printer_pgamma = debug('pgamma');
+const printer_pgamma = createNs('pgamma');
 export function pgamma(x: number, shape: number, scale: number, lowerTail: boolean, logP: boolean): number {
-
     if (isNaN(x) || isNaN(shape) || isNaN(scale)) {
         return NaN;
     }
-    if (shape < 0 || scale <= 0) return ML_ERR_return_NAN2(printer_pgamma, lineInfo4);
-
+    if (shape < 0 || scale <= 0) {
+        printer_pgamma(mapErrV2[ME.ME_DOMAIN], printer_pgamma.namespace);
+        return NaN;
+    }
     x /= scale;
 
     if (shape === 0)
         /* limit case; useful e.g. in pnchisq() */
         return x <= 0 ? R_DT_0(lowerTail, logP) : R_DT_1(lowerTail, logP); /* <= assert  pgamma(0,0) ==> 0 */
     return pgamma_raw(x, shape, lowerTail, logP);
-
 }
 /* From: terra@gnome.org (Morten Welinder)
  * To: R-bugs@biostat.ku.dk

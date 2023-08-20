@@ -1,5 +1,3 @@
-'use strict';
-
 import { IRNG, MessageType } from '@rng/irng';
 import type { IRNGNormalType } from '@lib/rng/normal/rng-types';
 

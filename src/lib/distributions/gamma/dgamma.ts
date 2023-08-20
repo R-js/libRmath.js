@@ -1,16 +1,17 @@
-import { debug } from '@mangos/debug';
-import { ML_ERR_return_NAN2, lineInfo4 } from '@common/logger';
+import createNs from '@mangos/debug-frontend';
+import { ME, mapErrV2 } from '@common/logger';
 import { dpois_raw } from '@dist/poisson/dpois';
 import { R_D__0 } from '@lib/r-func';
 
-const printer = debug('dgamma');
+const debug = createNs('dgamma');
 
 export function dgamma(x: number, shape: number, scale: number, aslog: boolean): number {
     let pr: number;
 
     if (isNaN(x) || isNaN(shape) || isNaN(scale)) return x + shape + scale;
     if (shape < 0 || scale <= 0) {
-        return ML_ERR_return_NAN2(printer, lineInfo4);
+        debug(mapErrV2[ME.ME_DOMAIN], debug.namespace);
+        return NaN;
     }
     if (x < 0) {
         return R_D__0(aslog);

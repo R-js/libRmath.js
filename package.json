@@ -117,7 +117,8 @@
         "ts-node": "10.9.1",
         "typescript": "5.1.6",
         "typescript-eslint-language-service": "4.1.5",
-        "typescript-transform-paths": "3.4.4"
+        "typescript-transform-paths": "3.4.4",
+        "vitest": "0.34.2"
     },
     "engines": {
         "node": ">=v18.15.0"

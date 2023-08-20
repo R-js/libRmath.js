@@ -3,9 +3,6 @@ import { loadData } from '@common/load';
 
 import { globalUni, RNGkind } from '@rng/global-rng';
 
-//const rbinomDomainWarns = select('rbinom')("argument out of domain in '%s'");
-//rbinomDomainWarns;
-
 import { rbinom } from '..';
 
 describe('rbinom', function () {

@@ -1,5 +1,3 @@
-'use strict';
-
 export const i2_32m1 = 2.328306437080797e-10;
 
 export function fixup(x: number): number {

@@ -20,11 +20,11 @@ describe('dbeta', function () {
         const actual = dbeta(NaN, 2, 3);
         expect(actual).toEqualFloatingPointBinary(NaN);
     });
-    it.todo('x=0.5, shape1=-2, shape2=3', () => {
+    it.todo('x=0.5, shape1=-2, shape2=3'); /*, () => {
         //const nan = dbeta(0.5, -2, 3);
         //expect(dbetaDomainWarns()).toHaveLength(1);
         //expect(nan).toBe(NaN);
-    });
+    });*/
     it('x ∊ {-1.5,1.2}, shape1=2, shape2=3', () => {
         const one = dbeta(-0.5, 2, 3);
         expect(one).toBe(1);

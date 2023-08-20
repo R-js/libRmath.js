@@ -1,9 +1,10 @@
-import { debug } from '@mangos/debug';
-import { ML_ERR_return_NAN2, lineInfo4 } from '@common/logger';
+import createNs from '@mangos/debug-frontend';
+import { ME, mapErrV2 } from '@common/logger';
+
 import { exp_rand } from '@dist/exp/sexp';
 import { globalNorm } from '../../rng/global-rng';
 
-const printer_rgamma = debug('rgamma');
+const debug_rgamma = createNs('rgamma');
 
 /* Constants : */
 const sqrt32 = 5.656854;
@@ -58,7 +59,8 @@ export function rgamma(a: number, scale: number): number {
     if (a === 0) return 0;
 
     if (!isFinite(a) || !isFinite(scale) || a < 0.0 || scale < 0.0) {
-        return ML_ERR_return_NAN2(printer_rgamma, lineInfo4);
+        debug_rgamma(mapErrV2[ME.ME_DOMAIN], debug_rgamma.namespace);
+        return NaN;
     }
     // a > 0
     if (a < 1) {

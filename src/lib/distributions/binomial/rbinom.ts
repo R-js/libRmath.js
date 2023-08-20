@@ -1,12 +1,12 @@
-import { debug } from '@mangos/debug';
-import { ML_ERR_return_NAN2, lineInfo4 } from '@common/logger';
+import createNs from '@mangos/debug-frontend';
+import { ME, mapErrV2 } from '@common/logger';
 import { R_pow_di } from '@lib/r-func';
 
 import { globalUni } from '@rng/global-rng';
 
 import { qbinom } from './qbinom';
 
-const printer_rbinom = debug('rbinom');
+const debug_rbinom = createNs('rbinom');
 
 export function rbinomOne(size: number, prob: number): number {
     const rng = globalUni();
@@ -55,9 +55,15 @@ export function rbinomOne(size: number, prob: number): number {
     let ix = 0;
     let k;
 
-    if (!isFinite(size)) return ML_ERR_return_NAN2(printer_rbinom, lineInfo4);
+    if (!isFinite(size)) {
+        debug_rbinom(mapErrV2[ME.ME_DOMAIN], debug_rbinom.namespace);
+        return NaN;
+    }
     r = Math.round(size);
-    if (r !== size) return ML_ERR_return_NAN2(printer_rbinom, lineInfo4);
+    if (r !== size) {
+        debug_rbinom(mapErrV2[ME.ME_DOMAIN], debug_rbinom.namespace);
+        return NaN;
+    }
     if (
         !isFinite(prob) ||
         /* n=0, p=0, p=1 are not errors <TSL>*/
@@ -65,7 +71,8 @@ export function rbinomOne(size: number, prob: number): number {
         prob < 0 ||
         prob > 1
     ) {
-        return ML_ERR_return_NAN2(printer_rbinom, lineInfo4);
+        debug_rbinom(mapErrV2[ME.ME_DOMAIN], debug_rbinom.namespace);
+        return NaN;
     }
     if (r === 0 || prob === 0) return 0;
     if (prob === 1) return r;
@@ -74,7 +81,7 @@ export function rbinomOne(size: number, prob: number): number {
         /* evade integer overflow,
             and r == INT_MAX gave only even values */
         const _p = rng.random(); //between 0 and 1
-        printer_rbinom('Evade overflow:%d > MAX_SAFE_INTEGER', r);
+        debug_rbinom('Evade overflow:%d > MAX_SAFE_INTEGER', r);
         const retv = qbinom(_p, r, prob, /*lower_tail*/ false, /*log_p*/ false);
         return retv;
     }

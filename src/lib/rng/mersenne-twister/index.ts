@@ -1,4 +1,3 @@
-'use strict';
 import { fixup } from '../fixup';
 import { IRNG } from '../irng';
 import type { IRNGType } from '@rng/rng-types';

@@ -1,14 +1,15 @@
-import { debug } from '@mangos/debug';
-import { ML_ERR_return_NAN2, lineInfo4 } from '@common/logger';
+import createNs from '@mangos/debug-frontend';
+import { ME, mapErrV2 } from '@common/logger';
 import { rgamma } from '@dist/gamma/rgamma';
 import { rpoisOne } from '@dist/poisson/rpois';
 import { rchisqOne } from '@dist/chi-2/rchisq';
 
-const printer = debug('rnchisq');
+const debug = createNs('rnchisq');
 
 export function rnchisqOne(df: number, lambda: number): number {
     if (!isFinite(df) || !isFinite(lambda) || df < 0 || lambda < 0) {
-        return ML_ERR_return_NAN2(printer, lineInfo4);
+        debug(mapErrV2[ME.ME_DOMAIN], debug.namespace);
+        return NaN;
     }
     if (lambda === 0) {
         return df === 0 ? 0 : rgamma(df / 2, 2);

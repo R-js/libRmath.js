@@ -1,5 +1,3 @@
-'use strict';
-
 export type IRNGNormalType =
     | 'AHRENS_DIETER'
     | 'BOX_MULLER'

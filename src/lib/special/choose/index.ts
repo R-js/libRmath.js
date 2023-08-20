@@ -1,4 +1,4 @@
-import { debug } from '@mangos/debug';
+import createNS from '@mangos/debug-frontend';
 
 import { isOdd, abs, log, exp, round, isInteger } from '@lib/r-func';
 
@@ -17,14 +17,16 @@ function lfastchoose2(n: number, k: number, sChoose?: Int32Array): number {
     return lgammafn_sign(n + 1) - lgammafn_sign(k + 1) - r;
 }
 
-const printer_lchoose = debug('lchoose');
+const debug_lchoose = createNS('lchoose');
 
 function lchoose(n: number, k: number): number {
     const k0 = k;
     k = Math.round(k);
     /* NaNs propagated correctly */
     if (isNaN(n) || isNaN(k)) return n + k;
-    if (abs(k - k0) > 1e-7) printer_lchoose('"k" (%d) must be integer, rounded to %d', k0, k);
+    if (abs(k - k0) > 1e-7) {
+        debug_lchoose('"k" (%d) must be integer, rounded to %d', k0, k);
+    }
     if (k < 2) {
         if (k < 0) return -Infinity;
         if (k === 0) return 0;
@@ -54,7 +56,7 @@ const k_small_max = 30;
 /* 30 is somewhat arbitrary: it is on the *safe* side:
  * both speed and precision are clearly improved for k < 30.
  */
-const printer_choose = debug('choose');
+const debug_choose = createNS('choose');
 
 function choose(n: number, k: number): number {
     let r: number;
@@ -65,7 +67,7 @@ function choose(n: number, k: number): number {
         return n + k;
     }
     if (abs(k - k0) > 1e-7) {
-        printer_choose('k (%d) must be integer, rounded to %d', k0, k);
+        debug_choose('k (%d) must be integer, rounded to %d', k0, k);
     }
     if (k < k_small_max) {
         let j: number;
