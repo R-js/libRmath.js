@@ -1,18 +1,24 @@
 // node
 import { resolve } from 'path';
 
-//helper
-import { loadData } from '@common/load';
-import { cl, select } from '@common/debug-mangos-select';
-
-const qnbetaDomainWarns = select('qnbeta')("argument out of domain in '%s'");
-
 //app
+import { register, unRegister } from '@mangos/debug-frontend';
 import { qbeta } from '..';
+import { loadData } from '@common/load';
+
+//mocks
+import createBackEndMock from '@common/debug-backend';
+import type { MockLogs } from '@common/debug-backend';
 
 describe('qbeta, ncp != undefined', function () {
+    const logs: MockLogs[] = [];
+    afterEach(() => {
+        unRegister();
+        logs.splice(0);
+    });
+
     beforeEach(() => {
-        cl.clear('qnbeta');
+        register(createBackEndMock(logs));
     });
     it('ranges x ∊ [0, 1], shape1=1, shape2=2, ncp=3', async () => {
         /* load data from fixture */
@@ -27,12 +33,26 @@ describe('qbeta, ncp != undefined', function () {
     it('x=0.5, shape1=Infinite,shape2=3, ncp=3', () => {
         const nan = qbeta(0.5, Infinity, 2, 3);
         expect(nan).toBeNaN();
-        expect(qnbetaDomainWarns()).toHaveLength(1);
+        expect(logs).toEqual([
+            {
+                prefix: '',
+                namespace: 'qnbeta',
+                formatter: "argument out of domain in '%s'",
+                args: ['qnbeta']
+            }
+        ]);
     });
     it('x=0.5, shape1=-2,shape2=3, ncp=3', () => {
         const nan = qbeta(0.5, -2, 2, 3);
         expect(nan).toBeNaN();
-        expect(qnbetaDomainWarns()).toHaveLength(1);
+        expect(logs).toEqual([
+            {
+                prefix: '',
+                namespace: 'qnbeta',
+                formatter: "argument out of domain in '%s'",
+                args: ['qnbeta']
+            }
+        ]);
     });
     it('x=1-EPSILON/2, shape1=-2, shape2=2, ncp=4', () => {
         const z = qbeta(1 - Number.EPSILON / 2, 2, 2, 4, true);

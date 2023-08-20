@@ -6,10 +6,20 @@ import { loadData } from '@common/load';
 
 //app
 import { pbeta } from '..';
+import { register, unRegister } from '@mangos/debug-frontend';
+
+//mocks
+import createBackEndMock from '@common/debug-backend';
+import type { MockLogs } from '@common/debug-backend';
 
 describe('pbeta, ncp = 0', function () {
+    const logs: MockLogs[] = [];
     beforeEach(() => {
-        //cl.clear('pbeta');
+        register(createBackEndMock(logs));
+    });
+    afterEach(() => {
+        unRegister();
+        logs.splice(0);
     });
     it('ranges x ∊ [0, 1], shape1=3, shape2=3', async () => {
         /* load data from fixture */
@@ -21,10 +31,23 @@ describe('pbeta, ncp = 0', function () {
         const nan = pbeta(NaN, 3, 3);
         expect(nan).toBeNaN();
     });
-    it.todo('x=0.5, shape1=3, shape2=3', () => {
+    it('x=0.5, shape1=3, shape2=3', () => {
         const nan = pbeta(0.5, -3, 3);
         expect(nan).toBeNaN();
-        //expect(pbetaDomainWarns()).toHaveLength(1);
+        expect(logs).toEqual([
+            {
+                prefix: '',
+                namespace: 'pbeta',
+                formatter: 'pbeta(q=%d, a=%d, b=%d, l.t=%s, ln=%s)',
+                args: [0.5, -3, 3, true, false]
+            },
+            {
+                prefix: '',
+                namespace: 'pbeta',
+                formatter: "argument out of domain in '%s'",
+                args: ['pbeta']
+            }
+        ]);
     });
     it('x=0.5, shape1=Infinity, shape2=3', () => {
         const z = pbeta(0.5, Infinity, 3);

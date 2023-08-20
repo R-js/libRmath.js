@@ -1,39 +1,51 @@
+import { register, unRegister } from '@mangos/debug-frontend';
+
 import log1p from '../log1p';
+
+//mocks
+import createBackEndMock from '@common/debug-backend';
+import type { MockLogs } from '@common/debug-backend';
 
 //hypot
 
 describe('log1p', function () {
+    const logs: MockLogs[] = [];
     beforeEach(() => {
-        //cl.clear('log1p');
+        register(createBackEndMock(logs));
+    });
+
+    afterEach(() => {
+        unRegister();
+        logs.splice(0);
     });
     describe('invalid input and edge cases', () => {
-        it.todo('x < -1 should be a NaN', () => {
-            //const l = log1p(-1.5);
-            //expect(l).toEqualFloatingPointBinary(NaN);
-            /*expect(dlog1pDomain()).toMatchInlineSnapshot(`
-[
-  [
-    "argument out of domain in '%s'",
-    "log1p, line:72, col:42",
-  ],
-]
-`);*/
+        it('x < -1 should be a NaN', () => {
+            const l = log1p(-1.5);
+            expect(l).toEqualFloatingPointBinary(NaN);
+            expect(logs).toEqual([
+                {
+                    prefix: '',
+                    namespace: 'log1p',
+                    formatter: "argument out of domain in '%s'",
+                    args: ['log1p']
+                }
+            ]);
         });
         it('x = -1 should be a -Infinity', () => {
             const l = log1p(-1);
             expect(l).toEqualFloatingPointBinary(-Infinity);
         });
-        it.todo('x < -0.999999985 causes precision failure warning', () => {
+        it('x < -0.999999985 causes precision failure warning', () => {
             const l = log1p(-0.999999999);
             expect(l).toEqualFloatingPointBinary(-20.723265865228342);
-            /*expect(dlog1pDomain()).toMatchInlineSnapshot(`
-[
-  [
-    "full precision may not have been achieved in '%s'",
-    "log1p, line:86, col:18",
-  ],
-]
-`);*/
+            expect(logs).toEqual([
+                {
+                    prefix: '',
+                    namespace: 'log1p',
+                    formatter: "full precision may not have been achieved in '%s'",
+                    args: ['log1p']
+                }
+            ]);
         });
     });
     describe('fidelity', () => {

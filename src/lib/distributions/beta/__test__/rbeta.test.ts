@@ -1,17 +1,22 @@
-//helper
-import { cl, select } from '@common/debug-mangos-select';
-
-const rbetaDomainWarns = select('rbeta')("argument out of domain in '%s'");
+import { register, unRegister } from '@mangos/debug-frontend';
 
 //app
 import { rbeta } from '..';
-
 import { globalNorm, globalUni, RNGkind } from '@rng/global-rng';
 
+//mocks
+import createBackEndMock from '@common/debug-backend';
+import type { MockLogs } from '@common/debug-backend';
+
 describe('rbeta', function () {
-    beforeAll(() => {
+    const logs: MockLogs[] = [];
+    beforeEach(() => {
         RNGkind({ uniform: 'MERSENNE_TWISTER', normal: 'INVERSION' });
-        cl.clear('rbeta');
+        register(createBackEndMock(logs));
+    });
+    afterEach(() => {
+        unRegister();
+        logs.splice(0);
     });
     it('sample 5 numbers, n=5, scp1=2, scp2=2', () => {
         /*
@@ -34,7 +39,14 @@ describe('rbeta', function () {
     it('scp1=-1, scp2=2', () => {
         const actual = rbeta(1, -1, 2);
         expect(actual).toEqualFloatingPointBinary(NaN);
-        expect(rbetaDomainWarns()).toHaveLength(1);
+        expect(logs).toEqual([
+            {
+                prefix: '',
+                namespace: 'rbeta',
+                formatter: "argument out of domain in '%s'",
+                args: ['rbeta']
+            }
+        ]);
     });
     it('scp1=NAN, scp2=2', () => {
         const actual = rbeta(1, NaN, 2);

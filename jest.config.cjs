@@ -1,7 +1,12 @@
 const testRegex = [
-    //'src/lib/alt/(.*)/__test__/test.ts',
+    'src/lib/alt/(.*)/__test__/test.ts',
+    'src/lib/chebyshev/(.*).test.ts',
     //'src/lib/distributions/beta/__test__/.*.test.ts',
-    'src/lib/distributions/beta/__test__/dbeta.test.ts'
+    'src/lib/distributions/beta/__test__/dbeta.test.ts',
+    'src/lib/distributions/beta/__test__/pbeta.test.ts',
+    'src/lib/distributions/beta/__test__/qbeta.test.ts',
+    'src/lib/distributions/beta/__test__/rbeta.test.ts',
+    'src/lib/distributions/beta/__test__/qnbeta.test.ts'
     //'src/lib/distributions/binomial/__test__/.*.test.ts'
     /*'src/lib/distributions/binomial-negative/__test__/.*.test.ts',
     'src/lib/distributions/cauchy/__test__/.*.test.ts',

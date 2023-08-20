@@ -1,14 +1,23 @@
 // node
 import { resolve } from 'path';
-
+import { register, unRegister } from '@mangos/debug-frontend';
 //helper
 import { loadData } from '@common/load';
 
 import { dbeta } from '..';
 
+import createBackEndMock from '@common/debug-backend';
+import type { MockLogs } from '@common/debug-backend';
+
 describe('dbeta', function () {
+    const logs: MockLogs[] = [];
     beforeEach(() => {
-        //
+        const backend = createBackEndMock(logs);
+        register(backend);
+    });
+    afterEach(() => {
+        unRegister();
+        logs.splice(0);
     });
     it('ranges x ∊ [0, 1]', async () => {
         /* load data from fixture */
@@ -20,11 +29,18 @@ describe('dbeta', function () {
         const actual = dbeta(NaN, 2, 3);
         expect(actual).toEqualFloatingPointBinary(NaN);
     });
-    it.todo('x=0.5, shape1=-2, shape2=3'); /*, () => {
-        //const nan = dbeta(0.5, -2, 3);
-        //expect(dbetaDomainWarns()).toHaveLength(1);
-        //expect(nan).toBe(NaN);
-    });*/
+    it('x=0.5, shape1=-2, shape2=3', () => {
+        const nan = dbeta(0.5, -2, 3);
+        expect(logs).toEqual([
+            {
+                prefix: '',
+                namespace: 'dbeta',
+                formatter: "argument out of domain in '%s'",
+                args: ['dbeta']
+            }
+        ]);
+        expect(nan).toBe(NaN);
+    });
     it('x ∊ {-1.5,1.2}, shape1=2, shape2=3', () => {
         const one = dbeta(-0.5, 2, 3);
         expect(one).toBe(1);
