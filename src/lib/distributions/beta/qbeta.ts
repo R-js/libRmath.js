@@ -1,5 +1,5 @@
-import { debug } from '@mangos/debug';
-import { ML_ERR_return_NAN2, lineInfo4, ME, ML_ERROR2 } from '@common/logger';
+import createNs from '@mangos/debug-frontend';
+import { ME, mapErrV2 } from '@common/logger';
 
 import {
     DBL_MANT_DIG,
@@ -33,7 +33,8 @@ const MLOGICAL_NA = -1;
         int swap_01, double log_q_cut, int n_N, double * qb): number { return 0 };
 */
 
-const printer_qbeta = debug('qbeta');
+const debug = createNs('qbeta');
+const debug_qbeta_raw = createNs('qbeta_raw');
 
 export function qbeta(p: number, shape1: number, shape2: number, lower_tail: boolean, log_p: boolean): number {
     /* test for admissibility of parameters */
@@ -41,7 +42,8 @@ export function qbeta(p: number, shape1: number, shape2: number, lower_tail: boo
     if (isNaN(shape1) || isNaN(shape2) || isNaN(p)) return shape1 + shape2 + p;
 
     if (shape1 < 0 || shape2 < 0) {
-        return ML_ERR_return_NAN2(printer_qbeta, lineInfo4);
+        debug(mapErrV2[ME.ME_DOMAIN], debug.namespace);
+        return NaN;
     }
     // allowing p==0 and q==0  <==> treat as one- or two-point mass
 
@@ -113,8 +115,7 @@ function return_q_half(_give_log_q: boolean, qb: NumArray): void {
     return;
 }
 
-const printer_qbeta_raw = debug('qbeta_raw');
-const R_ifDEBUG_printf = printer_qbeta_raw;
+const R_ifDEBUG_printf = debug_qbeta_raw;
 // Returns both qbeta() and its "mirror" 1-qbeta(). Useful notably when qbeta() ~= 1
 function qbeta_raw(
     alpha: number,
@@ -174,7 +175,7 @@ function qbeta_raw(
     // check alpha {*before* transformation which may all accuracy}:
     if ((log_p && alpha > 0) || (!log_p && (alpha < 0 || alpha > 1))) {
         // alpha is outside
-        printer_qbeta_raw(
+        debug_qbeta_raw(
             'qbeta(alpha=%d, %d, %d, .., log_p=%d): %s%s',
             alpha,
             p,
@@ -184,7 +185,7 @@ function qbeta_raw(
             log_p ? '[-Inf, 0]' : '[0,1]'
         );
         // ML_ERR_return_NAN :
-        ML_ERROR2(ME.ME_DOMAIN, lineInfo4, printer_qbeta_raw);
+        debug_qbeta_raw(mapErrV2[ME.ME_DOMAIN], debug.namespace);
         qb[0] = qb[1] = NaN;
         return;
     }
@@ -192,14 +193,7 @@ function qbeta_raw(
     //  p==0, q==0, p = Inf, q = Inf  <==> treat as one- or two-point mass
     if (p === 0 || q === 0 || !isFinite(p) || !isFinite(q)) {
         // We know 0 < T(alpha) < 1 : pbeta() is constant and trivial in {0, 1/2, 1}
-        printer_qbeta_raw(
-            'qbeta(%d, %d, %d, lower_t=%d, log_p=%d): (p,q)-boundary: trivial',
-            alpha,
-            p,
-            q,
-            lower_tail,
-            log_p
-        );
+        debug('qbeta(%d, %d, %d, lower_t=%d, log_p=%d): (p,q)-boundary: trivial', alpha, p, q, lower_tail, log_p);
         if (p === 0 && q === 0) {
             // point mass 1/2 at each of {0,1} :
             if (alpha < R_D_half(log_p)) {
@@ -264,7 +258,7 @@ function qbeta_raw(
     t = 0.2;
     // FIXME: Factor 0.2 is a bit arbitrary;  '1' is clearly much too much.
 
-    printer_qbeta_raw(
+    debug_qbeta_raw(
         'qbeta(%d, %d, %d, lower_t=%d, log_p=%d):%s   swap_tail=%d, la=%d, u0=%d (bnd: %d (%d)) ',
         alpha,
         p,
@@ -284,7 +278,7 @@ function qbeta_raw(
             // ==> use_log_x , too
             if (!use_log_x)
                 // (see if claim above is true)
-                printer_qbeta_raw('qbeta() L_return, u_n=%d;  give_log_q=TRUE but use_log_x=FALSE -- please report!', u_n);
+                debug_qbeta_raw('qbeta() L_return, u_n=%d;  give_log_q=TRUE but use_log_x=FALSE -- please report!', u_n);
             const r = R_Log1_Exp(u_n);
             if (swap_tail) {
                 qb[0] = r;
@@ -365,7 +359,7 @@ function qbeta_raw(
                         la + 2
                 )
             )
-                printer_qbeta_raw(
+                debug_qbeta_raw(
                     // low accuracy for more platform independent output:
                     'qbeta(a, *) =: x0 with |pbeta(x0,* %s) - alpha| = %d is not accurate',
                     log_ ? ', log_' : '',
@@ -455,7 +449,7 @@ function qbeta_raw(
                 if (!isFinite(y) && !(log_p && y === -Infinity)) {
                     // y = -Inf  is ok if(log_p)
                     // ML_ERR_return_NAN :
-                    ML_ERROR2(ME.ME_DOMAIN, lineInfo4, printer_qbeta_raw);
+                    debug_qbeta_raw(mapErrV2[ME.ME_DOMAIN], debug.namespace);
                     qb[0] = qb[1] = NaN;
                     return;
                 }
@@ -510,7 +504,7 @@ function qbeta_raw(
 
         /*-- NOT converged: Iteration count --*/
         warned = true;
-        ML_ERROR2(ME.ME_PRECISION, 'qbeta', printer_qbeta_raw);
+        debug(mapErrV2[ME.ME_PRECISION], debug.namespace);
     };
 
     if (
@@ -526,10 +520,10 @@ function qbeta_raw(
         r = r * Math.exp(u0); // = r*x0
         if (r > -1) {
             u = u0 - Math.log1p(r) / pp;
-            printer_qbeta_raw('u1-u0=%d --> choosing u = u1', u - u0);
+            debug_qbeta_raw('u1-u0=%d --> choosing u = u1', u - u0);
         } else {
             u = u0;
-            printer_qbeta_raw('cannot cheaply improve u0');
+            debug_qbeta_raw('cannot cheaply improve u0');
         }
         tx = xinbta = Math.exp(u);
         use_log_x = true; // or (u < log_q_cut)  ??
@@ -551,7 +545,7 @@ function qbeta_raw(
         t = 1 / (qq + qq - 1);
         h = 2 / (s + t);
         w = (y * Math.sqrt(h + r)) / h - (t - s) * (r + 5.0 / 6.0 - 2.0 / (3 * h));
-        printer_qbeta_raw('p,q > 1 => w=%d', w);
+        debug_qbeta_raw('p,q > 1 => w=%d', w);
         if (w > 300) {
             // Math.exp(w+w) is huge or overflows
             t = w + w + Math.log(qq) - Math.log(pp); // = argument of log1pMath.exp(.)

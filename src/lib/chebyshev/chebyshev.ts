@@ -1,7 +1,7 @@
-import { debug } from '@mangos/debug';
-import { ML_ERR_return_NAN2, lineInfo4 } from '@common/logger';
+import createDebug from '@mangos/debug-frontend';
+import { mapErrV2, ME } from '@common/logger';
 
-const printer = debug('chebyshev_eval');
+const debug = createDebug('chebyshev_eval');
 
 /*
 export function chebyshev_init(dos: number[], nos: number, eta: number): number {
@@ -30,11 +30,13 @@ export function chebyshev_eval(x: number, a: number[], n: number): number {
     let i: number;
 
     if (n < 1 || n > 1000) {
-        return ML_ERR_return_NAN2(printer, lineInfo4);
+        debug(mapErrV2[ME.ME_DOMAIN], debug.namespace);
+        return NaN;
     }
 
     if (x < -1.1 || x > 1.1) {
-        return ML_ERR_return_NAN2(printer, lineInfo4);
+        debug(mapErrV2[ME.ME_DOMAIN], debug.namespace);
+        return NaN;
     }
 
     const twox = x * 2;

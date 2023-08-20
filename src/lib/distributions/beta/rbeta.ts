@@ -1,9 +1,9 @@
-import { debug } from '@mangos/debug';
-import { ML_ERR_return_NAN2, lineInfo4 } from '@common/logger';
+import createNs from '@mangos/debug-frontend';
+import { ME, mapErrV2 } from '@common/logger';
 import { DBL_MAX_EXP, min, max, log } from '@lib/r-func';
 import { globalUni } from '@rng/global-rng';
 
-const printer = debug('rbeta');
+const debug = createNs('rbeta');
 
 export const expmax = DBL_MAX_EXP * Math.LN2; /* = log(DBL_MAX) */
 
@@ -11,10 +11,12 @@ export function rbetaOne(shape1: number, shape2: number): number {
     const rng = globalUni();
 
     if (isNaN(shape1) || isNaN(shape2)) {
-        return ML_ERR_return_NAN2(printer, lineInfo4);
+        debug(mapErrV2[ME.ME_DOMAIN], debug.namespace);
+        return NaN;
     }
     if (shape1 < 0 || shape2 < 0) {
-        return ML_ERR_return_NAN2(printer, lineInfo4);
+        debug(mapErrV2[ME.ME_DOMAIN], debug.namespace);
+        return NaN;
     }
     if (!isFinite(shape1) && !isFinite(shape2))
         // a = b = Inf : all mass at 1/2

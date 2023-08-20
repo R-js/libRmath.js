@@ -1,13 +1,14 @@
-import { debug } from '@mangos/debug';
+import createDebug from '@mangos/debug-frontend';
 
-import { ML_ERR_return_NAN2, lineInfo4 } from '@common/logger';
+import { mapErrV2, ME } from '@common/logger';
 
-import { M_LN_2PI, R_D__0, R_D__1, R_D_exp, R_D_negInonint, R_D_nonint_check } from '@lib/r-func';
+import { M_LN_2PI, R_D__0, R_D__1, R_D_exp, R_D_negInonint, isInteger } from '@lib/r-func';
 
 import { bd0 } from '@lib/deviance';
 import { stirlerr } from '@lib/stirling';
 
-const printer = debug('dbinom');
+const domain = 'dbinom';
+const debug = createDebug(domain);
 
 function dbinom_raw(x: number, n: number, p: number, q: number, give_log: boolean): number {
     let lc: number;
@@ -46,11 +47,13 @@ function dbinom(x: number, n: number, prob: number, log = false): number {
     /* NaNs propagated correctly */
     if (isNaN(x) || isNaN(n) || isNaN(prob)) return x + n + prob;
 
-    if (prob < 0 || prob > 1 || R_D_negInonint(n)) return ML_ERR_return_NAN2(printer, lineInfo4);
-
-    const ch = R_D_nonint_check(log, x, printer);
-    if (ch !== undefined) {
-        return ch;
+    if (prob < 0 || prob > 1 || R_D_negInonint(n)) {
+        debug('%s:' + mapErrV2[ME.ME_DOMAIN], 'WARN-01', domain);
+        return NaN;
+    }
+    if (!isInteger(x)) {
+        debug('%s: non-integer x = %d', 'WARN-02', x);
+        return R_D__0(log);
     }
     if (x < 0 || !isFinite(x)) return R_D__0(log);
 

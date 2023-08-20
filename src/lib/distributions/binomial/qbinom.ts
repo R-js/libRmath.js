@@ -1,13 +1,13 @@
-import { debug } from '@mangos/debug';
+import createNs from '@mangos/debug-frontend';
 
-import { ML_ERR_return_NAN2, lineInfo4, R_Q_P01_boundaries } from '@common/logger';
+import { ME, mapErrV2, R_Q_P01_boundaries } from '@common/logger';
 
 import { NumberW } from '@common/toms708/NumberW';
 import { R_DT_qIv } from '@dist/exp/expm1';
 import { qnorm } from '@dist/normal/qnorm';
 import { pbinom } from './pbinom';
 
-const printer_do_search = debug('do_search');
+const printer_do_search = createNs('do_search');
 
 function do_search(y: number, z: NumberW, p: number, n: number, pr: number, incr: number): number {
     if (z.val >= p) {
@@ -33,7 +33,7 @@ function do_search(y: number, z: NumberW, p: number, n: number, pr: number, incr
     }
 }
 
-const printer_qbinom = debug('qbinom');
+const printer_qbinom = createNs('qbinom');
 
 export function qbinom(p: number, size: number, prob: number, lowerTail = true, logP = false): number {
     const z = new NumberW(0);
@@ -42,19 +42,23 @@ export function qbinom(p: number, size: number, prob: number, lowerTail = true, 
     if (isNaN(p) || isNaN(size) || isNaN(prob)) return NaN;
 
     if (!isFinite(size) || !isFinite(prob)) {
-        return ML_ERR_return_NAN2(printer_qbinom, lineInfo4);
+        printer_qbinom(mapErrV2[ME.ME_DOMAIN], printer_do_search.namespace);
+        return NaN;
     }
     /* if logP is true, p = -Inf is a legitimate value */
     if (!isFinite(p) && !logP) {
-        return ML_ERR_return_NAN2(printer_qbinom, lineInfo4);
+        printer_qbinom(mapErrV2[ME.ME_DOMAIN], printer_do_search.namespace);
+        return NaN;
     }
 
     if (!Number.isInteger(size)) {
-        return ML_ERR_return_NAN2(printer_qbinom, lineInfo4);
+        printer_qbinom(mapErrV2[ME.ME_DOMAIN], printer_do_search.namespace);
+        return NaN;
     }
 
     if (prob < 0 || prob > 1 || size < 0) {
-        return ML_ERR_return_NAN2(printer_qbinom, lineInfo4);
+        printer_qbinom(mapErrV2[ME.ME_DOMAIN], printer_do_search.namespace);
+        return NaN;
     }
 
     const rc = R_Q_P01_boundaries(lowerTail, logP, p, 0, size);

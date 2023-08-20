@@ -1,9 +1,9 @@
-import { debug } from '@mangos/debug';
-import { ML_ERR_return_NAN2, lineInfo4, R_Q_P01_boundaries } from '@common/logger';
+import createNs from '@mangos/debug-frontend';
+import { ME, mapErrV2, R_Q_P01_boundaries } from '@common/logger';
 import { R_DT_qIv } from '@dist/exp/expm1';
 import { pnbeta } from './pnbeta';
 
-const printer_qnbeta = debug('qnbeta');
+const printer_qnbeta = createNs('qnbeta');
 
 const accu = 1e-15;
 const eps = 1e-14; /* must be > accu */
@@ -16,9 +16,15 @@ export function qnbeta(p: number, a: number, b: number, ncp: number, lower_tail:
 
     if (isNaN(p) || isNaN(a) || isNaN(b) || isNaN(ncp)) return p + a + b + ncp;
 
-    if (!isFinite(a)) return ML_ERR_return_NAN2(printer_qnbeta, lineInfo4);
+    if (!isFinite(a)) {
+        printer_qnbeta(mapErrV2[ME.ME_DOMAIN], printer_qnbeta.namespace);
+        return NaN;
+    }
 
-    if (ncp < 0 || a <= 0 || b <= 0) return ML_ERR_return_NAN2(printer_qnbeta, lineInfo4);
+    if (ncp < 0 || a <= 0 || b <= 0) {
+        printer_qnbeta(mapErrV2[ME.ME_DOMAIN], printer_qnbeta.namespace);
+        return NaN;
+    }
 
     const rc = R_Q_P01_boundaries(lower_tail, log_p, p, 0, 1);
     if (rc !== undefined) {

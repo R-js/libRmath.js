@@ -1,4 +1,4 @@
-import type { Printer } from '@mangos/debug';
+import type { Printer } from '@mangos/debug-frontend';
 
 const {
     isInteger,

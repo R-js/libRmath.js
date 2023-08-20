@@ -39,7 +39,6 @@ module.exports = {
                 'prettier'
             ],
             rules: {
-                'prettier/prettier': 2,
                 '@typescript-eslint/no-explicit-any': ['error', { ignoreRestArgs: true }],
                 '@typescript-eslint/explicit-module-boundary-types': 'error',
                 '@typescript-eslint/no-namespace': ['error', { allowDeclarations: true }],

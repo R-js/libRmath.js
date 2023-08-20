@@ -1,11 +1,7 @@
-
 import { resolve } from 'path';
 import { loadData } from '@common/load';
-import { cl /*, select*/ } from '@common/debug-mangos-select';
 
 import { globalUni, RNGkind } from '@rng/global-rng';
-
-
 
 //const rbinomDomainWarns = select('rbinom')("argument out of domain in '%s'");
 //rbinomDomainWarns;
@@ -14,10 +10,9 @@ import { rbinom } from '..';
 
 describe('rbinom', function () {
     beforeAll(() => {
-        RNGkind({ uniform: "MERSENNE_TWISTER", normal: "INVERSION" });
-        cl.clear('_rbinom');
+        RNGkind({ uniform: 'MERSENNE_TWISTER', normal: 'INVERSION' });
     });
-    
+
     it('n=10, unifrom=Mersenne T, norm=Inversion, size=100, n=10, prob=0.2', () => {
         const uni = globalUni();
         uni.init(1234);
@@ -44,22 +39,13 @@ describe('rbinom', function () {
     });
     it('n=10, size=4 prob=1', () => {
         const fours = rbinom(10, 4, 1);
-        expect(fours).toEqualFloatingPointBinary(
-            Array.from({ length: 10 }, () => 4));
+        expect(fours).toEqualFloatingPointBinary(Array.from({ length: 10 }, () => 4));
     });
     it('n=10, size=Number.MAX_SAFE_INTEGER * 2, prob=0.5', () => {
         globalUni().init(12345);
         const z = rbinom(10, 2147483647, 0.5);
         expect(z).toEqualFloatingPointBinary([
-            1073728257,
-            1073715082,
-            1073725385,
-            1073713876,
-            1073744356,
-            1073764266,
-            1073752331,
-            1073741288,
-            1073727785,
+            1073728257, 1073715082, 1073725385, 1073713876, 1073744356, 1073764266, 1073752331, 1073741288, 1073727785,
             1073688147
         ]);
     });

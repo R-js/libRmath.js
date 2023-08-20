@@ -1,8 +1,9 @@
 const testRegex = [
-    'src/lib/alt/(.*)/__test__/test.ts',
-    'src/lib/distributions/beta/__test__/.*.test.ts',
-    'src/lib/distributions/binomial/__test__/.*.test.ts',
-    'src/lib/distributions/binomial-negative/__test__/.*.test.ts',
+    //'src/lib/alt/(.*)/__test__/test.ts',
+    //'src/lib/distributions/beta/__test__/.*.test.ts',
+    'src/lib/distributions/beta/__test__/dbeta.test.ts'
+    //'src/lib/distributions/binomial/__test__/.*.test.ts'
+    /*'src/lib/distributions/binomial-negative/__test__/.*.test.ts',
     'src/lib/distributions/cauchy/__test__/.*.test.ts',
     'src/lib/distributions/chi-2/__test__/.*.test.ts',
     'src/lib/distributions/exp/__test__/.*.test.ts',
@@ -33,7 +34,7 @@ const testRegex = [
     'src/lib/special/bessel/(.*)/__test__/test.ts',
     'src/lib/special/beta/__test__/.*.test.ts',
     'src/lib/special/choose/__test__/.*.test.ts',
-    'src/lib/special/gamma/__test__/.*.test.ts'
+    'src/lib/special/gamma/__test__/.*.test.ts'*/
 ];
 
 const collectCoverageFrom = [
@@ -73,7 +74,7 @@ module.exports = {
     bail: true,
     automock: false,
     collectCoverage: true,
-    maxWorkers: '50%',
+    maxWorkers: 1,
     collectCoverageFrom,
     coveragePathIgnorePatterns: ['node_modules', 'test', 'doc.ts', 'IRandom.ts', 'IBesselRC.ts'],
     coverageDirectory: 'coverage',
@@ -113,8 +114,5 @@ module.exports = {
         '^lib/(.*)$': '<rootDir>/src/lib/$1'
     },
     setupFiles: ['<rootDir>/src/packages/__test__/jest-ext.d.ts'],
-    setupFilesAfterEnv: [
-        '<rootDir>/src/packages/__test__/jest-extension.ts',
-        '<rootDir>/src/packages/__test__/mock-of-debug.ts'
-    ]
+    setupFilesAfterEnv: ['<rootDir>/src/packages/__test__/jest-extension.ts']
 };

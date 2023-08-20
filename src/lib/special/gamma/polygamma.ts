@@ -120,7 +120,7 @@
  *    Routines called: Rf_d1mach, Rf_i1mach.
  */
 
-import { debug } from '@mangos/debug';
+import createNs from '@mangos/debug-frontend';
 import {
     DBL_MANT_DIG,
     DBL_MAX_EXP,
@@ -141,9 +141,7 @@ import {
     round
 } from '@lib/r-func';
 
-const printer = debug('dpsifn');
-
-
+const debug_dpsifn = createNs('dpsifn');
 
 const n_max = 100;
 
@@ -157,28 +155,11 @@ const lrg = 1 / (2 * DBL_EPSILON);
 
 const bvalues = new Float64Array([
     /* Bernoulli Numbers */
-    1.0,
-    -5.0e-1,
-    1.66666666666666667e-1,
-    -3.33333333333333333e-2,
-    2.38095238095238095e-2,
-    -3.33333333333333333e-2,
-    7.57575757575757576e-2,
-    -2.53113553113553114e-1,
-    1.16666666666666667,
-    -7.09215686274509804,
-    5.49711779448621554e1,
-    -5.29124242424242424e2,
-    6.1921231884057971e3,
-    -8.65802531135531136e4,
-    1.42551716666666667e6,
-    -2.7298231067816092e7,
-    6.01580873900642368e8,
-    -1.51163157670921569e10,
-    4.29614643061166667e11,
-    -1.37116552050883328e13,
-    4.88332318973593167e14,
-    -1.92965793419400681e16,
+    1.0, -5.0e-1, 1.66666666666666667e-1, -3.33333333333333333e-2, 2.38095238095238095e-2, -3.33333333333333333e-2,
+    7.57575757575757576e-2, -2.53113553113553114e-1, 1.16666666666666667, -7.09215686274509804, 5.49711779448621554e1,
+    -5.29124242424242424e2, 6.1921231884057971e3, -8.65802531135531136e4, 1.42551716666666667e6, -2.7298231067816092e7,
+    6.01580873900642368e8, -1.51163157670921569e10, 4.29614643061166667e11, -1.37116552050883328e13,
+    4.88332318973593167e14, -1.92965793419400681e16
 ]);
 
 /* From R, currently only used for kode = 1, m = 1 : */
@@ -189,9 +170,8 @@ function dpsifn(
     m: number,
     ans: Float64Array,
     nz: Uint8Array,
-    ierr: Uint8Array,
+    ierr: Uint8Array
 ): void {
-
     //  ints
     let nx: number;
     let xinc = 0 as number;
@@ -521,7 +501,7 @@ function dpsifn(
         return;
     } // goto capture end
     //L20:
-    printer(L20 ? 'goto L20 was set!' : 'goto L20 was not set');
+    debug_dpsifn(L20 ? 'goto L20 was set!' : 'goto L20 was not set');
 
     if (!L30) {
         for (i = 1; i <= nx; i++) {
@@ -553,18 +533,16 @@ function dpsifn(
     return NaN
 #endif
 */
-const print_psigamma = debug('psigamma');
+const debug_psigamma = createNs('psigamma');
 
 function _render(
     x: number,
     calculate: (x: number, ans: Float64Array, nz: Uint8Array, ierr: Uint8Array) => void,
-    final: (_ans: number) => number,
+    final: (_ans: number) => number
 ) {
-
     const ans = new Float64Array(1);
     const nz = new Uint8Array();
     const ierr = new Uint8Array(1);
-
 
     ans[0] = 0;
     nz[0] = 0;
@@ -574,17 +552,16 @@ function _render(
     }
     calculate(x, ans, nz, ierr);
     if (ierr[0] !== 0) {
-        return NaN
+        return NaN;
     }
     return final(ans[0]);
-
 }
 
 export function psigamma(x: number, deriv: number): number {
     deriv = round(deriv);
     const n = deriv >> 0;
     if (n > n_max) {
-        print_psigamma('"deriv = %d > %d (= n_max)', n, n_max);
+        debug_psigamma('"deriv = %d > %d (= n_max)', n, n_max);
     }
     return _render(
         x,
@@ -599,7 +576,7 @@ export function psigamma(x: number, deriv: number): number {
             v = -v; // = (-1)^(0+1) * gamma(0+1) * A
             for (let k = 1; k <= n; k++) v *= -k; // = (-1)^(k+1) * gamma(k+1) * A
             return v;
-        },
+        }
     );
 }
 
@@ -608,7 +585,7 @@ export function pentagamma(x: number): number {
     return _render(
         x,
         (x0: number, ans: Float64Array, nz: Uint8Array, ierr: Uint8Array) => dpsifn(x0, 3, 1, 1, ans, nz, ierr),
-        (v) => v * 6.0,
+        (v) => v * 6.0
     );
 }
 
@@ -617,7 +594,7 @@ export function tetragamma(x: number): number {
     return _render(
         x,
         (x0: number, ans: Float64Array, nz: Uint8Array, ierr: Uint8Array) => dpsifn(x0, 2, 1, 1, ans, nz, ierr),
-        (v) => v * -2.0,
+        (v) => v * -2.0
     );
 }
 
@@ -627,7 +604,7 @@ export function trigamma(x: number): number {
     return _render(
         x,
         (x0: number, ans: Float64Array, nz: Uint8Array, ierr: Uint8Array) => dpsifn(x0, 1, 1, 1, ans, nz, ierr),
-        (v) => v,
+        (v) => v
     );
 }
 
@@ -636,6 +613,6 @@ export function digamma(x: number): number {
     return _render(
         x,
         (x0: number, ans: Float64Array, nz: Uint8Array, ierr: Uint8Array) => dpsifn(x0, 0, 1, 1, ans, nz, ierr),
-        (v) => v * -1,
+        (v) => v * -1
     );
 }

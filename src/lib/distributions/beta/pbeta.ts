@@ -1,11 +1,11 @@
-import { debug } from '@mangos/debug';
-import { ML_ERR_return_NAN2, lineInfo4 } from '@common/logger';
+import createNs from '@mangos/debug-frontend';
+import { ME, mapErrV2 } from '@common/logger';
 import { R_DT_0, R_DT_1, log } from '@lib/r-func';
 import { Toms708 } from '@common/toms708/toms708';
 import { NumberW } from '@common/toms708/NumberW';
 
-const printer_pbeta_raw = debug('pbeta_raw');
-const printer_pbeta = debug('pbeta');
+const printer_pbeta_raw = createNs('pbeta_raw');
+const printer_pbeta = createNs('pbeta');
 
 export function pbeta_raw(x: number, a: number, b: number, lower_tail: boolean, log_p: boolean): number {
     // treat limit cases correctly here:
@@ -51,7 +51,11 @@ export function pbeta(q: number, a: number, b: number, lowerTail = true, logP = 
     printer_pbeta('pbeta(q=%d, a=%d, b=%d, l.t=%s, ln=%s)', q, a, b, lowerTail, logP);
     if (isNaN(q) || isNaN(a) || isNaN(b)) return NaN;
 
-    if (a < 0 || b < 0) return ML_ERR_return_NAN2(printer_pbeta, lineInfo4);
+    if (a < 0 || b < 0) {
+        printer_pbeta(mapErrV2[ME.ME_DOMAIN], printer_pbeta.namespace);
+        return NaN;
+    }
+
     // allowing a==0 and b==0  <==> treat as one- or two-point mass
 
     if (q <= 0) return R_DT_0(lowerTail, logP);
