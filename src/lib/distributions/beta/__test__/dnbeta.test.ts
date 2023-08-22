@@ -1,14 +1,22 @@
 // node
 import { resolve } from 'path';
-
+import { register, unRegister } from '@mangos/debug-frontend';
 //helper
 import { loadData } from '@common/load';
 
 import { dbeta } from '..';
+import createBackEndMock from '@common/debug-backend';
+import type { MockLogs } from '@common/debug-backend';
 
 describe('dbeta, ncp != undefined', () => {
+    const logs: MockLogs[] = [];
     beforeEach(() => {
-        //
+        const backend = createBackEndMock(logs);
+        register(backend);
+    });
+    afterEach(() => {
+        unRegister();
+        logs.splice(0);
     });
     it('ranges x ∊ [0, 1], shape1=3, shape2=3, ncp=2', async () => {
         const [x, y] = await loadData(resolve(__dirname, 'fixture-generation', 'dnbeta.R'), /\s+/, 1, 2);
@@ -19,14 +27,28 @@ describe('dbeta, ncp != undefined', () => {
         const nan = dbeta(NaN, 3, 3, 2);
         expect(nan).toBeNaN();
     });
-    it.todo('ranges x = 0.5, shape1=3, shape2=3, ncp=-2', () => {
+    it('ranges x = 0.5, shape1=3, shape2=3, ncp=-2', () => {
         const nan = dbeta(0.5, 3, 3, -2);
-        //expect(dnbetaDomainWarns()).toHaveLength(1);
         expect(nan).toBe(NaN);
+        expect(logs).toEqual([
+            {
+                prefix: '',
+                namespace: 'dnbeta',
+                formatter: "argument out of domain in '%s'",
+                args: ['dnbeta']
+            }
+        ]);
     });
-    it.todo('ranges x = 0.5, shape1=3, shape2=3, ncp=-2', () => {
+    it('ranges x = 0.5, shape1=3, shape2=3, ncp=-2', () => {
         const nan = dbeta(0.5, 3, 3, Infinity);
-        // expect(dnbetaDomainWarns()).toHaveLength(1);
+        expect(logs).toEqual([
+            {
+                prefix: '',
+                namespace: 'dnbeta',
+                formatter: "argument out of domain in '%s'",
+                args: ['dnbeta']
+            }
+        ]);
         expect(nan).toBe(NaN);
     });
     it('ranges x = -1, shape1=3, shape2=3, ncp=2', () => {
