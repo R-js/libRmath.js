@@ -1,5 +1,8 @@
 import { resolve } from 'path';
 
+import { register, unRegister } from '@mangos/debug-frontend';
+import createBackEndMock from '@common/debug-backend';
+import type { MockLogs } from '@common/debug-backend';
 //helper
 import { loadData } from '@common/load';
 
@@ -8,8 +11,14 @@ import { loadData } from '@common/load';
 import { dbinom } from '..';
 
 describe('dbinom', function () {
+    const logs: MockLogs[] = [];
     beforeEach(() => {
-        //
+        const backend = createBackEndMock(logs);
+        register(backend);
+    });
+    afterEach(() => {
+        unRegister();
+        logs.splice(0);
     });
     it('ranges x ∊ [0, 12] size=12, prob=0.01', async () => {
         const [x, y] = await loadData(resolve(__dirname, 'fixture-generation', 'dbinom1.R'), /\s+/, 1, 2);
@@ -60,11 +69,18 @@ describe('dbinom', function () {
         const z2 = dbinom(101, 100, 0.99); // 100%, you always score "head", never "tail"
         expect(z2).toBe(0);
     });
-    it.todo('x=4, size=100, prob=3 (>1)'); /*, () => {
+    it('x=4, size=100, prob=3 (>1)', () => {
         const z0 = dbinom(4, 100, 3); // 100%, you always score "head", never "tail"
         expect(z0).toBeNaN();
-        expect(dbinomDomainWarns()).toHaveLength(1);
-    });*/
+        expect(logs).toEqual([
+            {
+                prefix: '',
+                namespace: 'dbinom',
+                formatter: "%s:argument out of domain in '%s'",
+                args: ['WARN-01', 'dbinom']
+            }
+        ]);
+    });
     it('x=4, size=NaN, prob=0.5', () => {
         const z0 = dbinom(4, NaN, 0.5); // 100%, you always score "head", never "tail"
         expect(z0).toBeNaN();
