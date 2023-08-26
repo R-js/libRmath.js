@@ -76,8 +76,8 @@ describe('dbinom', function () {
             {
                 prefix: '',
                 namespace: 'dbinom',
-                formatter: "%s:argument out of domain in '%s'",
-                args: ['WARN-01', 'dbinom']
+                formatter: '%s: %s',
+                args: ["argument out of domain in '%s'", 'WARN-01']
             }
         ]);
     });

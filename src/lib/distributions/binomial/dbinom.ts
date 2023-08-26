@@ -7,8 +7,7 @@ import { M_LN_2PI, R_D__0, R_D__1, R_D_exp, R_D_negInonint, isInteger } from '@l
 import { bd0 } from '@lib/deviance';
 import { stirlerr } from '@lib/stirling';
 
-const domain = 'dbinom';
-const debug = createDebug(domain);
+const debug = createDebug('dbinom');
 
 function dbinom_raw(x: number, n: number, p: number, q: number, give_log: boolean): number {
     let lc: number;
@@ -48,7 +47,7 @@ function dbinom(x: number, n: number, prob: number, log = false): number {
     if (isNaN(x) || isNaN(n) || isNaN(prob)) return x + n + prob;
 
     if (prob < 0 || prob > 1 || R_D_negInonint(n)) {
-        debug('%s:' + mapErrV2[ME.ME_DOMAIN], 'WARN-01', domain);
+        debug('%s: %s', mapErrV2[ME.ME_DOMAIN], 'WARN-01');
         return NaN;
     }
     if (!isInteger(x)) {

@@ -1,13 +1,13 @@
-import { debug } from '@mangos/debug';
+import createNS from '@mangos/debug-frontend';
 
 import { R_D_qIv } from '@lib/r-func';
 
-import { ME, ML_ERROR2, ML_ERR_return_NAN2, lineInfo4, R_Q_P01_boundaries } from '@common/logger';
+import { ME, mapErrV2, R_Q_P01_boundaries } from '@common/logger';
 
 import { qchisq } from './qchisq';
 import { pnchisq_raw } from './pnchisq';
 
-const printer = debug('qnchisq');
+const debug = createNS('qnchisq');
 
 const accu = 1e-13;
 const racc = 4 * Number.EPSILON;
@@ -30,7 +30,8 @@ export function qnchisq(p: number, df: number, ncp: number, lower_tail: boolean,
     }
 
     if (!isFinite(df)) {
-        return ML_ERR_return_NAN2(printer, lineInfo4);
+        debug(mapErrV2[ME.ME_DOMAIN], debug.namespace);
+        return NaN;
     }
 
     /* Was
@@ -38,7 +39,8 @@ export function qnchisq(p: number, df: number, ncp: number, lower_tail: boolean,
      * if (df < 1 || ncp < 0) ML_ERR_return_NAN;
      */
     if (df < 0 || ncp < 0) {
-        return ML_ERR_return_NAN2(printer, lineInfo4);
+        debug(mapErrV2[ME.ME_DOMAIN], debug.namespace);
+        return NaN;
     }
 
     const rc = R_Q_P01_boundaries(lower_tail, log_p, p, 0, Infinity);
@@ -68,7 +70,9 @@ export function qnchisq(p: number, df: number, ncp: number, lower_tail: boolean,
 
     if (!lower_tail && ncp >= 80) {
         // in this case, pnchisq() works via lower_tail = TRUE
-        if (pp < 1e-10) ML_ERROR2(ME.ME_PRECISION, 'qnchisq', printer);
+        if (pp < 1e-10) {
+            debug(mapErrV2[ME.ME_PRECISION], debug.namespace);
+        }
         // p = R_DT_qIv(p)
         p = log_p ? -Math.expm1(pp) : 1 - pp;
         lower_tail = true;

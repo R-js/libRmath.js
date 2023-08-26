@@ -1,14 +1,21 @@
 // node
 import { resolve } from 'path';
 
-import { loadData } from '@common/load';
-import { cl } from '@common/debug-mangos-select';
-
 import { dcauchy } from '..';
+import { loadData } from '@common/load';
+import { register, unRegister } from '@mangos/debug-frontend';
+import createBackEndMock from '@common/debug-backend';
+import type { MockLogs } from '@common/debug-backend';
 
 describe('dcauchy', function () {
+    const logs: MockLogs[] = [];
     beforeEach(() => {
-        cl.clear('dcauchy');
+        const backend = createBackEndMock(logs);
+        register(backend);
+    });
+    afterEach(() => {
+        unRegister();
+        logs.splice(0);
     });
     it('ranges x ∊ [-40, 40, step 1] location=2, scale=3, log=true', async () => {
         const [x, y] = await loadData(resolve(__dirname, 'fixture-generation', 'dcauchy.R'), /\s+/, 1, 2);
@@ -27,7 +34,14 @@ describe('dcauchy', function () {
     it('x=2, location=0,scale=-10 (<0)', () => {
         const nan = dcauchy(2, 0, -10);
         expect(nan).toBeNaN();
-        //expect(out.length).toBe(1);
+        expect(logs).toEqual([
+            {
+                prefix: '',
+                namespace: 'dcauchy',
+                formatter: "argument out of domain in '%s'",
+                args: ['dcauchy']
+            }
+        ]);
     });
     it('x=2, + defaults', () => {
         const z = dcauchy(2);

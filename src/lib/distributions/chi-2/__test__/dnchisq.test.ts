@@ -1,14 +1,22 @@
 import { resolve } from 'path';
 
 import { loadData } from '@common/load';
-import { cl, select } from '@common/debug-mangos-select';
-const dnchisqDomainWarns = select('dnchisq')("argument out of domain in '%s'");
 
 import { dchisq } from '..';
 
+import { register, unRegister } from '@mangos/debug-frontend';
+import createBackEndMock from '@common/debug-backend';
+import type { MockLogs } from '@common/debug-backend';
+
 describe('dnchisq', function () {
+    const logs: MockLogs[] = [];
     beforeEach(() => {
-        cl.clear('dnchisq');
+        const backend = createBackEndMock(logs);
+        register(backend);
+    });
+    afterEach(() => {
+        unRegister();
+        logs.splice(0);
     });
     it('ranges x ∊ [0, 40, step 0.5] df=13, ncp=8', async () => {
         const [x, y] = await loadData(resolve(__dirname, 'fixture-generation', 'dnchisq.R'), /\s+/, 1, 2);
@@ -27,7 +35,14 @@ describe('dnchisq', function () {
     it('x=20, df=-4 ncp=8', () => {
         const nan = dchisq(20, -4, 8);
         expect(nan).toBeNaN();
-        expect(dnchisqDomainWarns()).toHaveLength(1);
+        expect(logs).toEqual([
+            {
+                prefix: '',
+                namespace: 'dnchisq',
+                formatter: "argument out of domain in '%s'",
+                args: ['dnchisq']
+            }
+        ]);
     });
     it('x=-2(<0), df=4 ncp=8', () => {
         const z = dchisq(-2, 4, 8);

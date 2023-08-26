@@ -1,17 +1,16 @@
 'use strict';
 
-import { debug } from '@mangos/debug';
-
+import createNS from '@mangos/debug-frontend';
+import { mapErrV2, ME } from '@common/logger';
 import { fmod, atan, tan } from '@lib/r-func';
 
-import { ME, ML_ERROR2, lineInfo4 } from '@common/logger';
 // tan(pi * x)  -- exact when x = k/2  for all integer k
-const printer_tanpi = debug('tanpi');
+const printer_tanpi = createNS('tanpi');
 
 export function tanpi(x: number): number {
     if (isNaN(x)) return x;
     if (!isFinite(x)) {
-        ML_ERROR2(ME.ME_DOMAIN, lineInfo4, printer_tanpi);
+        printer_tanpi(mapErrV2[ME.ME_DOMAIN], printer_tanpi.namespace);
         return NaN;
     }
     x = fmod(x, 1); // tan(pi(x + k)) == tan(pi x)  for all integer k

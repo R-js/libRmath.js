@@ -1,13 +1,14 @@
-import { debug } from '@mangos/debug';
-import { ML_ERR_return_NAN2, lineInfo4 } from '@common/logger';
+import createNS from '@mangos/debug-frontend';
+import { ME, mapErrV2 } from '@common/logger';
 
-const printer = debug('rcauchy');
+const debug = createNS('rcauchy');
 import { globalUni } from '@lib/rng';
 
 export function rcauchyOne(location = 0, scale = 1): number {
     const rng = globalUni();
     if (isNaN(location) || !isFinite(scale) || scale < 0) {
-        return ML_ERR_return_NAN2(printer, lineInfo4);
+        debug(mapErrV2[ME.ME_DOMAIN], debug.namespace);
+        return NaN;
     }
     if (scale === 0 || !isFinite(location)) {
         return location;

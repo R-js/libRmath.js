@@ -1,16 +1,21 @@
 import { resolve } from 'path';
 
 import { loadData } from '@common/load';
-import { cl, select } from '@common/debug-mangos-select';
-
-const pcauchyDomainWarns = select('pcauchy')("argument out of domain in '%s'");
-pcauchyDomainWarns;
 
 import { pcauchy } from '..';
+import { register, unRegister } from '@mangos/debug-frontend';
+import createBackEndMock from '@common/debug-backend';
+import type { MockLogs } from '@common/debug-backend';
 
 describe('pcauchy', function () {
+    const logs: MockLogs[] = [];
     beforeEach(() => {
-        cl.clear('pcauchy');
+        const backend = createBackEndMock(logs);
+        register(backend);
+    });
+    afterEach(() => {
+        unRegister();
+        logs.splice(0);
     });
     it('ranges x ∊ [-40, 40, step 1] location=2, scale=3, log=false', async () => {
         const [x, y] = await loadData(resolve(__dirname, 'fixture-generation', 'pcauchy1.R'), /\s+/, 1, 2);
@@ -29,7 +34,14 @@ describe('pcauchy', function () {
     it('x=0, scale=Infinity, location=Infinity', () => {
         const nan = pcauchy(0, Infinity, Infinity);
         expect(nan).toBeNaN();
-        expect(pcauchyDomainWarns()).toHaveLength(1);
+        expect(logs).toEqual([
+            {
+                prefix: '',
+                namespace: 'pcauchy',
+                formatter: "argument out of domain in '%s'",
+                args: ['pcauchy']
+            }
+        ]);
     });
 
     it('x=Infinity, rest=default', () => {

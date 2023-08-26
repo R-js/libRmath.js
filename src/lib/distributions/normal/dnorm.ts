@@ -1,10 +1,10 @@
-import { debug } from '@mangos/debug';
-import { ML_ERR_return_NAN2, lineInfo4 } from '@common/logger';
+import createNS from '@mangos/debug-frontend';
+import { ME, mapErrV2 } from '@common/logger';
 import { exp, round, log as _log, sqrt, abs } from '@lib/r-func';
 
 import { DBL_MANT_DIG, DBL_MIN_EXP, ldexp, M_1_SQRT_2PI, M_LN2, M_LN_SQRT_2PI, R_D__0 } from '@lib/r-func';
 
-const printer = debug('dnorm');
+const debug = createNS('dnorm');
 
 const PRECISION_LIMIT = sqrt(-2 * M_LN2 * (DBL_MIN_EXP + 1 - DBL_MANT_DIG));
 
@@ -23,7 +23,8 @@ export function dnorm4(x: number, mean = 0, sd = 1, log = false): number {
 
     if (sd <= 0) {
         if (sd < 0) {
-            return ML_ERR_return_NAN2(printer, lineInfo4);
+            debug(mapErrV2[ME.ME_DOMAIN], debug.namespace);
+            return NaN;
         }
         /* sd == 0 */
         return x === mean ? Infinity : R_D__0(log);

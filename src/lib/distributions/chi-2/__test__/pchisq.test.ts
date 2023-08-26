@@ -2,13 +2,19 @@ import { resolve } from 'path';
 import { pchisq } from '..';
 
 import { loadData } from '@common/load';
-import { cl, select } from '@common/debug-mangos-select';
-const pchisqDomainWarns = select('pchisq')("argument out of domain in '%s'");
-pchisqDomainWarns;
+import { register, unRegister } from '@mangos/debug-frontend';
+import createBackEndMock from '@common/debug-backend';
+import type { MockLogs } from '@common/debug-backend';
 
 describe('pchisq', function () {
+    const logs: MockLogs[] = [];
     beforeEach(() => {
-        cl.clear('dnchisq');
+        const backend = createBackEndMock(logs);
+        register(backend);
+    });
+    afterEach(() => {
+        unRegister();
+        logs.splice(0);
     });
     it('ranges x ∊ [0, 40, step 0.5] df=13', async () => {
         const [x, y] = await loadData(resolve(__dirname, 'fixture-generation', 'pchisq.R'), /\s+/, 1, 2);

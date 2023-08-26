@@ -1,17 +1,20 @@
 import { resolve } from 'path';
 
 import { loadData } from '@common/load';
-import { cl, select } from '@common/debug-mangos-select';
-
-const qnchisqLogs = select('qnchisq');
-const gnchisqDomainWarns = qnchisqLogs("argument out of domain in '%s'");
-const R_Q_P01_boundaries = select('R_Q_P01_boundaries')("argument out of domain in '%s'");
-
 import { qchisq } from '..';
+import { register, unRegister } from '@mangos/debug-frontend';
+import createBackEndMock from '@common/debug-backend';
+import type { MockLogs } from '@common/debug-backend';
 
 describe('qnchisq', function () {
+    const logs: MockLogs[] = [];
     beforeEach(() => {
-        cl.clear('qnchisq');
+        const backend = createBackEndMock(logs);
+        register(backend);
+    });
+    afterEach(() => {
+        unRegister();
+        logs.splice(0);
     });
     it('p=NaN, df=2, ncp=80', () => {
         const nan = qchisq(NaN, 2, 80);
@@ -28,17 +31,38 @@ describe('qnchisq', function () {
     it('p=.2, df=Infinite, ncp=80', () => {
         const nan = qchisq(0.2, Infinity, 80);
         expect(nan).toBeNaN();
-        expect(gnchisqDomainWarns()).toHaveLength(1);
+        expect(logs).toEqual([
+            {
+                prefix: '',
+                namespace: 'qnchisq',
+                formatter: "argument out of domain in '%s'",
+                args: ['qnchisq']
+            }
+        ]);
     });
     it('p=.2, df=-4(<0), ncp=80', () => {
         const nan = qchisq(0.2, -4, 80);
         expect(nan).toBeNaN();
-        expect(gnchisqDomainWarns()).toHaveLength(1);
+        expect(logs).toEqual([
+            {
+                prefix: '',
+                namespace: 'qnchisq',
+                formatter: "argument out of domain in '%s'",
+                args: ['qnchisq']
+            }
+        ]);
     });
     it('p=.2, df=4, ncp=-80(<0)', () => {
         const nan = qchisq(0.2, 4, -80);
         expect(nan).toBeNaN();
-        expect(gnchisqDomainWarns()).toHaveLength(1);
+        expect(logs).toEqual([
+            {
+                prefix: '',
+                namespace: 'qnchisq',
+                formatter: "argument out of domain in '%s'",
+                args: ['qnchisq']
+            }
+        ]);
     });
     it('bounderies, p=(0,1,1.2,-0.2), df=4, ncp=80', () => {
         const z = qchisq(1, 4, 80);
@@ -49,7 +73,20 @@ describe('qnchisq', function () {
         expect(nan).toBeNaN();
         const nan1 = qchisq(1.2, 4, 80);
         expect(nan1).toBeNaN();
-        expect(R_Q_P01_boundaries()).toHaveLength(2);
+        expect(logs).toEqual([
+            {
+                prefix: '',
+                namespace: 'R_Q_P01_boundaries',
+                formatter: "argument out of domain in '%s'",
+                args: ['R_Q_P01_boundaries']
+            },
+            {
+                prefix: '',
+                namespace: 'R_Q_P01_boundaries',
+                formatter: "argument out of domain in '%s'",
+                args: ['R_Q_P01_boundaries']
+            }
+        ]);
     });
     it('p=.8, df=42, ncp=80', () => {
         const z = qchisq(0.8, 42, 85);

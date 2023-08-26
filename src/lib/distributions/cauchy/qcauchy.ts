@@ -1,9 +1,9 @@
-import { debug } from '@mangos/debug';
-import { ML_ERR_return_NAN2, lineInfo4, R_Q_P01_check } from '@common/logger';
+import createNS from '@mangos/debug-frontend';
+import { ME, mapErrV2, R_Q_P01_check } from '@common/logger';
 
 import { tanpi } from '@trig/tanpi';
 
-const printer = debug('qcauchy');
+const debug = createNS('qcauchy');
 
 export function qcauchy(p: number, location = 0, scale = 1, lowerTail = true, logP = false): number {
     if (isNaN(p) || isNaN(location) || isNaN(scale)) return NaN;
@@ -15,8 +15,11 @@ export function qcauchy(p: number, location = 0, scale = 1, lowerTail = true, lo
     }
 
     if (scale <= 0 || !isFinite(scale)) {
-        if (scale === 0) return location;
-        /* else */ return ML_ERR_return_NAN2(printer, lineInfo4);
+        if (scale === 0) {
+            return location;
+        }
+        debug(mapErrV2[ME.ME_DOMAIN], debug.namespace);
+        return NaN;
     }
 
     //const my_INF = location + (lower_tail ? scale : -scale) * +Infinity;

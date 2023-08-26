@@ -1,0 +1,4367 @@
+[
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": "pnchisq(x=%d, f=%d, theta=%d >= 80): ",
+        "args": [
+            490,
+            13,
+            85
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": "-- v=exp(-th/2)=%d, x/2= %d, f/2= %d",
+        "args": [
+            3.4872615319944465e-19,
+            245,
+            6.5
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " lt= %d",
+        "args": [
+            -216.77618586821802
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": ", t=Math.exp(lt)= %d",
+        "args": [
+            7.166360798074798e-95
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            1
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            2
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            3
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            4
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            5
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            6
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            7
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            8
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            9
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            10
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            11
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            12
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            13
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            14
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            15
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            16
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            17
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            18
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            19
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            20
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            21
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            22
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            23
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            24
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            25
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            26
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            27
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            28
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            29
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            30
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            31
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            32
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            33
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            34
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            35
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            36
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            37
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            38
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            39
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            40
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            41
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            42
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            43
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            44
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            45
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            46
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            47
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            48
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            49
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            50
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            51
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            52
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            53
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            54
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            55
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            56
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            57
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            58
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            59
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            60
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            61
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            62
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            63
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            64
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            65
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            66
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            67
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            68
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            69
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            70
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            71
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            72
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            73
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            74
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            75
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            76
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            77
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            78
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            79
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            80
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            81
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            82
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            83
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            84
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            85
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            86
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            87
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            88
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            89
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            90
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            91
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            92
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            93
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            94
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            95
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            96
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            97
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            98
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            99
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            100
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            101
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            102
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            103
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            104
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            105
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            106
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            107
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            108
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            109
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            110
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            111
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            112
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            113
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            114
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            115
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            116
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            117
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            118
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            119
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            120
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            121
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            122
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            123
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            124
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            125
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            126
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            127
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            128
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            129
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            130
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            131
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            132
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            133
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            134
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            135
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            136
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            137
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            138
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            139
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            140
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            141
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            142
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            143
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            144
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            145
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            146
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            147
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            148
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            149
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            150
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            151
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            152
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            153
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            154
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            155
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            156
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            157
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            158
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            159
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            160
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            161
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            162
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            163
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            164
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            165
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            166
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            167
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            168
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            169
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            170
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            171
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            172
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            173
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            174
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            175
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            176
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            177
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            178
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            179
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            180
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            181
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            182
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            183
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            184
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            185
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            186
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            187
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            188
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            189
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            190
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            191
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            192
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            193
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            194
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            195
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            196
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            197
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            198
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            199
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            200
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            201
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            202
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            203
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            204
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            205
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            206
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            207
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            208
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            209
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            210
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            211
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            212
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            213
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            214
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            215
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            216
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            217
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            218
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            219
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            220
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            221
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            222
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            223
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            224
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            225
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            226
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            227
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            228
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            229
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            230
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            231
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            232
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            233
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            234
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            235
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            236
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            237
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            238
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            239
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            239,
+            0.025491822344703572,
+            12.490992948904754
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            240
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            240,
+            0.025439904172922096,
+            4.155184348243943
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            241
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            241,
+            0.025285097453817094,
+            2.4779395504740758
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            242
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            242,
+            0.025029692429031063,
+            1.7520784700321748
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            243
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            243,
+            0.024677161549748937,
+            1.343534351041887
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            244
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            244,
+            0.024232082483721402,
+            1.0794291288203173
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            245
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            245,
+            0.02370004075254189,
+            0.8933092283650408
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            246
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            246,
+            0.02308751484840065,
+            0.7541921517144214
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            247
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            247,
+            0.02240174708062637,
+            0.6456974158533485
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            248
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            248,
+            0.021650603687390378,
+            0.5583576740432258
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            249
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            249,
+            0.020842427911240247,
+            0.48632331792893924
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            250
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            250,
+            0.019985889777901604,
+            0.42578634744225174
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            251
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            251,
+            0.019089836240100945,
+            0.37416079030597865
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            252
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            252,
+            0.018163145160484395,
+            0.329627449208791
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            253
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            253,
+            0.017214586322315963,
+            0.29086714820464915
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            254
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            254,
+            0.016252692288891757,
+            0.256897394243773
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            255
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            255,
+            0.015285641500109332,
+            0.2269686162137447
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            256
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            256,
+            0.014321155516354822,
+            0.2004961772289676
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            257
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            257,
+            0.0133664118152645,
+            0.1770146429589083
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            258
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            258,
+            0.012427973035065666,
+            0.1561463278764661
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            259
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            259,
+            0.011511733057055154,
+            0.1375792487306592
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            260
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            260,
+            0.010622879845493456,
+            0.12105142149515805
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            261
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            261,
+            0.00976587452962813,
+            0.10633952265595079
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            262
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            262,
+            0.008944445830874361,
+            0.09325060547081783
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            263
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            263,
+            0.008161598616626513,
+            0.08161598616626517
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            264
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            264,
+            0.007419635106024103,
+            0.07128669023434925
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            265
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            265,
+            0.006720187064605934,
+            0.06213003135201715
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            266
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            266,
+            0.006064257203788045,
+            0.054027018724657136
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            267
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            267,
+            0.005452267944690168,
+            0.046870373559617255
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            268
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            268,
+            0.0048841157091374455,
+            0.04056299487249744
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            269
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            269,
+            0.00435922895715364,
+            0.03501675719680794
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            270
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            270,
+            0.0038766282922055965,
+            0.030151553383821316
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            271
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            271,
+            0.003434987094359389,
+            0.025894518095940018
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            272
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            272,
+            0.003032691308533515,
+            0.022179384196737654
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            273
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            273,
+            0.0026678972014029124,
+            0.018945936647643876
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            274
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            274,
+            0.0023385860978308174,
+            0.016139537858269028
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            275
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            275,
+            0.002042615308265776,
+            0.013710705493838774
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            276
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            276,
+            0.0017777646555066258,
+            0.011614729082643292
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            277
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            277,
+            0.0015417781968110561,
+            0.009811315797888541
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            278
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            278,
+            0.0013324009108243693,
+            0.008264258813973939
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            279
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            279,
+            0.001147410274699369,
+            0.006941123883983839
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            280
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            280,
+            0.0009846427926491956,
+            0.005812951426483206
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            281
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            281,
+            0.0008420156516546351,
+            0.004853972580126722
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            282
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            282,
+            0.0007175437727143847,
+            0.004041338490000559
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            283
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            283,
+            0.0006093525972791135,
+            0.0033548626142333223
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            284
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            284,
+            0.0005156869994244656,
+            0.002776776150747124
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            285
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            285,
+            0.0004349167465025614,
+            0.002291496836411346
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            286
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            286,
+            0.0003655389464601288,
+            0.001885411408057507
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            287
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            287,
+            0.0003061779209666036,
+            0.0015466719718931527
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            288
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            288,
+            0.00025558293232305916,
+            0.0012650064327100914
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            289
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            289,
+            0.00021262417120254497,
+            0.0010315430088044266
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            290
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            290,
+            0.0001762873839073554,
+            0.0008386487195592638
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            291
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            291,
+            0.00014566748417302555,
+            0.0006797815928074528
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            292
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            292,
+            0.00011996145755425634,
+            0.0005493562074914544
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            293
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            293,
+            0.00009846082780835111,
+            0.0004426220699641473
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            294
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            294,
+            0.00008054391590332561,
+            0.0003555542233570231
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            295
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            295,
+            0.0000656680845135267,
+            0.0002847554107223726
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            296
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            296,
+            0.000053362125060743094,
+            0.00022736905460664456
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            297
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            297,
+            0.00004321891120622168,
+            0.00018100227770127033
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            298
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            298,
+            0.00003488841267059081,
+            0.00014365816982007986
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            299
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            299,
+            0.000028071136631509847,
+            0.00011367650371437876
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            300
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            300,
+            0.000022512040833780402,
+            0.00008968211389066991
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            301
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            301,
+            0.000017994942917703746,
+            0.00007054017623739871
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            302
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            302,
+            0.00001433743419459323,
+            0.00005531765949095028
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            303
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            303,
+            0.000011386292958428984,
+            0.000043250260074652746
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            304
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            304,
+            0.000009013382148029404,
+            0.00003371417750026267
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            305
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            305,
+            0.0000071120084581874524,
+            0.00002620213642490115
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            306
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            306,
+            0.000005593714517675525,
+            0.000020303111953044503
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            307
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            307,
+            0.000004385472181857612,
+            0.000015685265467957888
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            308
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            308,
+            0.000003427243012934976,
+            0.000012081648031209631
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            309
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            309,
+            0.0000026698713455296317,
+            0.000009278276307159717
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            310
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            310,
+            0.0000020732756882876694,
+            0.0000071042313794472615
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            311
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            311,
+            0.0000016049053511231564,
+            0.000005423473255519634
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            312
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            312,
+            0.0000012384309008666876,
+            0.00000412810300288896
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            313
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            313,
+            9.526391545128367e-7,
+            0.0000031328401725589942
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            314
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            314,
+            7.30505767936291e-7,
+            0.0000023705154058859786
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            315
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            315,
+            5.584209458483348e-7,
+            0.0000017884069507561058
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            316
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            316,
+            4.2554628843807785e-7,
+            0.0000013452753634494079
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            317
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            317,
+            3.23283226875439e-7,
+            0.0000010089731284647464
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            318
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            318,
+            2.4483582870010065e-7,
+            7.545255098304992e-7
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            319
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            319,
+            1.848529369230344e-7,
+            5.625958949831483e-7
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            320
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            320,
+            1.3913661918938072e-7,
+            4.182634564588747e-7
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            321
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            321,
+            1.0440573262296562e-7,
+            3.100533877894132e-7
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            322
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            322,
+            7.810505188588269e-8,
+            2.291705115214523e-7
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            323
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            323,
+            5.8251865181251926e-8,
+            1.688959404663518e-7
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            324
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            324,
+            4.3313222972402793e-8,
+            1.2411391378056945e-7
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            325
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            325,
+            3.210813805821084e-8,
+            9.094212513597293e-8
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            326
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            326,
+            2.3729996453278002e-8,
+            6.644399006917842e-8
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            327
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            327,
+            1.748526054452063e-8,
+            4.8405523541328315e-8
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            328
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            328,
+            1.2845243878283521e-8,
+            3.5162958102563846e-8
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            329
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            329,
+            9.408325112644134e-9,
+            2.547005140992059e-8
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            330
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            330,
+            6.870460961543406e-9,
+            1.839631623582661e-8
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            331
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            331,
+            5.002267267691335e-9,
+            1.3249248438750028e-8
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            332
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            332,
+            3.6312754980277844e-9,
+            9.515106919965856e-9
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            333
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            333,
+            2.628249621910804e-9,
+            6.813980501250235e-9
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            334
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            334,
+            1.896674984884085e-9,
+            4.865815406247131e-9
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            335
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            335,
+            1.3647147468328956e-9,
+            3.464819823565384e-9
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            336
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            336,
+            9.790779296458546e-10,
+            2.4602471052639433e-9
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            337
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            337,
+            7.003623146371807e-10,
+            1.7420179399605008e-9
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            338
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            338,
+            4.995306174268101e-10,
+            1.2300000127594827e-9
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            339
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            339,
+            3.552539949769767e-10,
+            8.660420773070579e-10
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            340
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            340,
+            2.519167258158011e-10,
+            6.080748554174512e-10
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            341
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            341,
+            1.7812293744551597e-10,
+            4.2575726511367246e-10
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            342
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            342,
+            1.2558307819899686e-10,
+            2.972739532246787e-10
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            343
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            343,
+            8.828652556313983e-11,
+            2.0698754797099774e-10
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            344
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            344,
+            6.188898072380331e-11,
+            1.4372322537755278e-10
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            345
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            345,
+            4.326048581264426e-11,
+            9.951942745631781e-11
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            346
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            346,
+            3.015311244409059e-11,
+            6.872104696560184e-11
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            347
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            347,
+            2.095748240794949e-11,
+            4.732334737278918e-11
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            348
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            348,
+            1.4524987807489743e-11,
+            3.249883116744281e-11
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            349
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            349,
+            1.0038425988251022e-11,
+            2.2257143593859736e-11
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            350
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            350,
+            6.918183873759494e-12,
+            1.5201390574628488e-11
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            351
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            351,
+            4.754432115206384e-12,
+            1.0354096606449462e-11
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            352
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            352,
+            3.258282148882697e-12,
+            7.033296268513314e-12
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            353
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            353,
+            2.2267200180648835e-12,
+            4.764597418566782e-12
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            354
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            354,
+            1.5175143377632726e-12,
+            3.2189698073766402e-12
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            355
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            355,
+            1.0313204237226125e-12,
+            2.1688712773565683e-12
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            356
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            356,
+            6.98958516769129e-13,
+            1.4574028647526524e-12
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            357
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            357,
+            4.723995492646526e-13,
+            9.76691051222278e-13
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            358
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            358,
+            3.183985957904812e-13,
+            6.5278373195538e-13
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            359
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            359,
+            2.1401277357659228e-13,
+            4.3512970561215874e-13
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            360
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            360,
+            1.4345589473670344e-13,
+            2.892732033785379e-13
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            361
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            361,
+            9.589821066982903e-14,
+            1.9179642133965814e-13
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            362
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            362,
+            6.393214044655268e-14,
+            1.2682894258627865e-13
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            363
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            363,
+            4.250576501873923e-14,
+            8.364588296860333e-14
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            364
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            364,
+            2.8183795479272293e-14,
+            5.50201585053523e-14
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            365
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            365,
+            1.8637057739329856e-14,
+            3.609548732123175e-14
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            366
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            366,
+            1.229092636914082e-14,
+            2.3617858513250994e-14
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            367
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            367,
+            8.08396499446846e-15,
+            1.541300718789707e-14
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            368
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            368,
+            5.302734735327371e-15,
+            1.0032200850619354e-14
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            369
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            369,
+            3.4690787988122983e-15,
+            6.5128299288047e-15
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            370
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            370,
+            2.263446886042645e-15,
+            4.2170683428170965e-15
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " _OL_: n=%d",
+        "args": [
+            371
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " L10: n=%d; term= %d; bound= %d",
+        "args": [
+            371,
+            1.4728937239852538e-15,
+            2.723463866991602e-15
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": "BREAK n=%d %s; bound= %d %s, rel.err= %d %s",
+        "args": [
+            371,
+            "",
+            2.723463866991602e-15,
+            "<= errmax",
+            1.47289372398528e-15,
+            "<= reltol"
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": " ===  L_End: n=%d; term= %d; bound=%d",
+        "args": [
+            371,
+            1.4728937239852538e-15,
+            2.723463866991602e-15
+        ]
+    },
+    {
+        "prefix": "",
+        "namespace": "pnchisq",
+        "formatter": "full precision may not have been achieved in '%s'",
+        "args": [
+            "pnchisq"
+        ]
+    }
+]

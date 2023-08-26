@@ -1,7 +1,7 @@
-import { debug } from '@mangos/debug';
-import { ML_ERR_return_NAN2, lineInfo4 } from '@common/logger';
+import createDebug from '@mangos/debug-frontend';
+import { mapErrV2, ME } from '@common/logger';
 import { isNaN, PI, log as ln } from '@lib/r-func';
-const printer = debug('dcauchy');
+const debug = createDebug('dcauchy');
 
 export function dcauchy(x: number, location = 0, scale = 1, log = false): number {
     /* NaNs propagated correctly */
@@ -10,7 +10,8 @@ export function dcauchy(x: number, location = 0, scale = 1, log = false): number
     }
 
     if (scale <= 0) {
-        return ML_ERR_return_NAN2(printer, lineInfo4);
+        debug(mapErrV2[ME.ME_DOMAIN], debug.namespace);
+        return NaN;
     }
 
     const y = (x - location) / scale;

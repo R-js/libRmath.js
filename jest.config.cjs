@@ -3,10 +3,10 @@ const testRegex = [
     'src/lib/chebyshev/(.*).test.ts',
     'src/lib/distributions/beta/__test__/.*.test.ts',
     'src/lib/distributions/binomial/__test__/.*.test.ts',
-    'src/lib/distributions/binomial-negative/__test__/.*.test.ts'
-    /*'src/lib/distributions/cauchy/__test__/.*.test.ts',
-    'src/lib/distributions/chi-2/__test__/.*.test.ts',
-    'src/lib/distributions/exp/__test__/.*.test.ts',
+    'src/lib/distributions/binomial-negative/__test__/.*.test.ts',
+    'src/lib/distributions/cauchy/__test__/.*.test.ts',
+    'src/lib/distributions/chi-2/__test__/.*.test.ts'
+    /*'src/lib/distributions/exp/__test__/.*.test.ts',
     'src/lib/distributions/f-distro/__test__/.*.test.ts',
     'src/lib/distributions/gamma/__test__/.*.test.ts',
     'src/lib/distributions/geometric/__test__/.*.test.ts',
@@ -75,7 +75,7 @@ module.exports = {
     automock: false,
     collectCoverage: true,
     maxWorkers: 1,
-    collectCoverageFrom,
+    collectCoverageFrom: [],
     coveragePathIgnorePatterns: ['node_modules', 'test', 'doc.ts', 'IRandom.ts', 'IBesselRC.ts'],
     coverageDirectory: 'coverage',
     coverageProvider: 'babel', //"v8" is still experimental, but use "v8" for walk through debugging
