@@ -4,10 +4,11 @@ import { pnbinom } from '..';
 
 //helper
 import { loadData } from '@common/load';
-import { cl, select } from '@common/debug-mangos-select';
+import { register, unRegister } from '@mangos/debug-frontend';
 
-const pnbinomDomainWarns = select('pnbinom')("argument out of domain in '%s'");
-const pnbinomMuDomainWarns = select('pnbinom_mu')("argument out of domain in '%s'");
+//mocks
+import createBackEndMock from '@common/debug-backend';
+import type { MockLogs } from '@common/debug-backend';
 
 import { prob2mu } from './test-helpers';
 
@@ -17,9 +18,14 @@ describe('pnbinom', function () {
         expect(() => pnbinom(1, 10, 5, 6)).toThrowError('"prob" and "mu" both specified');
     });
     describe('using prob, not "mu" parameter', () => {
+        const logs: MockLogs[] = [];
         beforeEach(() => {
-            cl.clear('pnbinom');
-            cl.clear('pnbinom_mu');
+            const backend = createBackEndMock(logs);
+            register(backend);
+        });
+        afterEach(() => {
+            unRegister();
+            logs.splice(0);
         });
         it('x=NaN, prob=0.5, size=10', () => {
             const nan = pnbinom(NaN, 10, 0.5);
@@ -36,17 +42,38 @@ describe('pnbinom', function () {
         it('x=10, prob=Infinity, size=30', () => {
             const nan = pnbinom(10, 30, Infinity);
             expect(nan).toBeNaN();
-            expect(pnbinomDomainWarns()).toHaveLength(1);
+            expect(logs).toEqual([
+                {
+                    prefix: '',
+                    namespace: 'pnbinom',
+                    formatter: "argument out of domain in '%s'",
+                    args: ['pnbinom']
+                }
+            ]);
         });
         it('x=10, prob=0, size=30', () => {
             const nan = pnbinom(10, 30, 0);
             expect(nan).toBeNaN();
-            expect(pnbinomDomainWarns()).toHaveLength(1);
+            expect(logs).toEqual([
+                {
+                    prefix: '',
+                    namespace: 'pnbinom',
+                    formatter: "argument out of domain in '%s'",
+                    args: ['pnbinom']
+                }
+            ]);
         });
         it('x=10, prob=1.2, size=30', () => {
             const nan = pnbinom(10, 30, 1.2);
             expect(nan).toBeNaN();
-            expect(pnbinomDomainWarns()).toHaveLength(1);
+            expect(logs).toEqual([
+                {
+                    prefix: '',
+                    namespace: 'pnbinom',
+                    formatter: "argument out of domain in '%s'",
+                    args: ['pnbinom']
+                }
+            ]);
         });
         it('x=10, prob=0.2, size=0', () => {
             const z = pnbinom(10, 0, 0.2);
@@ -75,9 +102,14 @@ describe('pnbinom', function () {
         });
     });
     describe('using mu, not "prob" parameter', () => {
+        const logs: MockLogs[] = [];
         beforeEach(() => {
-            cl.clear('pnbinom');
-            cl.clear('pnbinom_mu');
+            const backend = createBackEndMock(logs);
+            register(backend);
+        });
+        afterEach(() => {
+            unRegister();
+            logs.splice(0);
         });
         it('x=NaN, size=30, mu=f(size=30,prob=0.3)', () => {
             const mu = prob2mu(30, 0.3);
@@ -98,25 +130,53 @@ describe('pnbinom', function () {
             const mu = prob2mu(30, 0.3);
             const nan = pnbinom(4, Infinity, undefined, mu);
             expect(nan).toBeNaN();
-            expect(pnbinomMuDomainWarns()).toHaveLength(1);
+            expect(logs).toEqual([
+                {
+                    prefix: '',
+                    namespace: 'pnbinom_mu',
+                    formatter: "argument out of domain in '%s'",
+                    args: ['pnbinom_mu']
+                }
+            ]);
         });
         it('x=4, size=30, mu=Infinity', () => {
             const mu = Infinity;
             const nan = pnbinom(4, 30, undefined, mu);
             expect(nan).toBeNaN();
-            expect(pnbinomMuDomainWarns()).toHaveLength(1);
+            expect(logs).toEqual([
+                {
+                    prefix: '',
+                    namespace: 'pnbinom_mu',
+                    formatter: "argument out of domain in '%s'",
+                    args: ['pnbinom_mu']
+                }
+            ]);
         });
         it('x=4, size=-30, mu=f(size=30, prob=0.3)', () => {
             const mu = prob2mu(30, 0.3);
             const nan = pnbinom(4, -30, undefined, mu);
             expect(nan).toBeNaN();
-            expect(pnbinomMuDomainWarns()).toHaveLength(1);
+            expect(logs).toEqual([
+                {
+                    prefix: '',
+                    namespace: 'pnbinom_mu',
+                    formatter: "argument out of domain in '%s'",
+                    args: ['pnbinom_mu']
+                }
+            ]);
         });
         it('x=4, size=30, mu=-20 (<0)', () => {
             const mu = -20;
             const nan = pnbinom(4, 30, undefined, mu);
             expect(nan).toBeNaN();
-            expect(pnbinomMuDomainWarns()).toHaveLength(1);
+            expect(logs).toEqual([
+                {
+                    prefix: '',
+                    namespace: 'pnbinom_mu',
+                    formatter: "argument out of domain in '%s'",
+                    args: ['pnbinom_mu']
+                }
+            ]);
         });
         it('x=4, size=0, mu=f(size=30, prob=0.3)', () => {
             const mu = prob2mu(30, 0.3);

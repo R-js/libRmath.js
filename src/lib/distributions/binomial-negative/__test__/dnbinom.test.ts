@@ -2,11 +2,12 @@ import { resolve } from 'path';
 
 //helper
 import { loadData } from '@common/load';
-import { cl, select } from '@common/debug-mangos-select';
 
-//const dbinom_muDomainWarns = select('dnbinom_mu')("argument out of domain in '%s'");
-const dbinomDomainWarns = select('dnbinom')("argument out of domain in '%s'");
-//dbinom_muDomainWarns;
+import { register, unRegister } from '@mangos/debug-frontend';
+
+//mocks
+import createBackEndMock from '@common/debug-backend';
+import type { MockLogs } from '@common/debug-backend';
 
 import { dnbinom } from '..';
 import { prob2mu } from './test-helpers';
@@ -17,11 +18,15 @@ describe('dnbinom', function () {
         expect(() => dnbinom(1, 10, 5, 6)).toThrowError('"prob" and "mu" both specified');
     });
     describe('using prob, not "mu" parameter', () => {
+        const logs: MockLogs[] = [];
         beforeEach(() => {
-            cl.clear('dnbinom_mu');
-            cl.clear('dnbinom');
+            const backend = createBackEndMock(logs);
+            register(backend);
         });
-
+        afterEach(() => {
+            unRegister();
+            logs.splice(0);
+        });
         it('ranges x ∊ [0, 200] size=34, prob=0.2', async () => {
             const [x, y] = await loadData(resolve(__dirname, 'fixture-generation', 'dnbinom1.R'), /\s+/, 1, 2);
             const actual = x.map((_x) => dnbinom(_x, 34, 0.2));
@@ -34,7 +39,14 @@ describe('dnbinom', function () {
         it('x=10, prob=0, size=20', () => {
             const nan = dnbinom(10, 20, 0);
             expect(nan).toBeNaN();
-            expect(dbinomDomainWarns()).toHaveLength(1);
+            expect(logs).toEqual([
+                {
+                    prefix: '',
+                    namespace: 'dnbinom',
+                    formatter: "argument out of domain in '%s'",
+                    args: ['dnbinom']
+                }
+            ]);
         });
         it('x=23.4 (non integer), prob=0.3, size=20', () => {
             const z = dnbinom(23.4, 20, 0.3);

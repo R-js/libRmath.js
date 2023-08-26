@@ -1,11 +1,9 @@
+import { register, unRegister } from '@mangos/debug-frontend';
+
 import { globalUni } from '@rng/global-rng';
-
-import { cl, select } from '@common/debug-mangos-select';
-
-const rnbinomDomainWarns = select('rnbinom')("argument out of domain in '%s'");
-const rnbinomMuDomainWarns = select('rnbinom_mu')("argument out of domain in '%s'");
-rnbinomDomainWarns;
-//rnbinomMuDomainWarns;
+//mocks
+import createBackEndMock from '@common/debug-backend';
+import type { MockLogs } from '@common/debug-backend';
 
 import { RNGkind, setSeed } from '@rng/global-rng';
 
@@ -17,10 +15,15 @@ describe('rnbinom', function () {
         expect(() => rnbinom(1, 10, 5, 6)).toThrowError('"prob" and "mu" both specified');
     });
     describe('using prob, not "mu" parameter', () => {
+        const logs: MockLogs[] = [];
         beforeEach(() => {
-            cl.clear('rnbinom');
-            cl.clear('rnbinom_mu');
+            const backend = createBackEndMock(logs);
+            register(backend);
             globalUni().init(97865);
+        });
+        afterEach(() => {
+            unRegister();
+            logs.splice(0);
         });
         it('n=10, size=4, prob=0.5', () => {
             const r = rnbinom(10, 4, 0.5);
@@ -48,9 +51,14 @@ describe('rnbinom', function () {
         });
     });
     describe('using mu, not "prob" parameter', () => {
+        const logs: MockLogs[] = [];
         beforeEach(() => {
-            cl.clear('rnbinom');
-            cl.clear('rnbinom_mu');
+            const backend = createBackEndMock(logs);
+            register(backend);
+        });
+        afterEach(() => {
+            unRegister();
+            logs.splice(0);
         });
         it('n=10, size=8, mu=12 (prob=0.6)', () => {
             RNGkind({ uniform: 'SUPER_DUPER', normal: 'BOX_MULLER' });
@@ -61,7 +69,14 @@ describe('rnbinom', function () {
         it('(check M.E.)n=1, size=8, mu=NaN', () => {
             const nan = rnbinom(1, 8, undefined, NaN);
             expect(nan).toEqualFloatingPointBinary(NaN);
-            expect(rnbinomMuDomainWarns()).toHaveLength(1);
+            expect(logs).toEqual([
+                {
+                    prefix: '',
+                    namespace: 'rnbinom_mu',
+                    formatter: "argument out of domain in '%s'",
+                    args: ['rnbinom_mu']
+                }
+            ]);
         });
         it('n=1, size=8, mu=0', () => {
             const z = rnbinom(1, 8, undefined, 0);
