@@ -8,8 +8,12 @@ import { qnbinom } from '..';
 
 describe('qnbinom', function () {
     describe('invalid input', () => {
-        expect(() => qnbinom(1, 10, undefined, undefined)).toThrowError('argument "prob" is missing, with no default');
-        expect(() => qnbinom(1, 10, 5, 6)).toThrowError('"prob" and "mu" both specified');
+        it('throws', () => {
+            expect(() => qnbinom(1, 10, undefined, undefined)).toThrowError(
+                'argument "prob" is missing, with no default'
+            );
+            expect(() => qnbinom(1, 10, 5, 6)).toThrowError('"prob" and "mu" both specified');
+        });
     });
     describe('using prob, not "mu" parameter', () => {
         const logs: MockLogs[] = [];

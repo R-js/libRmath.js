@@ -6,9 +6,9 @@ import { register, unRegister } from '@mangos/debug-frontend';
 import createBackEndMock from '@common/debug-backend';
 import type { MockLogs } from '@common/debug-backend';
 
-import * as logs0 from './fixture-generation/trace-info-pnchisq[x = 490, df=13, ncp=85, lower=false, log=true].json';
-import * as logs2 from './fixture-generation/trace-info-pnchisq[x = 200, df=13, ncp=85, lower=false, log=true].json';
-import * as logs3 from './fixture-generation/trace-info-pnchisq[x = 490, df=13, ncp=85, lower=false, log=false].json';
+import logs0 from './fixture-generation/trace-info-pnchisq[x = 490, df=13, ncp=85, lower=false, log=true].json';
+import logs2 from './fixture-generation/trace-info-pnchisq[x = 200, df=13, ncp=85, lower=false, log=true].json';
+import logs3 from './fixture-generation/trace-info-pnchisq[x = 490, df=13, ncp=85, lower=false, log=false].json' assert { type: 'json' };
 
 describe('pnchisq', function () {
     const logs: MockLogs[] = [];
