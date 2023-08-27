@@ -1,18 +1,17 @@
 import createNS from '@mangos/debug-frontend';
-import { ML_ERR_return_NAN2, lineInfo4 } from '@common/logger';
+import { ME, mapErrV2 } from '@common/logger';
 import { R_P_bounds_01 } from '@lib/r-func';
 import { pnbeta2 } from '@dist/beta/pnbeta';
 import { pnchisq } from '@dist/chi-2/pnchisq';
 
-const printer_pnf = debug('pnf');
+const debug = createNS('pnf');
 export function pnf(x: number, df1: number, df2: number, ncp: number, lowerTail: boolean, logP: boolean): number {
     if (isNaN(x) || isNaN(df1) || isNaN(df2) || isNaN(ncp)) return x + df2 + df1 + ncp;
 
-    if (df1 <= 0 || df2 <= 0 || ncp < 0) return ML_ERR_return_NAN2(printer_pnf, lineInfo4);
-    if (!isFinite(ncp)) return ML_ERR_return_NAN2(printer_pnf, lineInfo4);
-    if (!isFinite(df1) && !isFinite(df2))
-        /* both +Inf */
-        return ML_ERR_return_NAN2(printer_pnf, lineInfo4);
+    if (df1 <= 0 || df2 <= 0 || ncp < 0 || !isFinite(ncp) || (!isFinite(df1) && !isFinite(df2))) {
+        debug(mapErrV2[ME.ME_DOMAIN], debug.namespace);
+        return NaN;
+    }
 
     const rc = R_P_bounds_01(lowerTail, logP, x, 0, Infinity);
     if (rc !== undefined) {

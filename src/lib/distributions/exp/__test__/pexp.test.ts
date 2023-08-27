@@ -1,12 +1,12 @@
 import { resolve } from 'node:path';
 
-import { register, unRegister } from '@mangos/debug-frontend';
-import createBackEndMock from '@common/debug-backend';
-import type { MockLogs } from '@common/debug-backend';
-
 import { loadData } from '@common/load';
 
 import { pexp } from '..';
+
+import { register, unRegister } from '@mangos/debug-frontend';
+import createBackEndMock from '@common/debug-backend';
+import type { MockLogs } from '@common/debug-backend';
 
 describe('pexp', function () {
     const logs: MockLogs[] = [];

@@ -1,16 +1,19 @@
 import createNS from '@mangos/debug-frontend';
 
-import { ML_ERR_return_NAN2, lineInfo4, R_Q_P01_boundaries } from '@common/logger';
+import { ME, mapErrV2, R_Q_P01_boundaries } from '@common/logger';
 
 import { qbeta } from '@dist/beta/qbeta';
 import { qchisq } from '@dist/chi-2/qchisq';
 
-const printer = debug('qf');
+const debug = createNS('qf');
 
 export function qf(p: number, df1: number, df2: number, lower_tail: boolean, log_p: boolean): number {
     if (isNaN(p) || isNaN(df1) || isNaN(df2)) return p + df1 + df2;
 
-    if (df1 <= 0 || df2 <= 0) return ML_ERR_return_NAN2(printer, lineInfo4);
+    if (df1 <= 0 || df2 <= 0) {
+        debug(mapErrV2[ME.ME_DOMAIN], debug.namespace);
+        return NaN;
+    }
 
     const rc = R_Q_P01_boundaries(lower_tail, log_p, p, 0, Infinity);
     if (rc !== undefined) {

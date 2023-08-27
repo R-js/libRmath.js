@@ -1,19 +1,20 @@
 import createNS from '@mangos/debug-frontend';
 
-import { ML_ERR_return_NAN2, lineInfo4 } from '@common/logger';
+import { mapErrV2, ME } from '@common/logger';
 import { R_DT_0, R_DT_1, R_P_bounds_01 } from '@lib/r-func';
 
 //import { INormal } from '../exp/expm1'normal';
 import { pbeta } from '@dist/beta/pbeta';
 import { pchisq } from '@dist/chi-2/pchisq';
 
-const printer_pf = debug('pf');
+const debug = createNS('pf');
 
 export function pf(q: number, df1: number, df2: number, lowerTail: boolean, logP: boolean): number {
     if (isNaN(q) || isNaN(df1) || isNaN(df2)) return q + df2 + df1;
 
     if (df1 <= 0 || df2 <= 0) {
-        return ML_ERR_return_NAN2(printer_pf, lineInfo4);
+        debug(mapErrV2[ME.ME_DOMAIN], debug.namespace);
+        return NaN;
     }
 
     const rc = R_P_bounds_01(lowerTail, logP, q, 0, Infinity);

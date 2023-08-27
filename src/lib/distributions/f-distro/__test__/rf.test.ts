@@ -1,16 +1,21 @@
-import { cl, select } from '@common/debug-mangos-select';
-
 import { rf } from '..';
 import { globalUni, RNGkind } from '@rng/global-rng';
 
-const rfLogs = select('rf');
-const rfDomainWarns = rfLogs("argument out of domain in '%s'");
+import { register, unRegister } from '@mangos/debug-frontend';
+import createBackEndMock from '@common/debug-backend';
+import type { MockLogs } from '@common/debug-backend';
 
 describe('rf', function () {
+    const logs: MockLogs[] = [];
     beforeEach(() => {
         RNGkind({ uniform: 'MERSENNE_TWISTER', normal: 'INVERSION' });
         globalUni().init(123456);
-        cl.clear('rf');
+        const backend = createBackEndMock(logs);
+        register(backend);
+    });
+    afterEach(() => {
+        unRegister();
+        logs.splice(0);
     });
     it('n=10, df1=3, df2=55', () => {
         const actual = rf(10, 3, 55);
@@ -23,7 +28,14 @@ describe('rf', function () {
     it('n=1, df1=-3(<0), df2=55', () => {
         const nan = rf(1, -3, 55);
         expect(nan).toEqualFloatingPointBinary(NaN);
-        expect(rfDomainWarns()).toHaveLength(1);
+        expect(logs).toEqual([
+            {
+                prefix: '',
+                namespace: 'rf',
+                formatter: "argument out of domain in '%s'",
+                args: ['rf']
+            }
+        ]);
     });
     it('n=1, df1=Inf, df2=Inf', () => {
         const z = rf(1, Infinity, Infinity);

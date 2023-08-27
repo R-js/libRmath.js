@@ -1,15 +1,21 @@
 import { loadData } from '@common/load';
 import { resolve } from 'path';
-import { cl, select } from '@common/debug-mangos-select';
 
 import { qf } from '..';
 
-const qfLogs = select('qf');
-const qfDomainWarns = qfLogs("argument out of domain in '%s'");
+import { register, unRegister } from '@mangos/debug-frontend';
+import createBackEndMock from '@common/debug-backend';
+import type { MockLogs } from '@common/debug-backend';
 
 describe('qf', function () {
+    const logs: MockLogs[] = [];
     beforeEach(() => {
-        cl.clear('qf');
+        const backend = createBackEndMock(logs);
+        register(backend);
+    });
+    afterEach(() => {
+        unRegister();
+        logs.splice(0);
     });
     it('p ∈ [-0.125, 1.125], df1=3, df2=55', async () => {
         const [p, y1] = await loadData(resolve(__dirname, 'fixture-generation', 'qf.R'), /\s+/, 1, 2);
@@ -23,7 +29,14 @@ describe('qf', function () {
     it('p=0.2, df1=-2(<0), df2=4', () => {
         const nan = qf(0.2, -2, 4);
         expect(nan).toBeNaN();
-        expect(qfDomainWarns()).toHaveLength(1);
+        expect(logs).toEqual([
+            {
+                prefix: '',
+                namespace: 'qf',
+                formatter: "argument out of domain in '%s'",
+                args: ['qf']
+            }
+        ]);
     });
     it('p=0.3, df1=35, df2=4e6', () => {
         const z = qf(0.3, 35, 4e6);

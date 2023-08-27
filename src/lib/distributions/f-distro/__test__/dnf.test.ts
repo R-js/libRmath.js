@@ -1,14 +1,19 @@
 import { loadData } from '@common/load';
-import { resolve } from 'path';
+import { resolve } from 'node:path';
 import { df } from '..';
+import { register, unRegister } from '@mangos/debug-frontend';
+import createBackEndMock from '@common/debug-backend';
+import type { MockLogs } from '@common/debug-backend';
 
-import { cl, select } from '@common/debug-mangos-select';
-
-const dfLogs = select('dnf');
-const dfDomainWarns = dfLogs("argument out of domain in '%s'");
 describe('dnf (df with ncp is finite)', function () {
+    const logs: MockLogs[] = [];
     beforeEach(() => {
-        cl.clear('dnf');
+        const backend = createBackEndMock(logs);
+        register(backend);
+    });
+    afterEach(() => {
+        unRegister();
+        logs.splice(0);
     });
     it('x ∈ [-0.125, 3.1250], df1=23, df2=52, ncp=98', async () => {
         const [p, y1] = await loadData(resolve(__dirname, 'fixture-generation', 'dnf.R'), /\s+/, 1, 2);
@@ -22,12 +27,26 @@ describe('dnf (df with ncp is finite)', function () {
     it('x=1, df1=-1(<=0), df2=4, ncp=98', () => {
         const nan = df(1, -1, 4, 98);
         expect(nan).toBeNaN();
-        expect(dfDomainWarns()).toHaveLength(1);
+        expect(logs).toEqual([
+            {
+                prefix: '',
+                namespace: 'dnf',
+                formatter: "argument out of domain in '%s'",
+                args: ['dnf']
+            }
+        ]);
     });
     it('x=1, df1=2, df2=4, ncp=Inf', () => {
         const z = df(1, 2, 4, Infinity);
         expect(z).toBeNaN();
-        expect(dfDomainWarns()).toHaveLength(1);
+        expect(logs).toEqual([
+            {
+                prefix: '',
+                namespace: 'dnf',
+                formatter: "argument out of domain in '%s'",
+                args: ['dnf']
+            }
+        ]);
     });
     it('x=4, df1=inf, df2=inf, ncp=98', () => {
         const z = df(4, Infinity, Infinity, 98);

@@ -1,11 +1,11 @@
 import createNS from '@mangos/debug-frontend';
 
-import { ML_ERR_return_NAN2, lineInfo4 } from '@common/logger';
+import { ME, mapErrV2 } from '@common/logger';
 import { R_D__0, R_D__1 } from '@lib/r-func';
 import { dbinom_raw } from '@dist/binomial/dbinom';
 import { dgamma } from '@dist/gamma/dgamma';
 
-const printer_df = debug('df');
+const debug = createNS('df');
 
 export function df(x: number, m: number, n: number, giveLog: boolean): number {
     let f: number;
@@ -15,7 +15,8 @@ export function df(x: number, m: number, n: number, giveLog: boolean): number {
         return x + m + n;
     }
     if (m <= 0 || n <= 0) {
-        return ML_ERR_return_NAN2(printer_df, lineInfo4);
+        debug(mapErrV2[ME.ME_DOMAIN], debug.namespace);
+        return NaN;
     }
     if (x < 0) {
         return R_D__0(giveLog);

@@ -1,14 +1,20 @@
-import { resolve } from 'path';
+import { resolve } from 'node:path';
 import { df } from '..';
 
 import { loadData } from '@common/load';
-import { cl, select } from '@common/debug-mangos-select';
-const dfLogs = select('df');
-const dfDomainWarns = dfLogs("argument out of domain in '%s'");
+import { register, unRegister } from '@mangos/debug-frontend';
+import createBackEndMock from '@common/debug-backend';
+import type { MockLogs } from '@common/debug-backend';
 
 describe('df', function () {
+    const logs: MockLogs[] = [];
     beforeEach(() => {
-        cl.clear('df');
+        const backend = createBackEndMock(logs);
+        register(backend);
+    });
+    afterEach(() => {
+        unRegister();
+        logs.splice(0);
     });
     it('x ∈ [-0.125, 3.1250], df1=23, df2=52', async () => {
         const [p, y1] = await loadData(resolve(__dirname, 'fixture-generation', 'df.R'), /\s+/, 1, 2);
@@ -22,7 +28,14 @@ describe('df', function () {
     it('x=1, df1=-1(<0), df2=4', () => {
         const nan = df(1, -2, 4);
         expect(nan).toBeNaN();
-        expect(dfDomainWarns()).toHaveLength(1);
+        expect(logs).toEqual([
+            {
+                prefix: '',
+                namespace: 'df',
+                formatter: "argument out of domain in '%s'",
+                args: ['df']
+            }
+        ]);
     });
     it('x=0, df1=3(>2), df2=4', () => {
         const z = df(0, 3, 4);
