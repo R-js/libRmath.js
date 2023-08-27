@@ -245,9 +245,9 @@ expect.extend({
         // eslint-disable-next-line @typescript-eslint/no-inferrable-types
         received: unknown,
         expected: unknown,
-        mantissa: number = Infinity,
-        cycle: boolean = true,
-        hf: boolean = true
+        mantissa = Infinity,
+        cycle = true,
+        hf = true
     ) {
         const options: MatcherHintOptions = {
             isNot: this.isNot as boolean,
@@ -348,7 +348,7 @@ expect.extend({
         const bpeE = (expected as typedFPArrays).BYTES_PER_ELEMENT || (hf ? 8 : 4);
         const bpe: 4 | 8 = Math.min(bpeE, bpeR) as 4 | 8;
 
-        const mantissa2 = Math.min(mantissa, bpe === 4 || hf === false ? 23 : 52);
+        const mantissa2 = Math.min(mantissa as number, bpe === 4 || hf === false ? 23 : 52);
 
         if (mantissa2 !== mantissa) {
             errMsg += `Mantissa forced to ${mantissa2} bits`;

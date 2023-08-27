@@ -1,4 +1,4 @@
-const tsFilePattern = '**/*.ts';
+const tsFilePattern = './src/**/*.ts';
 module.exports = {
     root: true,
     env: {
@@ -13,7 +13,6 @@ module.exports = {
         ecmaVersion: 2020,
         requireConfigFile: false,
         sourceType: 'module',
-        extraFileExtensions: ['.mjs', '.cjs'],
         babelOptions: {
             parserOpts: {
                 plugins: ['importAssertions']

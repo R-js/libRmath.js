@@ -1,5 +1,6 @@
 {
     "include": ["src/lib/**/*.ts", "src/packages/**/*.ts", "src/index.ts"],
+    "exclude": ["./vitest.config.ts"],
     "files": ["src/index.ts"],
     "typeAcquisition": {
         "enable": true,
