@@ -1,4 +1,4 @@
-import { debug } from '@mangos/debug';
+import createNS from '@mangos/debug-frontend';
 import { ME, ML_ERROR2 } from '@common/logger';
 import { sinpi } from '@trig/sinpi';
 import BesselK from '../besselK';

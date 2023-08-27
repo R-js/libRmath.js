@@ -1,6 +1,6 @@
 'use strict';
 
-import { debug } from '@mangos/debug';
+import createNS from '@mangos/debug-frontend';
 import { ML_ERR_return_NAN2, lineInfo4 } from '@common/logger';
 import { M_LN_SQRT_PI, R_D__0, sqrt, abs, DBL_EPSILON, exp, log } from '@lib/r-func';
 import { lgammafn_sign as lgamma } from '@special/gamma';

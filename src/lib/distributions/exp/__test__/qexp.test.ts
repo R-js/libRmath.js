@@ -1,16 +1,20 @@
+import { register, unRegister } from '@mangos/debug-frontend';
+import createBackEndMock from '@common/debug-backend';
+import type { MockLogs } from '@common/debug-backend';
+
 import { resolve } from 'path';
 import { qexp } from '..';
-
 import { loadData } from '@common/load';
-import { cl, select } from '@common/debug-mangos-select';
-
-const qexpLogs = select('qexp');
-const qexpDomainWarns = qexpLogs("argument out of domain in '%s'");
-qexpDomainWarns;
 
 describe('qexp', function () {
+    const logs: MockLogs[] = [];
     beforeEach(() => {
-        cl.clear('qexp');
+        const backend = createBackEndMock(logs);
+        register(backend);
+    });
+    afterEach(() => {
+        unRegister();
+        logs.splice(0);
     });
     it('p=[ -0.1250, 1.1250 ], rates= 4, 32, (8 and tail=false, log=true)', async () => {
         const [p, y1, y2, y3] = await loadData(resolve(__dirname, 'fixture-generation', 'qexp.R'), /\s+/, 1, 2, 3, 4);
@@ -31,6 +35,13 @@ describe('qexp', function () {
     it('rate = -3 (<0)', () => {
         const nan = qexp(0, -3);
         expect(nan).toBeNaN();
-        expect(qexpDomainWarns()).toHaveLength(1);
+        expect(logs).toEqual([
+            {
+                prefix: '',
+                namespace: 'qexp',
+                formatter: "argument out of domain in '%s'",
+                args: ['qexp']
+            }
+        ]);
     });
 });

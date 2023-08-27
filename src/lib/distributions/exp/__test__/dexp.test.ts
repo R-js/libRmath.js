@@ -1,11 +1,20 @@
+import { register, unRegister } from '@mangos/debug-frontend';
+import createBackEndMock from '@common/debug-backend';
+import type { MockLogs } from '@common/debug-backend';
 import { loadData } from '@common/load';
 
 import { resolve } from 'path';
 import { dexp } from '..';
 
 describe('dexp', function () {
+    const logs: MockLogs[] = [];
     beforeEach(() => {
-        // cl.clear('dexp');
+        const backend = createBackEndMock(logs);
+        register(backend);
+    });
+    afterEach(() => {
+        unRegister();
+        logs.splice(0);
     });
     it('x=[-0.5, 3], rate=(1, 2, 45, 0.5)', async () => {
         const [p, y1, y2, y3, y4] = await loadData(
@@ -34,7 +43,7 @@ describe('dexp', function () {
         const nan = dexp(0, NaN);
         expect(nan).toBeNaN();
     });
-    it.todo('rate = -3 (<0)', () => {
+    it('rate = -3 (<0)', () => {
         const nan = dexp(0, -3);
         expect(nan).toBeNaN();
         // expect(dexpDomainWarns()).toHaveLength(1);

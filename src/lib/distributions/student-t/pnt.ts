@@ -1,6 +1,6 @@
 'use strict';
 
-import { debug } from '@mangos/debug';
+import createNS from '@mangos/debug-frontend';
 import { pbeta } from '@dist/beta/pbeta';
 import { ME, ML_ERR_return_NAN2, lineInfo4, ML_ERROR2 } from '@common/logger';
 import {

@@ -3,7 +3,7 @@
 import { ML_ERR_return_NAN2, lineInfo4 } from '@common/logger';
 import { R_DT_0, R_DT_1, isFinite, floor } from '@lib/r-func';
 
-import { debug } from '@mangos/debug';
+import createNS from '@mangos/debug-frontend';
 import { pgamma } from '@dist/gamma/pgamma';
 
 const printer = debug('ppois');

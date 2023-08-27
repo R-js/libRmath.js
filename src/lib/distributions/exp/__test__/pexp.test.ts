@@ -1,13 +1,22 @@
+import { resolve } from 'node:path';
+
+import { register, unRegister } from '@mangos/debug-frontend';
+import createBackEndMock from '@common/debug-backend';
+import type { MockLogs } from '@common/debug-backend';
+
 import { loadData } from '@common/load';
-import { resolve } from 'path';
+
 import { pexp } from '..';
 
-import { cl, select } from '@common/debug-mangos-select';
-const pexpDomainWarns = select('pexp')("argument out of domain in '%s'");
-
 describe('pexp', function () {
+    const logs: MockLogs[] = [];
     beforeEach(() => {
-        cl.clear('pexp');
+        const backend = createBackEndMock(logs);
+        register(backend);
+    });
+    afterEach(() => {
+        unRegister();
+        logs.splice(0);
     });
     it('x=[-0.5, 3], rates= 1, 2, 16, (5 and tail=F)', async () => {
         const [p, y1, y2, y3, y4] = await loadData(
@@ -40,7 +49,14 @@ describe('pexp', function () {
     it('rate = -3 (<0)', () => {
         const nan = pexp(0, -3);
         expect(nan).toBeNaN();
-        expect(pexpDomainWarns()).toHaveLength(1);
+        expect(logs).toEqual([
+            {
+                prefix: '',
+                namespace: 'pexp',
+                formatter: "argument out of domain in '%s'",
+                args: ['pexp']
+            }
+        ]);
     });
     it('asLog = true, rate = 5, x=2', () => {
         const z = pexp(2, 5, undefined, true);

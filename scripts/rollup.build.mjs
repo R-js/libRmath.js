@@ -57,7 +57,7 @@ const inputOptions = {
     plugins: [
         shims(),
         nodeResolve({
-            dedupe: ['@mangos/debug', 'ms'],
+            dedupe: ['@mangos/debug-frontend'],
             exportConditions: ['import']
         })
     ]

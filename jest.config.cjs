@@ -1,13 +1,13 @@
 const testRegex = [
     'src/lib/alt/(.*)/__test__/test.ts',
-    'src/lib/chebyshev/(.*).test.ts',
-    'src/lib/distributions/beta/__test__/.*.test.ts',
-    'src/lib/distributions/binomial/__test__/.*.test.ts',
-    'src/lib/distributions/binomial-negative/__test__/.*.test.ts',
-    'src/lib/distributions/cauchy/__test__/.*.test.ts',
-    'src/lib/distributions/chi-2/__test__/.*.test.ts'
-    /*'src/lib/distributions/exp/__test__/.*.test.ts',
-    'src/lib/distributions/f-distro/__test__/.*.test.ts',
+    'src/lib/chebyshev/(.*)\\.test.ts',
+    'src/lib/distributions/beta/__test__/.*\\.test.ts',
+    'src/lib/distributions/binomial/__test__/.*\\.test.ts',
+    'src/lib/distributions/binomial-negative/__test__/.*\\.test.ts',
+    'src/lib/distributions/cauchy/__test__/.*\\.test.ts',
+    'src/lib/distributions/chi-2/__test__/.*\\.test.ts',
+    'src/lib/distributions/exp/__test__/.*.test.ts'
+    /*'src/lib/distributions/f-distro/__test__/.*.test.ts',
     'src/lib/distributions/gamma/__test__/.*.test.ts',
     'src/lib/distributions/geometric/__test__/.*.test.ts',
     'src/lib/distributions/hypergeometric/__test__/.*.test.ts',

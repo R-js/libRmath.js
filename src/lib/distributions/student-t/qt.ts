@@ -1,6 +1,6 @@
 'use strict';
 
-import { debug } from '@mangos/debug';
+import createNS from '@mangos/debug-frontend';
 
 import { ME, ML_ERROR2, R_Q_P01_boundaries, ML_ERR_return_NAN2, lineInfo4 } from '@common/logger';
 

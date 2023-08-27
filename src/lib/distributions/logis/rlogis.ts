@@ -1,4 +1,4 @@
-import { debug } from '@mangos/debug';
+import createNS from '@mangos/debug-frontend';
 import { ML_ERR_return_NAN2, lineInfo4 } from '@common/logger';
 import { globalUni } from '@lib/rng';
 const printer_rlogis = debug('rlogis');

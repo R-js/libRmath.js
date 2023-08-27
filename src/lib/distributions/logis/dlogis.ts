@@ -1,4 +1,4 @@
-import { debug } from '@mangos/debug';
+import createNS from '@mangos/debug-frontend';
 import { ML_ERR_return_NAN2, lineInfo4 } from '@common/logger';
 import { log as _log, abs, exp } from '@lib/r-func';
 

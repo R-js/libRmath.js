@@ -1,8 +1,9 @@
-import { ML_ERR_return_NAN2, lineInfo4 } from '@common/logger';
-import { R_D__0 } from '@lib/r-func';
-import { debug } from '@mangos/debug';
+import createNS from '@mangos/debug-frontend';
 
-const printer = debug('dexp');
+import { ME, mapErrV2 } from '@common/logger';
+import { R_D__0 } from '@lib/r-func';
+
+const debug = createNS('dexp');
 
 export function dexp(x: number, scale: number, give_log: boolean): number {
     /* NaNs propagated correctly */
@@ -11,7 +12,8 @@ export function dexp(x: number, scale: number, give_log: boolean): number {
     }
 
     if (scale <= 0.0) {
-        return ML_ERR_return_NAN2(printer, lineInfo4);
+        debug(mapErrV2[ME.ME_DOMAIN], debug.namespace);
+        return NaN;
     }
 
     if (x < 0) {

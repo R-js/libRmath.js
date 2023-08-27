@@ -1,4 +1,4 @@
-import { debug } from '@mangos/debug';
+import createNS from '@mangos/debug-frontend';
 import { Rf_gamma_cody } from '@special/bessel/gamma_cody';
 import {
     enmten_BESS,

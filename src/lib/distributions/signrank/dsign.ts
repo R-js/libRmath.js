@@ -1,6 +1,6 @@
 'use strict';
 
-import { debug } from '@mangos/debug';
+import createNS from '@mangos/debug-frontend';
 import { ML_ERR_return_NAN2, lineInfo4 } from '@common/logger';
 import { cpu_csignrank } from './csignrank';
 import { R_D__0, R_D_exp, isNaN, trunc, abs, log as _log, M_LN2, round } from '@lib/r-func';

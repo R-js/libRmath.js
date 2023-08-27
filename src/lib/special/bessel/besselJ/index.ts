@@ -1,5 +1,5 @@
 //3rd party
-import { debug } from '@mangos/debug';
+import createNS from '@mangos/debug-frontend';
 
 //tooling
 import { ME, ML_ERROR2 } from '@common/logger';

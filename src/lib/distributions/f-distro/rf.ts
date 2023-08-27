@@ -1,4 +1,4 @@
-import { debug } from '@mangos/debug';
+import createNS from '@mangos/debug-frontend';
 
 import { rchisqOne } from '../chi-2/rchisq';
 import { ML_ERR_return_NAN2, lineInfo4 } from '@common/logger';

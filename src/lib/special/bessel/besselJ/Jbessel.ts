@@ -1,4 +1,4 @@
-import { debug } from '@mangos/debug';
+import createNS from '@mangos/debug-frontend';
 import { ME, ML_ERROR2 } from '@common/logger';
 import { Rf_gamma_cody } from '@special/bessel/gamma_cody';
 import { enmten_BESS, ensig_BESS, enten_BESS, xlrg_BESS_IJ } from '../bessel-constants';
@@ -24,31 +24,9 @@ const twopi2 = 0.001935307179586476925286767;
  *  Factorial(N)
  *--------------------------------------------------------------------- */
 const fact: number[] = [
-    1,
-    1,
-    2,
-    6,
-    24,
-    120,
-    720,
-    5040,
-    40320,
-    362880,
-    3628800,
-    39916800,
-    479001600,
-    6227020800,
-    87178291200,
-    1.307674368e12,
-    2.0922789888e13,
-    3.55687428096e14,
-    6.402373705728e15,
-    1.21645100408832e17,
-    2.43290200817664e18,
-    5.109094217170944e19,
-    1.12400072777760768e21,
-    2.585201673888497664e22,
-    6.2044840173323943936e23,
+    1, 1, 2, 6, 24, 120, 720, 5040, 40320, 362880, 3628800, 39916800, 479001600, 6227020800, 87178291200,
+    1.307674368e12, 2.0922789888e13, 3.55687428096e14, 6.402373705728e15, 1.21645100408832e17, 2.43290200817664e18,
+    5.109094217170944e19, 1.12400072777760768e21, 2.585201673888497664e22, 6.2044840173323943936e23
 ];
 
 export function J_bessel(x: number, alpha: number, nb: number): IBesselRC {
@@ -123,11 +101,8 @@ export function J_bessel(x: number, alpha: number, nb: number): IBesselRC {
      *******************************************************************
      */
 
-
-
     /* Local variables */
     //const int lim = nb;
-   
 
     //START ints
     let i_nend;
@@ -254,11 +229,9 @@ export function J_bessel(x: number, alpha: number, nb: number): IBesselRC {
         const xin = 1 / (64 * x * x);
         if (x >= 130) {
             i_m = 4;
-        }
-        else if (x >= 35) {
+        } else if (x >= 35) {
             i_m = 8;
-        }
-        else {
+        } else {
             i_m = 11;
         }
         xm = 4 * i_m;

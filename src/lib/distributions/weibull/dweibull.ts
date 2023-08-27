@@ -1,6 +1,6 @@
 'use strict';
 
-import { debug } from '@mangos/debug';
+import createNS from '@mangos/debug-frontend';
 
 import { ML_ERR_return_NAN2, lineInfo4 } from '@common/logger';
 import { R_D__0, pow, log as _log, exp } from '@lib/r-func';

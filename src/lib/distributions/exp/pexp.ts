@@ -1,15 +1,17 @@
-import { ML_ERR_return_NAN2, lineInfo4 } from '@common/logger';
+import createNS from '@mangos/debug-frontend';
+
+import { ME, mapErrV2 } from '@common/logger';
 import { R_D_exp, R_DT_0 } from '@lib/r-func';
 
-import { debug } from '@mangos/debug';
 import { R_Log1_Exp } from './expm1';
 
-const printer = debug('pexp');
+const debug = createNS('pexp');
 
 export function pexp(q: number, scale: number, lower_tail: boolean, log_p: boolean): number {
     if (isNaN(q) || isNaN(scale)) return q + scale;
     if (scale < 0) {
-        return ML_ERR_return_NAN2(printer, lineInfo4);
+        debug(mapErrV2[ME.ME_DOMAIN], debug.namespace);
+        return NaN;
     }
 
     if (q <= 0) return R_DT_0(lower_tail, log_p);

@@ -1,4 +1,4 @@
-import { debug } from '@mangos/debug';
+import createNS from '@mangos/debug-frontend';
 import { ML_ERR_return_NAN2, lineInfo4 } from '@common/logger';
 import { M_1_SQRT_2PI, M_LN_SQRT_2PI, R_D__0, log as _log } from '@lib/r-func';
 const printer = debug('dlnorm');
