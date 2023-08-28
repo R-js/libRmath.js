@@ -5,18 +5,35 @@ import { emptyFloat64Array } from '@lib/r-func';
 import { globalUni, RNGkind } from '@rng/global-rng';
 import { rgamma } from '..';
 
+import { register, unRegister } from '@mangos/debug-frontend';
+import createBackEndMock from '@common/debug-backend';
+import type { MockLogs } from '@common/debug-backend';
+
 describe('rgamma', function () {
+    const logs: MockLogs[] = [];
+    beforeEach(() => {
+        const backend = createBackEndMock(logs);
+        register(backend);
+    });
+    afterEach(() => {
+        unRegister();
+        logs.splice(0);
+    });
     describe('invalid input', () => {
-        beforeEach(() => {
-            // cl.clear('rgamma');
-        });
         it('n=-1(<0)', () => {
             expect(() => rgamma(-1, 1.6)).toThrow();
         });
-        it.todo('n=1, scale=NaN  shape=4', () => {
+        it('n=1, scale=NaN  shape=4', () => {
             const nan = rgamma(1, 4, undefined, NaN);
             expect(nan).toEqualFloatingPointBinary(NaN);
-            //expect(rgammaDomainWarns()).toHaveLength(1);
+            expect(logs).toEqual([
+                {
+                    prefix: '',
+                    namespace: 'rgamma',
+                    formatter: "argument out of domain in '%s'",
+                    args: ['rgamma']
+                }
+            ]);
         });
     });
     describe('edge cases', () => {

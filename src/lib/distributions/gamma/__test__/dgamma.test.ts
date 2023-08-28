@@ -3,19 +3,36 @@ import { resolve } from 'path';
 
 import { dgamma } from '..';
 
+import { register, unRegister } from '@mangos/debug-frontend';
+import createBackEndMock from '@common/debug-backend';
+import type { MockLogs } from '@common/debug-backend';
+
 describe('dgamma', function () {
+    const logs: MockLogs[] = [];
+    beforeEach(() => {
+        const backend = createBackEndMock(logs);
+        register(backend);
+    });
+    afterEach(() => {
+        unRegister();
+        logs.splice(0);
+    });
     describe('invalid input', () => {
-        beforeEach(() => {
-            //cl.clear('dgamma');
-        });
         it('x=NaN, shape=0', () => {
             const nan = dgamma(NaN, 0);
             expect(nan).toBe(NaN);
         });
-        it.todo('x=4, shape=-1(<0)', () => {
+        it('x=4, shape=-1(<0)', () => {
             const nan = dgamma(4, -1);
             expect(nan).toBe(NaN);
-            //expect(dgammaDomainWarns()).toHaveLength(1);
+            expect(logs).toEqual([
+                {
+                    prefix: '',
+                    namespace: 'dgamma',
+                    formatter: "argument out of domain in '%s'",
+                    args: ['dgamma']
+                }
+            ]);
         });
     });
 

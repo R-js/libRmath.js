@@ -3,19 +3,36 @@ import { resolve } from 'path';
 
 import { pgamma } from '..';
 
+import { register, unRegister } from '@mangos/debug-frontend';
+import createBackEndMock from '@common/debug-backend';
+import type { MockLogs } from '@common/debug-backend';
+
 describe('pgamma', function () {
+    const logs: MockLogs[] = [];
+    beforeEach(() => {
+        const backend = createBackEndMock(logs);
+        register(backend);
+    });
+    afterEach(() => {
+        unRegister();
+        logs.splice(0);
+    });
     describe('invalid input', () => {
-        beforeEach(() => {
-            //cl.clear('pgamma');
-        });
         it('x=NaN, shape=1.6, defaults', () => {
             const z = pgamma(NaN, 1.6);
             expect(z).toBeNaN();
         });
-        it.todo('x=0, shape=-5(<0), defaults', () => {
+        it('x=0, shape=-5(<0), defaults', () => {
             const nan = pgamma(0, -5);
             expect(nan).toBeNaN();
-            //expect(pgammaDomainWarns()).toHaveLength(1);
+            expect(logs).toEqual([
+                {
+                    prefix: '',
+                    namespace: 'pgamma',
+                    formatter: "argument out of domain in '%s'",
+                    args: ['pgamma']
+                }
+            ]);
         });
     });
     describe('edge cases', () => {

@@ -2,27 +2,56 @@ import { loadData } from '@common/load';
 import { resolve } from 'path';
 import { qgamma } from '..';
 
+import { register, unRegister } from '@mangos/debug-frontend';
+import createBackEndMock from '@common/debug-backend';
+import type { MockLogs } from '@common/debug-backend';
+
 describe('qgamma', function () {
+    const logs: MockLogs[] = [];
+    beforeEach(() => {
+        const backend = createBackEndMock(logs);
+        register(backend);
+    });
+    afterEach(() => {
+        unRegister();
+        logs.splice(0);
+    });
     describe('invalid input', () => {
-        beforeEach(() => {
-            // cl.clear('qgamma');
-            // cl.clear('R_Q_P01_boundaries');
-        });
         it('p=NaN, shape=1.6, defaults', () => {
             const z = qgamma(NaN, 1.6);
             expect(z).toBeNaN();
         });
-        it.todo('p=0.5, shape<0 or scale<0, defaults', () => {
+        it('p=0.5, shape<0 or scale<0, defaults', () => {
             const nan = qgamma(0.5, -5);
             const nan2 = qgamma(0.5, 2, -3);
             expect(nan).toBeNaN();
             expect(nan2).toBeNaN();
-            //expect(qgammaDomainWarns()).toHaveLength(2);
+            expect(logs).toEqual([
+                {
+                    prefix: '',
+                    namespace: 'qgamma',
+                    formatter: "argument out of domain in '%s'",
+                    args: ['qgamma']
+                },
+                {
+                    prefix: '',
+                    namespace: 'qgamma',
+                    formatter: "argument out of domain in '%s'",
+                    args: ['qgamma']
+                }
+            ]);
         });
-        it.todo('p=-2 shape=1.6, defaults', () => {
+        it('p=-2 shape=1.6, defaults', () => {
             const nan = qgamma(-2, 1.6);
             expect(nan).toBe(nan);
-            //expect(bounderiesWarns()).toHaveLength(1);
+            expect(logs).toEqual([
+                {
+                    prefix: '',
+                    namespace: 'R_Q_P01_boundaries',
+                    formatter: "argument out of domain in '%s'",
+                    args: ['R_Q_P01_boundaries']
+                }
+            ]);
         });
     });
     describe('edge cases', () => {
