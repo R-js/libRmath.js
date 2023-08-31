@@ -1,19 +1,22 @@
 import createNS from '@mangos/debug-frontend';
 import { dbinom_raw } from '@dist/binomial/dbinom';
-import { ML_ERR_return_NAN2, lineInfo4 } from '@common/logger';
+import { ME, mapErrV2 } from '@common/logger';
 
 import { R_D__0, R_D_nonint_check, log as _log, round } from '@lib/r-func';
 
-const printer = debug('dgeom');
+const debug = createNS('dgeom');
 
 export function dgeom(x: number, p: number, log = false): number {
-    if (isNaN(x) || isNaN(p)) return x + p;
-
-    if (p <= 0 || p > 1) {
-        return ML_ERR_return_NAN2(printer, lineInfo4);
+    if (isNaN(x) || isNaN(p)) {
+        return x + p;
     }
 
-    const rc = R_D_nonint_check(log, x, printer);
+    if (p <= 0 || p > 1) {
+        debug(mapErrV2[ME.ME_DOMAIN], debug.namespace);
+        return NaN;
+    }
+
+    const rc = R_D_nonint_check(log, x, debug);
     if (rc !== undefined) {
         return rc;
     }

@@ -1,16 +1,17 @@
 import createNS from '@mangos/debug-frontend';
 
-import { ML_ERR_return_NAN2, lineInfo4 } from '@common/logger';
+import { ME, mapErrV2 } from '@common/logger';
 import { R_DT_0, R_DT_1 } from '@lib/r-func';
 import { R_DT_Clog } from '@dist/exp/expm1';
 
-const printer = debug('pgeom');
+const debug = createNS('pgeom');
 
 export function pgeom(q: number, p: number, lowerTail = true, logP = false): number {
     if (isNaN(q) || isNaN(p)) return NaN;
 
     if (p <= 0 || p > 1) {
-        return ML_ERR_return_NAN2(printer, lineInfo4);
+        debug(mapErrV2[ME.ME_DOMAIN], debug.namespace);
+        return NaN;
     }
 
     if (q < 0) return R_DT_0(lowerTail, logP);

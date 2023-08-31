@@ -1,15 +1,18 @@
 import createNS from '@mangos/debug-frontend';
-import { R_Q_P01_check, ML_ERR_return_NAN2, lineInfo4, R_Q_P01_boundaries } from '@common/logger';
+import { R_Q_P01_check, ME, mapErrV2, R_Q_P01_boundaries } from '@common/logger';
 import { R_DT_Clog } from '@dist/exp/expm1';
 import { max, ceil, log1p } from '@lib/r-func';
 
-const printer = debug('qgeom');
+const debug = createNS('qgeom');
 
 export function qgeom(p: number, prob: number, lowerTail = true, logP = false): number {
-    if (isNaN(p) || isNaN(prob)) return NaN;
+    if (isNaN(p) || isNaN(prob)) {
+        return NaN;
+    }
 
     if (prob <= 0 || prob > 1) {
-        return ML_ERR_return_NAN2(printer, lineInfo4);
+        debug(mapErrV2[ME.ME_DOMAIN], debug.namespace);
+        return NaN;
     }
 
     const chk1 = R_Q_P01_check(logP, p);
@@ -17,7 +20,9 @@ export function qgeom(p: number, prob: number, lowerTail = true, logP = false): 
         return chk1;
     }
 
-    if (prob === 1) return 0;
+    if (prob === 1) {
+        return 0;
+    }
 
     const chk2 = R_Q_P01_boundaries(lowerTail, logP, p, 0, Infinity);
     if (chk2 !== undefined) {

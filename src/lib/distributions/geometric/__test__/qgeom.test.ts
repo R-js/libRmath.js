@@ -1,19 +1,22 @@
 import { loadData } from '@common/load';
 import { resolve } from 'path';
-import { cl, select } from '@common/debug-mangos-select';
 
 import { qgeom } from '..';
-
-const qgeomLogs = select('qgeom');
-const qgeomDomainWarns = qgeomLogs("argument out of domain in '%s'");
-const qgeomWarns = select('R_Q_P01_check')("argument out of domain in '%s'");
+import { register, unRegister } from '@mangos/debug-frontend';
+import createBackEndMock from '@common/debug-backend';
+import type { MockLogs } from '@common/debug-backend';
 
 describe('qgeom', function () {
+    const logs: MockLogs[] = [];
+    beforeEach(() => {
+        const backend = createBackEndMock(logs);
+        register(backend);
+    });
+    afterEach(() => {
+        unRegister();
+        logs.splice(0);
+    });
     describe('invalid input', () => {
-        beforeEach(() => {
-            cl.clear('qgeom');
-            cl.clear('R_Q_P01_check');
-        });
         it('p=NaN, prop=0.2', () => {
             const nan = qgeom(NaN, 0.2);
             expect(nan).toBe(NaN);
@@ -21,12 +24,26 @@ describe('qgeom', function () {
         it('p=4, prob=-1(<0)', () => {
             const nan = qgeom(4, -1);
             expect(nan).toBe(NaN);
-            expect(qgeomDomainWarns()).toHaveLength(1);
+            expect(logs).toEqual([
+                {
+                    prefix: '',
+                    namespace: 'qgeom',
+                    formatter: "argument out of domain in '%s'",
+                    args: ['qgeom']
+                }
+            ]);
         });
         it('p=1.2, prob=0.2, log=T', () => {
             const nan = qgeom(1.2, 0.2, undefined, true);
             expect(nan).toBe(NaN);
-            expect(qgeomWarns()).toHaveLength(1);
+            expect(logs).toEqual([
+                {
+                    prefix: '',
+                    namespace: 'R_Q_P01_check',
+                    formatter: "argument out of domain in '%s'",
+                    args: ['R_Q_P01_check']
+                }
+            ]);
         });
     });
 
