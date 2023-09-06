@@ -1,12 +1,11 @@
 import { loadData } from '@common/load';
 import { resolve } from 'path';
-import { cl, select } from '@common/debug-mangos-select';
 
 import { dhyper } from '..';
 
-const dhyperLogs = select('dhyper');
-const dhyperWarns = dhyperLogs("argument out of domain in '%s'");
-const nonIntWarns = dhyperLogs('non-integer x = %d');
+import { register, unRegister } from '@mangos/debug-frontend';
+import createBackEndMock from '@common/debug-backend';
+import type { MockLogs } from '@common/debug-backend';
 
 /**
  * dhyper(x, m, n, k, log = FALSE)
@@ -18,10 +17,16 @@ const nonIntWarns = dhyperLogs('non-integer x = %d');
  */
 
 describe('dhyper(x,m,n,k,log)', function () {
+    const logs: MockLogs[] = [];
+    beforeEach(() => {
+        const backend = createBackEndMock(logs);
+        register(backend);
+    });
+    afterEach(() => {
+        unRegister();
+        logs.splice(0);
+    });
     describe('invalid input', () => {
-        beforeEach(() => {
-            cl.clear('dhyper');
-        });
         it('test all inputs on NaN', () => {
             const nan1 = dhyper(NaN, 0, 0, 0);
             const nan2 = dhyper(0, NaN, 0, 0);
@@ -34,7 +39,26 @@ describe('dhyper(x,m,n,k,log)', function () {
             const nan2 = dhyper(0, 0, 3.2, 0);
             const nan3 = dhyper(0, 0, 0, 1);
             expect([nan1, nan2, nan3]).toEqualFloatingPointBinary(NaN);
-            expect(dhyperWarns()).toHaveLength(3);
+            expect(logs).toEqual([
+                {
+                    prefix: '',
+                    namespace: 'dhyper',
+                    formatter: "argument out of domain in '%s'",
+                    args: ['dhyper']
+                },
+                {
+                    prefix: '',
+                    namespace: 'dhyper',
+                    formatter: "argument out of domain in '%s'",
+                    args: ['dhyper']
+                },
+                {
+                    prefix: '',
+                    namespace: 'dhyper',
+                    formatter: "argument out of domain in '%s'",
+                    args: ['dhyper']
+                }
+            ]);
         });
     });
 
@@ -54,7 +78,14 @@ describe('dhyper(x,m,n,k,log)', function () {
         it('x is a non integer', () => {
             const z = dhyper(0.5, 3, 2, 2);
             expect(z).toBe(0);
-            expect(nonIntWarns()).toHaveLength(1);
+            expect(logs).toEqual([
+                {
+                    prefix: '',
+                    namespace: 'dhyper',
+                    formatter: 'non-integer x = %d',
+                    args: [0.5]
+                }
+            ]);
         });
         it('(contradiction) n = 0( no samples drawn), x > 0', () => {
             const z = dhyper(2, 3, 2, 0);

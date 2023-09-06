@@ -1,13 +1,10 @@
-import ms from 'ms';
-
 import { loadData } from '@common/load';
-import { resolve } from 'path';
-import { cl, select } from '@common/debug-mangos-select';
+import { resolve } from 'node:path';
 import { qhyper, useWasmBackendHyperGeom, clearBackendHyperGeom } from '..';
 
-const qhyperLogs = select('qhyper');
-const qhyperWarns = qhyperLogs("argument out of domain in '%s'");
-const p01bounderies = select('R_Q_P01_boundaries')("argument out of domain in '%s'");
+import { register, unRegister } from '@mangos/debug-frontend';
+import createBackEndMock from '@common/debug-backend';
+import type { MockLogs } from '@common/debug-backend';
 
 /**
  * function qhyper(p, m, n, k, lower.tail = TRUE, log.p = FALSE)
@@ -22,18 +19,23 @@ const p01bounderies = select('R_Q_P01_boundaries')("argument out of domain in '%
  */
 
 describe('qhyper(p,m,n,k,log)', function () {
+    const logs: MockLogs[] = [];
+    beforeEach(() => {
+        const backend = createBackEndMock(logs);
+        register(backend);
+    });
+    afterEach(() => {
+        unRegister();
+        logs.splice(0);
+    });
     describe('invalid input', () => {
-        beforeEach(() => {
-            cl.clear('qhyper');
-            cl.clear('R_Q_P01_boundaries');
-        });
         it('test inputs p, nr, ,b, n on NaN', () => {
             const nan1 = qhyper(NaN, 0, 0, 0);
             const nan2 = qhyper(0, NaN, 0, 0);
             const nan3 = qhyper(0, 0, NaN, 0);
             const nan4 = qhyper(0, 0, 0, NaN);
             expect([nan1, nan2, nan3, nan4]).toEqualFloatingPointBinary(NaN);
-            expect(qhyperWarns()).toHaveLength(0);
+            expect(logs).toEqual([]);
         });
         it('test inputs p,nr, nb, n on infinity', () => {
             const I = Infinity;
@@ -42,7 +44,32 @@ describe('qhyper(p,m,n,k,log)', function () {
             const nan3 = qhyper(0, 0, I, 0);
             const nan4 = qhyper(0, 0, 0, I);
             expect([nan1, nan2, nan3, nan4]).toEqualFloatingPointBinary(NaN);
-            expect(qhyperWarns()).toHaveLength(4);
+            expect(logs).toEqual([
+                {
+                    prefix: '',
+                    namespace: 'qhyper',
+                    formatter: "argument out of domain in '%s'",
+                    args: ['qhyper']
+                },
+                {
+                    prefix: '',
+                    namespace: 'qhyper',
+                    formatter: "argument out of domain in '%s'",
+                    args: ['qhyper']
+                },
+                {
+                    prefix: '',
+                    namespace: 'qhyper',
+                    formatter: "argument out of domain in '%s'",
+                    args: ['qhyper']
+                },
+                {
+                    prefix: '',
+                    namespace: 'qhyper',
+                    formatter: "argument out of domain in '%s'",
+                    args: ['qhyper']
+                }
+            ]);
         });
         it('test inputs nr < 0, nb <0, n <0 n > (nb+nr)', () => {
             const nan1 = qhyper(0.1, -1, 0, 0);
@@ -50,13 +77,51 @@ describe('qhyper(p,m,n,k,log)', function () {
             const nan3 = qhyper(0.1, 0, 0, -1);
             const nan4 = qhyper(0.1, 0, 0, 2);
             expect([nan1, nan2, nan3, nan4]).toEqualFloatingPointBinary(NaN);
-            expect(qhyperWarns()).toHaveLength(4);
+            expect(logs).toEqual([
+                {
+                    prefix: '',
+                    namespace: 'qhyper',
+                    formatter: "argument out of domain in '%s'",
+                    args: ['qhyper']
+                },
+                {
+                    prefix: '',
+                    namespace: 'qhyper',
+                    formatter: "argument out of domain in '%s'",
+                    args: ['qhyper']
+                },
+                {
+                    prefix: '',
+                    namespace: 'qhyper',
+                    formatter: "argument out of domain in '%s'",
+                    args: ['qhyper']
+                },
+                {
+                    prefix: '',
+                    namespace: 'qhyper',
+                    formatter: "argument out of domain in '%s'",
+                    args: ['qhyper']
+                }
+            ]);
         });
         it('p < 0 || p > 1', () => {
             const nan1 = qhyper(-1, 2, 3, 2);
             const nan2 = qhyper(1.21, 2, 3, 2);
             expect([nan1, nan2]).toEqualFloatingPointBinary(NaN);
-            expect(p01bounderies()).toHaveLength(2);
+            expect(logs).toEqual([
+                {
+                    prefix: '',
+                    namespace: 'R_Q_P01_boundaries',
+                    formatter: "argument out of domain in '%s'",
+                    args: ['R_Q_P01_boundaries']
+                },
+                {
+                    prefix: '',
+                    namespace: 'R_Q_P01_boundaries',
+                    formatter: "argument out of domain in '%s'",
+                    args: ['R_Q_P01_boundaries']
+                }
+            ]);
         });
     });
     describe('edge cases', () => {
@@ -121,23 +186,21 @@ describe('qhyper(p,m,n,k,log)', function () {
         });
     });
     describe('wasm accelerator test', () => {
-        it.skip('(481 sec) non wasm-accelerated test, n=1, nr=2**31-1, nb=2**31-1, n=2**31-1', () => {
-            const start = new Date();
-            //console.log(`start at: ${start.toISOString()}`)
-            const result = qhyper(0.5, 2 ** 31 - 1, 2 ** 31 - 1, 2 ** 31 - 1);
-            const stop = new Date();
-            const duration = Math.round((stop.valueOf() - start.valueOf()) / 1000);
-            //console.log(`stop at: ${stop.toISOString()}`)
-            console.log(`duration: ${duration} sec, result=${result}`);
-            expect(result).toBe(1073741806);
-        });
-        it('(28 sec) wasm-accelerated test, p=0.5, nr=2**31-1, nb=2**31-1, n=2**31-1', () => {
+        it('js & wasm-accelerated test, n=1, nr=2**31-1, nb=2**31-1, n=2**31-1', () => {
+            clearBackendHyperGeom();
+            const t0 = Date.now();
+            const result1 = qhyper(0.5, 2 ** 31 - 1, 2 ** 31 - 1, 2 ** 31 - 1);
+            const t1 = Date.now();
+            console.log('qhyper: (non wasm) duration: %s sec', Math.round((t1 - t0) / 10) / 100);
+            console.log('qhyper: (non wasm) duration: %s ms', t1 - t0);
+            expect(result1).toBe(1073741806);
             // initialize wasm
             useWasmBackendHyperGeom();
-            const start = Date.now();
+            const t2 = Date.now();
             const result = qhyper(0.5, 2 ** 31 - 1, 2 ** 31 - 1, 2 ** 31 - 1);
-            const stop = Date.now();
-            console.log(`(wasm) duration: ${ms(stop - start)}`);
+            const t3 = Date.now();
+            console.log('qhyper: (wasm) duration: %s sec', Math.round((t3 - t2) / 10) / 100);
+            console.log('qhyper: (wasm) duration: %s ms', t3 - t2);
             clearBackendHyperGeom();
             expect(result).toBe(1073741806);
         });

@@ -1,5 +1,5 @@
 import createNS from '@mangos/debug-frontend';
-import { ML_ERR_return_NAN2, lineInfo4 } from '@common/logger';
+import { mapErrV2, ME } from '@common/logger';
 import { R_D_Lval, R_DT_0, R_DT_1 } from '@lib/r-func';
 import { R_DT_log } from '@dist/exp/expm1';
 import { dhyper } from './dhyper';
@@ -37,7 +37,7 @@ function pdhyper(x: number, NR: number, NB: number, n: number, logP: boolean): n
 /* FIXME: The old phyper() code was basically used in ./qhyper.c as well
  * -----  We need to sync this again!
  */
-const printer_phyper = debug('phyper');
+const debug = createNS('phyper');
 
 export function phyper(q: number, m: number, n: number, k: number, lowerTail = true, logP = false): number {
     /* Sample of  n balls from  NR red  and	 NB black ones;	 q are red */
@@ -51,7 +51,8 @@ export function phyper(q: number, m: number, n: number, k: number, lowerTail = t
     k = Math.round(k);
 
     if (m < 0 || n < 0 || !isFinite(m + n) || k < 0 || k > m + n) {
-        return ML_ERR_return_NAN2(printer_phyper, lineInfo4);
+        debug(mapErrV2[ME.ME_DOMAIN], debug.namespace);
+        return NaN;
     }
 
     /*
@@ -91,7 +92,7 @@ export function phyper(q: number, m: number, n: number, k: number, lowerTail = t
 
     if (q >= k) {
         // this condition does not happen? (see above)
-        printer_phyper('trace q>=k q=%d m=%d n=%d k=%d', ox, onr, onb, onn);
+        debug('trace q>=k q=%d m=%d n=%d k=%d', ox, onr, onb, onn);
         return R_DT_1(lower_tail, logP);
     }
 

@@ -1,12 +1,12 @@
 import createNS from '@mangos/debug-frontend';
-import { ML_ERR_return_NAN2, lineInfo4, R_Q_P01_boundaries } from '@common/logger';
+import { mapErrV2, ME, R_Q_P01_boundaries } from '@common/logger';
 import { lfastchoose } from '@lib/special/choose';
 import { R_DT_qIv } from '@dist/exp/expm1';
 import { DBL_EPSILON } from '@lib/r-func';
 
 import type { QHyperFunctionMap, CalcQHyper } from './qhyper_wasm';
 
-const printer_qhyper = debug('qhyper');
+const debug = createNS('qhyper');
 
 const _d = new Float64Array(7);
 const ixr = 0;
@@ -84,7 +84,8 @@ export function qhyper(p: number, m: number, n: number, k: number, lowerTail = t
     }
 
     if (!isFinite(p) || !isFinite(m) || !isFinite(n) || !isFinite(k)) {
-        return ML_ERR_return_NAN2(printer_qhyper, lineInfo4);
+        debug(mapErrV2[ME.ME_DOMAIN], debug.namespace);
+        return NaN;
     }
 
     _d[iNR] = Math.round(m);
@@ -93,7 +94,10 @@ export function qhyper(p: number, m: number, n: number, k: number, lowerTail = t
     const N = _d[iNR] + _d[iNB];
 
     k = Math.round(k);
-    if (_d[iNR] < 0 || _d[iNB] < 0 || k < 0 || k > N) return ML_ERR_return_NAN2(printer_qhyper, lineInfo4);
+    if (_d[iNR] < 0 || _d[iNB] < 0 || k < 0 || k > N) {
+        debug(mapErrV2[ME.ME_DOMAIN], debug.namespace);
+        return NaN;
+    }
 
     /* Goal:  Find  xr (= #{red balls in sample}) such that
      *   phyper(xr,  NR,NB, k) >= p > phyper(xr - 1,  NR,NB, k)

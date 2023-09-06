@@ -126,6 +126,6 @@
         "node": ">=v18.15.0"
     },
     "dependencies": {
-        "@mangos/debug-frontend": "0.0.3"
+        "@mangos/debug-frontend": "0.0.4"
     }
 }

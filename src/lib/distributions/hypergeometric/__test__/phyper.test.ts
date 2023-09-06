@@ -1,11 +1,11 @@
 import { loadData } from '@common/load';
 import { resolve } from 'path';
-import { cl, select } from '@common/debug-mangos-select';
 
 import { phyper } from '..';
 
-const phyperLogs = select('phyper');
-const phyperWarns = phyperLogs("argument out of domain in '%s'");
+import { register, unRegister } from '@mangos/debug-frontend';
+import createBackEndMock from '@common/debug-backend';
+import type { MockLogs } from '@common/debug-backend';
 //const nonIntWarns = phyperLogs('non-integer x = %d');
 
 /**
@@ -19,17 +19,23 @@ const phyperWarns = phyperLogs("argument out of domain in '%s'");
  */
 
 describe('phyper(x,m,n,k,log)', function () {
+    const logs: MockLogs[] = [];
+    beforeEach(() => {
+        const backend = createBackEndMock(logs);
+        register(backend);
+    });
+    afterEach(() => {
+        unRegister();
+        logs.splice(0);
+    });
     describe('invalid input', () => {
-        beforeEach(() => {
-            cl.clear('phyper');
-        });
         it('test all inputs on NaN', () => {
             const nan1 = phyper(NaN, 0, 0, 0);
             const nan2 = phyper(0, NaN, 0, 0);
             const nan3 = phyper(0, 0, NaN, 0);
             const nan4 = phyper(0, 0, 0, NaN);
             expect([nan1, nan2, nan3, nan4]).toEqualFloatingPointBinary(NaN);
-            expect(phyperWarns()).toHaveLength(0);
+            expect(logs).toEqual([]);
         });
         it('test all inputs (except x) on negative of non integer', () => {
             const nan1 = phyper(0, -1, 0, 0);
@@ -38,7 +44,38 @@ describe('phyper(x,m,n,k,log)', function () {
             const nan4 = phyper(0, 0, 0, -1);
             const nan5 = phyper(0, 1, 1, 4);
             expect([nan1, nan2, nan3, nan4, nan5]).toEqualFloatingPointBinary(NaN);
-            expect(phyperWarns()).toHaveLength(5);
+            expect(logs).toEqual([
+                {
+                    prefix: '',
+                    namespace: 'phyper',
+                    formatter: "argument out of domain in '%s'",
+                    args: ['phyper']
+                },
+                {
+                    prefix: '',
+                    namespace: 'phyper',
+                    formatter: "argument out of domain in '%s'",
+                    args: ['phyper']
+                },
+                {
+                    prefix: '',
+                    namespace: 'phyper',
+                    formatter: "argument out of domain in '%s'",
+                    args: ['phyper']
+                },
+                {
+                    prefix: '',
+                    namespace: 'phyper',
+                    formatter: "argument out of domain in '%s'",
+                    args: ['phyper']
+                },
+                {
+                    prefix: '',
+                    namespace: 'phyper',
+                    formatter: "argument out of domain in '%s'",
+                    args: ['phyper']
+                }
+            ]);
         });
     });
     describe('edge cases', () => {

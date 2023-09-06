@@ -1,18 +1,26 @@
 import { resolve } from 'path';
-import ms from 'ms';
 
 import { loadData } from '@common/load';
-import { cl, select } from '@common/debug-mangos-select';
 
 import { globalUni, RNGkind } from '@rng/global-rng';
 import { rhyper, useWasmBackendHyperGeom, clearBackendHyperGeom } from '..';
 
-const rhyperDomainWarns = select('rhyper')("argument out of domain in '%s'");
+import { register, unRegister } from '@mangos/debug-frontend';
+import createBackEndMock from '@common/debug-backend';
+import type { MockLogs } from '@common/debug-backend';
 
 describe('rhyper', function () {
+    const logs: MockLogs[] = [];
+    beforeEach(() => {
+        const backend = createBackEndMock(logs);
+        register(backend);
+    });
+    afterEach(() => {
+        unRegister();
+        logs.splice(0);
+    });
     describe('invalid input', () => {
         beforeEach(() => {
-            cl.clear('rhyper');
             RNGkind({ uniform: 'MERSENNE_TWISTER', normal: 'INVERSION' });
             globalUni().init(123456);
         });
@@ -21,7 +29,26 @@ describe('rhyper', function () {
             const nan3 = rhyper(1, 0, NaN, 0);
             const nan4 = rhyper(1, 0, 0, Infinity);
             expect([nan2[0], nan3[0], nan4[0]]).toEqualFloatingPointBinary(NaN);
-            expect(rhyperDomainWarns()).toHaveLength(3);
+            expect(logs).toEqual([
+                {
+                    prefix: '',
+                    namespace: 'rhyper',
+                    formatter: "argument out of domain in '%s'",
+                    args: ['rhyper']
+                },
+                {
+                    prefix: '',
+                    namespace: 'rhyper',
+                    formatter: "argument out of domain in '%s'",
+                    args: ['rhyper']
+                },
+                {
+                    prefix: '',
+                    namespace: 'rhyper',
+                    formatter: "argument out of domain in '%s'",
+                    args: ['rhyper']
+                }
+            ]);
         });
         it('test inputs nr < 0, nb <0, n <0 n > (nb+nr)', () => {
             const nan1 = rhyper(1, -1, 0, 0);
@@ -29,13 +56,37 @@ describe('rhyper', function () {
             const nan3 = rhyper(1, 0, 0, -1);
             const nan4 = rhyper(1, 0, 0, 2);
             expect([nan1[0], nan2[0], nan3[0], nan4[0]]).toEqualFloatingPointBinary(NaN);
-            expect(rhyperDomainWarns()).toHaveLength(4);
+            expect(logs).toEqual([
+                {
+                    prefix: '',
+                    namespace: 'rhyper',
+                    formatter: "argument out of domain in '%s'",
+                    args: ['rhyper']
+                },
+                {
+                    prefix: '',
+                    namespace: 'rhyper',
+                    formatter: "argument out of domain in '%s'",
+                    args: ['rhyper']
+                },
+                {
+                    prefix: '',
+                    namespace: 'rhyper',
+                    formatter: "argument out of domain in '%s'",
+                    args: ['rhyper']
+                },
+                {
+                    prefix: '',
+                    namespace: 'rhyper',
+                    formatter: "argument out of domain in '%s'",
+                    args: ['rhyper']
+                }
+            ]);
         });
     });
 
     describe('edge cases', () => {
         beforeEach(() => {
-            cl.clear('rhyper');
             RNGkind({ uniform: 'MERSENNE_TWISTER', normal: 'INVERSION' });
             globalUni().init(123456);
         });
@@ -46,7 +97,7 @@ describe('rhyper', function () {
             const z2 = rhyper(10, 2 ** 31 - 2, 2 ** 31, 1);
             expect(z2).toEqualFloatingPointBinary([1, 1, 1, 1, 1, 1, 1, 0, 0, 1]);
         });
-        it('(wasm) with k=2^31-1 AND m, n, bigger then INT_MAX (2^31-1', () => {
+        it('(wasm) with k=2^31-1 AND m, n, bigger then INT_MAX (2^31-1', function () {
             globalUni().init(1234);
             useWasmBackendHyperGeom();
             const t0 = Date.now();
@@ -58,24 +109,26 @@ describe('rhyper', function () {
             );
             expect(z3).toEqualFloatingPointBinary(1073761537);
             const t1 = Date.now();
+            console.log('rhyper: (wasm) %s sec', Math.round((t1 - t0) / 10) / 100);
+            console.log('rhyper: (wasm) %s ms', t1 - t0);
+            clearBackendHyperGeom();
             globalUni().init(1234); // important!
             const z4 = rhyper(
                 1, //N
-                2 ** 31 / 2, //nn1in
-                2 ** 31 / 2, //nn2in
+                2 ** 31 - 1, //nn1in
+                2 ** 31 - 1, //nn2in
                 2 ** 31 - 1 //kkin
             );
             const t2 = Date.now();
-            expect(z4).toEqualFloatingPointBinary(1073741824);
-            clearBackendHyperGeom();
-            console.log(`rhyper: (wasm) ${ms(t1 - t0)}`);
-            console.log(`rhyper: (wasm) ${ms(t2 - t1)}`);
+            expect(z4).toEqualFloatingPointBinary(1073761537);
+
+            console.log('rhyper: (no-wasm) %s sec', Math.round((t2 - t1) / 10) / 100);
+            console.log('rhyper: (no-wasm) %s ms', t2 - t1);
         });
     });
 
     describe('reguler', () => {
         beforeEach(() => {
-            cl.clear('rhyper');
             RNGkind({ uniform: 'MERSENNE_TWISTER', normal: 'INVERSION' });
             globalUni().init(123456);
         });

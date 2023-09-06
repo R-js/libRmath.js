@@ -1,12 +1,12 @@
 import createNS from '@mangos/debug-frontend';
 //
 import { rbinomOne } from '@dist/binomial/rbinom';
-import { ML_ERR_return_NAN2, lineInfo4 } from '@common/logger';
+import { ME, mapErrV2 } from '@common/logger';
 import { INT_MAX, M_LN_SQRT_2PI } from '@lib/r-func';
 import { qhyper } from './qhyper';
 import { globalUni } from '../../rng/global-rng';
 //
-const printer_afc = debug('afc');
+const debugAfc = createNS('afc');
 
 const al = new Float64Array([
     0.0 /*ln(0!)=ln(1)*/, 0.0 /*ln(1!)=ln(1)*/, 0.69314718055994530941723212145817 /*ln(2) */,
@@ -32,7 +32,7 @@ function afc(i: number): number {
     // If (i > 7), use Stirling's approximation, otherwise use table lookup.
     i = Math.trunc(i);
     if (i < 0) {
-        printer_afc('rhyper.c: afc(i), i=%d < 0 -- SHOULD NOT HAPPEN!', i);
+        debugAfc('rhyper.c: afc(i), i=%d < 0 -- SHOULD NOT HAPPEN!', i);
         return -1; // unreached
     }
     if (i <= 7) {
@@ -45,7 +45,7 @@ function afc(i: number): number {
 }
 
 //     rhyper(NR, NB, n) -- NR 'red', NB 'blue', n drawn, how many are 'red'
-const printer_rhyper = debug('rhyper');
+const debug = createNS('rhyper');
 
 const r_d = new Float64Array(14);
 const d_N = 0;
@@ -109,7 +109,8 @@ export function rhyperOne(m: number, n: number, k: number): number {
     const rng = globalUni();
 
     if (!isFinite(m) || !isFinite(n) || !isFinite(k)) {
-        return ML_ERR_return_NAN2(printer_rhyper, lineInfo4);
+        debug(mapErrV2[ME.ME_DOMAIN], debug.namespace);
+        return NaN;
     }
 
     m = Math.round(m);
@@ -117,7 +118,8 @@ export function rhyperOne(m: number, n: number, k: number): number {
     k = Math.round(k);
 
     if (m < 0 || n < 0 || k < 0 || k > m + n) {
-        return ML_ERR_return_NAN2(printer_rhyper, lineInfo4);
+        debug(mapErrV2[ME.ME_DOMAIN], debug.namespace);
+        return NaN;
     }
     if (m >= INT_MAX || n >= INT_MAX || k >= INT_MAX) {
         /* large n -- evade integer overflow (and inappropriate algorithms)
@@ -183,7 +185,7 @@ export function rhyperOne(m: number, n: number, k: number): number {
         r_i[i_m] = ((r_i[i_k] + 1) * (r_i[i_n1] + 1)) / (r_d[d_N] + 2); // m := floor(adjusted mean E[.])
         r_i[i_minjx] = Math.max(0, r_i[i_k] - r_i[i_n2]);
         r_i[i_maxjx] = Math.min(r_i[i_n1], r_i[i_k]);
-        printer_rhyper(
+        debug(
             'rhyper(n1=%d, n2=%d, k=%d), setup: floor(a.mean)=: m = %d, [min,maxjx]= [%d,%d]\n',
             r_i[i_nn1],
             r_i[i_nn2],
@@ -198,7 +200,7 @@ export function rhyperOne(m: number, n: number, k: number): number {
 
     if (r_i[i_minjx] === r_i[i_maxjx]) {
         /* I: degenerate distribution ---------------- */
-        printer_rhyper('rhyper(), branch I (degenerate): ix := maxjx = %d\n', r_i[i_maxjx]);
+        debug('rhyper(), branch I (degenerate): ix := maxjx = %d\n', r_i[i_maxjx]);
 
         r_i[i_ix] = r_i[i_maxjx];
 
@@ -220,7 +222,7 @@ export function rhyperOne(m: number, n: number, k: number): number {
             }
             r_d[d_w] = Math.exp(lw + con);
         }
-        printer_rhyper('rhyper(), branch II; w = %d > 0', r_d[d_w]);
+        debug('rhyper(), branch II; w = %d > 0', r_d[d_w]);
 
         L10: for (;;) {
             // forever + break replaces "goto"
@@ -228,7 +230,7 @@ export function rhyperOne(m: number, n: number, k: number): number {
             r_i[i_ix] = r_i[i_minjx];
             let u = rng.random() * scale;
 
-            printer_rhyper('  _new_ u = %d', u);
+            debug('  _new_ u = %d', u);
 
             while (u > p) {
                 u -= p;
@@ -236,7 +238,7 @@ export function rhyperOne(m: number, n: number, k: number): number {
                 r_i[i_ix]++;
                 p = p / r_i[i_ix] / (r_i[i_n2] - r_i[i_k] + r_i[i_ix]);
 
-                printer_rhyper('       ix=%d, u=%d, p=%d (u-p=%d)\n', r_i[i_ix], u, p, u - p);
+                debug('       ix=%d, u=%d, p=%d (u-p=%d)\n', r_i[i_ix], u, p, u - p);
 
                 if (r_i[i_ix] > r_i[i_maxjx]) {
                     continue L10; //goto L10;
@@ -301,14 +303,14 @@ export function rhyperOne(m: number, n: number, k: number): number {
             r_d[d_p2] = r_d[d_p1] + r_d[d_kl] / r_d[d_lamdl];
             r_d[d_p3] = r_d[d_p2] + r_d[d_kr] / r_d[d_lamdr];
         }
-        printer_rhyper(
+        debug(
             'rhyper(), branch III {accept/reject}: (xl,xr)= (%d,%d); (lamdl,lamdr)= (%d,%d)\n',
             r_d[d_xl],
             r_d[d_xr],
             r_d[d_lamdl],
             r_d[d_lamdr]
         );
-        printer_rhyper('-------- p123= c(%d,%d,%d)\n', r_d[d_p1], r_d[d_p2], r_d[d_p3]);
+        debug('-------- p123= c(%d,%d,%d)\n', r_d[d_p1], r_d[d_p2], r_d[d_p3]);
 
         let n_uv = 0;
         //let goto_L30 = false;
@@ -317,17 +319,12 @@ export function rhyperOne(m: number, n: number, k: number): number {
             v = rng.random();
             n_uv++;
             if (n_uv >= 10000) {
-                printer_rhyper(
-                    'rhyper() branch III: giving up after %d rejections',
-                    r_i[i_nn1],
-                    r_i[i_nn2],
-                    r_i[i_kk],
-                    n_uv
-                );
-                return ML_ERR_return_NAN2(printer_rhyper, lineInfo4);
+                debug('rhyper() branch III: giving up after %d rejections', r_i[i_nn1], r_i[i_nn2], r_i[i_kk], n_uv);
+                debug(mapErrV2[ME.ME_DOMAIN], debug.namespace);
+                return NaN;
             }
 
-            printer_rhyper(' ... L30: new (u=%d, v ~ U[0,1])[%d]\n', n_uv, u, v);
+            debug(' ... L30: new (u=%d, v ~ U[0,1])[%d]\n', n_uv, u, v);
 
             if (u < r_d[d_p1]) {
                 /* rectangular region */
@@ -402,7 +399,7 @@ export function rhyperOne(m: number, n: number, k: number): number {
                     yk = 0,
                     alv = 0;
 
-                printer_rhyper(" ... accept/reject 'large' case v=%d", v);
+                debug(" ... accept/reject 'large' case v=%d", v);
 
                 /* squeeze using upper and lower bounds */
                 y = r_i[i_ix];
