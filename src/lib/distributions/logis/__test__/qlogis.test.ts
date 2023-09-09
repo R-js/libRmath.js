@@ -1,15 +1,20 @@
-import { cl, select } from '@common/debug-mangos-select';
+import { register, unRegister } from '@mangos/debug-frontend';
+import createBackEndMock from '@common/debug-backend';
+import type { MockLogs } from '@common/debug-backend';
 
 import { qlogis } from '..';
 
-const qLogisLogs = select('qlogis');
-const qLogisDomainWarns = qLogisLogs("argument out of domain in '%s'");
-
 describe('qlogis', function () {
+    const logs: MockLogs[] = [];
+    beforeEach(() => {
+        const backend = createBackEndMock(logs);
+        register(backend);
+    });
+    afterEach(() => {
+        unRegister();
+        logs.splice(0);
+    });
     describe('edge cases', () => {
-        beforeEach(() => {
-            cl.clear('qlogis');
-        });
         it('x = NaN or location = Nan, or scale = NaN or give_log = NaN', () => {
             const nan1 = qlogis(NaN);
             expect(nan1).toBeNaN();
@@ -37,14 +42,14 @@ describe('qlogis', function () {
         it('scale <= 0', () => {
             const nan = qlogis(0.3, undefined, -1);
             expect(nan).toEqualFloatingPointBinary(NaN);
-            expect(qLogisDomainWarns()).toMatchInlineSnapshot(`
-                [
-                  [
-                    "argument out of domain in '%s'",
-                    "qlogis, line:20, col:34",
-                  ],
-                ]
-            `);
+            expect(logs).toEqual([
+                {
+                    prefix: '',
+                    namespace: 'qlogis',
+                    formatter: "argument out of domain in '%s'",
+                    args: ['qlogis']
+                }
+            ]);
         });
         it('scale == 0', () => {
             const location = qlogis(0.2, 4, 0);

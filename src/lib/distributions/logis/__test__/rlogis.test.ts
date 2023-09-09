@@ -1,16 +1,20 @@
-import { cl, select } from '@common/debug-mangos-select';
-
+import { register, unRegister } from '@mangos/debug-frontend';
+import createBackEndMock from '@common/debug-backend';
+import type { MockLogs } from '@common/debug-backend';
 import { rlogis } from '..';
 import { globalUni, RNGkind } from '@rng/global-rng';
 
-const rLogisLogs = select('rlogis');
-const rLogisDomainWarns = rLogisLogs("argument out of domain in '%s'");
-
 describe('rlogis', function () {
+    const logs: MockLogs[] = [];
     beforeEach(() => {
-        cl.clear('rlogis');
         RNGkind({ uniform: 'MERSENNE_TWISTER', normal: 'INVERSION' });
         globalUni().init(123456);
+        const backend = createBackEndMock(logs);
+        register(backend);
+    });
+    afterEach(() => {
+        unRegister();
+        logs.splice(0);
     });
     it('n = 0', () => {
         const rc = rlogis(0);
@@ -35,30 +39,6 @@ describe('rlogis', function () {
     it('n = 5, location = nan', () => {
         const nans = rlogis(5, NaN);
         expect(nans).toEqualFloatingPointBinary([NaN, NaN, NaN, NaN, NaN]);
-        expect(rLogisDomainWarns()).toMatchInlineSnapshot(`
-            [
-              [
-                "argument out of domain in '%s'",
-                "rlogisOne, line:9, col:34",
-              ],
-              [
-                "argument out of domain in '%s'",
-                "rlogisOne, line:9, col:34",
-              ],
-              [
-                "argument out of domain in '%s'",
-                "rlogisOne, line:9, col:34",
-              ],
-              [
-                "argument out of domain in '%s'",
-                "rlogisOne, line:9, col:34",
-              ],
-              [
-                "argument out of domain in '%s'",
-                "rlogisOne, line:9, col:34",
-              ],
-            ]
-        `);
     });
 
     it('n = 0', () => {

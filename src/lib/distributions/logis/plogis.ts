@@ -1,5 +1,5 @@
 import createNS from '@mangos/debug-frontend';
-import { ML_ERR_return_NAN2, lineInfo4 } from '@common/logger';
+import { ME, mapErrV2 } from '@common/logger';
 import { R_P_bounds_Inf_01 } from '@lib/r-func';
 
 export function Rf_log1pexp(x: number): number {
@@ -9,13 +9,14 @@ export function Rf_log1pexp(x: number): number {
     return x + Math.exp(-x);
 }
 
-const printer_plogis = debug('plogis');
+const debug = createNS('plogis');
 
 export function plogis(x: number, location = 0, scale = 1, lowerTail = true, logP = false): number {
     if (isNaN(x) || isNaN(location) || isNaN(scale)) return NaN;
 
     if (scale <= 0.0) {
-        return ML_ERR_return_NAN2(printer_plogis, lineInfo4);
+        debug(mapErrV2[ME.ME_DOMAIN], debug.namespace);
+        return NaN;
     }
 
     x = (x - location) / scale;

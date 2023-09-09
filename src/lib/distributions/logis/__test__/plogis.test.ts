@@ -1,15 +1,20 @@
-import { cl, select } from '@common/debug-mangos-select';
+import { register, unRegister } from '@mangos/debug-frontend';
+import createBackEndMock from '@common/debug-backend';
+import type { MockLogs } from '@common/debug-backend';
 
 import { plogis } from '..';
 
-const pLogisLogs = select('plogis');
-const pLogisDomainWarns = pLogisLogs("argument out of domain in '%s'");
-
 describe('plogis', function () {
+    const logs: MockLogs[] = [];
+    beforeEach(() => {
+        const backend = createBackEndMock(logs);
+        register(backend);
+    });
+    afterEach(() => {
+        unRegister();
+        logs.splice(0);
+    });
     describe('edge cases', () => {
-        beforeEach(() => {
-            cl.clear('plogis');
-        });
         it('x = NaN or location = Nan, or scale = NaN or give_log = NaN', () => {
             const nan1 = plogis(NaN);
             expect(nan1).toBeNaN();
@@ -23,14 +28,14 @@ describe('plogis', function () {
         it('scale <= 0', () => {
             const nan = plogis(0, undefined, -0.5);
             expect(nan).toBeNaN();
-            expect(pLogisDomainWarns()).toMatchInlineSnapshot(`
-                [
-                  [
-                    "argument out of domain in '%s'",
-                    "plogis, line:18, col:34",
-                  ],
-                ]
-            `);
+            expect(logs).toEqual([
+                {
+                    prefix: '',
+                    namespace: 'plogis',
+                    formatter: "argument out of domain in '%s'",
+                    args: ['plogis']
+                }
+            ]);
         });
         it('x = -Infinity and x = Infinity', () => {
             const zero = plogis(-Infinity);

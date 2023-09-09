@@ -1,19 +1,24 @@
+import { register, unRegister } from '@mangos/debug-frontend';
+import createBackEndMock from '@common/debug-backend';
+import type { MockLogs } from '@common/debug-backend';
+
 import { loadData } from '@common/load';
 import { resolve } from 'path';
-import { cl, select } from '@common/debug-mangos-select';
-
 import { dlogis } from '..';
-
-const dLogisLogs = select('dlogis');
-const dLogisDomainWarns = dLogisLogs("argument out of domain in '%s'");
 
 //dlogis(x: number, location = 0, scale = 1, give_log = false)
 
 describe('dlogis', function () {
+    const logs: MockLogs[] = [];
+    beforeEach(() => {
+        const backend = createBackEndMock(logs);
+        register(backend);
+    });
+    afterEach(() => {
+        unRegister();
+        logs.splice(0);
+    });
     describe('edge cases', () => {
-        beforeEach(() => {
-            cl.clear('dlogis');
-        });
         it('x = NaN or location = Nan, or scale = NaN or give_log = NaN', () => {
             const nan1 = dlogis(NaN);
             expect(nan1).toBeNaN();
@@ -27,14 +32,14 @@ describe('dlogis', function () {
         it('scale <= 0', () => {
             const nan = dlogis(0, undefined, -0.5);
             expect(nan).toBeNaN();
-            expect(dLogisDomainWarns()).toMatchInlineSnapshot(`
-                [
-                  [
-                    "argument out of domain in '%s'",
-                    "dlogis, line:10, col:34",
-                  ],
-                ]
-            `);
+            expect(logs).toEqual([
+                {
+                    prefix: '',
+                    namespace: 'dlogis',
+                    formatter: "argument out of domain in '%s'",
+                    args: ['dlogis']
+                }
+            ]);
         });
     });
     describe('fidelity', () => {

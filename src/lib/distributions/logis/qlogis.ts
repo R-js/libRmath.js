@@ -1,15 +1,17 @@
 import createNS from '@mangos/debug-frontend';
 
-import { ML_ERR_return_NAN2, lineInfo4, R_Q_P01_boundaries } from '@common/logger';
+import { ME, mapErrV2, R_Q_P01_boundaries } from '@common/logger';
 
 import { log } from '@lib/r-func';
 
 import { R_Log1_Exp } from '@dist/exp/expm1';
 
-const printer_qlogis = debug('qlogis');
+const debug = createNS('qlogis');
 
 export function qlogis(p: number, location = 0, scale = 1, lowerTail = true, logP = false): number {
-    if (isNaN(p) || isNaN(location) || isNaN(scale)) return NaN;
+    if (isNaN(p) || isNaN(location) || isNaN(scale)) {
+        return NaN;
+    }
 
     const rc = R_Q_P01_boundaries(lowerTail, logP, p, -Infinity, Infinity);
     if (rc !== undefined) {
@@ -17,7 +19,8 @@ export function qlogis(p: number, location = 0, scale = 1, lowerTail = true, log
     }
 
     if (scale < 0) {
-        return ML_ERR_return_NAN2(printer_qlogis, lineInfo4);
+        debug(mapErrV2[ME.ME_DOMAIN], debug.namespace);
+        return NaN;
     }
     if (scale === 0) return location;
 

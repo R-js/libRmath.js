@@ -1,12 +1,13 @@
 import createNS from '@mangos/debug-frontend';
-import { ML_ERR_return_NAN2, lineInfo4 } from '@common/logger';
+import { ME, mapErrV2 } from '@common/logger';
 import { globalUni } from '@lib/rng';
-const printer_rlogis = debug('rlogis');
+const debug = createNS('rlogis');
 
 export function rlogisOne(location = 0, scale = 1): number {
     const rng = globalUni();
     if (isNaN(location) || !isFinite(scale)) {
-        return ML_ERR_return_NAN2(printer_rlogis, lineInfo4);
+        debug(mapErrV2[ME.ME_DOMAIN], debug.namespace);
+        return NaN;
     }
 
     if (scale === 0 || !isFinite(location)) return location;
