@@ -1,20 +1,25 @@
 import { loadData } from '@common/load';
 import { resolve } from 'path';
-import { cl, select } from '@common/debug-mangos-select';
 
-const logs = select('rlnorm');
-const logDomainWanrs = logs("argument out of domain in '%s'");
-//  rlnormOne(meanlog = 0, sdlog = 1, rng: IRNGNormal);
+import { register, unRegister } from '@mangos/debug-frontend';
+import createBackEndMock from '@common/debug-backend';
+import type { MockLogs } from '@common/debug-backend';
 
 import { globalUni, RNGkind } from '@rng/global-rng';
 
 import { rlnorm } from '..';
 
 describe('rlnorm', () => {
+    const logs: MockLogs[] = [];
+    beforeEach(() => {
+        const backend = createBackEndMock(logs);
+        register(backend);
+    });
+    afterEach(() => {
+        unRegister();
+        logs.splice(0);
+    });
     describe('invalid input', () => {
-        beforeEach(() => {
-            cl.clear('rlnorm');
-        });
         it('p=NaN | meanLog=NaN | sdLog=NaN | sdLog < 0', () => {
             const nan1 = rlnorm(1, NaN);
             expect(nan1).toEqualFloatingPointBinary(NaN);
@@ -22,7 +27,26 @@ describe('rlnorm', () => {
             expect(nan2).toEqualFloatingPointBinary(NaN);
             const nan3 = rlnorm(1, undefined, -1);
             expect(nan3).toEqualFloatingPointBinary(NaN);
-            expect(logDomainWanrs()).toHaveLength(3);
+            expect(logs).toEqual([
+                {
+                    prefix: '',
+                    namespace: 'rlnorm',
+                    formatter: "argument out of domain in '%s'",
+                    args: ['rlnorm']
+                },
+                {
+                    prefix: '',
+                    namespace: 'rlnorm',
+                    formatter: "argument out of domain in '%s'",
+                    args: ['rlnorm']
+                },
+                {
+                    prefix: '',
+                    namespace: 'rlnorm',
+                    formatter: "argument out of domain in '%s'",
+                    args: ['rlnorm']
+                }
+            ]);
         });
     });
     describe('fidelity (defer to rnorm[One] for most)', () => {

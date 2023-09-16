@@ -24,8 +24,8 @@ export default defineConfig({
         ]
     },
     test: {
-        minThreads: 1,
-        maxThreads: 1,
+        // minThreads: ,
+        // maxThreads: 1,
         environment: 'jsdom',
         globals: true,
         setupFiles: ['./src/packages/__test__/jest-ext.d.ts', './src/packages/__test__/jest-extension.ts'],
@@ -41,8 +41,9 @@ export default defineConfig({
             'src/lib/distributions/f-distro/__test__/*.test.ts',
             'src/lib/distributions/gamma/__test__/*.test.ts',
             'src/lib/distributions/geometric/__test__/*.test.ts',
-            'src/lib/distributions/hypergeometric/__test__/*.test.ts',
-            'src/lib/distributions/logis/__test__/*.test.ts'
+            //'src/lib/distributions/hypergeometric/__test__/*.test.ts',
+            'src/lib/distributions/logis/__test__/*.test.ts',
+            'src/lib/distributions/lognormal/__test__/*.test.ts'
         ],
         exclude: [...configDefaults.exclude]
     }

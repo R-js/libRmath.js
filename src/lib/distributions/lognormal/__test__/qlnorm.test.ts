@@ -1,18 +1,23 @@
 import { loadData } from '@common/load';
 import { resolve } from 'path';
-import { cl, select } from '@common/debug-mangos-select';
+import { register, unRegister } from '@mangos/debug-frontend';
+import createBackEndMock from '@common/debug-backend';
+import type { MockLogs } from '@common/debug-backend';
 
 import { qlnorm } from '..';
 
-const bounderies = select('R_Q_P01_boundaries');
-const warnings = bounderies("argument out of domain in '%s'");
-
 //  qlnorm(p: number, meanlog = 0, sdlog = 1, lower_tail = true, log_p = false):
 describe('qlnorm', () => {
+    const logs: MockLogs[] = [];
+    beforeEach(() => {
+        const backend = createBackEndMock(logs);
+        register(backend);
+    });
+    afterEach(() => {
+        unRegister();
+        logs.splice(0);
+    });
     describe('invalid input', () => {
-        beforeEach(() => {
-            cl.clear('R_Q_P01_boundaries');
-        });
         it('p=NaN | meanLog=NaN | sdLog=NaN', () => {
             const nan1 = qlnorm(NaN);
             expect(nan1).toBe(NaN);
@@ -24,7 +29,14 @@ describe('qlnorm', () => {
         it('p < 0', () => {
             const nan = qlnorm(-0.5, 4, 1, true, false);
             expect(nan).toBe(NaN);
-            expect(warnings()).toHaveLength(1);
+            expect(logs).toEqual([
+                {
+                    prefix: '',
+                    namespace: 'R_Q_P01_boundaries',
+                    formatter: "argument out of domain in '%s'",
+                    args: ['R_Q_P01_boundaries']
+                }
+            ]);
         });
         it('p <= 0 | p >= 1', () => {
             const nan1 = qlnorm(-0.5, 4, 1, true);
@@ -41,7 +53,26 @@ describe('qlnorm', () => {
 
             const zero1 = qlnorm(-Infinity, 4, 1, true, true);
             expect(zero1).toBe(0);
-            expect(warnings()).toHaveLength(3);
+            expect(logs).toEqual([
+                {
+                    prefix: '',
+                    namespace: 'R_Q_P01_boundaries',
+                    formatter: "argument out of domain in '%s'",
+                    args: ['R_Q_P01_boundaries']
+                },
+                {
+                    prefix: '',
+                    namespace: 'R_Q_P01_boundaries',
+                    formatter: "argument out of domain in '%s'",
+                    args: ['R_Q_P01_boundaries']
+                },
+                {
+                    prefix: '',
+                    namespace: 'R_Q_P01_boundaries',
+                    formatter: "argument out of domain in '%s'",
+                    args: ['R_Q_P01_boundaries']
+                }
+            ]);
         });
     });
     describe('fidelity (defer to qnorm for most)', () => {
