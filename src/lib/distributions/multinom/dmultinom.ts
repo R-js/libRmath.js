@@ -56,7 +56,7 @@ import createNS from '@mangos/debug-frontend';
 import { lgammafn_sign } from '@special/gamma/lgammafn_sign';
 import { sumfp, log as _log, exp, trunc } from '@lib/r-func';
 
-const printer = debug('dmultinom');
+const debug = createNS('dmultinom');
 
 function isZeroOrPositiveAndFinite(x: number) {
     return x >= 0;
@@ -73,12 +73,12 @@ export function dmultinomLikeR(x: Float32Array, prob: Float32Array, log = false)
 export function dmultinom(x: Float32Array, prob: Float32Array, log = false): number {
     // prob and x must be the same length
     if (x.length !== prob.length) {
-        printer('x[] and prob[] must be equal length vectors.');
+        debug('x[] and prob[] must be equal length vectors.');
         return NaN;
     }
     const s = sumfp(prob);
     if (prob.every(isFinite) === false || prob.every((_p) => _p >= 0) === false || s === 0) {
-        printer('probabilities must be finite, non-negative and not all 0');
+        debug('probabilities must be finite, non-negative and not all 0');
         return NaN;
     }
     //modify in place
@@ -93,7 +93,7 @@ export function dmultinom(x: Float32Array, prob: Float32Array, log = false): num
     });
 
     if (x.every(isZeroOrPositiveAndFinite) === false) {
-        printer("'x' must be non-negative (and finite)");
+        debug("'x' must be non-negative (and finite)");
         return NaN;
     }
 

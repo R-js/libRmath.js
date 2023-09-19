@@ -1,20 +1,40 @@
-import { cl, select } from '@common/debug-mangos-select';
 import { dmultinom, dmultinomLikeR } from '..';
 
-const dmultinomLogs = select('dmultinom');
+import { register, unRegister } from '@mangos/debug-frontend';
+import createBackEndMock from '@common/debug-backend';
+import type { MockLogs } from '@common/debug-backend';
 
 describe('dmultinom', function () {
+    const logs: MockLogs[] = [];
+    beforeEach(() => {
+        const backend = createBackEndMock(logs);
+        register(backend);
+    });
+    afterEach(() => {
+        unRegister();
+        logs.splice(0);
+    });
     describe('invalid input check and edge cases', () => {
-        beforeEach(() => {
-            cl.clear('dmultinom');
-        });
         it('non equal arrays x, prob, x=[1,2], prob=[0.4]', () => {
             const x = new Float32Array([1, 2]);
             const prob = new Float32Array([0.4]);
             const ans = dmultinom(x, prob);
             expect(ans).toBeNaN();
             expect(() => dmultinomLikeR(x, prob)).toThrowError();
-            expect(dmultinomLogs('x[] and prob[] must be equal length vectors.')()).toHaveLength(2);
+            expect(logs).toEqual([
+                {
+                    prefix: '',
+                    namespace: 'dmultinom',
+                    formatter: 'x[] and prob[] must be equal length vectors.',
+                    args: []
+                },
+                {
+                    prefix: '',
+                    namespace: 'dmultinom',
+                    formatter: 'x[] and prob[] must be equal length vectors.',
+                    args: []
+                }
+            ]);
         });
         it('probabilities must be finite, positive, and not all 0', () => {
             const x = new Float32Array([1, 2]);
@@ -30,14 +50,40 @@ describe('dmultinom', function () {
             prob[0] = -1;
             const ans3 = dmultinom(x, prob);
             expect(ans3).toBeNaN();
-            expect(dmultinomLogs('probabilities must be finite, non-negative and not all 0')()).toHaveLength(3);
+            expect(logs).toEqual([
+                {
+                    prefix: '',
+                    namespace: 'dmultinom',
+                    formatter: 'probabilities must be finite, non-negative and not all 0',
+                    args: []
+                },
+                {
+                    prefix: '',
+                    namespace: 'dmultinom',
+                    formatter: 'probabilities must be finite, non-negative and not all 0',
+                    args: []
+                },
+                {
+                    prefix: '',
+                    namespace: 'dmultinom',
+                    formatter: 'probabilities must be finite, non-negative and not all 0',
+                    args: []
+                }
+            ]);
         });
         it('some x[i] are negative', () => {
             const x = new Float32Array([1, 2, -3]);
             const prob = new Float32Array([0.4, 0.2, 0.4]);
             const ans1 = dmultinom(x, prob);
             expect(ans1).toBeNaN();
-            expect(dmultinomLogs("'x' must be non-negative (and finite)")()).toHaveLength(1);
+            expect(logs).toEqual([
+                {
+                    prefix: '',
+                    namespace: 'dmultinom',
+                    formatter: "'x' must be non-negative (and finite)",
+                    args: []
+                }
+            ]);
         });
         it('prob[i] = 0 cannot have a x[i] bin that is nonzero, result p = 0', () => {
             const x = new Float32Array([1, 2, 3]);
