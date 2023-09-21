@@ -1,20 +1,23 @@
 import { loadData } from '@common/load';
 import { resolve } from 'path';
-import { cl, select } from '@common/debug-mangos-select';
 
 import { qnorm } from '..';
 
-const qnormLogs = select('qnorm');
-const qnormDomainWarns = qnormLogs("argument out of domain in '%s'");
-
-const boundaries = select('R_Q_P01_boundaries')("argument out of domain in '%s'");
+import { register, unRegister } from '@mangos/debug-frontend';
+import createBackEndMock from '@common/debug-backend';
+import type { MockLogs } from '@common/debug-backend';
 
 describe('qnorm', function () {
+    const logs: MockLogs[] = [];
+    beforeEach(() => {
+        const backend = createBackEndMock(logs);
+        register(backend);
+    });
+    afterEach(() => {
+        unRegister();
+        logs.splice(0);
+    });
     describe('invalid input check and edge cases', () => {
-        beforeEach(() => {
-            cl.clear('R_Q_P01_boundaries');
-            cl.clear('qnorm');
-        });
         it('p = NaN or mu = Nan, or sigma = NaN', () => {
             const nan1 = qnorm(NaN);
             expect(nan1).toBeNaN();
@@ -37,29 +40,64 @@ describe('qnorm', function () {
         it('p > 0 and logp = TRUE, gives boundary error', () => {
             const nan = qnorm(0.1, 0, 1, true, true);
             expect(nan).toBeNaN();
-            expect(boundaries()).toHaveLength(1);
+            expect(logs).toEqual([
+                {
+                    prefix: '',
+                    namespace: 'R_Q_P01_boundaries',
+                    formatter: "argument out of domain in '%s'",
+                    args: ['R_Q_P01_boundaries']
+                }
+            ]);
         });
         it('p < 0 and logp = FALSE, gives boundary error', () => {
             const nan = qnorm(-5, 0, 1, true, false);
             expect(nan).toBeNaN();
-            expect(boundaries()).toHaveLength(1);
+            expect(logs).toEqual([
+                {
+                    prefix: '',
+                    namespace: 'R_Q_P01_boundaries',
+                    formatter: "argument out of domain in '%s'",
+                    args: ['R_Q_P01_boundaries']
+                }
+            ]);
         });
         it('p > 1 and logp = FALSE, gives boundary error', () => {
             const nan = qnorm(5, 0, 1, true, false);
             expect(nan).toBeNaN();
-            expect(boundaries()).toHaveLength(1);
+            expect(logs).toEqual([
+                {
+                    prefix: '',
+                    namespace: 'R_Q_P01_boundaries',
+                    formatter: "argument out of domain in '%s'",
+                    args: ['R_Q_P01_boundaries']
+                }
+            ]);
         });
 
         it('p > 0 and logp = FALSE, gives boundary error', () => {
             const nan = qnorm(5, 0, 1, true, false);
             expect(nan).toBeNaN();
-            expect(boundaries()).toHaveLength(1);
+            expect(logs).toEqual([
+                {
+                    prefix: '',
+                    namespace: 'R_Q_P01_boundaries',
+                    formatter: "argument out of domain in '%s'",
+                    args: ['R_Q_P01_boundaries']
+                }
+            ]);
         });
 
         it('sigma < 0', () => {
             const nan = qnorm(0.5, 0, -1, true, false);
             expect(nan).toBeNaN();
-            expect(qnormDomainWarns()).toHaveLength(1);
+            expect(logs).toEqual([
+                {
+                    prefix: '',
+                    namespace: 'qnorm',
+                    formatter: "argument out of domain in '%s'",
+                    args: ['qnorm']
+                }
+            ]);
         });
 
         it('sigma == 0', () => {

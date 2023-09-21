@@ -44,7 +44,8 @@ export default defineConfig({
             //'src/lib/distributions/hypergeometric/__test__/*.test.ts',
             'src/lib/distributions/logis/__test__/*.test.ts',
             'src/lib/distributions/lognormal/__test__/*.test.ts',
-            'src/lib/distributions/multinom/__test__/*.test.ts'
+            'src/lib/distributions/multinom/__test__/*.test.ts',
+            'src/lib/distributions/normal/__test__/*.test.ts'
         ],
         exclude: [...configDefaults.exclude]
     }

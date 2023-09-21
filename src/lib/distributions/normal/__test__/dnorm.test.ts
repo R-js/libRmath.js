@@ -1,17 +1,23 @@
 import { loadData } from '@common/load';
-import { resolve } from 'path';
-import { cl, select } from '@common/debug-mangos-select';
+import { resolve } from 'node:path';
 
 import { dnorm } from '..';
 
-const dnormLogs = select('dnorm');
-const dnormDomainWarns = dnormLogs("argument out of domain in '%s'");
+import { register, unRegister } from '@mangos/debug-frontend';
+import createBackEndMock from '@common/debug-backend';
+import type { MockLogs } from '@common/debug-backend';
 
 describe('dnorm', function () {
+    const logs: MockLogs[] = [];
+    beforeEach(() => {
+        const backend = createBackEndMock(logs);
+        register(backend);
+    });
+    afterEach(() => {
+        unRegister();
+        logs.splice(0);
+    });
     describe('invalid input check and edge cases', () => {
-        beforeEach(() => {
-            cl.clear('dnorm');
-        });
         it('x = NaN or mu = Nan, or sigma = NaN', () => {
             const nan1 = dnorm(NaN);
             expect(nan1).toBeNaN();
@@ -40,7 +46,14 @@ describe('dnorm', function () {
         });
         it('sd < 0', () => {
             expect(dnorm(0, 0, -1)).toBe(NaN);
-            expect(dnormDomainWarns()).toHaveLength(1);
+            expect(logs).toEqual([
+                {
+                    prefix: '',
+                    namespace: 'dnorm',
+                    formatter: "argument out of domain in '%s'",
+                    args: ['dnorm']
+                }
+            ]);
         });
         it('sd == 0, (a dirac delta function)', () => {
             expect(dnorm(0, 0, 0)).toBe(Infinity);
@@ -54,33 +67,30 @@ describe('dnorm', function () {
         });
         it('abs(z) >= 38.6 (special cutoff), gives zero', () => {
             expect(dnorm(38.9)).toBe(0);
-        })
+        });
     });
     describe('fidelity', () => {
         it('log = true for dnorm(x, µ, σ)', () => {
             const σ = 2;
             const µ = 1.5;
-            const zvals = [-1.5, -1, 0, 1, 1.5].map(x => (x - µ) / σ);
+            const zvals = [-1.5, -1, 0, 1, 1.5].map((x) => (x - µ) / σ);
 
-            const results = zvals.map(z => dnorm(z, 0, 1, true));
+            const results = zvals.map((z) => dnorm(z, 0, 1, true));
             expect(results).toEqualFloatingPointBinary([
-                -2.04393853320467267,
-                -1.70018853320467267,
-                -1.20018853320467267,
-                -0.95018853320467278,
-                -0.91893853320467278,
+                -2.04393853320467267, -1.70018853320467267, -1.20018853320467267, -0.95018853320467278,
+                -0.91893853320467278
             ]);
             expect(dnorm(38.5, 0, 1, true)).toEqualFloatingPointBinary(-742.04393853320471);
         });
         it('abs(z) < 5 dnorm(x, µ, σ)', async () => {
             const [x, y] = await loadData(resolve(__dirname, 'fixture-generation', 'dnorm.R'), /\s+/, 1, 2);
-            const result = x.map(d => dnorm(d));
+            const result = x.map((d) => dnorm(d));
             expect(result).toEqualFloatingPointBinary(y, 51);
         });
 
         it('abs(z) >= 5  && <= 38.0 dnorm(x, µ, σ)', async () => {
             const [x, y] = await loadData(resolve(__dirname, 'fixture-generation', 'dnorm2.R'), /\s+/, 1, 2);
-            const result = x.map(d => dnorm(d));
+            const result = x.map((d) => dnorm(d));
             expect(result).toEqualFloatingPointBinary(y, 51);
         });
     });

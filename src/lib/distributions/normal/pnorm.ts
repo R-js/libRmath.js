@@ -17,7 +17,9 @@ export function pnorm5(q: number, mean = 0, sd = 1, lowerTail = true, logP = fal
      * For example, if x == mean and sd == 0, we get the correct answer 1.
      */
 
-    if (isNaN(q) || isNaN(mean) || isNaN(sd)) return NaN;
+    if (isNaN(q) || isNaN(mean) || isNaN(sd)) {
+        return NaN;
+    }
 
     if (!isFinite(q) && mean === q) return NaN; /* x-mean is NaN */
     if (sd <= 0) {
