@@ -1,19 +1,23 @@
 import { loadData } from '@common/load';
-import { resolve } from 'path';
+import { resolve } from 'node:path';
 
-import { cl, select } from '@common/debug-mangos-select';
 import { dpois } from '..';
 import { dpois_raw } from '../dpois';
+import { register, unRegister } from '@mangos/debug-frontend';
+import createBackEndMock from '@common/debug-backend';
+import type { MockLogs } from '@common/debug-backend';
 
 import { DBL_MIN, MAX_SAFE_INTEGER, trunc } from '@lib/r-func';
 
-const dpoisLogs = select('dpois');
-const dpoisDomainWarns = dpoisLogs("argument out of domain in '%s'");
-const dpoisNonInt = dpoisLogs('non-integer x = %d');
-
 describe('dpois', function () {
+    const logs: MockLogs[] = [];
     beforeEach(() => {
-        cl.clear('dpois');
+        const backend = createBackEndMock(logs);
+        register(backend);
+    });
+    afterEach(() => {
+        unRegister();
+        logs.splice(0);
     });
     describe('invalid input and edge cases', () => {
         it('x and lambda are NaN', () => {
@@ -25,12 +29,26 @@ describe('dpois', function () {
         it('lamnda < 0', () => {
             const nan1 = dpois(0.5, -1);
             expect(nan1).toBeNaN();
-            expect(dpoisDomainWarns()).toHaveLength(1);
+            expect(logs).toEqual([
+                {
+                    prefix: '',
+                    namespace: 'dpois',
+                    formatter: "argument out of domain in '%s'",
+                    args: ['dpois']
+                }
+            ]);
         });
         it('x is non integer', () => {
             const zero = dpois(0.5, 1);
             expect(zero).toBe(0);
-            expect(dpoisNonInt()).toHaveLength(1);
+            expect(logs).toEqual([
+                {
+                    prefix: '',
+                    namespace: 'dpois',
+                    formatter: 'non-integer x = %d',
+                    args: [0.5]
+                }
+            ]);
         });
         it('x < 0 or x is Infinite', () => {
             const zero1 = dpois(-2, 1);

@@ -2,7 +2,7 @@
 
 import createNS from '@mangos/debug-frontend';
 
-import { ML_ERR_return_NAN2, lineInfo4, R_Q_P01_boundaries } from '@common/logger';
+import { ME, mapErrV2, R_Q_P01_boundaries } from '@common/logger';
 
 import { NumberW } from '@common/toms708/NumberW';
 
@@ -31,7 +31,7 @@ function do_search(y: number, z: NumberW, p: number, lambda: number, incr: numbe
     }
 }
 
-const printer = debug('qpois');
+const debug = createNS('qpois');
 
 export function qpois(p: number, lambda: number, lowerTail = true, logP = false): number {
     let y;
@@ -39,10 +39,10 @@ export function qpois(p: number, lambda: number, lowerTail = true, logP = false)
 
     if (isNaN(p) || isNaN(lambda)) return p + lambda;
 
-    if (!isFinite(lambda)) {
-        return ML_ERR_return_NAN2(printer, lineInfo4);
+    if (!isFinite(lambda) || lambda < 0) {
+        debug(mapErrV2[ME.ME_DOMAIN], debug.namespace);
+        return NaN;
     }
-    if (lambda < 0) return ML_ERR_return_NAN2(printer, lineInfo4);
     if (lambda === 0) return 0;
 
     const rc = R_Q_P01_boundaries(lowerTail, logP, p, 0, Infinity);

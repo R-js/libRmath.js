@@ -1,16 +1,21 @@
 import { loadData } from '@common/load';
 import { resolve } from 'path';
-import { cl, select } from '@common/debug-mangos-select';
 
 import { qpois } from '..';
 import { EPSILON, log } from '@lib/r-func';
-
-const qpoisLogs = select('qpois');
-const qpoisDomainWarns = qpoisLogs("argument out of domain in '%s'");
+import { register, unRegister } from '@mangos/debug-frontend';
+import createBackEndMock from '@common/debug-backend';
+import type { MockLogs } from '@common/debug-backend';
 
 describe('qpois', function () {
+    const logs: MockLogs[] = [];
     beforeEach(() => {
-        cl.clear('qpois');
+        const backend = createBackEndMock(logs);
+        register(backend);
+    });
+    afterEach(() => {
+        unRegister();
+        logs.splice(0);
     });
     describe('invalid input and edge cases', () => {
         it('p = NaN | lambda = NaN', () => {
@@ -22,12 +27,26 @@ describe('qpois', function () {
         it('lambda = Infinite', () => {
             const nan1 = qpois(0.5, Infinity);
             expect(nan1).toBeNaN();
-            expect(qpoisDomainWarns()).toHaveLength(1);
+            expect(logs).toEqual([
+                {
+                    prefix: '',
+                    namespace: 'qpois',
+                    formatter: "argument out of domain in '%s'",
+                    args: ['qpois']
+                }
+            ]);
         });
         it('lambda < 0', () => {
             const nan1 = qpois(0.5, -1);
             expect(nan1).toBeNaN();
-            expect(qpoisDomainWarns()).toHaveLength(1);
+            expect(logs).toEqual([
+                {
+                    prefix: '',
+                    namespace: 'qpois',
+                    formatter: "argument out of domain in '%s'",
+                    args: ['qpois']
+                }
+            ]);
         });
         it('lambda = 0', () => {
             const zero1 = qpois(0.5, 0);

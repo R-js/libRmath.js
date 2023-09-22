@@ -1,15 +1,20 @@
 import { loadData } from '@common/load';
 import { resolve } from 'path';
 
-import { cl, select } from '@common/debug-mangos-select';
 import { ppois } from '..';
-
-const ppoisLogs = select('ppois');
-const ppoisDomainWarns = ppoisLogs("argument out of domain in '%s'");
+import { register, unRegister } from '@mangos/debug-frontend';
+import createBackEndMock from '@common/debug-backend';
+import type { MockLogs } from '@common/debug-backend';
 
 describe('ppois', function () {
+    const logs: MockLogs[] = [];
     beforeEach(() => {
-        cl.clear('ppois');
+        const backend = createBackEndMock(logs);
+        register(backend);
+    });
+    afterEach(() => {
+        unRegister();
+        logs.splice(0);
     });
     describe('invalid input and edge cases', () => {
         it('x and lambda are NaN', () => {
@@ -21,7 +26,14 @@ describe('ppois', function () {
         it('lambda < 0', () => {
             const nan1 = ppois(0.5, -1);
             expect(nan1).toBeNaN();
-            expect(ppoisDomainWarns()).toHaveLength(1);
+            expect(logs).toEqual([
+                {
+                    prefix: '',
+                    namespace: 'ppois',
+                    formatter: "argument out of domain in '%s'",
+                    args: ['ppois']
+                }
+            ]);
         });
         it('x < 0', () => {
             const zero1 = ppois(-0.5, 1);

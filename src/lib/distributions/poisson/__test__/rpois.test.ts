@@ -1,17 +1,22 @@
 import { loadData } from '@common/load';
 import { resolve } from 'path';
-import { cl, select } from '@common/debug-mangos-select';
 
 import { rpois } from '..';
 
-const rpoisLogs = select('rpois');
-const rpoisDomainWarns = rpoisLogs("argument out of domain in '%s'");
-
 import { globalUni, RNGkind } from '@rng/global-rng';
+import { register, unRegister } from '@mangos/debug-frontend';
+import createBackEndMock from '@common/debug-backend';
+import type { MockLogs } from '@common/debug-backend';
 
 describe('rpois', function () {
+    const logs: MockLogs[] = [];
     beforeEach(() => {
-        cl.clear('rpois');
+        const backend = createBackEndMock(logs);
+        register(backend);
+    });
+    afterEach(() => {
+        unRegister();
+        logs.splice(0);
     });
     describe('invalid input and edge cases', () => {
         it('mhu = Infinity | mhu = NaN | mhu < 0', () => {
@@ -21,7 +26,26 @@ describe('rpois', function () {
             expect(nan2).toEqualFloatingPointBinary(NaN);
             const nan3 = rpois(1, -1);
             expect(nan3).toEqualFloatingPointBinary(NaN);
-            expect(rpoisDomainWarns()).toHaveLength(3);
+            expect(logs).toEqual([
+                {
+                    prefix: '',
+                    namespace: 'rpois',
+                    formatter: "argument out of domain in '%s'",
+                    args: ['rpois']
+                },
+                {
+                    prefix: '',
+                    namespace: 'rpois',
+                    formatter: "argument out of domain in '%s'",
+                    args: ['rpois']
+                },
+                {
+                    prefix: '',
+                    namespace: 'rpois',
+                    formatter: "argument out of domain in '%s'",
+                    args: ['rpois']
+                }
+            ]);
         });
         it('mhu = 0 -> 0', () => {
             const zero1 = rpois(1, 0);
