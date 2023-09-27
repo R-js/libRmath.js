@@ -1,7 +1,7 @@
 'use strict';
 
 import createNS from '@mangos/debug-frontend';
-import { ML_ERR_return_NAN2, lineInfo4 } from '@common/logger';
+import { ME, mapErrV2 } from '@common/logger';
 import { cpu_csignrank } from './csignrank';
 import { R_D__0, R_D_exp, isNaN, trunc, abs, log as _log, M_LN2, round } from '@lib/r-func';
 import { growMemory, memory } from './csignrank_wasm';
@@ -21,7 +21,7 @@ function unRegisterBackend(): boolean {
 
 export { unRegisterBackend, registerBackend };
 
-const printer = debug('dsignrank');
+const debug = createNS('dsignrank');
 
 export function dsignrank(x: number, n: number, log = false): number {
     if (isNaN(x) || isNaN(n)) {
@@ -29,7 +29,8 @@ export function dsignrank(x: number, n: number, log = false): number {
     }
 
     if (n <= 0) {
-        return ML_ERR_return_NAN2(printer, lineInfo4);
+        debug(mapErrV2[ME.ME_DOMAIN], debug.namespace);
+        return NaN;
     }
 
     if (abs(x - round(x)) > 1e-7) {

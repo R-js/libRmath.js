@@ -1,17 +1,22 @@
 import { loadData } from '@common/load';
 import { resolve } from 'path';
-import ms from 'ms';
 
-import { cl, select } from '@common/debug-mangos-select';
+import { ms } from './test-helpers';
+import { register, unRegister } from '@mangos/debug-frontend';
+import createBackEndMock from '@common/debug-backend';
+import type { MockLogs } from '@common/debug-backend';
 
 import { psignrank, useWasmBackendSignRank, clearBackendSignRank } from '..';
 
-const psignrankLogs = select('psignrank');
-const psignrankDomainWarns = psignrankLogs("argument out of domain in '%s'");
-
 describe('psignrank (wilcox sign rank)', function () {
+    const logs: MockLogs[] = [];
     beforeEach(() => {
-        cl.clear('psignrank');
+        const backend = createBackEndMock(logs);
+        register(backend);
+    });
+    afterEach(() => {
+        unRegister();
+        logs.splice(0);
     });
     describe('invalid input and edge cases', () => {
         it('x = NaN | n = NaN', () => {
@@ -25,7 +30,20 @@ describe('psignrank (wilcox sign rank)', function () {
             expect(nan1).toBeNaN();
             const nan2 = psignrank(6, Infinity);
             expect(nan2).toBeNaN();
-            expect(psignrankDomainWarns()).toHaveLength(2);
+            expect(logs).toEqual([
+                {
+                    prefix: '',
+                    namespace: 'psignrank',
+                    formatter: "argument out of domain in '%s'",
+                    args: ['psignrank']
+                },
+                {
+                    prefix: '',
+                    namespace: 'psignrank',
+                    formatter: "argument out of domain in '%s'",
+                    args: ['psignrank']
+                }
+            ]);
         });
         it('x < 0 or x > n*(n+1)/2', () => {
             const zero1 = psignrank(-1, 4);

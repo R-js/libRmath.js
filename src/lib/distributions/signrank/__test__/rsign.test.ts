@@ -3,18 +3,22 @@ import { resolve } from 'path';
 
 import { globalUni, RNGkind } from '@rng/global-rng';
 
-import { cl, select } from '@common/debug-mangos-select';
-
 import { rsignrank } from '..';
 
 import { INT_MAX } from '@lib/r-func';
-
-const rsignrankLogs = select('rsignrank');
-const rsignrankDomainWarns = rsignrankLogs("argument out of domain in '%s'");
+import { register, unRegister } from '@mangos/debug-frontend';
+import createBackEndMock from '@common/debug-backend';
+import type { MockLogs } from '@common/debug-backend';
 
 describe('rsignrank (wilcox sign rank)', function () {
+    const logs: MockLogs[] = [];
     beforeEach(() => {
-        cl.clear('rsignrank');
+        const backend = createBackEndMock(logs);
+        register(backend);
+    });
+    afterEach(() => {
+        unRegister();
+        logs.splice(0);
     });
     describe('invalid input and edge cases', () => {
         it('n = NaN', () => {
@@ -28,7 +32,14 @@ describe('rsignrank (wilcox sign rank)', function () {
         it('n < 0', () => {
             const nan1 = rsignrank(1, -1);
             expect(nan1).toEqualFloatingPointBinary(NaN);
-            expect(rsignrankDomainWarns()).toHaveLength(1);
+            expect(logs).toEqual([
+                {
+                    prefix: '',
+                    namespace: 'rsignrank',
+                    formatter: "argument out of domain in '%s'",
+                    args: ['rsignrank']
+                }
+            ]);
         });
         it('n == 0', () => {
             const zero = rsignrank(1, 0);

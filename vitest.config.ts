@@ -46,7 +46,8 @@ export default defineConfig({
             'src/lib/distributions/lognormal/__test__/*.test.ts',
             'src/lib/distributions/multinom/__test__/*.test.ts',
             'src/lib/distributions/normal/__test__/*.test.ts',
-            'src/lib/distributions/poisson/__test__/*.test.ts'
+            'src/lib/distributions/poisson/__test__/*.test.ts',
+            'src/lib/distributions/signrank/__test__/*.test.ts'
         ],
         exclude: [...configDefaults.exclude]
     }

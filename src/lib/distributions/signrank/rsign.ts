@@ -1,11 +1,11 @@
 'use strict';
 
 import createNS from '@mangos/debug-frontend';
-import { ML_ERR_return_NAN2, lineInfo4 } from '@common/logger';
+import { ME, mapErrV2 } from '@common/logger';
 import { globalUni } from '@rng/global-rng';
 import { floor, trunc, round, isNaN, INT_MAX } from '@lib/r-func';
 
-const printer = debug('rsignrank');
+const debug = createNS('rsignrank');
 
 export function rsignrankOne(n: number): number {
     const rng = globalUni();
@@ -19,7 +19,8 @@ export function rsignrankOne(n: number): number {
     n = round(n);
 
     if (n < 0) {
-        return ML_ERR_return_NAN2(printer, lineInfo4);
+        debug(mapErrV2[ME.ME_DOMAIN], debug.namespace);
+        return NaN;
     }
     if (n === 0) {
         return 0;

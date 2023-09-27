@@ -1,14 +1,14 @@
 'use strict';
 
 import createNS from '@mangos/debug-frontend';
-import { ML_ERR_return_NAN2, lineInfo4 } from '@common/logger';
+import { ME, mapErrV2 } from '@common/logger';
 import { R_DT_0, R_DT_1, R_DT_val, round, trunc, M_LN2, exp, isNaN, isFinite } from '@lib/r-func';
 import { cpu_csignrank } from './csignrank';
 import { growMemory, memory } from './csignrank_wasm';
 
 import type { CSingRank, CSignRankMap } from './csignrank_wasm';
 
-const printer = debug('psignrank');
+const debug = createNS('psignrank');
 
 let _csignrank: CSingRank = cpu_csignrank;
 
@@ -28,7 +28,8 @@ export function psignrank(q: number, n: number, lowerTail = true, logP = false):
         return NaN;
     }
     if (!isFinite(n) || n <= 0) {
-        return ML_ERR_return_NAN2(printer, lineInfo4);
+        debug(mapErrV2[ME.ME_DOMAIN], debug.namespace);
+        return NaN;
     }
 
     q = round(q + 1e-7);

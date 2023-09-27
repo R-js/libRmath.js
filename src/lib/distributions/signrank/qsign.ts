@@ -1,7 +1,7 @@
 'use strict';
 
 import createNS from '@mangos/debug-frontend';
-import { ML_ERR_return_NAN2, lineInfo4, R_Q_P01_check, ML_ERROR2, ME } from '@common/logger';
+import { R_Q_P01_check, ME, mapErrV2 } from '@common/logger';
 import { R_DT_qIv } from '@dist/exp/expm1';
 import { cpu_csignrank } from './csignrank';
 
@@ -10,7 +10,7 @@ import { growMemory } from './csignrank_wasm';
 
 import type { CSingRank, CSignRankMap } from './csignrank_wasm';
 
-const printer = debug('qsignrank');
+const debug = createNS('qsignrank');
 
 const PRECISION_LOWER_LIMIT = -DBL_MIN_VALUE_LN / M_LN2;
 
@@ -43,7 +43,8 @@ export function qsignrank(p: number, n: number, lowerTail = true, logP = false):
     }
 
     if (!isFinite(p) || !isFinite(n)) {
-        return ML_ERR_return_NAN2(printer, lineInfo4);
+        debug(mapErrV2[ME.ME_DOMAIN], debug.namespace);
+        return NaN;
     }
 
     // precision check, add this to upstream r-source
@@ -51,7 +52,7 @@ export function qsignrank(p: number, n: number, lowerTail = true, logP = false):
     // will be zero if n > -1074
     if (n > PRECISION_LOWER_LIMIT) {
         //
-        ML_ERROR2(ME.ME_UNDERFLOW, 'n > 1074', printer);
+        debug(mapErrV2[ME.ME_UNDERFLOW], 'n > 1074');
         return NaN;
     }
 
@@ -61,7 +62,8 @@ export function qsignrank(p: number, n: number, lowerTail = true, logP = false):
     }
 
     if (n <= 0) {
-        return ML_ERR_return_NAN2(printer, lineInfo4);
+        debug(mapErrV2[ME.ME_DOMAIN], debug.namespace);
+        return NaN;
     }
 
     if (p === R_DT_0(lowerTail, logP)) {

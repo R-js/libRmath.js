@@ -1,22 +1,24 @@
-import ms from 'ms';
+import { ms } from './test-helpers';
 
 import { loadData } from '@common/load';
 import { resolve } from 'path';
 
-import { cl, select } from '@common/debug-mangos-select';
-
 import { qsignrank, useWasmBackendSignRank, clearBackendSignRank, psignrank } from '..';
+import { register, unRegister } from '@mangos/debug-frontend';
+import createBackEndMock from '@common/debug-backend';
+import type { MockLogs } from '@common/debug-backend';
 
 import { log, DBL_EPSILON } from '@lib/r-func';
 
-const qsignrankLogs = select('qsignrank');
-const qsignrankDomainWarns = qsignrankLogs("argument out of domain in '%s'");
-const qsignrankBounderies = select('R_Q_P01_check')("argument out of domain in '%s'");
-
 describe('qsignrank (wilcox sign rank)', function () {
+    const logs: MockLogs[] = [];
     beforeEach(() => {
-        cl.clear('qsignrank');
-        cl.clear('R_Q_P01_check');
+        const backend = createBackEndMock(logs);
+        register(backend);
+    });
+    afterEach(() => {
+        unRegister();
+        logs.splice(0);
     });
     describe('invalid input and edge cases', () => {
         it('p = NaN | n = NaN', () => {
@@ -30,21 +32,60 @@ describe('qsignrank (wilcox sign rank)', function () {
             expect(nan1).toBeNaN();
             const nan2 = qsignrank(0.5, Infinity);
             expect(nan2).toBeNaN();
-            expect(qsignrankDomainWarns()).toHaveLength(2);
+            expect(logs).toEqual([
+                {
+                    prefix: '',
+                    namespace: 'qsignrank',
+                    formatter: "argument out of domain in '%s'",
+                    args: ['qsignrank']
+                },
+                {
+                    prefix: '',
+                    namespace: 'qsignrank',
+                    formatter: "argument out of domain in '%s'",
+                    args: ['qsignrank']
+                }
+            ]);
         });
         it('p < 0 | p > 1', () => {
             const nan1 = qsignrank(-1, 4);
             expect(nan1).toBeNaN();
             const nan2 = qsignrank(1.1, 5);
             expect(nan2).toBeNaN();
-            expect(qsignrankBounderies()).toHaveLength(2);
+            expect(logs).toEqual([
+                {
+                    prefix: '',
+                    namespace: 'R_Q_P01_check',
+                    formatter: "argument out of domain in '%s'",
+                    args: ['R_Q_P01_check']
+                },
+                {
+                    prefix: '',
+                    namespace: 'R_Q_P01_check',
+                    formatter: "argument out of domain in '%s'",
+                    args: ['R_Q_P01_check']
+                }
+            ]);
         });
         it('n <= 0', () => {
             const nan1 = qsignrank(0.2, -4);
             expect(nan1).toBeNaN();
             const nan2 = qsignrank(0.2, 0);
             expect(nan2).toBeNaN();
-            expect(qsignrankDomainWarns()).toHaveLength(2);
+            expect(logs).toEqual([
+                {
+                    prefix: '',
+                    namespace: 'qsignrank',
+                    formatter: "argument out of domain in '%s'",
+                    args: ['qsignrank']
+                },
+                {
+                    prefix: '',
+                    namespace: 'qsignrank',
+                    formatter: "argument out of domain in '%s'",
+                    args: ['qsignrank']
+                }
+            ]);
         });
         it('p = 0 | p = log(exp(1)) if pAsLog=true && lowerTail = true', () => {
             const zero1 = qsignrank(0, 4, true, false);
