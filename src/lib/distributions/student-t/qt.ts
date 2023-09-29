@@ -2,7 +2,7 @@
 
 import createNS from '@mangos/debug-frontend';
 
-import { ME, ML_ERROR2, R_Q_P01_boundaries, ML_ERR_return_NAN2, lineInfo4 } from '@common/logger';
+import { ME, R_Q_P01_boundaries, mapErrV2 } from '@common/logger';
 
 import {
     DBL_MANT_DIG,
@@ -33,7 +33,7 @@ import { tanpi } from '@trig/tanpi';
 import { _dt } from './dt';
 import { pt } from './pt';
 
-const printer = debug('qt');
+const debug = createNS('qt');
 
 const accu = 1e-13;
 const Eps = 1e-11; /* must be > accur */
@@ -53,7 +53,8 @@ export function qt(p: number, ndf: number, lower_tail: boolean, log_p: boolean):
     }
 
     if (ndf <= 0.0) {
-        return ML_ERR_return_NAN2(printer, lineInfo4);
+        debug(mapErrV2[ME.ME_DOMAIN], debug.namespace);
+        return NaN;
     }
 
     if (ndf < 1) {
@@ -97,7 +98,7 @@ export function qt(p: number, ndf: number, lower_tail: boolean, log_p: boolean):
         } while ((ux - lx) / abs(nx) > accu && ++iter < 1000);
 
         if (iter >= 1000) {
-            ML_ERROR2(ME.ME_PRECISION, 'qt', printer);
+            debug(mapErrV2[ME.ME_PRECISION], 'qt');
         }
         return 0.5 * (lx + ux);
     }

@@ -1,14 +1,12 @@
-'use strict';
-
 import createNS from '@mangos/debug-frontend';
-import { ML_ERR_return_NAN2, lineInfo4, R_Q_P01_boundaries } from '@common/logger';
+import { ME, mapErrV2, R_Q_P01_boundaries } from '@common/logger';
 import { R_DT_qIv } from '@dist/exp/expm1';
 import { DBL_EPSILON, min, max, abs, DBL_MAX } from '@lib/r-func';
 import { qnorm } from '@dist/normal/qnorm';
 import { pnt } from './pnt';
 import { qt } from './qt';
 
-const printer = debug('qnt');
+const debug = createNS('qnt');
 
 const accu = 1e-13;
 const Eps = 1e-11; /* must be > accu */
@@ -24,7 +22,8 @@ export function qnt(p: number, df: number, ncp: number, lower_tail: boolean, log
     }
 
     if (df <= 0) {
-        return ML_ERR_return_NAN2(printer, lineInfo4);
+        debug(mapErrV2[ME.ME_DOMAIN], debug.namespace);
+        return NaN;
     }
 
     if (ncp === 0 && df >= 1) {

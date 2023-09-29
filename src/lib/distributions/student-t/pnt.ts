@@ -2,7 +2,7 @@
 
 import createNS from '@mangos/debug-frontend';
 import { pbeta } from '@dist/beta/pbeta';
-import { ME, ML_ERR_return_NAN2, lineInfo4, ML_ERROR2 } from '@common/logger';
+import { ME, mapErrV2 } from '@common/logger';
 import {
     M_LN_SQRT_PI,
     M_SQRT_2dPI,
@@ -24,7 +24,7 @@ import { lgamma } from '@special/gamma';
 import { pnorm5 as pnorm } from '../normal/pnorm';
 import { pt } from './pt';
 
-const printer_pnt = debug('pnt');
+const debug_pnt = createNS('pnt');
 
 const DBL_MIN_EXP = -1021;
 const itrmax = 1000;
@@ -32,9 +32,9 @@ const errmax = 1e-12;
 
 function finis(tnc: number, del: number, lower_tail: boolean, negdel: boolean, log_p: boolean): number {
     const pn = pnorm(-del, 0, 1, /*lower*/ true, /*log_p*/ false);
-    printer_pnt('pnorm(%d,0,1)=%d', -del, pn);
+    debug_pnt('pnorm(%d,0,1)=%d', -del, pn);
     tnc += pn;
-    printer_pnt('tnc=%d', tnc);
+    debug_pnt('tnc=%d', tnc);
     lower_tail = lower_tail !== negdel; /* xor */
     /*
     negdel = (t < 0)
@@ -46,10 +46,10 @@ function finis(tnc: number, del: number, lower_tail: boolean, negdel: boolean, l
 
     */
     if (tnc > 1 - 1e-10 && lower_tail) {
-        ML_ERROR2(ME.ME_PRECISION, 'pnt{final}', printer_pnt);
+        debug_pnt(mapErrV2[ME.ME_PRECISION], 'pnt{final}');
     }
     const rc = R_DT_val(lower_tail, log_p, min(tnc, 1) /* Precaution */);
-    printer_pnt('rc:%d, tnc:%d, log_p:%s, lower_tail:%s', rc, tnc, log_p, lower_tail);
+    debug_pnt('rc:%d, tnc:%d, log_p:%s, lower_tail:%s', rc, tnc, log_p, lower_tail);
 
     return rc;
 }
@@ -79,7 +79,8 @@ export function pnt(t: number, df: number, ncp: number, lower_tail: boolean, log
     }
 
     if (df <= 0.0) {
-        return ML_ERR_return_NAN2(printer_pnt, lineInfo4);
+        debug_pnt(mapErrV2[ME.ME_DOMAIN], debug_pnt.namespace);
+        return NaN;
     }
 
     if (!isFinite(t)) {
@@ -103,7 +104,7 @@ export function pnt(t: number, df: number, ncp: number, lower_tail: boolean, log
              since pt(q, df, ncp) <= pt(0, df, ncp) = \Phi(-ncp) */
 
         if (ncp > 40 && (!log_p || !lower_tail)) {
-            printer_pnt('if x <=0 and solution for edge ncp > 40');
+            debug_pnt('if x <=0 and solution for edge ncp > 40');
             return R_DT_0(lower_tail, log_p);
         }
         negdel = true;
@@ -112,7 +113,7 @@ export function pnt(t: number, df: number, ncp: number, lower_tail: boolean, log
     }
 
     if (df > 4e5 || del * del > 2 * M_LN2 * -DBL_MIN_EXP) {
-        printer_pnt(
+        debug_pnt(
             'Abramowitz & Stegun 26.7.10 ncp:%d, del:%d, ncp2:%d, del2:%d, D:%d',
             ncp,
             del,
@@ -142,29 +143,29 @@ export function pnt(t: number, df: number, ncp: number, lower_tail: boolean, log
     rxb = df / (x + df); /* := (1 - x) {x below} -- but more accurately */
     x = x / (x + df); /* in [0,1) */
 
-    printer_pnt('pnt(t=%d, df=%d, ncp=%d, rxb=%d) ==> x=%d', t, df, ncp, rxb, x);
+    debug_pnt('pnt(t=%d, df=%d, ncp=%d, rxb=%d) ==> x=%d', t, df, ncp, rxb, x);
 
     // x will be always >= 0
     // because df >0
     // edge case is x==0, then we skip this
     if (x > 0) {
-        printer_pnt('x > 0 branch');
+        debug_pnt('x > 0 branch');
         /* <==>  t != 0 */
         const lambda = del * del;
         let p = 0.5 * exp(-0.5 * lambda);
 
-        printer_pnt('p=%d', p);
+        debug_pnt('p=%d', p);
 
         if (p === 0) {
             /* underflow! */
-            printer_pnt('p=%d, underflow protection', p);
+            debug_pnt('p=%d, underflow protection', p);
             /*========== really use an other algorithm for this case !!! */
-            ML_ERROR2(ME.ME_UNDERFLOW, 'pnt', printer_pnt);
-            ML_ERROR2(ME.ME_RANGE, 'pnt', printer_pnt); /* |ncp| too large */
+            debug_pnt(mapErrV2[ME.ME_UNDERFLOW], 'pnt');
+            debug_pnt(mapErrV2[ME.ME_RANGE], 'pnt'); /* |ncp| too large */
             return R_DT_0(lower_tail, log_p);
         }
 
-        printer_pnt(
+        debug_pnt(
             'it  1e5*(godd,   geven)|          p           q           s' +
                 /* 1.3 1..4..7.9 1..4..7.9|1..4..7.901 1..4..7.901 1..4..7.901 */
                 '        pnt(*)     errbd'
@@ -186,11 +187,11 @@ export function pnt(t: number, df: number, ncp: number, lower_tail: boolean, log
 
         const albeta = M_LN_SQRT_PI + lgamma(b) - lgamma(0.5 + b);
 
-        printer_pnt('%d = lgamma(%d)-lgamma(0.5+%d)+0.572364942924700087071713675677', albeta, b, b);
+        debug_pnt('%d = lgamma(%d)-lgamma(0.5+%d)+0.572364942924700087071713675677', albeta, b, b);
 
         xodd = pbeta(x, a, b, /*lower*/ true, /*log_p*/ false);
 
-        printer_pnt('return from pbeta:%d', xodd);
+        debug_pnt('return from pbeta:%d', xodd);
 
         godd = 2 * rxb * exp(a * log(x) - albeta);
 
@@ -215,25 +216,25 @@ export function pnt(t: number, df: number, ncp: number, lower_tail: boolean, log
 
             if (s < -1e-10) {
                 /* happens e.g. for (t,df,ncp)=(40,10,38.5), after 799 it.*/
-                ML_ERROR2(ME.ME_PRECISION, 'pnt', printer_pnt);
-                printer_pnt('goto:true, s = %d < 0 !!! ---> non-convergence!!', s);
+                debug_pnt(mapErrV2[ME.ME_PRECISION], 'pnt');
+                debug_pnt('goto:true, s = %d < 0 !!! ---> non-convergence!!', s);
                 return finis(tnc, del, lower_tail, negdel, log_p);
             }
             if (s <= 0 && it > 1) {
-                printer_pnt('goto:true, s:%d < 0 && it:%d>1', s, it);
+                debug_pnt('goto:true, s:%d < 0 && it:%d>1', s, it);
                 return finis(tnc, del, lower_tail, negdel, log_p);
             }
             errbd = 2 * s * (xodd - godd);
 
-            printer_pnt('%d %d %d|%d %d %d %d %d', it, 1e5 * godd, 1e5 * geven, p, q, s, tnc, errbd);
+            debug_pnt('%d %d %d|%d %d %d %d %d', it, 1e5 * godd, 1e5 * geven, p, q, s, tnc, errbd);
 
             if (abs(errbd) < errmax) {
-                printer_pnt('goto:true, errbd:%d < errmax:%d', errbd, errmax);
+                debug_pnt('goto:true, errbd:%d < errmax:%d', errbd, errmax);
                 return finis(tnc, del, lower_tail, negdel, log_p);
             }
         } //for (it = 1; it <= itrmax; it++)
         /* non-convergence:*/
-        ML_ERROR2(ME.ME_NOCONV, 'pnt', printer_pnt);
+        debug_pnt(mapErrV2[ME.ME_NOCONV], 'pnt');
     } else {
         tnc = 0;
     }

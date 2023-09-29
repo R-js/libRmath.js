@@ -1,25 +1,29 @@
 import { loadData } from '@common/load';
 import { resolve } from 'path';
 
-import { cl, select } from '@common/debug-mangos-select';
 import { DBL_EPSILON } from '@lib/r-func';
 
 import { qt } from '..';
 
-const qntDomainWarns = select('qnt')("argument out of domain in '%s'");
-const qntboundaryWarns = select('R_Q_P01_boundaries')("argument out of domain in '%s'");
-qntDomainWarns;
+import { register, unRegister } from '@mangos/debug-frontend';
+import createBackEndMock from '@common/debug-backend';
+import type { MockLogs } from '@common/debug-backend';
 
 function partialQntf(p: number, df: number, ncp: number, lowerTail = true, logP = false) {
     return qt(p, df, ncp, lowerTail, logP);
 }
 
 describe('qnt(x, df, ncp, lower.tail, log.p)', () => {
+    const logs: MockLogs[] = [];
+    beforeEach(() => {
+        const backend = createBackEndMock(logs);
+        register(backend);
+    });
+    afterEach(() => {
+        unRegister();
+        logs.splice(0);
+    });
     describe('invalid input and edge cases', () => {
-        beforeEach(() => {
-            cl.clear('qnt');
-            cl.clear('R_Q_P01_boundaries');
-        });
         it('x=NaN | df=NaN | ncp=NaN', () => {
             const nan1 = partialQntf(NaN, 4, 4);
             expect(nan1).toBeNaN();
@@ -46,7 +50,20 @@ describe('qnt(x, df, ncp, lower.tail, log.p)', () => {
             const nan1 = partialQntf(-1, 4, 6);
             const nan2 = partialQntf(1.2, 4, 6);
             expect([nan1, nan2]).toEqualFloatingPointBinary(NaN);
-            expect(qntboundaryWarns()).toHaveLength(2);
+            expect(logs).toEqual([
+                {
+                  prefix: '',
+                  namespace: 'R_Q_P01_boundaries',
+                  formatter: "argument out of domain in '%s'",
+                  args: [ 'R_Q_P01_boundaries' ]
+                },
+                {
+                  prefix: '',
+                  namespace: 'R_Q_P01_boundaries',
+                  formatter: "argument out of domain in '%s'",
+                  args: [ 'R_Q_P01_boundaries' ]
+                }
+              ]);
         });
         it('df = Infinity', () => {
             const dfInf = partialQntf(0.2, Infinity, 7);

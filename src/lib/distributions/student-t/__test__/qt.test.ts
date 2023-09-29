@@ -1,26 +1,30 @@
 import { loadData } from '@common/load';
 import { resolve } from 'path';
 
-import { cl, select } from '@common/debug-mangos-select';
 import { DBL_EPSILON, DBL_MIN } from '@lib/r-func';
 
 import { qt } from '..';
 
-const qtDomainWarns = select('qt')("argument out of domain in '%s'");
-const qtboundaryWarns = select('R_Q_P01_boundaries')("argument out of domain in '%s'");
-
 function partialQtf(p: number, df: number, lowerTail = true, logP = false) {
     return qt(p, df, undefined, lowerTail, logP);
 }
+import { register, unRegister } from '@mangos/debug-frontend';
+import createBackEndMock from '@common/debug-backend';
+import type { MockLogs } from '@common/debug-backend';
 
 // partialQtf(p: number, ndf: number, lower_tail: boolean, log_p: boolean): number
 
 describe('partialQtf(x, df, lower.tail, log.p)', function () {
+    const logs: MockLogs[] = [];
+    beforeEach(() => {
+        const backend = createBackEndMock(logs);
+        register(backend);
+    });
+    afterEach(() => {
+        unRegister();
+        logs.splice(0);
+    });
     describe('invalid input and edge cases', () => {
-        beforeEach(() => {
-            cl.clear('qt');
-            cl.clear('R_Q_P01_boundaries');
-        });
         it('p=NaN| df = NaN', () => {
             const nan1 = partialQtf(NaN, 0, true, false);
             const nan2 = partialQtf(0.5, NaN, true, false);
@@ -31,12 +35,33 @@ describe('partialQtf(x, df, lower.tail, log.p)', function () {
             expect(nan1).toBeNaN();
             const nan2 = partialQtf(2, 100, true, false);
             expect(nan2).toBeNaN();
-            expect(qtboundaryWarns()).toHaveLength(2);
+            expect(logs).toEqual([
+                {
+                  prefix: '',
+                  namespace: 'R_Q_P01_boundaries',
+                  formatter: "argument out of domain in '%s'",
+                  args: [ 'R_Q_P01_boundaries' ]
+                },
+                {
+                  prefix: '',
+                  namespace: 'R_Q_P01_boundaries',
+                  formatter: "argument out of domain in '%s'",
+                  args: [ 'R_Q_P01_boundaries' ]
+                }
+              ])
         });
         it('df <= 0', () => {
             const nan1 = partialQtf(0.2, -2, true, false);
             expect(nan1).toBeNaN();
-            expect(qtDomainWarns()).toHaveLength(1);
+            expect(logs).toEqual([
+                {
+                  prefix: '',
+                  namespace: 'qt',
+                  formatter: "argument out of domain in '%s'",
+                  args: [ 'qt' ]
+                }
+              ]);
+
         });
         it('df > 1e20', () => {
             const ans = partialQtf(0.2, 1.1e20, true, false);
@@ -62,16 +87,16 @@ describe('partialQtf(x, df, lower.tail, log.p)', function () {
             const ans2 = partialQtf(-DBL_MIN / 2, 45, true, true);
             expect(ans2).toEqualFloatingPointBinary(43926862.668675929, 43);
         });
-        xit('df < 2.1 && P > 0.5 (lowerTail=false && p ~ 0', () => {
+        it.todo('df < 2.1 && P > 0.5 (lowerTail=false && p ~ 0', () => {
             const ans1 = partialQtf(-DBL_MIN / 2, 1.2, false, true);
             expect(ans1).toEqualFloatingPointBinary(-1.0055623670775586e256);
         });
-        xit('p close to 1 or 0 (-+ EPSILON)', () => {
+        it.todo('p close to 1 or 0 (-+ EPSILON)', () => {
             expect(partialQtf(1 - DBL_EPSILON / 2, 0.2, true, false)).toEqualFloatingPointBinary(Infinity);
             expect(partialQtf(DBL_MIN / 2, 2, true, false)).toEqualFloatingPointBinary(-Infinity);
             expect(partialQtf(-DBL_MIN / 2, 2, true, true)).toEqualFloatingPointBinary(Infinity);
         });
-        xit('p close to 0 , df=1 lowertail=T , aslog = false', () => {
+        it.todo('p close to 0 , df=1 lowertail=T , aslog = false', () => {
             expect(partialQtf(DBL_MIN / 2, 1, true, false)).toEqualFloatingPointBinary(-2.8611174857570284e307);
             //js returns -Infinity, R returns -2.8611174857570284e+307
         });

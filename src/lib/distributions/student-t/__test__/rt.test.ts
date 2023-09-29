@@ -3,29 +3,29 @@ import { resolve } from 'path';
 
 import { globalUni, RNGkind } from '@rng/global-rng';
 
-import { cl, select } from '@common/debug-mangos-select';
+import { register, unRegister } from '@mangos/debug-frontend';
+import createBackEndMock from '@common/debug-backend';
+import type { MockLogs } from '@common/debug-backend';
 
 import { rt } from '..';
 
-const rtLogs = select('rt');
-const rtDomainWarns = rtLogs("argument out of domain in '%s'");
-
-const rchisqLogs = select('rchisq');
-const rchisqDomainWarns = rchisqLogs("argument out of domain in '%s'");
-
-const rnormLogs = select('rnorm');
-const rnormDomainWarns = rnormLogs("argument out of domain in '%s'");
-
 describe('rt (n,df,ncp)', function () {
-
+    const logs: MockLogs[] = [];
+    afterEach(() => {
+        unRegister();
+        logs.splice(0);
+    });
+    beforeEach(() => {
+        const backend = createBackEndMock(logs);
+        register(backend);
+        RNGkind({ uniform: "MERSENNE_TWISTER", normal: "INVERSION"});
+        globalUni().init(123456);
+    });
     describe('invalid input and edge cases', () => {
         describe('ncp = undefined', () => {
             beforeEach(() => {
                 RNGkind({ uniform: "MERSENNE_TWISTER", normal: "INVERSION"});
                 globalUni().init(123456);
-                cl.clear('rt');
-                cl.clear('rchisq');
-                cl.clear('rnorm');
             });
             it('n=NaN', () => {
                 expect(() => rt(NaN, 4, 2)).toThrowError('"n=NaN" is not a positive finite number');
@@ -35,7 +35,20 @@ describe('rt (n,df,ncp)', function () {
                 expect(nan1).toEqualFloatingPointBinary(NaN);
                 const nan2 = rt(1, -4);
                 expect(nan2).toEqualFloatingPointBinary(NaN);
-                expect(rtDomainWarns()).toHaveLength(2);
+                expect(logs).toEqual([
+                    {
+                      prefix: '',
+                      namespace: 'rt',
+                      formatter: "argument out of domain in '%s'",
+                      args: [ 'rt' ]
+                    },
+                    {
+                      prefix: '',
+                      namespace: 'rt',
+                      formatter: "argument out of domain in '%s'",
+                      args: [ 'rt' ]
+                    }
+                  ])
             });
             it('df = Infinity, ncp = undefined', async () => {
                 const [expected] = await loadData(resolve(__dirname, 'fixture-generation', 'rt1.R'), /\s+/, 1);
@@ -44,29 +57,31 @@ describe('rt (n,df,ncp)', function () {
             });
         });
         describe('ncp defined', () => {
-            beforeEach(() => {
-                RNGkind({ uniform: "MERSENNE_TWISTER", normal: "INVERSION"});
-                globalUni().init(123456);
-                cl.clear('rt');
-                cl.clear('rchisq');
-                cl.clear('rnorm');
-            });
             it('ncp=0, n = NaN', () => {
                 expect(() => rt(NaN, 4, 2)).toThrowError('"n=NaN" is not a positive finite number');
             });
             it('ncp=0, n = 1, df = NaN', () => {
                 expect(rt(1, NaN, 0)).toEqualFloatingPointBinary(NaN);
-                expect(rchisqDomainWarns()).toHaveLength(1);
-                expect(rnormDomainWarns()).toHaveLength(0);
+                expect(logs).toEqual([
+                    {
+                      prefix: '',
+                      namespace: 'qnorm',
+                      formatter: 'qnorm(p=%d, m=%d, s=%d, l.t.= %s, log= %s): q = %d',
+                      args: [ 0.7977843191740296, 0, 1, true, false, 0.2977843191740296 ]
+                    },
+                    {
+                      prefix: '',
+                      namespace: 'rchisq',
+                      formatter: "argument out of domain in '%s'",
+                      args: [ 'rchisq' ]
+                    }
+                  ]);
             });
         });
     });
     describe('fidelity', () => {
         describe('ncp = undefined', () => {
-            beforeEach(() => {
-                RNGkind({ uniform: "MERSENNE_TWISTER", normal: "INVERSION"});
-                globalUni().init(123456);
-            });
+           
             it('samples for df = 0.5|df = 5| df=50| df=500', async () => {
                 const [y1, y2, y3, y4] = await loadData(resolve(__dirname, 'fixture-generation', 'rt2.R'), /\s+/, 1, 2, 3, 4);
                 const actual1 = rt(20, 0.5);
