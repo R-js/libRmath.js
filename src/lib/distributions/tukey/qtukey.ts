@@ -2,7 +2,7 @@
 
 import createNS from '@mangos/debug-frontend';
 
-import { ME, ML_ERR_return_NAN2, lineInfo4, ML_ERROR2, R_Q_P01_boundaries } from '@common/logger';
+import { ME, mapErrV2, R_Q_P01_boundaries } from '@common/logger';
 import { R_DT_qIv } from '@dist/exp/expm1';
 import { ptukey } from './ptukey';
 
@@ -25,7 +25,7 @@ const c4 = 1.208;
 const c5 = 1.4142;
 const vmax = 120.0;
 
-const printer = debug('qtukey');
+const debug = createNS('qtukey');
 
 function qinv(p: number, c: number, v: number): number {
     //let ps;
@@ -84,13 +84,14 @@ export function qtukey(p: number, nmeans: number, df: number, nranges = 1, lower
     let iter;
 
     if (isNaN(p) || isNaN(nranges) || isNaN(nmeans) || isNaN(df)) {
-        ML_ERROR2(ME.ME_DOMAIN, 'qtukey', printer);
+        debug(mapErrV2[ME.ME_DOMAIN], debug.namespace);
         return NaN;
     }
 
     /* df must be > 1 ; there must be at least two values */
     if (df < 2 || nranges < 1 || nmeans < 2) {
-        return ML_ERR_return_NAN2(printer, lineInfo4);
+        debug(mapErrV2[ME.ME_DOMAIN], debug.namespace);
+        return NaN;
     }
 
     const rc = R_Q_P01_boundaries(lowerTail, logP, p, 0, Infinity);
@@ -149,7 +150,6 @@ export function qtukey(p: number, nmeans: number, df: number, nranges = 1, lower
     }
 
     /* The process did not converge in 'maxiter' iterations */
-
-    ML_ERROR2(ME.ME_NOCONV, 'qtukey', printer);
+    debug(mapErrV2[ME.ME_NOCONV], debug.namespace);
     return ans;
 }

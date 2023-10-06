@@ -1,22 +1,52 @@
-import { cl, select } from '@common/debug-mangos-select';
 import { ptukey } from '..';
 
-const ptukeyDomainWarns = select('ptukey')("argument out of domain in '%s'");
+import { register, unRegister } from '@mangos/debug-frontend';
+import createBackEndMock from '@common/debug-backend';
+import type { MockLogs } from '@common/debug-backend';
 
 describe('ptukey', function () {
+    const logs: MockLogs[] = [];
+    beforeEach(() => {
+        const backend = createBackEndMock(logs);
+        register(backend);
+    });
+    afterEach(() => {
+        unRegister();
+        logs.splice(0);
+    });
     describe('invalid input and edge cases', () => {
-        beforeEach(() => {
-            cl.clear('ptukey');
-            cl.clear('R_Q_P01_boundaries');
-        });
-
         it('p=Nan|nmeans=NaN|df=NaN|ranges=NaN', () => {
             const nan1 = ptukey(NaN, 4, 3, 2);
             const nan2 = ptukey(0.9, NaN, 3, 2);
             const nan3 = ptukey(0.9, 4, NaN);
             const nan4 = ptukey(0.9, 4, 3, NaN);
             expect([nan1, nan2, nan3, nan4]).toEqualFloatingPointBinary(NaN);
-            expect(ptukeyDomainWarns()).toHaveLength(4);
+            expect(logs).toEqual([
+                {
+                    prefix: '',
+                    namespace: 'ptukey',
+                    formatter: "argument out of domain in '%s'",
+                    args: ['ptukey']
+                },
+                {
+                    prefix: '',
+                    namespace: 'ptukey',
+                    formatter: "argument out of domain in '%s'",
+                    args: ['ptukey']
+                },
+                {
+                    prefix: '',
+                    namespace: 'ptukey',
+                    formatter: "argument out of domain in '%s'",
+                    args: ['ptukey']
+                },
+                {
+                    prefix: '',
+                    namespace: 'ptukey',
+                    formatter: "argument out of domain in '%s'",
+                    args: ['ptukey']
+                }
+            ]);
         });
         it('x <= 0 | x -> infinity', () => {
             const zero = ptukey(-0.9, 4, 2);
@@ -29,7 +59,26 @@ describe('ptukey', function () {
             const nan2 = ptukey(5, 1, 2);
             const nan3 = ptukey(5, 2, 2, 0);
             expect([nan1, nan2, nan3]).toEqualFloatingPointBinary(NaN);
-            expect(ptukeyDomainWarns()).toHaveLength(3);
+            expect(logs).toEqual([
+                {
+                    prefix: '',
+                    namespace: 'ptukey',
+                    formatter: "argument out of domain in '%s'",
+                    args: ['ptukey']
+                },
+                {
+                    prefix: '',
+                    namespace: 'ptukey',
+                    formatter: "argument out of domain in '%s'",
+                    args: ['ptukey']
+                },
+                {
+                    prefix: '',
+                    namespace: 'ptukey',
+                    formatter: "argument out of domain in '%s'",
+                    args: ['ptukey']
+                }
+            ]);
         });
         it('df > 25000, use wprob', () => {
             const ans = ptukey(1, 5, 26000);

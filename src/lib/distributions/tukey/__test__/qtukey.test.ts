@@ -1,16 +1,20 @@
-import { cl, select } from '@common/debug-mangos-select';
-
 import { qtukey } from '..';
 
-const qtukeyDomainWarns = select('qtukey')("argument out of domain in '%s'");
-const qtukeyBounderyWarns = select('R_Q_P01_boundaries')("argument out of domain in '%s'");
+import { register, unRegister } from '@mangos/debug-frontend';
+import createBackEndMock from '@common/debug-backend';
+import type { MockLogs } from '@common/debug-backend';
 
 describe('qtukey', function () {
+    const logs: MockLogs[] = [];
+    beforeEach(() => {
+        const backend = createBackEndMock(logs);
+        register(backend);
+    });
+    afterEach(() => {
+        unRegister();
+        logs.splice(0);
+    });
     describe('invalid input and edge cases', () => {
-        beforeEach(() => {
-            cl.clear('qtukey');
-            cl.clear('R_Q_P01_boundaries');
-        });
         it('p=Nan|nmeans=NaN|df=NaN|ranges=NaN', () => {
             const nan1 = qtukey(NaN, 4, 3, 2);
             const nan2 = qtukey(0.9, NaN, 3, 2);
@@ -23,13 +27,45 @@ describe('qtukey', function () {
             const nan2 = qtukey(0.9, 4, 2, 0);
             const nan3 = qtukey(0.9, 1, 2, 0);
             expect([nan1, nan2, nan3]).toEqualFloatingPointBinary(NaN);
-            expect(qtukeyDomainWarns()).toHaveLength(3);
+            expect(logs).toEqual([
+                {
+                    prefix: '',
+                    namespace: 'qtukey',
+                    formatter: "argument out of domain in '%s'",
+                    args: ['qtukey']
+                },
+                {
+                    prefix: '',
+                    namespace: 'qtukey',
+                    formatter: "argument out of domain in '%s'",
+                    args: ['qtukey']
+                },
+                {
+                    prefix: '',
+                    namespace: 'qtukey',
+                    formatter: "argument out of domain in '%s'",
+                    args: ['qtukey']
+                }
+            ]);
         });
         it('p > 1 | p < 0', () => {
             const nan1 = qtukey(-1, 4, 2);
             const nan2 = qtukey(1.2, 4, 2);
             expect([nan1, nan2]).toEqualFloatingPointBinary(NaN);
-            expect(qtukeyBounderyWarns()).toHaveLength(2);
+            expect(logs).toEqual([
+                {
+                    prefix: '',
+                    namespace: 'R_Q_P01_boundaries',
+                    formatter: "argument out of domain in '%s'",
+                    args: ['R_Q_P01_boundaries']
+                },
+                {
+                    prefix: '',
+                    namespace: 'R_Q_P01_boundaries',
+                    formatter: "argument out of domain in '%s'",
+                    args: ['R_Q_P01_boundaries']
+                }
+            ]);
         });
         it('p =0  | p = 1', () => {
             const b1 = qtukey(0, 4, 2);
