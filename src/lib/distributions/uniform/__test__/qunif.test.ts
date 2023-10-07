@@ -1,15 +1,20 @@
-import { cl, select } from '@common/debug-mangos-select';
-
 import { qunif } from '..';
 
-const qunifDomainWarns = select('qunif')("argument out of domain in '%s'");
-const qbounderyWarns = select('R_Q_P01_check')("argument out of domain in '%s'");
+import { register, unRegister } from '@mangos/debug-frontend';
+import createBackEndMock from '@common/debug-backend';
+import type { MockLogs } from '@common/debug-backend';
 
 describe('qunif', function () {
+    const logs: MockLogs[] = [];
+    beforeEach(() => {
+        const backend = createBackEndMock(logs);
+        register(backend);
+    });
+    afterEach(() => {
+        unRegister();
+        logs.splice(0);
+    });
     describe('invalid input and edge cases', () => {
-        beforeEach(() => {
-            cl.clear('qunif');
-        });
         it('p=Nan|a=NaN|b=NaN', () => {
             // qunif(p: number, a = 0, b = 1, lowerTail = true, logP = false)
             const nan1 = qunif(NaN, 4, 3);
@@ -24,19 +29,52 @@ describe('qunif', function () {
             expect(nan1).toBeNaN();
             const nan2 = qunif(1.2);
             expect(nan2).toBeNaN();
-            expect(qbounderyWarns()).toHaveLength(2);
+            expect(logs).toEqual([
+                {
+                    prefix: '',
+                    namespace: 'R_Q_P01_check',
+                    formatter: "argument out of domain in '%s'",
+                    args: ['R_Q_P01_check']
+                },
+                {
+                    prefix: '',
+                    namespace: 'R_Q_P01_check',
+                    formatter: "argument out of domain in '%s'",
+                    args: ['R_Q_P01_check']
+                }
+            ]);
         });
         it('min=Infinity|max=Infinity', () => {
             const nan1 = qunif(0.9, Infinity);
             expect(nan1).toBeNaN();
             const nan2 = qunif(0.9, 0, Infinity);
             expect(nan2).toBeNaN();
-            expect(qunifDomainWarns()).toHaveLength(2);
+            expect(logs).toEqual([
+                {
+                    prefix: '',
+                    namespace: 'qunif',
+                    formatter: "argument out of domain in '%s'",
+                    args: ['qunif']
+                },
+                {
+                    prefix: '',
+                    namespace: 'qunif',
+                    formatter: "argument out of domain in '%s'",
+                    args: ['qunif']
+                }
+            ]);
         });
         it('min > max', () => {
             const nan1 = qunif(0.9, 10, 4);
             expect(nan1).toBeNaN();
-            expect(qunifDomainWarns()).toHaveLength(1);
+            expect(logs).toEqual([
+                {
+                    prefix: '',
+                    namespace: 'qunif',
+                    formatter: "argument out of domain in '%s'",
+                    args: ['qunif']
+                }
+            ]);
         });
         it('min = max', () => {
             const ans = qunif(0.9, 4, 4);

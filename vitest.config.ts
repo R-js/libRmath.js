@@ -41,7 +41,9 @@ export default defineConfig({
             'src/lib/distributions/f-distro/__test__/*.test.ts',
             'src/lib/distributions/gamma/__test__/*.test.ts',
             'src/lib/distributions/geometric/__test__/*.test.ts',
-            //'src/lib/distributions/hypergeometric/__test__/*.test.ts',
+
+            //skip 'src/lib/distributions/hypergeometric/__test__/*.test.ts',
+
             'src/lib/distributions/logis/__test__/*.test.ts',
             'src/lib/distributions/lognormal/__test__/*.test.ts',
             'src/lib/distributions/multinom/__test__/*.test.ts',
@@ -49,7 +51,8 @@ export default defineConfig({
             'src/lib/distributions/poisson/__test__/*.test.ts',
             'src/lib/distributions/signrank/__test__/*.test.ts',
             'src/lib/distributions/student-t/__test__/*.test.ts',
-            'src/lib/distributions/tukey/__test__/*.test.ts'
+            'src/lib/distributions/tukey/__test__/*.test.ts',
+            'src/lib/distributions/uniform/__test__/*.test.ts'
         ],
         exclude: [...configDefaults.exclude]
     }

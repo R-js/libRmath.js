@@ -1,14 +1,20 @@
-import { cl, select } from '@common/debug-mangos-select';
-
 import { punif } from '..';
 
-const punifDomainWarns = select('punif')("argument out of domain in '%s'");
+import { register, unRegister } from '@mangos/debug-frontend';
+import createBackEndMock from '@common/debug-backend';
+import type { MockLogs } from '@common/debug-backend';
 
 describe('punif', function () {
+    const logs: MockLogs[] = [];
+    beforeEach(() => {
+        const backend = createBackEndMock(logs);
+        register(backend);
+    });
+    afterEach(() => {
+        unRegister();
+        logs.splice(0);
+    });
     describe('invalid input and edge cases', () => {
-        beforeEach(() => {
-            cl.clear('punif');
-        });
         it('x=Nan|min=NaN|max=NaN', () => {
             // dunif(x: number, min = 0, max = 1, logP = false):
             const nan1 = punif(NaN, 4, 3);
@@ -33,14 +39,34 @@ describe('punif', function () {
             expect(nan1).toBeNaN();
             const nan2 = punif(4, 9, 9);
             expect(nan2).toBe(0);
-            expect(punifDomainWarns()).toHaveLength(1);
+            expect(logs).toEqual([
+                {
+                    prefix: '',
+                    namespace: 'punif',
+                    formatter: "argument out of domain in '%s'",
+                    args: ['punif']
+                }
+            ]);
         });
         it('min = Infinity | max = Infinity', () => {
             const nan1 = punif(4, Infinity, 4);
             expect(nan1).toBeNaN();
             const nan2 = punif(4, 9, Infinity);
             expect(nan2).toBeNaN();
-            expect(punifDomainWarns()).toHaveLength(2);
+            expect(logs).toEqual([
+                {
+                    prefix: '',
+                    namespace: 'punif',
+                    formatter: "argument out of domain in '%s'",
+                    args: ['punif']
+                },
+                {
+                    prefix: '',
+                    namespace: 'punif',
+                    formatter: "argument out of domain in '%s'",
+                    args: ['punif']
+                }
+            ]);
         });
     });
     describe('fidelity', () => {
