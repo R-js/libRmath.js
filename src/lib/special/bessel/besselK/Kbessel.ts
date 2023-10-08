@@ -1,13 +1,13 @@
 import createNS from '@mangos/debug-frontend';
 
-import { ME, ML_ERROR2 } from '@common/logger';
+import { ME, mapErrV2 } from '@common/logger';
 import { sqxmin_BESS_K, xmax_BESS_K } from '../bessel-constants';
 import { IBesselRC } from '../IBesselRC';
 
 const M_SQRT_2dPI = 0.797884560802865355879892119869;
 import { min, log, exp, abs, sinh, trunc, sqrt, max, DBL_MAX, DBL_EPSILON, DBL_MIN } from '@lib/r-func';
 
-const printer = debug('K_bessel');
+const debug = createNS('K_bessel');
 
 export function K_bessel(x: number, alpha: number, nb: number, ize: number): IBesselRC {
     /*-------------------------------------------------------------------
@@ -178,7 +178,10 @@ export function K_bessel(x: number, alpha: number, nb: number, ize: number): IBe
         for (let cnt = 0; cnt < 1; cnt++) {
             if (ex <= 0 || (ize === 1 && ex > xmax_BESS_K)) {
                 if (ex <= 0) {
-                    if (ex < 0) ML_ERROR2(ME.ME_RANGE, 'K_bessel', printer);
+                    if (ex < 0) {
+                        debug(mapErrV2[ME.ME_RANGE], 'K_bessel');
+                    }
+
                     // for (i = 0; i < nb; i++)
                     bk[0] = Infinity;
                 } /* would only have underflow */

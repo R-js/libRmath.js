@@ -1,10 +1,35 @@
 import { defineConfig, configDefaults } from 'vitest/config';
 import { join } from 'node:path';
+import terser from '@rollup/plugin-terser';
 
 const root = join(__dirname, 'src');
 
 export default defineConfig({
-    plugins: [],
+    build: {
+        //minify: 'terser',
+        target: 'esnext',
+        lib: {
+            // you have to specify the input 2x also in rollupOptions
+            entry: join(__dirname, 'index.ts')
+        },
+        rollupOptions: {
+            input: {
+                // you have to specify the input 2x also in lib
+                index: 'src/index.ts'
+            },
+            output: [
+                {
+                    compact: true,
+                    minifyInternalExports: true,
+                    format: 'es',
+                    dir: 'dist/esm',
+                    entryFileNames: '[name].mjs',
+                    plugins: [terser()]
+                }
+            ]
+        },
+        plugins: []
+    },
     resolve: {
         alias: [
             { find: /^@common\/logger$/, replacement: join(root, 'packages/common/logger.ts') },
@@ -42,7 +67,7 @@ export default defineConfig({
             'src/lib/distributions/gamma/__test__/*.test.ts',
             'src/lib/distributions/geometric/__test__/*.test.ts',
 
-            // skip 'src/lib/distributions/hypergeometric/__test__/*.test.ts',
+            'src/lib/distributions/hypergeometric/__test__/*.test.ts',
 
             'src/lib/distributions/logis/__test__/*.test.ts',
             'src/lib/distributions/lognormal/__test__/*.test.ts',
@@ -54,7 +79,12 @@ export default defineConfig({
             'src/lib/distributions/tukey/__test__/*.test.ts',
             'src/lib/distributions/uniform/__test__/*.test.ts',
             'src/lib/distributions/weibull/__test__/*.test.ts',
-            'src/lib/distributions/wilcoxon/__test__/*.test.ts'
+            'src/lib/distributions/wilcoxon/__test__/*.test.ts',
+            'src/lib/rng/**/*test.ts',
+            'src/lib/special/bessel/**/*test.ts',
+            'src/lib/special/beta/**/*test.ts',
+            'src/lib/special/choose/**/*test.ts',
+            'src/lib/special/gamma/**/*test.ts'
         ],
         exclude: [...configDefaults.exclude]
     }

@@ -1,6 +1,7 @@
 import { IRNG, MessageType } from '../';
 import type { IRNGType } from '../rng-types';
 import { fixup, i2_32m1 } from '../fixup';
+import { vi, it } from 'vitest';
 
 class MyIRNG extends IRNG {
     public static override kind: IRNGType = 'USER_DEFINED' as IRNGType; // force extra kind
@@ -27,7 +28,7 @@ describe('irng', function n() {
     it('test emitting event on init', () => {
         const usr = new MyIRNG();
         const fn = (seed: number) => seed;
-        const mockCallback = jest.fn(fn);
+        const mockCallback = vi.fn(fn);
         usr.register(MessageType.INIT, mockCallback as typeof fn);
         usr.init(1234);
         expect(mockCallback).toHaveBeenCalledTimes(1);
@@ -37,7 +38,7 @@ describe('irng', function n() {
     it('test unregister specific callback', () => {
         const usr = new MyIRNG();
         const fn = (seed: number) => seed;
-        const mockCallback = jest.fn(fn);
+        const mockCallback = vi.fn(fn);
         usr.register(MessageType.INIT, mockCallback);
         usr.unregister(MessageType.INIT, mockCallback);
         usr.init(1234);
@@ -47,7 +48,7 @@ describe('irng', function n() {
     it('test unregister all callbacks', () => {
         const usr = new MyIRNG();
         const fn = (seed: number) => seed;
-        const mockCallback = jest.fn(fn);
+        const mockCallback = vi.fn(fn);
         usr.register(MessageType.INIT, mockCallback);
         usr.unregister(MessageType.INIT);
         usr.init(1234);
@@ -56,8 +57,8 @@ describe('irng', function n() {
     it('test register 2 callbacks and remove 1', () => {
         const usr = new MyIRNG();
         const fn = (seed: number) => seed;
-        const mockCallback1 = jest.fn(fn);
-        const mockCallback2 = jest.fn(fn);
+        const mockCallback1 = vi.fn(fn);
+        const mockCallback2 = vi.fn(fn);
         usr.register(MessageType.INIT, mockCallback1);
         usr.register(MessageType.INIT, mockCallback2);
         usr.init(1234); // both callbacks are called
@@ -69,7 +70,7 @@ describe('irng', function n() {
     it('unregister nonexisting callback', () => {
         const usr = new MyIRNG();
         const fn = (seed: number) => seed;
-        const mockCallback1 = jest.fn(fn);
+        const mockCallback1 = vi.fn(fn);
         usr.unregister(MessageType.INIT, mockCallback1);
         usr.init(5678); // only 1 callback called
         expect(mockCallback1).not.toHaveBeenCalled();

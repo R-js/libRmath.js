@@ -2,7 +2,7 @@
 import createNS from '@mangos/debug-frontend';
 
 //tooling
-import { ME, ML_ERROR2 } from '@common/logger';
+import { ME, mapErrV2 } from '@common/logger';
 
 import { cospi } from '@trig/cospi';
 import { sinpi } from '@trig/sinpi';
@@ -11,13 +11,13 @@ import { J_bessel } from './Jbessel';
 
 import { floor } from '@lib/r-func';
 
-const printer = debug('BesselJ');
+const debug = createNS('BesselJ');
 
 function BesselJ(x: number, nu: number): number {
     /* NaNs propagated correctly */
     if (isNaN(x) || isNaN(nu)) return x + nu;
     if (x < 0) {
-        ML_ERROR2(ME.ME_RANGE, 'BesselJ', printer);
+        debug(mapErrV2[ME.ME_RANGE], 'BesselJ');
         return NaN;
     }
     // double
@@ -39,7 +39,7 @@ function BesselJ(x: number, nu: number): number {
         }
         return rc;
     } else if (nu > 1e7) {
-        printer('besselJ(x, nu): nu=%d too large for bessel_j() algorithm', nu);
+        debug('besselJ(x, nu): nu=%d too large for bessel_j() algorithm', nu);
         return NaN;
     }
     // nb = 1 + Math.floor(nu);
@@ -47,14 +47,14 @@ function BesselJ(x: number, nu: number): number {
     // nu = -na
     nu -= na; // ==> nu' in [0, 1) because na = Math.floor(nu)
     const rc = J_bessel(x, nu, nb);
-    printer('debug (nu=%d, na=%d, nb=%d, rc=%j', nu, na, nb, rc);
+    debug('debug (nu=%d, na=%d, nb=%d, rc=%j', nu, na, nb, rc);
 
     if (rc.ncalc !== nb) {
         /* error input */
         if (rc.ncalc < 0) {
-            printer('bessel_j(%d): ncalc (=%d) != nb (=%d); nu=%d. Arg. out of range?', x, rc.ncalc, rc.nb, nu);
+            debug('bessel_j(%d): ncalc (=%d) != nb (=%d); nu=%d. Arg. out of range?', x, rc.ncalc, rc.nb, nu);
         } else {
-            printer('bessel_j(%d,nu=%d): precision lost in result', x, nu + nb - 1);
+            debug('bessel_j(%d,nu=%d): precision lost in result', x, nu + nb - 1);
         }
     }
     return rc.x; // bj[nb - 1];

@@ -117,9 +117,11 @@
         "jsdom": "22.1.0",
         "prettier": "3.0.2",
         "rollup": "3.28.0",
+        "terser": "5.21.0",
         "typescript": "5.1.6",
         "typescript-eslint-language-service": "4.1.5",
         "typescript-transform-paths": "3.4.4",
+        "vite": "4.4.11",
         "vitest": "0.34.2"
     },
     "engines": {

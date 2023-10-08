@@ -12,23 +12,6 @@ export const ME = {
     ME_UNDERFLOW: 16 // and underflow occured (important for IEEE)
 };
 
-/*
-export const min0 = (x: number, y: number): number => {
-  return x <= y ? x : y;
-};
-export const max0 = (x: number, y: number): number => {
-  return x <= y ? y : x;
-};
-*/
-export const mapErr = new Map([
-    [ME.ME_NONE, 'No error'],
-    [ME.ME_DOMAIN, "argument out of domain in '%s'"],
-    [ME.ME_RANGE, "argument out of range in '%s'"],
-    [ME.ME_NOCONV, "convergence failed in '%s'"],
-    [ME.ME_PRECISION, "full precision may not have been achieved in '%s'"],
-    [ME.ME_UNDERFLOW, "underflow occurred in '%s'"]
-]);
-
 export const mapErrV2 = {
     [ME.ME_NONE]: 'No error',
     [ME.ME_DOMAIN]: "argument out of domain in '%s'",
@@ -37,11 +20,6 @@ export const mapErrV2 = {
     [ME.ME_PRECISION]: "full precision may not have been achieved in '%s'",
     [ME.ME_UNDERFLOW]: "underflow occurred in '%s'"
 };
-
-/*export function ML_ERR_return_NAN2(printer: Printer): number {
-    printer(mapErrV2[ME.ME_DOMAIN]);
-    return NaN;
-}*/
 
 export function R_Q_P01_boundaries(
     lower_tail: boolean,

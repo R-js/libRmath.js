@@ -1,12 +1,12 @@
 import createNS from '@mangos/debug-frontend';
-import { ME, ML_ERROR2 } from '@common/logger';
+import { ME, mapErrV2 } from '@common/logger';
 import { Rf_gamma_cody } from '@special/bessel/gamma_cody';
 import { enmten_BESS, ensig_BESS, enten_BESS, xlrg_BESS_IJ } from '../bessel-constants';
 import { IBesselRC } from '../IBesselRC';
 
 const { min, trunc, pow, sqrt, sin, cos, max, abs } = Math;
 
-const printer = debug('J_bessel');
+const debug = createNS('J_bessel');
 
 /* ---------------------------------------------------------------------
      Mathematical constants
@@ -170,7 +170,7 @@ export function J_bessel(x: number, alpha: number, nb: number): IBesselRC {
 
     ncalc = nb;
     if (x > xlrg_BESS_IJ) {
-        ML_ERROR2(ME.ME_RANGE, 'J_bessel_err_nr=1000', printer);
+        debug(mapErrV2[ME.ME_RANGE], 'J_bessel_err_nr=1000');
         /* indeed, the limit is 0,
          * but the cutoff happens too early */
         return { x: 0, nb, ncalc };
@@ -187,7 +187,7 @@ export function J_bessel(x: number, alpha: number, nb: number): IBesselRC {
       ===================================================================*/
 
     if (x < 1 / 10000) {
-        printer('x < 0.0001 , x=%d, nb=%d', x, nb);
+        debug('x < 0.0001 , x=%d, nb=%d', x, nb);
         /* ---------------------------------------------------------------
            Two-term ascending series for small X.
            --------------------------------------------------------------- */
@@ -221,7 +221,7 @@ export function J_bessel(x: number, alpha: number, nb: number): IBesselRC {
             }
         }
     } else if (x > 25 && nb <= intxj + 1) {
-        printer('x > 25 and nb < int(x+1) :x=%d, nb=%d', x, nb);
+        debug('x > 25 and nb < int(x+1) :x=%d, nb=%d', x, nb);
         /* ------------------------------------------------------------
            Asymptotic series for X > 25 (and not too large nb)
            ------------------------------------------------------------ */
@@ -279,7 +279,7 @@ export function J_bessel(x: number, alpha: number, nb: number): IBesselRC {
         if (nb > 2)
             for (gnu = twonu + 2, j = 3; j <= nb; j++, gnu += 2) b2[j - 1] = (gnu * b2[j - 1 - 1]) / x - b2[j - 2 - 1];
     } else {
-        printer('rest: x=%d, nb=%d\t', x, nb);
+        debug('rest: x=%d, nb=%d\t', x, nb);
         /* rtnsig_BESS <= x && ( x <= 25 || intx+1 < *nb ) :
            --------------------------------------------------------
            Use recurrence to generate results.

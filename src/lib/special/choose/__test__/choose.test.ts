@@ -1,17 +1,21 @@
-import { cl, select } from '@common/debug-mangos-select';
+import { register, unRegister } from '@mangos/debug-frontend';
 
-const chooseDomainWarns = select('choose')("argument out of domain in '%s'");
-chooseDomainWarns;
-const chooseIntegerWarns = select('choose')('k (%d) must be integer, rounded to %d');
-
+import createBackEndMock from '@common/debug-backend';
+import type { MockLogs } from '@common/debug-backend';
 //app
 import { choose } from '..';
 
 describe('combinatorics (choose)', function () {
+    const logs: MockLogs[] = [];
+    beforeEach(() => {
+        const backend = createBackEndMock(logs);
+        register(backend);
+    });
+    afterEach(() => {
+        unRegister();
+        logs.splice(0);
+    });
     describe('invalid input and edge cases', () => {
-        beforeEach(() => {
-            cl.clear('choose');
-        });
         it('a = NaN|b = NaN', () => {
             const nan1 = choose(NaN, 5);
             const nan2 = choose(4, NaN);
@@ -19,13 +23,20 @@ describe('combinatorics (choose)', function () {
         });
         it('warning if int(k)-k > 1e-7', () => {
             expect(choose(5, 4 - 1e-7 * 2)).toBe(5);
-            expect(chooseIntegerWarns()).toHaveLength(1);
+            expect(logs).toEqual([
+                {
+                    prefix: '',
+                    namespace: 'choose',
+                    formatter: 'k (%d) must be integer, rounded to %d',
+                    args: [3.9999998, 4]
+                }
+            ]);
         });
         it('k < 0', () => {
             expect(choose(5, -1)).toBe(0);
         });
     });
-    describe('fidelity', () => {
+    describe.skip('fidelity', () => {
         //
     });
 });

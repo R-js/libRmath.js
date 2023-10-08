@@ -1,12 +1,12 @@
 import createNS from '@mangos/debug-frontend';
-import { ME, ML_ERROR2 } from '@common/logger';
+import { ME, mapErrV2 } from '@common/logger';
 import { sinpi } from '@trig/sinpi';
 import BesselK from '../besselK';
 import { I_bessel } from './IBessel';
 
 import { exp, trunc, floor, PI } from '@lib/r-func';
 
-const printer = debug('besselI');
+const debug = createNS('besselI');
 
 // Modified Bessel function of the first kind
 
@@ -15,7 +15,7 @@ function BesselI(x: number, nu: number, exponScaled = false): number {
     /* NaNs propagated correctly */
     if (isNaN(x) || isNaN(nu)) return x + nu;
     if (x < 0) {
-        ML_ERROR2(ME.ME_RANGE, 'bessel_i', printer);
+        debug(mapErrV2[ME.ME_RANGE], 'bessel_i');
         return NaN;
     }
     const ize = exponScaled ? 2 : 1;
@@ -36,9 +36,11 @@ function BesselI(x: number, nu: number, exponScaled = false): number {
     const rc = I_bessel(x, nu, nb, ize);
     if (rc.ncalc !== rc.nb) {
         /* error input */
-        if (rc.ncalc < 0)
-            printer('bessel_i(%d): ncalc (=%d) != nb (=%d); nu=%d. Arg. out of range?', x, rc.ncalc, rc.nb, nu);
-        else printer('bessel_i(%d,nu=%d): precision lost in result\n', rc.x, nu + rc.nb - 1);
+        if (rc.ncalc < 0) {
+            debug('bessel_i(%d): ncalc (=%d) != nb (=%d); nu=%d. Arg. out of range?', x, rc.ncalc, rc.nb, nu);
+        } else {
+            debug('bessel_i(%d,nu=%d): precision lost in result\n', rc.x, nu + rc.nb - 1);
+        }
     }
     x = rc.x; // bi[nb - 1];
 
