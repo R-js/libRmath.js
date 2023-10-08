@@ -2,13 +2,13 @@
 
 import createNS from '@mangos/debug-frontend';
 
-import { ML_ERR_return_NAN2, lineInfo4 } from '@common/logger';
+import { mapErrV2, ME } from '@common/logger';
 import { R_D__0, log as _log, round } from '@lib/r-func';
 import { choose, lchoose } from '@lib/special/choose';
 import { cwilcox } from './cwilcox';
 import { WilcoxonCache } from './WilcoxonCache';
 
-const printer_dwilcox = debug('dwilcox');
+const debug = createNS('dwilcox');
 
 export function dwilcox(x: number, m: number, n: number, log = false): number {
     m = round(m);
@@ -28,7 +28,8 @@ export function dwilcox(x: number, m: number, n: number, log = false): number {
 
     if (m <= 0 || n <= 0) {
         // console.log(`2. x:${x}, m:${m}, n:${n}`);
-        return ML_ERR_return_NAN2(printer_dwilcox, lineInfo4);
+        debug(mapErrV2[ME.ME_DOMAIN], debug.namespace);
+        return NaN;
     }
 
     if (Math.abs(x - Math.round(x)) > 1e-7) {

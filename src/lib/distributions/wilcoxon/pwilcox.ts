@@ -1,7 +1,7 @@
 'use strict';
 
 import createNS from '@mangos/debug-frontend';
-import { ML_ERR_return_NAN2, lineInfo4 } from '@common/logger';
+import { mapErrV2, ME } from '@common/logger';
 import { R_DT_0, R_DT_1, R_DT_val } from '@lib/r-func';
 import { choose } from '@lib/special/choose';
 
@@ -12,7 +12,7 @@ import { cwilcox } from './cwilcox';
 const { round: R_forceint, floor } = Math;
 const { isNaN: ISNAN, isFinite: R_FINITE } = Number;
 
-const printer_pwilcox = debug('pwilcox');
+const debug = createNS('pwilcox');
 
 export function pwilcox(q: number, m: number, n: number, lowerTail = true, logP = false): number {
     m = R_forceint(m);
@@ -24,11 +24,13 @@ export function pwilcox(q: number, m: number, n: number, lowerTail = true, logP 
         return q + m + n;
     }
     if (!R_FINITE(m) || !R_FINITE(n)) {
-        return ML_ERR_return_NAN2(printer_pwilcox, lineInfo4);
+        debug(mapErrV2[ME.ME_DOMAIN], debug.namespace);
+        return NaN;
     }
 
     if (m <= 0 || n <= 0) {
-        return ML_ERR_return_NAN2(printer_pwilcox, lineInfo4);
+        debug(mapErrV2[ME.ME_DOMAIN], debug.namespace);
+        return NaN;
     }
 
     q = floor(q + 1e-7);

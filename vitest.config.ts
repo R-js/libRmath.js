@@ -53,7 +53,8 @@ export default defineConfig({
             'src/lib/distributions/student-t/__test__/*.test.ts',
             'src/lib/distributions/tukey/__test__/*.test.ts',
             'src/lib/distributions/uniform/__test__/*.test.ts',
-            'src/lib/distributions/weibull/__test__/*.test.ts'
+            'src/lib/distributions/weibull/__test__/*.test.ts',
+            'src/lib/distributions/wilcoxon/__test__/*.test.ts'
         ],
         exclude: [...configDefaults.exclude]
     }

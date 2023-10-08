@@ -1,16 +1,21 @@
-import { cl, select } from '@common/debug-mangos-select';
-
 import { trunc } from '@lib/r-func';
 
 import { pwilcox } from '..';
-
-const pwilcoxDomainWarns = select('pwilcox')("argument out of domain in '%s'");
+import { register, unRegister } from '@mangos/debug-frontend';
+import createBackEndMock from '@common/debug-backend';
+import type { MockLogs } from '@common/debug-backend';
 
 describe('pwilcox', function () {
+    const logs: MockLogs[] = [];
+    beforeEach(() => {
+        const backend = createBackEndMock(logs);
+        register(backend);
+    });
+    afterEach(() => {
+        unRegister();
+        logs.splice(0);
+    });
     describe('invalid input and edge cases', () => {
-        beforeEach(() => {
-            cl.clear('pwilcox');
-        });
         it('q=NaN|m=NaN|n=NaN', () => {
             const nan1 = pwilcox(NaN, 1, 1);
             const nan2 = pwilcox(0, NaN, 1);
@@ -24,7 +29,20 @@ describe('pwilcox', function () {
             const nan2 = pwilcox(0, 1, Infinity);
             expect(nan1).toBeNaN();
             expect(nan2).toBeNaN();
-            expect(pwilcoxDomainWarns()).toHaveLength(2);
+            expect(logs).toEqual([
+                {
+                    prefix: '',
+                    namespace: 'pwilcox',
+                    formatter: "argument out of domain in '%s'",
+                    args: ['pwilcox']
+                },
+                {
+                    prefix: '',
+                    namespace: 'pwilcox',
+                    formatter: "argument out of domain in '%s'",
+                    args: ['pwilcox']
+                }
+            ]);
         });
         it('m < 0 | n < 0', () => {
             const nan1 = pwilcox(3, -4, 5);

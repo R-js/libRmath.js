@@ -1,17 +1,22 @@
 import { loadData } from '@common/load';
 import { resolve } from 'path';
 
-import { cl, select } from '@common/debug-mangos-select';
 import { qwilcox } from '..';
-
-const qwilcoxDomainWarns = select('qwilcox')("argument out of domain in '%s'");
-const qwilcoxCheck = select('R_Q_P01_check')("argument out of domain in '%s'");
+import { register, unRegister } from '@mangos/debug-frontend';
+import createBackEndMock from '@common/debug-backend';
+import type { MockLogs } from '@common/debug-backend';
 
 describe('qwilcox', function () {
+    const logs: MockLogs[] = [];
+    beforeEach(() => {
+        const backend = createBackEndMock(logs);
+        register(backend);
+    });
+    afterEach(() => {
+        unRegister();
+        logs.splice(0);
+    });
     describe('invalid input and edge cases', () => {
-        beforeEach(() => {
-            cl.clear('qwilcox');
-        });
         it('x=NaN|m=NaN|n=NaN', () => {
             const nan1 = qwilcox(NaN, 1, 1);
             const nan2 = qwilcox(0, NaN, 1);
@@ -27,7 +32,26 @@ describe('qwilcox', function () {
             expect(nan1).toBeNaN();
             expect(nan2).toBeNaN();
             expect(nan3).toBeNaN();
-            expect(qwilcoxDomainWarns()).toHaveLength(3);
+            expect(logs).toEqual([
+                {
+                    prefix: '',
+                    namespace: 'qwilcox',
+                    formatter: "argument out of domain in '%s'",
+                    args: ['qwilcox']
+                },
+                {
+                    prefix: '',
+                    namespace: 'qwilcox',
+                    formatter: "argument out of domain in '%s'",
+                    args: ['qwilcox']
+                },
+                {
+                    prefix: '',
+                    namespace: 'qwilcox',
+                    formatter: "argument out of domain in '%s'",
+                    args: ['qwilcox']
+                }
+            ]);
         });
         it('m <= 0 | n <= 0', () => {
             const nan1 = qwilcox(0.1, -4, 5);
@@ -40,14 +64,52 @@ describe('qwilcox', function () {
             expect(nan3).toBeNaN();
             expect(nan4).toBeNaN();
             //
-            expect(qwilcoxDomainWarns()).toHaveLength(4);
+            expect(logs).toEqual([
+                {
+                    prefix: '',
+                    namespace: 'qwilcox',
+                    formatter: "argument out of domain in '%s'",
+                    args: ['qwilcox']
+                },
+                {
+                    prefix: '',
+                    namespace: 'qwilcox',
+                    formatter: "argument out of domain in '%s'",
+                    args: ['qwilcox']
+                },
+                {
+                    prefix: '',
+                    namespace: 'qwilcox',
+                    formatter: "argument out of domain in '%s'",
+                    args: ['qwilcox']
+                },
+                {
+                    prefix: '',
+                    namespace: 'qwilcox',
+                    formatter: "argument out of domain in '%s'",
+                    args: ['qwilcox']
+                }
+            ]);
         });
         it('q < 0 || q > 1', () => {
             const nan1 = qwilcox(-1, 4, 5);
             const nan2 = qwilcox(1.2, 4, 5);
             expect(nan1).toBeNaN();
             expect(nan2).toBeNaN();
-            expect(qwilcoxCheck()).toHaveLength(2);
+            expect(logs).toEqual([
+                {
+                    prefix: '',
+                    namespace: 'R_Q_P01_check',
+                    formatter: "argument out of domain in '%s'",
+                    args: ['R_Q_P01_check']
+                },
+                {
+                    prefix: '',
+                    namespace: 'R_Q_P01_check',
+                    formatter: "argument out of domain in '%s'",
+                    args: ['R_Q_P01_check']
+                }
+            ]);
         });
         it('q = 0 | q = 1', () => {
             const ans1 = qwilcox(0, 4, 5);

@@ -1,18 +1,24 @@
 import { loadData } from '@common/load';
 import { resolve } from 'path';
 
-import { cl, select } from '@common/debug-mangos-select';
 import { rwilcoxOne, rwilcox } from '..';
 
 import { setSeed, RNGkind } from '@rng/global-rng';
-
-const rwilcoxDomainWarns = select('rwilcox')("argument out of domain in '%s'");
+import { register, unRegister } from '@mangos/debug-frontend';
+import createBackEndMock from '@common/debug-backend';
+import type { MockLogs } from '@common/debug-backend';
 
 describe('rwilcox', function () {
+    const logs: MockLogs[] = [];
     beforeEach(() => {
-        cl.clear('rwilcox');
+        const backend = createBackEndMock(logs);
+        register(backend);
         setSeed(12345);
         RNGkind({ sampleKind: 'ROUNDING' });
+    });
+    afterEach(() => {
+        unRegister();
+        logs.splice(0);
     });
     describe('invalid input and edge cases', () => {
         it('m=NaN|m=NaN|n=NaN', () => {
@@ -26,7 +32,20 @@ describe('rwilcox', function () {
             const nan2 = rwilcoxOne(5, -4);
             expect(nan1).toBeNaN();
             expect(nan2).toBeNaN();
-            expect(rwilcoxDomainWarns()).toHaveLength(2);
+            expect(logs).toEqual([
+                {
+                    prefix: '',
+                    namespace: 'rwilcox',
+                    formatter: "argument out of domain in '%s'",
+                    args: ['rwilcox']
+                },
+                {
+                    prefix: '',
+                    namespace: 'rwilcox',
+                    formatter: "argument out of domain in '%s'",
+                    args: ['rwilcox']
+                }
+            ]);
         });
         it('m == 0 | n == 0', () => {
             const z1 = rwilcoxOne(0, 3);
@@ -37,7 +56,20 @@ describe('rwilcox', function () {
         it('( m + n ) > 800_000_000', () => {
             const nan = rwilcoxOne(400_000_000, 400_000_000);
             expect(nan).toBeNaN();
-            expect(rwilcoxDomainWarns()).toHaveLength(2);
+            expect(logs).toEqual([
+                {
+                    prefix: '',
+                    namespace: 'rwilcox',
+                    formatter: "argument out of domain in '%s'",
+                    args: ['k > MAXSIZE(=2**32)']
+                },
+                {
+                    prefix: '',
+                    namespace: 'rwilcox',
+                    formatter: "argument out of domain in '%s'",
+                    args: ['rwilcox']
+                }
+            ]);
         });
     });
     describe('fidelity', () => {
@@ -53,11 +85,11 @@ describe('rwilcox', function () {
             expect(ans).toEqualFloatingPointBinary(r);
         });
         it.todo('for rwilcox we are diverging for R for high population number 2**20 etc, investigate');
-        /*it.only('(takes time) n=4, sample.kind=rounding, (m+n) > cut (2^25-1) of Marsaglia multicarry', async () => {
-            const rc = RNGkind({ uniform: IRNGTypeEnum.KNUTH_TAOCP2002, normal: IRNGSampleKindTypeEnum.ROUNDING});
+        /*it.todo('(takes time) n=4, sample.kind=rounding, (m+n) > cut (2^25-1) of Marsaglia multicarry', async () => {
+            const rc = RNGkind({ uniform: IRNGTypeEnum.KNUTH_TAOCP2002, normal: IRNGSampleKindTypeEnum.ROUNDING });
             rc.uniform.init(12345);
             //const [r] = await loadData(resolve(__dirname, 'fixture-generation', 'rwilcox3.R'), /\s+/, 1);
-            const ans = rwilcox(4, 2**20, 5);
+            const ans = rwilcox(4, 2 ** 20, 5);
             console.log(ans);
             //8483063091 8581659696 8204401718 8584827454
             //8483063296, 8581659648, 8204401664, 8584827392
