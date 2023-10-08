@@ -80,7 +80,7 @@
     "scripts": {
         "prebuild": "npm run lint",
         "build": "node --trace-warnings scripts/build.mjs",
-        "postbuild": "node --trace-warnings scripts/rollup.build.mjs",
+        "xpostbuild": "node --trace-warnings scripts/rollup.build.mjs",
         "lint": "eslint-config-prettier .eslintrc.cjs jest.config.cjs scripts/*.mjs  src/**/*.ts",
         "lint:fix": "npm run lint -- --fix",
         "prepublishOnly": "npm run build",
@@ -102,6 +102,7 @@
         "@mangos/jxpath": "1.0.13",
         "@rollup/plugin-node-resolve": "15.0.1",
         "@rollup/plugin-terser": "0.1.0",
+        "@rollup/plugin-typescript": "11.1.5",
         "@types/jest": "29.2.2",
         "@types/node": "18.11.10",
         "@typescript-eslint/eslint-plugin": "5.45.1",
@@ -117,15 +118,17 @@
         "jsdom": "22.1.0",
         "prettier": "3.0.2",
         "rollup": "3.28.0",
+        "rollup-plugin-typescript2": "0.36.0",
         "terser": "5.21.0",
-        "typescript": "5.1.6",
+        "typescript": "4.9.3",
         "typescript-eslint-language-service": "4.1.5",
         "typescript-transform-paths": "3.4.4",
         "vite": "4.4.11",
+        "vite-plugin-dts": "3.6.0",
         "vitest": "0.34.2"
     },
     "engines": {
-        "node": ">=v18.15.0"
+        "node": ">=v18.15.0'"
     },
     "dependencies": {
         "@mangos/debug-frontend": "0.0.4"

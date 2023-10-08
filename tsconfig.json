@@ -1,6 +1,6 @@
 {
     "include": ["src/lib/**/*.ts", "src/packages/**/*.ts", "src/index.ts"],
-    "exclude": ["./vitest.config.ts"],
+    "exclude": ["./vitest.config.ts", "**/__test__/**"],
     "files": ["src/index.ts"],
     "typeAcquisition": {
         "enable": true,
@@ -40,12 +40,14 @@
         "types": ["node", "jest"],
         "typeRoots": ["src/packages/__test__/jest-ext.d.ts", "node_modules/@types"],
 
-        "declaration": false,
+        //"declaration": true,
         "outDir": "dist/tsc",
         "preserveConstEnums": true,
         "stripInternal": true,
+        //"emitDeclarationOnly": true,
 
         "checkJs": true,
+        "sourceMap": false,
 
         "plugins": [
             {
@@ -63,7 +65,7 @@
         "forceConsistentCasingInFileNames": true,
         "preserveSymlinks": true,
 
-        "lib": ["esnext", "dom"],
+        "lib": ["es2020", "dom"],
         "target": "esnext",
 
         "explainFiles": false,
