@@ -1,14 +1,20 @@
-import { cl, select } from '@common/debug-mangos-select';
-
 import { dweibull } from '..';
 
-const dweibullDomainWarns = select('dweibull')("argument out of domain in '%s'");
+import { register, unRegister } from '@mangos/debug-frontend';
+import createBackEndMock from '@common/debug-backend';
+import type { MockLogs } from '@common/debug-backend';
 
 describe('dweibull', function () {
+    const logs: MockLogs[] = [];
+    beforeEach(() => {
+        const backend = createBackEndMock(logs);
+        register(backend);
+    });
+    afterEach(() => {
+        unRegister();
+        logs.splice(0);
+    });
     describe('invalid input and edge cases', () => {
-        beforeEach(() => {
-            cl.clear('dweibull');
-        });
         it('x=NaN|shape=NaN|scale=NaN', () => {
             const nan1 = dweibull(NaN, 0.5, 0.5);
             expect(nan1).toBeNaN();
@@ -22,7 +28,20 @@ describe('dweibull', function () {
             expect(nan1).toBeNaN();
             const nan2 = dweibull(4, 0.5, -0.5);
             expect(nan2).toBeNaN();
-            expect(dweibullDomainWarns()).toHaveLength(2);
+            expect(logs).toEqual([
+                {
+                    prefix: '',
+                    namespace: 'dweibull',
+                    formatter: "argument out of domain in '%s'",
+                    args: ['dweibull']
+                },
+                {
+                    prefix: '',
+                    namespace: 'dweibull',
+                    formatter: "argument out of domain in '%s'",
+                    args: ['dweibull']
+                }
+            ]);
         });
         it('x < 0', () => {
             const zero = dweibull(-3, 0.5, 0.5);

@@ -1,18 +1,22 @@
-import { cl, select } from '@common/debug-mangos-select';
-
 import { rweibullOne } from '../rweibull';
 import { rweibull } from '..';
 
 import { RNGkind, setSeed } from '@rng/global-rng';
-
-const qweibullDomainWarns = select('rweibull')("argument out of domain in '%s'");
-
+import { register, unRegister } from '@mangos/debug-frontend';
+import createBackEndMock from '@common/debug-backend';
+import type { MockLogs } from '@common/debug-backend';
 
 describe('rweibull', function () {
+    const logs: MockLogs[] = [];
+    beforeEach(() => {
+        const backend = createBackEndMock(logs);
+        register(backend);
+    });
+    afterEach(() => {
+        unRegister();
+        logs.splice(0);
+    });
     describe('invalid input and edge cases', () => {
-        beforeEach(() => {
-            cl.clear('rweibull');
-        });
         it('shape=NaN|scale=NaN', () => {
             const nan1 = rweibullOne(NaN, 0.5);
             expect(nan1).toBeNaN();
@@ -24,7 +28,20 @@ describe('rweibull', function () {
             expect(nan1).toBeNaN();
             const nan2 = rweibullOne(-4, 0.5);
             expect(nan2).toBeNaN();
-            expect(qweibullDomainWarns()).toHaveLength(2);
+            expect(logs).toEqual([
+                {
+                    prefix: '',
+                    namespace: 'rweibull',
+                    formatter: "argument out of domain in '%s'",
+                    args: ['rweibull']
+                },
+                {
+                    prefix: '',
+                    namespace: 'rweibull',
+                    formatter: "argument out of domain in '%s'",
+                    args: ['rweibull']
+                }
+            ]);
         });
         it('shape <= 0 | scale = 0', () => {
             const zero = rweibullOne(-3, 0);
@@ -34,7 +51,7 @@ describe('rweibull', function () {
 
     describe('fidelity', () => {
         beforeEach(() => {
-            RNGkind({ uniform: "MERSENNE_TWISTER", normal: "INVERSION"});
+            RNGkind({ uniform: 'MERSENNE_TWISTER', normal: 'INVERSION' });
             setSeed(111_111);
         });
         it('n=10, scale=0.5, shape=4', () => {
@@ -45,18 +62,14 @@ describe('rweibull', function () {
             > data.frame(x)
 
             */
-            expect(ans).toEqualFloatingPointBinary([
-                0.398435704026611937,
-                0.443965176838183928,
-                0.063657754510879225,
-                0.460309561235067666,
-                0.216327263228885708,
-                0.418756289335991294,
-                0.454827509456368295,
-                0.496260623621667896,
-                0.417812433744034151,
-                0.332115242278925915,
-            ], 51);
+            expect(ans).toEqualFloatingPointBinary(
+                [
+                    0.398435704026611937, 0.443965176838183928, 0.063657754510879225, 0.460309561235067666,
+                    0.216327263228885708, 0.418756289335991294, 0.454827509456368295, 0.496260623621667896,
+                    0.417812433744034151, 0.332115242278925915
+                ],
+                51
+            );
         });
     });
 });

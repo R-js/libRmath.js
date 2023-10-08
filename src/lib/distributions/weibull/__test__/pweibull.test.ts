@@ -1,14 +1,20 @@
-import { cl, select } from '@common/debug-mangos-select';
-
 import { pweibull } from '..';
 
-const pweibullDomainWarns = select('pweibull')("argument out of domain in '%s'");
+import { register, unRegister } from '@mangos/debug-frontend';
+import createBackEndMock from '@common/debug-backend';
+import type { MockLogs } from '@common/debug-backend';
 
 describe('pweibull', function () {
+    const logs: MockLogs[] = [];
+    beforeEach(() => {
+        const backend = createBackEndMock(logs);
+        register(backend);
+    });
+    afterEach(() => {
+        unRegister();
+        logs.splice(0);
+    });
     describe('invalid input and edge cases', () => {
-        beforeEach(() => {
-            cl.clear('pweibull');
-        });
         it('x=NaN|shape=NaN|scale=NaN', () => {
             const nan1 = pweibull(NaN, 0.5);
             expect(nan1).toBeNaN();
@@ -22,7 +28,20 @@ describe('pweibull', function () {
             expect(nan1).toBeNaN();
             const nan2 = pweibull(4, 0.5, -0.5);
             expect(nan2).toBeNaN();
-            expect(pweibullDomainWarns()).toHaveLength(2);
+            expect(logs).toEqual([
+                {
+                    prefix: '',
+                    namespace: 'pweibull',
+                    formatter: "argument out of domain in '%s'",
+                    args: ['pweibull']
+                },
+                {
+                    prefix: '',
+                    namespace: 'pweibull',
+                    formatter: "argument out of domain in '%s'",
+                    args: ['pweibull']
+                }
+            ]);
         });
         it('x < 0', () => {
             const zero = pweibull(-3, 0.5, 0.5);

@@ -2,16 +2,17 @@
 
 import createNS from '@mangos/debug-frontend';
 
-import { ML_ERR_return_NAN2, lineInfo4 } from '@common/logger';
+import { mapErrV2, ME } from '@common/logger';
 import { R_D__0, pow, log as _log, exp } from '@lib/r-func';
-const printer = debug('dweibull');
+const debug = createNS('dweibull');
 
 export function dweibull(x: number, shape: number, scale = 1, log = false): number {
     if (isNaN(x) || isNaN(shape) || isNaN(scale)) {
         return x + shape + scale;
     }
     if (shape <= 0 || scale <= 0) {
-        return ML_ERR_return_NAN2(printer, lineInfo4);
+        debug(mapErrV2[ME.ME_DOMAIN], debug.namespace);
+        return NaN;
     }
 
     if (x < 0) {

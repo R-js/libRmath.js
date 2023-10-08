@@ -1,15 +1,20 @@
-import { cl, select } from '@common/debug-mangos-select';
-
 import { qweibull } from '..';
 
-const qweibullDomainWarns = select('qweibull')("argument out of domain in '%s'");
-const qweibullBounderyWarns = select('R_Q_P01_boundaries')("argument out of domain in '%s'");
+import { register, unRegister } from '@mangos/debug-frontend';
+import createBackEndMock from '@common/debug-backend';
+import type { MockLogs } from '@common/debug-backend';
 
 describe('qweibull', function () {
+    const logs: MockLogs[] = [];
+    beforeEach(() => {
+        const backend = createBackEndMock(logs);
+        register(backend);
+    });
+    afterEach(() => {
+        unRegister();
+        logs.splice(0);
+    });
     describe('invalid input and edge cases', () => {
-        beforeEach(() => {
-            cl.clear('qweibull');
-        });
         it('p=NaN|shape=NaN|scale=NaN', () => {
             const nan1 = qweibull(NaN, 0.5);
             expect(nan1).toBeNaN();
@@ -23,14 +28,40 @@ describe('qweibull', function () {
             expect(nan1).toBeNaN();
             const nan2 = qweibull(4, 0.5, -0.5);
             expect(nan2).toBeNaN();
-            expect(qweibullDomainWarns()).toHaveLength(2);
+            expect(logs).toEqual([
+                {
+                    prefix: '',
+                    namespace: 'qweibull',
+                    formatter: "argument out of domain in '%s'",
+                    args: ['qweibull']
+                },
+                {
+                    prefix: '',
+                    namespace: 'qweibull',
+                    formatter: "argument out of domain in '%s'",
+                    args: ['qweibull']
+                }
+            ]);
         });
         it('p < 0 | p > 1.2', () => {
             const nan1 = qweibull(-0.2, 0.5, 0.5);
             expect(nan1).toBeNaN();
             const nan2 = qweibull(1.2, 0.5, 0.5);
             expect(nan2).toBeNaN();
-            expect(qweibullBounderyWarns()).toHaveLength(2);
+            expect(logs).toEqual([
+                {
+                    prefix: '',
+                    namespace: 'R_Q_P01_boundaries',
+                    formatter: "argument out of domain in '%s'",
+                    args: ['R_Q_P01_boundaries']
+                },
+                {
+                    prefix: '',
+                    namespace: 'R_Q_P01_boundaries',
+                    formatter: "argument out of domain in '%s'",
+                    args: ['R_Q_P01_boundaries']
+                }
+            ]);
         });
         it('p=1|p = 1', () => {
             const zero1 = qweibull(0, 0.5, 0.5);
