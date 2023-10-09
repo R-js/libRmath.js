@@ -6,8 +6,6 @@ const root = join(__dirname, 'src');
 
 export default defineConfig({
     build: {
-        //minify: 'terser',
-
         target: 'esnext',
         lib: {
             // you have to specify the input 2x also in rollupOptions

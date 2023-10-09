@@ -96,17 +96,9 @@
         ]
     },
     "devDependencies": {
-        "@babel/core": "7.21.0",
-        "@babel/eslint-parser": "7.19.1",
-        "@babel/eslint-plugin": "7.19.1",
         "@mangos/jxpath": "1.0.13",
-        "@rollup/plugin-node-resolve": "15.0.1",
-        "@rollup/plugin-terser": "0.1.0",
-        "@rollup/plugin-typescript": "11.1.5",
+        "@rollup/plugin-terser": "0.4.4",
         "@types/jest": "29.2.2",
-        "@types/node": "18.11.10",
-        "@typescript-eslint/eslint-plugin": "5.45.1",
-        "@typescript-eslint/parser": "5.45.1",
         "@vitest/coverage-c8": "0.33.0",
         "@vitest/coverage-v8": "0.34.3",
         "acorn": "8.8.1",
@@ -114,7 +106,6 @@
         "eslint": "8.48.0",
         "eslint-config-prettier": "9.0.0",
         "eslint-plugin-prettier": "5.0.0",
-        "jest-snapshot": "29.6.4",
         "jsdom": "22.1.0",
         "prettier": "3.0.2",
         "rollup": "3.28.0",
@@ -122,15 +113,14 @@
         "terser": "5.21.0",
         "typescript": "4.9.3",
         "typescript-eslint-language-service": "4.1.5",
-        "typescript-transform-paths": "3.4.4",
         "vite": "4.4.11",
-        "vite-plugin-dts": "3.6.0",
         "vitest": "0.34.2"
     },
     "engines": {
-        "node": ">=v18.15.0'"
+        "node": ">=18.0.0"
     },
     "dependencies": {
-        "@mangos/debug-frontend": "0.0.4"
+        "@mangos/debug-frontend": "0.0.4",
+        "uninstall": "0.0.0"
     }
 }

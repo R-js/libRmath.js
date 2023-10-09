@@ -1,0 +1,1 @@
+> ### This page has moved to https://github.com/microsoft/TypeScript-Compiler-Notes/

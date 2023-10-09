@@ -1,0 +1,1 @@
+> ### This page has moved to http://www.typescriptlang.org/docs/handbook/integrating-with-build-tools.html
