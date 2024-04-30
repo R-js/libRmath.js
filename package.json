@@ -65,7 +65,8 @@
     "type": "module",
     "exports": {
         "import": "./dist/esm/index.mjs",
-        "require": "./dist/commonjs/index.cjs"
+        "require": "./dist/commonjs/index.cjs",
+        "types": "./dist/types/index.d.ts"
     },
     "browser": "./dist/web.esm.mjs",
     "types": "./dist/types/index.d.ts",
