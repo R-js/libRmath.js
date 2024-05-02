@@ -1,4 +1,4 @@
-'use strict';
+
 
 export { dpois } from './dpois';
 export { ppois } from './ppois';

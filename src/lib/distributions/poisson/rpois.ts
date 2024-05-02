@@ -1,4 +1,4 @@
-'use strict';
+
 
 import { debug } from '@mangos/debug';
 

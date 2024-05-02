@@ -1,4 +1,4 @@
-'use strict';
+
 
 // R versions of log1p and hypot
 import { default as log1p } from '././lib/alt/log/log1p';

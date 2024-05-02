@@ -1,4 +1,4 @@
-'use strict';
+
 export { dnorm4 as dnorm } from './dnorm';
 export { pnorm5 as pnorm } from './pnorm';
 export { qnorm } from './qnorm';

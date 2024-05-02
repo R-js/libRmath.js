@@ -1,4 +1,4 @@
-'use strict';
+
 
 import { IRNG } from '../irng';
 import type { IRNGType } from '@rng/rng-types';

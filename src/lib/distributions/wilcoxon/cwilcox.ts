@@ -1,4 +1,4 @@
-'use strict';
+
 
 import { WilcoxonCache } from './WilcoxonCache';
 import { trunc } from '@lib/r-func';

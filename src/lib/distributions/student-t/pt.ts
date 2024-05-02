@@ -1,4 +1,4 @@
-'use strict';
+
 
 import lbeta from '@special/beta/lbeta';
 import { pbeta } from '@dist/beta/pbeta';

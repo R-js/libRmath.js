@@ -1,4 +1,4 @@
-'use strict';
+
 
 import { IRNG, MessageType } from '@rng/irng';
 import { IRNGNormal } from '@rng/normal/normal-rng';

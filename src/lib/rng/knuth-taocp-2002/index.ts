@@ -1,4 +1,4 @@
-'use strict';
+
 
 import { fixup } from '../fixup';
 import { IRNG } from '../irng';

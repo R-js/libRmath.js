@@ -1,4 +1,4 @@
-'use strict';
+
 
 import { imin2 } from '@lib/r-func';
 

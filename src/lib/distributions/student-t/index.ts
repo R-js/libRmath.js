@@ -1,4 +1,4 @@
-'use strict';
+
 
 // needed for random
 import { rchisq } from '@dist/chi-2';
