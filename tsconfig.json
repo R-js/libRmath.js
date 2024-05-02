@@ -47,9 +47,6 @@
         "checkJs": true,
 
         "plugins": [
-            {
-                "name": "typescript-eslint-language-service"
-            },
             // Transform paths in output .js files
             { "transform": "typescript-transform-paths" },
 

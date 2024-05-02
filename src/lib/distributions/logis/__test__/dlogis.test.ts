@@ -7,8 +7,6 @@ import { dlogis } from '..';
 const dLogisLogs = select('dlogis');
 const dLogisDomainWarns = dLogisLogs("argument out of domain in '%s'");
 
-//dlogis(x: number, location = 0, scale = 1, give_log = false)
-
 describe('dlogis', function () {
     describe('edge cases', () => {
         beforeEach(() => {

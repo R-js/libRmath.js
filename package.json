@@ -87,13 +87,6 @@
         "test": "jest --verbose",
         "pretty": "prettier -w ."
     },
-    "contributes": {
-        "typescriptServerPlugins": [
-            {
-                "name": "typescript-eslint-language-service"
-            }
-        ]
-    },
     "dependencies": {
         "@mangos/debug": "0.0.9-rc5"
     },

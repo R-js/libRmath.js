@@ -4,9 +4,7 @@ import { resolve } from 'path';
 import { loadData } from '@common/load';
 import { cl, select } from '@common/debug-mangos-select';
 
-//const dbinom_muDomainWarns = select('dnbinom_mu')("argument out of domain in '%s'");
 const dbinomDomainWarns = select('dnbinom')("argument out of domain in '%s'");
-//dbinom_muDomainWarns;
 
 import { dnbinom } from '..';
 import { prob2mu } from './test-helpers';

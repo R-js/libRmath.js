@@ -41,7 +41,6 @@ function dbinom_raw(x: number, n: number, p: number, q: number, give_log: boolea
     return R_D_exp(give_log, lc - 0.5 * lf);
 }
 
-//function dbinom(x: number, n: number, prob: number, log = false): number
 function dbinom(x: number, n: number, prob: number, log = false): number {
     /* NaNs propagated correctly */
     if (isNaN(x) || isNaN(n) || isNaN(prob)) return x + n + prob;
