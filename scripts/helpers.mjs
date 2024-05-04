@@ -1,4 +1,4 @@
-import { resolve , dirname, extname } from 'node:path';
+import { resolve , dirname, extname, join } from 'node:path';
 import { lstatSync, readdirSync } from 'node:fs';
 
 export function verifyPaths(paths) {
@@ -73,39 +73,48 @@ function isAliasedPath(path, exact, wildcard){
     return false;
 }
 
+function walkDirPath(subPaths, basePath) {
+    const current = subPaths.shift();
+    const entries = readdirSync(basePath, { withFileTypes: true });
+    const possibles = entries.filter(entry => {
+        // possible scenarios
+        if (subPaths.length === 0){
+            if (!entry.isFile()){
+                return false;
+            }
+            console.log(entry.name);
+        } 
+    });
+    /
+    if (possibles.length === 0) {
+        return // return undefined as in nothing found down this "basePath"
+    }
+    // maybe you found somehting
+}
+
 function resolveAliasPaths(path, pathsDictionary, base, exact, wildcard, forceExt){
     const idxExact = exact.indexOf(path);
     if (idxExact >=  0){
         return resolve(base, pathsDictionary[exact[idx]][0]);
     }
-    const candidates = wildCard
-        .map(wc => {
-            const noStar = wc.slice(0, -1);
-            if (path.startsWith(noStar)){
-                return path;
-            }
-            const noSlash = noStar.slice(0, -1);
-            if (path.startsWith(noSlash)){
-                return path;
-            }
-            return null;
-        })
+    const candidates = wildcard
+        .map(wc => path.startsWith(wc.slice(0, -1)) || path.startsWith(wc.slice(0, -2)) ? wc : null)
         .filter (f => !!f); // remove nulls
     
     for (const candidate of candidates){
-        const noStar = condidate.slice(0, -1);
+        const noStar = candidate.slice(0, -1);
         const noSlash = noStar.slice(0, -1);
         const matchedString = path.startsWith(noStar) ? noStar : noSlash;
 
         const possibleDirs = pathsDictionary[candidate];
         // we have to resolve each array element untill we find it
         for (const replace of possibleDirs){
-            const noStar = replace.splice(0, -1);
+            const noStar = replace.slice(0, -1);
             const dir = resolve(base, noStar);
             // must be a dir
             let lstat;
             try {
-                lstat = lstatSync(candidate);
+                lstat = lstatSync(dir);
             } catch (err) {
                 // nothing
             }
@@ -118,8 +127,9 @@ function resolveAliasPaths(path, pathsDictionary, base, exact, wildcard, forceEx
                 continue;
             }
             // so we have a directory
-
-
+            // replace alias prefix with real full dir
+            const subPathElts = path.replace(matchedString, '').split('/');
+            walkDirPath(subPathElts, dir);
         }
     }
     
@@ -138,7 +148,7 @@ export function resolveToFullPath(module, importStatement, forceExt, base, paths
         return importStatement.slice(pos + node_m.length + 1);
     }
     if (isAliased){
-        const find = resolveAliasPaths(importStatement, pathsDictionary, base, exact.wildcard, forceExt)
+        const find = resolveAliasPaths(importStatement, pathsDictionary, base, exact, wildcard, forceExt)
     }
     // possible physical location of a file
     const candidate = resolve(dirname(module), importStatement);
