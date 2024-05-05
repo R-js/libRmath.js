@@ -1,4 +1,4 @@
-'use strict';
+
 
 import { INT_MAX } from '@lib/r-func';
 import { fixup, i2_32m1 } from '../fixup';

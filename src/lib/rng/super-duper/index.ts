@@ -1,4 +1,4 @@
-'use strict';
+
 
 import { fixup, i2_32m1 } from '@rng/fixup';
 import { IRNG } from '@rng/irng';

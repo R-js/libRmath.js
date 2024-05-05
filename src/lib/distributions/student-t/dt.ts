@@ -1,4 +1,4 @@
-'use strict';
+
 
 import { M_1_SQRT_2PI, M_LN_SQRT_2PI, abs, log1p, log, sqrt, exp, DBL_EPSILON } from '@lib/r-func';
 

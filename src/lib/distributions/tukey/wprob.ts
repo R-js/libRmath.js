@@ -1,4 +1,4 @@
-'use strict';
+
 
 import { M_1_SQRT_2PI, pow, exp } from '@lib/r-func';
 import { pnorm5 as pnorm } from '@dist/normal/pnorm';

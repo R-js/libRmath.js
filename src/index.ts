@@ -1,4 +1,4 @@
-'use strict';
+
 
 // R versions of log1p and hypot
 import { default as log1p } from '././lib/alt/log/log1p';
@@ -67,23 +67,6 @@ import { dweibull, pweibull, qweibull, rweibull, rweibullOne } from './lib/distr
 
 import { dwilcox, pwilcox, qwilcox, rwilcox, rwilcoxOne } from './lib/distributions/wilcoxon';
 
-//rng (uniform)
-/*import { KnuthTAOCP } from './lib/rng/knuth-taocp';
-
-import { KnuthTAOCP2002 } from './lib/rng/knuth-taocp-2002';
-import { LecuyerCMRG } from './lib/rng/lecuyer-cmrg';
-import { MersenneTwister } from './lib/rng/mersenne-twister';
-import { SuperDuper } from './lib/rng/super-duper';
-import { MarsagliaMultiCarry } from './lib/rng/marsaglia-multicarry';
-import { WichmannHill } from './lib/rng/wichmann-hill';
-*/
-//rng (normal)
-/*import { AhrensDieter } from './lib/rng/normal/ahrens-dieter';
-import { Inversion } from './lib/rng/normal/inversion';
-import { BoxMuller } from './lib/rng/normal/box-muller';
-import { BuggyKindermanRamage } from './lib/rng/normal/buggy-kinderman-ramage';
-import { KindermanRamage } from './lib/rng/normal/kinderman-ramage';
-*/
 import { default as seed } from './lib/rng/seed';
 // stubs
 import { IRNG, MessageType } from './lib/rng/irng';
@@ -235,20 +218,6 @@ const defaultObservableNoteBook = {
     qwilcox,
     rwilcox,
     rwilcoxOne,
-    // uniform rngs
-    /*KnuthTAOCP,
-    KnuthTAOCP2002,
-    MersenneTwister,
-    SuperDuper,
-    MarsagliaMultiCarry,
-    WichmannHill,
-    // normal rngs
-    AhrensDieter,
-    Inversion,
-    BoxMuller,
-    BuggyKindermanRamage,
-    KindermanRamage,
-    */
     //
     seed,
     // infrastructure
@@ -418,22 +387,6 @@ export {
     qwilcox,
     rwilcox,
     rwilcoxOne,
-    // uniforms rngs
-    /*KnuthTAOCP,
-    KnuthTAOCP2002,
-    LecuyerCMRG,
-    MersenneTwister,
-    SuperDuper,
-    MarsagliaMultiCarry,
-    WichmannHill,
-    // normal rngs
-    AhrensDieter,
-    Inversion,
-    BoxMuller,
-    BuggyKindermanRamage,
-    KindermanRamage,
-    */
-    //
     seed,
     // infrastructure
     // abstract class IRNG
@@ -444,8 +397,6 @@ export {
     IRNGNormal,
     // enums
     //
-    //globalUni,
-    //globalNorm,
     RNGkind,
     setSeed,
     randomSeed,

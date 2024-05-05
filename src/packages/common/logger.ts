@@ -1,6 +1,5 @@
-import { debug } from '@mangos/debug';
-import type { Printer, LineInfo } from '@mangos/debug';
-import { getLineInfo } from '@mangos/debug';
+import { debug, getLineInfo } from '@mangos/debug';
+import type { Printer, LineInfo  } from '@mangos/debug';
 
 const debug_R_Q_P01_boundaries = debug('R_Q_P01_boundaries');
 const debug_R_Q_P01_check = debug('R_Q_P01_check');
@@ -23,14 +22,7 @@ export enum ME {
     ME_PRECISION = 8, //does not have "full" precision
     ME_UNDERFLOW = 16 // and underflow occured (important for IEEE)
 }
-/*
-export const min0 = (x: number, y: number): number => {
-  return x <= y ? x : y;
-};
-export const max0 = (x: number, y: number): number => {
-  return x <= y ? y : x;
-};
-*/
+
 export const mapErr = new Map([
     [ME.ME_NONE, 'No error'],
     [ME.ME_DOMAIN, "argument out of domain in '%s'"],

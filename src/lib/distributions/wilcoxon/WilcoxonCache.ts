@@ -1,4 +1,4 @@
-'use strict';
+
 
 type WCache = {
     [index: number]: WCache | number;

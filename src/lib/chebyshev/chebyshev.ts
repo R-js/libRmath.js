@@ -3,26 +3,6 @@ import { ML_ERR_return_NAN2, lineInfo4 } from '@common/logger';
 
 const printer = debug('chebyshev_eval');
 
-/*
-export function chebyshev_init(dos: number[], nos: number, eta: number): number {
-    let retCode = 0;
-    //let ii: number;
-    let err: number;
-
-    if (nos < 1) return 0;
-
-    err = 0.0;
-
-    for (let ii = 1; ii <= nos; ii++) {
-        retCode = nos - ii;
-        err += abs(dos[retCode]);
-        if (err > eta) {
-            return retCode;
-        }
-    }
-    return retCode;
-}
-*/
 export function chebyshev_eval(x: number, a: number[], n: number): number {
     let b0: number;
     let b1: number;

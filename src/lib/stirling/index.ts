@@ -1,4 +1,4 @@
-'use strict';
+
 
 import { M_LN_SQRT_2PI, trunc, log } from '@lib/r-func';
 import { lgammafn_sign } from '@special/gamma/lgammafn_sign';

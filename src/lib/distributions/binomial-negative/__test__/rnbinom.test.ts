@@ -2,10 +2,7 @@ import { globalUni } from '@rng/global-rng';
 
 import { cl, select } from '@common/debug-mangos-select';
 
-const rnbinomDomainWarns = select('rnbinom')("argument out of domain in '%s'");
 const rnbinomMuDomainWarns = select('rnbinom_mu')("argument out of domain in '%s'");
-rnbinomDomainWarns;
-//rnbinomMuDomainWarns;
 
 import { RNGkind, setSeed } from '@rng/global-rng';
 

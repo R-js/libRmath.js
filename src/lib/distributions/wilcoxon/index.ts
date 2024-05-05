@@ -1,4 +1,4 @@
-'use strict';
+
 
 export { dwilcox } from './dwilcox';
 export { pwilcox } from './pwilcox';

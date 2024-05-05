@@ -1,6 +1,5 @@
 import { loadData } from '@common/load';
-import { cl /*select*/ } from '@common/debug-mangos-select';
-//const dchisqDomainWarns = select('dchisq')("argument out of domain in '%s'");
+import { cl } from '@common/debug-mangos-select';
 
 import { resolve } from 'path';
 import { dchisq } from '..';

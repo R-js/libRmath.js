@@ -1,4 +1,4 @@
-'use strict';
+
 
 import { IRNG, MessageType } from '@rng/irng';
 import { qnorm } from '@dist/normal/qnorm';

@@ -1,4 +1,4 @@
-'use strict';
+
 
 export { dunif } from './dunif';
 export { punif } from './punif';
