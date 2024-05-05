@@ -1,4 +1,4 @@
-import { resolve , dirname, extname, join } from 'node:path';
+import { resolve , dirname, extname, join, basename, relative, sep } from 'node:path';
 import { lstatSync, readdirSync } from 'node:fs';
 
 export function verifyPaths(paths) {
@@ -73,69 +73,108 @@ function isAliasedPath(path, exact, wildcard){
     return false;
 }
 
-function walkDirPath(subPaths, basePath) {
+function walkDirPath(subPaths, basePath, possibleExtensions) {
+    // if subPaths is empty on entry it is possible directory import
+    if (subPaths.length === 0) {
+        subPaths.push('index');
+    }
     const current = subPaths.shift();
     const entries = readdirSync(basePath, { withFileTypes: true });
     const possibles = entries.filter(entry => {
         // possible scenarios
+        // last subpath?
         if (subPaths.length === 0){
-            if (!entry.isFile()){
-                return false;
+            if (entry.isDirectory() && current === entry.name) { // possible directory import
+                return true;
             }
-            console.log(entry.name);
-        } 
+            if (!entry.isFile()) { // no pipes, file sockets, etc
+                return false
+            }
+            // it is a regular file
+            const ext = extname(entry.name);
+            const fileSansExt = entry.name.replace(ext,'');
+            if (fileSansExt === current){
+                return true;
+            }
+            return false;
+        }
+        // must be a directory and exact match
+        if (current === entry.name && entry.isDirectory()){
+            return true;
+        }
+        return false;
     });
-    /
-    if (possibles.length === 0) {
-        return // return undefined as in nothing found down this "basePath"
+    if (subPaths.length > 0){
+        if (possibles.length){
+            return walkDirPath(structuredClone(subPaths), join(basePath, possibles[0].name), possibleExtensions);
+        }
+        return
     }
-    // maybe you found somehting
+    if (possibles.length === 0) {
+        return;
+    }
+    // handle directory imports
+    const dirImports = possibles.filter(possible => possible.isDirectory());
+    const fileImports = possibles.filter(possible => possible.isFile());
+    // handle file imports first
+    for (const ext of possibleExtensions){
+        const found = fileImports.find(possible => extname(possible.name) === ext);
+        if (found){
+            return join(basePath, found.name);
+        }
+    }
+    // handle directory imports
+    for (const dirImport of dirImports){
+        const found = walkDirPath(['index'], join(basePath, dirImport.name), possibleExtensions);
+        if (found) {
+            return found;
+        }
+    }
+    return;
 }
 
-function resolveAliasPaths(path, pathsDictionary, base, exact, wildcard, forceExt){
+function resolveAliasPaths(path, pathsDictionary, base, exact, wildcard, possibleExtensions){
     const idxExact = exact.indexOf(path);
-    if (idxExact >=  0){
+    if (idxExact >=  0) {
         return resolve(base, pathsDictionary[exact[idx]][0]);
     }
     const candidates = wildcard
         .map(wc => path.startsWith(wc.slice(0, -1)) || path.startsWith(wc.slice(0, -2)) ? wc : null)
         .filter (f => !!f); // remove nulls
     
-    for (const candidate of candidates){
+    for (const candidate of candidates) {
         const noStar = candidate.slice(0, -1);
         const noSlash = noStar.slice(0, -1);
         const matchedString = path.startsWith(noStar) ? noStar : noSlash;
-
+        
         const possibleDirs = pathsDictionary[candidate];
         // we have to resolve each array element untill we find it
-        for (const replace of possibleDirs){
-            const noStar = replace.slice(0, -1);
-            const dir = resolve(base, noStar);
+        for (const replace of possibleDirs) {
+            const dir = resolve(base, replace.slice(0, -1));
             // must be a dir
             let lstat;
             try {
                 lstat = lstatSync(dir);
             } catch (err) {
-                // nothing
-            }
-            if (!lstat) {
-                console.log(`lstat failed for ${candidate}`);
+                console.log(`lstat failed for ${replace} aliased by ${candidate}, with error ${String(err)}`);
                 continue;
             }
             if (!lstat.isDirectory()){
-                console.log(`not a directory: ${candidate}`);
+                console.log(`${replace} aliased by ${candiate} is not a directory`);
                 continue;
             }
             // so we have a directory
             // replace alias prefix with real full dir
             const subPathElts = path.replace(matchedString, '').split('/');
-            walkDirPath(subPathElts, dir);
+            const actual = walkDirPath(structuredClone(subPathElts), dir, possibleExtensions);
+            if (actual){
+                return actual;
+            }
         }
     }
-    
 }
 
-export function resolveToFullPath(module, importStatement, forceExt, base, pathsDictionary, exact, wildcard) {
+export function resolveToFullPath(module, importStatement, base, pathsDictionary, exact, wildcard, forceExt, possibleExtensions) {
     const node_m = 'node_modules';
     const isAliased = isAliasedPath(importStatement, exact, wildcard);
     const includesNodeModule = importStatement.includes(node_m);
@@ -143,16 +182,36 @@ export function resolveToFullPath(module, importStatement, forceExt, base, paths
         // dont change, this is a npm module import
         return importStatement;
     }
+    // relative import or aliased
     if (importStatement.includes(node_m)) {
         const pos = importStatement.lastIndexOf(node_m);
         return importStatement.slice(pos + node_m.length + 1);
     }
-    if (isAliased){
-        const find = resolveAliasPaths(importStatement, pathsDictionary, base, exact, wildcard, forceExt)
+    let aliasRelativePath;
+    if (isAliased) {
+        if (importStatement === '@rng/knuth-taocp-2002'){
+            const n = 1;
+        }
+        const resolved = resolveAliasPaths(importStatement, pathsDictionary, base, exact, wildcard, possibleExtensions)
+        if (resolved === importStatement) { // could not be resolved (assume it is node modules or dev forgot to alias in tsconfig.json)
+            return resolved;
+        }
+        if (!resolved) { // because of error (some path element replacement does not exist or no read access)
+            return importStatement;
+        }
+        if (typeof resolved !== 'string') {
+            return;
+        }
+        aliasRelativePath = relative(dirname(module), resolved);
+        if (aliasRelativePath[0] !== '.'){
+            aliasRelativePath = './' + aliasRelativePath;
+        }
     }
+    const finalImportStatement = aliasRelativePath || importStatement;
     // possible physical location of a file
-    const candidate = resolve(dirname(module), importStatement);
+    const candidate = resolve(dirname(module), finalImportStatement);
     // is it a dir ?
+
     let lstat = {
         isDirectory() {
             return false;
@@ -185,21 +244,21 @@ export function resolveToFullPath(module, importStatement, forceExt, base, paths
             }
         }
         if (indexTSFileExists) {
-            return importStatement + '/index' + forceExt;
+            return finalImportStatement.replace(sep, '/') + '/index' + forceExt;
         }
         if (!indexFileExists && !packageJSONExists) {
             throw new Error(
                 `directory import does not contain index.(js/mjs/cjs) file or package.json file ${join(
-                    importStatement
+                    finalImportStatement
                 )}`
             );
         }
         if (packageJSONExists) {
             // let "export" or "main" property handle it
-            return importStatement;
+            return finalImportStatement.replace(sep, '/');
         }
         // only index.js, index.cjs, index.mjs left
-        return importStatement + '/' + indexFileExists;
+        return finalImportStatement.replace(sep, '/') + '/' + indexFileExists;
     }
     // strip optionally the extension
     const ext = extname(candidate);
@@ -209,5 +268,6 @@ export function resolveToFullPath(module, importStatement, forceExt, base, paths
         throw new Error(`file does not exist: ${fileNameWithTSExt}`);
     }
     // must return without extension
-    return (ext === '' ? importStatement : importStatement.slice(0, -ext.length)) + forceExt;
+    const rc =  (ext === '' ? finalImportStatement : finalImportStatement.slice(0, -ext.length)) + forceExt;
+    return rc.replaceAll(sep, '/');
 }

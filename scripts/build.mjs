@@ -32,7 +32,7 @@ function removeSafeDir(dir) {
  * @param {ts.CompilerOptions} options
  */
 function createCompiler(config, sourceDir) {
-    return function compile(files, targetDIR, options) {
+    return function compile(files, targetDIR, options, possibleExtensions) {
         const compilerOptions = { ...config.compilerOptions, ...options };
         const { baseUrl, paths } = compilerOptions;
         const pathVerifyResult = verifyPaths(paths);
@@ -41,7 +41,6 @@ function createCompiler(config, sourceDir) {
             throw new Error(message);
         }
         const { exactPaths, wildCardPaths } = rankPaths(paths);
-        console.log(exactPaths, wildCardPaths);
         const host = ts.createCompilerHost(compilerOptions);
         let nr = 0;
         host.writeFile = function (fileName, contents, _writeByteOrderMark, onError, _sourceFiles) {
@@ -73,7 +72,7 @@ function createCompiler(config, sourceDir) {
                         // loop over all .js and change then
 
                         for (const node of requireStatements) {
-                            node.value = resolveToFullPath(fileName, node.value, '.cjs', baseUrl, paths, exactPaths, wildCardPaths);
+                            node.value = resolveToFullPath(fileName, node.value, baseUrl, paths, exactPaths, wildCardPaths, '.cjs', possibleExtensions);
                         }
 
                         contents = generate(astTree);
@@ -84,8 +83,7 @@ function createCompiler(config, sourceDir) {
                         const importStatements = Array.from(jxpath('/**/[type=ImportDeclaration]/source/', astTree));
                         for (const node of importStatements) {
                             if (node !== null && node !== undefined) {
-                                node.value = resolveToFullPath(fileName, node.value, '.mjs', baseUrl, paths, exactPaths, wildCardPaths);
-                                console.log(node.value);
+                                node.value = resolveToFullPath(fileName, node.value, baseUrl, paths, exactPaths, wildCardPaths, '.mjs', possibleExtensions);
                             }
                         }
                         const exportStatements = Array.from(
@@ -136,28 +134,38 @@ function init(targetDir, commenjsDir, esmDir, roots) {
 
     const compile = createCompiler(config, sourceDir);
 
-    compile(roots, esmDir, {
-        module: ts.ModuleKind.ES2020,
-        moduleResolution: ts.ModuleResolutionKind.NodeJs,
-        declaration: true,
-        declarationDir: './types', // this becomes ./dist/types
-        declarationMap: false,
-        removeComments: true,
-        sourceMap: false,
-        importHelpers: false,
-        outDir: undefined
-    });
+    compile(
+        roots,
+        esmDir,
+        {
+            module: ts.ModuleKind.ES2020,
+            moduleResolution: ts.ModuleResolutionKind.NodeJs,
+            declaration: true,
+            declarationDir: './types', // this becomes ./dist/types
+            declarationMap: false,
+            removeComments: true,
+            sourceMap: false,
+            importHelpers: false,
+            outDir: undefined
+        },
+        ['.ts']
+);
 
-    compile(roots, commenjsDir, {
-        module: ts.ModuleKind.CommonJS,
-        moduleResolution: ts.ModuleResolutionKind.NodeJs,
-        declaration: false,
-        outDir: undefined, // this is a must!
-        declarationMap: false,
-        removeComments: true,
-        sourceMap: false,
-        importHelpers: false // commonjs sometimes needs some extra code to create analogs for esm constructs (example export * from 'xyz)
-    });
+    compile(
+        roots,
+        commenjsDir,
+        {
+            module: ts.ModuleKind.CommonJS,
+            moduleResolution: ts.ModuleResolutionKind.NodeJs,
+            declaration: false,
+            outDir: undefined, // this is a must!
+            declarationMap: false,
+            removeComments: true,
+            sourceMap: false,
+            importHelpers: false // commonjs sometimes needs some extra code to create analogs for esm constructs (example export * from 'xyz)
+        },
+        ['.ts']
+    );
 }
 
 init('./dist', './dist/commonjs', './dist/esm', ['./src/index.ts']);

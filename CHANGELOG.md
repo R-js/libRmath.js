@@ -5,13 +5,29 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## version 2.0.1 -
+## version 2.0.1 - 2024-05-05
+
+### fixed (Maddison Hellstrom)[github](https://github.com/b0o) 
+
+[PR 190](https://github.com/R-js/libRmath.js/pull/190)
+
+- `./types`  added to package.json "exports" property
 
 ### improved (Jacob Bogers <jkfbogers@gmail.com>)
 
--   removed `ts-patch` to resolve alias path, use `ts-node` instead
--   introduced `prettier`
--   use prettier semver 2.8.8 to make it work with current libs
+-   removed `ts-patch`
+-   removed `ts-node`
+-   removed `prettier`
+-   removed `eslint`
+-   removed `babel`
+-   removed `typescript-eslint`
+-   removed `typescript-eslint/parser`
+-   updated `typescript` to v4.5.2
+-   removed `typescript-eslint-language-service`
+-   removed  `typescript-transform-paths/register`
+
+
+
 
 ## version 2.0.0 - 2023-03-03
 

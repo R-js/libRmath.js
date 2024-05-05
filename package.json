@@ -1,6 +1,6 @@
 {
     "name": "lib-r-math.js",
-    "version": "2.0.0",
+    "version": "2.0.1",
     "description": "Javascript Implementation of Statistical R standalone library rnmath",
     "keywords": [
         "statistics",
@@ -65,7 +65,8 @@
     "type": "module",
     "exports": {
         "import": "./dist/esm/index.mjs",
-        "require": "./dist/commonjs/index.cjs"
+        "require": "./dist/commonjs/index.cjs",
+        "types": "./dist/types/index.d.ts"
     },
     "browser": "./dist/web.esm.mjs",
     "types": "./dist/types/index.d.ts",
@@ -79,7 +80,7 @@
     ],
     "scripts": {
         "build": "node --trace-warnings scripts/build.mjs",
-        "xpostbuild": "node --trace-warnings scripts/rollup.build.mjs",
+        "postbuild": "node --trace-warnings scripts/rollup.build.mjs",
         "prepublishOnly": "npm run build",
         "test": "jest --verbose"
     },
@@ -98,10 +99,9 @@
         "ms": "3.0.0-canary.1",
         "rollup": "3.6.0",
         "ts-jest": "29.0.3",
-        "ts-node": "10.9.1",
         "typescript": "4.5.2"
     },
     "engines": {
-        "node": ">=v16.18.1"
+        "node": ">=v20.4.0"
     }
 }

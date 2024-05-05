@@ -3,11 +3,15 @@ import { builtinModules } from 'module';
 
 import terser from '@rollup/plugin-terser';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 
 const builtin = builtinModules.slice();
 builtin.splice(builtinModules.indexOf('crypto'), 1);
 
-import pkg from '../package.json' assert { type: 'json' };
+const pckPath = resolve('./package.json');
+
+const pkg = JSON.parse(readFileSync(pckPath));
 
 const version = pkg.version;
 
@@ -29,7 +33,6 @@ function shims() {
     return {
         name: 'stubbing for browser',
         async resolveId(source, importer) {
-            // console.log(`${importer} <- ${source}`);
             if (!importer) {
                 return null; // skip entry files
             }

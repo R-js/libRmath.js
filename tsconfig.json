@@ -5,10 +5,6 @@
         "enable": true,
         "disableFilenameBasedTypeAcquisition": true
     },
-    "ts-node": {
-        "transpileOnly": true,
-        "require": ["typescript-transform-paths/register"]
-    },
     "compilerOptions": {
         "allowUnreachableCode": true,
         "allowUnusedLabels": true,
@@ -45,15 +41,7 @@
         "stripInternal": true,
 
         "checkJs": true,
-
-        "plugins": [
-            // Transform paths in output .js files
-            { "transform": "typescript-transform-paths" },
-
-            // Transform paths in output .d.ts files (Include this line if you output declarations files)
-            { "transform": "typescript-transform-paths", "afterDeclarations": true }
-        ],
-
+   
         "allowSyntheticDefaultImports": false,
         "esModuleInterop": false,
         "forceConsistentCasingInFileNames": true,
