@@ -92,7 +92,7 @@ function createCompiler(config, sourceDir) {
                         try {
                             for (const node of exportStatements) {
                                 if (node !== null && node !== undefined) {
-                                    node.value = resolveToFullPath(fileName, node.value, '.mjs');
+                                    node.value = resolveToFullPath(fileName, node.value, baseUrl, paths, exactPaths, wildCardPaths, '.mjs', possibleExtensions);
                                 }
                             }
                         } catch (err) {
