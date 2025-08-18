@@ -41,4 +41,4 @@ export function lgammacor(x: number): number {
         return chebyshev_eval(tmp * tmp * 2 - 1, algmcs, nalgm) / x;
     }
     return 1 / (x * 12);
-}
+} 

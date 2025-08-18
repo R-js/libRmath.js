@@ -1,6 +1,6 @@
 
-import { debug } from '@mangos/debug';
-import { ME, ML_ERROR2 } from '@common/logger';
+import createNS from '@common/debug-frontend';
+import { ME, ML_ERROR3 } from '@common/logger';
 import { cospi } from '@trig/cospi';
 import { sinpi } from '@trig/sinpi';
 import BesselJ from '../besselJ';
@@ -11,7 +11,7 @@ import {
 } from '@lib/r-func';
 
 
-const printer = debug('BesselY');
+const printer = createNS('BesselY');
 
 function BesselY(x: number, nu: number): number {
     //double
@@ -20,7 +20,7 @@ function BesselY(x: number, nu: number): number {
     if (isNaN(x) || isNaN(nu)) return x + nu;
 
     if (x < 0) {
-        ML_ERROR2(ME.ME_RANGE, 'BesselY', printer);
+        ML_ERROR3(printer, ME.ME_RANGE, 'BesselY');
         return NaN;
     }
     const na = floor(nu);

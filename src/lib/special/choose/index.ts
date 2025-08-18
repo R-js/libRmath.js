@@ -1,4 +1,4 @@
-import { debug } from '@mangos/debug';
+import createNS from '@common/debug-frontend';
 
 import { isOdd, abs, log, exp, round, isInteger } from '@lib/r-func';
 
@@ -17,7 +17,7 @@ function lfastchoose2(n: number, k: number, sChoose?: Int32Array): number {
     return lgammafn_sign(n + 1) - lgammafn_sign(k + 1) - r;
 }
 
-const printer_lchoose = debug('lchoose');
+const printer_lchoose = createNS('lchoose');
 
 function lchoose(n: number, k: number): number {
     const k0 = k;
@@ -54,7 +54,7 @@ const k_small_max = 30;
 /* 30 is somewhat arbitrary: it is on the *safe* side:
  * both speed and precision are clearly improved for k < 30.
  */
-const printer_choose = debug('choose');
+const printer_choose = createNS('choose');
 
 function choose(n: number, k: number): number {
     let r: number;

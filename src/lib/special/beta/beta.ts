@@ -1,6 +1,6 @@
-import { debug } from '@mangos/debug';
+import createNS from '@common/debug-frontend';
 
-import { ME, ML_ERR_return_NAN2, lineInfo4, ML_ERROR2 } from '@common/logger';
+import { ME, ML_ERR_return_NAN2, ML_ERROR3 } from '@common/logger';
 import { gamma } from '@special/gamma';
 import lbeta from './lbeta';
 import { exp } from '@lib/r-func';
@@ -9,12 +9,12 @@ import { exp } from '@lib/r-func';
 const xmax = 171.61447887182298;
 const lnsml = -708.39641853226412;
 
-const printer_beta = debug('beta');
+const printer_beta = createNS('beta');
 
 function beta(a: number, b: number): number {
     if (isNaN(a) || isNaN(b)) return a + b;
 
-    if (a < 0 || b < 0) return ML_ERR_return_NAN2(printer_beta, lineInfo4);
+    if (a < 0 || b < 0) return ML_ERR_return_NAN2(printer_beta);
     else if (a === 0 || b === 0) return Infinity;
     else if (!isFinite(a) || !isFinite(b)) return 0;
 
@@ -34,7 +34,7 @@ function beta(a: number, b: number): number {
         //#ifndef IEEE_754
         if (val < lnsml) {
             // a and/or b so big that beta underflows
-            ML_ERROR2(ME.ME_UNDERFLOW, 'beta', printer_beta);
+            ML_ERROR3(printer_beta, ME.ME_UNDERFLOW, 'beta');
             // return ML_UNDERFLOW; pointless giving incorrect value
         }
         //#endif

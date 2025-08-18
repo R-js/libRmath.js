@@ -1,12 +1,12 @@
-import { debug } from '@mangos/debug';
-import { ME, ML_ERROR2 } from '@common/logger';
+import createNS from '@common/debug-frontend';
+import { ME, ML_ERROR3 } from '@common/logger';
 import { Rf_gamma_cody } from '@special/bessel/gamma_cody';
 import { enmten_BESS, ensig_BESS, enten_BESS, xlrg_BESS_IJ } from '../bessel-constants';
 import { IBesselRC } from '../IBesselRC';
 
 const { min, trunc, pow, sqrt, sin, cos, max, abs } = Math;
 
-const printer = debug('J_bessel');
+const printer = createNS('J_bessel');
 
 /* ---------------------------------------------------------------------
      Mathematical constants
@@ -127,7 +127,7 @@ export function J_bessel(x: number, alpha: number, nb: number): IBesselRC {
 
     /* Local variables */
     //const int lim = nb;
-   
+
 
     //START ints
     let i_nend;
@@ -195,7 +195,7 @@ export function J_bessel(x: number, alpha: number, nb: number): IBesselRC {
 
     ncalc = nb;
     if (x > xlrg_BESS_IJ) {
-        ML_ERROR2(ME.ME_RANGE, 'J_bessel_err_nr=1000', printer);
+        ML_ERROR3(printer, ME.ME_RANGE, 'J_bessel_err_nr=1000');
         /* indeed, the limit is 0,
          * but the cutoff happens too early */
         return { x: 0, nb, ncalc };
