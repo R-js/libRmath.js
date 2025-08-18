@@ -69,7 +69,7 @@ function createCompiler(config, sourceDir) {
                             '/**/[type=CallExpression]/callee/[type=Identifier]/[name=require]/../arguments/[type=Literal]/',
                             astTree
                         );
-                        // loop over all .js and change then
+                        // loop over all .js and change them
 
                         for (const node of requireStatements) {
                             node.value = resolveToFullPath(fileName, node.value, baseUrl, paths, exactPaths, wildCardPaths, '.cjs', possibleExtensions);
