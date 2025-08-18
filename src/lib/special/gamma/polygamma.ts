@@ -120,7 +120,7 @@
  *    Routines called: Rf_d1mach, Rf_i1mach.
  */
 
-import { debug } from '@mangos/debug';
+import createNS from '@common/debug-frontend';
 import {
     DBL_MANT_DIG,
     DBL_MAX_EXP,
@@ -141,7 +141,7 @@ import {
     round
 } from '@lib/r-func';
 
-const printer = debug('dpsifn');
+const printer = createNS('dpsifn');
 
 
 
@@ -313,7 +313,7 @@ function dpsifn(
     let L20 = false;
     let L30 = false;
 
-    for (;;) {
+    for (; ;) {
         nn = n + mm - 1;
         fn = nn;
         t = (fn + 1) * xln;
@@ -446,7 +446,7 @@ function dpsifn(
     } //if
     s = (s + t1) * tss;
     // while (true) is a goto capture
-    for (;;) {
+    for (; ;) {
         if (xinc !== 0.0) {
             /* backward recur from xdmy to x */
 
@@ -553,7 +553,7 @@ function dpsifn(
     return NaN
 #endif
 */
-const print_psigamma = debug('psigamma');
+const print_psigamma = createNS('psigamma');
 
 function _render(
     x: number,

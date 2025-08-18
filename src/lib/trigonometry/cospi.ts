@@ -1,10 +1,10 @@
 
 
-import { debug } from '@mangos/debug';
+import createNS from '@common/debug-frontend';
 
 import { fmod } from '@lib/r-func';
 
-import { ME, ML_ERROR2, lineInfo4 } from '@common/logger';
+import { ML_ERR_return_NAN2 } from '@common/logger';
 
 /* HAVE_COSPI etc will not be defined in standalone-use: the
    intention is to make the versions here available in that case.
@@ -13,14 +13,13 @@ import { ME, ML_ERROR2, lineInfo4 } from '@common/logger';
 */
 
 // cos(pi * x)  -- exact when x = k/2  for all integer k
-const printer_cospi = debug('cospi');
+const printer_cospi = createNS('cospi');
 
 export function cospi(x: number): number {
     // NaNs propagated correctly
     if (isNaN(x)) return x;
     if (!isFinite(x)) {
-        ML_ERROR2(ME.ME_DOMAIN, lineInfo4, printer_cospi);
-        return NaN;
+        return ML_ERR_return_NAN2(printer_cospi);
     }
 
     x = fmod(Math.abs(x), 2); // cos() symmetric; cos(pi(x + 2k)) == cos(pi x) for all integer k
