@@ -1,12 +1,12 @@
-import { debug } from '@mangos/debug';
-import { ME, ML_ERROR2 } from '@common/logger';
+import createNS from '@common/debug-frontend';
+import { ME, ML_ERROR3 } from '@common/logger';
 import { sinpi } from '@trig/sinpi';
 import BesselK from '../besselK';
 import { I_bessel } from './IBessel';
 
 import { exp, trunc, floor, PI } from '@lib/r-func';
 
-const printer = debug('besselI');
+const printer = createNS('besselI');
 
 // Modified Bessel function of the first kind
 
@@ -15,7 +15,7 @@ function BesselI(x: number, nu: number, exponScaled = false): number {
     /* NaNs propagated correctly */
     if (isNaN(x) || isNaN(nu)) return x + nu;
     if (x < 0) {
-        ML_ERROR2(ME.ME_RANGE, 'bessel_i', printer);
+        ML_ERROR3(printer, ME.ME_RANGE, 'bessel_i');
         return NaN;
     }
     const ize = exponScaled ? 2 : 1;

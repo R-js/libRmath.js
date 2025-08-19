@@ -1,8 +1,8 @@
 //3rd party
-import { debug } from '@mangos/debug';
+import createNS from '@common/debug-frontend';
 
 //tooling
-import { ME, ML_ERROR2 } from '@common/logger';
+import { ME, ML_ERROR3 } from '@common/logger';
 
 import { cospi } from '@trig/cospi';
 import { sinpi } from '@trig/sinpi';
@@ -11,13 +11,13 @@ import { J_bessel } from './Jbessel';
 
 import { floor } from '@lib/r-func';
 
-const printer = debug('BesselJ');
+const printer = createNS('BesselJ');
 
 function BesselJ(x: number, nu: number): number {
     /* NaNs propagated correctly */
     if (isNaN(x) || isNaN(nu)) return x + nu;
     if (x < 0) {
-        ML_ERROR2(ME.ME_RANGE, 'BesselJ', printer);
+        ML_ERROR3(printer, ME.ME_RANGE, 'BesselJ');
         return NaN;
     }
     // double
