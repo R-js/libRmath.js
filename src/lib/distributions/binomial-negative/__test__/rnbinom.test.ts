@@ -1,13 +1,13 @@
-import { globalUni } from '@rng/global-rng';
-
-import { cl, select } from '@common/debug-mangos-select';
-
-const rnbinomMuDomainWarns = select('rnbinom_mu')("argument out of domain in '%s'");
-
-import { RNGkind, setSeed } from '@rng/global-rng';
+import { globalUni, RNGkind, setSeed } from '@rng/global-rng';
 
 import { rnbinom } from '..';
 
+import createDebugLoggerBackend, { createStatsFromLogs, LogEntry } from '@common/debug-backend';
+import { register } from '@common/debug-frontend';
+
+const logs: LogEntry[] = [];
+
+register(createDebugLoggerBackend(logs));
 describe('rnbinom', function () {
     describe('invalid input', () => {
         expect(() => rnbinom(1, 10, undefined, undefined)).toThrowError('argument "prob" is missing, with no default');
@@ -15,10 +15,8 @@ describe('rnbinom', function () {
     });
     describe('using prob, not "mu" parameter', () => {
         beforeEach(() => {
-            cl.clear('rnbinom');
-            cl.clear('rnbinom_mu');
             globalUni().init(97865);
-        });
+        })
         it('n=10, size=4, prob=0.5', () => {
             const r = rnbinom(10, 4, 0.5);
             expect(r).toEqualFloatingPointBinary([4, 8, 3, 5, 4, 3, 6, 4, 2, 5]);
@@ -45,10 +43,6 @@ describe('rnbinom', function () {
         });
     });
     describe('using mu, not "prob" parameter', () => {
-        beforeEach(() => {
-            cl.clear('rnbinom');
-            cl.clear('rnbinom_mu');
-        });
         it('n=10, size=8, mu=12 (prob=0.6)', () => {
             RNGkind({ uniform: 'SUPER_DUPER', normal: 'BOX_MULLER' });
             setSeed(1234);
@@ -57,8 +51,9 @@ describe('rnbinom', function () {
         });
         it('(check M.E.)n=1, size=8, mu=NaN', () => {
             const nan = rnbinom(1, 8, undefined, NaN);
+            const stats = createStatsFromLogs(logs);
+            expect(stats.rnbinom_mu).toBe(1);
             expect(nan).toEqualFloatingPointBinary(NaN);
-            expect(rnbinomMuDomainWarns()).toHaveLength(1);
         });
         it('n=1, size=8, mu=0', () => {
             const z = rnbinom(1, 8, undefined, 0);

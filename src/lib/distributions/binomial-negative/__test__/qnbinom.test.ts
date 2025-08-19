@@ -1,11 +1,13 @@
-import { cl, select } from '@common/debug-mangos-select';
-
-const qnbinomDomainWarns = select('qnbinom')("argument out of domain in '%s'");
-const do_searchDomainWarns = select('do_search')("argument out of domain in '%s'");
-qnbinomDomainWarns;
-do_searchDomainWarns;
 
 import { qnbinom } from '..';
+
+import createDebugLoggerBackend, { createStatsFromLogs, LogEntry } from '@common/debug-backend';
+import { register } from '@common/debug-frontend';
+import { globalUni } from '@lib/rng';
+
+const logs: LogEntry[] = [];
+
+register(createDebugLoggerBackend(logs));
 
 describe('qnbinom', function () {
     describe('invalid input', () => {
@@ -14,8 +16,7 @@ describe('qnbinom', function () {
     });
     describe('using prob, not "mu" parameter', () => {
         beforeEach(() => {
-            cl.clear('qnbinom');
-            cl.clear('do_search');
+            globalUni().init(97865);
         });
         it('p=NaN, prob=0.5, size=10', () => {
             const nan = qnbinom(NaN, 10, 0.5);
@@ -36,7 +37,8 @@ describe('qnbinom', function () {
         it('p=0.5, prob=-1(<0), size=0', () => {
             const nan = qnbinom(0.5, 4, -1);
             expect(nan).toBeNaN();
-            //expect(out.length).toBe(1);
+            const stats1 = createStatsFromLogs(logs);
+            expect(stats1.qnbinom).toBe(1);
         });
         it('p=1, prob=0.3, size=-4', () => {
             const nan = qnbinom(1, -4, 0.3);
@@ -81,10 +83,6 @@ describe('qnbinom', function () {
         });
     });
     describe('using mu, not "prob" parameter', () => {
-        beforeEach(() => {
-            cl.clear('qnbinom');
-            cl.clear('do_search');
-        });
         it('p=0.8, size=500, mu=600, (prob=0.5454545454545454)', () => {
             const z = qnbinom(0.8, 500, undefined, 600);
             expect(z).toBe(630);

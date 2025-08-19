@@ -2,9 +2,12 @@ import { resolve } from 'path';
 
 //helper
 import { loadData } from '@common/load';
-import { cl, select } from '@common/debug-mangos-select';
+import createDebugLoggerBackend, { createStatsFromLogs, LogEntry } from '@common/debug-backend';
+import { register } from '@common/debug-frontend';
 
-const dbinomDomainWarns = select('dnbinom')("argument out of domain in '%s'");
+const logs: LogEntry[] = [];
+
+register(createDebugLoggerBackend(logs));
 
 import { dnbinom } from '..';
 import { prob2mu } from './test-helpers';
@@ -15,11 +18,6 @@ describe('dnbinom', function () {
         expect(() => dnbinom(1, 10, 5, 6)).toThrowError('"prob" and "mu" both specified');
     });
     describe('using prob, not "mu" parameter', () => {
-        beforeEach(() => {
-            cl.clear('dnbinom_mu');
-            cl.clear('dnbinom');
-        });
-
         it('ranges x ∊ [0, 200] size=34, prob=0.2', async () => {
             const [x, y] = await loadData(resolve(__dirname, 'fixture-generation', 'dnbinom1.R'), /\s+/, 1, 2);
             const actual = x.map((_x) => dnbinom(_x, 34, 0.2));
@@ -31,8 +29,9 @@ describe('dnbinom', function () {
         });
         it('x=10, prob=0, size=20', () => {
             const nan = dnbinom(10, 20, 0);
+            const stats = createStatsFromLogs(logs);
             expect(nan).toBeNaN();
-            expect(dbinomDomainWarns()).toHaveLength(1);
+            expect(stats.dnbinom).toBe(1);
         });
         it('x=23.4 (non integer), prob=0.3, size=20', () => {
             const z = dnbinom(23.4, 20, 0.3);
