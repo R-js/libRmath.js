@@ -12,11 +12,17 @@ const lnsml = -708.39641853226412;
 const printer_beta = createNS('beta');
 
 function beta(a: number, b: number): number {
-    if (isNaN(a) || isNaN(b)) return a + b;
+    if (isNaN(a) || isNaN(b)) {
+        return a + b;
+    }
 
-    if (a < 0 || b < 0) return ML_ERR_return_NAN2(printer_beta);
-    else if (a === 0 || b === 0) return Infinity;
-    else if (!isFinite(a) || !isFinite(b)) return 0;
+    if (a < 0 || b < 0) {
+        return ML_ERR_return_NAN2(printer_beta);
+    } else if (a === 0 || b === 0) {
+        return Infinity;
+    } else if (!isFinite(a) || !isFinite(b)) {
+        return 0;
+    }
 
     if (a + b < xmax) {
         //

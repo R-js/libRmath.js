@@ -1,6 +1,6 @@
 import createNS from '@common/debug-frontend';
 
-import { ML_ERR_return_NAN2, ME } from '@common/logger';
+import { ML_ERR_return_NAN2 } from '@common/logger';
 
 import {
     DBL_MANT_DIG,

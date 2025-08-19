@@ -1,15 +1,18 @@
-//helpers
-import { cl, select } from '@common/debug-mangos-select';
-
-const betaDomainWarns = select('beta')("argument out of domain in '%s'");
-
 //app
 import { beta } from '..';
 
+import createDebugLoggerBackend from '@common/debug-backend';
+import { register } from '@common/debug-frontend';
+
+const logs: unknown[] = [];
+
+register(createDebugLoggerBackend(logs));
+
+beforeEach(() => {
+    logs.splice(0);
+});
+
 describe('beta(a,b)', function () {
-    beforeEach(() => {
-        cl.clear('beta');
-    });
     it('a = 0, b > 0', () => {
         /* load data from fixture */
         const a = 0;
@@ -30,7 +33,7 @@ describe('beta(a,b)', function () {
         const nan1 = beta(-1, 4);
         const nan2 = beta(4, -1);
         expect([nan1, nan2]).toEqualFloatingPointBinary(NaN);
-        expect(betaDomainWarns()).toHaveLength(2);
+        expect(logs).toHaveLength(2);
     });
     it('a=Infinity returns 0 and ME warnings', () => {
         const inf = beta(Infinity, 1);

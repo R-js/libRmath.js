@@ -3,16 +3,17 @@ import { resolve } from 'path';
 
 //helper
 import { loadData } from '@common/load';
-import { cl, select } from '@common/debug-mangos-select';
 
-const dbetaDomainWarns = select('dbeta')("argument out of domain in '%s'");
+import { register } from '@common/debug-frontend';
+import createDebugLoggerBackend, { createStatsFromLogs, LogEntry } from '@common/debug-backend';
 
 import { dbeta } from '..';
 
+const logs: LogEntry[] = [];
+
+register(createDebugLoggerBackend(logs));
+
 describe('dbeta', function () {
-    beforeEach(() => {
-        cl.clear('dbeta');
-    });
     it('ranges x ∊ [0, 1]', async () => {
         /* load data from fixture */
         const [x, y] = await loadData(resolve(__dirname, 'fixture-generation', 'dbeta.R'), /\s+/, 1, 2);
@@ -25,7 +26,8 @@ describe('dbeta', function () {
     });
     it('x=0.5, shape1=-2, shape2=3', () => {
         const nan = dbeta(0.5, -2, 3);
-        expect(dbetaDomainWarns()).toHaveLength(1);
+        const stats1 = createStatsFromLogs(logs);
+        expect(stats1.dbeta).toBe(1);
         expect(nan).toBe(NaN);
     });
     it('x ∊ {-1.5,1.2}, shape1=2, shape2=3', () => {

@@ -1,14 +1,6 @@
-import { cl, select } from '@common/debug-mangos-select';
-const lbetaDomainWarns = select('lbeta')("argument out of domain in '%s'");
-lbetaDomainWarns;
-
 //app
 import { lbeta } from '..';
-
 describe('lbeta(a,b)', function () {
-    beforeEach(() => {
-        cl.clear('lbeta');
-    });
     it('a = 0, b > 0', () => {
         /* load data from fixture */
         const a = 0;

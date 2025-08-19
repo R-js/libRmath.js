@@ -3,17 +3,17 @@ import { resolve } from 'path';
 
 //helper
 import { loadData } from '@common/load';
-import { cl, select } from '@common/debug-mangos-select';
-
-const pbetaDomainWarns = select('pbeta')("argument out of domain in '%s'");
 
 //app
 import { pbeta } from '..';
+import createDebugLoggerBackend, { createStatsFromLogs, LogEntry } from '@common/debug-backend';
+import { register } from '@common/debug-frontend';
+
+const logs: LogEntry[] = [];
+
+register(createDebugLoggerBackend(logs));
 
 describe('pbeta, ncp = 0', function () {
-    beforeEach(() => {
-        cl.clear('pbeta');
-    });
     it('ranges x ∊ [0, 1], shape1=3, shape2=3', async () => {
         /* load data from fixture */
         const [x, y] = await loadData(resolve(__dirname, 'fixture-generation', 'pbeta.R'), /\s+/, 1, 2);
@@ -25,10 +25,12 @@ describe('pbeta, ncp = 0', function () {
         expect(nan).toBeNaN();
     });
     it('x=0.5, shape1=3, shape2=3', () => {
+        const stats0 = createStatsFromLogs(logs);
         const nan = pbeta(0.5, -3, 3);
         expect(nan).toBeNaN();
-        expect(pbetaDomainWarns()).toHaveLength(1);
-    });
+        const stats1 = createStatsFromLogs(logs);
+        expect(stats1.pbeta - stats0.pbeta).toBe(2);
+    }, 1e9);
     it('x=0.5, shape1=Infinity, shape2=3', () => {
         const z = pbeta(0.5, Infinity, 3);
         expect(z).toBe(0);
