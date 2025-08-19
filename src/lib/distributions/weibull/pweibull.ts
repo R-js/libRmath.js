@@ -1,12 +1,12 @@
 
 
-import { debug } from '@mangos/debug';
+import createNS from '@common/debug-frontend';
 
-import { ML_ERR_return_NAN2, lineInfo4 } from '@common/logger';
+import { ML_ERR_return_NAN2 } from '@common/logger';
 import { R_D_exp, R_DT_0, pow, expm1 } from '@lib/r-func';
 import { R_Log1_Exp } from '@dist/exp/expm1';
 
-const printer = debug('pweibull');
+const printer = createNS('pweibull');
 
 export function pweibull(q: number, shape: number, scale = 1, lowerTail = true, logP = false): number {
     if (isNaN(q) || isNaN(shape) || isNaN(scale)) {
@@ -14,7 +14,7 @@ export function pweibull(q: number, shape: number, scale = 1, lowerTail = true, 
     }
 
     if (shape <= 0 || scale <= 0) {
-        return ML_ERR_return_NAN2(printer, lineInfo4);
+        return ML_ERR_return_NAN2(printer);
     }
 
     if (q <= 0) {

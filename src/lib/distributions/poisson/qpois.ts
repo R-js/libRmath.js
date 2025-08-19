@@ -1,8 +1,8 @@
 
 
-import { debug } from '@mangos/debug';
+import createNS from '@common/debug-frontend';
 
-import { ML_ERR_return_NAN2, lineInfo4, R_Q_P01_boundaries } from '@common/logger';
+import { ML_ERR_return_NAN2, R_Q_P01_boundaries } from '@common/logger';
 
 import { NumberW } from '@common/toms708/NumberW';
 
@@ -17,21 +17,21 @@ import { max, sqrt, floor, round as nearbyint, isNaN, DBL_EPSILON, isFinite } fr
 function do_search(y: number, z: NumberW, p: number, lambda: number, incr: number): number {
     if (z.val >= p) {
         // search to the left
-        for (;;) {
+        for (; ;) {
             if (y === 0 || (z.val = ppois(y - incr, lambda, true, false)) < p) return y;
             y = max(0, y - incr);
         }
     } else {
         // search to the right
 
-        for (;;) {
+        for (; ;) {
             y = y + incr;
             if ((z.val = ppois(y, lambda, true, false)) >= p) return y;
         }
     }
 }
 
-const printer = debug('qpois');
+const printer = createNS('qpois');
 
 export function qpois(p: number, lambda: number, lowerTail = true, logP = false): number {
     let y;
@@ -40,9 +40,9 @@ export function qpois(p: number, lambda: number, lowerTail = true, logP = false)
     if (isNaN(p) || isNaN(lambda)) return p + lambda;
 
     if (!isFinite(lambda)) {
-        return ML_ERR_return_NAN2(printer, lineInfo4);
+        return ML_ERR_return_NAN2(printer);
     }
-    if (lambda < 0) return ML_ERR_return_NAN2(printer, lineInfo4);
+    if (lambda < 0) return ML_ERR_return_NAN2(printer);
     if (lambda === 0) return 0;
 
     const rc = R_Q_P01_boundaries(lowerTail, logP, p, 0, Infinity);

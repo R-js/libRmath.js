@@ -1,6 +1,6 @@
-import { debug } from '@mangos/debug';
+import createNS from '@common/debug-frontend';
 
-import { ML_ERR_return_NAN2, lineInfo4, R_Q_P01_boundaries, R_Q_P01_check } from '@common/logger';
+import { ML_ERR_return_NAN2, R_Q_P01_boundaries, R_Q_P01_check } from '@common/logger';
 import { M_LN2, R_D__0, DBL_MIN } from '@lib/r-func';
 import { R_DT_Clog, R_DT_log, R_DT_qIv } from '@dist/exp/expm1';
 import { dgamma } from './dgamma';
@@ -8,7 +8,7 @@ import { lgammafn_sign as lgammafn } from '@special/gamma/lgammafn_sign';
 import { pgamma, pgamma_raw, lgamma1p } from './pgamma';
 import { qnorm } from '@dist/normal/qnorm';
 
-const printer_qchisq_appr = debug('qchisq_appr');
+const printer_qchisq_appr = createNS('qchisq_appr');
 
 function qchisq_appr(
     p: number,
@@ -40,7 +40,7 @@ function qchisq_appr(
         return rc;
     }
     if (nu <= 0) {
-        return ML_ERR_return_NAN2(printer_qchisq_appr, lineInfo4);
+        return ML_ERR_return_NAN2(printer_qchisq_appr);
     }
 
     const alpha = 0.5 * nu; /* = [pq]gamma() shape */
@@ -87,7 +87,7 @@ function qchisq_appr(
     return ch;
 }
 
-const printer_qgamma = debug('qgamma');
+const printer_qgamma = createNS('qgamma');
 
 /*			shape = alpha */
 const EPS1 = 1e-2;
@@ -137,7 +137,9 @@ export function qgamma(p: number, alpha: number, scale: number, lower_tail: bool
     if (rc !== undefined) {
         return rc;
     }
-    if (alpha < 0 || scale <= 0) return ML_ERR_return_NAN2(printer_qgamma, lineInfo4);
+    if (alpha < 0 || scale <= 0) {
+        return ML_ERR_return_NAN2(printer_qgamma);
+    }
 
     if (alpha === 0) /* all mass at 0 : */ return 0;
 

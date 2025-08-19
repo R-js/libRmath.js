@@ -1,10 +1,10 @@
-import { debug } from '@mangos/debug';
-import { ML_ERR_return_NAN2, lineInfo4 } from '@common/logger';
+import createNS from '@common/debug-frontend';
+import { ML_ERR_return_NAN2 } from '@common/logger';
 import { R_D__0, R_D_exp, ceil, sqrt } from '@lib/r-func';
 import { dpois_raw } from '@dist/poisson/dpois';
 import { dbeta_scalar } from './dbeta';
 
-const printer = debug('dnbeta');
+const printer = createNS('dnbeta');
 
 const eps = 1e-15;
 
@@ -23,11 +23,11 @@ export function dnbeta_scalar(x: number, a: number, b: number, ncp: number, give
 
     if (isNaN(x) || isNaN(a) || isNaN(b) || isNaN(ncp)) return x + a + b + ncp;
     if (ncp < 0 || a <= 0 || b <= 0) {
-        return ML_ERR_return_NAN2(printer, lineInfo4);
+        return ML_ERR_return_NAN2(printer);
     }
 
     if (!isFinite(a) || !isFinite(b) || !isFinite(ncp)) {
-        return ML_ERR_return_NAN2(printer, lineInfo4);
+        return ML_ERR_return_NAN2(printer);
     }
 
     if (x < 0 || x > 1) {

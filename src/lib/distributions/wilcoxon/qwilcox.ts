@@ -1,8 +1,8 @@
 
 
-import { debug } from '@mangos/debug';
+import createNS from '@common/debug-frontend';
 
-import { ML_ERR_return_NAN2, lineInfo4, R_Q_P01_check } from '@common/logger';
+import { ML_ERR_return_NAN2, R_Q_P01_check } from '@common/logger';
 import { R_DT_0, R_DT_1, DBL_EPSILON } from '@lib/r-func';
 
 import { R_DT_qIv } from '@dist/exp/expm1';
@@ -10,7 +10,7 @@ import { cwilcox } from './cwilcox';
 import { WilcoxonCache } from './WilcoxonCache';
 import { choose } from '@special/choose';
 
-const printer_qwilcox = debug('qwilcox');
+const printer_qwilcox = createNS('qwilcox');
 
 export function qwilcox(x: number, m: number, n: number, lowerTail = true, logP = false): number {
     m = Math.round(m);
@@ -21,7 +21,7 @@ export function qwilcox(x: number, m: number, n: number, lowerTail = true, logP 
         return x + m + n;
     }
     if (!isFinite(x) || !isFinite(m) || !isFinite(n)) {
-        return ML_ERR_return_NAN2(printer_qwilcox, lineInfo4);
+        return ML_ERR_return_NAN2(printer_qwilcox);
     }
 
     const rc = R_Q_P01_check(logP, x);
@@ -30,7 +30,7 @@ export function qwilcox(x: number, m: number, n: number, lowerTail = true, logP 
     }
 
     if (m <= 0 || n <= 0) {
-        return ML_ERR_return_NAN2(printer_qwilcox, lineInfo4);
+        return ML_ERR_return_NAN2(printer_qwilcox);
     }
 
     if (x === R_DT_0(lowerTail, logP)) {
@@ -47,14 +47,14 @@ export function qwilcox(x: number, m: number, n: number, lowerTail = true, logP 
     let q = 0;
     if (x <= 0.5) {
         x = x - 10 * DBL_EPSILON;
-        for (;;) {
+        for (; ;) {
             p += cwilcox(q, m, n, w) / c;
             if (p >= x) break;
             q++;
         }
     } else {
         x = 1 - x + 10 * DBL_EPSILON;
-        for (;;) {
+        for (; ;) {
             p += cwilcox(q, m, n, w) / c;
             if (p > x) {
                 q = Math.trunc(m * n - q);

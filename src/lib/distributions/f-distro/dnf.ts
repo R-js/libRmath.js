@@ -1,12 +1,12 @@
-import { debug } from '@mangos/debug';
-import { ML_ERR_return_NAN2, lineInfo4 } from '@common/logger';
+import createNS from '@common/debug-frontend';
+import { ML_ERR_return_NAN2 } from '@common/logger';
 import { R_D__0 } from '@lib/r-func';
 
 import { dnbeta_scalar } from '@dist/beta/dnbeta';
 import { dnchisq } from '@dist/chi-2/dnchisq';
 import { dgamma } from '@dist/gamma/dgamma';
 
-const printer = debug('dnf');
+const printer = createNS('dnf');
 
 export function dnf(x: number, df1: number, df2: number, ncp: number, giveLog: boolean): number {
     let z: number;
@@ -21,14 +21,14 @@ export function dnf(x: number, df1: number, df2: number, ncp: number, giveLog: b
      *   return df(x, df1, df2, give_log); */
 
     if (df1 <= 0 || df2 <= 0 || ncp < 0) {
-        return ML_ERR_return_NAN2(printer, lineInfo4);
+        return ML_ERR_return_NAN2(printer);
     }
     if (x < 0) {
         return R_D__0(giveLog);
     }
     if (!isFinite(ncp)) {
         /* ncp = +Inf -- FIXME?: in some cases, limit exists */
-        return ML_ERR_return_NAN2(printer, lineInfo4);
+        return ML_ERR_return_NAN2(printer);
     }
 
     /* This is not correct for  df1 == 2, ncp > 0 - and seems unneeded:

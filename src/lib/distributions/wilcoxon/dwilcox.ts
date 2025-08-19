@@ -1,14 +1,14 @@
 
 
-import { debug } from '@mangos/debug';
+import createNS from '@common/debug-frontend';
 
-import { ML_ERR_return_NAN2, lineInfo4 } from '@common/logger';
+import { ML_ERR_return_NAN2 } from '@common/logger';
 import { R_D__0, log as _log, round } from '@lib/r-func';
 import { choose, lchoose } from '@lib/special/choose';
 import { cwilcox } from './cwilcox';
 import { WilcoxonCache } from './WilcoxonCache';
 
-const printer_dwilcox = debug('dwilcox');
+const printer_dwilcox = createNS('dwilcox');
 
 export function dwilcox(x: number, m: number, n: number, log = false): number {
     m = round(m);
@@ -28,7 +28,7 @@ export function dwilcox(x: number, m: number, n: number, log = false): number {
 
     if (m <= 0 || n <= 0) {
         // console.log(`2. x:${x}, m:${m}, n:${n}`);
-        return ML_ERR_return_NAN2(printer_dwilcox, lineInfo4);
+        return ML_ERR_return_NAN2(printer_dwilcox);
     }
 
     if (Math.abs(x - Math.round(x)) > 1e-7) {

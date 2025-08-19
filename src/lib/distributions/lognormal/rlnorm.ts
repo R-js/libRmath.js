@@ -1,13 +1,13 @@
-import { debug } from '@mangos/debug';
-import { ML_ERR_return_NAN2, lineInfo4 } from '@common/logger';
+import createNS from '@common/debug-frontend';
+import { ML_ERR_return_NAN2 } from '@common/logger';
 import { rnormOne } from '@dist/normal/rnorm';
 import { exp } from '@lib/r-func';
 
-const printer = debug('rlnorm');
+const printer = createNS('rlnorm');
 
 export function rlnormOne(meanlog = 0, sdlog = 1): number {
     if (isNaN(meanlog) || !isFinite(sdlog) || sdlog < 0) {
-        return ML_ERR_return_NAN2(printer, lineInfo4);
+        return ML_ERR_return_NAN2(printer);
     }
     return exp(rnormOne(meanlog, sdlog));
 }

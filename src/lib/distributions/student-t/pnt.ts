@@ -1,8 +1,8 @@
 
 
-import { debug } from '@mangos/debug';
+import createNS from '@common/debug-frontend';
 import { pbeta } from '@dist/beta/pbeta';
-import { ME, ML_ERR_return_NAN2, lineInfo4, ML_ERROR2 } from '@common/logger';
+import { ME, ML_ERR_return_NAN2, ML_ERROR3 } from '@common/logger';
 import {
     M_LN_SQRT_PI,
     M_SQRT_2dPI,
@@ -24,7 +24,7 @@ import { lgamma } from '@special/gamma';
 import { pnorm5 as pnorm } from '../normal/pnorm';
 import { pt } from './pt';
 
-const printer_pnt = debug('pnt');
+const printer_pnt = createNS('pnt');
 
 const DBL_MIN_EXP = -1021;
 const itrmax = 1000;
@@ -46,7 +46,7 @@ function finis(tnc: number, del: number, lower_tail: boolean, negdel: boolean, l
 
     */
     if (tnc > 1 - 1e-10 && lower_tail) {
-        ML_ERROR2(ME.ME_PRECISION, 'pnt{final}', printer_pnt);
+        ML_ERROR3(printer_pnt, ME.ME_PRECISION, 'pnt{final}');
     }
     const rc = R_DT_val(lower_tail, log_p, min(tnc, 1) /* Precaution */);
     printer_pnt('rc:%d, tnc:%d, log_p:%s, lower_tail:%s', rc, tnc, log_p, lower_tail);
@@ -79,7 +79,7 @@ export function pnt(t: number, df: number, ncp: number, lower_tail: boolean, log
     }
 
     if (df <= 0.0) {
-        return ML_ERR_return_NAN2(printer_pnt, lineInfo4);
+        return ML_ERR_return_NAN2(printer_pnt);
     }
 
     if (!isFinite(t)) {
@@ -159,15 +159,15 @@ export function pnt(t: number, df: number, ncp: number, lower_tail: boolean, log
             /* underflow! */
             printer_pnt('p=%d, underflow protection', p);
             /*========== really use an other algorithm for this case !!! */
-            ML_ERROR2(ME.ME_UNDERFLOW, 'pnt', printer_pnt);
-            ML_ERROR2(ME.ME_RANGE, 'pnt', printer_pnt); /* |ncp| too large */
+            ML_ERROR3(printer_pnt, ME.ME_UNDERFLOW, 'pnt');
+            ML_ERROR3(printer_pnt, ME.ME_RANGE, 'pnt'); /* |ncp| too large */
             return R_DT_0(lower_tail, log_p);
         }
 
         printer_pnt(
             'it  1e5*(godd,   geven)|          p           q           s' +
-                /* 1.3 1..4..7.9 1..4..7.9|1..4..7.901 1..4..7.901 1..4..7.901 */
-                '        pnt(*)     errbd'
+            /* 1.3 1..4..7.9 1..4..7.9|1..4..7.901 1..4..7.901 1..4..7.901 */
+            '        pnt(*)     errbd'
         );
         /* 1..4..7..0..34 1..4..7.9*/
 
@@ -215,7 +215,7 @@ export function pnt(t: number, df: number, ncp: number, lower_tail: boolean, log
 
             if (s < -1e-10) {
                 /* happens e.g. for (t,df,ncp)=(40,10,38.5), after 799 it.*/
-                ML_ERROR2(ME.ME_PRECISION, 'pnt', printer_pnt);
+                ML_ERROR3(printer_pnt, ME.ME_PRECISION, 'pnt');
                 printer_pnt('goto:true, s = %d < 0 !!! ---> non-convergence!!', s);
                 return finis(tnc, del, lower_tail, negdel, log_p);
             }
@@ -233,7 +233,7 @@ export function pnt(t: number, df: number, ncp: number, lower_tail: boolean, log
             }
         } //for (it = 1; it <= itrmax; it++)
         /* non-convergence:*/
-        ML_ERROR2(ME.ME_NOCONV, 'pnt', printer_pnt);
+        ML_ERROR3(printer_pnt, ME.ME_NOCONV, 'pnt');
     } else {
         tnc = 0;
     }

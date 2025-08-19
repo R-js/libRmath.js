@@ -1,7 +1,7 @@
 
 
-import { debug } from '@mangos/debug';
-import { ML_ERR_return_NAN2, lineInfo4, R_Q_P01_check, ML_ERROR2, ME } from '@common/logger';
+import createNS from '@common/debug-frontend';
+import { ML_ERR_return_NAN2, R_Q_P01_check, ML_ERROR3, ME } from '@common/logger';
 import { R_DT_qIv } from '@dist/exp/expm1';
 import { cpu_csignrank } from './csignrank';
 
@@ -10,7 +10,7 @@ import { growMemory } from './csignrank_wasm';
 
 import type { CSingRank, CSignRankMap } from './csignrank_wasm';
 
-const printer = debug('qsignrank');
+const printer = createNS('qsignrank');
 
 const PRECISION_LOWER_LIMIT = -DBL_MIN_VALUE_LN / M_LN2;
 
@@ -43,7 +43,7 @@ export function qsignrank(p: number, n: number, lowerTail = true, logP = false):
     }
 
     if (!isFinite(p) || !isFinite(n)) {
-        return ML_ERR_return_NAN2(printer, lineInfo4);
+        return ML_ERR_return_NAN2(printer);
     }
 
     // precision check, add this to upstream r-source
@@ -51,7 +51,7 @@ export function qsignrank(p: number, n: number, lowerTail = true, logP = false):
     // will be zero if n > -1074
     if (n > PRECISION_LOWER_LIMIT) {
         //
-        ML_ERROR2(ME.ME_UNDERFLOW, 'n > 1074', printer);
+        ML_ERROR3(printer, ME.ME_UNDERFLOW, 'n > 1074');
         return NaN;
     }
 
@@ -61,7 +61,7 @@ export function qsignrank(p: number, n: number, lowerTail = true, logP = false):
     }
 
     if (n <= 0) {
-        return ML_ERR_return_NAN2(printer, lineInfo4);
+        return ML_ERR_return_NAN2(printer);
     }
 
     if (p === R_DT_0(lowerTail, logP)) {
@@ -87,14 +87,14 @@ export function qsignrank(p: number, n: number, lowerTail = true, logP = false):
     let q = 0;
     if (p <= 0.5) {
         p = p - 10 * DBL_EPSILON;
-        for (;;) {
+        for (; ;) {
             _p += _csignrank(q, n, u, c) * f;
             if (_p >= p) break;
             q++;
         }
     } else {
         p = 1 - p + 10 * DBL_EPSILON;
-        for (;;) {
+        for (; ;) {
             _p += _csignrank(q, n, u, c) * f;
             if (_p > p) {
                 q = trunc(u - q);

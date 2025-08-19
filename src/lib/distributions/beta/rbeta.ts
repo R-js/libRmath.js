@@ -1,9 +1,9 @@
-import { debug } from '@mangos/debug';
-import { ML_ERR_return_NAN2, lineInfo4 } from '@common/logger';
+import createNS from '@common/debug-frontend';
+import { ML_ERR_return_NAN2 } from '@common/logger';
 import { DBL_MAX_EXP, min, max, log } from '@lib/r-func';
 import { globalUni } from '@rng/global-rng';
 
-const printer = debug('rbeta');
+const printer = createNS('rbeta');
 
 export const expmax = DBL_MAX_EXP * Math.LN2; /* = log(DBL_MAX) */
 
@@ -11,20 +11,26 @@ export function rbetaOne(shape1: number, shape2: number): number {
     const rng = globalUni();
 
     if (isNaN(shape1) || isNaN(shape2)) {
-        return ML_ERR_return_NAN2(printer, lineInfo4);
+        return ML_ERR_return_NAN2(printer);
     }
     if (shape1 < 0 || shape2 < 0) {
-        return ML_ERR_return_NAN2(printer, lineInfo4);
+        return ML_ERR_return_NAN2(printer);
     }
-    if (!isFinite(shape1) && !isFinite(shape2))
+    if (!isFinite(shape1) && !isFinite(shape2)) {
         // a = b = Inf : all mass at 1/2
         return 0.5;
-    if (shape1 === 0 && shape2 === 0)
+    }
+    if (shape1 === 0 && shape2 === 0) {
         // point mass 1/2 at each of {0,1} :
         return rng.random() < 0.5 ? 0 : 1;
+    }
     // now, at least one of a, b is finite and positive
-    if (!isFinite(shape1) || shape2 === 0) return 1.0;
-    if (!isFinite(shape2) || shape1 === 0) return 0.0;
+    if (!isFinite(shape1) || shape2 === 0) {
+        return 1.0;
+    }
+    if (!isFinite(shape2) || shape1 === 0) {
+        return 0.0;
+    }
 
     let r;
     let s;
@@ -82,7 +88,7 @@ export function rbetaOne(shape1: number, shape2: number): number {
             k2 = 0.25 + (0.5 + 0.25 / delta) * a;
         }
         /* FIXME: "do { } while()", but not trivially because of "continue"s:*/
-        for (;;) {
+        for (; ;) {
             u1 = rng.random();
             u2 = rng.random();
             if (u1 < 0.5) {

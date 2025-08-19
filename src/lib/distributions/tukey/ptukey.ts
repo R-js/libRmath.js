@@ -1,15 +1,15 @@
 
 
-import { debug } from '@mangos/debug';
+import createNS from '@common/debug-frontend';
 import { wprob } from './wprob';
 
-import { ME, ML_ERR_return_NAN2, lineInfo4, ML_ERROR2 } from '@common/logger';
+import { ME, ML_ERR_return_NAN2, ML_ERROR3 } from '@common/logger';
 
 import { R_DT_val, R_DT_0, R_DT_1, log, M_LN2, sqrt, exp, min } from '@lib/r-func';
 
 import { lgammafn_sign } from '@special/gamma';
 
-const printer_ptukey = debug('ptukey');
+const printer_ptukey = createNS('ptukey');
 const nlegq = 16;
 const ihalfq = 8;
 
@@ -113,7 +113,7 @@ export function ptukey(q: number, nmeans: number, df: number, nrnages = 1, lower
     //let j: number;
 
     if (isNaN(q) || isNaN(nrnages) || isNaN(nmeans) || isNaN(df)) {
-        return ML_ERR_return_NAN2(printer_ptukey, lineInfo4);
+        return ML_ERR_return_NAN2(printer_ptukey);
     }
 
     if (q <= 0) {
@@ -124,7 +124,7 @@ export function ptukey(q: number, nmeans: number, df: number, nrnages = 1, lower
     /* there must be at least two values */
 
     if (df < 2 || nrnages < 1 || nmeans < 2) {
-        return ML_ERR_return_NAN2(printer_ptukey, lineInfo4);
+        return ML_ERR_return_NAN2(printer_ptukey);
     }
 
     if (!isFinite(q)) {
@@ -214,7 +214,7 @@ export function ptukey(q: number, nmeans: number, df: number, nrnages = 1, lower
     } //for
 
     if (otsum > eps2) {
-        ML_ERROR2(ME.ME_PRECISION, 'ptukey', printer_ptukey);
+        ML_ERROR3(printer_ptukey, ME.ME_PRECISION, 'ptukey');
     }
     ans = min(1, ans);
     return R_DT_val(lowerTail, logP, ans);

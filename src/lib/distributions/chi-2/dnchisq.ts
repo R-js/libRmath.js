@@ -1,11 +1,11 @@
-import { debug } from '@mangos/debug';
-import { ML_ERR_return_NAN2, lineInfo4 } from '@common/logger';
+import createNS from '@common/debug-frontend';
+import { ML_ERR_return_NAN2 } from '@common/logger';
 import { R_D__0, R_D_val } from '@lib/r-func';
 
 import { dchisq } from './dchisq';
 import { dpois_raw } from '@dist/poisson/dpois';
 
-const printer_dnchisq = debug('dnchisq');
+const printer_dnchisq = createNS('dnchisq');
 const eps = 5e-15;
 
 export function dnchisq(x: number, df: number, ncp: number, give_log: boolean): number {
@@ -23,7 +23,7 @@ export function dnchisq(x: number, df: number, ncp: number, give_log: boolean): 
     }
 
     if (!isFinite(df) || !isFinite(ncp) || ncp < 0 || df < 0) {
-        return ML_ERR_return_NAN2(printer_dnchisq, lineInfo4);
+        return ML_ERR_return_NAN2(printer_dnchisq);
     }
 
     if (x < 0) {

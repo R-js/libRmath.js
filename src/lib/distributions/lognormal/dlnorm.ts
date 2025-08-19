@@ -1,7 +1,7 @@
-import { debug } from '@mangos/debug';
-import { ML_ERR_return_NAN2, lineInfo4 } from '@common/logger';
+import createNS from '@common/debug-frontend';
+import { ML_ERR_return_NAN2 } from '@common/logger';
 import { M_1_SQRT_2PI, M_LN_SQRT_2PI, R_D__0, log as _log } from '@lib/r-func';
-const printer = debug('dlnorm');
+const printer = createNS('dlnorm');
 
 export function dlnorm(x: number, meanlog = 0, sdlog = 1, log = false): number {
     if (isNaN(x) || isNaN(meanlog) || isNaN(sdlog)) {
@@ -9,7 +9,7 @@ export function dlnorm(x: number, meanlog = 0, sdlog = 1, log = false): number {
     }
     if (sdlog <= 0) {
         if (sdlog < 0) {
-            return ML_ERR_return_NAN2(printer, lineInfo4);
+            return ML_ERR_return_NAN2(printer);
         }
         // sdlog == 0 :
         return Math.log(x) === meanlog ? Infinity : R_D__0(log);

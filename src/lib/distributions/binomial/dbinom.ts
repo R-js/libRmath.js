@@ -1,13 +1,13 @@
-import { debug } from '@mangos/debug';
+import createNS from '@common/debug-frontend';
 
-import { ML_ERR_return_NAN2, lineInfo4 } from '@common/logger';
+import { ML_ERR_return_NAN2 } from '@common/logger';
 
 import { M_LN_2PI, R_D__0, R_D__1, R_D_exp, R_D_negInonint, R_D_nonint_check } from '@lib/r-func';
 
 import { bd0 } from '@lib/deviance';
 import { stirlerr } from '@lib/stirling';
 
-const printer = debug('dbinom');
+const printer = createNS('dbinom');
 
 function dbinom_raw(x: number, n: number, p: number, q: number, give_log: boolean): number {
     let lc: number;
@@ -43,9 +43,13 @@ function dbinom_raw(x: number, n: number, p: number, q: number, give_log: boolea
 
 function dbinom(x: number, n: number, prob: number, log = false): number {
     /* NaNs propagated correctly */
-    if (isNaN(x) || isNaN(n) || isNaN(prob)) return x + n + prob;
+    if (isNaN(x) || isNaN(n) || isNaN(prob)) {
+        return x + n + prob;
+    }
 
-    if (prob < 0 || prob > 1 || R_D_negInonint(n)) return ML_ERR_return_NAN2(printer, lineInfo4);
+    if (prob < 0 || prob > 1 || R_D_negInonint(n)) {
+        return ML_ERR_return_NAN2(printer);
+    }
 
     const ch = R_D_nonint_check(log, x, printer);
     if (ch !== undefined) {

@@ -1,9 +1,9 @@
-import { debug } from '@mangos/debug';
-import { ML_ERR_return_NAN2, lineInfo4 } from '@common/logger';
+import createNS from '@common/debug-frontend';
+import { ML_ERR_return_NAN2 } from '@common/logger';
 import { exp_rand } from '@dist/exp/sexp';
 import { globalNorm } from '../../rng/global-rng';
 
-const printer_rgamma = debug('rgamma');
+const printer_rgamma = createNS('rgamma');
 
 /* Constants : */
 const sqrt32 = 5.656854;
@@ -58,13 +58,13 @@ export function rgamma(a: number, scale: number): number {
     if (a === 0) return 0;
 
     if (!isFinite(a) || !isFinite(scale) || a < 0.0 || scale < 0.0) {
-        return ML_ERR_return_NAN2(printer_rgamma, lineInfo4);
+        return ML_ERR_return_NAN2(printer_rgamma);
     }
     // a > 0
     if (a < 1) {
         /* GS algorithm for parameters a < 1 */
         e = 1.0 + exp_m1 * a;
-        for (;;) {
+        for (; ;) {
             p = e * rng.uniform_rng.random();
             if (p >= 1.0) {
                 x = -Math.log((e - p) / a);
@@ -139,7 +139,7 @@ export function rgamma(a: number, scale: number): number {
         if (Math.log(1.0 - u) <= q) return scale * ret_val;
     }
 
-    for (;;) {
+    for (; ;) {
         /* Step 8: e = standard exponential deviate
          *	u =  0,1 -uniform deviate
          *	t = (b,si)-double exponential (laplace) sample */

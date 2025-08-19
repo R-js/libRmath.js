@@ -1,13 +1,18 @@
-import { debug } from '@mangos/debug';
+import createNS from '@common/debug-frontend';
 
 import { R_D_qIv } from '@lib/r-func';
 
-import { ME, ML_ERROR2, ML_ERR_return_NAN2, lineInfo4, R_Q_P01_boundaries } from '@common/logger';
+import {
+    ME,
+    ML_ERROR3,
+    ML_ERR_return_NAN2,
+    R_Q_P01_boundaries
+} from '@common/logger';
 
 import { qchisq } from './qchisq';
 import { pnchisq_raw } from './pnchisq';
 
-const printer = debug('qnchisq');
+const printer = createNS('qnchisq');
 
 const accu = 1e-13;
 const racc = 4 * Number.EPSILON;
@@ -30,7 +35,7 @@ export function qnchisq(p: number, df: number, ncp: number, lower_tail: boolean,
     }
 
     if (!isFinite(df)) {
-        return ML_ERR_return_NAN2(printer, lineInfo4);
+        return ML_ERR_return_NAN2(printer);
     }
 
     /* Was
@@ -38,7 +43,7 @@ export function qnchisq(p: number, df: number, ncp: number, lower_tail: boolean,
      * if (df < 1 || ncp < 0) ML_ERR_return_NAN;
      */
     if (df < 0 || ncp < 0) {
-        return ML_ERR_return_NAN2(printer, lineInfo4);
+        return ML_ERR_return_NAN2(printer);
     }
 
     const rc = R_Q_P01_boundaries(lower_tail, log_p, p, 0, Infinity);
@@ -68,46 +73,47 @@ export function qnchisq(p: number, df: number, ncp: number, lower_tail: boolean,
 
     if (!lower_tail && ncp >= 80) {
         // in this case, pnchisq() works via lower_tail = TRUE
-        if (pp < 1e-10) ML_ERROR2(ME.ME_PRECISION, 'qnchisq', printer);
-        // p = R_DT_qIv(p)
-        p = log_p ? -Math.expm1(pp) : 1 - pp;
-        lower_tail = true;
-    } else {
-        p = pp;
-    }
+        if (pp < 1e-10) {
+            ML_ERROR3(printer, ME.ME_PRECISION, 'qnchisq');
+            // p = R_DT_qIv(p)
+            p = log_p ? -Math.expm1(pp) : 1 - pp;
+            lower_tail = true;
+        } else {
+            p = pp;
+        }
 
-    pp = Math.min(1 - Number.EPSILON, p * (1 + Eps));
-    if (lower_tail) {
-        for (; ux < DBL_MAX && pnchisq_raw(ux, df, ncp, Eps, rEps, 10000, true, false) < pp; ux *= 2);
-        pp = p * (1 - Eps);
-        for (
-            lx = Math.min(ux0, DBL_MAX);
-            lx > DBL_MIN && pnchisq_raw(lx, df, ncp, Eps, rEps, 10000, true, false) > pp;
-            lx *= 0.5
-        );
-    } else {
-        for (; ux < DBL_MAX && pnchisq_raw(ux, df, ncp, Eps, rEps, 10000, false, false) > pp; ux *= 2);
-        pp = p * (1 - Eps);
-        for (
-            lx = Math.min(ux0, DBL_MAX);
-            lx > DBL_MIN && pnchisq_raw(lx, df, ncp, Eps, rEps, 10000, false, false) < pp;
-            lx *= 0.5
-        );
-    }
+        pp = Math.min(1 - Number.EPSILON, p * (1 + Eps));
+        if (lower_tail) {
+            for (; ux < DBL_MAX && pnchisq_raw(ux, df, ncp, Eps, rEps, 10000, true, false) < pp; ux *= 2);
+            pp = p * (1 - Eps);
+            for (
+                lx = Math.min(ux0, DBL_MAX);
+                lx > DBL_MIN && pnchisq_raw(lx, df, ncp, Eps, rEps, 10000, true, false) > pp;
+                lx *= 0.5
+            );
+        } else {
+            for (; ux < DBL_MAX && pnchisq_raw(ux, df, ncp, Eps, rEps, 10000, false, false) > pp; ux *= 2);
+            pp = p * (1 - Eps);
+            for (
+                lx = Math.min(ux0, DBL_MAX);
+                lx > DBL_MIN && pnchisq_raw(lx, df, ncp, Eps, rEps, 10000, false, false) < pp;
+                lx *= 0.5
+            );
+        }
 
-    /* 2. interval (lx,ux)  halving : */
-    if (lower_tail) {
-        do {
-            nx = 0.5 * (lx + ux);
-            if (pnchisq_raw(nx, df, ncp, accu, racc, 100000, true, false) > p) ux = nx;
-            else lx = nx;
-        } while ((ux - lx) / nx > accu);
-    } else {
-        do {
-            nx = 0.5 * (lx + ux);
-            if (pnchisq_raw(nx, df, ncp, accu, racc, 100000, false, false) < p) ux = nx;
-            else lx = nx;
-        } while ((ux - lx) / nx > accu);
+        /* 2. interval (lx,ux)  halving : */
+        if (lower_tail) {
+            do {
+                nx = 0.5 * (lx + ux);
+                if (pnchisq_raw(nx, df, ncp, accu, racc, 100000, true, false) > p) ux = nx;
+                else lx = nx;
+            } while ((ux - lx) / nx > accu);
+        } else {
+            do {
+                nx = 0.5 * (lx + ux);
+                if (pnchisq_raw(nx, df, ncp, accu, racc, 100000, false, false) < p) ux = nx;
+                else lx = nx;
+            } while ((ux - lx) / nx > accu);
+        }
+        return 0.5 * (ux + lx);
     }
-    return 0.5 * (ux + lx);
-}

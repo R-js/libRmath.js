@@ -1,10 +1,10 @@
-import { debug } from '@mangos/debug';
+import createNS from '@common/debug-frontend';
 
-import { ML_ERR_return_NAN2, lineInfo4 } from '@common/logger';
+import { ML_ERR_return_NAN2 } from '@common/logger';
 import { R_D__0, R_D__1, R_D_negInonint, R_D_nonint_check } from '@lib/r-func';
 import { dbinom_raw } from '@dist/binomial/dbinom';
 
-const printer = debug('dhyper');
+const printer = createNS('dhyper');
 
 export function dhyper(x: number, m: number, n: number, k: number, log = false): number {
     if (isNaN(x) || isNaN(m) || isNaN(n) || isNaN(k)) {
@@ -12,7 +12,7 @@ export function dhyper(x: number, m: number, n: number, k: number, log = false):
     }
 
     if (R_D_negInonint(m) || R_D_negInonint(n) || R_D_negInonint(k) || k > m + n) {
-        return ML_ERR_return_NAN2(printer, lineInfo4);
+        return ML_ERR_return_NAN2(printer);
     }
     if (x < 0) {
         return R_D__0(log);

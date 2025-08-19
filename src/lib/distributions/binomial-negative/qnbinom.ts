@@ -1,6 +1,6 @@
-import { debug } from '@mangos/debug';
+import createNS from '@common/debug-frontend';
 
-import { ML_ERR_return_NAN2, lineInfo4, R_Q_P01_boundaries } from '@common/logger';
+import { ML_ERR_return_NAN2, R_Q_P01_boundaries } from '@common/logger';
 import { R_DT_0, R_DT_1 } from '@lib/r-func';
 
 import { NumberW } from '@common/toms708/NumberW';
@@ -9,13 +9,13 @@ import { R_DT_qIv } from '@dist/exp/expm1';
 import { qnorm } from '@dist/normal/qnorm';
 import { pnbinom } from './pnbinom';
 
-const printer_do_search = debug('do_search');
+const printer_do_search = createNS('do_search');
 
 function do_search(y: number, z: NumberW, p: number, n: number, pr: number, incr: number): number {
     printer_do_search('start: y:%d, z:%o, p:%d, n:%d, pr:%d, incr:%d', y, z, p, n, pr, incr);
     if (z.val >= p) {
         //* search to the left
-        for (;;) {
+        for (; ;) {
             if (
                 y === 0 ||
                 (z.val = pnbinom(
@@ -34,7 +34,7 @@ function do_search(y: number, z: NumberW, p: number, n: number, pr: number, incr
     } else {
         // search to the right
 
-        for (;;) {
+        for (; ;) {
             y = y + incr;
             if (
                 (z.val = pnbinom(
@@ -52,7 +52,7 @@ function do_search(y: number, z: NumberW, p: number, n: number, pr: number, incr
     } //if
 }
 
-const printer_qnbinom = debug('qnbinom');
+const printer_qnbinom = createNS('qnbinom');
 
 export function qnbinom(p: number, size: number, prob: number, lower_tail: boolean, log_p: boolean): number {
     let y;
@@ -69,7 +69,7 @@ export function qnbinom(p: number, size: number, prob: number, lower_tail: boole
     if (prob === 0 && size === 0) return 0;
 
     if (prob <= 0 || prob > 1 || size < 0) {
-        return ML_ERR_return_NAN2(printer_qnbinom, lineInfo4);
+        return ML_ERR_return_NAN2(printer_qnbinom);
     }
 
     if (prob === 1 || size === 0) return 0;
@@ -91,11 +91,17 @@ export function qnbinom(p: number, size: number, prob: number, lower_tail: boole
         // code below will not execute because of "R_Q_P01_boundaries" check above
         const rdt0 = R_DT_0(lower_tail, log_p);
         const rdt1 = R_DT_1(lower_tail, log_p);
-        if (p === rdt0) return 0;
-        if (p === rdt1) return Infinity;
+        if (p === rdt0) {
+            return 0;
+        }
+        if (p === rdt1) {
+            return Infinity;
+        }
     }
     /* temporary hack --- FIXME --- */
-    if (p + 1.01 * Number.EPSILON >= 1) return Infinity;
+    if (p + 1.01 * Number.EPSILON >= 1) {
+        return Infinity;
+    }
 
     /* y := approx.value (Cornish-Fisher expansion) :  */
     z.val = qnorm(p, 0, 1, /*lower_tail*/ true, /*log_p*/ false);

@@ -37,15 +37,18 @@ describe('pexp', function () {
         const nan = pexp(0, NaN);
         expect(nan).toBeNaN();
     });
+
     it('rate = -3 (<0)', () => {
         const nan = pexp(0, -3);
         expect(nan).toBeNaN();
         expect(pexpDomainWarns()).toHaveLength(1);
     });
+
     it('asLog = true, rate = 5, x=2', () => {
         const z = pexp(2, 5, undefined, true);
         expect(z).toEqualFloatingPointBinary(-4.5400960370489214e-5, 51);
     });
+
     it('defaults', () => {
         const z = pexp(2);
         expect(z).toEqualFloatingPointBinary(0.8646647167633873);

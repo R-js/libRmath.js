@@ -1,8 +1,8 @@
 
 
-import { debug } from '@mangos/debug';
+import createNS from '@common/debug-frontend';
 
-import { ML_ERR_return_NAN2, lineInfo4 } from '@common/logger';
+import { ML_ERR_return_NAN2 } from '@common/logger';
 import { globalNorm } from '@rng/global-rng';
 
 import { imax2, imin2, M_1_SQRT_2PI, trunc, log, abs, pow, exp, floor, sqrt, isFinite } from '@lib/r-func';
@@ -23,7 +23,7 @@ const one_7 = 0.1428571428571428571;
 const one_12 = 0.0833333333333333333;
 const one_24 = 0.0416666666666666667;
 
-const printer_rpois = debug('rpois');
+const printer_rpois = createNS('rpois');
 
 /* Factorial Table (0:9)! */
 const fact = [1, 1, 2, 6, 24, 120, 720, 5040, 40320, 362880];
@@ -69,7 +69,7 @@ export function rpoisOne(lambda: number): number {
     let kflag = 0;
 
     if (!isFinite(lambda) || lambda < 0) {
-        return ML_ERR_return_NAN2(printer_rpois, lineInfo4);
+        return ML_ERR_return_NAN2(printer_rpois);
     }
     if (lambda === 0) return 0;
 
@@ -98,7 +98,7 @@ export function rpoisOne(lambda: number): number {
         q = p0 = p = exp(-lambda);
         //}
 
-        for (;;) {
+        for (; ;) {
             /* Step U. uniform sample for inversion method */
             u = rng.uniform_rng.random();
             if (u <= p0) return 0;
@@ -164,7 +164,7 @@ export function rpoisOne(lambda: number): number {
 
     let gotoStepF = false;
     let once = true;
-    for (;;) {
+    for (; ;) {
         if (once) {
             once = false;
             if (g >= 0) {
