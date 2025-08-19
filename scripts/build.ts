@@ -6,14 +6,13 @@
 
 
 import { mkdirSync, readFileSync, rmSync } from 'node:fs';
-import { writeFile } from 'node:fs/promises';
 import { writeFileSync } from 'node:fs';
 import { join, relative, dirname, extname } from 'node:path';
 import ts from 'typescript';
 import { parse } from 'acorn';
-import jxpath from '@mangos/jxpath';
 import { generate } from 'escodegen';
 import { verifyPaths, rankPaths, resolveToFullPath } from './helpers.mjs';
+import { recursiveDescend } from './nodeWalker';
 
 
 function removeSafeDir(dir) {
@@ -36,9 +35,9 @@ function createCompiler(config, sourceDir) {
         const compilerOptions = { ...config.compilerOptions, ...options };
         const { baseUrl, paths } = compilerOptions;
         const pathVerifyResult = verifyPaths(paths);
-        if (Array.isArray(pathVerifyResult)){
+        if (Array.isArray(pathVerifyResult)) {
             const messages = pathVerifyResult.join('\n');
-            throw new Error(message);
+            throw new Error(messages);
         }
         const { exactPaths, wildCardPaths } = rankPaths(paths);
         const host = ts.createCompilerHost(compilerOptions);
@@ -65,13 +64,38 @@ function createCompiler(config, sourceDir) {
 
                 switch (compilerOptions.module) {
                     case ts.ModuleKind.CommonJS: {
-                        const requireStatements = jxpath(
-                            '/**/[type=CallExpression]/callee/[type=Identifier]/[name=require]/../arguments/[type=Literal]/',
-                            astTree
+                        const requireStatements: any[] = [];
+                        recursiveDescend(
+                            astTree as any,
+                            (node: any) => {
+                                let flag = false;
+                                if (node?.type === 'CallExpression') {
+                                    const callee = node?.callee;
+                                    if (callee?.type === 'Identifier' && callee?.name === 'require') {
+                                        flag = true;
+                                    }
+                                }
+                                if (flag && node?.arguments) {
+                                    for (const args of node?.arguments) {
+                                        if (args?.type === 'Literal') {
+                                            return node;
+                                        }
+                                    }
+                                }
+                            },
+                            requireStatements
                         );
+                        const finalRequires = requireStatements
+                            .filter((_node: any) => _node?.arguments)
+                            .reduce((collector: any, _node: any) => {
+                                const _requireStatements = _node.arguments.filter((args: any) => args?.type === 'Literal');
+                                collector.push(..._requireStatements);
+                                return collector;
+                            }, []);
+
                         // loop over all .js and change them
 
-                        for (const node of requireStatements) {
+                        for (const node of finalRequires) {
                             node.value = resolveToFullPath(fileName, node.value, baseUrl, paths, exactPaths, wildCardPaths, '.cjs', possibleExtensions);
                         }
 
@@ -80,24 +104,40 @@ function createCompiler(config, sourceDir) {
                         break;
                     }
                     case ts.ModuleKind.ES2020: {
-                        const importStatements = Array.from(jxpath('/**/[type=ImportDeclaration]/source/', astTree));
-                        for (const node of importStatements) {
-                            if (node !== null && node !== undefined) {
-                                node.value = resolveToFullPath(fileName, node.value, baseUrl, paths, exactPaths, wildCardPaths, '.mjs', possibleExtensions);
-                            }
-                        }
-                        const exportStatements = Array.from(
-                            jxpath('/**/[type=/ExportAllDeclaration|ExportNamedDeclaration/]/source', astTree)
-                        );
-                        try {
-                            for (const node of exportStatements) {
-                                if (node !== null && node !== undefined) {
-                                    node.value = resolveToFullPath(fileName, node.value, baseUrl, paths, exactPaths, wildCardPaths, '.mjs', possibleExtensions);
+                        const importStatements: any[] = [];
+                        recursiveDescend(
+                            astTree as any,
+                            (node: any) => {
+                                let flag = false;
+                                if (node?.type === 'ImportDeclaration') {
+                                    if (node?.source) {
+                                        return node;
+                                    }
                                 }
-                            }
-                        } catch (err) {
-                            console.log(err);
-                        }
+                            },
+                            importStatements
+                        );
+                        importStatements
+                            .filter((_node: any) => _node?.source).forEach(_node => {
+                                _node.source.value = resolveToFullPath(fileName, _node.source.value, baseUrl, paths, exactPaths, wildCardPaths, '.mjs', possibleExtensions);
+                            });
+                        const exportStatements: any[] = [];
+                        recursiveDescend(
+                            astTree as any,
+                            (node: any) => {
+                                let flag = false;
+                                if (['ExportAllDeclaration', 'ExportNamedDeclaration'].includes(node?.type)) {
+                                    if (node?.source) {
+                                        return node;
+                                    }
+                                }
+                            },
+                            exportStatements
+                        );
+                        exportStatements
+                            .filter((_node: any) => _node?.source).forEach(_node => {
+                                _node.source.value = resolveToFullPath(fileName, _node.source.value, baseUrl, paths, exactPaths, wildCardPaths, '.mjs', possibleExtensions);
+                            });
                         contents = generate(astTree);
                         path = extname(path) === '' ? path + '.mjs' : path.slice(0, -extname(path).length) + '.mjs';
                         break;
@@ -149,7 +189,7 @@ function init(targetDir, commenjsDir, esmDir, roots) {
             outDir: undefined
         },
         ['.ts']
-);
+    );
 
     compile(
         roots,

@@ -1,6 +1,8 @@
 import { resolve , dirname, extname, join, basename, relative, sep } from 'node:path';
 import { lstatSync, readdirSync } from 'node:fs';
 
+                        
+
 export function verifyPaths(paths) {
     if (Object.keys(paths).length === 0){
         return true;

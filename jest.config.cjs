@@ -114,7 +114,6 @@ module.exports = {
     },
     setupFiles: ['<rootDir>/src/packages/__test__/jest-ext.d.ts'],
     setupFilesAfterEnv: [
-        '<rootDir>/src/packages/__test__/jest-extension.ts',
-        '<rootDir>/src/packages/__test__/mock-of-debug.ts'
+        '<rootDir>/src/packages/__test__/jest-extension.ts'
     ]
 };

@@ -79,16 +79,12 @@
         "README.md"
     ],
     "scripts": {
-        "build": "node --trace-warnings scripts/build.mjs",
+        "build": "tsx scripts/build.ts",
         "postbuild": "node --trace-warnings scripts/rollup.build.mjs",
         "prepublishOnly": "npm run build",
         "test": "jest --verbose"
     },
-    "dependencies": {
-        "@mangos/debug": "0.0.9-rc5"
-    },
     "devDependencies": {
-        "@mangos/jxpath": "1.0.13",
         "@rollup/plugin-node-resolve": "15.0.1",
         "@rollup/plugin-terser": "0.1.0",
         "@types/jest": "29.2.2",
@@ -99,6 +95,7 @@
         "ms": "3.0.0-canary.1",
         "rollup": "3.6.0",
         "ts-jest": "29.0.3",
+        "tsx": "4.20.4",
         "typescript": "4.5.2"
     },
     "engines": {

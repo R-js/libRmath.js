@@ -1,7 +1,7 @@
-import { debug } from '@mangos/debug';
+import createNS from '@common/debug-frontend';
 import { NumberW } from './NumberW';
 import { trunc, log, abs, min, pow } from '@lib/r-func';
-const printer_bratio = debug('Toms708.bratio');
+const printer_bratio = createNS('Toms708.bratio');
 /**
  * Computes the incomplete beta function
  * <p>
@@ -60,7 +60,7 @@ const aVec = new Float64Array([
     0.5e1,
 ]);
 
-const bVec = new Float64Array( [
+const bVec = new Float64Array([
     0.5,
     0.5,
     0.5,
@@ -652,7 +652,7 @@ export class Toms708 {
 
         const nMax = 42;
 
-        
+
 
         if (nData.val < 0) nData.val = 0;
 
@@ -849,7 +849,7 @@ export class Toms708 {
         // C  CONTINUED FRACTION CALCULATION
         // C
 
-        for (;;) {
+        for (; ;) {
             n++;
             t = n / a;
             w = n * (b - n) * x;

@@ -1,10 +1,10 @@
 /* want to compile log1p as Rlog1p if HAVE_LOG1P && !HAVE_WORKING_LOG1P */
-import { debug } from '@mangos/debug';
+import createNs from '@common/debug-frontend';
 import { chebyshev_eval } from '../../chebyshev/chebyshev';
-import { ME, ML_ERR_return_NAN2, ML_ERROR2, lineInfo4 } from '@common/logger';
+import { ME, ML_ERR_return_NAN2, ML_ERROR3 } from '@common/logger';
 import { abs as fabs, log } from '@lib/r-func';
 
-const printer = debug('log1p');
+const printer = createNs('log1p');
 
 import {
     NEGATIVE_INFINITY,
@@ -69,7 +69,9 @@ export default function log1p(x: number): number {
 
     if (x === 0) return 0; // speed
     if (x === -1) return NEGATIVE_INFINITY;
-    if (x < -1) return ML_ERR_return_NAN2(printer, lineInfo4);
+    if (x < -1) {
+        return ML_ERR_return_NAN2(printer);
+    }
 
     if (fabs(x) <= 0.375) {
         // Improve on speed (only);
@@ -83,7 +85,7 @@ export default function log1p(x: number): number {
     // else
     if (x < xmin) {
         // answer less than half precision because x too near -1
-        ML_ERROR2(ME.ME_PRECISION, lineInfo4, printer);
+        ML_ERROR3(printer, ME.ME_PRECISION, 'log1p');
     }
     return log(1 + x);
 }
