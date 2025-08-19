@@ -1,17 +1,13 @@
 
-
-
 import { globalUni, RNGkind } from '@rng/global-rng';
 import { rcauchy } from '..';
-import { cl } from '@common/debug-mangos-select';
 
 describe('rcauchy', function () {
 
     beforeEach(() => {
-        RNGkind({ uniform: "MERSENNE_TWISTER", normal: "INVERSION"});
+        RNGkind({ uniform: "MERSENNE_TWISTER", normal: "INVERSION" });
         globalUni().init(98765);
-        cl.clear('rcauchy');
-    })
+    });
     it('n=10, defaults', () => {
         const actual = rcauchy(10);
         expect(actual).toEqualFloatingPointBinary([

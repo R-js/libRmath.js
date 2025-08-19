@@ -1,20 +1,17 @@
 
 import { globalUni, RNGkind } from '@rng/global-rng';
 import { rchisq } from '..';
-import { cl, select } from '@common/debug-mangos-select';
+import { createLogHarnas } from '@common/debug-backend';
 
-const rchisqLogs = select('rchisq');
-const rchisqDomainWarns = rchisqLogs("argument out of domain in '%s'");
-
+const { getStats } = createLogHarnas();
 
 describe('rchisq', function () {
     beforeEach(() => {
-        RNGkind({ uniform: "MERSENNE_TWISTER", normal: "INVERSION"});
+        RNGkind({ uniform: "MERSENNE_TWISTER", normal: "INVERSION" });
         globalUni().init(98765);
-        cl.clear('rchisq');
     })
     it('n=10, df=34', () => {
-        rchisq(10,45); // skip 10
+        rchisq(10, 45); // skip 10
         const actual = rchisq(10, 45);
         expect(actual).toEqualFloatingPointBinary([
             32.638684661215024,
@@ -31,8 +28,9 @@ describe('rchisq', function () {
     });
     it('n=1, location=NaN', () => {
         const nan = rchisq(1, NaN);
+        const stats = getStats();
         expect(nan).toEqualFloatingPointBinary(NaN);
-        expect(rchisqDomainWarns()).toHaveLength(1);
+        expect(stats.rchisq).toBe(1);
     });
     it('n=10, df=4500', () => {
         const actual = rchisq(10, 4500);

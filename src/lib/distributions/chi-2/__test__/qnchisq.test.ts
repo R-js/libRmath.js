@@ -1,18 +1,14 @@
 import { resolve } from 'path';
 
 import { loadData } from '@common/load';
-import { cl, select } from '@common/debug-mangos-select';
 
-const qnchisqLogs = select('qnchisq');
-const gnchisqDomainWarns = qnchisqLogs("argument out of domain in '%s'");
-const R_Q_P01_boundaries = select('R_Q_P01_boundaries')("argument out of domain in '%s'");
+import { createLogHarnas } from '@common/debug-backend';
+
+const { getStats } = createLogHarnas();
 
 import { qchisq } from '..';
 
 describe('qnchisq', function () {
-    beforeEach(() => {
-        cl.clear('qnchisq');
-    });
     it('p=NaN, df=2, ncp=80', () => {
         const nan = qchisq(NaN, 2, 80);
         expect(nan).toBeNaN();
@@ -27,18 +23,23 @@ describe('qnchisq', function () {
     });
     it('p=.2, df=Infinite, ncp=80', () => {
         const nan = qchisq(0.2, Infinity, 80);
+        const stats = getStats();
         expect(nan).toBeNaN();
-        expect(gnchisqDomainWarns()).toHaveLength(1);
+        expect(stats.qnchisq).toBe(1);
     });
     it('p=.2, df=-4(<0), ncp=80', () => {
+        const stats0 = getStats();
         const nan = qchisq(0.2, -4, 80);
         expect(nan).toBeNaN();
-        expect(gnchisqDomainWarns()).toHaveLength(1);
+        const stats1 = getStats();
+        expect(stats1.qnchisq - stats0.qnchisq).toBe(1);
     });
     it('p=.2, df=4, ncp=-80(<0)', () => {
+        const stats0 = getStats();
         const nan = qchisq(0.2, 4, -80);
+        const stats1 = getStats();
         expect(nan).toBeNaN();
-        expect(gnchisqDomainWarns()).toHaveLength(1);
+        expect(stats1.qnchisq - stats0.qnchisq).toBe(1);
     });
     it('bounderies, p=(0,1,1.2,-0.2), df=4, ncp=80', () => {
         const z = qchisq(1, 4, 80);
@@ -49,7 +50,8 @@ describe('qnchisq', function () {
         expect(nan).toBeNaN();
         const nan1 = qchisq(1.2, 4, 80);
         expect(nan1).toBeNaN();
-        expect(R_Q_P01_boundaries()).toHaveLength(2);
+        const stats = getStats();
+        expect(stats.R_Q_P01_boundaries).toBe(2);
     });
     it('p=.8, df=42, ncp=80', () => {
         const z = qchisq(0.8, 42, 85);

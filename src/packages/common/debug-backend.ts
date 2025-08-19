@@ -1,3 +1,5 @@
+import { register } from '@common/debug-frontend';
+
 export default function createDebugLoggerBackend(logs: unknown[]) {
     return function (prefix?: string) {
         const finalPrefix = prefix ? `${prefix}/` : '';
@@ -22,4 +24,15 @@ export function createStatsFromLogs(logs: LogEntry[]) {
         return col;
     }, rc);
     return rc;
+}
+
+export function createLogHarnas() {
+    const logs: LogEntry[] = [];
+    register(createDebugLoggerBackend(logs));
+    return {
+        logs,
+        getStats() {
+            return createStatsFromLogs(logs);
+        }
+    }
 }

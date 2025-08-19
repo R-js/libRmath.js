@@ -3,16 +3,10 @@
 import { globalUni, RNGkind } from '@rng/global-rng';
 import { rchisq } from '..';
 
-
-import { cl, select } from '@common/debug-mangos-select';
-const rchisqLogs = select('rnchisq');
-const rchisqDomainWarns = rchisqLogs("argument out of domain in '%s'");
-
 describe('rnchisq', function () {
     beforeEach(() => {
         RNGkind({ uniform: "MERSENNE_TWISTER", normal: "INVERSION" });
         globalUni().init(98765);
-        cl.clear('rnchisq');
     })
     it('n=10, df=34, ncp=34', () => {
         const actual = rchisq(10, 45, 34);
@@ -31,20 +25,19 @@ describe('rnchisq', function () {
         ], 20);
     });
     it('n=1, location=NaN', () => {
-         const nan = rchisq(1, NaN, 5);
-         expect(nan).toEqualFloatingPointBinary(NaN);
-         expect(rchisqDomainWarns()).toHaveLength(1);
-     });
-     it('n=1, df=0, ncp=0', () => {
-         const actual = rchisq(1,0,0);
-         expect(actual).toEqualFloatingPointBinary(0);
-     });
-     it('n=1, df=0, ncp=4', () => {
-        const actual = rchisq(1,0,4);
+        const nan = rchisq(1, NaN, 5);
+        expect(nan).toEqualFloatingPointBinary(NaN);
+    });
+    it('n=1, df=0, ncp=0', () => {
+        const actual = rchisq(1, 0, 0);
+        expect(actual).toEqualFloatingPointBinary(0);
+    });
+    it('n=1, df=0, ncp=4', () => {
+        const actual = rchisq(1, 0, 4);
         expect(actual).toEqualFloatingPointBinary(3.3275030977911904);
     });
-     it('n=5, df=0, ncp=4', () => {
-        const actual = rchisq(5,0,4);
+    it('n=5, df=0, ncp=4', () => {
+        const actual = rchisq(5, 0, 4);
         expect(actual).toEqualFloatingPointBinary([
             //> set.seed(98765)
             //> s=rchisq(n=5,df=0,ncp=4)

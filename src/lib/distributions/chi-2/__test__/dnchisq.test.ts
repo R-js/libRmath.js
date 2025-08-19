@@ -1,15 +1,13 @@
 import { resolve } from 'path';
 
 import { loadData } from '@common/load';
-import { cl, select } from '@common/debug-mangos-select';
-const dnchisqDomainWarns = select('dnchisq')("argument out of domain in '%s'");
+import { createLogHarnas } from '@common/debug-backend';
 
 import { dchisq } from '..';
 
+const { getStats } = createLogHarnas();
+
 describe('dnchisq', function () {
-    beforeEach(() => {
-        cl.clear('dnchisq');
-    });
     it('ranges x ∊ [0, 40, step 0.5] df=13, ncp=8', async () => {
         const [x, y] = await loadData(resolve(__dirname, 'fixture-generation', 'dnchisq.R'), /\s+/, 1, 2);
         const actual = x.map((_x) => dchisq(_x, 13, 8));
@@ -27,7 +25,8 @@ describe('dnchisq', function () {
     it('x=20, df=-4 ncp=8', () => {
         const nan = dchisq(20, -4, 8);
         expect(nan).toBeNaN();
-        expect(dnchisqDomainWarns()).toHaveLength(1);
+        const stats = getStats();
+        expect(stats.dnchisq).toBe(1);
     });
     it('x=-2(<0), df=4 ncp=8', () => {
         const z = dchisq(-2, 4, 8);

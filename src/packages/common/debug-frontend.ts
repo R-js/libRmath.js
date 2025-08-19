@@ -39,11 +39,6 @@ export default function createNs(ns: string): Printer {
                 return controller.isEnabled(ns);
             },
             enumerable: true
-        },
-        namespace: {
-            value: ns,
-            enumerable: true,
-            writable: false
         }
     });
     return print as Printer;
