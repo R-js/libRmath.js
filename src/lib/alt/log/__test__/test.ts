@@ -1,41 +1,33 @@
 import log1p from '../log1p';
-import { cl, select } from '@common/debug-mangos-select';
-const dlog1pDomain = select('log1p')(/.*/);
 
 //hypot
 
+import createDebugLoggerBackend, { createStatsFromLogs, LogEntry } from '@common/debug-backend';
+import { register } from '@common/debug-frontend';
+
+const logs: LogEntry[] = [];
+
+register(createDebugLoggerBackend(logs));
+
 describe('log1p', function () {
-    beforeEach(() => {
-        cl.clear('log1p');
-    });
     describe('invalid input and edge cases', () => {
         it('x < -1 should be a NaN', () => {
             const l = log1p(-1.5);
+            const stats = createStatsFromLogs(logs);
             expect(l).toEqualFloatingPointBinary(NaN);
-            expect(dlog1pDomain()).toMatchInlineSnapshot(`
-[
-  [
-    "argument out of domain in '%s'",
-    "log1p, line:72, col:42",
-  ],
-]
-`);
+            expect(stats.log1p).toBe(1);
+
         });
         it('x = -1 should be a -Infinity', () => {
             const l = log1p(-1);
             expect(l).toEqualFloatingPointBinary(-Infinity);
         });
         it('x < -0.999999985 causes precision failure warning', () => {
+            const stats0 = createStatsFromLogs(logs);
             const l = log1p(-0.999999999);
+            const stats1 = createStatsFromLogs(logs);
             expect(l).toEqualFloatingPointBinary(-20.723265865228342);
-            expect(dlog1pDomain()).toMatchInlineSnapshot(`
-[
-  [
-    "full precision may not have been achieved in '%s'",
-    "log1p, line:86, col:18",
-  ],
-]
-`);
+            expect(stats1.log1p - stats0.log1p).toBe(1);
         });
     });
     describe('fidelity', () => {

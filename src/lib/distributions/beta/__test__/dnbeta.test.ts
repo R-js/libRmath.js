@@ -4,10 +4,10 @@ import { resolve } from 'path';
 //helper
 import { loadData } from '@common/load';
 import { dbeta } from '..';
-import createDebugLoggerBackend from '@common/debug-backend';
+import createDebugLoggerBackend, { createStatsFromLogs, LogEntry } from '@common/debug-backend';
 import { register } from '@common/debug-frontend';
 
-const logs: unknown[] = [];
+const logs: LogEntry[] = [];
 
 register(createDebugLoggerBackend(logs));
 
@@ -23,14 +23,14 @@ describe('dbeta, ncp != undefined', () => {
     });
     it('ranges x = 0.5, shape1=3, shape2=3, ncp=-2', () => {
         const nan = dbeta(0.5, 3, 3, -2);
-        console.log('w1', logs);
-        //  expect(dnbetaDomainWarns()).toHaveLength(1);
+        const stats = createStatsFromLogs(logs);
+        expect(stats.dnbeta).toBe(1);
         expect(nan).toBe(NaN);
     });
     it('ranges x = 0.5, shape1=3, shape2=3, ncp=-2', () => {
         const nan = dbeta(0.5, 3, 3, Infinity);
-        console.log('w2', logs);
-        //  expect(dnbetaDomainWarns()).toHaveLength(1);
+        const stats = createStatsFromLogs(logs);
+        expect(stats.dnbeta).toBe(2)
         expect(nan).toBe(NaN);
     });
     it('ranges x = -1, shape1=3, shape2=3, ncp=2', () => {

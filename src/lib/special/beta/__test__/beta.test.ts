@@ -1,16 +1,12 @@
 //app
 import { beta } from '..';
 
-import createDebugLoggerBackend from '@common/debug-backend';
+import createDebugLoggerBackend, { createStatsFromLogs, LogEntry } from '@common/debug-backend';
 import { register } from '@common/debug-frontend';
 
-const logs: unknown[] = [];
+const logs: LogEntry[] = [];
 
 register(createDebugLoggerBackend(logs));
-
-beforeEach(() => {
-    logs.splice(0);
-});
 
 describe('beta(a,b)', function () {
     it('a = 0, b > 0', () => {
@@ -30,10 +26,12 @@ describe('beta(a,b)', function () {
         expect([nan1, nan2]).toEqualFloatingPointBinary(NaN);
     });
     it('a<0 or b < 0 returns NaN', () => {
+        const stats0 = createStatsFromLogs(logs);
         const nan1 = beta(-1, 4);
         const nan2 = beta(4, -1);
+        const stats1 = createStatsFromLogs(logs);
         expect([nan1, nan2]).toEqualFloatingPointBinary(NaN);
-        expect(logs).toHaveLength(2);
+        expect(stats1.beta - stats0.beta).toBe(2);
     });
     it('a=Infinity returns 0 and ME warnings', () => {
         const inf = beta(Infinity, 1);
