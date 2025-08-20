@@ -7,11 +7,9 @@ import { loadData } from '@common/load';
 //app
 import { qbeta } from '..';
 
-import createDebugLoggerBackend, { createStatsFromLogs, type LogEntry } from '@common/debug-backend';
-import { register } from '@common/debug-frontend';
+import { createLogHarnas } from '@common/debug-backend';
 
-const logs: LogEntry[] = [];
-register(createDebugLoggerBackend(logs));
+const { getStats } = createLogHarnas();
 
 describe('qbeta, ncp != undefined', function () {
     it('ranges x ∊ [0, 1], shape1=1, shape2=2, ncp=3', async () => {
@@ -27,19 +25,15 @@ describe('qbeta, ncp != undefined', function () {
     it('x=0.5, shape1=Infinite,shape2=3, ncp=3', () => {
         const nan = qbeta(0.5, Infinity, 2, 3);
         expect(nan).toBeNaN();
-        const stats = (logs as unknown as { namespace: string; formatter: string; args: unknown[] }[]).reduce((col, obj) => {
-            col[obj.namespace] = col[obj.namespace] ?? 0;
-            col[obj.namespace]++;
-            return col;
-        }, {} as Record<string, number>)
+        const stats = getStats();
         expect(stats.qnbeta).toBe(1);
     });
     it('x=0.5, shape1=-2,shape2=3, ncp=3', () => {
-        const stats0 = createStatsFromLogs(logs);
+        const stats0 = getStats();
         const qnBetaCount0 = stats0.qnbeta;
         const nan = qbeta(0.5, -2, 2, 3);
         expect(nan).toBeNaN();
-        const stats1 = createStatsFromLogs(logs);
+        const stats1 = getStats();
         const qnBetaCount1 = stats1.qnbeta;
         expect(qnBetaCount1 - qnBetaCount0).toBe(1);
     });

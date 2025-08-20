@@ -7,11 +7,9 @@ import { loadData } from '@common/load';
 //app
 import { qbeta } from '..';
 
-import createDebugLoggerBackend, { createStatsFromLogs, LogEntry } from '@common/debug-backend';
-import { register } from '@common/debug-frontend';
+import { createLogHarnas } from '@common/debug-backend';
 
-const logs: LogEntry[] = [];
-register(createDebugLoggerBackend(logs));
+const { getStats } = createLogHarnas();
 
 describe('qbeta', function () {
     it('ranges x ∊ [0, 1], shape1=1, shape2=2', async () => {
@@ -49,8 +47,8 @@ describe('qbeta', function () {
     it('shape1=-1, q=0.2, shape2=4, ncp=undefined', () => {
         const nan = qbeta(0.2, -3, 4);
         expect(nan).toEqualFloatingPointBinary(NaN);
-        const stats1 = createStatsFromLogs(logs);
-        expect(stats1.qbeta).toBe(1);
+        const stats = getStats();
+        expect(stats.qbeta).toBe(1);
     });
     it('shape1=3, q=0.2, shape2=4, ncp=undefined, log.p=TRUE', () => {
         const nan = qbeta(0.2, 3, 4, undefined, false, true);

@@ -6,12 +6,9 @@ import { loadData } from '@common/load';
 //app
 import { qbinom } from '..';
 
-import createDebugLoggerBackend, { createStatsFromLogs, LogEntry } from '@common/debug-backend';
-import { register } from '@common/debug-frontend';
+import { createLogHarnas } from '@common/debug-backend';
 
-const logs: LogEntry[] = [];
-
-register(createDebugLoggerBackend(logs));
+const { getStats } = createLogHarnas();
 
 describe('qbinom', function () {
     it('ranges p ∊ [0, 1, step 0.01] size=10, prob=0.5', async () => {
@@ -24,30 +21,30 @@ describe('qbinom', function () {
         expect(actual).toBeNaN();
     });
     it('p = Infinity, size=10, prob=0.5', () => {
-        const stats0 = createStatsFromLogs(logs);
+        const stats0 = getStats();
         const actual = qbinom(Infinity, 10, 0.5);
-        const stats1 = createStatsFromLogs(logs);
+        const stats1 = getStats();
         expect(actual).toBeNaN();
         expect(stats1.qbinom - stats0.qbinom).toBe(1);
     });
     it('p = 0.5, size=Infinity, prob=0.5', () => {
-        const stats0 = createStatsFromLogs(logs);
+        const stats0 = getStats();
         const actual = qbinom(0.5, Infinity, 0.5);
-        const stats1 = createStatsFromLogs(logs);
+        const stats1 = getStats();
         expect(actual).toBeNaN();
         expect(stats1.qbinom - stats0.qbinom).toBe(1);
     });
     it('p = 0.5, size=5.2 (non integer), prob=0.5', () => {
-        const stats0 = createStatsFromLogs(logs);
+        const stats0 = getStats();
         const actual = qbinom(0.5, 5.2, 0.5);
-        const stats1 = createStatsFromLogs(logs);
+        const stats1 = getStats();
         expect(actual).toBeNaN();
         expect(stats1.qbinom - stats0.qbinom).toBe(1);
     });
     it('p = 0.5, size=-5 (<0), prob=0.5', () => {
-        const stats0 = createStatsFromLogs(logs);
+        const stats0 = getStats();
         const actual = qbinom(0.5, -5, 0.5);
-        const stats1 = createStatsFromLogs(logs);
+        const stats1 = getStats();
         expect(actual).toBeNaN();
         expect(stats1.qbinom - stats0.qbinom).toBe(1);
     });

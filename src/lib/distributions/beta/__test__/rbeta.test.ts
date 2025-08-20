@@ -2,11 +2,10 @@
 import { rbeta } from '..';
 
 import { globalNorm, globalUni, RNGkind } from '@rng/global-rng';
-import createDebugLoggerBackend, { createStatsFromLogs, LogEntry } from '@common/debug-backend';
-import { register } from '@common/debug-frontend';
 
-const logs: LogEntry[] = [];
-register(createDebugLoggerBackend(logs));
+import { createLogHarnas } from '@common/debug-backend';
+
+const { getStats } = createLogHarnas();
 
 describe('rbeta', function () {
     beforeAll(() => {
@@ -32,7 +31,7 @@ describe('rbeta', function () {
     });
     it('scp1=-1, scp2=2', () => {
         const actual = rbeta(1, -1, 2);
-        const stats1 = createStatsFromLogs(logs);
+        const stats1 = getStats();
         expect(actual).toEqualFloatingPointBinary(NaN);
         expect(stats1.rbeta).toBe(1);
     });

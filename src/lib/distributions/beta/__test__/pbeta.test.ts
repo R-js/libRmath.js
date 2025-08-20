@@ -6,12 +6,9 @@ import { loadData } from '@common/load';
 
 //app
 import { pbeta } from '..';
-import createDebugLoggerBackend, { createStatsFromLogs, LogEntry } from '@common/debug-backend';
-import { register } from '@common/debug-frontend';
 
-const logs: LogEntry[] = [];
-
-register(createDebugLoggerBackend(logs));
+import { createLogHarnas } from '@common/debug-backend';
+const { getStats } = createLogHarnas();
 
 describe('pbeta, ncp = 0', function () {
     it('ranges x ∊ [0, 1], shape1=3, shape2=3', async () => {
@@ -25,10 +22,10 @@ describe('pbeta, ncp = 0', function () {
         expect(nan).toBeNaN();
     });
     it('x=0.5, shape1=3, shape2=3', () => {
-        const stats0 = createStatsFromLogs(logs);
+        const stats0 = getStats();
         const nan = pbeta(0.5, -3, 3);
         expect(nan).toBeNaN();
-        const stats1 = createStatsFromLogs(logs);
+        const stats1 = getStats();
         expect(stats1.pbeta - stats0.pbeta).toBe(2);
     }, 1e9);
     it('x=0.5, shape1=Infinity, shape2=3', () => {

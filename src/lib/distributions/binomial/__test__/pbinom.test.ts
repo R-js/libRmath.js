@@ -6,12 +6,9 @@ import { loadData } from '@common/load';
 
 //app
 import { pbinom } from '..';
-import createDebugLoggerBackend, { createStatsFromLogs, LogEntry } from '@common/debug-backend';
-import { register } from '@common/debug-frontend';
+import { createLogHarnas } from '@common/debug-backend';
 
-const logs: LogEntry[] = [];
-
-register(createDebugLoggerBackend(logs));
+const { getStats } = createLogHarnas();
 
 describe('pbinom', function () {
     it('ranges x ∊ [0, 12] size=12, prob=0.01', async () => {
@@ -24,9 +21,9 @@ describe('pbinom', function () {
         expect(actual).toBeNaN();
     });
     it('x = 5, size=Infinity, prob=0.01', () => {
-        const stats0 = createStatsFromLogs(logs);
+        const stats0 = getStats();
         const actual = pbinom(5, Infinity, 0.01);
-        const stats1 = createStatsFromLogs(logs);
+        const stats1 = getStats();
         expect(actual).toBeNaN();
         expect(stats1.pbinom - stats0.pbinom).toBe(1);
     });
@@ -36,16 +33,16 @@ describe('pbinom', function () {
     });
 
     it('x = 5, size=Infinity, prob=0.01', () => {
-        const stats0 = createStatsFromLogs(logs);
+        const stats0 = getStats();
         const actual = pbinom(5, 7.2, 0.01);
-        const stats1 = createStatsFromLogs(logs);
+        const stats1 = getStats();
         expect(stats1.pbinom - stats0.pbinom).toBe(2);
         expect(actual).toBeNaN();
     });
     it('x = 5, size=Infinity, prob=0.01', () => {
-        const stats0 = createStatsFromLogs(logs);
+        const stats0 = getStats();
         const actual = pbinom(5, -7, 0.01);
-        const stats1 = createStatsFromLogs(logs);
+        const stats1 = getStats();
         expect(actual).toBeNaN();
         expect(stats1.pbinom - stats0.pbinom).toBe(1);
     });

@@ -4,12 +4,9 @@ import { resolve } from 'path';
 //helper
 import { loadData } from '@common/load';
 import { dbeta } from '..';
-import createDebugLoggerBackend, { createStatsFromLogs, LogEntry } from '@common/debug-backend';
-import { register } from '@common/debug-frontend';
+import { createLogHarnas } from '@common/debug-backend';
 
-const logs: LogEntry[] = [];
-
-register(createDebugLoggerBackend(logs));
+const { getStats } = createLogHarnas();
 
 describe('dbeta, ncp != undefined', () => {
     it('ranges x ∊ [0, 1], shape1=3, shape2=3, ncp=2', async () => {
@@ -23,13 +20,13 @@ describe('dbeta, ncp != undefined', () => {
     });
     it('ranges x = 0.5, shape1=3, shape2=3, ncp=-2', () => {
         const nan = dbeta(0.5, 3, 3, -2);
-        const stats = createStatsFromLogs(logs);
+        const stats = getStats();
         expect(stats.dnbeta).toBe(1);
         expect(nan).toBe(NaN);
     });
     it('ranges x = 0.5, shape1=3, shape2=3, ncp=-2', () => {
         const nan = dbeta(0.5, 3, 3, Infinity);
-        const stats = createStatsFromLogs(logs);
+        const stats = getStats();
         expect(stats.dnbeta).toBe(2)
         expect(nan).toBe(NaN);
     });
