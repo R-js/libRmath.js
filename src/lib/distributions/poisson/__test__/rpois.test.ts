@@ -1,18 +1,12 @@
 import { loadData } from '@common/load';
 import { resolve } from 'path';
-import { cl, select } from '@common/debug-mangos-select';
-
 import { rpois } from '..';
-
-const rpoisLogs = select('rpois');
-const rpoisDomainWarns = rpoisLogs("argument out of domain in '%s'");
-
 import { globalUni, RNGkind } from '@rng/global-rng';
 
+import { createLogHarnas } from '@common/debug-backend';
+const { getStats } = createLogHarnas();
+
 describe('rpois', function () {
-    beforeEach(() => {
-        cl.clear('rpois');
-    });
     describe('invalid input and edge cases', () => {
         it('mhu = Infinity | mhu = NaN | mhu < 0', () => {
             const nan1 = rpois(1, NaN);
@@ -21,7 +15,7 @@ describe('rpois', function () {
             expect(nan2).toEqualFloatingPointBinary(NaN);
             const nan3 = rpois(1, -1);
             expect(nan3).toEqualFloatingPointBinary(NaN);
-            expect(rpoisDomainWarns()).toHaveLength(3);
+            expect(getStats().rpois).toBe(3)
         });
         it('mhu = 0 -> 0', () => {
             const zero1 = rpois(1, 0);

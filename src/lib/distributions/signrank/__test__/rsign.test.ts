@@ -3,19 +3,14 @@ import { resolve } from 'path';
 
 import { globalUni, RNGkind } from '@rng/global-rng';
 
-import { cl, select } from '@common/debug-mangos-select';
-
 import { rsignrank } from '..';
 
 import { INT_MAX } from '@lib/r-func';
 
-const rsignrankLogs = select('rsignrank');
-const rsignrankDomainWarns = rsignrankLogs("argument out of domain in '%s'");
+import { createLogHarnas } from '@common/debug-backend';
+const { getStats } = createLogHarnas();
 
 describe('rsignrank (wilcox sign rank)', function () {
-    beforeEach(() => {
-        cl.clear('rsignrank');
-    });
     describe('invalid input and edge cases', () => {
         it('n = NaN', () => {
             const nan1 = rsignrank(1, NaN);
@@ -28,7 +23,7 @@ describe('rsignrank (wilcox sign rank)', function () {
         it('n < 0', () => {
             const nan1 = rsignrank(1, -1);
             expect(nan1).toEqualFloatingPointBinary(NaN);
-            expect(rsignrankDomainWarns()).toHaveLength(1);
+            expect(getStats().rsignrank).toBe(1);
         });
         it('n == 0', () => {
             const zero = rsignrank(1, 0);
