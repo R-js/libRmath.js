@@ -1,17 +1,13 @@
 import { loadData } from '@common/load';
 import { resolve } from 'path';
-import { cl, select } from '@common/debug-mangos-select';
 
 import { pgeom } from '..';
 
-const dgammaLogs = select('pgeom');
-const dgammaDomainWarns = dgammaLogs("argument out of domain in '%s'");
+import { createLogHarnas } from '@common/debug-backend';
+const { getStats } = createLogHarnas();
 
 describe('pgeom', function () {
     describe('invalid input', () => {
-        beforeEach(() => {
-            cl.clear('pgeom');
-        });
         it('x=NaN, prop=0.2', () => {
             const nan = pgeom(NaN, 0.2);
             expect(nan).toBe(NaN);
@@ -19,7 +15,7 @@ describe('pgeom', function () {
         it('x=4, prob=-1(<0)', () => {
             const nan = pgeom(4, -1);
             expect(nan).toBe(NaN);
-            expect(dgammaDomainWarns()).toHaveLength(1);
+            expect(getStats().pgeom).toBe(1);
         });
     });
 

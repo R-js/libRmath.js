@@ -8,7 +8,9 @@ const printer = createNS('dgamma');
 export function dgamma(x: number, shape: number, scale: number, aslog: boolean): number {
     let pr: number;
 
-    if (isNaN(x) || isNaN(shape) || isNaN(scale)) return x + shape + scale;
+    if (isNaN(x) || isNaN(shape) || isNaN(scale)) {
+        return x + shape + scale;
+    }
     if (shape < 0 || scale <= 0) {
         return ML_ERR_return_NAN2(printer);
     }

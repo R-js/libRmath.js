@@ -1,25 +1,24 @@
 import { loadData } from '@common/load';
 import { resolve } from 'path';
-import { cl, select } from '@common/debug-mangos-select';
-
 import { dgamma } from '..';
 
-const dgammaLogs = select('dgamma');
-const dgammaDomainWarns = dgammaLogs("argument out of domain in '%s'");
+import { createLogHarnas } from '@common/debug-backend';
+const { getStats } = createLogHarnas();
 
 describe('dgamma', function () {
     describe('invalid input', () => {
-        beforeEach(() => {
-            cl.clear('dgamma');
-        });
         it('x=NaN, shape=0', () => {
             const nan = dgamma(NaN, 0);
+            const stats = getStats();
+            expect(stats).toEqual({});
             expect(nan).toBe(NaN);
+
         });
         it('x=4, shape=-1(<0)', () => {
             const nan = dgamma(4, -1);
+            const stats = getStats();
+            expect(stats.dgamma).toBe(1);
             expect(nan).toBe(NaN);
-            expect(dgammaDomainWarns()).toHaveLength(1);
         });
     });
 

@@ -1,16 +1,13 @@
-import { cl, select } from '@common/debug-mangos-select';
-
 import { rf } from '..';
 import { globalUni, RNGkind } from '@rng/global-rng';
 
-const rfLogs = select('rf');
-const rfDomainWarns = rfLogs("argument out of domain in '%s'");
+import { createLogHarnas } from '@common/debug-backend';
+const { getStats } = createLogHarnas();
 
 describe('rf', function () {
     beforeEach(() => {
         RNGkind({ uniform: 'MERSENNE_TWISTER', normal: 'INVERSION' });
         globalUni().init(123456);
-        cl.clear('rf');
     });
     it('n=10, df1=3, df2=55', () => {
         const actual = rf(10, 3, 55);
@@ -22,8 +19,9 @@ describe('rf', function () {
     });
     it('n=1, df1=-3(<0), df2=55', () => {
         const nan = rf(1, -3, 55);
+        const stats = getStats();
         expect(nan).toEqualFloatingPointBinary(NaN);
-        expect(rfDomainWarns()).toHaveLength(1);
+        expect(stats.rf).toBe(1);
     });
     it('n=1, df1=Inf, df2=Inf', () => {
         const z = rf(1, Infinity, Infinity);

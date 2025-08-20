@@ -10,7 +10,9 @@ import { pchisq } from '@dist/chi-2/pchisq';
 const printer_pf = createNS('pf');
 
 export function pf(q: number, df1: number, df2: number, lowerTail: boolean, logP: boolean): number {
-    if (isNaN(q) || isNaN(df1) || isNaN(df2)) return q + df2 + df1;
+    if (isNaN(q) || isNaN(df1) || isNaN(df2)) {
+        return q + df2 + df1;
+    }
 
     if (df1 <= 0 || df2 <= 0) {
         return ML_ERR_return_NAN2(printer_pf);

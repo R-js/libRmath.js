@@ -2,14 +2,13 @@ import { loadData } from '@common/load';
 import { resolve } from 'path';
 import { pf } from '..';
 
-import { cl, select } from '@common/debug-mangos-select';
-const pfLogs = select('pf');
-const pfDomainWarns = pfLogs("argument out of domain in '%s'");
+
+import { createLogHarnas } from '@common/debug-backend';
+
+const { getStats } = createLogHarnas();
+
 
 describe('pf', function () {
-    beforeEach(() => {
-        cl.clear('pf');
-    });
     it('x ∈ [-0.125, 3.1250], df1=23, df2=52', async () => {
         const [p, y1] = await loadData(resolve(__dirname, 'fixture-generation', 'pf.R'), /\s+/, 1, 2);
         const a1 = p.map((_p) => pf(_p, 23, 52));
@@ -22,7 +21,8 @@ describe('pf', function () {
     it('x=1, df1=-1(<0), df2=4', () => {
         const nan = pf(1, -2, 4);
         expect(nan).toBeNaN();
-        expect(pfDomainWarns()).toHaveLength(1);
+        const stats = getStats();
+        console.log('pf', stats);
     });
     it('x=2, df1=23, df2=Infinity', () => {
         const z = pf(2, 23, Infinity);

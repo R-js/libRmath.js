@@ -1,17 +1,13 @@
 import { loadData } from '@common/load';
 import { resolve } from 'path';
-import { cl, select } from '@common/debug-mangos-select';
 
 import { pgamma } from '..';
 
-const pgammaLogs = select('pgamma');
-const pgammaDomainWarns = pgammaLogs("argument out of domain in '%s'");
+import { createLogHarnas } from '@common/debug-backend';
+const { getStats } = createLogHarnas();
 
 describe('pgamma', function () {
     describe('invalid input', () => {
-        beforeEach(() => {
-            cl.clear('pgamma');
-        });
         it('x=NaN, shape=1.6, defaults', () => {
             const z = pgamma(NaN, 1.6);
             expect(z).toBeNaN();
@@ -19,7 +15,8 @@ describe('pgamma', function () {
         it('x=0, shape=-5(<0), defaults', () => {
             const nan = pgamma(0, -5);
             expect(nan).toBeNaN();
-            expect(pgammaDomainWarns()).toHaveLength(1);
+            const stats = getStats();
+            expect(stats.pgamma).toBe(1);
         });
     });
     describe('edge cases', () => {
