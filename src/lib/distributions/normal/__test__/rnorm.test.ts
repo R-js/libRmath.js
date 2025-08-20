@@ -1,13 +1,10 @@
 import { loadData } from '@common/load';
 import { resolve } from 'path';
-import { cl, select } from '@common/debug-mangos-select';
-
 import { rnorm } from '..';
 
-const rnormLogs = select('rnorm');
-const rnormDomainWarns = rnormLogs("argument out of domain in '%s'");
+import { createLogHarnas } from '@common/debug-backend';
+const { getStats } = createLogHarnas();
 
-//const boundaries = select('R_Q_P01_boundaries')("argument out of domain in '%s'");
 import { globalUni, RNGkind } from '@rng/global-rng';
 
 describe('rnorm', function () {
@@ -15,7 +12,6 @@ describe('rnorm', function () {
         beforeAll(() => {
             RNGkind({ uniform: 'MERSENNE_TWISTER', normal: 'INVERSION' });
             globalUni().init(123456);
-            cl.clear('rnorm');
         });
         it('mhu = NaN | sigma = NaN | sigma < 0', () => {
             const nan1 = rnorm(1, NaN);
@@ -24,7 +20,8 @@ describe('rnorm', function () {
             expect(nan1).toEqualFloatingPointBinary(NaN);
             expect(nan2).toEqualFloatingPointBinary(NaN);
             expect(nan3).toEqualFloatingPointBinary(NaN);
-            expect(rnormDomainWarns()).toHaveLength(3);
+            const stats = getStats();
+            expect(stats.rnorm).toBe(3);
         });
         it('mhu = Infinity | sigma = 0', () => {
             const mhu1 = rnorm(1, Infinity);

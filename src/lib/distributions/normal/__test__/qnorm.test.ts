@@ -1,20 +1,12 @@
 import { loadData } from '@common/load';
 import { resolve } from 'path';
-import { cl, select } from '@common/debug-mangos-select';
-
 import { qnorm } from '..';
 
-const qnormLogs = select('qnorm');
-const qnormDomainWarns = qnormLogs("argument out of domain in '%s'");
-
-const boundaries = select('R_Q_P01_boundaries')("argument out of domain in '%s'");
+import { createLogHarnas } from '@common/debug-backend';
+const { getStats } = createLogHarnas();
 
 describe('qnorm', function () {
     describe('invalid input check and edge cases', () => {
-        beforeEach(() => {
-            cl.clear('R_Q_P01_boundaries');
-            cl.clear('qnorm');
-        });
         it('p = NaN or mu = Nan, or sigma = NaN', () => {
             const nan1 = qnorm(NaN);
             expect(nan1).toBeNaN();
@@ -37,29 +29,38 @@ describe('qnorm', function () {
         it('p > 0 and logp = TRUE, gives boundary error', () => {
             const nan = qnorm(0.1, 0, 1, true, true);
             expect(nan).toBeNaN();
-            expect(boundaries()).toHaveLength(1);
+            const stats = getStats();
+            expect(stats.R_Q_P01_boundaries).toBe(1);
         });
         it('p < 0 and logp = FALSE, gives boundary error', () => {
+            const stats0 = getStats();
             const nan = qnorm(-5, 0, 1, true, false);
             expect(nan).toBeNaN();
-            expect(boundaries()).toHaveLength(1);
+            const stats1 = getStats();
+            expect(stats1.R_Q_P01_boundaries - stats0.R_Q_P01_boundaries).toBe(1);
         });
         it('p > 1 and logp = FALSE, gives boundary error', () => {
+            const stats0 = getStats();
             const nan = qnorm(5, 0, 1, true, false);
             expect(nan).toBeNaN();
-            expect(boundaries()).toHaveLength(1);
+            const stats1 = getStats();
+            expect(stats1.R_Q_P01_boundaries - stats0.R_Q_P01_boundaries).toBe(1);
         });
 
         it('p > 0 and logp = FALSE, gives boundary error', () => {
+            const stats0 = getStats();
             const nan = qnorm(5, 0, 1, true, false);
             expect(nan).toBeNaN();
-            expect(boundaries()).toHaveLength(1);
+            const stats1 = getStats();
+            expect(stats1.R_Q_P01_boundaries - stats0.R_Q_P01_boundaries).toBe(1);
         });
 
         it('sigma < 0', () => {
+            // const stats0 = getStats();
             const nan = qnorm(0.5, 0, -1, true, false);
             expect(nan).toBeNaN();
-            expect(qnormDomainWarns()).toHaveLength(1);
+            const stats1 = getStats();
+            expect(stats1.qnorm).toBe(1); // - stats0.R_Q_P01_boundaries).toBe(1);
         });
 
         it('sigma == 0', () => {

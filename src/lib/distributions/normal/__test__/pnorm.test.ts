@@ -1,17 +1,12 @@
 import { loadData } from '@common/load';
 import { resolve } from 'path';
-import { cl, select } from '@common/debug-mangos-select';
-
 import { pnorm } from '..';
 
-const pnormLogs = select('pnorm');
-const pnormDomainWarns = pnormLogs("argument out of domain in '%s'");
+import { createLogHarnas } from '@common/debug-backend';
+const { getStats } = createLogHarnas();
 
 describe('pnorm', function () {
     describe('invalid input check and edge cases', () => {
-        beforeEach(() => {
-            cl.clear('pnorm');
-        });
         it('q = NaN or mu = Nan, or sigma = NaN', () => {
             const nan1 = pnorm(NaN);
             expect(nan1).toBeNaN();
@@ -26,7 +21,8 @@ describe('pnorm', function () {
         });
         it('sd < 0', () => {
             expect(pnorm(0, 0, -1)).toBe(NaN);
-            expect(pnormDomainWarns()).toHaveLength(1);
+            const stats = getStats();
+            expect(stats.pnorm).toBe(1);
         });
         it('sd == 0, (unit step function)', () => {
             expect(pnorm(0, 0, 0)).toBe(1);
