@@ -1,20 +1,15 @@
 import { loadData } from '@common/load';
 import { resolve } from 'path';
 
-import { cl, select } from '@common/debug-mangos-select';
-
 import { dt } from '..';
 
-const dntLogs = select('dnt');
-const dntDomainWarns = dntLogs("argument out of domain in '%s'");
+import { createLogHarnas } from '@common/debug-backend';
+const { getStats } = createLogHarnas();
 
 describe('dt (n,df,ncp, giveLog)', function () {
 
     describe('invalid input and edge cases', () => {
         describe('ncp = undefined', () => {
-            beforeEach(() => {
-                cl.clear('dnt');
-            });
             it('x=Nan|df=NaN', () => {
                 const nan1 = dt(NaN, 4);
                 const nan2 = dt(5, NaN);
@@ -24,7 +19,7 @@ describe('dt (n,df,ncp, giveLog)', function () {
             it('df <= 0', () => {
                 const nan1 = dt(4, -3);
                 expect(nan1).toBeNaN();
-                expect(dntDomainWarns()).toHaveLength(1);
+                expect(getStats().dnt).toBe(1);
             });
             it('x = Infinite', () => {
                 const zero1 = dt(Infinity, 3);
@@ -32,7 +27,7 @@ describe('dt (n,df,ncp, giveLog)', function () {
                 const zero2 = dt(-Infinity, 3);
                 expect(zero2).toBe(0);
             });
-           
+
         });
         describe('ncp defined', () => {
             it('ncp=Nan', () => {
@@ -50,13 +45,13 @@ describe('dt (n,df,ncp, giveLog)', function () {
                 expect(res).toEqualFloatingPointBinary(y, 46);
                 const resAsLog = x.map(_x => dt(_x, 5, undefined, true));
                 expect(resAsLog).toEqualFloatingPointBinary(yAsLog, 51);
-                
+
             });
             it('df = Infinite x=(-4,4)', async () => {
                 const [x, y] = await loadData(resolve(__dirname, 'fixture-generation', 'dt4.R'), /\s+/, 1, 2);
                 const actual = x.map(_x => dt(_x, Infinity));
                 expect(actual).toEqualFloatingPointBinary(y, 49);
-  
+
             });
             it('(x*x)/df > (1 / DBL_EPSILON);', () => {
                 // x*x > df/DBL_EPSILON

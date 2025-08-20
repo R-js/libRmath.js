@@ -1,31 +1,17 @@
 import { loadData } from '@common/load';
 import { resolve } from 'path';
-
 import { globalUni, RNGkind } from '@rng/global-rng';
-
-import { cl, select } from '@common/debug-mangos-select';
-
 import { rt } from '..';
 
-const rtLogs = select('rt');
-const rtDomainWarns = rtLogs("argument out of domain in '%s'");
-
-const rchisqLogs = select('rchisq');
-const rchisqDomainWarns = rchisqLogs("argument out of domain in '%s'");
-
-const rnormLogs = select('rnorm');
-const rnormDomainWarns = rnormLogs("argument out of domain in '%s'");
+import { createLogHarnas } from '@common/debug-backend';
+const { getStats } = createLogHarnas();
 
 describe('rt (n,df,ncp)', function () {
-
     describe('invalid input and edge cases', () => {
         describe('ncp = undefined', () => {
             beforeEach(() => {
-                RNGkind({ uniform: "MERSENNE_TWISTER", normal: "INVERSION"});
+                RNGkind({ uniform: "MERSENNE_TWISTER", normal: "INVERSION" });
                 globalUni().init(123456);
-                cl.clear('rt');
-                cl.clear('rchisq');
-                cl.clear('rnorm');
             });
             it('n=NaN', () => {
                 expect(() => rt(NaN, 4, 2)).toThrowError('"n=NaN" is not a positive finite number');
@@ -35,7 +21,8 @@ describe('rt (n,df,ncp)', function () {
                 expect(nan1).toEqualFloatingPointBinary(NaN);
                 const nan2 = rt(1, -4);
                 expect(nan2).toEqualFloatingPointBinary(NaN);
-                expect(rtDomainWarns()).toHaveLength(2);
+                const stats = getStats();
+                expect(stats.rt).toBe(2);
             });
             it('df = Infinity, ncp = undefined', async () => {
                 const [expected] = await loadData(resolve(__dirname, 'fixture-generation', 'rt1.R'), /\s+/, 1);
@@ -45,26 +32,25 @@ describe('rt (n,df,ncp)', function () {
         });
         describe('ncp defined', () => {
             beforeEach(() => {
-                RNGkind({ uniform: "MERSENNE_TWISTER", normal: "INVERSION"});
+                RNGkind({ uniform: "MERSENNE_TWISTER", normal: "INVERSION" });
                 globalUni().init(123456);
-                cl.clear('rt');
-                cl.clear('rchisq');
-                cl.clear('rnorm');
             });
             it('ncp=0, n = NaN', () => {
                 expect(() => rt(NaN, 4, 2)).toThrowError('"n=NaN" is not a positive finite number');
             });
             it('ncp=0, n = 1, df = NaN', () => {
+                const stats = getStats();
                 expect(rt(1, NaN, 0)).toEqualFloatingPointBinary(NaN);
-                expect(rchisqDomainWarns()).toHaveLength(1);
-                expect(rnormDomainWarns()).toHaveLength(0);
+                const stats1 = getStats();
+                expect(stats1.rchisq).toBe(1);
+                expect(stats1.rt - stats.rt).toBe(0);
             });
         });
     });
     describe('fidelity', () => {
         describe('ncp = undefined', () => {
             beforeEach(() => {
-                RNGkind({ uniform: "MERSENNE_TWISTER", normal: "INVERSION"});
+                RNGkind({ uniform: "MERSENNE_TWISTER", normal: "INVERSION" });
                 globalUni().init(123456);
             });
             it('samples for df = 0.5|df = 5| df=50| df=500', async () => {
