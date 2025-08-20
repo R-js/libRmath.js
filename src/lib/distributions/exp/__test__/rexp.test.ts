@@ -3,15 +3,13 @@ import { setSeed, RNGkind } from '@rng/global-rng';
 
 import { rexp } from '..';
 
-import { cl, select } from '@common/debug-mangos-select';
+import { createLogHarnas } from '@common/debug-backend';
 
-const rexpLogs = select('rexp');
-const rexpDomainWarns = rexpLogs("argument out of domain in '%s'");
+const { getStats } = createLogHarnas();
 
 describe('rexp', function () {
     beforeEach(() => {
-        cl.clear('rexp');
-        RNGkind({ uniform: "MERSENNE_TWISTER", normal: "INVERSION"});
+        RNGkind({ uniform: "MERSENNE_TWISTER", normal: "INVERSION" });
         setSeed(123456);
     })
 
@@ -54,12 +52,12 @@ describe('rexp', function () {
     });
     it('n=1 , rate=Nan', () => {
         const nan = rexp(1, NaN);
+        const stats = getStats();
         expect(nan).toEqualFloatingPointBinary(NaN);
-        expect(rexpDomainWarns()).toHaveLength(1);
+        expect(stats.rexp).toBe(1);
     });
     it('n=1 , rate=Infinity', () => {
         const z = rexp(1, Infinity);
         expect(z).toEqualFloatingPointBinary(0);
     });
-
 });

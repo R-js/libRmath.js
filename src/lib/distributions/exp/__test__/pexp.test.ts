@@ -2,13 +2,11 @@ import { loadData } from '@common/load';
 import { resolve } from 'path';
 import { pexp } from '..';
 
-import { cl, select } from '@common/debug-mangos-select';
-const pexpDomainWarns = select('pexp')("argument out of domain in '%s'");
+import { createLogHarnas } from '@common/debug-backend';
+
+const { getStats } = createLogHarnas();
 
 describe('pexp', function () {
-    beforeEach(() => {
-        cl.clear('pexp');
-    });
     it('x=[-0.5, 3], rates= 1, 2, 16, (5 and tail=F)', async () => {
         const [p, y1, y2, y3, y4] = await loadData(
             resolve(__dirname, 'fixture-generation', 'pexp.R'),
@@ -41,7 +39,8 @@ describe('pexp', function () {
     it('rate = -3 (<0)', () => {
         const nan = pexp(0, -3);
         expect(nan).toBeNaN();
-        expect(pexpDomainWarns()).toHaveLength(1);
+        const stats = getStats();
+        expect(stats.pexp).toBe(1);
     });
 
     it('asLog = true, rate = 5, x=2', () => {
