@@ -1,17 +1,13 @@
 import { loadData } from '@common/load';
 import { resolve } from 'path';
-import { cl, select } from '@common/debug-mangos-select';
 
 import { plnorm } from '..';
 
-const plnormLogs = select('plnorm');
-const plnormDomainWarns = plnormLogs("argument out of domain in '%s'");
+import { createLogHarnas } from '@common/debug-backend';
+const { getStats } = createLogHarnas();
 
 describe('plnorm', () => {
     describe('invalid input', () => {
-        beforeEach(() => {
-            cl.clear('plnorm');
-        });
         it('x=NaN | meanLog=NaN | sdLog=NaN', () => {
             const nan1 = plnorm(NaN);
             expect(nan1).toBe(NaN);
@@ -23,7 +19,7 @@ describe('plnorm', () => {
         it('sdLob < 0', () => {
             const nan = plnorm(0.5, 4, -1);
             expect(nan).toBe(NaN);
-            expect(plnormDomainWarns()).toHaveLength(1);
+            expect(getStats().plnorm).toBe(1);
         });
         it('x <= 0', () => {
             const zero = plnorm(-1.5);

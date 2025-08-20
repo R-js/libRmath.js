@@ -1,18 +1,14 @@
 import { loadData } from '@common/load';
 import { resolve } from 'path';
-import { cl, select } from '@common/debug-mangos-select';
 
 import { qlnorm } from '..';
 
-const bounderies = select('R_Q_P01_boundaries');
-const warnings = bounderies("argument out of domain in '%s'");
+import { createLogHarnas } from '@common/debug-backend';
+const { getStats } = createLogHarnas();
 
 //  qlnorm(p: number, meanlog = 0, sdlog = 1, lower_tail = true, log_p = false):
 describe('qlnorm', () => {
     describe('invalid input', () => {
-        beforeEach(() => {
-            cl.clear('R_Q_P01_boundaries');
-        });
         it('p=NaN | meanLog=NaN | sdLog=NaN', () => {
             const nan1 = qlnorm(NaN);
             expect(nan1).toBe(NaN);
@@ -24,9 +20,11 @@ describe('qlnorm', () => {
         it('p < 0', () => {
             const nan = qlnorm(-0.5, 4, 1, true, false);
             expect(nan).toBe(NaN);
-            expect(warnings()).toHaveLength(1);
+            const stats = getStats();
+            expect(stats.R_Q_P01_boundaries).toBe(1);
         });
         it('p <= 0 | p >= 1', () => {
+            const stats0 = getStats();
             const nan1 = qlnorm(-0.5, 4, 1, true);
             expect(nan1).toBe(NaN);
             //
@@ -41,7 +39,8 @@ describe('qlnorm', () => {
 
             const zero1 = qlnorm(-Infinity, 4, 1, true, true);
             expect(zero1).toBe(0);
-            expect(warnings()).toHaveLength(3);
+            const stats1 = getStats();
+            expect(stats1.R_Q_P01_boundaries - stats0.R_Q_P01_boundaries).toBe(3);
         });
     });
     describe('fidelity (defer to qnorm for most)', () => {
