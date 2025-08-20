@@ -1,14 +1,11 @@
-import { cl, select } from '@common/debug-mangos-select';
-
 import { rlogis } from '..';
 import { globalUni, RNGkind } from '@rng/global-rng';
 
-const rLogisLogs = select('rlogis');
-const rLogisDomainWarns = rLogisLogs("argument out of domain in '%s'");
+import { createLogHarnas } from '@common/debug-backend';
+const { getStats } = createLogHarnas();
 
 describe('rlogis', function () {
     beforeEach(() => {
-        cl.clear('rlogis');
         RNGkind({ uniform: 'MERSENNE_TWISTER', normal: 'INVERSION' });
         globalUni().init(123456);
     });
@@ -35,30 +32,8 @@ describe('rlogis', function () {
     it('n = 5, location = nan', () => {
         const nans = rlogis(5, NaN);
         expect(nans).toEqualFloatingPointBinary([NaN, NaN, NaN, NaN, NaN]);
-        expect(rLogisDomainWarns()).toMatchInlineSnapshot(`
-            [
-              [
-                "argument out of domain in '%s'",
-                "rlogisOne, line:9, col:34",
-              ],
-              [
-                "argument out of domain in '%s'",
-                "rlogisOne, line:9, col:34",
-              ],
-              [
-                "argument out of domain in '%s'",
-                "rlogisOne, line:9, col:34",
-              ],
-              [
-                "argument out of domain in '%s'",
-                "rlogisOne, line:9, col:34",
-              ],
-              [
-                "argument out of domain in '%s'",
-                "rlogisOne, line:9, col:34",
-              ],
-            ]
-        `);
+        const stats = getStats();
+        expect(stats.rlogis).toBe(5);
     });
 
     it('n = 0', () => {

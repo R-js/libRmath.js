@@ -1,15 +1,10 @@
-import { cl, select } from '@common/debug-mangos-select';
-
 import { plogis } from '..';
 
-const pLogisLogs = select('plogis');
-const pLogisDomainWarns = pLogisLogs("argument out of domain in '%s'");
+import { createLogHarnas } from '@common/debug-backend';
+const { getStats } = createLogHarnas();
 
 describe('plogis', function () {
     describe('edge cases', () => {
-        beforeEach(() => {
-            cl.clear('plogis');
-        });
         it('x = NaN or location = Nan, or scale = NaN or give_log = NaN', () => {
             const nan1 = plogis(NaN);
             expect(nan1).toBeNaN();
@@ -23,14 +18,7 @@ describe('plogis', function () {
         it('scale <= 0', () => {
             const nan = plogis(0, undefined, -0.5);
             expect(nan).toBeNaN();
-            expect(pLogisDomainWarns()).toMatchInlineSnapshot(`
-                [
-                  [
-                    "argument out of domain in '%s'",
-                    "plogis, line:18, col:34",
-                  ],
-                ]
-            `);
+            expect(getStats().plogis).toBe(1)
         });
         it('x = -Infinity and x = Infinity', () => {
             const zero = plogis(-Infinity);

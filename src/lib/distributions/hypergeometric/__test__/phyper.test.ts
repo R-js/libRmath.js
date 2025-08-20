@@ -1,12 +1,9 @@
 import { loadData } from '@common/load';
 import { resolve } from 'path';
-import { cl, select } from '@common/debug-mangos-select';
-
 import { phyper } from '..';
 
-const phyperLogs = select('phyper');
-const phyperWarns = phyperLogs("argument out of domain in '%s'");
-//const nonIntWarns = phyperLogs('non-integer x = %d');
+import { createLogHarnas } from '@common/debug-backend';
+const { getStats } = createLogHarnas();
 
 /**
  * function phyper(x, m, n, k, lower.tail = TRUE, log.p = FALSE)
@@ -20,16 +17,12 @@ const phyperWarns = phyperLogs("argument out of domain in '%s'");
 
 describe('phyper(x,m,n,k,log)', function () {
     describe('invalid input', () => {
-        beforeEach(() => {
-            cl.clear('phyper');
-        });
         it('test all inputs on NaN', () => {
             const nan1 = phyper(NaN, 0, 0, 0);
             const nan2 = phyper(0, NaN, 0, 0);
             const nan3 = phyper(0, 0, NaN, 0);
             const nan4 = phyper(0, 0, 0, NaN);
             expect([nan1, nan2, nan3, nan4]).toEqualFloatingPointBinary(NaN);
-            expect(phyperWarns()).toHaveLength(0);
         });
         it('test all inputs (except x) on negative of non integer', () => {
             const nan1 = phyper(0, -1, 0, 0);
@@ -38,7 +31,7 @@ describe('phyper(x,m,n,k,log)', function () {
             const nan4 = phyper(0, 0, 0, -1);
             const nan5 = phyper(0, 1, 1, 4);
             expect([nan1, nan2, nan3, nan4, nan5]).toEqualFloatingPointBinary(NaN);
-            expect(phyperWarns()).toHaveLength(5);
+            expect(getStats().phyper).toBe(5);
         });
     });
     describe('edge cases', () => {

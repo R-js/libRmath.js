@@ -2,17 +2,16 @@ import { resolve } from 'path';
 import ms from 'ms';
 
 import { loadData } from '@common/load';
-import { cl, select } from '@common/debug-mangos-select';
 
 import { globalUni, RNGkind } from '@rng/global-rng';
 import { rhyper, useWasmBackendHyperGeom, clearBackendHyperGeom } from '..';
 
-const rhyperDomainWarns = select('rhyper')("argument out of domain in '%s'");
+import { createLogHarnas } from '@common/debug-backend';
+const { getStats } = createLogHarnas();
 
 describe('rhyper', function () {
     describe('invalid input', () => {
         beforeEach(() => {
-            cl.clear('rhyper');
             RNGkind({ uniform: 'MERSENNE_TWISTER', normal: 'INVERSION' });
             globalUni().init(123456);
         });
@@ -21,21 +20,22 @@ describe('rhyper', function () {
             const nan3 = rhyper(1, 0, NaN, 0);
             const nan4 = rhyper(1, 0, 0, Infinity);
             expect([nan2[0], nan3[0], nan4[0]]).toEqualFloatingPointBinary(NaN);
-            expect(rhyperDomainWarns()).toHaveLength(3);
+            expect(getStats().rhyper).toBe(3)
         });
         it('test inputs nr < 0, nb <0, n <0 n > (nb+nr)', () => {
+            const stats0 = getStats();
             const nan1 = rhyper(1, -1, 0, 0);
             const nan2 = rhyper(1, 0, -1, 0);
             const nan3 = rhyper(1, 0, 0, -1);
             const nan4 = rhyper(1, 0, 0, 2);
+            const stats1 = getStats();
             expect([nan1[0], nan2[0], nan3[0], nan4[0]]).toEqualFloatingPointBinary(NaN);
-            expect(rhyperDomainWarns()).toHaveLength(4);
+            expect(stats1.rhyper - stats0.rhyper).toBe(4);
         });
     });
 
     describe('edge cases', () => {
         beforeEach(() => {
-            cl.clear('rhyper');
             RNGkind({ uniform: 'MERSENNE_TWISTER', normal: 'INVERSION' });
             globalUni().init(123456);
         });
@@ -75,7 +75,6 @@ describe('rhyper', function () {
 
     describe('reguler', () => {
         beforeEach(() => {
-            cl.clear('rhyper');
             RNGkind({ uniform: 'MERSENNE_TWISTER', normal: 'INVERSION' });
             globalUni().init(123456);
         });
@@ -103,8 +102,6 @@ describe('rhyper', function () {
                 13, 13, 14, 14, 14, 14, 13, 15, 11, 14, 13, 13, 12, 12, 11, 12, 12, 14, 14, 13, 14, 15, 14, 14, 13, 13,
                 12, 12, 12, 14, 13, 12, 14, 14, 12, 15, 12, 12, 13, 13, 14, 13, 12, 14, 13, 14, 13, 13, 13, 14
             ]);
-
-            //console.log(result2);
             const result2 = rhyper(10, 30, 15, 40);
             expect(result2).toEqualFloatingPointBinary([26, 27, 27, 28, 27, 29, 28, 28, 26, 26]);
         });

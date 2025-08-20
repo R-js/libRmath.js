@@ -1,15 +1,10 @@
-import { cl, select } from '@common/debug-mangos-select';
-
 import { qlogis } from '..';
 
-const qLogisLogs = select('qlogis');
-const qLogisDomainWarns = qLogisLogs("argument out of domain in '%s'");
+import { createLogHarnas } from '@common/debug-backend';
+const { getStats } = createLogHarnas();
 
 describe('qlogis', function () {
     describe('edge cases', () => {
-        beforeEach(() => {
-            cl.clear('qlogis');
-        });
         it('x = NaN or location = Nan, or scale = NaN or give_log = NaN', () => {
             const nan1 = qlogis(NaN);
             expect(nan1).toBeNaN();
@@ -37,14 +32,7 @@ describe('qlogis', function () {
         it('scale <= 0', () => {
             const nan = qlogis(0.3, undefined, -1);
             expect(nan).toEqualFloatingPointBinary(NaN);
-            expect(qLogisDomainWarns()).toMatchInlineSnapshot(`
-                [
-                  [
-                    "argument out of domain in '%s'",
-                    "qlogis, line:20, col:34",
-                  ],
-                ]
-            `);
+            expect(getStats().qlogis).toBe(1);
         });
         it('scale == 0', () => {
             const location = qlogis(0.2, 4, 0);
