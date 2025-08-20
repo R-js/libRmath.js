@@ -1,13 +1,10 @@
 
 import { qnbinom } from '..';
 
-import createDebugLoggerBackend, { createStatsFromLogs, LogEntry } from '@common/debug-backend';
-import { register } from '@common/debug-frontend';
 import { globalUni } from '@lib/rng';
 
-const logs: LogEntry[] = [];
-
-register(createDebugLoggerBackend(logs));
+import { createLogHarnas } from '@common/debug-backend';
+const { getStats } = createLogHarnas();
 
 describe('qnbinom', function () {
     describe('invalid input', () => {
@@ -37,7 +34,7 @@ describe('qnbinom', function () {
         it('p=0.5, prob=-1(<0), size=0', () => {
             const nan = qnbinom(0.5, 4, -1);
             expect(nan).toBeNaN();
-            const stats1 = createStatsFromLogs(logs);
+            const stats1 = getStats();
             expect(stats1.qnbinom).toBe(1);
         });
         it('p=1, prob=0.3, size=-4', () => {

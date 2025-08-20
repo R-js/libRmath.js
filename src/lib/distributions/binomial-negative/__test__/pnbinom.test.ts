@@ -7,12 +7,9 @@ import { loadData } from '@common/load';
 
 import { prob2mu } from './test-helpers';
 
-import createDebugLoggerBackend, { createStatsFromLogs, LogEntry } from '@common/debug-backend';
-import { register } from '@common/debug-frontend';
+import { createLogHarnas } from '@common/debug-backend';
 
-const logs: LogEntry[] = [];
-
-register(createDebugLoggerBackend(logs));
+const { getStats } = createLogHarnas();
 
 describe('pnbinom', function () {
     describe('invalid input', () => {
@@ -34,7 +31,7 @@ describe('pnbinom', function () {
         });
         it('x=10, prob=Infinity, size=30', () => {
             const nan = pnbinom(10, 30, Infinity);
-            const stats = createStatsFromLogs(logs);
+            const stats = getStats();
             expect(stats.pnbinom).toBe(1);
             expect(nan).toBeNaN();
         });

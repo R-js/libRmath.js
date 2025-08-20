@@ -2,12 +2,9 @@ import { globalUni, RNGkind, setSeed } from '@rng/global-rng';
 
 import { rnbinom } from '..';
 
-import createDebugLoggerBackend, { createStatsFromLogs, LogEntry } from '@common/debug-backend';
-import { register } from '@common/debug-frontend';
+import { createLogHarnas } from '@common/debug-backend';
+const { getStats } = createLogHarnas();
 
-const logs: LogEntry[] = [];
-
-register(createDebugLoggerBackend(logs));
 describe('rnbinom', function () {
     describe('invalid input', () => {
         expect(() => rnbinom(1, 10, undefined, undefined)).toThrowError('argument "prob" is missing, with no default');
@@ -51,7 +48,7 @@ describe('rnbinom', function () {
         });
         it('(check M.E.)n=1, size=8, mu=NaN', () => {
             const nan = rnbinom(1, 8, undefined, NaN);
-            const stats = createStatsFromLogs(logs);
+            const stats = getStats();
             expect(stats.rnbinom_mu).toBe(1);
             expect(nan).toEqualFloatingPointBinary(NaN);
         });

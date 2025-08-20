@@ -2,12 +2,9 @@ import { resolve } from 'path';
 
 //helper
 import { loadData } from '@common/load';
-import createDebugLoggerBackend, { createStatsFromLogs, LogEntry } from '@common/debug-backend';
-import { register } from '@common/debug-frontend';
+import { createLogHarnas } from '@common/debug-backend';
 
-const logs: LogEntry[] = [];
-
-register(createDebugLoggerBackend(logs));
+const { getStats } = createLogHarnas();
 
 import { dnbinom } from '..';
 import { prob2mu } from './test-helpers';
@@ -29,7 +26,7 @@ describe('dnbinom', function () {
         });
         it('x=10, prob=0, size=20', () => {
             const nan = dnbinom(10, 20, 0);
-            const stats = createStatsFromLogs(logs);
+            const stats = getStats();
             expect(nan).toBeNaN();
             expect(stats.dnbinom).toBe(1);
         });

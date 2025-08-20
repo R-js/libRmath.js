@@ -7,11 +7,9 @@ import { loadData } from '@common/load';
 
 import { dbinom } from '..';
 
-import createDebugLoggerBackend, { createStatsFromLogs, LogEntry } from '@common/debug-backend';
-import { register } from '@common/debug-frontend';
+import { createLogHarnas } from '@common/debug-backend';
 
-const logs: LogEntry[] = [];
-register(createDebugLoggerBackend(logs));
+const { getStats } = createLogHarnas();
 
 describe('dbinom', function () {
     it('ranges x ∊ [0, 12] size=12, prob=0.01', async () => {
@@ -65,7 +63,7 @@ describe('dbinom', function () {
     });
     it('x=4, size=100, prob=3 (>1)', () => {
         const z0 = dbinom(4, 100, 3); // 100%, you always score "head", never "tail"
-        const stats1 = createStatsFromLogs(logs);
+        const stats1 = getStats();
         expect(z0).toBeNaN();
         expect(stats1.dbinom).toBe(1);
     });
