@@ -1,19 +1,14 @@
 import { loadData } from '@common/load';
 import { resolve } from 'path';
 
-import { cl, select } from '@common/debug-mangos-select';
-
 import { runif } from '..';
 
 import { globalUni, RNGkind } from '@rng/global-rng';
-
-const runifDomainWarns = select('runif')("argument out of domain in '%s'");
+import { createLogHarnas } from '@common/debug-backend';
+const { getStats } = createLogHarnas();
 
 describe('runif', function () {
     describe('invalid input and edge cases', () => {
-        beforeEach(() => {
-            cl.clear('runif');
-        });
         it('n=Nan', () => {
             // qunif(p: number, a = 0, b = 1, lowerTail = true, logP = false)
             expect(() => runif(NaN)).toThrowError('"n=NaN" is not a positive finite number');
@@ -36,11 +31,11 @@ describe('runif', function () {
             const nan3 = runif(1, 20, 10);
             // its a Float64Array
             expect(nan3).toEqualFloatingPointBinary(NaN);
-
-            expect(runifDomainWarns()).toHaveLength(3);
+            expect(getStats().runif).toBe(3);
         });
 
         it('a = Infinite| b = Infinite| a > b', () => {
+            const stats0 = getStats();
             const nan1 = runif(1, Infinity);
             // its a Float64Array
             expect(nan1).toEqualFloatingPointBinary(NaN);
@@ -50,7 +45,8 @@ describe('runif', function () {
             const nan3 = runif(1, 20, 10);
             // its a Float64Array
             expect(nan3).toEqualFloatingPointBinary(NaN);
-            expect(runifDomainWarns()).toHaveLength(3);
+            const stats1 = getStats();
+            expect(stats1.runif - stats0.runif).toBe(3);
         });
     });
     describe('fidelity', () => {

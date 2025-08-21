@@ -1,14 +1,10 @@
-import { cl, select } from '@common/debug-mangos-select';
-
 import { dunif } from '..';
 
-const dunifDomainWarns = select('dunif')("argument out of domain in '%s'");
+import { createLogHarnas } from '@common/debug-backend';
+const { getStats } = createLogHarnas();
 
 describe('dunif', function () {
     describe('invalid input and edge cases', () => {
-        beforeEach(() => {
-            cl.clear('dunif');
-        });
         it('x=Nan|min=NaN|max=NaN', () => {
             // dunif(x: number, min = 0, max = 1, logP = false):
             const nan1 = dunif(NaN, 4, 3);
@@ -33,7 +29,7 @@ describe('dunif', function () {
             expect(nan1).toBeNaN();
             const nan2 = dunif(4, 9, 9);
             expect(nan2).toBeNaN();
-            expect(dunifDomainWarns()).toHaveLength(2);
+            expect(getStats().dunif).toBe(2);
         });
     });
     describe('fidelity', () => {

@@ -1,15 +1,10 @@
-import { cl, select } from '@common/debug-mangos-select';
-
 import { qunif } from '..';
 
-const qunifDomainWarns = select('qunif')("argument out of domain in '%s'");
-const qbounderyWarns = select('R_Q_P01_check')("argument out of domain in '%s'");
+import { createLogHarnas } from '@common/debug-backend';
+const { getStats } = createLogHarnas();
 
 describe('qunif', function () {
     describe('invalid input and edge cases', () => {
-        beforeEach(() => {
-            cl.clear('qunif');
-        });
         it('p=Nan|a=NaN|b=NaN', () => {
             // qunif(p: number, a = 0, b = 1, lowerTail = true, logP = false)
             const nan1 = qunif(NaN, 4, 3);
@@ -24,19 +19,22 @@ describe('qunif', function () {
             expect(nan1).toBeNaN();
             const nan2 = qunif(1.2);
             expect(nan2).toBeNaN();
-            expect(qbounderyWarns()).toHaveLength(2);
+            const stats = getStats();
+            expect(stats.R_Q_P01_check).toBe(2);
         });
         it('min=Infinity|max=Infinity', () => {
             const nan1 = qunif(0.9, Infinity);
             expect(nan1).toBeNaN();
             const nan2 = qunif(0.9, 0, Infinity);
             expect(nan2).toBeNaN();
-            expect(qunifDomainWarns()).toHaveLength(2);
+            expect(getStats().qunif).toBe(2);
         });
         it('min > max', () => {
+            const stats0 = getStats();
             const nan1 = qunif(0.9, 10, 4);
             expect(nan1).toBeNaN();
-            expect(qunifDomainWarns()).toHaveLength(1);
+            const stats1 = getStats();
+            expect(stats1.qunif - stats0.qunif).toBe(1);
         });
         it('min = max', () => {
             const ans = qunif(0.9, 4, 4);
