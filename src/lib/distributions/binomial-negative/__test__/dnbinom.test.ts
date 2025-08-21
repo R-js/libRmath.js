@@ -1,7 +1,7 @@
 import { resolve } from 'path';
 
 //helper
-import { loadData } from '@common/load';
+import { loadData } from '@common/test-helpers/load';
 import { createLogHarnas } from '@common/debug-backend';
 
 const { getStats } = createLogHarnas();
@@ -9,8 +9,8 @@ const { getStats } = createLogHarnas();
 import { dnbinom } from '..';
 import { prob2mu } from './test-helpers';
 
-describe('dnbinom', function () {
-    describe('invalid input', () => {
+describe('dnbinom', () => {
+    it('invalid input', () => {
         expect(() => dnbinom(1, 10, undefined, undefined)).toThrowError('argument "prob" is missing, with no default');
         expect(() => dnbinom(1, 10, 5, 6)).toThrowError('"prob" and "mu" both specified');
     });

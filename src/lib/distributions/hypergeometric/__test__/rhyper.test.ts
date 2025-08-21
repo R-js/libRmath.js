@@ -1,7 +1,7 @@
 import { resolve } from 'path';
 import ms from 'ms';
 
-import { loadData } from '@common/load';
+import { loadData } from '@common/test-helpers/load';
 
 import { globalUni, RNGkind } from '@rng/global-rng';
 import { rhyper, useWasmBackendHyperGeom, clearBackendHyperGeom } from '..';
@@ -70,7 +70,7 @@ describe('rhyper', function () {
             clearBackendHyperGeom();
             console.log(`rhyper: (wasm) ${ms(t1 - t0)}`);
             console.log(`rhyper: (wasm) ${ms(t2 - t1)}`);
-        });
+        }, 1e6);
     });
 
     describe('reguler', () => {

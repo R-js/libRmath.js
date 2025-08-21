@@ -1,7 +1,7 @@
 import { resolve } from 'path';
 
 //helper
-import { loadData } from '@common/load';
+import { loadData } from '@common/test-helpers/load';
 
 //app
 

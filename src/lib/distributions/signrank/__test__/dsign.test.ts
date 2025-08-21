@@ -1,6 +1,6 @@
 import ms from 'ms';
 
-import { loadData } from '@common/load';
+import { loadData } from '@common/test-helpers/load';
 import { resolve } from 'path';
 import { dsignrank, useWasmBackendSignRank, clearBackendSignRank } from '..';
 
@@ -69,7 +69,7 @@ describe('dsignrank (wilcox sign rank)', function () {
             expect(res).toEqual(Infinity);
             console.log(`dsign (wasm) duration: ${ms(Date.now() - start)}`);
             clearBackendSignRank();
-        });
+        }, 1e9);
         it.skip('(no wasm) test large inputnumbers n = 4000, W= 4025500', () => {
             const start = Date.now();
             const res = dsignrank(4025500, 4000);

@@ -1,5 +1,6 @@
-export {};
+export { describe, it, expect, xit } from 'vitest';
 
+import { expect } from 'vitest';
 import type { MatcherHintOptions } from 'jest-matcher-utils';
 import { isTypedArray } from 'util/types';
 
@@ -233,6 +234,8 @@ function toScalar(o: NumArray, alt: string) {
     }
     return alt;
 }
+
+
 
 expect.extend({
     toEqualFloatingPointBinary(

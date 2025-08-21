@@ -1,4 +1,4 @@
-import { loadData } from '@common/load';
+import { loadData } from '@common/test-helpers/load';
 import { resolve } from 'path';
 import { pf } from '..';
 
@@ -22,7 +22,7 @@ describe('pf', function () {
         const nan = pf(1, -2, 4);
         expect(nan).toBeNaN();
         const stats = getStats();
-        console.log('pf', stats);
+        expect(stats.pf).toBe(1);
     });
     it('x=2, df1=23, df2=Infinity', () => {
         const z = pf(2, 23, Infinity);

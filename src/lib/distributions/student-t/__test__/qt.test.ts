@@ -1,4 +1,4 @@
-import { loadData } from '@common/load';
+import { loadData } from '@common/test-helpers/load';
 import { resolve } from 'path';
 import { DBL_EPSILON, DBL_MIN } from '@lib/r-func';
 
@@ -58,16 +58,16 @@ describe('partialQtf(x, df, lower.tail, log.p)', function () {
             const ans2 = partialQtf(-DBL_MIN / 2, 45, true, true);
             expect(ans2).toEqualFloatingPointBinary(43926862.668675929, 43);
         });
-        xit('df < 2.1 && P > 0.5 (lowerTail=false && p ~ 0', () => {
+        it.skip('df < 2.1 && P > 0.5 (lowerTail=false && p ~ 0', () => {
             const ans1 = partialQtf(-DBL_MIN / 2, 1.2, false, true);
             expect(ans1).toEqualFloatingPointBinary(-1.0055623670775586e256);
         });
-        xit('p close to 1 or 0 (-+ EPSILON)', () => {
+        it.skip('p close to 1 or 0 (-+ EPSILON)', () => {
             expect(partialQtf(1 - DBL_EPSILON / 2, 0.2, true, false)).toEqualFloatingPointBinary(Infinity);
             expect(partialQtf(DBL_MIN / 2, 2, true, false)).toEqualFloatingPointBinary(-Infinity);
             expect(partialQtf(-DBL_MIN / 2, 2, true, true)).toEqualFloatingPointBinary(Infinity);
         });
-        xit('p close to 0 , df=1 lowertail=T , aslog = false', () => {
+        it.skip('p close to 0 , df=1 lowertail=T , aslog = false', () => {
             expect(partialQtf(DBL_MIN / 2, 1, true, false)).toEqualFloatingPointBinary(-2.8611174857570284e307);
             //js returns -Infinity, R returns -2.8611174857570284e+307
         });

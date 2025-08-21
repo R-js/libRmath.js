@@ -1,7 +1,7 @@
 // node
 import { resolve } from 'path';
 
-import { loadData } from '@common/load';
+import { loadData } from '@common/test-helpers/load';
 import { dcauchy } from '..';
 
 describe('dcauchy', function () {

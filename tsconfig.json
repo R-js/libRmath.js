@@ -33,7 +33,7 @@
         },
         "resolveJsonModule": true,
         "types": ["node", "jest"],
-        "typeRoots": ["src/packages/__test__/jest-ext.d.ts", "node_modules/@types"],
+        "typeRoots": ["src/packages/test-helpers/jest-ext.d.ts", "node_modules/@types"],
 
         "declaration": false,
         "outDir": "dist/tsc",

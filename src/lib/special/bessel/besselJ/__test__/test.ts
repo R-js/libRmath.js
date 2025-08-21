@@ -1,23 +1,10 @@
-// node
-//import { resolve } from 'path';
-
-//helper
-//import { loadData } from '@common/load';
-import { cl, select } from '@common/debug-mangos-select';
-
-const regexpAll = /^.*$/;
-const msgBesselJ = select('BesselJ')(regexpAll);
-const msgBesselJInternal = select('J_bessel')(regexpAll);
-
-//app
 
 import besselJ from '..';
 
+import { createLogHarnas } from '@common/debug-backend';
+const { getStats } = createLogHarnas();
+
 describe('bessel function of first kind (besselJ)', function () {
-    beforeEach(() => {
-        cl.clear('BesselJ');
-        cl.clear('J_bessel');
-    });
     describe('invalid input and edge cases', () => {
         it('[NaN] in, NaN', () => {
             const actual = besselJ(NaN, 0);
@@ -35,16 +22,17 @@ describe('bessel function of first kind (besselJ)', function () {
             const actual = besselJ(4e5, -52);
             // check error log
             expect(actual).toEqualFloatingPointBinary(0);
-            expect(msgBesselJInternal()).toEqual([["argument out of range in '%s'", 'J_bessel_err_nr=1000']]);
+            expect(getStats()).toEqual({ BesselJ: 3, J_bessel: 1 });
         });
         it('x=27.595, nu=398.5', () => {
+            const stats0 = getStats();
             const actual = besselJ(27.595, 398.5);
             expect(actual).toBe(0);
-            expect(msgBesselJ()).toEqual([
-                ['debug (nu=%d, na=%d, nb=%d, rc=%j', 0.5, 398, 399, { nb: 399, ncalc: 320, x: 0 }],
-                ['bessel_j(%d,nu=%d): precision lost in result', 27.595, 398.5]
-            ]);
-            expect(msgBesselJInternal()).toEqual([['rest: x=%d, nb=%d\t', 27.595, 399]]);
+            const stats1 = getStats();
+            const BesselJCnt = stats1.BesselJ - stats0.BesselJ;
+            const J_besselCnt = stats1.J_bessel - stats0.J_bessel;
+            expect(BesselJCnt).toBe(2);
+            expect(J_besselCnt).toBe(1);
         });
     });
     describe('fidelity', () => {

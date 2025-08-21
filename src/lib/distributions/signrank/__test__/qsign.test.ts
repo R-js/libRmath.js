@@ -1,6 +1,6 @@
 import ms from 'ms';
 
-import { loadData } from '@common/load';
+import { loadData } from '@common/test-helpers/load';
 import { resolve } from 'path';
 import { qsignrank, useWasmBackendSignRank, clearBackendSignRank, psignrank } from '..';
 import { log, DBL_EPSILON } from '@lib/r-func';
@@ -102,7 +102,7 @@ describe('qsignrank (wilcox sign rank)', function () {
             );
             expect(xCalcActual).toEqualFloatingPointBinary(xCalc);
             clearBackendSignRank();
-        });
+        }, 1e9);
         it.skip('(no wasm) n = 1074', async () => {
             const start0 = Date.now();
             const [x, xCalc] = await loadData(resolve(__dirname, 'fixture-generation', 'qsign1b.R'), /\s+/, 1, 2);

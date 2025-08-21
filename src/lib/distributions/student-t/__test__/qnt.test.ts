@@ -1,4 +1,4 @@
-import { loadData } from '@common/load';
+import { loadData } from '@common/test-helpers/load';
 import { resolve } from 'path';
 
 import { DBL_EPSILON } from '@lib/r-func';

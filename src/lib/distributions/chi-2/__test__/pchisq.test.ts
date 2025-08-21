@@ -1,7 +1,7 @@
 import { resolve } from 'path';
 import { pchisq } from '..';
 
-import { loadData } from '@common/load';
+import { loadData } from '@common/test-helpers/load';
 
 describe('pchisq', function () {
     it('ranges x ∊ [0, 40, step 0.5] df=13', async () => {

@@ -27,52 +27,64 @@ describe('irng', function n() {
     it('test emitting event on init', () => {
         const usr = new MyIRNG();
         const fn = (seed: number) => seed;
-        const mockCallback = jest.fn(fn);
-        usr.register(MessageType.INIT, mockCallback as typeof fn);
+        let calledWith = [];
+        const mockCallback = (...args: any[]) => calledWith.push(args);
+        usr.register(MessageType.INIT, mockCallback);
         usr.init(1234);
-        expect(mockCallback).toHaveBeenCalledTimes(1);
-        expect(mockCallback).toHaveBeenCalledWith(usr, 1234);
+        expect(calledWith).toEqual(
+            [
+                [
+                    usr,
+                    1234
+                ]
+            ]
+        );
     });
 
     it('test unregister specific callback', () => {
         const usr = new MyIRNG();
         const fn = (seed: number) => seed;
-        const mockCallback = jest.fn(fn);
+        let cnt = 0;
+        const mockCallback = () => cnt++;
         usr.register(MessageType.INIT, mockCallback);
         usr.unregister(MessageType.INIT, mockCallback);
         usr.init(1234);
-        expect(mockCallback).not.toHaveBeenCalled();
+        expect(cnt).toBe(0); // mockCallback not called
     });
 
     it('test unregister all callbacks', () => {
         const usr = new MyIRNG();
         const fn = (seed: number) => seed;
-        const mockCallback = jest.fn(fn);
+        let cnt = 0;
+        const mockCallback = () => cnt++;
         usr.register(MessageType.INIT, mockCallback);
         usr.unregister(MessageType.INIT);
         usr.init(1234);
-        expect(mockCallback).not.toHaveBeenCalled();
+        expect(cnt).toBe(0);
     });
     it('test register 2 callbacks and remove 1', () => {
         const usr = new MyIRNG();
         const fn = (seed: number) => seed;
-        const mockCallback1 = jest.fn(fn);
-        const mockCallback2 = jest.fn(fn);
+        let cnt1 = 0;
+        let cnt2 = 0;
+        const mockCallback1 = () => cnt1++;
+        const mockCallback2 = () => cnt2++;;
         usr.register(MessageType.INIT, mockCallback1);
         usr.register(MessageType.INIT, mockCallback2);
         usr.init(1234); // both callbacks are called
         usr.unregister(MessageType.INIT, mockCallback1);
         usr.init(5678); // only 1 callback called
-        expect(mockCallback1).toHaveBeenCalledTimes(1);
-        expect(mockCallback2).toHaveBeenCalledTimes(2);
+        expect(cnt1).toBe(1); // called once
+        expect(cnt2).toBe(2); // called twice
     });
     it('unregister nonexisting callback', () => {
         const usr = new MyIRNG();
         const fn = (seed: number) => seed;
-        const mockCallback1 = jest.fn(fn);
+        let cnt1 = 0;
+        const mockCallback1 = () => cnt1++;
         usr.unregister(MessageType.INIT, mockCallback1);
-        usr.init(5678); // only 1 callback called
-        expect(mockCallback1).not.toHaveBeenCalled();
+        usr.init(5678);
+        expect(cnt1).toBe(0); // not called
     });
 });
 

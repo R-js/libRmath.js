@@ -3,7 +3,7 @@ import { resolve } from 'path';
 import { pnbinom } from '..';
 
 //helper
-import { loadData } from '@common/load';
+import { loadData } from '@common/test-helpers/load';
 
 import { prob2mu } from './test-helpers';
 
@@ -12,7 +12,7 @@ import { createLogHarnas } from '@common/debug-backend';
 const { getStats } = createLogHarnas();
 
 describe('pnbinom', function () {
-    describe('invalid input', () => {
+    it('invalid input', () => {
         expect(() => pnbinom(1, 10, undefined, undefined)).toThrowError('argument "prob" is missing, with no default');
         expect(() => pnbinom(1, 10, 5, 6)).toThrowError('"prob" and "mu" both specified');
     });

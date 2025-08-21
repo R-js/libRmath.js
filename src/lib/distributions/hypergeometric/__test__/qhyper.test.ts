@@ -1,6 +1,6 @@
 import ms from 'ms';
 
-import { loadData } from '@common/load';
+import { loadData } from '@common/test-helpers/load';
 import { resolve } from 'path';
 import { qhyper, useWasmBackendHyperGeom, clearBackendHyperGeom } from '..';
 
@@ -135,6 +135,6 @@ describe('qhyper(p,m,n,k,log)', function () {
             console.log(`(wasm) duration: ${ms(stop - start)}`);
             clearBackendHyperGeom();
             expect(result).toBe(1073741806);
-        });
+        }, 1e9);
     });
 });

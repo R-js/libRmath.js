@@ -1,4 +1,4 @@
-import { loadData } from '@common/load';
+import { loadData } from '@common/test-helpers/load';
 import { resolve } from 'path';
 
 import { pf } from '..';
@@ -33,8 +33,7 @@ describe('pnf ncp=defined', function () {
         const nan = pf(2, 23, 24, Infinity);
         const stats1 = getStats();
         expect(nan).toBeNaN();
-        console.log(stats1, stats0);
-        // expect(pfDomainWarns()).toHaveLength(1);
+        expect(stats1.pnf - stats0.pnf).toBe(1);
     });
     it('x=2, df1=Infinity, df2=Infinity, ncp=38', () => {
         const nan = pf(2, Infinity, Infinity, 38);

@@ -1,7 +1,7 @@
 import { resolve } from 'path';
 import { qexp } from '..';
 
-import { loadData } from '@common/load';
+import { loadData } from '@common/test-helpers/load';
 import { createLogHarnas } from '@common/debug-backend';
 
 const { getStats } = createLogHarnas();
