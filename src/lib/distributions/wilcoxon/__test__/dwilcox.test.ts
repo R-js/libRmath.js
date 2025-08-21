@@ -1,19 +1,15 @@
 import { loadData } from '@common/load';
 import { resolve } from 'path';
 
-import { cl, select } from '@common/debug-mangos-select';
+import { createLogHarnas } from '@common/debug-backend';
+const { getStats } = createLogHarnas();
 
 import { dwilcox } from '..';
-
 import { exp } from '@lib/r-func';
 
-const dwilcoxDomainWarns = select('dwilcox')("argument out of domain in '%s'");
 
 describe('dwilcox', function () {
     describe('invalid input and edge cases', () => {
-        beforeEach(() => {
-            cl.clear('dwilcox');
-        });
         it('x=NaN|m=NaN|n=NaN', () => {
             const nan1 = dwilcox(NaN, 1, 1);
             const nan2 = dwilcox(0, NaN, 1);
@@ -27,7 +23,7 @@ describe('dwilcox', function () {
             const nan2 = dwilcox(0, 1, -1);
             expect(nan1).toBeNaN();
             expect(nan2).toBeNaN();
-            expect(dwilcoxDomainWarns()).toHaveLength(2);
+            expect(getStats().dwilcox).toBe(2);
         });
         it('if x is larger then an integer by 1e-7 return 0', () => {
             const nonZero1 = dwilcox(3 + 1e-7, 4, 5);
