@@ -1,22 +1,18 @@
-import { cl, select } from '@common/debug-mangos-select';
 import { ptukey } from '..';
 
-const ptukeyDomainWarns = select('ptukey')("argument out of domain in '%s'");
+import { createLogHarnas } from '@common/debug-backend';
+const { getStats } = createLogHarnas();
 
 describe('ptukey', function () {
     describe('invalid input and edge cases', () => {
-        beforeEach(() => {
-            cl.clear('ptukey');
-            cl.clear('R_Q_P01_boundaries');
-        });
-
         it('p=Nan|nmeans=NaN|df=NaN|ranges=NaN', () => {
             const nan1 = ptukey(NaN, 4, 3, 2);
             const nan2 = ptukey(0.9, NaN, 3, 2);
             const nan3 = ptukey(0.9, 4, NaN);
             const nan4 = ptukey(0.9, 4, 3, NaN);
             expect([nan1, nan2, nan3, nan4]).toEqualFloatingPointBinary(NaN);
-            expect(ptukeyDomainWarns()).toHaveLength(4);
+            const stats = getStats();
+            expect(stats.ptukey).toBe(4);
         });
         it('x <= 0 | x -> infinity', () => {
             const zero = ptukey(-0.9, 4, 2);
@@ -25,11 +21,13 @@ describe('ptukey', function () {
             expect(one).toBe(1);
         });
         it('df < 2| nmeans < 2| nrnanges < 1', () => {
+            const stats0 = getStats();
             const nan1 = ptukey(5, 4, 1);
             const nan2 = ptukey(5, 1, 2);
             const nan3 = ptukey(5, 2, 2, 0);
             expect([nan1, nan2, nan3]).toEqualFloatingPointBinary(NaN);
-            expect(ptukeyDomainWarns()).toHaveLength(3);
+            const stats1 = getStats();
+            expect(stats1.ptukey - stats0.ptukey).toBe(3);
         });
         it('df > 25000, use wprob', () => {
             const ans = ptukey(1, 5, 26000);

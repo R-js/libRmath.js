@@ -2,18 +2,16 @@
 import { resolve } from 'path';
 
 //helper
-import { loadData } from '@common/load';
-import { cl, select } from '@common/debug-mangos-select';
-
-const qbeta2DomainWarns = select('qbeta')("argument out of domain in '%s'");
+import { loadData } from '@common/test-helpers/load';
 
 //app
 import { qbeta } from '..';
 
+import { createLogHarnas } from '@common/debug-backend';
+
+const { getStats } = createLogHarnas();
+
 describe('qbeta', function () {
-    beforeEach(() => {
-        cl.clear('qbeta');
-    });
     it('ranges x ∊ [0, 1], shape1=1, shape2=2', async () => {
         const [x, y] = await loadData(resolve(__dirname, 'fixture-generation', 'qbeta.R'), /\s+/, 1, 2);
         const actual = x.map((_x) => qbeta(_x, 2, 2, undefined, true, false));
@@ -49,7 +47,8 @@ describe('qbeta', function () {
     it('shape1=-1, q=0.2, shape2=4, ncp=undefined', () => {
         const nan = qbeta(0.2, -3, 4);
         expect(nan).toEqualFloatingPointBinary(NaN);
-        expect(qbeta2DomainWarns()).toHaveLength(1);
+        const stats = getStats();
+        expect(stats.qbeta).toBe(1);
     });
     it('shape1=3, q=0.2, shape2=4, ncp=undefined, log.p=TRUE', () => {
         const nan = qbeta(0.2, 3, 4, undefined, false, true);

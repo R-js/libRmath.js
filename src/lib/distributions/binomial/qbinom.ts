@@ -1,13 +1,13 @@
-import { debug } from '@mangos/debug';
+import createNS from '@common/debug-frontend';
 
-import { ML_ERR_return_NAN2, lineInfo4, R_Q_P01_boundaries } from '@common/logger';
+import { ML_ERR_return_NAN2, R_Q_P01_boundaries } from '@common/logger';
 
 import { NumberW } from '@common/toms708/NumberW';
 import { R_DT_qIv } from '@dist/exp/expm1';
 import { qnorm } from '@dist/normal/qnorm';
 import { pbinom } from './pbinom';
 
-const printer_do_search = debug('do_search');
+const printer_do_search = createNS('do_search');
 
 function do_search(y: number, z: NumberW, p: number, n: number, pr: number, incr: number): number {
     if (z.val >= p) {
@@ -15,7 +15,7 @@ function do_search(y: number, z: NumberW, p: number, n: number, pr: number, incr
 
         printer_do_search('new z=%o >= p = %d  --> search to left (y--) ..', z, p);
 
-        for (;;) {
+        for (; ;) {
             let newz: number;
             if (y === 0 || (newz = pbinom(y - incr, n, pr, /*l._t.*/ true, /*logP*/ false)) < p) return y;
             y = Math.max(0, y - incr);
@@ -26,14 +26,14 @@ function do_search(y: number, z: NumberW, p: number, n: number, pr: number, incr
 
         printer_do_search('new z=%d < p = %d  --> search to right (y++) ..', z.val, p);
 
-        for (;;) {
+        for (; ;) {
             y = Math.min(y + incr, n);
             if (y === n || (z.val = pbinom(y, n, pr, /*l._t.*/ true, /*logP*/ false)) >= p) return y;
         }
     }
 }
 
-const printer_qbinom = debug('qbinom');
+const printer_qbinom = createNS('qbinom');
 
 export function qbinom(p: number, size: number, prob: number, lowerTail = true, logP = false): number {
     const z = new NumberW(0);
@@ -42,19 +42,19 @@ export function qbinom(p: number, size: number, prob: number, lowerTail = true, 
     if (isNaN(p) || isNaN(size) || isNaN(prob)) return NaN;
 
     if (!isFinite(size) || !isFinite(prob)) {
-        return ML_ERR_return_NAN2(printer_qbinom, lineInfo4);
+        return ML_ERR_return_NAN2(printer_qbinom);
     }
     /* if logP is true, p = -Inf is a legitimate value */
     if (!isFinite(p) && !logP) {
-        return ML_ERR_return_NAN2(printer_qbinom, lineInfo4);
+        return ML_ERR_return_NAN2(printer_qbinom);
     }
 
     if (!Number.isInteger(size)) {
-        return ML_ERR_return_NAN2(printer_qbinom, lineInfo4);
+        return ML_ERR_return_NAN2(printer_qbinom);
     }
 
     if (prob < 0 || prob > 1 || size < 0) {
-        return ML_ERR_return_NAN2(printer_qbinom, lineInfo4);
+        return ML_ERR_return_NAN2(printer_qbinom);
     }
 
     const rc = R_Q_P01_boundaries(lowerTail, logP, p, 0, size);

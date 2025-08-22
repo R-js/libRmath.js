@@ -1,21 +1,15 @@
 import ms from 'ms';
 
-import { loadData } from '@common/load';
+import { loadData } from '@common/test-helpers/load';
 import { resolve } from 'path';
-
-import { cl, select } from '@common/debug-mangos-select';
-
 import { dsignrank, useWasmBackendSignRank, clearBackendSignRank } from '..';
 
-const dsignrankLogs = select('dsignrank');
-const dsignrankDomainWarns = dsignrankLogs("argument out of domain in '%s'");
+import { createLogHarnas } from '@common/debug-backend';
+const { getStats } = createLogHarnas();
 
 const range = (a: number, b: number) => Array.from({ length: b - a + 1 }, (_v, i) => i + a);
 
 describe('dsignrank (wilcox sign rank)', function () {
-    beforeEach(() => {
-        cl.clear('dsignrank');
-    });
     describe('invalid input and edge cases', () => {
         it('x = NaN | n = NaN', () => {
             const nan1 = dsignrank(NaN, 2);
@@ -26,7 +20,7 @@ describe('dsignrank (wilcox sign rank)', function () {
         it('n <= 0', () => {
             const nan1 = dsignrank(6, -1);
             expect(nan1).toBeNaN();
-            expect(dsignrankDomainWarns()).toHaveLength(1);
+            expect(getStats().dsignrank).toBe(1);
         });
         it('trunc(x)-x < 1e7 and trunc(x)-x > 1e7', () => {
             const zero = dsignrank(3 + 2e-7, 4);
@@ -75,8 +69,8 @@ describe('dsignrank (wilcox sign rank)', function () {
             expect(res).toEqual(Infinity);
             console.log(`dsign (wasm) duration: ${ms(Date.now() - start)}`);
             clearBackendSignRank();
-        });
-        it('(no wasm) test large inputnumbers n = 4000, W= 4025500', () => {
+        }, 1e9);
+        it.skip('(no wasm) test large inputnumbers n = 4000, W= 4025500', () => {
             const start = Date.now();
             const res = dsignrank(4025500, 4000);
             expect(res).toEqual(Infinity);

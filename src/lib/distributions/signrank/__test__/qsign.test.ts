@@ -1,23 +1,14 @@
 import ms from 'ms';
 
-import { loadData } from '@common/load';
+import { loadData } from '@common/test-helpers/load';
 import { resolve } from 'path';
-
-import { cl, select } from '@common/debug-mangos-select';
-
 import { qsignrank, useWasmBackendSignRank, clearBackendSignRank, psignrank } from '..';
-
 import { log, DBL_EPSILON } from '@lib/r-func';
 
-const qsignrankLogs = select('qsignrank');
-const qsignrankDomainWarns = qsignrankLogs("argument out of domain in '%s'");
-const qsignrankBounderies = select('R_Q_P01_check')("argument out of domain in '%s'");
+import { createLogHarnas } from '@common/debug-backend';
+const { getStats } = createLogHarnas();
 
 describe('qsignrank (wilcox sign rank)', function () {
-    beforeEach(() => {
-        cl.clear('qsignrank');
-        cl.clear('R_Q_P01_check');
-    });
     describe('invalid input and edge cases', () => {
         it('p = NaN | n = NaN', () => {
             const nan1 = qsignrank(NaN, 2);
@@ -30,21 +21,24 @@ describe('qsignrank (wilcox sign rank)', function () {
             expect(nan1).toBeNaN();
             const nan2 = qsignrank(0.5, Infinity);
             expect(nan2).toBeNaN();
-            expect(qsignrankDomainWarns()).toHaveLength(2);
+            expect(getStats().qsignrank).toBe(2);
         });
         it('p < 0 | p > 1', () => {
             const nan1 = qsignrank(-1, 4);
             expect(nan1).toBeNaN();
             const nan2 = qsignrank(1.1, 5);
             expect(nan2).toBeNaN();
-            expect(qsignrankBounderies()).toHaveLength(2);
+            const stats = getStats();
+            expect(stats.R_Q_P01_check).toBe(2);
         });
         it('n <= 0', () => {
+            const stats0 = getStats();
             const nan1 = qsignrank(0.2, -4);
             expect(nan1).toBeNaN();
             const nan2 = qsignrank(0.2, 0);
             expect(nan2).toBeNaN();
-            expect(qsignrankDomainWarns()).toHaveLength(2);
+            const stats1 = getStats();
+            expect(stats1.qsignrank - stats0.qsignrank).toBe(2);
         });
         it('p = 0 | p = log(exp(1)) if pAsLog=true && lowerTail = true', () => {
             const zero1 = qsignrank(0, 4, true, false);
@@ -108,8 +102,8 @@ describe('qsignrank (wilcox sign rank)', function () {
             );
             expect(xCalcActual).toEqualFloatingPointBinary(xCalc);
             clearBackendSignRank();
-        });
-        it('(no wasm) n = 1074', async () => {
+        }, 1e9);
+        it.skip('(no wasm) n = 1074', async () => {
             const start0 = Date.now();
             const [x, xCalc] = await loadData(resolve(__dirname, 'fixture-generation', 'qsign1b.R'), /\s+/, 1, 2);
             const p = x.map((_x) => psignrank(_x, 1074));

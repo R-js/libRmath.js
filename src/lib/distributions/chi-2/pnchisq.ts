@@ -1,5 +1,5 @@
-import { debug } from '@mangos/debug';
-import { ML_ERR_return_NAN2, lineInfo4, ML_ERROR2, ME } from '@common/logger';
+import createNS from '@common/debug-frontend';
+import { ML_ERR_return_NAN2, ML_ERROR3, ME } from '@common/logger';
 import { M_LN_SQRT_2PI, R_D__1, R_D_exp, R_DT_0, R_DT_1, R_DT_val } from '@lib/r-func';
 
 import { R_Log1_Exp } from '@dist/exp/expm1';
@@ -13,7 +13,7 @@ export const DBL_MIN_EXP = Math.log2(Number.MIN_VALUE);
 const _dbl_min_exp = Math.LN2 * DBL_MIN_EXP;
 /*= -708.3964 for IEEE double precision */
 
-const printer = debug('pnchisq');
+const printer = createNS('pnchisq');
 
 export function pnchisq(x: number, df: number, ncp: number, lower_tail: boolean, log_p: boolean): number {
     let ans;
@@ -22,11 +22,11 @@ export function pnchisq(x: number, df: number, ncp: number, lower_tail: boolean,
         return NaN;
     }
     if (!isFinite(df) || !isFinite(ncp)) {
-        return ML_ERR_return_NAN2(printer, lineInfo4);
+        return ML_ERR_return_NAN2(printer);
     }
 
     if (df < 0 || ncp < 0) {
-        return ML_ERR_return_NAN2(printer, lineInfo4);
+        return ML_ERR_return_NAN2(printer);
     }
 
     ans = pnchisq_raw(x, df, ncp, 1e-12, 8 * Number.EPSILON, 1000000, lower_tail, log_p);
@@ -36,7 +36,9 @@ export function pnchisq(x: number, df: number, ncp: number, lower_tail: boolean,
         } else {
             /* !lower_tail */
             /* since we computed the other tail cancellation is likely */
-            if (ans < (log_p ? -10 * Math.LN10 : 1e-10)) ML_ERROR2(ME.ME_PRECISION, 'pnchisq', printer);
+            if (ans < (log_p ? -10 * Math.LN10 : 1e-10)) {
+                ML_ERROR3(printer, ME.ME_PRECISION, 'pnchisq');
+            }
             if (!log_p) ans = Math.max(ans, 0.0); /* Precaution PR#7099 */
         }
     }

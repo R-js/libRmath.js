@@ -1,4 +1,4 @@
-import type { Printer } from '@mangos/debug';
+import { Printer } from "@common/debug-frontend";
 
 const {
     isInteger,
@@ -501,7 +501,7 @@ export function R_pow_di(x: number, n: number): number {
             n = -n;
             x = 1 / x;
         }
-        for (;;) {
+        for (; ;) {
             if (n & 1) pow *= x;
             if ((n >>= 1)) x *= x;
             else break;

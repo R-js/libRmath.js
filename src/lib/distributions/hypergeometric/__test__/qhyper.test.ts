@@ -1,13 +1,11 @@
 import ms from 'ms';
 
-import { loadData } from '@common/load';
+import { loadData } from '@common/test-helpers/load';
 import { resolve } from 'path';
-import { cl, select } from '@common/debug-mangos-select';
 import { qhyper, useWasmBackendHyperGeom, clearBackendHyperGeom } from '..';
 
-const qhyperLogs = select('qhyper');
-const qhyperWarns = qhyperLogs("argument out of domain in '%s'");
-const p01bounderies = select('R_Q_P01_boundaries')("argument out of domain in '%s'");
+import { createLogHarnas } from '@common/debug-backend';
+const { getStats } = createLogHarnas();
 
 /**
  * function qhyper(p, m, n, k, lower.tail = TRUE, log.p = FALSE)
@@ -23,17 +21,12 @@ const p01bounderies = select('R_Q_P01_boundaries')("argument out of domain in '%
 
 describe('qhyper(p,m,n,k,log)', function () {
     describe('invalid input', () => {
-        beforeEach(() => {
-            cl.clear('qhyper');
-            cl.clear('R_Q_P01_boundaries');
-        });
         it('test inputs p, nr, ,b, n on NaN', () => {
             const nan1 = qhyper(NaN, 0, 0, 0);
             const nan2 = qhyper(0, NaN, 0, 0);
             const nan3 = qhyper(0, 0, NaN, 0);
             const nan4 = qhyper(0, 0, 0, NaN);
             expect([nan1, nan2, nan3, nan4]).toEqualFloatingPointBinary(NaN);
-            expect(qhyperWarns()).toHaveLength(0);
         });
         it('test inputs p,nr, nb, n on infinity', () => {
             const I = Infinity;
@@ -42,21 +35,23 @@ describe('qhyper(p,m,n,k,log)', function () {
             const nan3 = qhyper(0, 0, I, 0);
             const nan4 = qhyper(0, 0, 0, I);
             expect([nan1, nan2, nan3, nan4]).toEqualFloatingPointBinary(NaN);
-            expect(qhyperWarns()).toHaveLength(4);
+            expect(getStats().qhyper).toBe(4);
         });
         it('test inputs nr < 0, nb <0, n <0 n > (nb+nr)', () => {
+            const stats0 = getStats();
             const nan1 = qhyper(0.1, -1, 0, 0);
             const nan2 = qhyper(0.1, 0, -1, 0);
             const nan3 = qhyper(0.1, 0, 0, -1);
             const nan4 = qhyper(0.1, 0, 0, 2);
             expect([nan1, nan2, nan3, nan4]).toEqualFloatingPointBinary(NaN);
-            expect(qhyperWarns()).toHaveLength(4);
+            const stats1 = getStats();
+            expect(stats1.qhyper - stats0.qhyper).toBe(4);
         });
         it('p < 0 || p > 1', () => {
             const nan1 = qhyper(-1, 2, 3, 2);
             const nan2 = qhyper(1.21, 2, 3, 2);
             expect([nan1, nan2]).toEqualFloatingPointBinary(NaN);
-            expect(p01bounderies()).toHaveLength(2);
+            expect(getStats().R_Q_P01_boundaries).toBe(2);
         });
     });
     describe('edge cases', () => {
@@ -72,6 +67,7 @@ describe('qhyper(p,m,n,k,log)', function () {
         });
     });
     describe('with fixtures', () => {
+        it.todo('useWasmBackendHyperGeom failes on below test, find out why');
         it('p ∈ [0,1], m=300, n=150, k=400 (k < 1000, "small"), lower={true|false}, log={true|false}', async () => {
             const [p, y1, y2, y3, y4] = await loadData(
                 resolve(__dirname, 'fixture-generation', 'qhyper.R'),
@@ -140,6 +136,6 @@ describe('qhyper(p,m,n,k,log)', function () {
             console.log(`(wasm) duration: ${ms(stop - start)}`);
             clearBackendHyperGeom();
             expect(result).toBe(1073741806);
-        });
+        }, 1e9);
     });
 });

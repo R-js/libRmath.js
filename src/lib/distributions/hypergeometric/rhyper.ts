@@ -1,12 +1,12 @@
-import { debug } from '@mangos/debug';
+import createNS from '@common/debug-frontend';
 //
 import { rbinomOne } from '@dist/binomial/rbinom';
-import { ML_ERR_return_NAN2, lineInfo4 } from '@common/logger';
+import { ML_ERR_return_NAN2 } from '@common/logger';
 import { INT_MAX, M_LN_SQRT_2PI } from '@lib/r-func';
 import { qhyper } from './qhyper';
 import { globalUni } from '../../rng/global-rng';
 //
-const printer_afc = debug('afc');
+const printer_afc = createNS('afc');
 
 const al = new Float64Array([
     0.0 /*ln(0!)=ln(1)*/, 0.0 /*ln(1!)=ln(1)*/, 0.69314718055994530941723212145817 /*ln(2) */,
@@ -45,7 +45,7 @@ function afc(i: number): number {
 }
 
 //     rhyper(NR, NB, n) -- NR 'red', NB 'blue', n drawn, how many are 'red'
-const printer_rhyper = debug('rhyper');
+const printer_rhyper = createNS('rhyper');
 
 const r_d = new Float64Array(14);
 const d_N = 0;
@@ -109,7 +109,7 @@ export function rhyperOne(m: number, n: number, k: number): number {
     const rng = globalUni();
 
     if (!isFinite(m) || !isFinite(n) || !isFinite(k)) {
-        return ML_ERR_return_NAN2(printer_rhyper, lineInfo4);
+        return ML_ERR_return_NAN2(printer_rhyper);
     }
 
     m = Math.round(m);
@@ -117,7 +117,7 @@ export function rhyperOne(m: number, n: number, k: number): number {
     k = Math.round(k);
 
     if (m < 0 || n < 0 || k < 0 || k > m + n) {
-        return ML_ERR_return_NAN2(printer_rhyper, lineInfo4);
+        return ML_ERR_return_NAN2(printer_rhyper);
     }
     if (m >= INT_MAX || n >= INT_MAX || k >= INT_MAX) {
         /* large n -- evade integer overflow (and inappropriate algorithms)
@@ -222,7 +222,7 @@ export function rhyperOne(m: number, n: number, k: number): number {
         }
         printer_rhyper('rhyper(), branch II; w = %d > 0', r_d[d_w]);
 
-        L10: for (;;) {
+        L10: for (; ;) {
             // forever + break replaces "goto"
             let p = r_d[d_w];
             r_i[i_ix] = r_i[i_minjx];
@@ -272,29 +272,29 @@ export function rhyperOne(m: number, n: number, k: number): number {
 
             r_d[d_kl] = Math.exp(
                 r_d[d_a] -
-                    afc(r_d[d_xl]) -
-                    afc(r_i[i_n1] - r_d[d_xl]) -
-                    afc(r_i[i_k] - r_d[d_xl]) -
-                    afc(r_i[i_n2] - r_i[i_k] + r_d[d_xl])
+                afc(r_d[d_xl]) -
+                afc(r_i[i_n1] - r_d[d_xl]) -
+                afc(r_i[i_k] - r_d[d_xl]) -
+                afc(r_i[i_n2] - r_i[i_k] + r_d[d_xl])
             );
             r_d[d_kr] = Math.exp(
                 r_d[d_a] -
-                    afc(r_d[d_xr] - 1) -
-                    afc(r_i[i_n1] - r_d[d_xr] + 1) -
-                    afc(r_i[i_k] - r_d[d_xr] + 1) -
-                    afc(r_i[i_n2] - r_i[i_k] + r_d[d_xr] - 1)
+                afc(r_d[d_xr] - 1) -
+                afc(r_i[i_n1] - r_d[d_xr] + 1) -
+                afc(r_i[i_k] - r_d[d_xr] + 1) -
+                afc(r_i[i_n2] - r_i[i_k] + r_d[d_xr] - 1)
             );
 
             r_d[d_lamdl] = -Math.log(
                 (r_d[d_xl] * (r_i[i_n2] - r_i[i_k] + r_d[d_xl])) /
-                    (r_i[i_n1] - r_d[d_xl] + 1) /
-                    (r_i[i_k] - r_d[d_xl] + 1)
+                (r_i[i_n1] - r_d[d_xl] + 1) /
+                (r_i[i_k] - r_d[d_xl] + 1)
             );
 
             r_d[d_lamdr] = -Math.log(
                 ((r_i[i_n1] - r_d[d_xr] + 1) * (r_i[i_k] - r_d[d_xr] + 1)) /
-                    r_d[d_xr] /
-                    (r_i[i_n2] - r_i[i_k] + r_d[d_xr])
+                r_d[d_xr] /
+                (r_i[i_n2] - r_i[i_k] + r_d[d_xr])
             );
 
             r_d[d_p1] = r_d[d_d] + r_d[d_d]; //
@@ -312,7 +312,7 @@ export function rhyperOne(m: number, n: number, k: number): number {
 
         let n_uv = 0;
         //let goto_L30 = false;
-        L30: for (;;) {
+        L30: for (; ;) {
             u = rng.random() * r_d[d_p3];
             v = rng.random();
             n_uv++;
@@ -324,7 +324,7 @@ export function rhyperOne(m: number, n: number, k: number): number {
                     r_i[i_kk],
                     n_uv
                 );
-                return ML_ERR_return_NAN2(printer_rhyper, lineInfo4);
+                return ML_ERR_return_NAN2(printer_rhyper);
             }
 
             printer_rhyper(' ... L30: new (u=%d, v ~ U[0,1])[%d]\n', n_uv, u, v);
@@ -466,10 +466,10 @@ export function rhyperOne(m: number, n: number, k: number): number {
                         if (
                             alv <=
                             r_d[d_a] -
-                                afc(r_i[i_ix]) -
-                                afc(r_i[i_n1] - r_i[i_ix]) -
-                                afc(r_i[i_k] - r_i[i_ix]) -
-                                afc(r_i[i_n2] - r_i[i_k] + r_i[i_ix])
+                            afc(r_i[i_ix]) -
+                            afc(r_i[i_n1] - r_i[i_ix]) -
+                            afc(r_i[i_k] - r_i[i_ix]) -
+                            afc(r_i[i_n2] - r_i[i_k] + r_i[i_ix])
                         ) {
                             reject = false;
                         } else {

@@ -1,33 +1,30 @@
-import { loadData } from '@common/load';
+import { loadData } from '@common/test-helpers/load';
 import { resolve } from 'path';
-import { cl, select } from '@common/debug-mangos-select';
-
 import { emptyFloat64Array } from '@lib/r-func';
 import { globalUni, RNGkind } from '@rng/global-rng';
 import { rgeom } from '..';
 
-const rgeomLogs = select('rgeom');
-const rgeomDomainWarns = rgeomLogs("argument out of domain in '%s'");
+import { createLogHarnas } from '@common/debug-backend';
+const { getStats } = createLogHarnas()
 
 describe('rgeom', function () {
     describe('invalid input', () => {
-        beforeEach(() => {
-            cl.clear('rgeom');
-        });
         it('n=1, prob=NaN', () => {
             const nan = rgeom(1, NaN);
             expect(nan).toEqualFloatingPointBinary(NaN);
-            expect(rgeomDomainWarns()).toHaveLength(1);
+            expect(getStats().rgeom).toBe(1);
         });
         it('n=1, prob=-1(<0)', () => {
+            const stats0 = getStats();
             const nan = rgeom(1, -1);
             expect(nan).toEqualFloatingPointBinary(NaN);
-            expect(rgeomDomainWarns()).toHaveLength(1);
+            expect(getStats().rgeom - stats0.rgeom).toBe(1)
         });
         it('n=1, prob=1.3(>1)', () => {
+            const stats0 = getStats();
             const nan = rgeom(1, 1.2);
             expect(nan).toEqualFloatingPointBinary(NaN);
-            expect(rgeomDomainWarns()).toHaveLength(1);
+            expect(getStats().rgeom - stats0.rgeom).toBe(1)
         });
     });
 

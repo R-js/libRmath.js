@@ -1,5 +1,5 @@
 
-import { debug } from '@mangos/debug';
+import createNS from '@common/debug-frontend';
 import { cospi } from '@trig/cospi';
 import { sinpi } from '@trig/sinpi';
 import { M_eps_sinc, thresh_BESS_Y, xlrg_BESS_Y } from '../bessel-constants';
@@ -12,7 +12,7 @@ const M_PI_2 = 1.5707963267948966;
 const { min, trunc, sqrt, sin, cos, log, abs, pow, PI: M_PI } = Math;
 const { MIN_VALUE: DBL_MIN, EPSILON: DBL_EPSILON, NEGATIVE_INFINITY: ML_NEGINF, MAX_VALUE: DBL_MAX } = Number;
 
-const printer = debug('Y_bessel');
+const printer = createNS('Y_bessel');
 
 export function Y_bessel(x: number, alpha: number, nb: number): IBesselRC {
     /* ----------------------------------------------------------------------
@@ -209,8 +209,8 @@ export function Y_bessel(x: number, alpha: number, nb: number): IBesselRC {
         ya1 = -p * cos(ex);
     } else if (ex < 3) {
         /* -------------------------------------------------------------
-		   Use Temme's scheme for small X
-		   ------------------------------------------------------------- */
+           Use Temme's scheme for small X
+           ------------------------------------------------------------- */
         b = ex * 0.5;
         d = -log(b);
         f = nu * d;
@@ -219,8 +219,8 @@ export function Y_bessel(x: number, alpha: number, nb: number): IBesselRC {
         else c = nu / sinpi(nu);
 
         /* ------------------------------------------------------------
-		   Computation of sinh(f)/f
-		   ------------------------------------------------------------ */
+           Computation of sinh(f)/f
+           ------------------------------------------------------------ */
         if (abs(f) < 1) {
             x2 = f * f;
             en = 19;
@@ -233,7 +233,7 @@ export function Y_bessel(x: number, alpha: number, nb: number): IBesselRC {
             s = ((e - 1 / e) * 0.5) / f;
         }
         /* --------------------------------------------------------
-		   Computation of 1/gamma(1-a) using Chebyshev polynomials */
+           Computation of 1/gamma(1-a) using Chebyshev polynomials */
         x2 = nu * nu * 8;
         aye = ch[0];
         even = 0;
@@ -249,7 +249,7 @@ export function Y_bessel(x: number, alpha: number, nb: number): IBesselRC {
         odd = (odd + alfa) * 2;
         gamma = odd * nu + even;
         /* End of computation of 1/gamma(1-a)
-		   ----------------------------------------------------------- */
+           ----------------------------------------------------------- */
         g = e * gamma;
         e = (e + 1 / e) * 0.5;
         f = 2 * c * (odd * e + even * s * d);
@@ -283,8 +283,8 @@ export function Y_bessel(x: number, alpha: number, nb: number): IBesselRC {
         ya1 = -ya1 / b;
     } else if (ex < thresh_BESS_Y) {
         /* --------------------------------------------------------------
-		   Use Temme's scheme for moderate X :  3 <= x < 16
-		   -------------------------------------------------------------- */
+           Use Temme's scheme for moderate X :  3 <= x < 16
+           -------------------------------------------------------------- */
         c = (0.5 - nu) * (0.5 + nu);
         b = ex + ex;
         e = (ex * M_1_PI * cospi(nu)) / DBL_EPSILON;
@@ -308,7 +308,7 @@ export function Y_bessel(x: number, alpha: number, nb: number): IBesselRC {
         g = -q / s;
         q = g;
 
-        for (;;) {
+        for (; ;) {
             //L220:
             en -= 1;
             if (en > 0) {
@@ -405,8 +405,8 @@ export function Y_bessel(x: number, alpha: number, nb: number): IBesselRC {
         ya1 = h;
     }
     /* ---------------------------------------------------------------
-	   Now have first one or two Y's
-	   --------------------------------------------------------------- */
+       Now have first one or two Y's
+       --------------------------------------------------------------- */
     by[0] = ya;
     ncalc = 1;
     if (nb > 1) {

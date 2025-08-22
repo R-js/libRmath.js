@@ -1,12 +1,12 @@
-import { debug } from '@mangos/debug';
-import { ML_ERR_return_NAN2, lineInfo4 } from '@common/logger';
+import createNS from '@common/debug-frontend';
+import { ML_ERR_return_NAN2 } from '@common/logger';
 import { R_pow_di } from '@lib/r-func';
 
 import { globalUni } from '@rng/global-rng';
 
 import { qbinom } from './qbinom';
 
-const printer_rbinom = debug('rbinom');
+const printer_rbinom = createNS('rbinom');
 
 export function rbinomOne(size: number, prob: number): number {
     const rng = globalUni();
@@ -55,9 +55,14 @@ export function rbinomOne(size: number, prob: number): number {
     let ix = 0;
     let k;
 
-    if (!isFinite(size)) return ML_ERR_return_NAN2(printer_rbinom, lineInfo4);
+    if (!isFinite(size)) {
+        return ML_ERR_return_NAN2(printer_rbinom);
+    }
+
     r = Math.round(size);
-    if (r !== size) return ML_ERR_return_NAN2(printer_rbinom, lineInfo4);
+    if (r !== size) {
+        return ML_ERR_return_NAN2(printer_rbinom);
+    }
     if (
         !isFinite(prob) ||
         /* n=0, p=0, p=1 are not errors <TSL>*/
@@ -65,7 +70,7 @@ export function rbinomOne(size: number, prob: number): number {
         prob < 0 ||
         prob > 1
     ) {
-        return ML_ERR_return_NAN2(printer_rbinom, lineInfo4);
+        return ML_ERR_return_NAN2(printer_rbinom);
     }
     if (r === 0 || prob === 0) return 0;
     if (prob === 1) return r;
@@ -101,11 +106,11 @@ export function rbinomOne(size: number, prob: number): number {
     const L_np_small = () => {
         //L_np_small:
         /*---------------------- np = n*p < 30 : ------------------------- */
-        for (;;) {
+        for (; ;) {
             ix = 0;
             f = qn;
             u = rng.random();
-            for (;;) {
+            for (; ;) {
                 if (u < f) {
                     //goto finis;
                     return;
@@ -156,7 +161,7 @@ export function rbinomOne(size: number, prob: number): number {
    }*/
 
     /*-------------------------- np = n*p >= 30 : ------------------- */
-    for (;;) {
+    for (; ;) {
         u = rng.random() * p4;
         v = rng.random();
         /* triangular region */
@@ -221,12 +226,12 @@ export function rbinomOne(size: number, prob: number): number {
                 if (
                     alv <=
                     xm * Math.log(f1 / x1) +
-                        (n - m + 0.5) * Math.log(z / w) +
-                        (ix - m) * Math.log((w * p) / (x1 * q)) +
-                        (13860.0 - (462.0 - (132.0 - (99.0 - 140.0 / f2) / f2) / f2) / f2) / f1 / 166320.0 +
-                        (13860.0 - (462.0 - (132.0 - (99.0 - 140.0 / z2) / z2) / z2) / z2) / z / 166320.0 +
-                        (13860.0 - (462.0 - (132.0 - (99.0 - 140.0 / x2) / x2) / x2) / x2) / x1 / 166320.0 +
-                        (13860.0 - (462.0 - (132.0 - (99.0 - 140.0 / w2) / w2) / w2) / w2) / w / 166320
+                    (n - m + 0.5) * Math.log(z / w) +
+                    (ix - m) * Math.log((w * p) / (x1 * q)) +
+                    (13860.0 - (462.0 - (132.0 - (99.0 - 140.0 / f2) / f2) / f2) / f2) / f1 / 166320.0 +
+                    (13860.0 - (462.0 - (132.0 - (99.0 - 140.0 / z2) / z2) / z2) / z2) / z / 166320.0 +
+                    (13860.0 - (462.0 - (132.0 - (99.0 - 140.0 / x2) / x2) / x2) / x2) / x1 / 166320.0 +
+                    (13860.0 - (462.0 - (132.0 - (99.0 - 140.0 / w2) / w2) / w2) / w2) / w / 166320
                 ) {
                     return finis(); // goto finis
                 }

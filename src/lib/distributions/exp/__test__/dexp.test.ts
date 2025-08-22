@@ -1,14 +1,13 @@
-import { loadData } from '@common/load';
-import { cl, select } from '@common/debug-mangos-select';
-const dexpDomainWarns = select('dexp')("argument out of domain in '%s'");
+import { loadData } from '@common/test-helpers/load';
 
 import { resolve } from 'path';
 import { dexp } from '..';
 
+import { createLogHarnas } from '@common/debug-backend';
+
+const { getStats } = createLogHarnas();
+
 describe('dexp', function () {
-    beforeEach(() => {
-        cl.clear('dexp');
-    });
     it('x=[-0.5, 3], rate=(1, 2, 45, 0.5)', async () => {
         const [p, y1, y2, y3, y4] = await loadData(
             resolve(__dirname, 'fixture-generation', 'dexp.R'),
@@ -39,7 +38,8 @@ describe('dexp', function () {
     it('rate = -3 (<0)', () => {
         const nan = dexp(0, -3);
         expect(nan).toBeNaN();
-        expect(dexpDomainWarns()).toHaveLength(1);
+        const stats = getStats();
+        expect(stats.dexp).toBe(1);
     });
     it('asLog = true, rate = 5, x=0', () => {
         const z = dexp(0, 5, true);

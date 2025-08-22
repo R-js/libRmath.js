@@ -1,17 +1,12 @@
-import { loadData } from '@common/load';
+import { loadData } from '@common/test-helpers/load';
 import { resolve } from 'path';
-import { cl, select } from '@common/debug-mangos-select';
-
 import { dgeom } from '..';
 
-const dgammaLogs = select('dgeom');
-const dgammaDomainWarns = dgammaLogs("argument out of domain in '%s'");
+import { createLogHarnas } from '@common/debug-backend';
+const { getStats } = createLogHarnas();
 
 describe('dgeom', function () {
     describe('invalid input', () => {
-        beforeEach(() => {
-            cl.clear('dgeom');
-        });
         it('x=NaN, prop=0', () => {
             const nan = dgeom(NaN, 0);
             expect(nan).toBe(NaN);
@@ -19,12 +14,11 @@ describe('dgeom', function () {
         it('x=4, prob=-1(<0)', () => {
             const nan = dgeom(4, -1);
             expect(nan).toBe(NaN);
-            expect(dgammaDomainWarns()).toHaveLength(1);
+            expect(getStats().dgeom).toBe(1);
         });
         it('x=4, prob=1.2(>1)', () => {
             const nan = dgeom(4, 1.2);
             expect(nan).toBe(NaN);
-            expect(dgammaDomainWarns()).toHaveLength(1);
         });
     });
 

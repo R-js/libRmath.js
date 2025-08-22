@@ -1,19 +1,17 @@
 import { resolve } from 'path';
 
 //helper
-import { loadData } from '@common/load';
-import { cl, select } from '@common/debug-mangos-select';
-
-const dbinomDomainWarns = select('dbinom')("argument out of domain in '%s'");
+import { loadData } from '@common/test-helpers/load';
 
 //app
 
 import { dbinom } from '..';
 
+import { createLogHarnas } from '@common/debug-backend';
+
+const { getStats } = createLogHarnas();
+
 describe('dbinom', function () {
-    beforeEach(() => {
-        cl.clear('dbinom');
-    });
     it('ranges x ∊ [0, 12] size=12, prob=0.01', async () => {
         const [x, y] = await loadData(resolve(__dirname, 'fixture-generation', 'dbinom1.R'), /\s+/, 1, 2);
         const actual = x.map((_x) => dbinom(_x, 12, 0.01));
@@ -65,8 +63,9 @@ describe('dbinom', function () {
     });
     it('x=4, size=100, prob=3 (>1)', () => {
         const z0 = dbinom(4, 100, 3); // 100%, you always score "head", never "tail"
+        const stats1 = getStats();
         expect(z0).toBeNaN();
-        expect(dbinomDomainWarns()).toHaveLength(1);
+        expect(stats1.dbinom).toBe(1);
     });
     it('x=4, size=NaN, prob=0.5', () => {
         const z0 = dbinom(4, NaN, 0.5); // 100%, you always score "head", never "tail"

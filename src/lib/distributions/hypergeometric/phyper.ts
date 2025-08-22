@@ -1,11 +1,8 @@
-import { debug } from '@mangos/debug';
-import { ML_ERR_return_NAN2, lineInfo4 } from '@common/logger';
+import createNS from '@common/debug-frontend';
+import { ML_ERR_return_NAN2 } from '@common/logger';
 import { R_D_Lval, R_DT_0, R_DT_1 } from '@lib/r-func';
 import { R_DT_log } from '@dist/exp/expm1';
 import { dhyper } from './dhyper';
-
-//NOTE: p[d]hyper is not  typo!!
-//const printer_pdhyper = debug('pdhyper');
 
 function pdhyper(x: number, NR: number, NB: number, n: number, logP: boolean): number {
     /*
@@ -37,7 +34,7 @@ function pdhyper(x: number, NR: number, NB: number, n: number, logP: boolean): n
 /* FIXME: The old phyper() code was basically used in ./qhyper.c as well
  * -----  We need to sync this again!
  */
-const printer_phyper = debug('phyper');
+const printer_phyper = createNS('phyper');
 
 export function phyper(q: number, m: number, n: number, k: number, lowerTail = true, logP = false): number {
     /* Sample of  n balls from  NR red  and	 NB black ones;	 q are red */
@@ -51,7 +48,7 @@ export function phyper(q: number, m: number, n: number, k: number, lowerTail = t
     k = Math.round(k);
 
     if (m < 0 || n < 0 || !isFinite(m + n) || k < 0 || k > m + n) {
-        return ML_ERR_return_NAN2(printer_phyper, lineInfo4);
+        return ML_ERR_return_NAN2(printer_phyper);
     }
 
     /*

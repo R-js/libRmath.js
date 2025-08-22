@@ -1,14 +1,14 @@
 
 
-import { debug } from '@mangos/debug';
-import { ML_ERR_return_NAN2, lineInfo4 } from '@common/logger';
+import createNS from '@common/debug-frontend';
+import { ML_ERR_return_NAN2 } from '@common/logger';
 import { M_LN_SQRT_PI, R_D__0, sqrt, abs, DBL_EPSILON, exp, log } from '@lib/r-func';
 import { lgammafn_sign as lgamma } from '@special/gamma';
 import { dnorm } from '@dist/normal';
 import { _dt } from './dt';
 import { pnt } from './pnt';
 
-const printer_dnt = debug('dnt');
+const printer_dnt = createNS('dnt');
 
 export function dnt(x: number, df: number, ncp = 0, giveLog = false): number {
     if (isNaN(x) || isNaN(df) || isNaN(ncp)) {
@@ -17,7 +17,7 @@ export function dnt(x: number, df: number, ncp = 0, giveLog = false): number {
 
     /* If non-positive df then error */
     if (df <= 0.0) {
-        return ML_ERR_return_NAN2(printer_dnt, lineInfo4);
+        return ML_ERR_return_NAN2(printer_dnt);
     }
 
     /* If x is infinite then return 0 */

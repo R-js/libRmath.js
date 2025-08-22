@@ -1,20 +1,15 @@
-import { loadData } from '@common/load';
+import { loadData } from '@common/test-helpers/load';
 import { resolve } from 'path';
 
-import { cl, select } from '@common/debug-mangos-select';
 import { dpois } from '..';
 import { dpois_raw } from '../dpois';
 
 import { DBL_MIN, MAX_SAFE_INTEGER, trunc } from '@lib/r-func';
 
-const dpoisLogs = select('dpois');
-const dpoisDomainWarns = dpoisLogs("argument out of domain in '%s'");
-const dpoisNonInt = dpoisLogs('non-integer x = %d');
+import { createLogHarnas } from '@common/debug-backend';
+const { getStats } = createLogHarnas();
 
 describe('dpois', function () {
-    beforeEach(() => {
-        cl.clear('dpois');
-    });
     describe('invalid input and edge cases', () => {
         it('x and lambda are NaN', () => {
             const nan1 = dpois(NaN, 2);
@@ -25,12 +20,14 @@ describe('dpois', function () {
         it('lamnda < 0', () => {
             const nan1 = dpois(0.5, -1);
             expect(nan1).toBeNaN();
-            expect(dpoisDomainWarns()).toHaveLength(1);
+            expect(getStats().dpois).toBe(1);
         });
         it('x is non integer', () => {
+            const stats0 = getStats();
             const zero = dpois(0.5, 1);
             expect(zero).toBe(0);
-            expect(dpoisNonInt()).toHaveLength(1);
+            const stats1 = getStats();
+            expect(stats1.dpois - stats0.dpois).toBe(1);
         });
         it('x < 0 or x is Infinite', () => {
             const zero1 = dpois(-2, 1);

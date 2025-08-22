@@ -1,13 +1,13 @@
-import { debug } from '@mangos/debug';
+import createNS from '@common/debug-frontend';
 
 import { rchisqOne } from '../chi-2/rchisq';
-import { ML_ERR_return_NAN2, lineInfo4 } from '@common/logger';
+import { ML_ERR_return_NAN2 } from '@common/logger';
 
-const printer = debug('rf');
+const printer = createNS('rf');
 
 export function rfOne(n1: number, n2: number): number {
     if (isNaN(n1) || isNaN(n2) || n1 <= 0 || n2 <= 0) {
-        return ML_ERR_return_NAN2(printer, lineInfo4);
+        return ML_ERR_return_NAN2(printer);
     }
 
     const v1 = isFinite(n1) ? rchisqOne(n1) / n1 : 1;

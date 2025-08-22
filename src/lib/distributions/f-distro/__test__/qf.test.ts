@@ -1,16 +1,12 @@
-import { loadData } from '@common/load';
+import { loadData } from '@common/test-helpers/load';
 import { resolve } from 'path';
-import { cl, select } from '@common/debug-mangos-select';
 
 import { qf } from '..';
 
-const qfLogs = select('qf');
-const qfDomainWarns = qfLogs("argument out of domain in '%s'");
+import { createLogHarnas } from '@common/debug-backend';
+const { getStats } = createLogHarnas();
 
 describe('qf', function () {
-    beforeEach(() => {
-        cl.clear('qf');
-    });
     it('p ∈ [-0.125, 1.125], df1=3, df2=55', async () => {
         const [p, y1] = await loadData(resolve(__dirname, 'fixture-generation', 'qf.R'), /\s+/, 1, 2);
         const a1 = p.map((_p) => qf(_p, 3, 55));
@@ -23,7 +19,8 @@ describe('qf', function () {
     it('p=0.2, df1=-2(<0), df2=4', () => {
         const nan = qf(0.2, -2, 4);
         expect(nan).toBeNaN();
-        expect(qfDomainWarns()).toHaveLength(1);
+        const stats = getStats();
+        expect(stats.qf).toBe(1);
     });
     it('p=0.3, df1=35, df2=4e6', () => {
         const z = qf(0.3, 35, 4e6);

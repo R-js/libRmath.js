@@ -1,14 +1,9 @@
-import { cl, select } from '@common/debug-mangos-select';
-
 import { dweibull } from '..';
-
-const dweibullDomainWarns = select('dweibull')("argument out of domain in '%s'");
+import { createLogHarnas } from '@common/debug-backend';
+const { getStats } = createLogHarnas();
 
 describe('dweibull', function () {
     describe('invalid input and edge cases', () => {
-        beforeEach(() => {
-            cl.clear('dweibull');
-        });
         it('x=NaN|shape=NaN|scale=NaN', () => {
             const nan1 = dweibull(NaN, 0.5, 0.5);
             expect(nan1).toBeNaN();
@@ -22,7 +17,7 @@ describe('dweibull', function () {
             expect(nan1).toBeNaN();
             const nan2 = dweibull(4, 0.5, -0.5);
             expect(nan2).toBeNaN();
-            expect(dweibullDomainWarns()).toHaveLength(2);
+            expect(getStats().dweibull).toBe(2);
         });
         it('x < 0', () => {
             const zero = dweibull(-3, 0.5, 0.5);

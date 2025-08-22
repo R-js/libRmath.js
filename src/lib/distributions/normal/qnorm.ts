@@ -1,24 +1,30 @@
 
 
-import { debug } from '@mangos/debug';
-import { ML_ERR_return_NAN2, lineInfo4, R_Q_P01_boundaries } from '@common/logger';
+import createNS from '@common/debug-frontend';
+import { ML_ERR_return_NAN2, R_Q_P01_boundaries } from '@common/logger';
 import { R_DT_CIv, R_DT_qIv } from '@dist/exp/expm1';
 import { abs, sqrt, log as _log } from '@lib/r-func';
 
-const printer = debug('qnorm');
+const printer = createNS('qnorm');
 
 export function qnorm(p: number, mean = 0, sd = 1, lowerTail = true, logP = false): number {
     let r;
     let val;
 
-    if (isNaN(p) || isNaN(mean) || isNaN(sd)) return NaN;
+    if (isNaN(p) || isNaN(mean) || isNaN(sd)) {
+        return NaN;
+    }
 
     const rc = R_Q_P01_boundaries(lowerTail, logP, p, -Infinity, Infinity);
     if (rc !== undefined) {
         return rc;
     }
-    if (sd < 0) return ML_ERR_return_NAN2(printer, lineInfo4);
-    if (sd === 0) return mean;
+    if (sd < 0) {
+        return ML_ERR_return_NAN2(printer);
+    }
+    if (sd === 0) {
+        return mean;
+    }
 
     const p_ = R_DT_qIv(lowerTail, logP, p); /* real lowerTail prob. p */
     const q = p_ - 0.5;

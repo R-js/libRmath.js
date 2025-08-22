@@ -1,6 +1,6 @@
-import { debug } from '@mangos/debug';
+import createNS from '@common/debug-frontend';
 
-import { ML_ERR_return_NAN2, lineInfo4 } from '@common/logger';
+import { ML_ERR_return_NAN2 } from '@common/logger';
 
 import {
     R_D__0,
@@ -204,7 +204,7 @@ function logspace_sum(logx: number[], n: number): number {
  *
  * and  dpois*(.., give_log = TRUE) :=  Math.log( dpois*(..) )
  */
-const pr_dpois_wrap = debug('dpois_wrap');
+const pr_dpois_wrap = createNS('dpois_wrap');
 
 function dpois_wrap(x_plus_1: number, lambda: number, give_log: boolean): number {
     pr_dpois_wrap('dpois_wrap(x+1=%d, lambda=%d, log=%s)', x_plus_1, lambda, give_log);
@@ -224,7 +224,7 @@ function dpois_wrap(x_plus_1: number, lambda: number, give_log: boolean): number
 /*
  * Abramowitz and Stegun 6.5.29 [right]
  */
-const pr_pgamma_smallx = debug('pgamma_smallx');
+const pr_pgamma_smallx = createNS('pgamma_smallx');
 
 function pgamma_smallx(x: number, alph: number, lowerTail: boolean, logP: boolean): number {
     let sum = 0;
@@ -298,7 +298,7 @@ function pd_upper_series(x: number, y: number, logP: boolean): number {
  *    scaled upper-tail F_{gamma}
  *  ~=  (y / d) * [1 +  (1-y)/d +  O( ((1-y)/d)^2 ) ]
  */
-const pr_pd_lower_cf = debug('pd_lower_cf');
+const pr_pd_lower_cf = createNS('pd_lower_cf');
 
 function pd_lower_cf(y: number, d: number): number {
     let f = 0.0; /* -Wall */
@@ -377,7 +377,7 @@ function pd_lower_cf(y: number, d: number): number {
     return f; /* should not happen ... */
 } /* pd_lower_cf() */
 
-const pr_pd_lower_series = debug('pd_lower_series');
+const pr_pd_lower_series = createNS('pd_lower_series');
 
 function pd_lower_series(lambda: number, y: number): number {
     let term = 1;
@@ -466,7 +466,7 @@ function dpnorm(x: number, lowerTail: boolean, lp: number): number {
  * http://members.aol.com/iandjmsmith/PoissonApprox.htm
  */
 
-const pr_ppois_asymp = debug('ppois_asymp');
+const pr_ppois_asymp = createNS('ppois_asymp');
 const coefs_a = new Float64Array([
     -1e99, // placeholder used for 1-indexing
     2 / 3,
@@ -550,7 +550,7 @@ function ppois_asymp(x: number, lambda: number, lowerTail: boolean, logP: boolea
 }
 /* ppois_asymp() */
 
-const pr_pgamma_raw = debug('pgamma_raw');
+const pr_pgamma_raw = createNS('pgamma_raw');
 
 export function pgamma_raw(x: number, alph: number, lowerTail: boolean, logP: boolean): number {
     /* Here, assume that  (x,alph) are not NA  &  alph > 0 . */
@@ -624,13 +624,13 @@ export function pgamma_raw(x: number, alph: number, lowerTail: boolean, logP: bo
     } else return res;
 }
 
-const printer_pgamma = debug('pgamma');
+const printer_pgamma = createNS('pgamma');
 export function pgamma(x: number, shape: number, scale: number, lowerTail: boolean, logP: boolean): number {
 
     if (isNaN(x) || isNaN(shape) || isNaN(scale)) {
         return NaN;
     }
-    if (shape < 0 || scale <= 0) return ML_ERR_return_NAN2(printer_pgamma, lineInfo4);
+    if (shape < 0 || scale <= 0) return ML_ERR_return_NAN2(printer_pgamma);
 
     x /= scale;
 

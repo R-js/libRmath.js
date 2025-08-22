@@ -1,22 +1,20 @@
-import { cl, select } from '@common/debug-mangos-select';
 import { dmultinom, dmultinomLikeR } from '..';
 
-const dmultinomLogs = select('dmultinom');
+import { createLogHarnas } from '@common/debug-backend';
+const { getStats } = createLogHarnas();
 
 describe('dmultinom', function () {
     describe('invalid input check and edge cases', () => {
-        beforeEach(() => {
-            cl.clear('dmultinom');
-        });
         it('non equal arrays x, prob, x=[1,2], prob=[0.4]', () => {
             const x = new Float32Array([1, 2]);
             const prob = new Float32Array([0.4]);
             const ans = dmultinom(x, prob);
             expect(ans).toBeNaN();
             expect(() => dmultinomLikeR(x, prob)).toThrowError();
-            expect(dmultinomLogs('x[] and prob[] must be equal length vectors.')()).toHaveLength(2);
+            expect(getStats().dmultinom).toBe(2);
         });
         it('probabilities must be finite, positive, and not all 0', () => {
+            const stats0 = getStats();
             const x = new Float32Array([1, 2]);
             const prob = new Float32Array([0.4, NaN]);
             const ans1 = dmultinom(x, prob);
@@ -30,14 +28,17 @@ describe('dmultinom', function () {
             prob[0] = -1;
             const ans3 = dmultinom(x, prob);
             expect(ans3).toBeNaN();
-            expect(dmultinomLogs('probabilities must be finite, non-negative and not all 0')()).toHaveLength(3);
+            const stats1 = getStats();
+            expect(stats1.dmultinom - stats0.dmultinom).toBe(3);
         });
         it('some x[i] are negative', () => {
+            const stats0 = getStats();
             const x = new Float32Array([1, 2, -3]);
             const prob = new Float32Array([0.4, 0.2, 0.4]);
             const ans1 = dmultinom(x, prob);
             expect(ans1).toBeNaN();
-            expect(dmultinomLogs("'x' must be non-negative (and finite)")()).toHaveLength(1);
+            const stats1 = getStats();
+            expect(stats1.dmultinom - stats0.dmultinom).toBe(1);
         });
         it('prob[i] = 0 cannot have a x[i] bin that is nonzero, result p = 0', () => {
             const x = new Float32Array([1, 2, 3]);

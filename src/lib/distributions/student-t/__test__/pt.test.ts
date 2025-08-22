@@ -1,18 +1,12 @@
-import { loadData } from '@common/load';
+import { loadData } from '@common/test-helpers/load';
 import { resolve } from 'path';
-
-import { cl, select } from '@common/debug-mangos-select';
-
 import { pt } from '..';
 
-const pntLogs = select('pnt');
-const pntDomainWarns = pntLogs("argument out of domain in '%s'");
+import { createLogHarnas } from '@common/debug-backend';
+const { getStats } = createLogHarnas();
 
 describe('pt(x,df, ncp, log.p)', function () {
     describe('ncp is defined', () => {
-        beforeEach(() => {
-            cl.clear('pnt');
-        });
         it('x=Nan|df=NaN|ncp=NaN', () => {
             //
             const nan1 = pt(NaN, 45, 0);
@@ -23,7 +17,7 @@ describe('pt(x,df, ncp, log.p)', function () {
         it('df <= 0', () => {
             const nan1 = pt(0, 0, 0);
             expect(nan1).toBeNaN();
-            expect(pntDomainWarns()).toHaveLength(1);
+            expect(getStats().pnt).toBe(1);
         });
         it('x = -Infinity| x= Infinity', () => {
             const zero = pt(-Infinity, 45);

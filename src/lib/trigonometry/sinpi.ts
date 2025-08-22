@@ -1,15 +1,15 @@
-import { debug } from '@mangos/debug';
+import createNS from '@common/debug-frontend';
 
 import { fmod } from '@lib/r-func';
 
-import { ME, ML_ERROR2 } from '@common/logger';
+import { ME, ML_ERROR3 } from '@common/logger';
 
 // sin(pi * x)  -- exact when x = k/2  for all integer k
-const printer_sinpi = debug('sinpi');
+const printer_sinpi = createNS('sinpi');
 export function sinpi(x: number): number {
     if (isNaN(x)) return x;
     if (!isFinite(x)) {
-        ML_ERROR2(ME.ME_DOMAIN, 'sinpi not finite', printer_sinpi);
+        ML_ERROR3(printer_sinpi, ME.ME_DOMAIN, 'sinpi not finite');
         return NaN;
     }
     x = fmod(x, 2); // sin(pi(x + 2k)) == sin(pi x)  for all integer k

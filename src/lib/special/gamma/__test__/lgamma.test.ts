@@ -1,5 +1,5 @@
 import { resolve } from 'path';
-import { loadData } from '@common/load';
+import { loadData } from '@common/test-helpers/load';
 
 
 //app
@@ -47,7 +47,7 @@ describe('lgamma', () => {
         expect(lgamma(NaN)).toEqualFloatingPointBinary(NaN);
     });
     it('x < -10', () => {
-        expect([-11.5, -20.5, -30.5, -40.5].map(x=>lgamma(x))).toEqualFloatingPointBinary([
+        expect([-11.5, -20.5, -30.5, -40.5].map(x => lgamma(x))).toEqualFloatingPointBinary([
             -17.589617626087044044,
             -42.707195974825765461,
             -75.226467981933367923,

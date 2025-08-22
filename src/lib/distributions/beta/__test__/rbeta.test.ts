@@ -1,17 +1,15 @@
-//helper
-import { cl, select } from '@common/debug-mangos-select';
-
-const rbetaDomainWarns = select('rbeta')("argument out of domain in '%s'");
-
 //app
 import { rbeta } from '..';
 
 import { globalNorm, globalUni, RNGkind } from '@rng/global-rng';
 
+import { createLogHarnas } from '@common/debug-backend';
+
+const { getStats } = createLogHarnas();
+
 describe('rbeta', function () {
     beforeAll(() => {
         RNGkind({ uniform: 'MERSENNE_TWISTER', normal: 'INVERSION' });
-        cl.clear('rbeta');
     });
     it('sample 5 numbers, n=5, scp1=2, scp2=2', () => {
         /*
@@ -33,8 +31,9 @@ describe('rbeta', function () {
     });
     it('scp1=-1, scp2=2', () => {
         const actual = rbeta(1, -1, 2);
+        const stats1 = getStats();
         expect(actual).toEqualFloatingPointBinary(NaN);
-        expect(rbetaDomainWarns()).toHaveLength(1);
+        expect(stats1.rbeta).toBe(1);
     });
     it('scp1=NAN, scp2=2', () => {
         const actual = rbeta(1, NaN, 2);

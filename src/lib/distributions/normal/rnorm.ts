@@ -1,16 +1,16 @@
 
 
-import { debug } from '@mangos/debug';
+import createNS from '@common/debug-frontend';
 
-import { ML_ERR_return_NAN2, lineInfo4 } from '@common/logger';
+import { ML_ERR_return_NAN2 } from '@common/logger';
 import { globalNorm } from '@rng/global-rng';
 
-const printer = debug('rnorm');
+const printer = createNS('rnorm');
 
 export function rnormOne(mean = 0, sd = 1): number {
     const rng = globalNorm();
     if (isNaN(mean) || !isFinite(sd) || sd < 0) {
-        return ML_ERR_return_NAN2(printer, lineInfo4);
+        return ML_ERR_return_NAN2(printer);
     }
     if (sd === 0 || !isFinite(mean)) {
         return mean; /* includes mean = +/- Inf with finite sd */

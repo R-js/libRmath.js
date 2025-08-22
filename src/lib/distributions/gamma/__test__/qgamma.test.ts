@@ -1,19 +1,12 @@
-import { loadData } from '@common/load';
+import { loadData } from '@common/test-helpers/load';
 import { resolve } from 'path';
-import { cl, select } from '@common/debug-mangos-select';
-
 import { qgamma } from '..';
 
-const qgammaLogs = select('qgamma');
-const qgammaDomainWarns = qgammaLogs("argument out of domain in '%s'");
-const bounderiesWarns = select('R_Q_P01_boundaries')("argument out of domain in '%s'");
+import { createLogHarnas } from '@common/debug-backend';
+const { getStats } = createLogHarnas();
 
 describe('qgamma', function () {
     describe('invalid input', () => {
-        beforeEach(() => {
-            cl.clear('qgamma');
-            cl.clear('R_Q_P01_boundaries');
-        });
         it('p=NaN, shape=1.6, defaults', () => {
             const z = qgamma(NaN, 1.6);
             expect(z).toBeNaN();
@@ -23,12 +16,13 @@ describe('qgamma', function () {
             const nan2 = qgamma(0.5, 2, -3);
             expect(nan).toBeNaN();
             expect(nan2).toBeNaN();
-            expect(qgammaDomainWarns()).toHaveLength(2);
+            const stats = getStats();
+            expect(stats.qgamma).toBe(2);
         });
         it('p=-2 shape=1.6, defaults', () => {
             const nan = qgamma(-2, 1.6);
             expect(nan).toBe(nan);
-            expect(bounderiesWarns()).toHaveLength(1);
+            expect(getStats().R_Q_P01_boundaries).toBe(1);
         });
     });
     describe('edge cases', () => {

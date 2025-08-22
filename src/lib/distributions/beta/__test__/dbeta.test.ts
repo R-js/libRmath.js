@@ -2,17 +2,15 @@
 import { resolve } from 'path';
 
 //helper
-import { loadData } from '@common/load';
-import { cl, select } from '@common/debug-mangos-select';
-
-const dbetaDomainWarns = select('dbeta')("argument out of domain in '%s'");
+import { loadData } from '@common/test-helpers/load';
 
 import { dbeta } from '..';
 
+import { createLogHarnas } from '@common/debug-backend';
+
+const { getStats } = createLogHarnas();
+
 describe('dbeta', function () {
-    beforeEach(() => {
-        cl.clear('dbeta');
-    });
     it('ranges x ∊ [0, 1]', async () => {
         /* load data from fixture */
         const [x, y] = await loadData(resolve(__dirname, 'fixture-generation', 'dbeta.R'), /\s+/, 1, 2);
@@ -25,7 +23,8 @@ describe('dbeta', function () {
     });
     it('x=0.5, shape1=-2, shape2=3', () => {
         const nan = dbeta(0.5, -2, 3);
-        expect(dbetaDomainWarns()).toHaveLength(1);
+        const stats1 = getStats();
+        expect(stats1.dbeta).toBe(1);
         expect(nan).toBe(NaN);
     });
     it('x ∊ {-1.5,1.2}, shape1=2, shape2=3', () => {

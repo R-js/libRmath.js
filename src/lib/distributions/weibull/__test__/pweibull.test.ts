@@ -1,14 +1,9 @@
-import { cl, select } from '@common/debug-mangos-select';
-
 import { pweibull } from '..';
-
-const pweibullDomainWarns = select('pweibull')("argument out of domain in '%s'");
+import { createLogHarnas } from '@common/debug-backend';
+const { getStats } = createLogHarnas();
 
 describe('pweibull', function () {
     describe('invalid input and edge cases', () => {
-        beforeEach(() => {
-            cl.clear('pweibull');
-        });
         it('x=NaN|shape=NaN|scale=NaN', () => {
             const nan1 = pweibull(NaN, 0.5);
             expect(nan1).toBeNaN();
@@ -22,7 +17,7 @@ describe('pweibull', function () {
             expect(nan1).toBeNaN();
             const nan2 = pweibull(4, 0.5, -0.5);
             expect(nan2).toBeNaN();
-            expect(pweibullDomainWarns()).toHaveLength(2);
+            expect(getStats().pweibull).toBe(2);
         });
         it('x < 0', () => {
             const zero = pweibull(-3, 0.5, 0.5);

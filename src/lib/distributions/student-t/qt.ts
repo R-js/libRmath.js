@@ -1,8 +1,8 @@
 
 
-import { debug } from '@mangos/debug';
+import createNS from '@common/debug-frontend';
 
-import { ME, ML_ERROR2, R_Q_P01_boundaries, ML_ERR_return_NAN2, lineInfo4 } from '@common/logger';
+import { ME, ML_ERROR3, R_Q_P01_boundaries, ML_ERR_return_NAN2 } from '@common/logger';
 
 import {
     DBL_MANT_DIG,
@@ -33,7 +33,7 @@ import { tanpi } from '@trig/tanpi';
 import { _dt } from './dt';
 import { pt } from './pt';
 
-const printer = debug('qt');
+const printer = createNS('qt');
 
 const accu = 1e-13;
 const Eps = 1e-11; /* must be > accur */
@@ -53,7 +53,7 @@ export function qt(p: number, ndf: number, lower_tail: boolean, log_p: boolean):
     }
 
     if (ndf <= 0.0) {
-        return ML_ERR_return_NAN2(printer, lineInfo4);
+        return ML_ERR_return_NAN2(printer);
     }
 
     if (ndf < 1) {
@@ -97,7 +97,7 @@ export function qt(p: number, ndf: number, lower_tail: boolean, log_p: boolean):
         } while ((ux - lx) / abs(nx) > accu && ++iter < 1000);
 
         if (iter >= 1000) {
-            ML_ERROR2(ME.ME_PRECISION, 'qt', printer);
+            ML_ERROR3(printer, ME.ME_PRECISION, 'qt');
         }
         return 0.5 * (lx + ux);
     }
@@ -239,7 +239,7 @@ export function qt(p: number, ndf: number, lower_tail: boolean, log_p: boolean):
             y =
                 (((1 / (((ndf + 6) / (ndf * y) - 0.089 * d - 0.822) * (ndf + 2) * 3) + 0.5 / (ndf + 4)) * y - 1) *
                     (ndf + 1)) /
-                    (ndf + 2) +
+                (ndf + 2) +
                 1 / y;
             q = sqrt(ndf * y);
         }

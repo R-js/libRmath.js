@@ -1,16 +1,12 @@
 import { resolve } from 'path';
 
-import { loadData } from '@common/load';
-import { cl, select } from '@common/debug-mangos-select';
-
-const qcauchyDomainWarns = select('qcauchy')("argument out of domain in '%s'");
-
+import { loadData } from '@common/test-helpers/load';
 import { qcauchy } from '..';
+import { createLogHarnas } from '@common/debug-backend';
+
+const { getStats } = createLogHarnas();
 
 describe('qcauchy', function () {
-    beforeEach(() => {
-        cl.clear('qcauchy');
-    });
     it('ranges p ∊ [0, 1, step 0.02] defaults', async () => {
         const [x, y] = await loadData(resolve(__dirname, 'fixture-generation', 'qcauchy.R'), /\s+/, 1, 2);
         const actual = x.map((_x) => qcauchy(_x));
@@ -37,8 +33,9 @@ describe('qcauchy', function () {
     });
     it('p=0.66, scale=-1(<0), defaults', () => {
         const nan = qcauchy(0.66, undefined, -1);
+        const stats = getStats();
         expect(nan).toBeNaN();
-        expect(qcauchyDomainWarns()).toHaveLength(1);
+        expect(stats.qcauchy).toBe(1);
     });
     it('p=0.66, scale=0, defaults', () => {
         const nan = qcauchy(0.66, undefined, 0);

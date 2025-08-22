@@ -1,15 +1,10 @@
 // node
 import { resolve } from 'path';
 
-import { loadData } from '@common/load';
-import { cl } from '@common/debug-mangos-select';
-
+import { loadData } from '@common/test-helpers/load';
 import { dcauchy } from '..';
 
 describe('dcauchy', function () {
-    beforeEach(() => {
-        cl.clear('dcauchy');
-    });
     it('ranges x ∊ [-40, 40, step 1] location=2, scale=3, log=true', async () => {
         const [x, y] = await loadData(resolve(__dirname, 'fixture-generation', 'dcauchy.R'), /\s+/, 1, 2);
         const actual = x.map((_x) => dcauchy(_x, 2, 3, true));
@@ -27,7 +22,6 @@ describe('dcauchy', function () {
     it('x=2, location=0,scale=-10 (<0)', () => {
         const nan = dcauchy(2, 0, -10);
         expect(nan).toBeNaN();
-        //expect(out.length).toBe(1);
     });
     it('x=2, + defaults', () => {
         const z = dcauchy(2);

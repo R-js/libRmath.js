@@ -1,17 +1,14 @@
 import { resolve } from 'path';
 
-import { loadData } from '@common/load';
-import { cl, select } from '@common/debug-mangos-select';
+import { loadData } from '@common/test-helpers/load';
 
-const pcauchyDomainWarns = select('pcauchy')("argument out of domain in '%s'");
-pcauchyDomainWarns;
 
 import { pcauchy } from '..';
+import { createLogHarnas } from '@common/debug-backend';
+
+const { getStats } = createLogHarnas();
 
 describe('pcauchy', function () {
-    beforeEach(() => {
-        cl.clear('pcauchy');
-    });
     it('ranges x ∊ [-40, 40, step 1] location=2, scale=3, log=false', async () => {
         const [x, y] = await loadData(resolve(__dirname, 'fixture-generation', 'pcauchy1.R'), /\s+/, 1, 2);
         const actual = x.map((_x) => pcauchy(_x, 2, 3));
@@ -27,9 +24,11 @@ describe('pcauchy', function () {
     });
     it.todo('check code path to hit DE Messages');
     it('x=0, scale=Infinity, location=Infinity', () => {
+        const stats0 = getStats();
         const nan = pcauchy(0, Infinity, Infinity);
+        const stats1 = getStats()
+        expect(stats1.pcauchy - stats0.pcauchy).toBe(1);
         expect(nan).toBeNaN();
-        expect(pcauchyDomainWarns()).toHaveLength(1);
     });
 
     it('x=Infinity, rest=default', () => {

@@ -1,12 +1,12 @@
 
 
-import { debug } from '@mangos/debug';
+import createNS from '@common/debug-frontend';
 
-import { ML_ERR_return_NAN2, lineInfo4 } from '@common/logger';
+import { ML_ERR_return_NAN2 } from '@common/logger';
 import { pow, log } from '@lib/r-func';
 import { globalUni } from '@rng/global-rng';
 
-const printer = debug('rweibull');
+const printer = createNS('rweibull');
 
 export function rweibullOne(shape: number, scale = 1): number {
     const rng = globalUni();
@@ -15,7 +15,7 @@ export function rweibullOne(shape: number, scale = 1): number {
             return 0;
         }
         /* else */
-        return ML_ERR_return_NAN2(printer, lineInfo4);
+        return ML_ERR_return_NAN2(printer);
     }
 
     return scale * pow(-log(rng.random()), 1.0 / shape);

@@ -1,9 +1,9 @@
-import { debug } from '@mangos/debug';
-import { ML_ERR_return_NAN2, lineInfo4, R_Q_P01_boundaries } from '@common/logger';
+import createNs from '@common/debug-frontend';
+import { ML_ERR_return_NAN2, R_Q_P01_boundaries } from '@common/logger';
 import { R_DT_qIv } from '@dist/exp/expm1';
 import { pnbeta } from './pnbeta';
 
-const printer_qnbeta = debug('qnbeta');
+const printer_qnbeta = createNs('qnbeta');
 
 const accu = 1e-15;
 const eps = 1e-14; /* must be > accu */
@@ -14,11 +14,17 @@ export function qnbeta(p: number, a: number, b: number, ncp: number, lower_tail:
     let nx;
     let pp;
 
-    if (isNaN(p) || isNaN(a) || isNaN(b) || isNaN(ncp)) return p + a + b + ncp;
+    if (isNaN(p) || isNaN(a) || isNaN(b) || isNaN(ncp)) {
+        return p + a + b + ncp;
+    }
 
-    if (!isFinite(a)) return ML_ERR_return_NAN2(printer_qnbeta, lineInfo4);
+    if (!isFinite(a)) {
+        return ML_ERR_return_NAN2(printer_qnbeta);
+    }
 
-    if (ncp < 0 || a <= 0 || b <= 0) return ML_ERR_return_NAN2(printer_qnbeta, lineInfo4);
+    if (ncp < 0 || a <= 0 || b <= 0) {
+        return ML_ERR_return_NAN2(printer_qnbeta);
+    }
 
     const rc = R_Q_P01_boundaries(lower_tail, log_p, p, 0, 1);
     if (rc !== undefined) {
@@ -28,7 +34,9 @@ export function qnbeta(p: number, a: number, b: number, ncp: number, lower_tail:
 
     /* Invert pnbeta(.) :
      * 1. finding an upper and lower bound */
-    if (p > 1 - Number.EPSILON) return 1.0;
+    if (p > 1 - Number.EPSILON) {
+        return 1.0;
+    }
     pp = Math.min(1 - Number.EPSILON, p * (1 + eps));
     for (ux = 0.5; ux < 1 - Number.EPSILON && pnbeta(ux, a, b, ncp, true, false) < pp; ux = 0.5 * (1 + ux));
     pp = p * (1 - eps);
@@ -43,3 +51,4 @@ export function qnbeta(p: number, a: number, b: number, ncp: number, lower_tail:
 
     return 0.5 * (ux + lx);
 }
+

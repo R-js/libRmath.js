@@ -1,4 +1,4 @@
-import { debug } from '@mangos/debug';
+import createNS from '@common/debug-frontend';
 import { Rf_gamma_cody } from '@special/bessel/gamma_cody';
 import {
     enmten_BESS,
@@ -14,7 +14,7 @@ import type { IBesselRC } from '../IBesselRC';
 const { sqrt, pow, min, max: fmax, exp, trunc } = Math;
 const { POSITIVE_INFINITY: ML_POSINF } = Number;
 
-const printer = debug('I_bessel');
+const printer = createNS('I_bessel');
 
 export function I_bessel(x: number, alpha: number, nb: number, ize: number): IBesselRC {
     /* -------------------------------------------------------------------

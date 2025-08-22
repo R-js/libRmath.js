@@ -421,3 +421,5 @@ export {
     lgamma
 };
 export { defaultObservableNoteBook as default };
+
+export { unRegister, register } from '@common/debug-frontend'

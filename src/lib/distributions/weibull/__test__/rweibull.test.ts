@@ -1,18 +1,13 @@
-import { cl, select } from '@common/debug-mangos-select';
-
 import { rweibullOne } from '../rweibull';
 import { rweibull } from '..';
 
 import { RNGkind, setSeed } from '@rng/global-rng';
 
-const qweibullDomainWarns = select('rweibull')("argument out of domain in '%s'");
-
+import { createLogHarnas } from '@common/debug-backend';
+const { getStats } = createLogHarnas();
 
 describe('rweibull', function () {
     describe('invalid input and edge cases', () => {
-        beforeEach(() => {
-            cl.clear('rweibull');
-        });
         it('shape=NaN|scale=NaN', () => {
             const nan1 = rweibullOne(NaN, 0.5);
             expect(nan1).toBeNaN();
@@ -24,7 +19,7 @@ describe('rweibull', function () {
             expect(nan1).toBeNaN();
             const nan2 = rweibullOne(-4, 0.5);
             expect(nan2).toBeNaN();
-            expect(qweibullDomainWarns()).toHaveLength(2);
+            expect(getStats().rweibull).toBe(4);
         });
         it('shape <= 0 | scale = 0', () => {
             const zero = rweibullOne(-3, 0);
@@ -34,7 +29,7 @@ describe('rweibull', function () {
 
     describe('fidelity', () => {
         beforeEach(() => {
-            RNGkind({ uniform: "MERSENNE_TWISTER", normal: "INVERSION"});
+            RNGkind({ uniform: "MERSENNE_TWISTER", normal: "INVERSION" });
             setSeed(111_111);
         });
         it('n=10, scale=0.5, shape=4', () => {

@@ -1,20 +1,17 @@
-import { loadData } from '@common/load';
+import { loadData } from '@common/test-helpers/load';
 import { resolve } from 'path';
-
-import { cl, select } from '@common/debug-mangos-select';
 import { rwilcoxOne, rwilcox } from '..';
-
 import { setSeed, RNGkind } from '@rng/global-rng';
 
-const rwilcoxDomainWarns = select('rwilcox')("argument out of domain in '%s'");
+import { createLogHarnas } from '@common/debug-backend';
+const { getStats } = createLogHarnas();
 
-describe('rwilcox', function () {
+describe.only('rwilcox', function () {
     beforeEach(() => {
-        cl.clear('rwilcox');
         setSeed(12345);
         RNGkind({ sampleKind: 'ROUNDING' });
     });
-    describe('invalid input and edge cases', () => {
+    describe.only('invalid input and edge cases', () => {
         it('m=NaN|m=NaN|n=NaN', () => {
             const nan1 = rwilcoxOne(NaN, 4);
             const nan2 = rwilcoxOne(4, NaN);
@@ -26,7 +23,7 @@ describe('rwilcox', function () {
             const nan2 = rwilcoxOne(5, -4);
             expect(nan1).toBeNaN();
             expect(nan2).toBeNaN();
-            expect(rwilcoxDomainWarns()).toHaveLength(2);
+            expect(getStats().rwilcox).toBe(2);
         });
         it('m == 0 | n == 0', () => {
             const z1 = rwilcoxOne(0, 3);
@@ -35,9 +32,11 @@ describe('rwilcox', function () {
             expect(z2).toBe(0);
         });
         it('( m + n ) > 800_000_000', () => {
+            const stats0 = getStats();
             const nan = rwilcoxOne(400_000_000, 400_000_000);
             expect(nan).toBeNaN();
-            expect(rwilcoxDomainWarns()).toHaveLength(2);
+            const stats1 = getStats();
+            expect(stats1.rwilcox - stats0.rwilcox).toBe(1);
         });
     });
     describe('fidelity', () => {

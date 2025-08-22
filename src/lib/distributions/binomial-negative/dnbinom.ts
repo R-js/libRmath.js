@@ -1,11 +1,11 @@
-import { debug } from '@mangos/debug';
+import createNS from '@common/debug-frontend';
 
-import { ML_ERR_return_NAN2, lineInfo4 } from '@common/logger';
+import { ML_ERR_return_NAN2 } from '@common/logger';
 import { R_D__0, R_D__1, R_D_exp, R_D_nonint_check } from '@lib/r-func';
 import { dbinom_raw } from '@dist/binomial/dbinom';
 import { lgammafn_sign } from '@special/gamma/lgammafn_sign';
 
-const printer = debug('dnbinom');
+const printer = createNS('dnbinom');
 /**
  *
  * @param {number} x - The number of failures after of "size" successes. When number of failures is reached stop
@@ -20,7 +20,7 @@ export function dnbinom(x: number, size: number, prob: number, give_log: boolean
     }
 
     if (prob <= 0 || prob > 1 || size < 0) {
-        return ML_ERR_return_NAN2(printer, lineInfo4);
+        return ML_ERR_return_NAN2(printer);
     }
 
     const rc = R_D_nonint_check(give_log, x, printer);
@@ -45,7 +45,7 @@ export function dnbinom(x: number, size: number, prob: number, give_log: boolean
     return give_log ? Math.log(p) + ans : p * ans;
 }
 
-const printer_dnbinom_mu = debug('dnbinom_mu');
+const printer_dnbinom_mu = createNS('dnbinom_mu');
 
 export function dnbinom_mu(x: number, size: number, mu: number, give_log: boolean): number {
     /* originally, just set  prob :=  size / (size + mu)  and called dbinom_raw(),
@@ -58,7 +58,7 @@ export function dnbinom_mu(x: number, size: number, mu: number, give_log: boolea
     }
 
     if (mu < 0 || size < 0) {
-        return ML_ERR_return_NAN2(printer_dnbinom_mu, lineInfo4);
+        return ML_ERR_return_NAN2(printer_dnbinom_mu);
     }
 
     const rc = R_D_nonint_check(give_log, x, printer_dnbinom_mu);

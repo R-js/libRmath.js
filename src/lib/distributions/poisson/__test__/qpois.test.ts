@@ -1,17 +1,12 @@
-import { loadData } from '@common/load';
+import { loadData } from '@common/test-helpers/load';
 import { resolve } from 'path';
-import { cl, select } from '@common/debug-mangos-select';
-
 import { qpois } from '..';
 import { EPSILON, log } from '@lib/r-func';
 
-const qpoisLogs = select('qpois');
-const qpoisDomainWarns = qpoisLogs("argument out of domain in '%s'");
+import { createLogHarnas } from '@common/debug-backend';
+const { getStats } = createLogHarnas();
 
 describe('qpois', function () {
-    beforeEach(() => {
-        cl.clear('qpois');
-    });
     describe('invalid input and edge cases', () => {
         it('p = NaN | lambda = NaN', () => {
             const nan1 = qpois(NaN, 2);
@@ -22,12 +17,14 @@ describe('qpois', function () {
         it('lambda = Infinite', () => {
             const nan1 = qpois(0.5, Infinity);
             expect(nan1).toBeNaN();
-            expect(qpoisDomainWarns()).toHaveLength(1);
+            expect(getStats().qpois).toBe(1);
         });
         it('lambda < 0', () => {
+            const stats0 = getStats();
             const nan1 = qpois(0.5, -1);
             expect(nan1).toBeNaN();
-            expect(qpoisDomainWarns()).toHaveLength(1);
+            const stats1 = getStats();
+            expect(stats1.qpois - stats0.qpois).toBe(1);
         });
         it('lambda = 0', () => {
             const zero1 = qpois(0.5, 0);

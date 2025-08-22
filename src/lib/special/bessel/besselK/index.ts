@@ -1,16 +1,16 @@
-import { debug } from '@mangos/debug';
-import { ME, ML_ERROR2 } from '@common/logger';
+import createNS from '@common/debug-frontend';
+import { ME, ML_ERROR3 } from '@common/logger';
 import { isNaN, floor } from '@lib/r-func';
 import { K_bessel } from './Kbessel';
 
-const printer = debug('BesselK');
+const printer = createNS('BesselK');
 
 function BesselK(x: number, nu: number, exponScaled = false): number {
     /* NaNs propagated correctly */
     if (isNaN(x) || isNaN(nu)) return x + nu;
 
     if (x < 0) {
-        ML_ERROR2(ME.ME_RANGE, 'bessel_k', printer);
+        ML_ERROR3(printer, ME.ME_RANGE, 'bessel_k');
         return NaN;
     }
     const ize = exponScaled ? 2 : 1;

@@ -1,20 +1,15 @@
-import { loadData } from '@common/load';
+import { loadData } from '@common/test-helpers/load';
 import { resolve } from 'path';
-import { cl, select } from '@common/debug-mangos-select';
-
-const logs = select('rlnorm');
-const logDomainWanrs = logs("argument out of domain in '%s'");
-//  rlnormOne(meanlog = 0, sdlog = 1, rng: IRNGNormal);
 
 import { globalUni, RNGkind } from '@rng/global-rng';
 
 import { rlnorm } from '..';
 
+import { createLogHarnas } from '@common/debug-backend';
+const { getStats } = createLogHarnas();
+
 describe('rlnorm', () => {
     describe('invalid input', () => {
-        beforeEach(() => {
-            cl.clear('rlnorm');
-        });
         it('p=NaN | meanLog=NaN | sdLog=NaN | sdLog < 0', () => {
             const nan1 = rlnorm(1, NaN);
             expect(nan1).toEqualFloatingPointBinary(NaN);
@@ -22,7 +17,8 @@ describe('rlnorm', () => {
             expect(nan2).toEqualFloatingPointBinary(NaN);
             const nan3 = rlnorm(1, undefined, -1);
             expect(nan3).toEqualFloatingPointBinary(NaN);
-            expect(logDomainWanrs()).toHaveLength(3);
+            const stats = getStats();
+            expect(stats.rlnorm).toBe(3)
         });
     });
     describe('fidelity (defer to rnorm[One] for most)', () => {

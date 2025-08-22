@@ -1,9 +1,9 @@
 
 
-import { debug } from '@mangos/debug';
-const printer = debug('punif');
+import createNS from '@common/debug-frontend';
+const printer = createNS('punif');
 
-import { ML_ERR_return_NAN2, lineInfo4 } from '@common/logger';
+import { ML_ERR_return_NAN2 } from '@common/logger';
 import { R_D_val, R_DT_0, R_DT_1 } from '@lib/r-func';
 
 export function punif(q: number, min = 0, max = 1, lowerTail = true, logP = false): number {
@@ -12,11 +12,11 @@ export function punif(q: number, min = 0, max = 1, lowerTail = true, logP = fals
     }
 
     if (max < min) {
-        return ML_ERR_return_NAN2(printer, lineInfo4);
+        return ML_ERR_return_NAN2(printer);
     }
 
     if (!isFinite(min) || !isFinite(max)) {
-        return ML_ERR_return_NAN2(printer, lineInfo4);
+        return ML_ERR_return_NAN2(printer);
     }
 
     if (q >= max) {

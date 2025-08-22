@@ -1,15 +1,13 @@
 import { resolve } from 'path';
 import { df } from '..';
 
-import { loadData } from '@common/load';
-import { cl, select } from '@common/debug-mangos-select';
-const dfLogs = select('df');
-const dfDomainWarns = dfLogs("argument out of domain in '%s'");
+import { loadData } from '@common/test-helpers/load';
+import { createLogHarnas } from '@common/debug-backend';
+
+const { getStats } = createLogHarnas();
+
 
 describe('df', function () {
-    beforeEach(() => {
-        cl.clear('df');
-    });
     it('x ∈ [-0.125, 3.1250], df1=23, df2=52', async () => {
         const [p, y1] = await loadData(resolve(__dirname, 'fixture-generation', 'df.R'), /\s+/, 1, 2);
         const a1 = p.map((_p) => df(_p, 23, 52));
@@ -22,7 +20,8 @@ describe('df', function () {
     it('x=1, df1=-1(<0), df2=4', () => {
         const nan = df(1, -2, 4);
         expect(nan).toBeNaN();
-        expect(dfDomainWarns()).toHaveLength(1);
+        const stats = getStats();
+        expect(stats.df).toBe(1);
     });
     it('x=0, df1=3(>2), df2=4', () => {
         const z = df(0, 3, 4);

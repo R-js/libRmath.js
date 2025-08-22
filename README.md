@@ -2,7 +2,9 @@
 
 This R statistical [`nmath`](https://svn.r-project.org/R/trunk/src/nmath) re-created in typescript/javascript.
 
-This is the documentation of 2.0.0, for the lts branch of version 1.x see [here](https://github.com/R-js/libRmath.js/tree/lts-libr-v1).
+This is the documentation of 3.0.0, 
+- for the lts branch of version 2.x see [here](https://github.com/R-js/libRmath.js/tree/lts-libr-v2)
+- for the lts branch of version 1.x see [here](https://github.com/R-js/libRmath.js/tree/lts-libr-v1).
 
 If you were not using a previous version to 2.0.0, you can skip _breaking changes_ and go to:
 

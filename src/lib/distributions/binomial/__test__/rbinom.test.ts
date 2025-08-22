@@ -1,23 +1,16 @@
 
 import { resolve } from 'path';
-import { loadData } from '@common/load';
-import { cl /*, select*/ } from '@common/debug-mangos-select';
-
+import { loadData } from '@common/test-helpers/load';
 import { globalUni, RNGkind } from '@rng/global-rng';
 
-
-
-//const rbinomDomainWarns = select('rbinom')("argument out of domain in '%s'");
-//rbinomDomainWarns;
-
 import { rbinom } from '..';
+
 
 describe('rbinom', function () {
     beforeAll(() => {
         RNGkind({ uniform: "MERSENNE_TWISTER", normal: "INVERSION" });
-        cl.clear('_rbinom');
     });
-    
+
     it('n=10, unifrom=Mersenne T, norm=Inversion, size=100, n=10, prob=0.2', () => {
         const uni = globalUni();
         uni.init(1234);

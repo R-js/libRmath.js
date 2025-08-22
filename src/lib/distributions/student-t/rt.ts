@@ -1,18 +1,18 @@
 
 
-import { debug } from '@mangos/debug';
+import createNS from '@common/debug-frontend';
 
 import { rchisqOne } from '@dist/chi-2/rchisq';
-import { ML_ERR_return_NAN2, lineInfo4 } from '@common/logger';
+import { ML_ERR_return_NAN2 } from '@common/logger';
 import { globalNorm } from '@rng/global-rng';
 import { sqrt } from '@lib/r-func';
 
-const printer = debug('rt');
+const printer = createNS('rt');
 
 export function rtOne(df: number): number {
     const rng = globalNorm();
     if (isNaN(df) || df <= 0.0) {
-        return ML_ERR_return_NAN2(printer, lineInfo4);
+        return ML_ERR_return_NAN2(printer);
     }
 
     const num = rng.random();

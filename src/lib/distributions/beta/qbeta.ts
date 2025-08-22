@@ -1,5 +1,6 @@
-import { debug } from '@mangos/debug';
-import { ML_ERR_return_NAN2, lineInfo4, ME, ML_ERROR2 } from '@common/logger';
+import createNS from '@common/debug-frontend';
+
+import { ML_ERR_return_NAN2 } from '@common/logger';
 
 import {
     DBL_MANT_DIG,
@@ -33,7 +34,7 @@ const MLOGICAL_NA = -1;
         int swap_01, double log_q_cut, int n_N, double * qb): number { return 0 };
 */
 
-const printer_qbeta = debug('qbeta');
+const printer_qbeta = createNS('qbeta');
 
 export function qbeta(p: number, shape1: number, shape2: number, lower_tail: boolean, log_p: boolean): number {
     /* test for admissibility of parameters */
@@ -41,7 +42,7 @@ export function qbeta(p: number, shape1: number, shape2: number, lower_tail: boo
     if (isNaN(shape1) || isNaN(shape2) || isNaN(p)) return shape1 + shape2 + p;
 
     if (shape1 < 0 || shape2 < 0) {
-        return ML_ERR_return_NAN2(printer_qbeta, lineInfo4);
+        return ML_ERR_return_NAN2(printer_qbeta);
     }
     // allowing p==0 and q==0  <==> treat as one- or two-point mass
 
@@ -113,7 +114,7 @@ function return_q_half(_give_log_q: boolean, qb: NumArray): void {
     return;
 }
 
-const printer_qbeta_raw = debug('qbeta_raw');
+const printer_qbeta_raw = createNS('qbeta_raw');
 const R_ifDEBUG_printf = printer_qbeta_raw;
 // Returns both qbeta() and its "mirror" 1-qbeta(). Useful notably when qbeta() ~= 1
 function qbeta_raw(
@@ -184,8 +185,7 @@ function qbeta_raw(
             log_p ? '[-Inf, 0]' : '[0,1]'
         );
         // ML_ERR_return_NAN :
-        ML_ERROR2(ME.ME_DOMAIN, lineInfo4, printer_qbeta_raw);
-        qb[0] = qb[1] = NaN;
+        qb[0] = qb[1] = ML_ERR_return_NAN2(printer_qbeta_raw);
         return;
     }
 
@@ -362,7 +362,7 @@ function qbeta_raw(
                         true,
                         true
                     ) >
-                        la + 2
+                    la + 2
                 )
             )
                 printer_qbeta_raw(
@@ -455,8 +455,7 @@ function qbeta_raw(
                 if (!isFinite(y) && !(log_p && y === -Infinity)) {
                     // y = -Inf  is ok if(log_p)
                     // ML_ERR_return_NAN :
-                    ML_ERROR2(ME.ME_DOMAIN, lineInfo4, printer_qbeta_raw);
-                    qb[0] = qb[1] = NaN;
+                    qb[0] = qb[1] = ML_ERR_return_NAN2(printer_qbeta_raw);
                     return;
                 }
 
@@ -510,7 +509,7 @@ function qbeta_raw(
 
         /*-- NOT converged: Iteration count --*/
         warned = true;
-        ML_ERROR2(ME.ME_PRECISION, 'qbeta', printer_qbeta_raw);
+        ML_ERR_return_NAN2(printer_qbeta_raw);
     };
 
     if (
@@ -696,8 +695,8 @@ function qbeta_raw(
                 xinbta > 1.1 // i.e. "way off"
                     ? 0.5 // otherwise, keep the respective boundary:
                     : xinbta < p_lo
-                    ? Math.exp(u)
-                    : p_hi;
+                        ? Math.exp(u)
+                        : p_hi;
             if (bad_u) u = Math.log(xinbta);
             // otherwise: not changing "potentially better" u than the above
         }

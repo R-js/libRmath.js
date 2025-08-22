@@ -1,17 +1,13 @@
-import { loadData } from '@common/load';
+import { loadData } from '@common/test-helpers/load';
 import { resolve } from 'path';
 
-import { cl, select } from '@common/debug-mangos-select';
 import { qwilcox } from '..';
 
-const qwilcoxDomainWarns = select('qwilcox')("argument out of domain in '%s'");
-const qwilcoxCheck = select('R_Q_P01_check')("argument out of domain in '%s'");
+import { createLogHarnas } from '@common/debug-backend';
+const { getStats } = createLogHarnas();
 
 describe('qwilcox', function () {
     describe('invalid input and edge cases', () => {
-        beforeEach(() => {
-            cl.clear('qwilcox');
-        });
         it('x=NaN|m=NaN|n=NaN', () => {
             const nan1 = qwilcox(NaN, 1, 1);
             const nan2 = qwilcox(0, NaN, 1);
@@ -27,9 +23,10 @@ describe('qwilcox', function () {
             expect(nan1).toBeNaN();
             expect(nan2).toBeNaN();
             expect(nan3).toBeNaN();
-            expect(qwilcoxDomainWarns()).toHaveLength(3);
+            expect(getStats().qwilcox).toBe(3);
         });
         it('m <= 0 | n <= 0', () => {
+            const stats0 = getStats();
             const nan1 = qwilcox(0.1, -4, 5);
             const nan2 = qwilcox(0.5, 4, -5);
             expect(nan1).toBeNaN();
@@ -39,15 +36,16 @@ describe('qwilcox', function () {
             const nan4 = qwilcox(0.5, 4, -5);
             expect(nan3).toBeNaN();
             expect(nan4).toBeNaN();
-            //
-            expect(qwilcoxDomainWarns()).toHaveLength(4);
+            const stats1 = getStats();
+            expect(stats1.qwilcox - stats0.qwilcox).toBe(4);
         });
         it('q < 0 || q > 1', () => {
             const nan1 = qwilcox(-1, 4, 5);
             const nan2 = qwilcox(1.2, 4, 5);
             expect(nan1).toBeNaN();
             expect(nan2).toBeNaN();
-            expect(qwilcoxCheck()).toHaveLength(2);
+            const stats = getStats();
+            expect(stats.R_Q_P01_check).toBe(2);
         });
         it('q = 0 | q = 1', () => {
             const ans1 = qwilcox(0, 4, 5);

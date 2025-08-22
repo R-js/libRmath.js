@@ -1,6 +1,6 @@
-import { debug } from '@mangos/debug';
+import createNS from '@common/debug-frontend';
 
-import { ML_ERR_return_NAN2, lineInfo4 } from '@common/logger';
+import { ML_ERR_return_NAN2 } from '@common/logger';
 
 import { M_LN_SQRT_2PI } from '@lib/r-func';
 
@@ -8,7 +8,7 @@ import { gamma } from '@special/gamma';
 import { lgammafn_sign } from '@special/gamma/lgammafn_sign';
 import { lgammacor } from '@special/gamma/lgammacor';
 
-const printer = debug('lbeta');
+const printer = createNS('lbeta');
 
 function lbeta(a: number, b: number): number {
     let corr: number;
@@ -21,8 +21,9 @@ function lbeta(a: number, b: number): number {
     if (b > q) q = b; // := max(a,b)
 
     // both arguments must be >= 0
-    if (p < 0) return ML_ERR_return_NAN2(printer, lineInfo4);
-    else if (p === 0) {
+    if (p < 0) {
+        return ML_ERR_return_NAN2(printer);
+    } else if (p === 0) {
         return Infinity;
     } else if (!isFinite(q)) {
         // q == +Inf

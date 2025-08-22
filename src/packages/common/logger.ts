@@ -1,18 +1,7 @@
-import { debug, getLineInfo } from '@mangos/debug';
-import type { Printer, LineInfo  } from '@mangos/debug';
+import createNs, { type Printer } from './debug-frontend';
 
-const debug_R_Q_P01_boundaries = debug('R_Q_P01_boundaries');
-const debug_R_Q_P01_check = debug('R_Q_P01_check');
-
-export function createLineInfo(n: number) {
-    return function (): string {
-        const info = getLineInfo(n) as Required<LineInfo>;
-        return `${info.fnName}, line:${info.line}, col:${info.column}`;
-    };
-}
-
-const lineInfo4 = createLineInfo(4);
-export { lineInfo4 };
+const debug_R_Q_P01_boundaries = createNs('R_Q_P01_boundaries');
+const debug_R_Q_P01_check = createNs('R_Q_P01_check');
 
 export enum ME {
     ME_NONE = 0, // no error
@@ -23,33 +12,34 @@ export enum ME {
     ME_UNDERFLOW = 16 // and underflow occured (important for IEEE)
 }
 
-export const mapErr = new Map([
-    [ME.ME_NONE, 'No error'],
-    [ME.ME_DOMAIN, "argument out of domain in '%s'"],
-    [ME.ME_RANGE, "argument out of range in '%s'"],
-    [ME.ME_NOCONV, "convergence failed in '%s'"],
-    [ME.ME_PRECISION, "full precision may not have been achieved in '%s'"],
-    [ME.ME_UNDERFLOW, "underflow occurred in '%s'"]
-]);
+export const mapErr =
+{
+    [ME.ME_NONE]: 'No error',
+    [ME.ME_DOMAIN]: 'argument out of domain in \'%s\'',
+    [ME.ME_RANGE]: 'argument out of range in \'%s\'',
+    [ME.ME_NOCONV]: 'convergence failed in \'%s\'',
+    [ME.ME_PRECISION]: 'full precision may not have been achieved in \'%s\'',
+    [ME.ME_UNDERFLOW]: 'underflow occurred in \'%s\'',
+};
 
-export function ML_ERROR2<T extends string | Record<string, unknown> | (() => string)>(
+export function ML_ERROR3(
+    printer: Printer,
     x: ME,
-    s: T,
-    printer: Printer
-): void {
+    arg: string): void {
     if (!printer.enabled) {
         return;
     }
-    const str = mapErr.get(x);
-    const val = typeof s === 'function' ? s() : s;
-    if (str) {
-        printer(str, val);
+    const templateStr = mapErr[x];
+    if (templateStr) {
+        const err = new Error().stack!
+        printer(templateStr, arg, err);
     }
 }
 
-export function ML_ERR_return_NAN2(printer: Printer, getExtraInfo: () => string): number {
+export function ML_ERR_return_NAN2(printer: Printer): number {
     if (printer.enabled) {
-        ML_ERROR2(ME.ME_DOMAIN, getExtraInfo(), printer);
+        const stackTrace = new Error().stack! ?? 'there is no stack trace';
+        ML_ERROR3(printer, ME.ME_DOMAIN, stackTrace);
     }
     return NaN;
 }
@@ -63,7 +53,7 @@ export function R_Q_P01_boundaries(
 ): number | undefined {
     if (log_p) {
         if (p > 0) {
-            return ML_ERR_return_NAN2(debug_R_Q_P01_boundaries, lineInfo4);
+            return ML_ERR_return_NAN2(debug_R_Q_P01_boundaries);
         }
         if (p === 0)
             /* upper bound*/
@@ -72,17 +62,15 @@ export function R_Q_P01_boundaries(
     } else {
         /* !log_p */
         if (p < 0 || p > 1) {
-            return ML_ERR_return_NAN2(debug_R_Q_P01_boundaries, lineInfo4);
+            return ML_ERR_return_NAN2(debug_R_Q_P01_boundaries);
         }
         if (p === 0) return lower_tail ? _LEFT_ : _RIGHT_;
         if (p === 1) return lower_tail ? _RIGHT_ : _LEFT_;
     }
-    return undefined;
 }
 
 export function R_Q_P01_check(logP: boolean, p: number): number | undefined {
     if ((logP && p > 0) || (!logP && (p < 0 || p > 1))) {
-        return ML_ERR_return_NAN2(debug_R_Q_P01_check, lineInfo4);
+        return ML_ERR_return_NAN2(debug_R_Q_P01_check);
     }
-    return undefined;
 }

@@ -1,12 +1,12 @@
 
 
-import { debug } from '@mangos/debug';
-import { ML_ERR_return_NAN2, lineInfo4, ML_ERROR2, ME } from '@common/logger';
+import createNS from '@common/debug-frontend';
+import { ML_ERR_return_NAN2, ML_ERROR3, ME } from '@common/logger';
 import { round, trunc, floor } from '@lib/r-func';
 import { R_unif_index } from '@rng/utils';
 import { globalUni, globalSampleKind } from '@rng/global-rng';
 
-const printer_rwilcox = debug('rwilcox');
+const printer_rwilcox = createNS('rwilcox');
 
 const MAXSIZE = 800_000_000;
 
@@ -21,7 +21,7 @@ export function rwilcoxOne(m: number, n: number): number {
     n = round(n);
 
     if (m < 0 || n < 0) {
-        return ML_ERR_return_NAN2(printer_rwilcox, lineInfo4);
+        return ML_ERR_return_NAN2(printer_rwilcox);
     }
 
     if (m === 0 || n === 0) {
@@ -31,8 +31,8 @@ export function rwilcoxOne(m: number, n: number): number {
     let k = trunc(m + n);
 
     if (k >= MAXSIZE) {
-        ML_ERROR2(ME.ME_DOMAIN, 'k > MAXSIZE(=2**32)', printer_rwilcox);
-        return ML_ERR_return_NAN2(printer_rwilcox, lineInfo4);
+        ML_ERROR3(printer_rwilcox, ME.ME_DOMAIN, 'k > MAXSIZE(=2**32)',);
+        return NaN;
     }
 
     const x = new Uint32Array(k);

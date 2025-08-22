@@ -1,19 +1,13 @@
-import { loadData } from '@common/load';
+import { loadData } from '@common/test-helpers/load';
 import { resolve } from 'path';
-import { cl, select } from '@common/debug-mangos-select';
 
 import { qgeom } from '..';
 
-const qgeomLogs = select('qgeom');
-const qgeomDomainWarns = qgeomLogs("argument out of domain in '%s'");
-const qgeomWarns = select('R_Q_P01_check')("argument out of domain in '%s'");
+import { createLogHarnas } from '@common/debug-backend';
+const { getStats } = createLogHarnas();
 
 describe('qgeom', function () {
     describe('invalid input', () => {
-        beforeEach(() => {
-            cl.clear('qgeom');
-            cl.clear('R_Q_P01_check');
-        });
         it('p=NaN, prop=0.2', () => {
             const nan = qgeom(NaN, 0.2);
             expect(nan).toBe(NaN);
@@ -21,12 +15,13 @@ describe('qgeom', function () {
         it('p=4, prob=-1(<0)', () => {
             const nan = qgeom(4, -1);
             expect(nan).toBe(NaN);
-            expect(qgeomDomainWarns()).toHaveLength(1);
+            expect(getStats().qgeom).toBe(1);
         });
         it('p=1.2, prob=0.2, log=T', () => {
             const nan = qgeom(1.2, 0.2, undefined, true);
+            const stats = getStats();
             expect(nan).toBe(NaN);
-            expect(qgeomWarns()).toHaveLength(1);
+            expect(stats.R_Q_P01_check).toBe(1);
         });
     });
 
