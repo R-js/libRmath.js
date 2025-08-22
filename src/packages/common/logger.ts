@@ -36,21 +36,6 @@ export function ML_ERROR3(
     }
 }
 
-/*
-export function ML_ERROR2(
-    x: ME,
-    printer: Printer
-): void {
-    if (!printer.enabled) {
-        return;
-    }
-    const err = new Error().stack!
-    const str = mapErr.get(x);
-    if (str) {
-        printer(str, err);
-    }
-}*/
-
 export function ML_ERR_return_NAN2(printer: Printer): number {
     if (printer.enabled) {
         const stackTrace = new Error().stack! ?? 'there is no stack trace';
@@ -82,12 +67,10 @@ export function R_Q_P01_boundaries(
         if (p === 0) return lower_tail ? _LEFT_ : _RIGHT_;
         if (p === 1) return lower_tail ? _RIGHT_ : _LEFT_;
     }
-    return undefined;
 }
 
 export function R_Q_P01_check(logP: boolean, p: number): number | undefined {
     if ((logP && p > 0) || (!logP && (p < 0 || p > 1))) {
         return ML_ERR_return_NAN2(debug_R_Q_P01_check);
     }
-    return undefined;
 }

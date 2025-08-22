@@ -67,6 +67,7 @@ describe('qhyper(p,m,n,k,log)', function () {
         });
     });
     describe('with fixtures', () => {
+        it.todo('useWasmBackendHyperGeom failes on below test, find out why');
         it('p ∈ [0,1], m=300, n=150, k=400 (k < 1000, "small"), lower={true|false}, log={true|false}', async () => {
             const [p, y1, y2, y3, y4] = await loadData(
                 resolve(__dirname, 'fixture-generation', 'qhyper.R'),

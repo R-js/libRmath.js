@@ -125,7 +125,6 @@ export function qhyper(p: number, m: number, n: number, k: number, lowerTail = t
     p *= 1 - 1000 * DBL_EPSILON; /* was 64, but failed on FreeBSD sometimes */
     _d[isum] = small_N ? _d[iterm] : Math.exp(_d[iterm]);
 
-    // for speed, removed if (small_N) out of the while loop
     return small_N
         ? backendTinyN(_d[isum], _d[iterm], p, _d[ixr], xend, _d[ixb], _d[iNB], _d[iNR])
         : backendBigN(_d[isum], _d[iterm], p, _d[ixr], xend, _d[ixb], _d[iNB], _d[iNR]);

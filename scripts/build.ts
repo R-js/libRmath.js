@@ -8,11 +8,11 @@
 import { mkdirSync, readFileSync, rmSync } from 'node:fs';
 import { writeFileSync } from 'node:fs';
 import { join, relative, dirname, extname } from 'node:path';
-import ts from 'typescript';
 import { parse } from 'acorn';
 import { generate } from 'escodegen';
 import { verifyPaths, rankPaths, resolveToFullPath } from './helpers.mjs';
 import { recursiveDescend } from './nodeWalker';
+import ts from "typescript";
 
 
 function removeSafeDir(dir) {
@@ -169,6 +169,7 @@ function init(targetDir, commenjsDir, esmDir, roots) {
     mkdirSync(esmDir, { recursive: true });
     // Read the TypeScript config file.
     const { config } = ts.readConfigFile('tsconfig.json', (fileName) => readFileSync(fileName).toString());
+
     const sourceDir = join('src');
     const { baseUrl, paths } = config.compilerOptions;
 
