@@ -55,7 +55,7 @@ describe('qhyper(p,m,n,k,log)', function () {
         });
     });
     describe('edge cases', () => {
-        it('(p=1 and p=1, m=300 n=150, k=400', () => {
+        it('(p=0 and p=1, m=300 n=150, k=400', () => {
             // the minimum output is Max(0,  (nn-nb) )
             // the maximum output is min(nn, nr)
             // xstart = max(0, 400-150) = 250, so p=0 will output 250

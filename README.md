@@ -1,10 +1,24 @@
 # libRmath.js
 
-This R statistical [`nmath`](https://svn.r-project.org/R/trunk/src/nmath) re-created in typescript/javascript.
+This R statistical [`nmath`](https://svn.r-project.org/R/trunk/src/nmath) re-created in typescript/javascript and handwritten webassembly.
 
-This is the documentation of 3.0.0, 
-- for the lts branch of version 2.x see [here](https://github.com/R-js/libRmath.js/tree/lts-libr-v2)
-- for the lts branch of version 1.x see [here](https://github.com/R-js/libRmath.js/tree/lts-libr-v1).
+This library has zero external dependencies.
+
+## Synopsys
+
+This is the documentation of 3.0.0 (beta1),
+
+This documentation assumes you knowledgable about the R build-in libaries.
+
+```bash
+npm i lib-r-math.js@latest # most recent lts version
+
+npm i lib-r-math.js@3.0.0-beta1 # current bleeding edge
+```
+
+**Older documentation:**
+- for the lts branch of version 2 see [here](https://github.com/R-js/libRmath.js/tree/lts-libr-v2)
+- for the lts branch of version 1 see [here](https://github.com/R-js/libRmath.js/tree/lts-libr-v1).
 
 If you were not using a previous version to 2.0.0, you can skip _breaking changes_ and go to:
 
@@ -81,14 +95,11 @@ rbinomOne(350, 0.5);
 
 ### UMD module removed
 
-There is no UMD module from 2.0.0. These are the module types for node and browser
-
--   **node**: esm (multiple files), commonjs
--   **web**: esm (single bundle) and iife ("immediately-invoked Function Expression")
+There is no UMD module from 2.0.0 onward. 
 
 ## Installation and usage
 
-Minimal version of node required is `16.18.1`.
+Minimal version of node required is `18.15.0`.
 
 ```bash
 npm i lib-r-math.js
@@ -202,11 +213,11 @@ const answ = BesselJ(3, 0.4);
 
 ### `RNGkind`
 
-RNGkind is the analog to R's "RNGkind". This is how you select what RNG (normal and uniform) you use and the samplingKind
+RNGkind is the analog to R's "RNGkind". This is how you select what RNG (normal and uniform) you use and the `samplingKind` (Rounding or Rejection) property
 
 Follows closely the R implementation [here](https://stat.ethz.ch/R-manual/R-devel/library/base/html/Random.html)
 
-R console:
+**R console:**
 
 ```R
 > RNGkind()

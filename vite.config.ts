@@ -1,5 +1,4 @@
 import { defineConfig } from 'vitest/config';
-import path from 'path';
 import tsconfigPaths from 'vite-tsconfig-paths';
 
 export default defineConfig({
@@ -18,7 +17,10 @@ export default defineConfig({
             'src/lib/distributions/f-distro/__test__/*test.ts',
             'src/lib/distributions/gamma/__test__/**/*test.ts',
             'src/lib/distributions/geometric/**/__test__/*test.ts',
-            'src/lib/distributions/hypergeometric/**/__test__/*test.ts', // issue
+            'src/lib/distributions/hypergeometric/__test__/dhyper.test.ts',
+            'src/lib/distributions/hypergeometric/__test__/phyper.test.ts',
+            'src/lib/distributions/hypergeometric/__test__/rhyper.test.ts',
+            'src/lib/distributions/hypergeometric/__test__/qhyper.test.ts',
             'src/lib/distributions/logis/**/__test__/*test.ts',
             'src/lib/distributions/lognormal/**/__test__/*test.ts',
             'src/lib/distributions/multinom/**/__test__/*test.ts',
@@ -44,17 +46,6 @@ export default defineConfig({
             'src/lib/special/choose/**/__test__/*test.ts',
             'src/lib/special/gamma/**/__test__/*test.ts'
         ],
-        exclude: [
-            // 'node_modules',
-            // 'test',
-            // 'doc.ts',
-            //'IRandom.ts',
-            ///'IBesselRC.ts',
-            //'/esm/',
-            // '/commonjs/',
-            // '/types/',
-            //'/dist/'
-        ],
         coverage: {
             enabled: true,
             provider: 'v8',
@@ -71,14 +62,6 @@ export default defineConfig({
                 'src/lib/trigonometry/**/*.ts',
                 'src/lib/r-func.ts',
                 'logger.ts',
-                //'src/lib/distributions/**/*.ts',
-                //'src/lib/r-func.ts',
-                //'src/lib/index.ts',
-                //'src/lib/trigonometry/*.ts',
-                //'src/lib/stirling/index.ts',
-                //'src/lib/special/**/*.ts',
-                //'src/lib/rng/**/*.ts',
-                //'src/packages/common/logger.ts'
             ],
             exclude: [
                 // anything in a local test directory including helpers

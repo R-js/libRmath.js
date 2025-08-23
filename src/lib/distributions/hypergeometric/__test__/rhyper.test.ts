@@ -46,7 +46,7 @@ describe('rhyper', function () {
             const z2 = rhyper(10, 2 ** 31 - 2, 2 ** 31, 1);
             expect(z2).toEqualFloatingPointBinary([1, 1, 1, 1, 1, 1, 1, 0, 0, 1]);
         });
-        it.todo('jest has no problem with test below, but vitest does');
+        it.todo('vitest has an issue "Error: [vitest-worker]: Timeout calling "onTaskUpdate" on long running sycn tasks');
         it.skip('(wasm) with k=2^31-1 AND m, n, bigger then INT_MAX (2^31-1', () => {
             globalUni().init(1234);
             useWasmBackendHyperGeom();
@@ -58,7 +58,9 @@ describe('rhyper', function () {
                 2 ** 31 - 1 //kkin
             );
             expect(z3).toEqualFloatingPointBinary(1073761537);
+
             const t1 = Date.now();
+
             globalUni().init(1234); // important!
             const z4 = rhyper(
                 1, //N
@@ -68,9 +70,9 @@ describe('rhyper', function () {
             );
             const t2 = Date.now();
             expect(z4).toEqualFloatingPointBinary(1073741824);
-            // clearBackendHyperGeom();
-            // console.log(`rhyper: (wasm) ${ms(t1 - t0)}`);
-            // console.log(`rhyper: (wasm) ${ms(t2 - t1)}`);
+            clearBackendHyperGeom();
+            console.log(`rhyper: (wasm) ${ms(t1 - t0)}`);
+            console.log(`rhyper: (wasm) ${ms(t2 - t1)}`);
         }, 1e9);
     });
 

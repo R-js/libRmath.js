@@ -22,10 +22,7 @@ export const mapErr =
     [ME.ME_UNDERFLOW]: 'underflow occurred in \'%s\'',
 };
 
-export function ML_ERROR3(
-    printer: Printer,
-    x: ME,
-    arg: string): void {
+export function ML_ERROR3(printer: Printer, x: ME, arg: string): void {
     if (!printer.enabled) {
         return;
     }

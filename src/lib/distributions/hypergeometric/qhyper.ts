@@ -35,19 +35,17 @@ export function unRegisterBackend(): boolean {
 }
 
 function cpuBackendTinyN(
-    sum: number,
-    term: number,
-    p: number,
-    xr: number,
-    end: number,
-    xb: number,
-    NB: number,
-    NR: number
+    sum: number, // 0
+    term: number, // 1
+    p: number, // 2
+    xr: number, // 3
+    end: number,// 4
+    xb: number, // 5
+    NB: number, // 6
+    NR: number  // 7
 ): number {
     while (sum < p && xr < end) {
-        //xr++
         xr++;
-
         NB++;
         term *= (NR / xr) * (xb / NB);
         sum += term;
@@ -125,7 +123,8 @@ export function qhyper(p: number, m: number, n: number, k: number, lowerTail = t
     p *= 1 - 1000 * DBL_EPSILON; /* was 64, but failed on FreeBSD sometimes */
     _d[isum] = small_N ? _d[iterm] : Math.exp(_d[iterm]);
 
-    return small_N
-        ? backendTinyN(_d[isum], _d[iterm], p, _d[ixr], xend, _d[ixb], _d[iNB], _d[iNR])
-        : backendBigN(_d[isum], _d[iterm], p, _d[ixr], xend, _d[ixb], _d[iNB], _d[iNR]);
+    if (small_N) {
+        return backendTinyN(_d[isum], _d[iterm], p, _d[ixr], xend, _d[ixb], _d[iNB], _d[iNR]);
+    }
+    return backendBigN(_d[isum], _d[iterm], p, _d[ixr], xend, _d[ixb], _d[iNB], _d[iNR]);
 }
