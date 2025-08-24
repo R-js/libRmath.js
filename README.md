@@ -99,7 +99,7 @@ There is no UMD module from 2.0.0 onward.
 
 ## Installation and usage
 
-Minimal version of node required is `18.15.0`.
+Minimal version of node required is `22.12.0`.
 
 ```bash
 npm i lib-r-math.js
