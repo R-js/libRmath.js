@@ -102,5 +102,5 @@
     "sideEffects": false,
     "type": "module",
     "types": "./dist/types/index.d.ts",
-    "version": "3.0.0.-beta1"
+    "version": "3.0.0.beta1"
 }

@@ -6,7 +6,7 @@ This library has zero external dependencies.
 
 ## Synopsys
 
-This is the documentation of 3.0.0 (beta1),
+This is the documentation of @3.0.0.beta1,
 
 This documentation assumes you knowledgable about the R build-in libaries.
 
