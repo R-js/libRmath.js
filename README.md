@@ -6,14 +6,14 @@ This library has zero external dependencies.
 
 ## Synopsys
 
-This is the documentation of @3.0.0.beta1,
+This is the documentation of `@beta3-rc2`,
 
 This documentation assumes you knowledgable about the R build-in libaries.
 
 ```bash
 npm i lib-r-math.js@latest # most recent lts version
 
-npm i lib-r-math.js@3.0.0-beta1 # current bleeding edge
+npm i lib-r-math.js@beta3-rc2 # current bleeding edge
 ```
 
 **Older documentation:**
