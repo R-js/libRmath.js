@@ -86,7 +86,7 @@ There is no UMD module from 2.0.0. These are the module types for node and brows
 
 ## Installation and usage
 
-Minimal version of node required is `16.18.1`.
+Minimal version of node required is `18.15.0`.
 
 ```bash
 npm i lib-r-math.js
