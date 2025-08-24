@@ -9,14 +9,7 @@ export type LoggerController = {
     isEnabled(namespace?: string): boolean;
 };
 
-const defaultController: LoggerController = {
-    send(_namespace: string, _formatter: string, ..._args: any[]) { },
-    isEnabled(_namespace?: string) {
-        return false;
-    }
-};
-
-let controller: LoggerController = defaultController;
+let controller: LoggerController | undefined;
 
 export function register(backend: (prefix?: string) => LoggerController, prefix?: string) {
     controller = backend(prefix);
@@ -24,11 +17,14 @@ export function register(backend: (prefix?: string) => LoggerController, prefix?
 }
 
 export function unRegister() {
-    controller = defaultController;
+    controller = undefined;
 }
 
 export default function createNs(ns: string): Printer {
     function print(formatter: string, ...args: any[]) {
+        if (!controller) {
+            return;
+        }
         if (controller.isEnabled(ns)) {
             controller.send(ns, formatter, ...args);
         }
@@ -36,6 +32,9 @@ export default function createNs(ns: string): Printer {
     Object.defineProperties(print, {
         enabled: {
             get() {
+                if (!controller) {
+                    return false;
+                }
                 return controller.isEnabled(ns);
             },
             enumerable: true

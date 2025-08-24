@@ -15,10 +15,10 @@ import { recursiveDescend } from './nodeWalker';
 import ts from "typescript";
 
 
-function removeSafeDir(dir) {
+function removeSafeDir(dir: string) {
     try {
         rmSync(dir, { recursive: true });
-    } catch (error) {
+    } catch (error: any) {
         if (error.code !== 'ENOENT') throw error;
     }
 }
@@ -30,8 +30,8 @@ function removeSafeDir(dir) {
  * @param {string[]} files
  * @param {ts.CompilerOptions} options
  */
-function createCompiler(config, sourceDir) {
-    return function compile(files, targetDIR, options, possibleExtensions) {
+function createCompiler(config: any, sourceDir: string) {
+    return function compile(files: string[], targetDIR: string, options: Record<string, unknown>, possibleExtensions: string[]) {
         const compilerOptions = { ...config.compilerOptions, ...options };
         const { baseUrl, paths } = compilerOptions;
         const pathVerifyResult = verifyPaths(paths);
@@ -108,7 +108,6 @@ function createCompiler(config, sourceDir) {
                         recursiveDescend(
                             astTree as any,
                             (node: any) => {
-                                let flag = false;
                                 if (node?.type === 'ImportDeclaration') {
                                     if (node?.source) {
                                         return node;
@@ -125,7 +124,6 @@ function createCompiler(config, sourceDir) {
                         recursiveDescend(
                             astTree as any,
                             (node: any) => {
-                                let flag = false;
                                 if (['ExportAllDeclaration', 'ExportNamedDeclaration'].includes(node?.type)) {
                                     if (node?.source) {
                                         return node;
@@ -151,7 +149,7 @@ function createCompiler(config, sourceDir) {
                 writeFileSync(path, contents, 'utf-8');
                 // eslint-disable-next-line no-console
                 console.log('Built', path);
-            } catch (err) {
+            } catch (err: any) {
                 onError && onError(err.message);
                 // eslint-disable-next-line no-console
                 console.log('Fail', path);
@@ -163,7 +161,7 @@ function createCompiler(config, sourceDir) {
     };
 }
 
-function init(targetDir, commenjsDir, esmDir, roots) {
+function init(targetDir: string, commenjsDir: string, esmDir: string, roots: string[]) {
     removeSafeDir(targetDir);
     mkdirSync(commenjsDir, { recursive: true });
     mkdirSync(esmDir, { recursive: true });
@@ -171,7 +169,6 @@ function init(targetDir, commenjsDir, esmDir, roots) {
     const { config } = ts.readConfigFile('tsconfig.json', (fileName) => readFileSync(fileName).toString());
 
     const sourceDir = join('src');
-    const { baseUrl, paths } = config.compilerOptions;
 
     const compile = createCompiler(config, sourceDir);
 
