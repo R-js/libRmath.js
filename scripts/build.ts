@@ -1,9 +1,4 @@
 #!/usr/bin/env node
-// @ts-check4785838a-0a9e-41fa-a217-4bd234c00c9e
-
-// TODO: resolve paths like described here
-// https://www.typescriptlang.org/docs/handbook/modules/reference.html#paths
-
 
 import { mkdirSync, readFileSync, rmSync } from 'node:fs';
 import { writeFileSync } from 'node:fs';
