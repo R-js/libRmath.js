@@ -2,6 +2,19 @@
 
 This R statistical [`nmath`](https://svn.r-project.org/R/trunk/src/nmath) re-created in typescript/javascript and handwritten webassembly.
 
+**Distributions:**
+
+_beta, binomial, binomial-negative, cauchy, ch-2, exponential, fisher_, _gamma, geometric, hypergeometric (web assembly), logistic, log normal, multinomial, normal/gaussian, poisson distribution, singnrank (web assembly), student-t, tukey, uniform, weibull, wilcoxon_
+
+**Special functions:**
+
+Bessel, beta, gamma, choose (the binomial coefficient $\binom{n}{k}$).
+
+
+**Pseudo Random genererators:**
+knuth-taocp, lecuyer-cmrg, marsalglia-multicarry, mersenne-twister, super-duper, wichman-hill, ahrens-dieter, box-muller, buggy-kinderman-ramage, inversion, kinderman-ramage.
+
+
 This library has zero external dependencies.
 
 ## Synopsys
