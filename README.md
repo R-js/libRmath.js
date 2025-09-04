@@ -19,8 +19,6 @@ This library has zero external dependencies.
 
 ## Synopsys
 
-This is the documentation of version 3.0.0
-
 This documentation assumes you knowledgable about the R build-in libaries.
 
 ```bash
