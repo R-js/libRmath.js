@@ -4,15 +4,16 @@ This R statistical [`nmath`](https://svn.r-project.org/R/trunk/src/nmath) re-cre
 
 **Distributions:**
 
-_beta, binomial, binomial-negative, cauchy, ch-2, exponential, fisher_, _gamma, geometric, hypergeometric (web assembly), logistic, log normal, multinomial, normal/gaussian, poisson distribution, singnrank (web assembly), student-t, tukey, uniform, weibull, wilcoxon_
+_beta, binomial, binomial-negative, cauchy, ch-2, exponential, fisher_, _gamma, geometric, hypergeometric (web assembly), logistic, log normal, multinomial, normal/gaussian, poisson distribution, singnrank (web assembly), student-t, tukey, uniform, weibull, wilcoxon._
 
 **Special functions:**
 
-Bessel, beta, gamma, choose (the binomial coefficient $\binom{n}{k}$).
+_bessel, beta, gamma, choose (the binomial coefficient $\binom{n}{k}$)._
 
 
 **Pseudo Random genererators:**
-knuth-taocp, lecuyer-cmrg, marsalglia-multicarry, mersenne-twister, super-duper, wichman-hill, ahrens-dieter, box-muller, buggy-kinderman-ramage, inversion, kinderman-ramage.
+
+_knuth-taocp, lecuyer-cmrg, marsalglia-multicarry, mersenne-twister, super-duper, wichman-hill, ahrens-dieter, box-muller, buggy-kinderman-ramage, inversion, kinderman-ramage._
 
 
 This library has zero external dependencies.
