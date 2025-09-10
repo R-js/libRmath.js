@@ -1,4 +1,4 @@
-export { describe, it, expect, xit } from 'vitest';
+export { describe, it, expect } from 'vitest';
 
 import { expect } from 'vitest';
 import type { MatcherHintOptions } from 'jest-matcher-utils';
@@ -273,7 +273,7 @@ expect.extend({
             options.comment = 'unusable data type(s)';
             return {
                 message: () =>
-                    this.utils.matcherHint('toEqualFloatingPointBinary', typeR, typeE, options) + '\n\n' + errMsg,
+                    this.utils.matcherHint('toEqualFloatingPointBinary', typeR, typeE, options as any as any) + '\n\n' + errMsg,
                 pass: this.isNot ? true : false
             };
         }
@@ -284,7 +284,7 @@ expect.extend({
             errMsg = 'Expected is am empty array';
             return {
                 message: () =>
-                    this.utils.matcherHint('toEqualFloatingPointBinary', typeR, typeE, options) + '\n\n' + errMsg,
+                    this.utils.matcherHint('toEqualFloatingPointBinary', typeR, typeE, options as any) + '\n\n' + errMsg,
                 pass: this.isNot ? true : false
             };
         }
@@ -295,7 +295,7 @@ expect.extend({
             errMsg = 'Comparing received (scalar) with an array of length > 1';
             return {
                 message: () =>
-                    this.utils.matcherHint('toEqualFloatingPointBinary', typeR, typeE, options) + '\n\n' + errMsg,
+                    this.utils.matcherHint('toEqualFloatingPointBinary', typeR, typeE, options as any) + '\n\n' + errMsg,
                 pass: this.isNot ? true : false
             };
         }
@@ -306,7 +306,7 @@ expect.extend({
             errMsg = 'Received is am empty array';
             return {
                 message: () =>
-                    this.utils.matcherHint('toEqualFloatingPointBinary', typeR, typeE, options) + '\n\n' + errMsg,
+                    this.utils.matcherHint('toEqualFloatingPointBinary', typeR, typeE, options as any) + '\n\n' + errMsg,
                 pass: this.isNot ? true : false
             };
         }
@@ -317,7 +317,7 @@ expect.extend({
             errMsg = 'Comparing received (array length > 1) with a Received (scalar)';
             return {
                 message: () =>
-                    this.utils.matcherHint('toEqualFloatingPointBinary', typeR, typeE, options) + '\n\n' + errMsg,
+                    this.utils.matcherHint('toEqualFloatingPointBinary', typeR, typeE, options as any) + '\n\n' + errMsg,
                 pass: this.isNot ? true : false
             };
         }
@@ -327,7 +327,7 @@ expect.extend({
             return {
                 pass: true,
                 message: () =>
-                    this.utils.matcherHint('toEqualFloatingPointBinary', '[]', '[]', options) + '\n\n' + errMsg
+                    this.utils.matcherHint('toEqualFloatingPointBinary', '[]', '[]', options as any) + '\n\n' + errMsg
             };
         }
         // check 7: if one of the arrays is empty thats an error
@@ -340,7 +340,7 @@ expect.extend({
                         'toEqualFloatingPointBinary',
                         isEmptyArray(received) ? '[]' : typeR,
                         isEmptyArray(expected) ? '[]' : typeE,
-                        options
+                        options as any
                     ) +
                     '\n\n' +
                     errMsg
@@ -369,7 +369,7 @@ expect.extend({
             return {
                 pass: true,
                 message: () =>
-                    this.utils.matcherHint('toEqualFloatingPointBinary', typeR, typeE, options) + '\n\n' + errMsg
+                    this.utils.matcherHint('toEqualFloatingPointBinary', typeR, typeE, options as any) + '\n\n' + errMsg
             };
         } catch (err) {
             const [rc, aIdx, bIdx, recv, expv] = err as number[];
@@ -388,7 +388,7 @@ expect.extend({
             return {
                 pass: false,
                 message: () =>
-                    this.utils.matcherHint('toEqualFloatingPointBinary', typeR, typeE, options) + '\n\n' + errMsg
+                    this.utils.matcherHint('toEqualFloatingPointBinary', typeR, typeE, options as any) + '\n\n' + errMsg
             };
         }
     }
