@@ -4,10 +4,10 @@ import { mkdirSync, readFileSync, rmSync } from 'node:fs';
 import { writeFileSync } from 'node:fs';
 import { join, relative, dirname, extname } from 'node:path';
 import { parse } from 'acorn';
-import { generate } from 'escodegen';
+import { generate } from 'astring';
 import { verifyPaths, rankPaths, resolveToFullPath } from './helpers.mjs';
 import { recursiveDescend } from './nodeWalker';
-import ts from "typescript";
+import ts from 'typescript';
 
 
 function removeSafeDir(dir: string) {
@@ -36,12 +36,8 @@ function createCompiler(config: any, sourceDir: string) {
         }
         const { exactPaths, wildCardPaths } = rankPaths(paths);
         const host = ts.createCompilerHost(compilerOptions);
-        let nr = 0;
         host.writeFile = function (fileName, contents, _writeByteOrderMark, onError, _sourceFiles) {
             const isDts = fileName.endsWith('.d.ts');
-            if (isDts && fileName.endsWith('src/lib/rng/knuth-taocp/index.js')) {
-                nr++;
-            }
             const relativeToSourceDir = relative(sourceDir, fileName);
             const subDir = join(targetDIR, dirname(relativeToSourceDir));
 
@@ -92,6 +88,7 @@ function createCompiler(config: any, sourceDir: string) {
 
                         for (const node of finalRequires) {
                             node.value = resolveToFullPath(fileName, node.value, baseUrl, paths, exactPaths, wildCardPaths, '.cjs', possibleExtensions);
+                            node.raw = `"${node.value}"`;
                         }
 
                         contents = generate(astTree);
@@ -114,6 +111,7 @@ function createCompiler(config: any, sourceDir: string) {
                         importStatements
                             .filter((_node: any) => _node?.source).forEach(_node => {
                                 _node.source.value = resolveToFullPath(fileName, _node.source.value, baseUrl, paths, exactPaths, wildCardPaths, '.mjs', possibleExtensions);
+                                _node.source.raw = `"${_node.source.value}"`
                             });
                         const exportStatements: any[] = [];
                         recursiveDescend(
@@ -129,7 +127,8 @@ function createCompiler(config: any, sourceDir: string) {
                         );
                         exportStatements
                             .filter((_node: any) => _node?.source).forEach(_node => {
-                                _node.source.value = resolveToFullPath(fileName, _node.source.value, baseUrl, paths, exactPaths, wildCardPaths, '.mjs', possibleExtensions);
+                                _node.source.raw = _node.source.value = resolveToFullPath(fileName, _node.source.value, baseUrl, paths, exactPaths, wildCardPaths, '.mjs', possibleExtensions);
+                                _node.source.raw = `"${_node.source.value}"`;
                             });
                         contents = generate(astTree);
                         path = extname(path) === '' ? path + '.mjs' : path.slice(0, -extname(path).length) + '.mjs';

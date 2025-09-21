@@ -2,9 +2,9 @@ import log1p from '../log1p';
 
 //hypot
 
-import { createLogHarnas } from '@common/debug-backend';
+import { createObjectLogHarnas } from '@common/debug-backend';
 
-const { getStats } = createLogHarnas();
+const { getStats } = createObjectLogHarnas({ log1p: true });
 
 describe('log1p', function () {
     describe('invalid input and edge cases', () => {

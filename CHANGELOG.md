@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## version 4.0.0 <to be determined>
+
+### improved 
+-`2025-09-21` (Jacob Bogers <jkfbogers@gmail.com>)
+    - Moved to typescript "5.4.5"
+    - replaced `escodegen` with `astring`, build script adjusted;
+
+### improved (Jacob Bogers <jkfbogers@gmail.com>)
+- Updated README.md, to let potential users know what functions this module supports
+
 ## version 3.0.2 2025-09-04
 
 ### improved (Jacob Bogers <jkfbogers@gmail.com>)

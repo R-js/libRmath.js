@@ -1,15 +1,16 @@
 /* want to compile log1p as Rlog1p if HAVE_LOG1P && !HAVE_WORKING_LOG1P */
-import createNs from '@common/debug-frontend';
+import { createObjectNs } from '@common/debug-frontend';
 import { chebyshev_eval } from '../../chebyshev/chebyshev';
-import { ME, ML_ERR_return_NAN2, ML_ERROR3 } from '@common/logger';
 import { abs as fabs, log } from '@lib/r-func';
 
-const printer = createNs('log1p');
+const printer = createObjectNs('log1p');
 
 import {
     NEGATIVE_INFINITY,
     EPSILON,
 } from '@lib/r-func';
+import DomainError from '@lib/errors/DomainError';
+import PrecisionError from '@lib/errors/PrecisionError';
 
 // series for log1p on the interval -.375 to .375
 //				     with weighted error   6.35e-32
@@ -70,7 +71,8 @@ export default function log1p(x: number): number {
     if (x === 0) return 0; // speed
     if (x === -1) return NEGATIVE_INFINITY;
     if (x < -1) {
-        return ML_ERR_return_NAN2(printer);
+        printer(DomainError, 'log1p');
+        return NaN;
     }
 
     if (fabs(x) <= 0.375) {
@@ -85,7 +87,7 @@ export default function log1p(x: number): number {
     // else
     if (x < xmin) {
         // answer less than half precision because x too near -1
-        ML_ERROR3(printer, ME.ME_PRECISION, 'log1p');
+        printer(PrecisionError, 'log1p');
     }
     return log(1 + x);
 }

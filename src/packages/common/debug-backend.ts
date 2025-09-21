@@ -1,4 +1,11 @@
-import { register } from '@common/debug-frontend';
+import { register, registerObjectLogger } from '@common/debug-frontend';
+import DefaultObjectLogger from './DefaultObjectLogger';
+
+export function createDebugObjectLoggerBackend(logs: unknown[], enabledNameSpaces = {}) {
+    return function (prefix?: string) {
+        return new DefaultObjectLogger(prefix, logs, enabledNameSpaces);
+    }
+}
 
 export default function createDebugLoggerBackend(logs: unknown[]) {
     return function (prefix?: string) {
@@ -26,6 +33,17 @@ export function createStatsFromLogs(logs: LogEntry[]) {
     return rc;
 }
 
+export function createStatsFromObjectLogs(logs: { ns: string }[]) {
+    const rc = {} as Record<string, number>;
+    logs.reduce((col, obj) => {
+        col[obj.ns] = col[obj.ns] ?? 0;
+        col[obj.ns]++;
+        return col;
+    }, rc);
+    return rc;
+}
+
+
 export function createLogHarnas() {
     const logs: LogEntry[] = [];
     register(createDebugLoggerBackend(logs));
@@ -33,6 +51,17 @@ export function createLogHarnas() {
         logs,
         getStats() {
             return createStatsFromLogs(logs);
+        }
+    }
+}
+
+export function createObjectLogHarnas(allowedNS: Record<string, true>) {
+    const logs: { ns: string }[] = [];
+    registerObjectLogger(createDebugObjectLoggerBackend(logs, allowedNS), /*optional prefix namespace 'stand-alone'*/);
+    return {
+        logs,
+        getStats() {
+            return createStatsFromObjectLogs(logs);
         }
     }
 }
