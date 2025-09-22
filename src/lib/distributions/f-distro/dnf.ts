@@ -21,14 +21,16 @@ export function dnf(x: number, df1: number, df2: number, ncp: number, giveLog: b
      *   return df(x, df1, df2, give_log); */
 
     if (df1 <= 0 || df2 <= 0 || ncp < 0) {
-        return ML_ERR_return_NAN2(printer);
+        printer(DomainError);
+        return NaN;
     }
     if (x < 0) {
         return R_D__0(giveLog);
     }
     if (!isFinite(ncp)) {
         /* ncp = +Inf -- FIXME?: in some cases, limit exists */
-        return ML_ERR_return_NAN2(printer);
+        printer(DomainError);
+        return NaN;
     }
 
     /* This is not correct for  df1 == 2, ncp > 0 - and seems unneeded:

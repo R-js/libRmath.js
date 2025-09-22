@@ -32,7 +32,8 @@ export function lgammacor(x: number): number {
     //   xbig = 2 ^ 26.5
     //   xmax = DBL_MAX / 48 =  2^1020 / 3
 
-    if (x < 10) return ML_ERR_return_NAN2(printer);
+    if (x < 10) printer(DomainError);
+    return NaN;
     else if (x >= xmax) {
         ML_ERROR3(printer, ME.ME_UNDERFLOW, 'lgammacor');
         // allow to underflow below

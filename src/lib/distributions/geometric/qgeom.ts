@@ -9,7 +9,8 @@ export function qgeom(p: number, prob: number, lowerTail = true, logP = false): 
     if (isNaN(p) || isNaN(prob)) return NaN;
 
     if (prob <= 0 || prob > 1) {
-        return ML_ERR_return_NAN2(printer);
+        printer(DomainError);
+        return NaN;
     }
 
     const chk1 = R_Q_P01_check(logP, p);

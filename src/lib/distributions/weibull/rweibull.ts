@@ -15,7 +15,8 @@ export function rweibullOne(shape: number, scale = 1): number {
             return 0;
         }
         /* else */
-        return ML_ERR_return_NAN2(printer);
+        printer(DomainError);
+        return NaN;
     }
 
     return scale * pow(-log(rng.random()), 1.0 / shape);

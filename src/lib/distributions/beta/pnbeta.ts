@@ -1,14 +1,19 @@
-import createNS from '@common/debug-frontend';
-import { ML_ERR_return_NAN2, ME, ML_ERROR3 } from '@common/logger';
+import { createObjectNs } from '@common/debug-frontend';
 import { R_P_bounds_01, floor, exp, sqrt, log, log1p, max } from '@lib/r-func';
 
 import { lgammafn_sign } from '@special/gamma/lgammafn_sign';
 
 import { Toms708 } from '@common/toms708/toms708';
 import { NumberW } from '@common/toms708/NumberW';
+import DomainError from '@lib/errors/DomainError';
+import PrecisionError from '@lib/errors/PrecisionError';
+import ConvergenceError from '@lib/errors/ConvergenceError';
 
-const printerPNBeta = createNS('pnbeta_raw/pnbeta');
-const printer_pnbeta2 = createNS('pnbeta2');
+const domain = 'pnbeta2';
+const domain_raw = 'pnbeta_raw/pnbeta';
+
+const printer_raw_pnbeta2 = createObjectNs(domain_raw);
+const printer_pnbeta2 = createObjectNs(domain);
 
 /* change errmax and itrmax if desired;
  * original (AS 226, R84) had  (errmax; itrmax) = (1e-6; 100) */
@@ -34,7 +39,8 @@ function pnbeta_raw(x: number, o_x: number, a: number, b: number, ncp: number): 
     let sumq;
 
     if (ncp < 0 || a <= 0 || b <= 0) {
-        return ML_ERR_return_NAN2(printerPNBeta);
+        printer_raw_pnbeta2(DomainError, domain_raw)
+        return NaN;
     }
 
     const c = ncp / 2;
@@ -67,8 +73,12 @@ function pnbeta_raw(x: number, o_x: number, a: number, b: number, ncp: number): 
         errbd = (temp.val - gx) * sumq;
     } while (errbd > errmax && j < itrmax + x0);
 
-    if (errbd > errmax) ML_ERROR3(printerPNBeta, ME.ME_PRECISION, 'pnbeta');
-    if (j >= itrmax + x0) ML_ERROR3(printerPNBeta, ME.ME_NOCONV, 'pnbeta');
+    if (errbd > errmax) {
+        printer_raw_pnbeta2(PrecisionError, domain_raw);
+    }
+    if (j >= itrmax + x0) {
+        printer_pnbeta2(ConvergenceError, domain);
+    }
 
     return ans;
 }
@@ -88,7 +98,10 @@ export function pnbeta2(
     if (lower_tail) {
         return log_p ? log(ans) : ans;
     } else {
-        if (ans > 1 - 1e-10) ML_ERROR3(printer_pnbeta2, ME.ME_PRECISION, 'pnbeta');
+        if (ans > 1 - 1e-10) {
+            printer_pnbeta2(PrecisionError, domain);
+        }
+
         if (ans > 1.0) ans = 1.0; /* Precaution */
         /* include standalone case */
         return log_p ? log1p(-ans) : 1 - ans;

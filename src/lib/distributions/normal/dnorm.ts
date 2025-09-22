@@ -31,7 +31,8 @@ export function dnorm4(x: number, mean = 0, sd = 1, log = false): number {
 
     if (sd <= 0) {
         if (sd < 0) {
-            return ML_ERR_return_NAN2(printer);
+            printer(DomainError);
+            return NaN;
         }
         /* sd == 0 */
         return x === mean ? Infinity : R_D__0(log);

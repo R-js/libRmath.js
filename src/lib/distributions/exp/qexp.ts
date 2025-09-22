@@ -11,7 +11,8 @@ export function qexp(p: number, scale: number, lower_tail: boolean, log_p: boole
     }
 
     if (scale < 0) {
-        return ML_ERR_return_NAN2(printer);
+        printer(DomainError);
+        return NaN;
     }
 
     const rc = R_Q_P01_check(log_p, p);

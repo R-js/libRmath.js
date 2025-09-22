@@ -22,7 +22,8 @@ function lbeta(a: number, b: number): number {
 
     // both arguments must be >= 0
     if (p < 0) {
-        return ML_ERR_return_NAN2(printer);
+        printer(DomainError);
+        return NaN;
     } else if (p === 0) {
         return Infinity;
     } else if (!isFinite(q)) {

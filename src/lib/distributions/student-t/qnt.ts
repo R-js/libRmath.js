@@ -24,7 +24,8 @@ export function qnt(p: number, df: number, ncp: number, lower_tail: boolean, log
     }
 
     if (df <= 0) {
-        return ML_ERR_return_NAN2(printer);
+        printer(DomainError);
+        return NaN;
     }
 
     if (ncp === 0 && df >= 1) {

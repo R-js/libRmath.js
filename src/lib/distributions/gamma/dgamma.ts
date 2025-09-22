@@ -12,7 +12,8 @@ export function dgamma(x: number, shape: number, scale: number, aslog: boolean):
         return x + shape + scale;
     }
     if (shape < 0 || scale <= 0) {
-        return ML_ERR_return_NAN2(printer);
+        printer(DomainError);
+        return NaN;
     }
     if (x < 0) {
         return R_D__0(aslog);

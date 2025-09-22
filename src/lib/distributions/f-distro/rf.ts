@@ -7,7 +7,8 @@ const printer = createNS('rf');
 
 export function rfOne(n1: number, n2: number): number {
     if (isNaN(n1) || isNaN(n2) || n1 <= 0 || n2 <= 0) {
-        return ML_ERR_return_NAN2(printer);
+        printer(DomainError);
+        return NaN;
     }
 
     const v1 = isFinite(n1) ? rchisqOne(n1) / n1 : 1;

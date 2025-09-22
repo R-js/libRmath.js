@@ -1,11 +1,11 @@
-import createNS from '@common/debug-frontend';
-import { ML_ERR_return_NAN2 } from '@common/logger';
+import { createObjectNs } from '@common/debug-frontend';
 import { R_D__0, R_D_exp, ceil, sqrt } from '@lib/r-func';
 import { dpois_raw } from '@dist/poisson/dpois';
 import { dbeta_scalar } from './dbeta';
+import DomainError from '@lib/errors/DomainError';
 
-const printer = createNS('dnbeta');
-
+const domain = 'dnbeta';
+const printer = createObjectNs(domain);
 const eps = 1e-15;
 
 //also used by f-distriution
@@ -23,11 +23,13 @@ export function dnbeta_scalar(x: number, a: number, b: number, ncp: number, give
 
     if (isNaN(x) || isNaN(a) || isNaN(b) || isNaN(ncp)) return x + a + b + ncp;
     if (ncp < 0 || a <= 0 || b <= 0) {
-        return ML_ERR_return_NAN2(printer);
+        printer(DomainError, domain);
+        return NaN;
     }
 
     if (!isFinite(a) || !isFinite(b) || !isFinite(ncp)) {
-        return ML_ERR_return_NAN2(printer);
+        printer(DomainError, domain);
+        return NaN;
     }
 
     if (x < 0 || x > 1) {

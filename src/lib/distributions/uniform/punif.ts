@@ -12,11 +12,13 @@ export function punif(q: number, min = 0, max = 1, lowerTail = true, logP = fals
     }
 
     if (max < min) {
-        return ML_ERR_return_NAN2(printer);
+        printer(DomainError);
+        return NaN;
     }
 
     if (!isFinite(min) || !isFinite(max)) {
-        return ML_ERR_return_NAN2(printer);
+        printer(DomainError);
+        return NaN;
     }
 
     if (q >= max) {

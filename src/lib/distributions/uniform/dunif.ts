@@ -11,7 +11,8 @@ export function dunif(x: number, min = 0, max = 1, log = false): number {
         return x + min + max;
     }
     if (max <= min) {
-        return ML_ERR_return_NAN2(printer);
+        printer(DomainError);
+        return NaN;
     }
 
     if (min <= x && x <= max) {

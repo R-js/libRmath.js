@@ -1,7 +1,9 @@
-import createNS from '@common/debug-frontend';
-import { ML_ERR_return_NAN2 } from '@common/logger';
+import { createObjectNs } from '@common/debug-frontend';
+import DomainError from '@lib/errors/DomainError';
 
-const printer = createNS('chebyshev_eval');
+const domain = 'chebyshev_eval';
+
+const printer = createObjectNs(domain);
 
 export function chebyshev_eval(x: number, a: number[], n: number): number {
     let b0: number;
@@ -10,11 +12,13 @@ export function chebyshev_eval(x: number, a: number[], n: number): number {
     let i: number;
 
     if (n < 1 || n > 1000) {
-        return ML_ERR_return_NAN2(printer);
+        printer(DomainError, domain);
+        return NaN;
     }
 
     if (x < -1.1 || x > 1.1) {
-        return ML_ERR_return_NAN2(printer);
+        printer(DomainError, domain);
+        return NaN;
     }
 
     const twox = x * 2;

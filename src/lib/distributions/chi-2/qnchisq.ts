@@ -35,7 +35,8 @@ export function qnchisq(p: number, df: number, ncp: number, lower_tail: boolean,
     }
 
     if (!isFinite(df)) {
-        return ML_ERR_return_NAN2(printer);
+        printer(DomainError);
+        return NaN;
     }
 
     /* Was
@@ -43,7 +44,8 @@ export function qnchisq(p: number, df: number, ncp: number, lower_tail: boolean,
      * if (df < 1 || ncp < 0) ML_ERR_return_NAN;
      */
     if (df < 0 || ncp < 0) {
-        return ML_ERR_return_NAN2(printer);
+        printer(DomainError);
+        return NaN;
     }
 
     const rc = R_Q_P01_boundaries(lower_tail, log_p, p, 0, Infinity);

@@ -9,7 +9,8 @@ export function dlnorm(x: number, meanlog = 0, sdlog = 1, log = false): number {
     }
     if (sdlog <= 0) {
         if (sdlog < 0) {
-            return ML_ERR_return_NAN2(printer);
+            printer(DomainError);
+            return NaN;
         }
         // sdlog == 0 :
         return Math.log(x) === meanlog ? Infinity : R_D__0(log);

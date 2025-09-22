@@ -1,11 +1,15 @@
-import { ML_ERR_return_NAN2 } from '@common/logger';
 import { R_DT_0, R_DT_1, log } from '@lib/r-func';
 import { Toms708 } from '@common/toms708/toms708';
 import { NumberW } from '@common/toms708/NumberW';
-import createNs from '@common/debug-frontend';
+import { createObjectNs } from '@common/debug-frontend';
+import DomainError from '@lib/errors/DomainError';
+import VariableArgumentError from '@lib/errors/VariableArgumentError';
 
-const printer_pbeta_raw = createNs('pbeta_raw');
-const printer_pbeta = createNs('pbeta');
+const domain_raw = 'pbeta_raw';
+const domain = 'pbeta'
+
+const printer_pbeta_raw = createObjectNs(domain_raw);
+const printer_pbeta = createObjectNs(domain);
 
 export function pbeta_raw(x: number, a: number, b: number, lower_tail: boolean, log_p: boolean): number {
     // treat limit cases correctly here:
@@ -33,13 +37,13 @@ export function pbeta_raw(x: number, a: number, b: number, lower_tail: boolean, 
     const ierr: NumberW = new NumberW(0);
     //====
     //Toms708.bratio(a, b, x, x1, &w, &wc, &ierr, log_p); /* -> ./toms708.c */
-    printer_pbeta_raw('before Toms708.bratio, a=%d, b=%d, x=%d, w=%d,wc=%d, ierr=%d', a, b, x, w.val, wc.val, ierr.val);
+    printer_pbeta_raw(VariableArgumentError, 'before Toms708.bratio, a=%d, b=%d, x=%d, w=%d,wc=%d, ierr=%d', a, b, x, w.val, wc.val, ierr.val);
     Toms708.bratio(a, b, x, x1, w, wc, ierr); /* -> ./toms708.c */
-    printer_pbeta_raw('after Toms708.bratio, a=%d, b=%d, x=%d, w=%d,wc=%d, ierr=%d', a, b, x, w.val, wc.val, ierr.val);
+    printer_pbeta_raw(VariableArgumentError, 'after Toms708.bratio, a=%d, b=%d, x=%d, w=%d,wc=%d, ierr=%d', a, b, x, w.val, wc.val, ierr.val);
     //====
     // ierr in {10,14} <==> bgrat() error code ierr-10 in 1:4; for 1 and 4, warned *there*
     if (ierr.val && ierr.val !== 11 && ierr.val !== 14)
-        printer_pbeta_raw('pbeta_raw(%d, a=%d, b=%d, ..) -> bratio() gave error code %d', x, a, b, ierr);
+        printer_pbeta_raw(VariableArgumentError, 'pbeta_raw(%d, a=%d, b=%d, ..) -> bratio() gave error code %d', x, a, b, ierr);
     if (log_p) {
         w.val = log(w.val);
         wc.val = log(wc.val);
@@ -48,11 +52,14 @@ export function pbeta_raw(x: number, a: number, b: number, lower_tail: boolean, 
 } /* pbeta_raw() */
 
 export function pbeta(q: number, a: number, b: number, lowerTail = true, logP = false): number {
-    printer_pbeta('pbeta(q=%d, a=%d, b=%d, l.t=%s, ln=%s)', q, a, b, lowerTail, logP);
-    if (isNaN(q) || isNaN(a) || isNaN(b)) return NaN;
+    printer_pbeta(VariableArgumentError, 'pbeta(q=%d, a=%d, b=%d, l.t=%s, ln=%s)', q, a, b, lowerTail, logP);
+    if (isNaN(q) || isNaN(a) || isNaN(b)) {
+        return NaN;
+    }
 
     if (a < 0 || b < 0) {
-        return ML_ERR_return_NAN2(printer_pbeta);
+        printer_pbeta(DomainError, domain)
+        return NaN;
     }
     // allowing a==0 and b==0  <==> treat as one- or two-point mass
 

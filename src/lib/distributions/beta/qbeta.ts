@@ -1,6 +1,4 @@
-import createNS from '@common/debug-frontend';
-
-import { ML_ERR_return_NAN2 } from '@common/logger';
+import { createObjectNs } from '@common/debug-frontend';
 
 import {
     DBL_MANT_DIG,
@@ -19,6 +17,8 @@ import { R_DT_CIv, R_DT_Clog, R_DT_log, R_DT_qIv, R_Log1_Exp } from '@dist/exp/e
 
 import { lbeta } from '@special/beta';
 import { pbeta_raw } from './pbeta';
+import DomainError from '@lib/errors/DomainError';
+import VariableArgumentError from '@lib/errors/VariableArgumentError';
 
 const USE_LOG_X_CUTOFF = -5;
 //                       --- based on some testing; had = -10
@@ -34,7 +34,8 @@ const MLOGICAL_NA = -1;
         int swap_01, double log_q_cut, int n_N, double * qb): number { return 0 };
 */
 
-const printer_qbeta = createNS('qbeta');
+const domain = 'qbeta';
+const printer = createObjectNs(domain);
 
 export function qbeta(p: number, shape1: number, shape2: number, lower_tail: boolean, log_p: boolean): number {
     /* test for admissibility of parameters */
@@ -42,7 +43,8 @@ export function qbeta(p: number, shape1: number, shape2: number, lower_tail: boo
     if (isNaN(shape1) || isNaN(shape2) || isNaN(p)) return shape1 + shape2 + p;
 
     if (shape1 < 0 || shape2 < 0) {
-        return ML_ERR_return_NAN2(printer_qbeta);
+        printer(DomainError, domain);
+        return NaN;
     }
     // allowing p==0 and q==0  <==> treat as one- or two-point mass
 
@@ -114,7 +116,9 @@ function return_q_half(_give_log_q: boolean, qb: NumArray): void {
     return;
 }
 
-const printer_qbeta_raw = createNS('qbeta_raw');
+const domain_raw = 'qbeta_raw';
+const printer_qbeta_raw = createObjectNs(domain_raw);
+
 const R_ifDEBUG_printf = printer_qbeta_raw;
 // Returns both qbeta() and its "mirror" 1-qbeta(). Useful notably when qbeta() ~= 1
 function qbeta_raw(
@@ -175,7 +179,7 @@ function qbeta_raw(
     // check alpha {*before* transformation which may all accuracy}:
     if ((log_p && alpha > 0) || (!log_p && (alpha < 0 || alpha > 1))) {
         // alpha is outside
-        printer_qbeta_raw(
+        printer_qbeta_raw(VariableArgumentError,
             'qbeta(alpha=%d, %d, %d, .., log_p=%d): %s%s',
             alpha,
             p,
@@ -185,7 +189,8 @@ function qbeta_raw(
             log_p ? '[-Inf, 0]' : '[0,1]'
         );
         // ML_ERR_return_NAN :
-        qb[0] = qb[1] = ML_ERR_return_NAN2(printer_qbeta_raw);
+        printer_qbeta_raw(DomainError, domain_raw);
+        qb[0] = qb[1] = NaN;
         return;
     }
 
@@ -193,6 +198,7 @@ function qbeta_raw(
     if (p === 0 || q === 0 || !isFinite(p) || !isFinite(q)) {
         // We know 0 < T(alpha) < 1 : pbeta() is constant and trivial in {0, 1/2, 1}
         printer_qbeta_raw(
+            VariableArgumentError,
             'qbeta(%d, %d, %d, lower_t=%d, log_p=%d): (p,q)-boundary: trivial',
             alpha,
             p,
@@ -265,6 +271,7 @@ function qbeta_raw(
     // FIXME: Factor 0.2 is a bit arbitrary;  '1' is clearly much too much.
 
     printer_qbeta_raw(
+        VariableArgumentError,
         'qbeta(%d, %d, %d, lower_t=%d, log_p=%d):%s   swap_tail=%d, la=%d, u0=%d (bnd: %d (%d)) ',
         alpha,
         p,
@@ -305,6 +312,7 @@ function qbeta_raw(
                     : (y - a) * Math.exp(logbeta + r * Math.log(xinbta) + t * Math.log1p(-xinbta));
                 tx = xinbta - w;
                 R_ifDEBUG_printf(
+                    VariableArgumentError,
                     'Final Newton correction(non-log scale): xinbta=%.16g, y=%g, w=%g. => new tx=%.16g\n',
                     xinbta,
                     y,
@@ -336,6 +344,7 @@ function qbeta_raw(
         //L_converged:
         log_ = log_p || use_log_x; // only for printing
         R_ifDEBUG_printf(
+            VariableArgumentError,
             ' %s: Final delta(y) = %g%s\n',
             warned ? '_NO_ convergence' : 'converged',
             y - (log_ ? la : a),
@@ -366,6 +375,7 @@ function qbeta_raw(
                 )
             )
                 printer_qbeta_raw(
+                    VariableArgumentError,
                     // low accuracy for more platform independent output:
                     'qbeta(a, *) =: x0 with |pbeta(x0,* %s) - alpha| = %d is not accurate',
                     log_ ? ', log_' : '',
@@ -405,6 +415,7 @@ function qbeta_raw(
                 if (!isFinite(w)) break;
                 if (i_pb >= n_N && w * wprev <= 0) prev = Math.max(Math.abs(adj), fpu);
                 R_ifDEBUG_printf(
+                    VariableArgumentError,
                     'N(i=%2d): u=%#20.16g, pb(e^u)=%#12.6g, w=%#15.9g, %s prev=%11g,',
                     i_pb,
                     u,
@@ -425,6 +436,7 @@ function qbeta_raw(
                                 /* R_ifDEBUG_printf(" -adj=%g, %s <= acu  ==> convergence\n", */
                                 /*	 -adj, (prev <= acu) ? "prev" : "|w|"); */
                                 R_ifDEBUG_printf(
+                                    VariableArgumentError,
                                     ' it{in}=%d, -adj=%g, %s <= acu  ==> convergence\n',
                                     i_inn,
                                     -adj,
@@ -441,7 +453,7 @@ function qbeta_raw(
                 // (cancellation in (u_n -u) => may differ from adj:
                 const D = Math.min(Math.abs(adj), Math.abs(u_n - u));
                 /* R_ifDEBUG_printf(" delta(u)=%g\n", u_n - u); */
-                R_ifDEBUG_printf(' it{in}=%d, delta(u)=%9.3g, D/|.|=%.3g\n', i_inn, u_n - u, D / Math.abs(u_n + u));
+                R_ifDEBUG_printf(VariableArgumentError, ' it{in}=%d, delta(u)=%9.3g, D/|.|=%.3g\n', i_inn, u_n - u, D / Math.abs(u_n + u));
                 if (D <= 4e-16 * Math.abs(u_n + u)) return; //goto L_converged ;
                 u = u_n;
                 xinbta = Math.exp(u);
@@ -455,7 +467,8 @@ function qbeta_raw(
                 if (!isFinite(y) && !(log_p && y === -Infinity)) {
                     // y = -Inf  is ok if(log_p)
                     // ML_ERR_return_NAN :
-                    qb[0] = qb[1] = ML_ERR_return_NAN2(printer_qbeta_raw);
+                    printer_qbeta_raw(DomainError, domain_raw);
+                    qb[0] = qb[1] = NaN;
                     return;
                 }
 
@@ -467,6 +480,7 @@ function qbeta_raw(
                     : (y - a) * Math.exp(logbeta + r * Math.log(xinbta) + t * Math.log1p(-xinbta));
                 if (i_pb >= n_N && w * wprev <= 0) prev = Math.max(Math.abs(adj), fpu);
                 R_ifDEBUG_printf(
+                    VariableArgumentError,
                     'N(i=%2d): x0=%d, pb(x0)=%d, w=%d, %s prev=%d,',
                     i_pb,
                     xinbta,
@@ -484,6 +498,7 @@ function qbeta_raw(
                         if (0 <= tx && tx <= 1) {
                             if (prev <= acu || Math.abs(w) <= acu) {
                                 R_ifDEBUG_printf(
+                                    VariableArgumentError,
                                     ' it{in}=%d, delta(x)=%g, %s <= acu  ==> convergence\n',
                                     i_inn,
                                     -adj,
@@ -496,7 +511,7 @@ function qbeta_raw(
                     }
                     g /= 3;
                 } //for(i_inn)
-                R_ifDEBUG_printf(' it{in}=%d, delta(x)=%g\n', i_inn, tx - xinbta);
+                R_ifDEBUG_printf(VariableArgumentError, ' it{in}=%d, delta(x)=%g\n', i_inn, tx - xinbta);
                 if (Math.abs(tx - xinbta) <= 4e-16 * (tx + xinbta))
                     // "<=" : (.) === 0
                     return; //goto L_converged ;
@@ -509,7 +524,7 @@ function qbeta_raw(
 
         /*-- NOT converged: Iteration count --*/
         warned = true;
-        ML_ERR_return_NAN2(printer_qbeta_raw);
+        printer_qbeta_raw(DomainError, domain_raw);
     };
 
     if (
@@ -525,10 +540,10 @@ function qbeta_raw(
         r = r * Math.exp(u0); // = r*x0
         if (r > -1) {
             u = u0 - Math.log1p(r) / pp;
-            printer_qbeta_raw('u1-u0=%d --> choosing u = u1', u - u0);
+            printer_qbeta_raw(VariableArgumentError, 'u1-u0=%d --> choosing u = u1', u - u0);
         } else {
             u = u0;
-            printer_qbeta_raw('cannot cheaply improve u0');
+            printer_qbeta_raw(VariableArgumentError, 'cannot cheaply improve u0');
         }
         tx = xinbta = Math.exp(u);
         use_log_x = true; // or (u < log_q_cut)  ??
@@ -550,7 +565,7 @@ function qbeta_raw(
         t = 1 / (qq + qq - 1);
         h = 2 / (s + t);
         w = (y * Math.sqrt(h + r)) / h - (t - s) * (r + 5.0 / 6.0 - 2.0 / (3 * h));
-        printer_qbeta_raw('p,q > 1 => w=%d', w);
+        printer_qbeta_raw(VariableArgumentError, 'p,q > 1 => w=%d', w);
         if (w > 300) {
             // Math.exp(w+w) is huge or overflows
             t = w + w + Math.log(qq) - Math.log(pp); // = argument of log1pMath.exp(.)
@@ -568,7 +583,7 @@ function qbeta_raw(
         t = 1 / (3 * Math.sqrt(qq));
         t = r * R_pow_di(1 + t * (-t + y), 3); // = \chi^2_{alpha} of AS 64
         s = 4 * pp + r - 2; // 4p + 2q - 2 = numerator of new t = (...) / chi^2
-        R_ifDEBUG_printf('min(p,q) <= 1: t=%g', t);
+        R_ifDEBUG_printf(VariableArgumentError, 'min(p,q) <= 1: t=%g', t);
         if (t === 0 || (t < 0 && s >= t)) {
             // cannot use chisq approx
             // x0 = 1 - { (1-a)*q*B(p,q) } ^{1/q}    {AS 65}
@@ -578,20 +593,20 @@ function qbeta_raw(
              * FIXME: not worth it? Math.log1p(-a) always the same ?? */
             if (swap_tail) l1ma = R_DT_log(lower_tail, log_p, alpha);
             else l1ma = R_DT_Clog(lower_tail, log_p, alpha);
-            R_ifDEBUG_printf(' t <= 0 : Math.log1p(-a)=%.15g, better l1ma=%.15g\n', Math.log1p(-a), l1ma);
+            R_ifDEBUG_printf(VariableArgumentError, ' t <= 0 : Math.log1p(-a)=%.15g, better l1ma=%.15g\n', Math.log1p(-a), l1ma);
             const xx: number = (l1ma + Math.log(qq) + logbeta) / qq;
             if (xx <= 0) {
                 xinbta = -Math.expm1(xx);
                 u = R_Log1_Exp(xx); // =  Math.log(xinbta) = Math.log(1 - Math.exp(...A...))
             } else {
                 // xx > 0 ==> 1 - e^xx < 0 .. is nonsense
-                R_ifDEBUG_printf(' xx=%g > 0: xinbta:= 1-e^xx < 0\n', xx);
+                R_ifDEBUG_printf(VariableArgumentError, ' xx=%g > 0: xinbta:= 1-e^xx < 0\n', xx);
                 xinbta = 0;
                 u = -Infinity; /// FIXME can do better?
             }
         } else {
             t = s / t;
-            R_ifDEBUG_printf(' t > 0 or s < t < 0:  new t = %g ( > 1 ?)\n', t);
+            R_ifDEBUG_printf(VariableArgumentError, ' t > 0 or s < t < 0:  new t = %g ( > 1 ?)\n', t);
             if (t <= 1) {
                 // cannot use chisq, either
                 u = (la + Math.log(pp) + logbeta) / pp;
@@ -613,7 +628,7 @@ function qbeta_raw(
         // ==> "swap now" (much less easily)
         // "revert swap" -- and use_log_x
         swap_tail = !swap_tail;
-        R_ifDEBUG_printf(' u = %g (e^u = xinbta = %.16g) ==> ', u, xinbta);
+        R_ifDEBUG_printf(VariableArgumentError, ' u = %g (e^u = xinbta = %.16g) ==> ', u, xinbta);
         if (swap_tail) {
             a = R_DT_CIv(lower_tail, log_p, alpha); // needed ?
             la = R_DT_Clog(lower_tail, log_p, alpha);
@@ -625,7 +640,7 @@ function qbeta_raw(
             pp = p;
             qq = q;
         }
-        R_ifDEBUG_printf('"%s\'; la = %g\n', swap_tail ? 'swap now' : 'swap back', la);
+        R_ifDEBUG_printf(VariableArgumentError, '"%s\'; la = %g\n', swap_tail ? 'swap now' : 'swap back', la);
         // we could redo computations above, but this should be stable
         u = R_Log1_Exp(u);
         xinbta = Math.exp(u);
@@ -643,6 +658,7 @@ function qbeta_raw(
     const bad_init = bad_u || xinbta > p_hi;
 
     R_ifDEBUG_printf(
+        VariableArgumentError,
         ' -> u = %g, e^u = xinbta = %.16g, (Newton acu=%g%s)\n',
         u,
         xinbta,
@@ -660,7 +676,7 @@ function qbeta_raw(
         try at smallest positive number: */
         w = pbeta_raw(DBL_very_MIN, pp, qq, true, log_p);
         if (w > (log_p ? la : a)) {
-            R_ifDEBUG_printf(' quantile is left of smallest positive number; "convergence"\n');
+            R_ifDEBUG_printf(VariableArgumentError, ' quantile is left of smallest positive number; "convergence"\n');
             if (log_p || Math.abs(w - a) < Math.abs(0 - a)) {
                 // DBL_very_MIN is better than 0
                 tx = DBL_very_MIN;
@@ -675,7 +691,7 @@ function qbeta_raw(
             L_return();
             return;
         } else {
-            R_ifDEBUG_printf(' pbeta(smallest pos.) = %g <= %g  --> continuing\n', w, log_p ? la : a);
+            R_ifDEBUG_printf(VariableArgumentError, ' pbeta(smallest pos.) = %g <= %g  --> continuing\n', w, log_p ? la : a);
             if (u < DBL_log_v_MIN) {
                 u = DBL_log_v_MIN; // = Math.log(DBL_very_MIN)
                 xinbta = DBL_very_MIN;
@@ -686,11 +702,11 @@ function qbeta_raw(
     /* Sometimes the approximation is negative (and === 0 is also not "ok") */
     if (bad_init && !(use_log_x && tx > 0)) {
         if (u === -Infinity) {
-            R_ifDEBUG_printf('  u = -Inf;');
+            R_ifDEBUG_printf(VariableArgumentError, '  u = -Inf;');
             u = M_LN2 * DBL_MIN_EXP;
             xinbta = Number.MIN_VALUE;
         } else {
-            R_ifDEBUG_printf(' bad_init: u=%g, xinbta=%g;', u, xinbta);
+            R_ifDEBUG_printf(VariableArgumentError, ' bad_init: u=%g, xinbta=%g;', u, xinbta);
             xinbta =
                 xinbta > 1.1 // i.e. "way off"
                     ? 0.5 // otherwise, keep the respective boundary:
@@ -700,7 +716,7 @@ function qbeta_raw(
             if (bad_u) u = Math.log(xinbta);
             // otherwise: not changing "potentially better" u than the above
         }
-        R_ifDEBUG_printf(' -> (partly)new u=%g, xinbta=%g\n', u, xinbta);
+        R_ifDEBUG_printf(VariableArgumentError, ' -> (partly)new u=%g, xinbta=%g\n', u, xinbta);
     }
 
     L_Newton();

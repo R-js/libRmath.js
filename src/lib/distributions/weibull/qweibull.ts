@@ -15,7 +15,8 @@ export function qweibull(p: number, shape: number, scale = 1, lowerTail = true, 
     }
 
     if (shape <= 0 || scale <= 0) {
-        return ML_ERR_return_NAN2(printer);
+        printer(DomainError);
+        return NaN;
     }
 
     const rc = R_Q_P01_boundaries(lowerTail, logP, p, 0, Infinity);

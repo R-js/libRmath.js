@@ -14,7 +14,8 @@ export function pweibull(q: number, shape: number, scale = 1, lowerTail = true, 
     }
 
     if (shape <= 0 || scale <= 0) {
-        return ML_ERR_return_NAN2(printer);
+        printer(DomainError);
+        return NaN;
     }
 
     if (q <= 0) {

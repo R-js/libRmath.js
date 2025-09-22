@@ -48,7 +48,8 @@ function dbinom(x: number, n: number, prob: number, log = false): number {
     }
 
     if (prob < 0 || prob > 1 || R_D_negInonint(n)) {
-        return ML_ERR_return_NAN2(printer);
+        printer(DomainError);
+        return NaN;
     }
 
     const ch = R_D_nonint_check(log, x, printer);

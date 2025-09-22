@@ -9,7 +9,8 @@ const printer = createNS('rgeom');
 export function rgeomOne(p: number): number {
     const rng = globalUni();
     if (!isFinite(p) || p <= 0 || p > 1) {
-        return ML_ERR_return_NAN2(printer);
+        printer(DomainError);
+        return NaN;
     }
     return rpoisOne(exp_rand(rng) * ((1 - p) / p));
 }

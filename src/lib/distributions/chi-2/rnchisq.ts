@@ -8,7 +8,8 @@ const printer = createNS('rnchisq');
 
 export function rnchisqOne(df: number, lambda: number): number {
     if (!isFinite(df) || !isFinite(lambda) || df < 0 || lambda < 0) {
-        return ML_ERR_return_NAN2(printer);
+        printer(DomainError);
+        return NaN;
     }
     if (lambda === 0) {
         return df === 0 ? 0 : rgamma(df / 2, 2);

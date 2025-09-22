@@ -9,7 +9,8 @@ const printer = createNS('pbinom');
 export function pbinom(x: number, n: number, prob: number, lowerTail = true, logP = false): number {
     if (isNaN(x) || isNaN(n) || isNaN(prob)) return NaN;
     if (!isFinite(n) || !isFinite(prob)) {
-        return ML_ERR_return_NAN2(printer);
+        printer(DomainError);
+        return NaN;
     }
 
     const lower_tail = lowerTail;
@@ -17,14 +18,16 @@ export function pbinom(x: number, n: number, prob: number, lowerTail = true, log
 
     if (R_nonint(n)) {
         printer('non-integer n = %d', n);
-        return ML_ERR_return_NAN2(printer);
+        printer(DomainError);
+        return NaN;
     }
     n = Math.round(n);
     /* 
      PR#8560: n=0 is a valid value 
   */
     if (n < 0 || prob < 0 || prob > 1) {
-        return ML_ERR_return_NAN2(printer);
+        printer(DomainError);
+        return NaN;
     }
 
     if (x < 0) return R_DT_0(lower_tail, log_p);

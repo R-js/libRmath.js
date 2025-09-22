@@ -53,7 +53,8 @@ export function qt(p: number, ndf: number, lower_tail: boolean, log_p: boolean):
     }
 
     if (ndf <= 0.0) {
-        return ML_ERR_return_NAN2(printer);
+        printer(DomainError);
+        return NaN;
     }
 
     if (ndf < 1) {

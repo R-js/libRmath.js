@@ -12,7 +12,8 @@ export function ppois(q: number, lambda: number, lowerTail = true, logP = false)
     if (isNaN(q) || isNaN(lambda)) return q + lambda;
 
     if (lambda < 0) {
-        return ML_ERR_return_NAN2(printer);
+        printer(DomainError);
+        return NaN;
     }
     if (q < 0) {
         return R_DT_0(lowerTail, logP);

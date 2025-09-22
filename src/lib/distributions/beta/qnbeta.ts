@@ -1,9 +1,11 @@
-import createNs from '@common/debug-frontend';
-import { ML_ERR_return_NAN2, R_Q_P01_boundaries } from '@common/logger';
+import { R_Q_P01_boundaries } from '@common/logger';
 import { R_DT_qIv } from '@dist/exp/expm1';
 import { pnbeta } from './pnbeta';
+import { createObjectNs } from '@common/debug-frontend';
+import DomainError from '@lib/errors/DomainError';
 
-const printer_qnbeta = createNs('qnbeta');
+const domain = 'qnbeta';
+const printer_qnbeta = createObjectNs(domain);
 
 const accu = 1e-15;
 const eps = 1e-14; /* must be > accu */
@@ -19,11 +21,13 @@ export function qnbeta(p: number, a: number, b: number, ncp: number, lower_tail:
     }
 
     if (!isFinite(a)) {
-        return ML_ERR_return_NAN2(printer_qnbeta);
+        printer_qnbeta(DomainError, domain);
+        return NaN;
     }
 
     if (ncp < 0 || a <= 0 || b <= 0) {
-        return ML_ERR_return_NAN2(printer_qnbeta);
+        printer_qnbeta(DomainError, domain);
+        return NaN;
     }
 
     const rc = R_Q_P01_boundaries(lower_tail, log_p, p, 0, 1);

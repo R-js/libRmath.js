@@ -45,7 +45,8 @@ export function dpois(x: number, lambda: number, log = false): number {
     }
 
     if (lambda < 0) {
-        return ML_ERR_return_NAN2(printer);
+        printer(DomainError);
+        return NaN;
     }
 
     const rc = R_D_nonint_check(log, x, printer);

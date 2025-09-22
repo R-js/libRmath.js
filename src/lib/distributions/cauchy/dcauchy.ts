@@ -10,7 +10,8 @@ export function dcauchy(x: number, location = 0, scale = 1, log = false): number
     }
 
     if (scale <= 0) {
-        return ML_ERR_return_NAN2(printer);
+        printer(DomainError);
+return NaN;
     }
 
     const y = (x - location) / scale;

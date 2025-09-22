@@ -22,11 +22,13 @@ export function pnchisq(x: number, df: number, ncp: number, lower_tail: boolean,
         return NaN;
     }
     if (!isFinite(df) || !isFinite(ncp)) {
-        return ML_ERR_return_NAN2(printer);
+        printer(DomainError);
+        return NaN;
     }
 
     if (df < 0 || ncp < 0) {
-        return ML_ERR_return_NAN2(printer);
+        printer(DomainError);
+        return NaN;
     }
 
     ans = pnchisq_raw(x, df, ncp, 1e-12, 8 * Number.EPSILON, 1000000, lower_tail, log_p);

@@ -12,12 +12,14 @@ export function pcauchy(x: number, location = 0, scale = 1, lowerTail = true, lo
     if (isNaN(x) || isNaN(location) || isNaN(scale)) return x + location + scale;
 
     if (scale <= 0) {
-        return ML_ERR_return_NAN2(printer);
+        printer(DomainError);
+        return NaN;
     }
 
     x = (x - location) / scale;
     if (isNaN(x)) {
-        return ML_ERR_return_NAN2(printer);
+        printer(DomainError);
+        return NaN;
     }
 
     if (!isFinite(x)) {

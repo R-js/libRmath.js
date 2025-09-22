@@ -28,7 +28,8 @@ export function psignrank(q: number, n: number, lowerTail = true, logP = false):
         return NaN;
     }
     if (!isFinite(n) || n <= 0) {
-        return ML_ERR_return_NAN2(printer);
+        printer(DomainError);
+        return NaN;
     }
 
     q = round(q + 1e-7);

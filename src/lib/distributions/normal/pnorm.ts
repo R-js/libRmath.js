@@ -22,7 +22,8 @@ export function pnorm5(q: number, mean = 0, sd = 1, lowerTail = true, logP = fal
     if (!isFinite(q) && mean === q) return NaN; /* x-mean is NaN */
     if (sd <= 0) {
         if (sd < 0) {
-            return ML_ERR_return_NAN2(printer);
+            printer(DomainError);
+            return NaN;
         }
         /* sd = 0 : */
         return q < mean ? R_DT_0(lowerTail, logP) : R_DT_1(lowerTail, logP);

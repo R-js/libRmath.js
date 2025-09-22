@@ -10,7 +10,8 @@ export function dgeom(x: number, p: number, log = false): number {
     if (isNaN(x) || isNaN(p)) return x + p;
 
     if (p <= 0 || p > 1) {
-        return ML_ERR_return_NAN2(printer);
+        printer(DomainError);
+        return NaN;
     }
 
     const rc = R_D_nonint_check(log, x, printer);

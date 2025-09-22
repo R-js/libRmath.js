@@ -12,7 +12,8 @@ export function dhyper(x: number, m: number, n: number, k: number, log = false):
     }
 
     if (R_D_negInonint(m) || R_D_negInonint(n) || R_D_negInonint(k) || k > m + n) {
-        return ML_ERR_return_NAN2(printer);
+        printer(DomainError);
+        return NaN;
     }
     if (x < 0) {
         return R_D__0(log);

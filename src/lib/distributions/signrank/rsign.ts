@@ -19,7 +19,8 @@ export function rsignrankOne(n: number): number {
     n = round(n);
 
     if (n < 0) {
-        return ML_ERR_return_NAN2(printer);
+        printer(DomainError);
+        return NaN;
     }
     if (n === 0) {
         return 0;

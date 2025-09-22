@@ -14,7 +14,8 @@ export function rexpOne(rate: number): number {
             return 0;
         }
         /* else */
-        return ML_ERR_return_NAN2(printer);
+        printer(DomainError);
+        return NaN;
     }
     return exp_rand(rng) / rate; // --> in ./sexp.c
 }

@@ -40,9 +40,11 @@ export function qpois(p: number, lambda: number, lowerTail = true, logP = false)
     if (isNaN(p) || isNaN(lambda)) return p + lambda;
 
     if (!isFinite(lambda)) {
-        return ML_ERR_return_NAN2(printer);
+        printer(DomainError);
+        return NaN;
     }
-    if (lambda < 0) return ML_ERR_return_NAN2(printer);
+    if (lambda < 0) printer(DomainError);
+    return NaN;
     if (lambda === 0) return 0;
 
     const rc = R_Q_P01_boundaries(lowerTail, logP, p, 0, Infinity);

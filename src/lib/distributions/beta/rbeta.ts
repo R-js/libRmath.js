@@ -1,9 +1,10 @@
-import createNS from '@common/debug-frontend';
-import { ML_ERR_return_NAN2 } from '@common/logger';
+import { createObjectNs } from '@common/debug-frontend';
+import DomainError from '@lib/errors/DomainError';
 import { DBL_MAX_EXP, min, max, log } from '@lib/r-func';
 import { globalUni } from '@rng/global-rng';
 
-const printer = createNS('rbeta');
+const domain = 'rbeta';
+const printer = createObjectNs('rbeta');
 
 export const expmax = DBL_MAX_EXP * Math.LN2; /* = log(DBL_MAX) */
 
@@ -11,10 +12,12 @@ export function rbetaOne(shape1: number, shape2: number): number {
     const rng = globalUni();
 
     if (isNaN(shape1) || isNaN(shape2)) {
-        return ML_ERR_return_NAN2(printer);
+        printer(DomainError, domain);
+        return NaN;
     }
     if (shape1 < 0 || shape2 < 0) {
-        return ML_ERR_return_NAN2(printer);
+        printer(DomainError, domain);
+        return NaN;
     }
     if (!isFinite(shape1) && !isFinite(shape2)) {
         // a = b = Inf : all mass at 1/2

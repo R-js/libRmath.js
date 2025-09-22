@@ -29,7 +29,8 @@ export function dsignrank(x: number, n: number, log = false): number {
     }
 
     if (n <= 0) {
-        return ML_ERR_return_NAN2(printer);
+        printer(DomainError);
+        return NaN;
     }
 
     if (abs(x - round(x)) > 1e-7) {

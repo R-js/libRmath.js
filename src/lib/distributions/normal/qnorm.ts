@@ -20,7 +20,8 @@ export function qnorm(p: number, mean = 0, sd = 1, lowerTail = true, logP = fals
         return rc;
     }
     if (sd < 0) {
-        return ML_ERR_return_NAN2(printer);
+        printer(DomainError);
+        return NaN;
     }
     if (sd === 0) {
         return mean;

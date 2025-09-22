@@ -11,11 +11,13 @@ const printer = createNS('pnbinom');
 export function pnbinom(x: number, size: number, prob: number, lowerTail: boolean, logP: boolean): number {
     if (isNaN(x) || isNaN(size) || isNaN(prob)) return x + size + prob;
     if (!isFinite(size) || !isFinite(prob)) {
-        return ML_ERR_return_NAN2(printer);
+        printer(DomainError);
+        return NaN;
     }
 
     if (size < 0 || prob <= 0 || prob > 1) {
-        return ML_ERR_return_NAN2(printer);
+        printer(DomainError);
+        return NaN;
     }
 
     /* limiting case: point mass at zero */

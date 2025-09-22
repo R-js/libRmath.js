@@ -10,7 +10,8 @@ export function pgeom(q: number, p: number, lowerTail = true, logP = false): num
     if (isNaN(q) || isNaN(p)) return NaN;
 
     if (p <= 0 || p > 1) {
-        return ML_ERR_return_NAN2(printer);
+        printer(DomainError);
+        return NaN;
     }
 
     if (q < 0) return R_DT_0(lowerTail, logP);

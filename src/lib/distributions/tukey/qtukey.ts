@@ -89,7 +89,8 @@ export function qtukey(p: number, nmeans: number, df: number, nranges = 1, lower
 
     /* df must be > 1 ; there must be at least two values */
     if (df < 2 || nranges < 1 || nmeans < 2) {
-        return ML_ERR_return_NAN2(printer);
+        printer(DomainError);
+        return NaN;
     }
 
     const rc = R_Q_P01_boundaries(lowerTail, logP, p, 0, Infinity);

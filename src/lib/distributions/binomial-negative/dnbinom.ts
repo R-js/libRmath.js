@@ -20,7 +20,8 @@ export function dnbinom(x: number, size: number, prob: number, give_log: boolean
     }
 
     if (prob <= 0 || prob > 1 || size < 0) {
-        return ML_ERR_return_NAN2(printer);
+        printer(DomainError);
+        return NaN;
     }
 
     const rc = R_D_nonint_check(give_log, x, printer);

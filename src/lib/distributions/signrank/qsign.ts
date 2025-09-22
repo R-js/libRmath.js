@@ -43,7 +43,8 @@ export function qsignrank(p: number, n: number, lowerTail = true, logP = false):
     }
 
     if (!isFinite(p) || !isFinite(n)) {
-        return ML_ERR_return_NAN2(printer);
+        printer(DomainError);
+        return NaN;
     }
 
     // precision check, add this to upstream r-source
@@ -61,7 +62,8 @@ export function qsignrank(p: number, n: number, lowerTail = true, logP = false):
     }
 
     if (n <= 0) {
-        return ML_ERR_return_NAN2(printer);
+        printer(DomainError);
+        return NaN;
     }
 
     if (p === R_DT_0(lowerTail, logP)) {

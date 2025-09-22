@@ -11,7 +11,8 @@ export function dexp(x: number, scale: number, give_log: boolean): number {
     }
 
     if (scale <= 0.0) {
-        return ML_ERR_return_NAN2(printer);
+        printer(DomainError);
+        return NaN;
     }
 
     if (x < 0) {

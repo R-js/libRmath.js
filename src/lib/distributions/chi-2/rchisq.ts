@@ -6,7 +6,8 @@ const printer = createNS('rchisq');
 
 export function rchisqOne(df: number): number {
     if (!isFinite(df) || df < 0.0) {
-        return ML_ERR_return_NAN2(printer);
+        printer(DomainError);
+        return NaN;
     }
     return rgamma(df / 2.0, 2.0);
 }

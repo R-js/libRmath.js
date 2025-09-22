@@ -11,7 +11,8 @@ export function qnf(p: number, df1: number, df2: number, ncp: number, lowerTail:
     if (isNaN(p) || isNaN(df1) || isNaN(df2) || isNaN(ncp)) return p + df1 + df2 + ncp;
 
     if (df1 <= 0 || df2 <= 0 || ncp < 0 || !isFinite(ncp) || (!isFinite(df1) && !isFinite(df2))) {
-        return ML_ERR_return_NAN2(printer);
+        printer(DomainError);
+        return NaN;
     }
 
     const rc = R_Q_P01_boundaries(lowerTail, logP, p, 0, Infinity);

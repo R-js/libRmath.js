@@ -12,7 +12,8 @@ const printer = createNS('rt');
 export function rtOne(df: number): number {
     const rng = globalNorm();
     if (isNaN(df) || df <= 0.0) {
-        return ML_ERR_return_NAN2(printer);
+        printer(DomainError);
+        return NaN;
     }
 
     const num = rng.random();

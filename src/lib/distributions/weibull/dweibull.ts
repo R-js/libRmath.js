@@ -11,7 +11,8 @@ export function dweibull(x: number, shape: number, scale = 1, log = false): numb
         return x + shape + scale;
     }
     if (shape <= 0 || scale <= 0) {
-        return ML_ERR_return_NAN2(printer);
+        printer(DomainError);
+        return NaN;
     }
 
     if (x < 0) {

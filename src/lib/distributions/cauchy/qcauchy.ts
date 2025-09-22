@@ -18,7 +18,8 @@ export function qcauchy(p: number, location = 0, scale = 1, lowerTail = true, lo
         if (scale === 0) {
             return location;
         }
-        /* else */ return ML_ERR_return_NAN2(printer);
+        /* else */ printer(DomainError);
+        return NaN;
     }
 
     //const my_INF = location + (lower_tail ? scale : -scale) * +Infinity;
