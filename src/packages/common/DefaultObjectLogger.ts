@@ -5,10 +5,13 @@ export default class DefaultObjectLogger implements LoggerObjectController {
     constructor(
         private readonly prefix: string | undefined,
         private readonly logs: unknown[],
-        private readonly namespaces = {}
+        private readonly namespaces?: Record<string, true>
     ) { }
 
     isEnabled(namespace: string): boolean {
+        if (!this.namespaces) {
+            return true;
+        }
         return (namespace in this.namespaces);
     }
     send<T extends new (...args: any) => Error>(namespace: string, constructor: T, ...args: ConstructorParameters<T>): void {

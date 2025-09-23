@@ -7,9 +7,9 @@ import { loadData } from '@common/test-helpers/load';
 
 import { dbinom } from '..';
 
-import { createLogHarnas } from '@common/debug-backend';
+import { createObjectLogHarnas } from '@common/debug-backend';
 
-const { getStats } = createLogHarnas();
+const { getStats } = createObjectLogHarnas();
 
 describe('dbinom', function () {
     it('ranges x ∊ [0, 12] size=12, prob=0.01', async () => {

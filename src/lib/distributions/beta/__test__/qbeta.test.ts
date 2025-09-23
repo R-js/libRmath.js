@@ -7,9 +7,9 @@ import { loadData } from '@common/test-helpers/load';
 //app
 import { qbeta } from '..';
 
-import { createLogHarnas } from '@common/debug-backend';
+import { createObjectLogHarnas } from '@common/debug-backend';
 
-const { getStats } = createLogHarnas();
+const { getStats } = createObjectLogHarnas();
 
 describe('qbeta', function () {
     it('ranges x ∊ [0, 1], shape1=1, shape2=2', async () => {

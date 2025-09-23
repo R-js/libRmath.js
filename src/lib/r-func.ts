@@ -448,6 +448,15 @@ export const R_D_exp = (log_p: boolean, x: number): number => {
 };
 
 //ok
+
+export function R_D_nonint_checkV2(log: boolean, x: number): number | undefined {
+    if (R_nonint(x)) {
+        return R_D__0(log);
+    }
+    return undefined;
+}
+
+// @deprecated, remove
 export function R_D_nonint_check(log: boolean, x: number, printer: Printer): number | undefined {
     if (R_nonint(x)) {
         printer('non-integer x = %d', x);

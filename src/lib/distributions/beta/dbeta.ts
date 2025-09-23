@@ -5,7 +5,7 @@ import { lbeta } from '@special/beta';
 import DomainError from '@lib/errors/DomainError';
 
 const domain = 'dbeta_scalar';
-const printer = createObjectNs('dbeta');
+const printer = createObjectNs(domain);
 
 export function dbeta_scalar(x: number, a: number, b: number, asLog: boolean): number {
     if (isNaN(x) || isNaN(a) || isNaN(b)) {

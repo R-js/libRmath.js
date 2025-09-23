@@ -3,9 +3,9 @@ import { rbeta } from '..';
 
 import { globalNorm, globalUni, RNGkind } from '@rng/global-rng';
 
-import { createLogHarnas } from '@common/debug-backend';
+import { createObjectLogHarnas } from '@common/debug-backend';
 
-const { getStats } = createLogHarnas();
+const { getStats } = createObjectLogHarnas();
 
 describe('rbeta', function () {
     beforeAll(() => {

@@ -1,13 +1,14 @@
-import createNS from '@common/debug-frontend';
+import { createObjectNs } from '@common/debug-frontend';
 
-import { ML_ERR_return_NAN2 } from '@common/logger';
-
-import { M_LN_2PI, R_D__0, R_D__1, R_D_exp, R_D_negInonint, R_D_nonint_check } from '@lib/r-func';
+import { M_LN_2PI, R_D__0, R_D__1, R_D_exp, R_D_negInonint, R_D_nonint_checkV2 } from '@lib/r-func';
 
 import { bd0 } from '@lib/deviance';
 import { stirlerr } from '@lib/stirling';
+import DomainError from '@lib/errors/DomainError';
+import VariableArgumentError from '@lib/errors/VariableArgumentError';
 
-const printer = createNS('dbinom');
+const domain = 'dbinom';
+const printer = createObjectNs(domain);
 
 function dbinom_raw(x: number, n: number, p: number, q: number, give_log: boolean): number {
     let lc: number;
@@ -48,15 +49,18 @@ function dbinom(x: number, n: number, prob: number, log = false): number {
     }
 
     if (prob < 0 || prob > 1 || R_D_negInonint(n)) {
-        printer(DomainError);
+        printer(DomainError, domain);
         return NaN;
     }
 
-    const ch = R_D_nonint_check(log, x, printer);
+    const ch = R_D_nonint_checkV2(log, x);
     if (ch !== undefined) {
+        printer(VariableArgumentError, '%s non-integer x = %d', domain, x);
         return ch;
     }
-    if (x < 0 || !isFinite(x)) return R_D__0(log);
+    if (x < 0 || !isFinite(x)) {
+        return R_D__0(log);
+    }
 
     n = Math.round(n);
     x = Math.round(x);

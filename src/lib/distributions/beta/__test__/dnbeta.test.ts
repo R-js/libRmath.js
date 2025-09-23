@@ -4,9 +4,9 @@ import { resolve } from 'path';
 //helper
 import { loadData } from '@common/test-helpers/load';
 import { dbeta } from '..';
-import { createLogHarnas } from '@common/debug-backend';
+import { createObjectLogHarnas } from '@common/debug-backend';
 
-const { getStats } = createLogHarnas();
+const { getStats } = createObjectLogHarnas();
 
 describe('dbeta, ncp != undefined', () => {
     it('ranges x ∊ [0, 1], shape1=3, shape2=3, ncp=2', async () => {

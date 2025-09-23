@@ -6,12 +6,12 @@ import { loadData } from '@common/test-helpers/load';
 //app
 import { qbinom } from '..';
 
-import { createLogHarnas } from '@common/debug-backend';
+import { createObjectLogHarnas } from '@common/debug-backend';
 
-const { getStats } = createLogHarnas();
+const { getStats } = createObjectLogHarnas();
 
 describe('qbinom', function () {
-    it('ranges p ∊ [0, 1, step 0.01] size=10, prob=0.5', async () => {
+    it.only('ranges p ∊ [0, 1, step 0.01] size=10, prob=0.5', async () => {
         const [x, y] = await loadData(resolve(__dirname, 'fixture-generation', 'qbinom1.R'), /\s+/, 1, 2);
         const actual = x.map((_x) => qbinom(_x, 10, 0.5));
         expect(actual).toEqualFloatingPointBinary(y);

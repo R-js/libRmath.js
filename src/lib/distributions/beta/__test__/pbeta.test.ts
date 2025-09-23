@@ -7,8 +7,8 @@ import { loadData } from '@common/test-helpers/load';
 //app
 import { pbeta } from '..';
 
-import { createLogHarnas } from '@common/debug-backend';
-const { getStats } = createLogHarnas();
+import { createObjectLogHarnas } from '@common/debug-backend';
+const { getStats } = createObjectLogHarnas();
 
 describe('pbeta, ncp = 0', function () {
     it('ranges x ∊ [0, 1], shape1=3, shape2=3', async () => {
