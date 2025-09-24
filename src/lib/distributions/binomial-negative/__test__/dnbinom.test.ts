@@ -2,9 +2,9 @@ import { resolve } from 'path';
 
 //helper
 import { loadData } from '@common/test-helpers/load';
-import { createLogHarnas } from '@common/debug-backend';
+import { createObjectLogHarnas } from '@common/debug-backend';
 
-const { getStats } = createLogHarnas();
+const { getStats } = createObjectLogHarnas();
 
 import { dnbinom } from '..';
 import { prob2mu } from './test-helpers';

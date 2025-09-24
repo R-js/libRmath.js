@@ -1,6 +1,4 @@
-import createNS from '@common/debug-frontend';
-
-import { ML_ERR_return_NAN2, R_Q_P01_boundaries } from '@common/logger';
+import { R_Q_P01_boundariesV2 } from '@common/logger';
 import { R_DT_0, R_DT_1 } from '@lib/r-func';
 
 import { NumberW } from '@common/toms708/NumberW';
@@ -8,11 +6,15 @@ import { NumberW } from '@common/toms708/NumberW';
 import { R_DT_qIv } from '@dist/exp/expm1';
 import { qnorm } from '@dist/normal/qnorm';
 import { pnbinom } from './pnbinom';
+import { createObjectNs } from '@common/debug-frontend';
+import VariableArgumentError from '@lib/errors/VariableArgumentError';
+import DomainError from '@lib/errors/DomainError';
 
-const printer_do_search = createNS('do_search');
+const domain = 'do_search';
+const printer_do_search = createObjectNs(domain);
 
 function do_search(y: number, z: NumberW, p: number, n: number, pr: number, incr: number): number {
-    printer_do_search('start: y:%d, z:%o, p:%d, n:%d, pr:%d, incr:%d', y, z, p, n, pr, incr);
+    printer_do_search(VariableArgumentError, 'start: y:%d, z:%o, p:%d, n:%d, pr:%d, incr:%d', y, z, p, n, pr, incr);
     if (z.val >= p) {
         //* search to the left
         for (; ;) {
@@ -26,7 +28,7 @@ function do_search(y: number, z: NumberW, p: number, n: number, pr: number, incr
                     false
                 )) < p
             ) {
-                printer_do_search('exit1');
+                printer_do_search(VariableArgumentError, 'exit1');
                 return y;
             }
             y = Math.max(0, y - incr);
@@ -45,14 +47,15 @@ function do_search(y: number, z: NumberW, p: number, n: number, pr: number, incr
                     false
                 )) >= p
             ) {
-                printer_do_search('exit2');
+                printer_do_search(VariableArgumentError, 'exit2');
                 return y;
             }
         } //while
     } //if
 }
 
-const printer_qnbinom = createNS('qnbinom');
+const domain_binom = 'qnbinom';
+const printer_qnbinom = createObjectNs(domain_binom);
 
 export function qnbinom(p: number, size: number, prob: number, lower_tail: boolean, log_p: boolean): number {
     let y;
@@ -69,12 +72,13 @@ export function qnbinom(p: number, size: number, prob: number, lower_tail: boole
     if (prob === 0 && size === 0) return 0;
 
     if (prob <= 0 || prob > 1 || size < 0) {
-        return ML_ERR_return_NAN2(printer_qnbinom);
+        printer_qnbinom(DomainError, domain_binom);
+        return NaN;
     }
 
     if (prob === 1 || size === 0) return 0;
 
-    const rc = R_Q_P01_boundaries(lower_tail, log_p, p, 0, Infinity);
+    const rc = R_Q_P01_boundariesV2(lower_tail, log_p, p, 0, Infinity);
     if (rc !== undefined) {
         return rc;
     }

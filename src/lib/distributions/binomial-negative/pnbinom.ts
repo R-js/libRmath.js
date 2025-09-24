@@ -1,22 +1,24 @@
-import createNS from '@common/debug-frontend';
 
-import { ML_ERR_return_NAN2 } from '@common/logger';
 import { R_DT_0, R_DT_1 } from '@lib/r-func';
 import { pbeta } from '@dist/beta/pbeta';
 import { Toms708 } from '@common/toms708/toms708';
 import { NumberW } from '@common/toms708/NumberW';
+import DomainError from '@lib/errors/DomainError';
+import { createObjectNs } from '@common/debug-frontend';
+import VariableArgumentError from '@lib/errors/VariableArgumentError';
 
-const printer = createNS('pnbinom');
+const domain = 'pnbinom'
+const printer = createObjectNs(domain);
 
 export function pnbinom(x: number, size: number, prob: number, lowerTail: boolean, logP: boolean): number {
     if (isNaN(x) || isNaN(size) || isNaN(prob)) return x + size + prob;
     if (!isFinite(size) || !isFinite(prob)) {
-        printer(DomainError);
+        printer(DomainError, domain);
         return NaN;
     }
 
     if (size < 0 || prob <= 0 || prob > 1) {
-        printer(DomainError);
+        printer(DomainError, domain);
         return NaN;
     }
 
@@ -29,16 +31,19 @@ export function pnbinom(x: number, size: number, prob: number, lowerTail: boolea
     return pbeta(prob, size, x + 1, lowerTail, logP);
 }
 
-const printer_pnbinom_mu = createNS('pnbinom_mu');
+const domain_mu = 'pnbinom_mu';
+const printer_pnbinom_mu = createObjectNs(domain_mu);
 
 export function pnbinom_mu(x: number, size: number, mu: number, lowerTail: boolean, logP: boolean): number {
     if (isNaN(x) || isNaN(size) || isNaN(mu)) return x + size + mu;
     if (!isFinite(size) || !isFinite(mu)) {
-        return ML_ERR_return_NAN2(printer_pnbinom_mu);
+        printer(DomainError, domain_mu);
+        return NaN;
     }
 
     if (size < 0 || mu < 0) {
-        return ML_ERR_return_NAN2(printer_pnbinom_mu);
+        printer(DomainError, domain_mu);
+        return NaN;
     }
 
     /* limiting case: point mass at zero */
@@ -65,7 +70,7 @@ export function pnbinom_mu(x: number, size: number, mu: number, lowerTail: boole
         const wc = new NumberW(0);
         Toms708.bratio(size, x + 1, size / (size + mu), mu / (size + mu), w, wc, ierr);
         if (ierr.val) {
-            printer('pnbinom_mu() -> bratio() gave error code %d', ierr.val);
+            printer(VariableArgumentError, 'pnbinom_mu() -> bratio() gave error code %d', ierr.val);
         }
         if (logP) {
             w.val = Math.log(w.val);

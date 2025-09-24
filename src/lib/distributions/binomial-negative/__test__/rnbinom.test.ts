@@ -2,8 +2,8 @@ import { globalUni, RNGkind, setSeed } from '@rng/global-rng';
 
 import { rnbinom } from '..';
 
-import { createLogHarnas } from '@common/debug-backend';
-const { getStats } = createLogHarnas();
+import { createObjectLogHarnas } from '@common/debug-backend';
+const { getStats } = createObjectLogHarnas();
 
 describe('rnbinom', function () {
     it('invalid input', () => {

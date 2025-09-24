@@ -3,8 +3,8 @@ import { qnbinom } from '..';
 
 import { globalUni } from '@lib/rng';
 
-import { createLogHarnas } from '@common/debug-backend';
-const { getStats } = createLogHarnas();
+import { createObjectLogHarnas } from '@common/debug-backend';
+const { getStats } = createObjectLogHarnas();
 
 describe('qnbinom', function () {
     it('invalid input', () => {

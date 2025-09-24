@@ -10,7 +10,7 @@ export default defineConfig({
             'src/lib/alt/**/__test__/*test.ts',
             'src/lib/distributions/beta/__test__/*.test.ts',
             'src/lib/distributions/binomial/__test__/*test.ts',
-            // 'src/lib/distributions/binomial-negative/__test__/*test.ts',
+            'src/lib/distributions/binomial-negative/__test__/*.test.ts',
             // 'src/lib/distributions/cauchy/__test__/*test.ts',
             // 'src/lib/distributions/chi-2/__test__/*test.ts',
             // 'src/lib/distributions/exp/__test__/*test.ts',

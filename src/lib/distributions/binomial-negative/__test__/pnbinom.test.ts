@@ -7,9 +7,9 @@ import { loadData } from '@common/test-helpers/load';
 
 import { prob2mu } from './test-helpers';
 
-import { createLogHarnas } from '@common/debug-backend';
+import { createObjectLogHarnas } from '@common/debug-backend';
 
-const { getStats } = createLogHarnas();
+const { getStats } = createObjectLogHarnas();
 
 describe('pnbinom', function () {
     it('invalid input', () => {
@@ -38,12 +38,10 @@ describe('pnbinom', function () {
         it('x=10, prob=0, size=30', () => {
             const nan = pnbinom(10, 30, 0);
             expect(nan).toBeNaN();
-            // expect(pnbinomDomainWarns()).toHaveLength(1);
         });
         it('x=10, prob=1.2, size=30', () => {
             const nan = pnbinom(10, 30, 1.2);
             expect(nan).toBeNaN();
-            // expect(pnbinomDomainWarns()).toHaveLength(1);
         });
         it('x=10, prob=0.2, size=0', () => {
             const z = pnbinom(10, 0, 0.2);
