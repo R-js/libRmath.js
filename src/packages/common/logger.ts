@@ -7,6 +7,8 @@ const debug_R_Q_P01_boundariesV2 = createObjectNs(domain_r_Q_P01_boundaries)
 const debug_R_Q_P01_boundaries = createNs('R_Q_P01_boundaries');
 const debug_R_Q_P01_check = createNs('R_Q_P01_check');
 
+export const R_Q_P01_check_domain = 'R_Q_P01_check';
+
 export enum ME {
     ME_NONE = 0, // no error
     ME_DOMAIN = 1, // argument out of domain
@@ -100,8 +102,17 @@ export function R_Q_P01_boundaries(
     }
 }
 
+/**
+ * @deprecated
+ */
 export function R_Q_P01_check(logP: boolean, p: number): number | undefined {
     if ((logP && p > 0) || (!logP && (p < 0 || p > 1))) {
         return ML_ERR_return_NAN2(debug_R_Q_P01_check);
+    }
+}
+
+export function R_Q_P01_checkV2(logP: boolean, p: number): number | undefined {
+    if ((logP && p > 0) || (!logP && (p < 0 || p > 1))) {
+        return NaN;
     }
 }

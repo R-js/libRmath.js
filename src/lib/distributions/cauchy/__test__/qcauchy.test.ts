@@ -2,9 +2,9 @@ import { resolve } from 'path';
 
 import { loadData } from '@common/test-helpers/load';
 import { qcauchy } from '..';
-import { createLogHarnas } from '@common/debug-backend';
+import { createObjectLogHarnas } from '@common/debug-backend';
 
-const { getStats } = createLogHarnas();
+const { getStats } = createObjectLogHarnas();
 
 describe('qcauchy', function () {
     it('ranges p ∊ [0, 1, step 0.02] defaults', async () => {

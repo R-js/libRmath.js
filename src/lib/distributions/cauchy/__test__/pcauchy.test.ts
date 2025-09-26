@@ -4,9 +4,9 @@ import { loadData } from '@common/test-helpers/load';
 
 
 import { pcauchy } from '..';
-import { createLogHarnas } from '@common/debug-backend';
+import { createObjectLogHarnas } from '@common/debug-backend';
 
-const { getStats } = createLogHarnas();
+const { getStats } = createObjectLogHarnas();
 
 describe('pcauchy', function () {
     it('ranges x ∊ [-40, 40, step 1] location=2, scale=3, log=false', async () => {

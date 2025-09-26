@@ -1,24 +1,24 @@
-import createNS from '@common/debug-frontend';
-
-import { ML_ERR_return_NAN2 } from '@common/logger';
+import { createObjectNs } from '@common/debug-frontend';
+import DomainError from '@lib/errors/DomainError';
 import { R_D_val, R_DT_0, R_DT_1 } from '@lib/r-func';
 
 import { R_D_Clog } from '@lib/r-func';
 import { atanpi } from '@trig/tanpi';
 
-const printer = createNS('pcauchy');
+const domain = 'pcauchy'
+const printer = createObjectNs(domain);
 
 export function pcauchy(x: number, location = 0, scale = 1, lowerTail = true, logP = false): number {
     if (isNaN(x) || isNaN(location) || isNaN(scale)) return x + location + scale;
 
     if (scale <= 0) {
-        printer(DomainError);
+        printer(DomainError, domain);
         return NaN;
     }
 
     x = (x - location) / scale;
     if (isNaN(x)) {
-        printer(DomainError);
+        printer(DomainError, domain);
         return NaN;
     }
 
@@ -41,3 +41,4 @@ export function pcauchy(x: number, location = 0, scale = 1, lowerTail = true, lo
         return R_D_val(logP, 0.5 + atanpi(x));
     }
 }
+

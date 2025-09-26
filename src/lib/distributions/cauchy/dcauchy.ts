@@ -1,7 +1,9 @@
-import createNS from '@common/debug-frontend';
-import { ML_ERR_return_NAN2 } from '@common/logger';
+import { createObjectNs } from '@common/debug-frontend';
+import DomainError from '@lib/errors/DomainError';
 import { isNaN, PI, log as ln } from '@lib/r-func';
-const printer = createNS('dcauchy');
+
+const domain = 'dcauchy'
+const printer = createObjectNs(domain);
 
 export function dcauchy(x: number, location = 0, scale = 1, log = false): number {
     /* NaNs propagated correctly */
@@ -10,8 +12,8 @@ export function dcauchy(x: number, location = 0, scale = 1, log = false): number
     }
 
     if (scale <= 0) {
-        printer(DomainError);
-return NaN;
+        printer(DomainError, domain);
+        return NaN;
     }
 
     const y = (x - location) / scale;

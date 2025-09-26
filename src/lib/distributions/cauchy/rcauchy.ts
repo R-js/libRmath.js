@@ -1,13 +1,15 @@
-import createNS from '@common/debug-frontend';
-import { ML_ERR_return_NAN2 } from '@common/logger';
+import { createObjectNs } from '@common/debug-frontend';
+import DomainError from '@lib/errors/DomainError';
 
-const printer = createNS('rcauchy');
+const domain = 'rcauchy';
+const printer = createObjectNs(domain);
+
 import { globalUni } from '@lib/rng';
 
 export function rcauchyOne(location = 0, scale = 1): number {
     const rng = globalUni();
     if (isNaN(location) || !isFinite(scale) || scale < 0) {
-        printer(DomainError);
+        printer(DomainError, domain);
         return NaN;
     }
     if (scale === 0 || !isFinite(location)) {

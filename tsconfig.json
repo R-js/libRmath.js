@@ -32,8 +32,11 @@
         },
         "resolveJsonModule": true,
         "types": ["node", "jest"],
-        "typeRoots": ["src/packages/test-helpers/jest-ext.d.ts", "node_modules/@types", "node_modules/@vitest/runner/dist/index.d.ts"],
-
+        "typeRoots": [
+            "src/packages/test-helpers/jest-ext.d.ts",
+            "node_modules/@types",
+            "node_modules/@vitest/runner/dist/index.d.ts"
+        ],
         "declaration": false,
         "outDir": "dist/tsc",
         "preserveConstEnums": true,

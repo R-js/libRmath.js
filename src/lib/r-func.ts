@@ -456,7 +456,9 @@ export function R_D_nonint_checkV2(log: boolean, x: number): number | undefined 
     return undefined;
 }
 
-// @deprecated, remove
+/** 
+ * @deprecated
+ */
 export function R_D_nonint_check(log: boolean, x: number, printer: Printer): number | undefined {
     if (R_nonint(x)) {
         printer('non-integer x = %d', x);

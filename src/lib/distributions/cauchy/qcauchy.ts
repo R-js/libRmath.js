@@ -1,16 +1,21 @@
-import createNS from '@common/debug-frontend';
-import { ML_ERR_return_NAN2, R_Q_P01_check } from '@common/logger';
+import { createObjectNs } from '@common/debug-frontend';
+import { R_Q_P01_checkV2 } from '@common/logger';
+import { R_Q_P01_check_domain } from '@common/logger';
+import DomainError from '@lib/errors/DomainError';
 
 import { tanpi } from '@trig/tanpi';
 
-const printer = createNS('qcauchy');
+const domain = 'qcauchy';
+const printer = createObjectNs(domain);
+const debug_R_Q_P01_check = createObjectNs(R_Q_P01_check_domain);
 
 export function qcauchy(p: number, location = 0, scale = 1, lowerTail = true, logP = false): number {
     if (isNaN(p) || isNaN(location) || isNaN(scale)) return NaN;
     let lower_tail = lowerTail;
 
-    const rc = R_Q_P01_check(logP, p);
+    const rc = R_Q_P01_checkV2(logP, p);
     if (rc !== undefined) {
+        debug_R_Q_P01_check(DomainError, R_Q_P01_check_domain);
         return rc;
     }
 
@@ -18,7 +23,7 @@ export function qcauchy(p: number, location = 0, scale = 1, lowerTail = true, lo
         if (scale === 0) {
             return location;
         }
-        /* else */ printer(DomainError);
+        printer(DomainError, domain);
         return NaN;
     }
 
