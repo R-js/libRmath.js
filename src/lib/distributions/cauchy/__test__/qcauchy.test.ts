@@ -4,8 +4,6 @@ import { loadData } from '@common/test-helpers/load';
 import { qcauchy } from '..';
 import { createObjectLogHarnas } from '@common/debug-backend';
 
-const { getStats } = createObjectLogHarnas();
-
 describe('qcauchy', function () {
     it('ranges p ∊ [0, 1, step 0.02] defaults', async () => {
         const [x, y] = await loadData(resolve(__dirname, 'fixture-generation', 'qcauchy.R'), /\s+/, 1, 2);
@@ -32,6 +30,7 @@ describe('qcauchy', function () {
         expect(z3).toBe(Infinity);
     });
     it('p=0.66, scale=-1(<0), defaults', () => {
+        const { getStats } = createObjectLogHarnas();
         const nan = qcauchy(0.66, undefined, -1);
         const stats = getStats();
         expect(nan).toBeNaN();

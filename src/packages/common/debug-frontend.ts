@@ -16,7 +16,7 @@ export type LoggerController = {
 };
 
 export type LoggerObjectController = {
-    send<T extends new (...args: any) => Error>(namespace: string, formatter: T, ...args: ConstructorParameters<T>): void;
+    send<T extends abstract new (...args: any) => Error>(namespace: string, formatter: T, ...args: ConstructorParameters<T>): void;
     isEnabled(namespace: string): boolean;
 };
 
@@ -42,6 +42,7 @@ export function unRegisterObjectController() {
     objectController = undefined;
 }
 
+/* @deprecated */
 export default function createNs(ns: string): Printer {
     function print(formatter: string, ...args: any[]) {
         if (!controller) {
@@ -65,6 +66,31 @@ export default function createNs(ns: string): Printer {
     return print as Printer;
 }
 
+function createPrinter(downStairs: LoggerObjectController, ns: string): PrintObject {
+    return function <T extends abstract new (...args: any) => Error>(formatter: T, ...args: ConstructorParameters<T>) {
+        if (downStairs.isEnabled(ns)) {
+            downStairs.send(ns, formatter, ...args);
+        }
+    }
+}
+// return print as PrintObject;
+
+export type LoggerEnhanced = {
+    printer?: PrintObject;
+};
+
+export function decorateWithLogger<T extends (...args: any) => ReturnType<T>>(ns: string, fn: T, printName = 'printer') {
+    return function (...args: Parameters<T>): ReturnType<T> {
+        // pull in mailslot value dynamically 
+        const downStairs = objectController;
+        const ctx = this ?? {};
+        // attach printer to context
+        if (downStairs) {
+            ctx[printName] = createPrinter(downStairs, ns);
+        }
+        return fn.call(ctx, ...args);
+    }
+}
 
 export function createObjectNs(ns: string): PrintObject {
     function print<T extends new (...args: any) => Error>(formatter: T, ...args: ConstructorParameters<T>) {
@@ -75,16 +101,5 @@ export function createObjectNs(ns: string): PrintObject {
             objectController.send(ns, formatter, ...args);
         }
     }
-    Object.defineProperties(print, {
-        enabled: {
-            get() {
-                if (!controller) {
-                    return false;
-                }
-                return controller.isEnabled(ns);
-            },
-            enumerable: true
-        }
-    });
     return print as PrintObject;
 }

@@ -1,18 +1,17 @@
-import { createObjectNs } from '@common/debug-frontend';
+import { LoggerEnhanced, decorateWithLogger } from '@common/debug-frontend';
 import DomainError from '@lib/errors/DomainError';
 import { isNaN, PI, log as ln } from '@lib/r-func';
 
 const domain = 'dcauchy'
-const printer = createObjectNs(domain);
+export default decorateWithLogger(domain, dcauchy);
 
-export function dcauchy(x: number, location = 0, scale = 1, log = false): number {
-    /* NaNs propagated correctly */
+function dcauchy(this: LoggerEnhanced, x: number, location = 0, scale = 1, log = false): number {
     if (isNaN(x) || isNaN(location) || isNaN(scale)) {
         return x + location + scale;
     }
 
     if (scale <= 0) {
-        printer(DomainError, domain);
+        this.printer?.(DomainError, domain);
         return NaN;
     }
 

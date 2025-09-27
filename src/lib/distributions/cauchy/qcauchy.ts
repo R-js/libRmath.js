@@ -1,4 +1,4 @@
-import { createObjectNs } from '@common/debug-frontend';
+import { LoggerEnhanced, decorateWithLogger } from '@common/debug-frontend';
 import { R_Q_P01_checkV2 } from '@common/logger';
 import { R_Q_P01_check_domain } from '@common/logger';
 import DomainError from '@lib/errors/DomainError';
@@ -6,16 +6,15 @@ import DomainError from '@lib/errors/DomainError';
 import { tanpi } from '@trig/tanpi';
 
 const domain = 'qcauchy';
-const printer = createObjectNs(domain);
-const debug_R_Q_P01_check = createObjectNs(R_Q_P01_check_domain);
+export default decorateWithLogger(domain, qcauchy);
 
-export function qcauchy(p: number, location = 0, scale = 1, lowerTail = true, logP = false): number {
+function qcauchy(this: LoggerEnhanced, p: number, location = 0, scale = 1, lowerTail = true, logP = false): number {
     if (isNaN(p) || isNaN(location) || isNaN(scale)) return NaN;
     let lower_tail = lowerTail;
 
     const rc = R_Q_P01_checkV2(logP, p);
     if (rc !== undefined) {
-        debug_R_Q_P01_check(DomainError, R_Q_P01_check_domain);
+        this.printer?.(DomainError, R_Q_P01_check_domain);
         return rc;
     }
 
@@ -23,7 +22,7 @@ export function qcauchy(p: number, location = 0, scale = 1, lowerTail = true, lo
         if (scale === 0) {
             return location;
         }
-        printer(DomainError, domain);
+        this.printer?.(DomainError, domain);
         return NaN;
     }
 
@@ -53,9 +52,8 @@ export function qcauchy(p: number, location = 0, scale = 1, lowerTail = true, lo
         }
     }
 
-    if (p === 0.5) return location; // avoid 1/Inf below
-    //if (p === 0) return location + (lower_tail ? scale : -scale) * -Infinity; // p = 1. is handled above
+    if (p === 0.5) return location;
     if (p === 0) return lower_tail ? -Infinity : Infinity;
     return location + (lower_tail ? -scale : scale) / tanpi(p);
-    /*	-1/tan(pi * p) = -cot(pi * p) = tan(pi * (p - 1/2))  */
+
 }

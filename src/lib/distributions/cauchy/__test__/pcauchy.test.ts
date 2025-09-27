@@ -6,7 +6,7 @@ import { loadData } from '@common/test-helpers/load';
 import { pcauchy } from '..';
 import { createObjectLogHarnas } from '@common/debug-backend';
 
-const { getStats } = createObjectLogHarnas();
+// const { getStats } = createObjectLogHarnas({ pcauchy: true });
 
 describe('pcauchy', function () {
     it('ranges x ∊ [-40, 40, step 1] location=2, scale=3, log=false', async () => {
@@ -24,10 +24,10 @@ describe('pcauchy', function () {
     });
     it.todo('check code path to hit DE Messages');
     it('x=0, scale=Infinity, location=Infinity', () => {
-        const stats0 = getStats();
+        const { getStats } = createObjectLogHarnas({ pcauchy: true });
         const nan = pcauchy(0, Infinity, Infinity);
         const stats1 = getStats()
-        expect(stats1.pcauchy - stats0.pcauchy).toBe(1);
+        expect(stats1.pcauchy).toBe(1);
         expect(nan).toBeNaN();
     });
 
