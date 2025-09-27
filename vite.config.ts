@@ -49,7 +49,7 @@ export default defineConfig({
         coverage: {
             enabled: true,
             provider: 'v8',
-            reporter: ['json', 'lcov', 'text', 'clover'],
+            reporter: ['json', 'lcov', 'text', 'clover', 'text-summary'],
             include: [
                 'src/lib/alt/**/*.ts',
                 'src/lib/chebyshev/**/*.ts',
