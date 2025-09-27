@@ -1,5 +1,5 @@
 {
-    "include": ["src/lib/**/*.ts", "src/packages/**/*.ts", "src/index.ts", "scripts/build.ts", "scripts/nodeWalker.ts"],
+    "include": ["src/lib/**/*.ts", "src/packages/**/*.ts", "src/index.ts", "scripts/build.ts", "scripts/nodeWalker.ts", "src/lib/distributions/binomial-negative/dnbinom.js"],
     "files": ["src/index.ts"],
     "typeAcquisition": {
         "enable": true,

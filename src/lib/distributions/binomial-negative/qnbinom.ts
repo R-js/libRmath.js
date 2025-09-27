@@ -5,59 +5,13 @@ import { NumberW } from '@common/toms708/NumberW';
 
 import { R_DT_qIv } from '@dist/exp/expm1';
 import { qnorm } from '@dist/normal/qnorm';
-import { pnbinom } from './pnbinom';
-import { createObjectNs } from '@common/debug-frontend';
-import VariableArgumentError from '@lib/errors/VariableArgumentError';
+import pnbinom from './pnbinom';
+import { LoggerEnhanced, decorateWithLogger } from '@common/debug-frontend';
 import DomainError from '@lib/errors/DomainError';
+import do_search from './do_search';
 
-const domain = 'do_search';
-const printer_do_search = createObjectNs(domain);
 
-function do_search(y: number, z: NumberW, p: number, n: number, pr: number, incr: number): number {
-    printer_do_search(VariableArgumentError, 'start: y:%d, z:%o, p:%d, n:%d, pr:%d, incr:%d', y, z, p, n, pr, incr);
-    if (z.val >= p) {
-        //* search to the left
-        for (; ;) {
-            if (
-                y === 0 ||
-                (z.val = pnbinom(
-                    y - incr,
-                    n,
-                    pr,
-                    true, ///log_p,
-                    false
-                )) < p
-            ) {
-                printer_do_search(VariableArgumentError, 'exit1');
-                return y;
-            }
-            y = Math.max(0, y - incr);
-        } //while
-    } else {
-        // search to the right
-
-        for (; ;) {
-            y = y + incr;
-            if (
-                (z.val = pnbinom(
-                    y,
-                    n,
-                    pr, //l._t.
-                    true,
-                    false
-                )) >= p
-            ) {
-                printer_do_search(VariableArgumentError, 'exit2');
-                return y;
-            }
-        } //while
-    } //if
-}
-
-const domain_binom = 'qnbinom';
-const printer_qnbinom = createObjectNs(domain_binom);
-
-export function qnbinom(p: number, size: number, prob: number, lower_tail: boolean, log_p: boolean): number {
+export default decorateWithLogger(function qnbinom(this: LoggerEnhanced, p: number, size: number, prob: number, lower_tail: boolean, log_p: boolean): number {
     let y;
 
     const z = new NumberW(0);
@@ -72,7 +26,7 @@ export function qnbinom(p: number, size: number, prob: number, lower_tail: boole
     if (prob === 0 && size === 0) return 0;
 
     if (prob <= 0 || prob > 1 || size < 0) {
-        printer_qnbinom(DomainError, domain_binom);
+        this?.printer?.(DomainError, qnbinom.name);
         return NaN;
     }
 
@@ -117,7 +71,9 @@ export function qnbinom(p: number, size: number, prob: number, lower_tail: boole
     p *= 1 - 64 * Number.EPSILON;
 
     /* If the C-F value is not too large a simple search is OK */
-    if (y < 1e5) return do_search(y, z, p, size, prob, 1);
+    if (y < 1e5) {
+        return do_search(y, z, p, size, prob, 1);
+    }
     /* Otherwise be a bit cleverer in the search */
     {
         let incr = Math.floor(y * 0.001);
@@ -129,8 +85,5 @@ export function qnbinom(p: number, size: number, prob: number, lower_tail: boole
         } while (oldincr > 1 && incr > y * 1e-15);
         return y;
     }
-}
+});
 
-export function qnbinom_mu(p: number, size: number, mu: number, lower_tail: boolean, log_p: boolean): number {
-    return qnbinom(p, size, /* prob = */ size / (size + mu), lower_tail, log_p);
-}

@@ -9,9 +9,9 @@ import { qbeta } from '..';
 
 import { createObjectLogHarnas } from '@common/debug-backend';
 
-const { getStats } = createObjectLogHarnas();
+import { describe } from 'vitest';
 
-describe('qbeta', function () {
+describe.concurrent('qbeta', function () {
     it('ranges x ∊ [0, 1], shape1=1, shape2=2', async () => {
         const [x, y] = await loadData(resolve(__dirname, 'fixture-generation', 'qbeta.R'), /\s+/, 1, 2);
         const actual = x.map((_x) => qbeta(_x, 2, 2, undefined, true, false));
@@ -45,6 +45,7 @@ describe('qbeta', function () {
         expect(nan).toEqualFloatingPointBinary(NaN);
     });
     it('shape1=-1, q=0.2, shape2=4, ncp=undefined', () => {
+        const { getStats } = createObjectLogHarnas();
         const nan = qbeta(0.2, -3, 4);
         expect(nan).toEqualFloatingPointBinary(NaN);
         const stats = getStats();

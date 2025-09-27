@@ -1,16 +1,13 @@
-import { R_Q_P01_boundaries } from '@common/logger';
+import { R_Q_P01_boundariesV2 } from '@common/logger';
 import { R_DT_qIv } from '@dist/exp/expm1';
-import { pnbeta } from './pnbeta';
-import { createObjectNs } from '@common/debug-frontend';
+import pnbeta from './pnbeta';
 import DomainError from '@lib/errors/DomainError';
-
-const domain = 'qnbeta';
-const printer_qnbeta = createObjectNs(domain);
+import { LoggerEnhanced, decorateWithLogger } from '@common/debug-frontend';
 
 const accu = 1e-15;
 const eps = 1e-14; /* must be > accu */
 
-export function qnbeta(p: number, a: number, b: number, ncp: number, lower_tail: boolean, log_p: boolean): number {
+export default decorateWithLogger(function qnbeta(this: LoggerEnhanced, p: number, a: number, b: number, ncp: number, lower_tail: boolean, log_p: boolean): number {
     let ux;
     let lx;
     let nx;
@@ -21,16 +18,16 @@ export function qnbeta(p: number, a: number, b: number, ncp: number, lower_tail:
     }
 
     if (!isFinite(a)) {
-        printer_qnbeta(DomainError, domain);
+        this?.printer?.(DomainError, qnbeta.name);
         return NaN;
     }
 
     if (ncp < 0 || a <= 0 || b <= 0) {
-        printer_qnbeta(DomainError, domain);
+        this?.printer?.(DomainError, qnbeta.name);
         return NaN;
     }
 
-    const rc = R_Q_P01_boundaries(lower_tail, log_p, p, 0, 1);
+    const rc = R_Q_P01_boundariesV2(lower_tail, log_p, p, 0, 1);
     if (rc !== undefined) {
         return rc;
     }
@@ -54,5 +51,6 @@ export function qnbeta(p: number, a: number, b: number, ncp: number, lower_tail:
     } while ((ux - lx) / nx > accu);
 
     return 0.5 * (ux + lx);
-}
+});
+
 

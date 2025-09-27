@@ -9,7 +9,7 @@ import { prob2mu } from './test-helpers';
 
 import { createObjectLogHarnas } from '@common/debug-backend';
 
-const { getStats } = createObjectLogHarnas();
+
 
 describe('pnbinom', function () {
     it('invalid input', () => {
@@ -30,6 +30,7 @@ describe('pnbinom', function () {
             expect(nan).toBeNaN();
         });
         it('x=10, prob=Infinity, size=30', () => {
+            const { getStats } = createObjectLogHarnas();
             const nan = pnbinom(10, 30, Infinity);
             const stats = getStats();
             expect(stats.pnbinom).toBe(1);

@@ -39,6 +39,7 @@ export function ML_ERROR3(printer: Printer, x: ME, arg: string): void {
     }
 }
 
+/* @deprecated */
 export function ML_ERR_return_NAN2(printer: Printer): number {
     if (printer.enabled) {
         const stackTrace = new Error().stack! ?? 'there is no stack trace';

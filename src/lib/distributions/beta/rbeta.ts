@@ -1,22 +1,19 @@
-import { createObjectNs } from '@common/debug-frontend';
+import { LoggerEnhanced, decorateWithLogger } from '@common/debug-frontend';
 import DomainError from '@lib/errors/DomainError';
 import { DBL_MAX_EXP, min, max, log } from '@lib/r-func';
 import { globalUni } from '@rng/global-rng';
 
-const domain = 'rbeta';
-const printer = createObjectNs('rbeta');
+const expmax = DBL_MAX_EXP * Math.LN2; /* = log(DBL_MAX) */
 
-export const expmax = DBL_MAX_EXP * Math.LN2; /* = log(DBL_MAX) */
-
-export function rbetaOne(shape1: number, shape2: number): number {
+export default decorateWithLogger(function rbeta(this: LoggerEnhanced, shape1: number, shape2: number): number {
     const rng = globalUni();
 
     if (isNaN(shape1) || isNaN(shape2)) {
-        printer(DomainError, domain);
+        this?.printer?.(DomainError, rbeta.name);
         return NaN;
     }
     if (shape1 < 0 || shape2 < 0) {
-        printer(DomainError, domain);
+        this?.printer?.(DomainError, rbeta.name);
         return NaN;
     }
     if (!isFinite(shape1) && !isFinite(shape2)) {
@@ -136,4 +133,4 @@ export function rbetaOne(shape1: number, shape2: number): number {
 
         return shape1 !== a ? b / (b + w) : w / (b + w);
     }
-}
+});

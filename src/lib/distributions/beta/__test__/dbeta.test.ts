@@ -8,7 +8,6 @@ import { dbeta } from '..';
 
 import { createObjectLogHarnas } from '@common/debug-backend';
 
-const { getStats } = createObjectLogHarnas({ dbeta_scalar: true });
 
 describe('dbeta', function () {
     it('ranges x ∊ [0, 1]', async () => {
@@ -22,9 +21,10 @@ describe('dbeta', function () {
         expect(actual).toEqualFloatingPointBinary(NaN);
     });
     it('x=0.5, shape1=-2, shape2=3', () => {
+        const { getStats } = createObjectLogHarnas();
         const nan = dbeta(0.5, -2, 3);
         const stats1 = getStats();
-        expect(stats1.dbeta_scalar).toBe(1);
+        expect(stats1.dbeta).toBe(1);
         expect(nan).toBe(NaN);
     });
     it('x ∊ {-1.5,1.2}, shape1=2, shape2=3', () => {

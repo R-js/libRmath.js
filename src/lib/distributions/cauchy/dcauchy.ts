@@ -2,8 +2,7 @@ import { LoggerEnhanced, decorateWithLogger } from '@common/debug-frontend';
 import DomainError from '@lib/errors/DomainError';
 import { isNaN, PI, log as ln } from '@lib/r-func';
 
-const domain = 'dcauchy'
-export default decorateWithLogger(domain, dcauchy);
+export default decorateWithLogger(dcauchy);
 
 function dcauchy(this: LoggerEnhanced, x: number, location = 0, scale = 1, log = false): number {
     if (isNaN(x) || isNaN(location) || isNaN(scale)) {
@@ -11,7 +10,7 @@ function dcauchy(this: LoggerEnhanced, x: number, location = 0, scale = 1, log =
     }
 
     if (scale <= 0) {
-        this.printer?.(DomainError, domain);
+        this?.printer?.(DomainError, dcauchy.name);
         return NaN;
     }
 

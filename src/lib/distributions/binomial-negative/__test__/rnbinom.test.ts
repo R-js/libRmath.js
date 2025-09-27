@@ -3,7 +3,7 @@ import { globalUni, RNGkind, setSeed } from '@rng/global-rng';
 import { rnbinom } from '..';
 
 import { createObjectLogHarnas } from '@common/debug-backend';
-const { getStats } = createObjectLogHarnas();
+
 
 describe('rnbinom', function () {
     it('invalid input', () => {
@@ -47,6 +47,7 @@ describe('rnbinom', function () {
             expect(z).toEqualFloatingPointBinary([10, 10, 17, 6, 9, 14, 10, 12, 3, 5]);
         });
         it('(check M.E.)n=1, size=8, mu=NaN', () => {
+            const { getStats } = createObjectLogHarnas();
             const nan = rnbinom(1, 8, undefined, NaN);
             const stats = getStats();
             expect(stats.rnbinom_mu).toBe(1);

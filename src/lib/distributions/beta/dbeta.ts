@@ -1,19 +1,15 @@
-import { createObjectNs } from '@common/debug-frontend';
+import { LoggerEnhanced, decorateWithLogger } from '@common/debug-frontend';
 import { R_D__0, R_D_exp, R_D_val, log, log1p } from '@lib/r-func';
-import { dbinom_raw } from '@dist/binomial/dbinom';
+import dbinom_raw from '@dist/binomial/dbinom_raw';
 import { lbeta } from '@special/beta';
 import DomainError from '@lib/errors/DomainError';
 
-const domain = 'dbeta_scalar';
-const printer = createObjectNs(domain);
-
-export function dbeta_scalar(x: number, a: number, b: number, asLog: boolean): number {
+export default decorateWithLogger(function dbeta(this: LoggerEnhanced, x: number, a: number, b: number, asLog: boolean): number {
     if (isNaN(x) || isNaN(a) || isNaN(b)) {
         return x + a + b;
     }
-
     if (a < 0 || b < 0) {
-        printer(DomainError, domain);
+        this?.printer?.(DomainError, dbeta.name);
         return NaN;
     }
     if (x < 0 || x > 1) {
@@ -60,4 +56,4 @@ export function dbeta_scalar(x: number, a: number, b: number, asLog: boolean): n
         lval = log(a + b - 1) + dbinom_raw(a - 1, a + b - 2, x, 1 - x, true);
     }
     return R_D_exp(asLog, lval);
-}
+});

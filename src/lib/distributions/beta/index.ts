@@ -1,20 +1,20 @@
 //distros
 //dbeta
-import { dbeta_scalar } from './dbeta';
-import { dnbeta_scalar } from './dnbeta';
+import dbeta_scalar from './dbeta';
+import dnbeta_scalar from './dnbeta';
 
 //pbeta
-import { pbeta as _pbeta } from './pbeta';
-import { pnbeta as _pnbeta } from './pnbeta';
+import { default as _pbeta } from './pbeta';
+import { default as _pnbeta } from './pnbeta';
 
 //qbeta
-import { qbeta as _qbeta } from './qbeta';
-import { qnbeta as _qnbeta } from './qnbeta';
+import { default as _qbeta } from './qbeta';
+import { default as _qnbeta } from './qnbeta';
 
 //rbeta
 import { rchisqOne } from '@dist/chi-2/rchisq';
 import { rnchisqOne } from '@dist/chi-2/rnchisq';
-import { rbetaOne } from './rbeta';
+import { default as rbetaOne } from './rbeta';
 
 //helper
 import { repeatedCall } from '@lib/r-func';

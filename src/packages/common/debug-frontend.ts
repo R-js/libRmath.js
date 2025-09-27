@@ -75,20 +75,23 @@ function createPrinter(downStairs: LoggerObjectController, ns: string): PrintObj
 }
 // return print as PrintObject;
 
-export type LoggerEnhanced = {
+export type LoggerEnhanced = undefined | {
     printer?: PrintObject;
 };
 
-export function decorateWithLogger<T extends (...args: any) => ReturnType<T>>(ns: string, fn: T, printName = 'printer') {
+export function decorateWithLogger<T extends (...args: any) => ReturnType<T>>(fn: T, printName = 'printer') {
     return function (...args: Parameters<T>): ReturnType<T> {
-        // pull in mailslot value dynamically 
-        const downStairs = objectController;
-        const ctx = this ?? {};
-        // attach printer to context
-        if (downStairs) {
-            ctx[printName] = createPrinter(downStairs, ns);
+        // pull in mailslot value dynamically (objectController is a global)
+        const downStairsLogger = objectController;
+
+        // performance: only create if needed
+        // check if the slot is free and downStairsLogger is defined
+        if (!this?.[printName] && downStairsLogger) {
+            const ctx = this ?? Object.create(null);
+            ctx[printName] = createPrinter(downStairsLogger, fn.name);
+            return fn.call(ctx, ...args);
         }
-        return fn.call(ctx, ...args);
+        return fn(...args);
     }
 }
 

@@ -5,8 +5,7 @@ import { R_D_val, R_DT_0, R_DT_1 } from '@lib/r-func';
 import { R_D_Clog } from '@lib/r-func';
 import { atanpi } from '@trig/tanpi';
 
-const domain = 'pcauchy'
-export default decorateWithLogger(domain, pcauchy);
+export default decorateWithLogger(pcauchy);
 
 function pcauchy(this: LoggerEnhanced, x: number, location = 0, scale = 1, lowerTail = true, logP = false): number {
     if (isNaN(x) || isNaN(location) || isNaN(scale)) {
@@ -14,13 +13,13 @@ function pcauchy(this: LoggerEnhanced, x: number, location = 0, scale = 1, lower
     }
 
     if (scale <= 0) {
-        this.printer?.(DomainError, domain);
+        this?.printer?.(DomainError, pcauchy.name);
         return NaN;
     }
 
     x = (x - location) / scale;
     if (isNaN(x)) {
-        this.printer?.(DomainError, domain);
+        this?.printer?.(DomainError, pcauchy.name);
         return NaN;
     }
 

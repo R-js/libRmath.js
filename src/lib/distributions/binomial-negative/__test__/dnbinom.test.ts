@@ -4,8 +4,6 @@ import { resolve } from 'path';
 import { loadData } from '@common/test-helpers/load';
 import { createObjectLogHarnas } from '@common/debug-backend';
 
-const { getStats } = createObjectLogHarnas();
-
 import { dnbinom } from '..';
 import { prob2mu } from './test-helpers';
 
@@ -25,6 +23,7 @@ describe('dnbinom', () => {
             expect(nan).toBeNaN();
         });
         it('x=10, prob=0, size=20', () => {
+            const { getStats } = createObjectLogHarnas();
             const nan = dnbinom(10, 20, 0);
             const stats = getStats();
             expect(nan).toBeNaN();

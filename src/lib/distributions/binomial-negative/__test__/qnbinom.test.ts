@@ -4,7 +4,6 @@ import { qnbinom } from '..';
 import { globalUni } from '@lib/rng';
 
 import { createObjectLogHarnas } from '@common/debug-backend';
-const { getStats } = createObjectLogHarnas();
 
 describe('qnbinom', function () {
     it('invalid input', () => {
@@ -32,6 +31,7 @@ describe('qnbinom', function () {
             expect(z).toBe(0);
         });
         it('p=0.5, prob=-1(<0), size=0', () => {
+            const { getStats } = createObjectLogHarnas({ qnbinom: true });
             const nan = qnbinom(0.5, 4, -1);
             expect(nan).toBeNaN();
             const stats1 = getStats();
@@ -40,7 +40,6 @@ describe('qnbinom', function () {
         it('p=1, prob=0.3, size=-4', () => {
             const nan = qnbinom(1, -4, 0.3);
             expect(nan).toBeNaN();
-            //expect(out.length).toBe(1);
         });
         it('p=1, prob=1, size=4', () => {
             const z = qnbinom(1, 4, 1);

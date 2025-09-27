@@ -1,63 +1,44 @@
-import createNS from '@common/debug-frontend';
+import { type LoggerEnhanced, decorateWithLogger } from '@common/debug-frontend';
 
-import { ML_ERR_return_NAN2, R_Q_P01_boundaries } from '@common/logger';
+import { R_Q_P01_boundariesV2 } from '@common/logger';
 
 import { NumberW } from '@common/toms708/NumberW';
 import { R_DT_qIv } from '@dist/exp/expm1';
 import { qnorm } from '@dist/normal/qnorm';
-import { pbinom } from './pbinom';
+import pbinom from './pbinom';
+import do_search from './do_search';
+import DomainError from '@lib/errors/DomainError';
+import VariableArgumentError from '@lib/errors/VariableArgumentError';
 
-const printer_do_search = createNS('do_search');
-
-function do_search(y: number, z: NumberW, p: number, n: number, pr: number, incr: number): number {
-    if (z.val >= p) {
-        /* search to the left */
-
-        printer_do_search('new z=%o >= p = %d  --> search to left (y--) ..', z, p);
-
-        for (; ;) {
-            let newz: number;
-            if (y === 0 || (newz = pbinom(y - incr, n, pr, /*l._t.*/ true, /*logP*/ false)) < p) return y;
-            y = Math.max(0, y - incr);
-            z.val = newz;
-        }
-    } else {
-        /* search to the right */
-
-        printer_do_search('new z=%d < p = %d  --> search to right (y++) ..', z.val, p);
-
-        for (; ;) {
-            y = Math.min(y + incr, n);
-            if (y === n || (z.val = pbinom(y, n, pr, /*l._t.*/ true, /*logP*/ false)) >= p) return y;
-        }
-    }
-}
-
-const printer_qbinom = createNS('qbinom');
-
-export function qbinom(p: number, size: number, prob: number, lowerTail = true, logP = false): number {
+export default decorateWithLogger(function qbinom(this: LoggerEnhanced, p: number, size: number, prob: number, lowerTail = true, logP = false): number {
     const z = new NumberW(0);
     let y: number;
 
-    if (isNaN(p) || isNaN(size) || isNaN(prob)) return NaN;
+    if (isNaN(p) || isNaN(size) || isNaN(prob)) {
+        return NaN;
+    }
 
     if (!isFinite(size) || !isFinite(prob)) {
-        return ML_ERR_return_NAN2(printer_qbinom);
+        this?.printer?.(DomainError, qbinom.name);
+        return NaN
     }
     /* if logP is true, p = -Inf is a legitimate value */
     if (!isFinite(p) && !logP) {
-        return ML_ERR_return_NAN2(printer_qbinom);
+        this?.printer?.(DomainError, qbinom.name);
+        return NaN
     }
 
     if (!Number.isInteger(size)) {
-        return ML_ERR_return_NAN2(printer_qbinom);
+        this?.printer?.(DomainError, qbinom.name);
+        return NaN
     }
 
     if (prob < 0 || prob > 1 || size < 0) {
-        return ML_ERR_return_NAN2(printer_qbinom);
+        this?.printer?.(DomainError, qbinom.name);
+        return NaN;
     }
 
-    const rc = R_Q_P01_boundaries(lowerTail, logP, p, 0, size);
+    const rc = R_Q_P01_boundariesV2(lowerTail, logP, p, 0, size);
     if (rc !== undefined) {
         return rc;
     }
@@ -74,7 +55,7 @@ export function qbinom(p: number, size: number, prob: number, lowerTail = true, 
 
     const gamma = (q - prob) / sigma; // = (  (1 - prob)-prob )/sd = (1 - 2pr)/sd
 
-    printer_qbinom(
+    this?.printer?.(VariableArgumentError,
         'qbinom(p=%d, n=%d, prob=%d, l.t.=%s, log=%s): sigm=%d, gam=%d',
         p,
         size,
@@ -106,7 +87,7 @@ export function qbinom(p: number, size: number, prob: number, lowerTail = true, 
         /* way off */ y = size;
     }
 
-    printer_qbinom('new (p,1-p)=(%d,%d), z=qnorm(..)=%d, y=%d, size=%d', p, 1 - p, z.val, y, size);
+    this?.printer?.(VariableArgumentError, 'new (p,1-p)=(%d,%d), z=qnorm(..)=%d, y=%d, size=%d', p, 1 - p, z.val, y, size);
 
     z.val = pbinom(y, size, prob, /*lowerTail*/ true, /*logP*/ false);
 
@@ -126,4 +107,4 @@ export function qbinom(p: number, size: number, prob: number, lowerTail = true, 
         incr = Math.max(1, Math.floor(incr / 100));
     } while (oldincr > 1 && incr > size * 1e-15);
     return y;
-}
+});

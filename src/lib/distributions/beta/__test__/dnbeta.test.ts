@@ -6,7 +6,6 @@ import { loadData } from '@common/test-helpers/load';
 import { dbeta } from '..';
 import { createObjectLogHarnas } from '@common/debug-backend';
 
-const { getStats } = createObjectLogHarnas();
 
 describe('dbeta, ncp != undefined', () => {
     it('ranges x ∊ [0, 1], shape1=3, shape2=3, ncp=2', async () => {
@@ -19,15 +18,17 @@ describe('dbeta, ncp != undefined', () => {
         expect(nan).toBeNaN();
     });
     it('ranges x = 0.5, shape1=3, shape2=3, ncp=-2', () => {
+        const { getStats } = createObjectLogHarnas();
         const nan = dbeta(0.5, 3, 3, -2);
         const stats = getStats();
         expect(stats.dnbeta).toBe(1);
         expect(nan).toBe(NaN);
     });
     it('ranges x = 0.5, shape1=3, shape2=3, ncp=-2', () => {
+        const { getStats } = createObjectLogHarnas();
         const nan = dbeta(0.5, 3, 3, Infinity);
         const stats = getStats();
-        expect(stats.dnbeta).toBe(2)
+        expect(stats.dnbeta).toBe(1)
         expect(nan).toBe(NaN);
     });
     it('ranges x = -1, shape1=3, shape2=3, ncp=2', () => {

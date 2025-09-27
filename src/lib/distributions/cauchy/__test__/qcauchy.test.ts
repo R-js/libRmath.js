@@ -3,22 +3,27 @@ import { resolve } from 'path';
 import { loadData } from '@common/test-helpers/load';
 import { qcauchy } from '..';
 import { createObjectLogHarnas } from '@common/debug-backend';
+import { unRegisterObjectController } from '@common/debug-frontend';
 
 describe('qcauchy', function () {
     it('ranges p ∊ [0, 1, step 0.02] defaults', async () => {
+        unRegisterObjectController();
         const [x, y] = await loadData(resolve(__dirname, 'fixture-generation', 'qcauchy.R'), /\s+/, 1, 2);
         const actual = x.map((_x) => qcauchy(_x));
         expect(actual).toEqualFloatingPointBinary(y, 47);
     });
     it('p=NaN, defaults', () => {
+        unRegisterObjectController();
         const z = qcauchy(NaN);
         expect(z).toBeNaN();
     });
     it('p=-1, defaults', () => {
+        unRegisterObjectController();
         const nan = qcauchy(-1);
         expect(nan).toBeNaN();
     });
     it('p=1 or -1, defaults', () => {
+        unRegisterObjectController();
         const z = qcauchy(1);
         expect(z).toBe(Infinity);
         const z1 = qcauchy(0);
@@ -37,18 +42,22 @@ describe('qcauchy', function () {
         expect(stats.qcauchy).toBe(1);
     });
     it('p=0.66, scale=0, defaults', () => {
+        unRegisterObjectController();
         const nan = qcauchy(0.66, undefined, 0);
         expect(nan).toBe(0);
     });
     it('p=-0.66, log=true, defaults', () => {
+        unRegisterObjectController();
         const z = qcauchy(-0.66, undefined, undefined, undefined, true);
         expect(z).toEqualFloatingPointBinary(0.052989541547587254);
     });
     it('p=-1.66, log=true, defaults', () => {
+        unRegisterObjectController();
         const z = qcauchy(-1.66, undefined, undefined, undefined, true);
         expect(z).toEqualFloatingPointBinary(-1.4700742254066812, 50);
     });
     it('p=0, log=true, defaults', () => {
+        unRegisterObjectController();
         const z = qcauchy(0, undefined, undefined, undefined, true);
         expect(z).toBe(Infinity);
     });

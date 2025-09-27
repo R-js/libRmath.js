@@ -1,14 +1,13 @@
-import createNS from '@common/debug-frontend';
-import { ML_ERR_return_NAN2 } from '@common/logger';
-import { R_pow_di } from '@lib/r-func';
+import { R_pow_di, abs, log, trunc } from '@lib/r-func';
 
 import { globalUni } from '@rng/global-rng';
 
-import { qbinom } from './qbinom';
+import qbinom from './qbinom';
+import { LoggerEnhanced, decorateWithLogger } from '@common/debug-frontend';
+import DomainError from '@lib/errors/DomainError';
+import VariableArgumentError from '@lib/errors/VariableArgumentError';
 
-const printer_rbinom = createNS('rbinom');
-
-export function rbinomOne(size: number, prob: number): number {
+export default decorateWithLogger(function rbinomOne(this: LoggerEnhanced, size: number, prob: number): number {
     const rng = globalUni();
     // double
     let c = 0;
@@ -56,12 +55,14 @@ export function rbinomOne(size: number, prob: number): number {
     let k;
 
     if (!isFinite(size)) {
-        return ML_ERR_return_NAN2(printer_rbinom);
+        this?.printer?.(DomainError, rbinomOne.name);
+        return NaN;
     }
 
     r = Math.round(size);
     if (r !== size) {
-        return ML_ERR_return_NAN2(printer_rbinom);
+        this?.printer?.(DomainError, rbinomOne.name);
+        return NaN;
     }
     if (
         !isFinite(prob) ||
@@ -70,7 +71,8 @@ export function rbinomOne(size: number, prob: number): number {
         prob < 0 ||
         prob > 1
     ) {
-        return ML_ERR_return_NAN2(printer_rbinom);
+        this?.printer?.(DomainError, rbinomOne.name);
+        return NaN;
     }
     if (r === 0 || prob === 0) return 0;
     if (prob === 1) return r;
@@ -79,7 +81,7 @@ export function rbinomOne(size: number, prob: number): number {
         /* evade integer overflow,
             and r == INT_MAX gave only even values */
         const _p = rng.random(); //between 0 and 1
-        printer_rbinom('Evade overflow:%d > MAX_SAFE_INTEGER', r);
+        this?.printer?.(VariableArgumentError, 'Evade overflow:%d > MAX_SAFE_INTEGER', r);
         const retv = qbinom(_p, r, prob, /*lower_tail*/ false, /*log_p*/ false);
         return retv;
     }
@@ -166,14 +168,14 @@ export function rbinomOne(size: number, prob: number): number {
         v = rng.random();
         /* triangular region */
         if (u <= p1) {
-            ix = Math.trunc(xm - p1 * v + u);
+            ix = trunc(xm - p1 * v + u);
             return finis();
             //goto finis;
         }
         /* parallelogram region */
         if (u <= p2) {
             x = xl + (u - p1) / c;
-            v = v * c + 1.0 - Math.abs(xm - x) / p1;
+            v = v * c + 1.0 - abs(xm - x) / p1;
             if (v > 1.0 || v <= 0) continue;
             ix = Math.trunc(x);
         } else {
@@ -184,7 +186,7 @@ export function rbinomOne(size: number, prob: number): number {
                 v = v * (u - p3) * xlr;
             } else {
                 /* left tail */
-                ix = Math.trunc(xl + Math.log(v) / xll);
+                ix = Math.trunc(xl + log(v) / xll);
                 if (ix < 0) continue;
                 v = v * (u - p2) * xll;
             }
@@ -242,4 +244,4 @@ export function rbinomOne(size: number, prob: number): number {
     // throw new Error(`internal error unreachable code`)
     //L_np_small();
     //return finis();
-}
+});

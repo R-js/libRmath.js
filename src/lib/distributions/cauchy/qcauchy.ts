@@ -5,8 +5,7 @@ import DomainError from '@lib/errors/DomainError';
 
 import { tanpi } from '@trig/tanpi';
 
-const domain = 'qcauchy';
-export default decorateWithLogger(domain, qcauchy);
+export default decorateWithLogger(qcauchy);
 
 function qcauchy(this: LoggerEnhanced, p: number, location = 0, scale = 1, lowerTail = true, logP = false): number {
     if (isNaN(p) || isNaN(location) || isNaN(scale)) return NaN;
@@ -14,7 +13,7 @@ function qcauchy(this: LoggerEnhanced, p: number, location = 0, scale = 1, lower
 
     const rc = R_Q_P01_checkV2(logP, p);
     if (rc !== undefined) {
-        this.printer?.(DomainError, R_Q_P01_check_domain);
+        this?.printer?.(DomainError, R_Q_P01_check_domain);
         return rc;
     }
 
@@ -22,7 +21,7 @@ function qcauchy(this: LoggerEnhanced, p: number, location = 0, scale = 1, lower
         if (scale === 0) {
             return location;
         }
-        this.printer?.(DomainError, domain);
+        this?.printer?.(DomainError, qcauchy.name);
         return NaN;
     }
 

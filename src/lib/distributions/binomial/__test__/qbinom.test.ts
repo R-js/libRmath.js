@@ -4,14 +4,12 @@ import { resolve } from 'path';
 import { loadData } from '@common/test-helpers/load';
 
 //app
-import { qbinom } from '..';
+import qbinom from '../qbinom';
 
 import { createObjectLogHarnas } from '@common/debug-backend';
 
-const { getStats } = createObjectLogHarnas();
-
 describe('qbinom', function () {
-    it.only('ranges p ∊ [0, 1, step 0.01] size=10, prob=0.5', async () => {
+    it('ranges p ∊ [0, 1, step 0.01] size=10, prob=0.5', async () => {
         const [x, y] = await loadData(resolve(__dirname, 'fixture-generation', 'qbinom1.R'), /\s+/, 1, 2);
         const actual = x.map((_x) => qbinom(_x, 10, 0.5));
         expect(actual).toEqualFloatingPointBinary(y);
@@ -21,32 +19,32 @@ describe('qbinom', function () {
         expect(actual).toBeNaN();
     });
     it('p = Infinity, size=10, prob=0.5', () => {
-        const stats0 = getStats();
+        const { getStats } = createObjectLogHarnas();
         const actual = qbinom(Infinity, 10, 0.5);
         const stats1 = getStats();
         expect(actual).toBeNaN();
-        expect(stats1.qbinom - stats0.qbinom).toBe(1);
+        expect(stats1.qbinom).toBe(1);
     });
     it('p = 0.5, size=Infinity, prob=0.5', () => {
-        const stats0 = getStats();
+        const { getStats } = createObjectLogHarnas();
         const actual = qbinom(0.5, Infinity, 0.5);
         const stats1 = getStats();
         expect(actual).toBeNaN();
-        expect(stats1.qbinom - stats0.qbinom).toBe(1);
+        expect(stats1.qbinom).toBe(1);
     });
     it('p = 0.5, size=5.2 (non integer), prob=0.5', () => {
-        const stats0 = getStats();
+        const { getStats } = createObjectLogHarnas();
         const actual = qbinom(0.5, 5.2, 0.5);
         const stats1 = getStats();
         expect(actual).toBeNaN();
-        expect(stats1.qbinom - stats0.qbinom).toBe(1);
+        expect(stats1.qbinom).toBe(1);
     });
     it('p = 0.5, size=-5 (<0), prob=0.5', () => {
-        const stats0 = getStats();
+        const { getStats } = createObjectLogHarnas();
         const actual = qbinom(0.5, -5, 0.5);
         const stats1 = getStats();
         expect(actual).toBeNaN();
-        expect(stats1.qbinom - stats0.qbinom).toBe(1);
+        expect(stats1.qbinom).toBe(1);
     });
     it('p = 0.5, size=5 , prob=0', () => {
         const actual = qbinom(0.5, 5, 0);

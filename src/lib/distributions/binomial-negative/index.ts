@@ -1,8 +1,12 @@
-import { dnbinom as _dnb, dnbinom_mu } from './dnbinom';
-import { pnbinom as _pnb, pnbinom_mu } from './pnbinom';
-import { qnbinom as _qnb, qnbinom_mu } from './qnbinom';
-import { rnbinomOne as _rnbinomOne, rnbinom_muOne } from './rnbinom';
+import { default as dnbinom_mu } from './dnbinom_mu';
+import { default as _dnb } from './dnbinom';
+import { default as _pnb } from './pnbinom';
+import { default as _qnb } from './qnbinom';
+import { default as qnbinom_mu } from './qnbinom_mu';
+import { default as _rnbinomOne } from './rnbinom';
+import { default as rnbinom_muOne } from './rnbinom_mu';
 import { repeatedCall64 } from '@lib/r-func';
+import pnbinom_mu from './pnbinom_mu';
 
 const probAndMuBoth = '"prob" and "mu" both specified';
 const probMis = 'argument "prob" is missing, with no default';

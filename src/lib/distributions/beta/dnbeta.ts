@@ -1,15 +1,13 @@
-import { createObjectNs } from '@common/debug-frontend';
+import { LoggerEnhanced, decorateWithLogger } from '@common/debug-frontend';
 import { R_D__0, R_D_exp, ceil, sqrt } from '@lib/r-func';
 import { dpois_raw } from '@dist/poisson/dpois';
-import { dbeta_scalar } from './dbeta';
+import dbeta_scalar from './dbeta';
 import DomainError from '@lib/errors/DomainError';
 
-const domain = 'dnbeta';
-const printer = createObjectNs(domain);
 const eps = 1e-15;
 
 //also used by f-distriution
-export function dnbeta_scalar(x: number, a: number, b: number, ncp: number, give_log: boolean): number {
+export default decorateWithLogger(function dnbeta(this: LoggerEnhanced, x: number, a: number, b: number, ncp: number, give_log: boolean): number {
     //int
     let kMax;
     //double
@@ -23,12 +21,12 @@ export function dnbeta_scalar(x: number, a: number, b: number, ncp: number, give
 
     if (isNaN(x) || isNaN(a) || isNaN(b) || isNaN(ncp)) return x + a + b + ncp;
     if (ncp < 0 || a <= 0 || b <= 0) {
-        printer(DomainError, domain);
+        this?.printer?.(DomainError, dnbeta.name);
         return NaN;
     }
 
     if (!isFinite(a) || !isFinite(b) || !isFinite(ncp)) {
-        printer(DomainError, domain);
+        this?.printer?.(DomainError, dnbeta.name);
         return NaN;
     }
 
@@ -85,4 +83,4 @@ export function dnbeta_scalar(x: number, a: number, b: number, ncp: number, give
     } while (term > sum * eps);
 
     return R_D_exp(give_log, p_k + Math.log(sum));
-}
+});

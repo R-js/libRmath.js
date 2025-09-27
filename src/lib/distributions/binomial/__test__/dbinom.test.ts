@@ -9,8 +9,6 @@ import { dbinom } from '..';
 
 import { createObjectLogHarnas } from '@common/debug-backend';
 
-const { getStats } = createObjectLogHarnas();
-
 describe('dbinom', function () {
     it('ranges x ∊ [0, 12] size=12, prob=0.01', async () => {
         const [x, y] = await loadData(resolve(__dirname, 'fixture-generation', 'dbinom1.R'), /\s+/, 1, 2);
@@ -62,6 +60,7 @@ describe('dbinom', function () {
         expect(z2).toBe(0);
     });
     it('x=4, size=100, prob=3 (>1)', () => {
+        const { getStats } = createObjectLogHarnas({ dbinom: true });
         const z0 = dbinom(4, 100, 3); // 100%, you always score "head", never "tail"
         const stats1 = getStats();
         expect(z0).toBeNaN();

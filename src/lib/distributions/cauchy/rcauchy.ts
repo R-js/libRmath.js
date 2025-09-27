@@ -3,13 +3,12 @@ import DomainError from '@lib/errors/DomainError';
 
 import { globalUni } from '@lib/rng';
 
-const domain = 'rcauchy';
-export default decorateWithLogger(domain, rcauchyOne);
+export default decorateWithLogger(rcauchyOne);
 
 function rcauchyOne(this: LoggerEnhanced, location = 0, scale = 1): number {
     const rng = globalUni();
     if (isNaN(location) || !isFinite(scale) || scale < 0) {
-        this.printer?.(DomainError, domain);
+        this?.printer?.(DomainError, rcauchyOne.name);
         return NaN;
     }
     if (scale === 0 || !isFinite(location)) {
