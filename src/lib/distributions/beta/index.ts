@@ -12,8 +12,8 @@ import { default as _qbeta } from './qbeta';
 import { default as _qnbeta } from './qnbeta';
 
 //rbeta
-import { rchisqOne } from '@dist/chi-2/rchisq';
-import { rnchisqOne } from '@dist/chi-2/rnchisq';
+import { default as rchisqOne } from '@dist/chi-2/rchisq';
+import { default as rnchisqOne } from '@dist/chi-2/rnchisq';
 import { default as rbetaOne } from './rbeta';
 
 //helper

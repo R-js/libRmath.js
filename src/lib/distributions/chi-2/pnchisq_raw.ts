@@ -1,0 +1,259 @@
+import { LoggerEnhanced, decorateWithLogger } from "@common/debug-frontend";
+import { R_Log1_Exp } from "../exp/expm1";
+import { DBL_MIN_EXP, M_LN_SQRT_2PI, R_DT_0, R_DT_1, R_DT_val, R_D_exp } from "@lib/r-func";
+import VariableArgumentError from "@lib/errors/VariableArgumentError";
+import { logspace_add } from "../gamma/logspace-add";
+import { pchisq } from "./pchisq";
+import { lgammafn_sign as lgammafn } from "@lib/special/gamma/lgammafn_sign";
+
+const _dbl_min_exp = Math.LN2 * DBL_MIN_EXP;
+/*= -708.3964 for IEEE double precision */
+
+export default decorateWithLogger(function pnchisq_raw(
+    this: LoggerEnhanced,
+    x: number,
+    f: number,
+    theta: number /* = ncp */,
+    errmax: number,
+    reltol: number,
+    itrmax: number,
+    lower_tail: boolean,
+    log_p: boolean
+): number {
+    //double
+    let term;
+    let bound;
+    let f_x_2n;
+    let f_2n;
+    let l_lam = -1;
+    let l_x = -1; /* initialized for -Wall */
+    //Rboolean
+    let lamSml: boolean;
+    let tSml: boolean;
+    let is_r: boolean;
+    let is_b: boolean;
+    let is_it: boolean;
+
+    //LDOUBLE
+    let ans: number;
+    let u: number;
+    let v: number;
+    let t: number;
+    let lt: number;
+    let lu = -1;
+
+    if (x <= 0) {
+        if (x === 0 && f === 0) {
+            const _L = -0.5 * theta;
+            const result = lower_tail ? R_D_exp(log_p, _L) : log_p ? R_Log1_Exp(_L) : -Math.expm1(_L);
+            this?.printer?.(VariableArgumentError, 'result1:%d', result);
+            return result;
+        }
+        /* x < 0  or {x==0, f > 0} */
+        return R_DT_0(lower_tail, log_p);
+    }
+    if (!isFinite(x)) {
+        return R_DT_1(lower_tail, log_p);
+    }
+
+    /* This is principally for use from qnchisq */
+
+    if (theta < 80) {
+        /* use 110 for Inf, as ppois(110, 80/2, lower.tail=FALSE) is 2e-20 */
+        //double
+        let ans;
+        //int
+        let i;
+        // Have  pgamma(x,s) < x^s / Gamma(s+1) (< and ~= for small x)
+        // === = > pchisq(x, f) = pgamma(x, f/2, 2) = pgamma(x/2, f/2)
+        //                  <  (x/2)^(f/2) / Gamma(f/2+1) < eps
+        // <==>  f/2 * log(x/2) - log(Gamma(f/2+1)) < log(eps) ( ~= -708.3964 )
+        // <==>        log(x/2) < 2/f*(log(Gamma(f/2+1)) + log(eps))
+        // <==> log(x) < log(2) + 2/f*(log(Gamma(f/2+1)) + log(eps))
+        const p1 = lgammafn(f / 2 + 1);
+        const p2 = Math.LN2 + (2 / f) * (p1 + _dbl_min_exp);
+        const p3 = Math.log(x);
+        if (lower_tail && f > 0 && p3 < p2) {
+            // all  pchisq(x, f+2*i, lower_tail, FALSE), i=0,...,110 would underflow to 0.
+            // === = > work in log scale
+            const lambda = 0.5 * theta;
+            let sum = -Infinity;
+            let sum2 = -Infinity;
+            let pr = -lambda;
+            /* we need to renormalize here: the result could be very close to 1 */
+            for (i = 0; i < 110; pr += Math.log(lambda) - Math.log(++i)) {
+                sum2 = logspace_add(sum2, pr);
+                sum = logspace_add(sum, pr + pchisq(x, f + 2 * i, lower_tail, true));
+                if (sum2 >= -1e-15) {
+                    /*<=> EXP(sum2) >= 1-1e-15 */
+                    break;
+                }
+            }
+            ans = sum - sum2;
+            this?.printer?.(VariableArgumentError,
+                'pnchisq(x=%d, f=%d, th.=%d); th. < 80, logspace: i=%d, ans=(sum=%d)-(sum2=%d)',
+                x,
+                f,
+                theta,
+                i,
+                sum,
+                sum2
+            );
+
+            return log_p ? ans : Math.exp(ans);
+        } else {
+            const lambda = 0.5 * theta;
+            let sum = 0;
+            let sum2 = 0;
+            let pr = Math.exp(-lambda); // does this need a feature test?
+            /* we need to renormalize here: the result could be very close to 1 */
+            for (i = 0; i < 110; pr *= lambda / ++i) {
+                // pr === =  exp(-lambda) lambda^i / i!  ===   dpois(i, lambda)
+                sum2 += pr;
+                // pchisq(*, i, *) is  strictly decreasing to 0 for lower_tail=TRUE
+                //                 and strictly increasing to 1 for lower_tail=FALSE
+                sum += pr * pchisq(x, f + 2 * i, lower_tail, false);
+                if (sum2 >= 1 - 1e-15) break;
+            }
+            ans = sum / sum2;
+
+            this?.printer?.(VariableArgumentError, 'pnchisq(x=%d, f=%d, theta=%d); theta < 80: i=%d, sum=%d, sum2=%d', x, f, theta, i, sum, sum2);
+
+            return log_p ? Math.log(ans) : ans;
+        }
+    } // if(theta < 80)
+
+    // else: theta ===  ncp >= 80 --------------------------------------------
+
+    this?.printer?.(VariableArgumentError, 'pnchisq(x=%d, f=%d, theta=%d >= 80): ', x, f, theta);
+
+    // Series expansion ------- FIXME: log_p=TRUE, lower_tail=FALSE only applied at end
+
+    const lam = 0.5 * theta;
+    lamSml = -lam < _dbl_min_exp;
+    if (lamSml) {
+        /* MATHLIB_ERROR(
+           "non centrality parameter (= %g) too large for current algorithm",
+           theta) */
+        u = 0;
+        lu = -lam; /* ===  ln(u) */
+        l_lam = Math.log(lam);
+    } else {
+        u = Math.exp(-lam);
+    }
+
+    /* evaluate the first term */
+    v = u;
+    const x2 = 0.5 * x;
+    const f2 = 0.5 * f;
+    f_x_2n = f - x;
+
+    this?.printer?.(VariableArgumentError, '-- v=exp(-th/2)=%d, x/2= %d, f/2= %d', v, x2, f2);
+
+    if (
+        f2 * Number.EPSILON > 0.125 /* very large f and x ~= f: probably needs */ &&
+        Math.abs((t = x2 - f2)) /* another algorithm anyway */ < Math.sqrt(Number.EPSILON) * f2
+    ) {
+        /* evade cancellation error */
+        /* t = Math.exp((1 - t)*(2 - t/(f2 + 1))) / Math.sqrt(2*M_PI*(f2 + 1));*/
+        lt = (1 - t) * (2 - t / (f2 + 1)) - M_LN_SQRT_2PI - 0.5 * Math.log(f2 + 1);
+
+        this?.printer?.(VariableArgumentError, ' (case I) === > ');
+    } else {
+        /* Usual case 2: careful not to overflow .. : */
+        lt = f2 * Math.log(x2) - x2 - lgammafn(f2 + 1);
+    }
+
+    this?.printer?.(VariableArgumentError, ' lt= %d', lt);
+
+    tSml = lt < _dbl_min_exp;
+    if (tSml) {
+        this?.printer?.(VariableArgumentError, ' is very small');
+
+        if (x > f + theta + 5 * Math.sqrt(2 * (f + 2 * theta))) {
+            /* x > E[X] + 5* sigma(X) */
+            return R_DT_1(lower_tail, log_p); /* FIXME: could be more accurate than 0. */
+        } /* else */
+        l_x = Math.log(x);
+        ans = term = 0;
+        t = 0;
+    } else {
+        t = Math.exp(lt);
+        this?.printer?.(VariableArgumentError, ', t=Math.exp(lt)= %d', t);
+        term = v * t;
+        ans = term;
+    }
+
+    let n; //cant put it inside the for below((
+    for (n = 1, f_2n = f + 2, f_x_2n += 2; ; n++, f_2n += 2, f_x_2n += 2) {
+        this?.printer?.(VariableArgumentError, ' _OL_: n=%d', n);
+        /* f_2n    === = f + 2*n
+         * f_x_2n  === = f - x + 2*n   > 0  <==> (f+2n)  >   x */
+        if (f_x_2n > 0) {
+            /* find the error bound and check for convergence */
+
+            bound = (t * x) / f_x_2n;
+
+            this?.printer?.(VariableArgumentError, ' L10: n=%d; term= %d; bound= %d', n, term, bound);
+
+            is_r = is_it = false;
+            /* convergence only if BOTH absolute and relative error < 'bnd' */
+            if (((is_b = bound <= errmax) && (is_r = term <= reltol * ans)) || (is_it = n > itrmax)) {
+                this?.printer?.(VariableArgumentError,
+                    'BREAK n=%d %s; bound= %d %s, rel.err= %d %s',
+                    n,
+                    is_it ? '> itrmax' : '',
+                    bound,
+                    is_b ? '<= errmax' : '',
+                    term / ans,
+                    is_r ? '<= reltol' : ''
+                );
+                break; /* out completely */
+            }
+        }
+
+        /* evaluate the next term of the */
+        /* expansion and then the partial sum */
+
+        if (lamSml) {
+            lu += l_lam - Math.log(n); /* u = u* lam / n */
+            if (lu >= _dbl_min_exp) {
+                /* no underflow anymore === > change regime */
+
+                this?.printer?.(VariableArgumentError, ' n=%d; nomore underflow in u = Math.exp(lu) === > change', n);
+
+                v = u = Math.exp(lu); /* the first non-0 'u' */
+                lamSml = false;
+            }
+        } else {
+            u *= lam / n;
+            v += u;
+        }
+        if (tSml) {
+            lt += l_x - Math.log(f_2n); /* t <- t * (x / f2n) */
+            if (lt >= _dbl_min_exp) {
+                /* no underflow anymore === > change regime */
+
+                this?.printer?.(VariableArgumentError, '  n=%d; nomore underflow in t = Math.exp(lt) === > change', n);
+
+                t = Math.exp(lt); /* the first non-0 't' */
+                tSml = false;
+            }
+        } else {
+            t *= x / f_2n;
+        }
+        if (!lamSml && !tSml) {
+            term = v * t;
+            ans += term;
+        }
+    } /* for(n ...) */
+
+    if (is_it) {
+        this?.printer?.(VariableArgumentError, 'pnchisq(x=%d, ..): not converged in %d iter.', x, itrmax);
+    }
+
+    this?.printer?.(VariableArgumentError, ' ===  L_End: n=%d; term= %d; bound=%d', n, term, bound);
+
+    return R_DT_val(lower_tail, log_p, ans);
+});
+

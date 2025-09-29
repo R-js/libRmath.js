@@ -7,6 +7,7 @@ export function createDebugObjectLoggerBackend(logs: unknown[], enabledNameSpace
     }
 }
 
+/** @deprecated */
 export default function createDebugLoggerBackend(logs: unknown[]) {
     return function (prefix?: string) {
         const finalPrefix = prefix ? `${prefix}/` : '';
@@ -23,6 +24,7 @@ export default function createDebugLoggerBackend(logs: unknown[]) {
 
 export type LogEntry = { namespace: string; formatter: string; args: unknown[] };
 
+/** @deprecated */
 export function createStatsFromLogs(logs: LogEntry[]) {
     const rc = {} as Record<string, number>;
     logs.reduce((col, obj) => {
@@ -44,6 +46,7 @@ export function createStatsFromObjectLogs(logs: { ns: string }[]) {
 }
 
 
+/** @deprecated */
 export function createLogHarnas() {
     const logs: LogEntry[] = [];
     register(createDebugLoggerBackend(logs));

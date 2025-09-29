@@ -2,9 +2,12 @@
 
 import { globalUni, RNGkind } from '@rng/global-rng';
 import { rchisq } from '..';
+import { unRegisterObjectController } from '@common/debug-frontend';
+
 
 describe('rnchisq', function () {
     beforeEach(() => {
+        unRegisterObjectController();
         RNGkind({ uniform: "MERSENNE_TWISTER", normal: "INVERSION" });
         globalUni().init(98765);
     })

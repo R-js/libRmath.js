@@ -1,18 +1,11 @@
-import createNS from '@common/debug-frontend';
-
 import { R_D_qIv } from '@lib/r-func';
 
-import {
-    ME,
-    ML_ERROR3,
-    ML_ERR_return_NAN2,
-    R_Q_P01_boundaries
-} from '@common/logger';
-
 import { qchisq } from './qchisq';
-import { pnchisq_raw } from './pnchisq';
-
-const printer = createNS('qnchisq');
+import { LoggerEnhanced, decorateWithLogger } from '@common/debug-frontend';
+import DomainError from '@lib/errors/DomainError';
+import PrecisionError from '@lib/errors/PrecisionError';
+import pnchisq_raw from './pnchisq_raw';
+import R_Q_P01_boundariesV2 from '@common/R_Q_P01_boundariesV2';
 
 const accu = 1e-13;
 const racc = 4 * Number.EPSILON;
@@ -22,7 +15,7 @@ const DBL_MAX = 1.7976931348623158e308;
 const Eps = 1e-11; /* must be > accu */
 const rEps = 1e-10; /* relative tolerance ... */
 
-export function qnchisq(p: number, df: number, ncp: number, lower_tail: boolean, log_p: boolean): number {
+export default decorateWithLogger(function qnchisq(this: LoggerEnhanced, p: number, df: number, ncp: number, lower_tail: boolean, log_p: boolean): number {
     // double
     let ux: number;
     let lx: number;
@@ -35,7 +28,7 @@ export function qnchisq(p: number, df: number, ncp: number, lower_tail: boolean,
     }
 
     if (!isFinite(df)) {
-        printer(DomainError);
+        this?.printer?.(DomainError, qnchisq.name);
         return NaN;
     }
 
@@ -44,11 +37,11 @@ export function qnchisq(p: number, df: number, ncp: number, lower_tail: boolean,
      * if (df < 1 || ncp < 0) ML_ERR_return_NAN;
      */
     if (df < 0 || ncp < 0) {
-        printer(DomainError);
+        this?.printer?.(DomainError, qnchisq.name);
         return NaN;
     }
 
-    const rc = R_Q_P01_boundaries(lower_tail, log_p, p, 0, Infinity);
+    const rc = R_Q_P01_boundariesV2(lower_tail, log_p, p, 0, Infinity);
     if (rc !== undefined) {
         return rc;
     }
@@ -76,7 +69,7 @@ export function qnchisq(p: number, df: number, ncp: number, lower_tail: boolean,
     if (!lower_tail && ncp >= 80) {
         // in this case, pnchisq() works via lower_tail = TRUE
         if (pp < 1e-10) {
-            ML_ERROR3(printer, ME.ME_PRECISION, 'qnchisq');
+            this?.printer?.(PrecisionError, qnchisq.name);
         }
         // p = R_DT_qIv(p)
         p = log_p ? -Math.expm1(pp) : 1 - pp;
@@ -119,4 +112,4 @@ export function qnchisq(p: number, df: number, ncp: number, lower_tail: boolean,
         } while ((ux - lx) / nx > accu);
     }
     return 0.5 * (ux + lx);
-}
+});

@@ -2,9 +2,11 @@ import { resolve } from 'path';
 import { qchisq } from '..';
 
 import { loadData } from '@common/test-helpers/load';
+import { unRegisterObjectController } from '@common/debug-frontend';
 
 describe('qchisq', function () {
     it('ranges x ∊ [0, 1] df=15,1', async () => {
+        unRegisterObjectController();
         const [x, y1, y2, y3, y4] = await loadData(
             resolve(__dirname, 'fixture-generation', 'qchisq.R'),
             /\s+/,

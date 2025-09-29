@@ -1,14 +1,13 @@
-import createNS from '@common/debug-frontend';
-import { ML_ERR_return_NAN2 } from '@common/logger';
 import { R_D__0, R_D_val } from '@lib/r-func';
 
-import { dchisq } from './dchisq';
+import dchisq from './dchisq';
 import { dpois_raw } from '@dist/poisson/dpois';
+import { LoggerEnhanced, decorateWithLogger } from '@common/debug-frontend';
+import DomainError from '@lib/errors/DomainError';
 
-const printer_dnchisq = createNS('dnchisq');
 const eps = 5e-15;
 
-export function dnchisq(x: number, df: number, ncp: number, give_log: boolean): number {
+export default decorateWithLogger(function dnchisq(this: LoggerEnhanced, x: number, df: number, ncp: number, give_log: boolean): number {
     let i: number;
     //let ncp2: number;
     let q: number;
@@ -23,15 +22,22 @@ export function dnchisq(x: number, df: number, ncp: number, give_log: boolean): 
     }
 
     if (!isFinite(df) || !isFinite(ncp) || ncp < 0 || df < 0) {
-        return ML_ERR_return_NAN2(printer_dnchisq);
+        this?.printer?.(DomainError, dnchisq.name)
+        return NaN;
     }
 
     if (x < 0) {
         return R_D__0(give_log);
     }
-    if (x === 0 && df < 2) return Infinity;
-    if (ncp === 0) return df > 0 ? dchisq(x, df, give_log) : R_D__0(give_log);
-    if (x === Infinity) return R_D__0(give_log);
+    if (x === 0 && df < 2) {
+        return Infinity;
+    }
+    if (ncp === 0) {
+        return df > 0 ? dchisq(x, df, give_log) : R_D__0(give_log);
+    }
+    if (x === Infinity) {
+        return R_D__0(give_log);
+    }
 
     const ncp2 = 0.5 * ncp;
 
@@ -44,7 +50,9 @@ export function dnchisq(x: number, df: number, ncp: number, give_log: boolean): 
     // if df=20 and ncp=8 , x=19
     //   then imax=NaN
     imax = Math.ceil((-(2 + df) + Math.sqrt((2 - df) * (2 - df) + 4 * ncp * x)) / 4);
-    if (imax < 0) imax = 0;
+    if (imax < 0) {
+        imax = 0;
+    }
     //
     if (isFinite(imax)) {
         dfmid = df + 2 * imax;
@@ -90,4 +98,4 @@ export function dnchisq(x: number, df: number, ncp: number, give_log: boolean): 
         if (q < 1 && term * q <= (1 - q) * eps) break;
     }
     return R_D_val(give_log, sum);
-}
+});

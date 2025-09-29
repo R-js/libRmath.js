@@ -1,3 +1,4 @@
+/** @deprecated */
 export type Printer = {
     (formatter: string, ...args: any[]): void;
     enabled: boolean;
@@ -10,6 +11,7 @@ export type PrintObject = {
     ): void;
 }
 
+/** @deprecated */
 export type LoggerController = {
     send(namespace: string, formatter: string, ...args: any[]): void;
     isEnabled(namespace?: string): boolean;
@@ -20,10 +22,12 @@ export type LoggerObjectController = {
     isEnabled(namespace: string): boolean;
 };
 
+/** @deprecated */
 let controller: LoggerController | undefined;
 
 let objectController: LoggerObjectController | undefined;
 
+/** @deprecated */
 export function register(backend: (prefix?: string) => LoggerController, prefix?: string) {
     controller = backend(prefix);
     return controller;
@@ -34,6 +38,7 @@ export function registerObjectLogger(backend: (prefix?: string) => LoggerObjectC
     return controller;
 }
 
+/** @deprecated */
 export function unRegister() {
     controller = undefined;
 }
@@ -66,14 +71,6 @@ export default function createNs(ns: string): Printer {
     return print as Printer;
 }
 
-function createPrinter(downStairs: LoggerObjectController, ns: string): PrintObject {
-    return function <T extends abstract new (...args: any) => Error>(formatter: T, ...args: ConstructorParameters<T>) {
-        if (downStairs.isEnabled(ns)) {
-            downStairs.send(ns, formatter, ...args);
-        }
-    }
-}
-// return print as PrintObject;
 
 export type LoggerEnhanced = undefined | {
     printer?: PrintObject;
@@ -87,14 +84,18 @@ export function decorateWithLogger<T extends (...args: any) => ReturnType<T>>(fn
         // performance: only create if needed
         // check if the slot is free and downStairsLogger is defined
         if (!this?.[printName] && downStairsLogger) {
-            const ctx = this ?? Object.create(null);
-            ctx[printName] = createPrinter(downStairsLogger, fn.name);
+            const ctx = {
+                [printName]<LocalErrorObject extends abstract new (...args: any) => Error>(formatter: LocalErrorObject, ...argsPrinter: ConstructorParameters<LocalErrorObject>) {
+                    downStairsLogger.send(fn.name, formatter, ...argsPrinter);
+                }
+            }
             return fn.call(ctx, ...args);
         }
         return fn(...args);
     }
 }
 
+/** @deprecated */
 export function createObjectNs(ns: string): PrintObject {
     function print<T extends new (...args: any) => Error>(formatter: T, ...args: ConstructorParameters<T>) {
         if (!objectController) {

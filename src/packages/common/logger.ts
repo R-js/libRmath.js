@@ -1,8 +1,4 @@
-import DomainError from '@lib/errors/DomainError';
-import createNs, { createObjectNs, type Printer } from './debug-frontend';
-
-const domain_r_Q_P01_boundaries = 'R_Q_P01_boundaries'
-const debug_R_Q_P01_boundariesV2 = createObjectNs(domain_r_Q_P01_boundaries)
+import createNs, { type Printer } from './debug-frontend';
 
 const debug_R_Q_P01_boundaries = createNs('R_Q_P01_boundaries');
 const debug_R_Q_P01_check = createNs('R_Q_P01_check');
@@ -28,6 +24,7 @@ export const mapErr =
     [ME.ME_UNDERFLOW]: 'underflow occurred in \'%s\'',
 };
 
+/** @deprecated */
 export function ML_ERROR3(printer: Printer, x: ME, arg: string): void {
     if (!printer.enabled) {
         return;
@@ -46,33 +43,6 @@ export function ML_ERR_return_NAN2(printer: Printer): number {
         ML_ERROR3(printer, ME.ME_DOMAIN, stackTrace);
     }
     return NaN;
-}
-
-export function R_Q_P01_boundariesV2(
-    lower_tail: boolean,
-    log_p: boolean,
-    p: number,
-    _LEFT_: number,
-    _RIGHT_: number
-): number | undefined {
-    if (log_p) {
-        if (p > 0) {
-            debug_R_Q_P01_boundariesV2(DomainError, domain_r_Q_P01_boundaries)
-            return NaN;
-        }
-        if (p === 0)
-            /* upper bound*/
-            return lower_tail ? _RIGHT_ : _LEFT_;
-        if (p === -Infinity) return lower_tail ? _LEFT_ : _RIGHT_;
-    } else {
-        /* !log_p */
-        if (p < 0 || p > 1) {
-            debug_R_Q_P01_boundariesV2(DomainError, domain_r_Q_P01_boundaries)
-            return NaN;
-        }
-        if (p === 0) return lower_tail ? _LEFT_ : _RIGHT_;
-        if (p === 1) return lower_tail ? _RIGHT_ : _LEFT_;
-    }
 }
 
 /**

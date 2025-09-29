@@ -1,4 +1,3 @@
-import { R_Q_P01_boundariesV2 } from '@common/logger';
 import { R_DT_0, R_DT_1 } from '@lib/r-func';
 
 import { NumberW } from '@common/toms708/NumberW';
@@ -9,6 +8,7 @@ import pnbinom from './pnbinom';
 import { LoggerEnhanced, decorateWithLogger } from '@common/debug-frontend';
 import DomainError from '@lib/errors/DomainError';
 import do_search from './do_search';
+import R_Q_P01_boundariesV2 from '@common/R_Q_P01_boundariesV2';
 
 
 export default decorateWithLogger(function qnbinom(this: LoggerEnhanced, p: number, size: number, prob: number, lower_tail: boolean, log_p: boolean): number {

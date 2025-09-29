@@ -437,8 +437,12 @@ export function R_P_bounds_01(
     x_min: number,
     x_max: number
 ): number | undefined {
-    if (x <= x_min) return R_DT_0(lower_tail, log_p);
-    if (x >= x_max) return R_DT_1(lower_tail, log_p);
+    if (x <= x_min) {
+        return R_DT_0(lower_tail, log_p);
+    }
+    if (x >= x_max) {
+        return R_DT_1(lower_tail, log_p);
+    }
     return undefined;
 }
 

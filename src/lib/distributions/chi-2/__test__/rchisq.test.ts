@@ -1,12 +1,13 @@
 
 import { globalUni, RNGkind } from '@rng/global-rng';
 import { rchisq } from '..';
-import { createLogHarnas } from '@common/debug-backend';
+import { createObjectLogHarnas } from '@common/debug-backend';
+import { unRegisterObjectController } from '@common/debug-frontend';
 
-const { getStats } = createLogHarnas();
 
 describe('rchisq', function () {
     beforeEach(() => {
+        unRegisterObjectController();
         RNGkind({ uniform: "MERSENNE_TWISTER", normal: "INVERSION" });
         globalUni().init(98765);
     })
@@ -27,6 +28,7 @@ describe('rchisq', function () {
         ]);
     });
     it('n=1, location=NaN', () => {
+        const { getStats } = createObjectLogHarnas()
         const nan = rchisq(1, NaN);
         const stats = getStats();
         expect(nan).toEqualFloatingPointBinary(NaN);

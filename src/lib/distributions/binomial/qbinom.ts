@@ -1,7 +1,5 @@
 import { type LoggerEnhanced, decorateWithLogger } from '@common/debug-frontend';
 
-import { R_Q_P01_boundariesV2 } from '@common/logger';
-
 import { NumberW } from '@common/toms708/NumberW';
 import { R_DT_qIv } from '@dist/exp/expm1';
 import { qnorm } from '@dist/normal/qnorm';
@@ -9,6 +7,7 @@ import pbinom from './pbinom';
 import do_search from './do_search';
 import DomainError from '@lib/errors/DomainError';
 import VariableArgumentError from '@lib/errors/VariableArgumentError';
+import R_Q_P01_boundariesV2 from '@common/R_Q_P01_boundariesV2';
 
 export default decorateWithLogger(function qbinom(this: LoggerEnhanced, p: number, size: number, prob: number, lowerTail = true, logP = false): number {
     const z = new NumberW(0);

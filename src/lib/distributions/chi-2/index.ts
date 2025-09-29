@@ -1,11 +1,11 @@
-import { dchisq as _dchisq } from './dchisq';
-import { dnchisq as _dnchisq } from './dnchisq';
+import { default as _dchisq } from './dchisq';
+import { default as _dnchisq } from './dnchisq';
 import { pchisq as _pchisq } from './pchisq';
-import { pnchisq as _pnchisq } from './pnchisq';
+import { default as _pnchisq } from './pnchisq';
 import { qchisq as _qchisq } from './qchisq';
-import { qnchisq as _qnchisq } from './qnchisq';
-import { rchisqOne as _rchisqOne } from './rchisq';
-import { rnchisqOne as _rnchisqOne } from './rnchisq';
+import { default as _qnchisq } from './qnchisq';
+import { default as _rchisqOne } from './rchisq';
+import { default as _rnchisqOne } from './rnchisq';
 import { repeatedCall64 } from '@lib/r-func';
 
 export function rchisq(n: number, df: number, ncp?: number): Float64Array {

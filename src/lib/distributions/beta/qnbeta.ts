@@ -1,8 +1,8 @@
-import { R_Q_P01_boundariesV2 } from '@common/logger';
 import { R_DT_qIv } from '@dist/exp/expm1';
 import pnbeta from './pnbeta';
 import DomainError from '@lib/errors/DomainError';
 import { LoggerEnhanced, decorateWithLogger } from '@common/debug-frontend';
+import R_Q_P01_boundariesV2 from '@common/R_Q_P01_boundariesV2';
 
 const accu = 1e-15;
 const eps = 1e-14; /* must be > accu */
