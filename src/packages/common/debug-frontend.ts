@@ -83,7 +83,7 @@ export function decorateWithLogger<T extends (...args: any) => ReturnType<T>>(fn
 
         // performance: only create if needed
         // check if the slot is free and downStairsLogger is defined
-        if (!this?.[printName] && downStairsLogger) {
+        if (downStairsLogger) {
             const ctx = {
                 [printName]<LocalErrorObject extends abstract new (...args: any) => Error>(formatter: LocalErrorObject, ...argsPrinter: ConstructorParameters<LocalErrorObject>) {
                     downStairsLogger.send(fn.name, formatter, ...argsPrinter);
