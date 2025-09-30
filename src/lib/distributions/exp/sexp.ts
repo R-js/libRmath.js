@@ -21,11 +21,10 @@ const q = new Float64Array([
 
 export function exp_rand(rng: IRNG): number {
 
- 
   let d_a = 0.;
   let d_u = rng.random();    // precaution if u = 0 is ever returned
-  while (d_u <= 0 || d_u >= 1) d_u =  rng.random();
-  for(;;){
+  while (d_u <= 0 || d_u >= 1) d_u = rng.random();
+  for (; ;) {
     d_u += d_u;
     if (d_u > 1)
       break;
@@ -37,10 +36,10 @@ export function exp_rand(rng: IRNG): number {
     return d_a + d_u;
 
   let i_i = 0;
-  let ustar =  rng.random();
+  let ustar = rng.random();
   let umin = ustar;
   do {
-    ustar =  rng.random();
+    ustar = rng.random();
     if (umin > ustar)
       umin = ustar;
     i_i++;

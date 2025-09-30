@@ -1,17 +1,15 @@
-import { ML_ERR_return_NAN2 } from '@common/logger';
+import { LoggerEnhanced, decorateWithLogger } from '@common/debug-frontend';
+import DomainError from '@lib/errors/DomainError';
 import { R_D__0 } from '@lib/r-func';
-import createNS from '@common/debug-frontend';
 
-const printer = createNS('dexp');
-
-export function dexp(x: number, scale: number, give_log: boolean): number {
+export default decorateWithLogger(function dexp(this: LoggerEnhanced, x: number, scale: number, give_log: boolean): number {
     /* NaNs propagated correctly */
     if (Number.isNaN(x) || Number.isNaN(scale)) {
         return NaN;
     }
 
     if (scale <= 0.0) {
-        printer(DomainError);
+        this?.printer?.(DomainError, dexp.name);
         return NaN;
     }
 
@@ -19,4 +17,4 @@ export function dexp(x: number, scale: number, give_log: boolean): number {
         return R_D__0(give_log);
     }
     return give_log ? -x / scale - Math.log(scale) : Math.exp(-x / scale) / scale;
-}
+});

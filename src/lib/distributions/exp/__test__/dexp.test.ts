@@ -1,14 +1,14 @@
+import { describe } from 'vitest';
 import { loadData } from '@common/test-helpers/load';
 
 import { resolve } from 'path';
 import { dexp } from '..';
+import { createObjectLogHarnas } from '@common/debug-backend';
+import { unRegisterObjectController } from '@common/debug-frontend';
 
-import { createLogHarnas } from '@common/debug-backend';
-
-const { getStats } = createLogHarnas();
-
-describe('dexp', function () {
+describe.concurrent('dexp', function () {
     it('x=[-0.5, 3], rate=(1, 2, 45, 0.5)', async () => {
+        unRegisterObjectController();
         const [p, y1, y2, y3, y4] = await loadData(
             resolve(__dirname, 'fixture-generation', 'dexp.R'),
             /\s+/,
@@ -32,20 +32,25 @@ describe('dexp', function () {
         expect(a4).toEqualFloatingPointBinary(y4, 50);
     });
     it('rate = NaN', () => {
+        unRegisterObjectController();
         const nan = dexp(0, NaN);
         expect(nan).toBeNaN();
     });
     it('rate = -3 (<0)', () => {
+        unRegisterObjectController();
+        const { getStats } = createObjectLogHarnas();
         const nan = dexp(0, -3);
         expect(nan).toBeNaN();
         const stats = getStats();
         expect(stats.dexp).toBe(1);
     });
     it('asLog = true, rate = 5, x=0', () => {
+        unRegisterObjectController();
         const z = dexp(0, 5, true);
         expect(z).toEqualFloatingPointBinary(1.6094379124341003);
     });
     it('defaults', () => {
+        unRegisterObjectController();
         const z = dexp(3);
         expect(z).toEqualFloatingPointBinary(0.049787068367863944);
     });

@@ -1,17 +1,14 @@
-import { ML_ERR_return_NAN2 } from '@common/logger';
 import { R_D_exp, R_DT_0 } from '@lib/r-func';
-
-import createNS from '@common/debug-frontend';
 import { R_Log1_Exp } from './expm1';
+import { decorateWithLogger, LoggerEnhanced } from '@common/debug-frontend';
+import DomainError from '@lib/errors/DomainError';
 
-const printer = createNS('pexp');
-
-export function pexp(q: number, scale: number, lower_tail: boolean, log_p: boolean): number {
+export default decorateWithLogger(function pexp(this: LoggerEnhanced, q: number, scale: number, lower_tail: boolean, log_p: boolean): number {
     if (isNaN(q) || isNaN(scale)) {
         return q + scale;
     }
     if (scale < 0) {
-        printer(DomainError);
+        this?.printer?.(DomainError, pexp.name);
         return NaN;
     }
 
@@ -21,4 +18,4 @@ export function pexp(q: number, scale: number, lower_tail: boolean, log_p: boole
     /* same as weibull( shape = 1): */
     q = -(q / scale);
     return lower_tail ? (log_p ? R_Log1_Exp(q) : -Math.expm1(q)) : R_D_exp(log_p, q);
-}
+});

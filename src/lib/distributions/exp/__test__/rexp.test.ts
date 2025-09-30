@@ -1,11 +1,8 @@
 
 import { setSeed, RNGkind } from '@rng/global-rng';
-
 import { rexp } from '..';
-
-import { createLogHarnas } from '@common/debug-backend';
-
-const { getStats } = createLogHarnas();
+import { unRegisterObjectController } from '@common/debug-frontend';
+import { createObjectLogHarnas } from '@common/debug-backend';
 
 describe('rexp', function () {
     beforeEach(() => {
@@ -14,10 +11,12 @@ describe('rexp', function () {
     })
 
     it('n=0', () => {
+        unRegisterObjectController();
         const z = rexp(0);
         expect(z).toEqualFloatingPointBinary([]);
     });
     it('n=2 , rate=2', () => {
+        unRegisterObjectController();
         const z = rexp(2, 2);
         expect(z).toEqualFloatingPointBinary([
             //from R
@@ -26,6 +25,7 @@ describe('rexp', function () {
         ]);
     });
     it('n=12, rate=2', () => {
+        unRegisterObjectController();
         expect(rexp(20, 2)).toEqualFloatingPointBinary([
             //from R
             0.297784320777282119,
@@ -51,12 +51,14 @@ describe('rexp', function () {
         ]);
     });
     it('n=1 , rate=Nan', () => {
+        const { getStats } = createObjectLogHarnas();
         const nan = rexp(1, NaN);
         const stats = getStats();
         expect(nan).toEqualFloatingPointBinary(NaN);
         expect(stats.rexp).toBe(1);
     });
     it('n=1 , rate=Infinity', () => {
+        unRegisterObjectController();
         const z = rexp(1, Infinity);
         expect(z).toEqualFloatingPointBinary(0);
     });

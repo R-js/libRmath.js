@@ -1,13 +1,14 @@
+import { describe } from 'vitest';
+
 import { loadData } from '@common/test-helpers/load';
 import { resolve } from 'path';
 import { pexp } from '..';
+import { unRegisterObjectController } from '@common/debug-frontend';
+import { createObjectLogHarnas } from '@common/debug-backend';
 
-import { createLogHarnas } from '@common/debug-backend';
-
-const { getStats } = createLogHarnas();
-
-describe('pexp', function () {
+describe.concurrent('pexp', function () {
     it('x=[-0.5, 3], rates= 1, 2, 16, (5 and tail=F)', async () => {
+        unRegisterObjectController();
         const [p, y1, y2, y3, y4] = await loadData(
             resolve(__dirname, 'fixture-generation', 'pexp.R'),
             /\s+/,
@@ -32,11 +33,13 @@ describe('pexp', function () {
     });
 
     it('rate = NaN', () => {
+        unRegisterObjectController();
         const nan = pexp(0, NaN);
         expect(nan).toBeNaN();
     });
 
     it('rate = -3 (<0)', () => {
+        const { getStats } = createObjectLogHarnas();
         const nan = pexp(0, -3);
         expect(nan).toBeNaN();
         const stats = getStats();
@@ -44,11 +47,13 @@ describe('pexp', function () {
     });
 
     it('asLog = true, rate = 5, x=2', () => {
+        unRegisterObjectController
         const z = pexp(2, 5, undefined, true);
         expect(z).toEqualFloatingPointBinary(-4.5400960370489214e-5, 51);
     });
 
     it('defaults', () => {
+        unRegisterObjectController();
         const z = pexp(2);
         expect(z).toEqualFloatingPointBinary(0.8646647167633873);
     });

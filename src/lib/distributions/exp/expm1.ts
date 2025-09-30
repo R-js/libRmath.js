@@ -20,27 +20,6 @@ function R_DT_CIv(lower_tail: boolean, log_p: boolean, p: number): number {
     return log_p ? (lower_tail ? -expm1(p) : exp(p)) : R_D_Cval(lower_tail, p);
 }
 
-/*
-export function expm1(x: number) {
-
-    let y: number;
-    let a = fabs(x);
-
-    if (a < DBL_EPSILON) return x;
-    if (a > 0.697) return exp(x) - 1;  // negligible cancellation 
-
-    if (a > 1e-8)
-        y = exp(x) - 1;
-    else // Taylor expansion, more accurate in this range 
-        y = (x / 2 + 1) * x;
-
-    // Newton step for solving   log(1 + y) = x   for y : 
-    // WARNING: does not work for y ~ -1: bug in 1.5.0 
-    y -= (1 + y) * (log1p(y) - x);
-    return y;
-}
-*/
-
 function R_D_LExp(log_p: boolean, x: number): number {
     return log_p ? R_Log1_Exp(x) : log1p(-x);
 }

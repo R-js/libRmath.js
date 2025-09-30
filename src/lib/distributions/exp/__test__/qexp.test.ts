@@ -1,13 +1,14 @@
+import { describe } from 'vitest';
 import { resolve } from 'path';
 import { qexp } from '..';
 
 import { loadData } from '@common/test-helpers/load';
-import { createLogHarnas } from '@common/debug-backend';
+import { unRegisterObjectController } from '@common/debug-frontend';
+import { createObjectLogHarnas } from '@common/debug-backend';
 
-const { getStats } = createLogHarnas();
-
-describe('qexp', function () {
+describe.concurrent('qexp', function () {
     it('p=[ -0.1250, 1.1250 ], rates= 4, 32, (8 and tail=false, log=true)', async () => {
+        unRegisterObjectController();
         const [p, y1, y2, y3] = await loadData(resolve(__dirname, 'fixture-generation', 'qexp.R'), /\s+/, 1, 2, 3, 4);
 
         const a1 = p.map((_p) => qexp(_p, 4));
@@ -20,10 +21,12 @@ describe('qexp', function () {
         expect(a3).toEqualFloatingPointBinary(y3, 49);
     });
     it('rate = NaN', () => {
+        unRegisterObjectController();
         const nan = qexp(0, NaN);
         expect(nan).toBeNaN();
     });
     it('rate = -3 (<0)', () => {
+        const { getStats } = createObjectLogHarnas();
         const nan = qexp(0, -3);
         expect(nan).toBeNaN();
         const stats = getStats();

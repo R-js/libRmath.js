@@ -1,7 +1,7 @@
-import { dexp as _dexp } from './dexp';
-import { pexp as _pexp } from './pexp';
-import { qexp as _qexp } from './qexp';
-import { rexpOne } from './rexp';
+import { default as _dexp } from './dexp';
+import { default as _pexp } from './pexp';
+import { default as _qexp } from './qexp';
+import { default as rexpOne } from './rexp';
 
 import { repeatedCall64 } from '@lib/r-func';
 

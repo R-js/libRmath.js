@@ -71,10 +71,10 @@ export default function createNs(ns: string): Printer {
     return print as Printer;
 }
 
-
 export type LoggerEnhanced = undefined | {
     printer?: PrintObject;
 };
+
 
 export function decorateWithLogger<T extends (...args: any) => ReturnType<T>>(fn: T, printName = 'printer') {
     return function (...args: Parameters<T>): ReturnType<T> {

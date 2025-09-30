@@ -13,7 +13,7 @@ export default defineConfig({
             'src/lib/distributions/binomial-negative/__test__/*.test.ts',
             'src/lib/distributions/cauchy/__test__/*.test.ts',
             'src/lib/distributions/chi-2/__test__/*test.ts',
-            // 'src/lib/distributions/exp/__test__/*test.ts',
+            'src/lib/distributions/exp/__test__/*test.ts',
             // 'src/lib/distributions/f-distro/__test__/*test.ts',
             // 'src/lib/distributions/gamma/__test__/**/*test.ts',
             // 'src/lib/distributions/geometric/**/__test__/*test.ts',
