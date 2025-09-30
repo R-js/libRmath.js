@@ -22,6 +22,7 @@ export default function createDebugLoggerBackend(logs: unknown[]) {
     }
 }
 
+/** @deprecated */
 export type LogEntry = { namespace: string; formatter: string; args: unknown[] };
 
 /** @deprecated */
