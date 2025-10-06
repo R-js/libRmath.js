@@ -1,14 +1,14 @@
 
 
-import createNS from '@common/debug-frontend';
+// import createNS from '@common/debug-frontend';
 
-import { ML_ERR_return_NAN2 } from '@common/logger';
-import { R_D__0, R_D__1, R_D_exp, R_D_fexp, R_D_nonint_check, DBL_MIN, M_2PI, log } from '@lib/r-func';
+// import { ML_ERR_return_NAN2 } from '@common/logger';
+import { R_D__0, R_D__1, R_D_exp, R_D_fexp, R_D_nonint_check, DBL_MIN, M_2PI, log, R_D_nonint_checkV2 } from '@lib/r-func';
 import { bd0 } from '@lib/deviance';
 import { lgammafn_sign as lgammafn } from '@special/gamma/lgammafn_sign';
 import { stirlerr } from '@lib/stirling';
 
-const printer = createNS('dpois');
+// const printer = createNS('dpois');
 
 export function dpois_raw(x: number, lambda: number, give_log: boolean): number {
     /*
@@ -45,11 +45,11 @@ export function dpois(x: number, lambda: number, log = false): number {
     }
 
     if (lambda < 0) {
-        printer(DomainError);
+        // printer(DomainError);
         return NaN;
     }
 
-    const rc = R_D_nonint_check(log, x, printer);
+    const rc = R_D_nonint_checkV2(log, x);
 
     if (rc !== undefined) {
         return rc;

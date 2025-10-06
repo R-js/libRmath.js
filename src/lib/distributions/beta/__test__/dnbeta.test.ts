@@ -4,7 +4,7 @@ import { resolve } from 'path';
 //helper
 import { loadData } from '@common/test-helpers/load';
 import { dbeta } from '..';
-import { createObjectLogHarnas } from '@common/debug-backend';
+import { createObjectLogHarnas } from '@common/downstairs';
 
 
 describe('dbeta, ncp != undefined', () => {

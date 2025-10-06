@@ -1,9 +1,9 @@
-import createNS from '@common/debug-frontend';
+// import createNS from '@common/debug-frontend';
 import { ML_ERR_return_NAN2 } from '@common/logger';
 import { exp_rand } from '@dist/exp/sexp';
 import { globalNorm } from '../../rng/global-rng';
 
-const printer_rgamma = createNS('rgamma');
+// const printer_rgamma = createNS('rgamma');
 
 /* Constants : */
 const sqrt32 = 5.656854;
@@ -58,7 +58,7 @@ export function rgamma(a: number, scale: number): number {
     if (a === 0) return 0;
 
     if (!isFinite(a) || !isFinite(scale) || a < 0.0 || scale < 0.0) {
-        return ML_ERR_return_NAN2(printer_rgamma);
+        return NaN; //ML_ERR_return_NAN2(printer_rgamma);
     }
     // a > 0
     if (a < 1) {

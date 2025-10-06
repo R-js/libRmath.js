@@ -1,12 +1,12 @@
 import { rgamma } from '@dist/gamma/rgamma';
-import { rpoisOne } from '@dist/poisson/rpois';
+import rpoisOne from '@dist/poisson/rpois';
 import rchisq from '@dist/chi-2/rchisq';
-import DomainError from '@lib/errors/DomainError';
-import { LoggerEnhanced, decorateWithLogger } from '@common/debug-frontend';
+import { LoggerEnhanced, decorateWithLogger } from '@common/upstairs';
+import interplateDomainErrorTemplate from '@lib/errors/interpolateDomainErrorTemplate';
 
 export default decorateWithLogger(function rnchisq(this: LoggerEnhanced, df: number, lambda: number): number {
     if (!isFinite(df) || !isFinite(lambda) || df < 0 || lambda < 0) {
-        this?.printer?.(DomainError, rnchisq.name);
+        this?.error(interplateDomainErrorTemplate, rnchisq.name);
         return NaN;
     }
     if (lambda === 0) {

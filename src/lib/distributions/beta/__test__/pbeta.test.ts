@@ -6,9 +6,9 @@ import { loadData } from '@common/test-helpers/load';
 
 //app
 import { pbeta } from '..';
+import { createObjectLogHarnas } from '@common/downstairs';
 
-import { createObjectLogHarnas } from '@common/debug-backend';
-const { getStats } = createObjectLogHarnas();
+
 
 describe('pbeta, ncp = 0', function () {
     it('ranges x ∊ [0, 1], shape1=3, shape2=3', async () => {
@@ -22,11 +22,11 @@ describe('pbeta, ncp = 0', function () {
         expect(nan).toBeNaN();
     });
     it('x=0.5, shape1=3, shape2=3', () => {
-        const stats0 = getStats();
+        const { getStats } = createObjectLogHarnas();
         const nan = pbeta(0.5, -3, 3);
         expect(nan).toBeNaN();
         const stats1 = getStats();
-        expect(stats1.pbeta - stats0.pbeta).toBe(2);
+        expect(stats1.pbeta).toBe(2);
     }, 1e9);
     it('x=0.5, shape1=Infinity, shape2=3', () => {
         const z = pbeta(0.5, Infinity, 3);

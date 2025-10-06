@@ -5,9 +5,7 @@ import { resolve } from 'path';
 import { loadData } from '@common/test-helpers/load';
 
 import { dbeta } from '..';
-
-import { createObjectLogHarnas } from '@common/debug-backend';
-
+import { createObjectLogHarnas } from '@common/downstairs';
 
 describe('dbeta', function () {
     it('ranges x ∊ [0, 1]', async () => {

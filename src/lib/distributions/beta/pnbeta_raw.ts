@@ -1,9 +1,9 @@
-import { LoggerEnhanced, decorateWithLogger } from "@common/debug-frontend";
 import { NumberW } from "@common/toms708/NumberW";
-import { Toms708 } from "@common/toms708/toms708";
-import ConvergenceError from "@lib/errors/ConvergenceError";
-import DomainError from "@lib/errors/DomainError";
-import PrecisionError from "@lib/errors/PrecisionError";
+import Toms708 from "@common/toms708/toms708";
+import { LoggerEnhanced, decorateWithLogger } from "@common/upstairs";
+import interplateDomainErrorTemplate from "@lib/errors/interpolateDomainErrorTemplate";
+import interpolatePrecisionErrorTemplate from "@lib/errors/interpolatePrecisionErrorTemplate";
+import interpolateConversionErrorTemplate from "@lib/errors/interpolateConversionErrorTemplate";
 import { exp, floor, log, log1p, max, sqrt } from "@lib/r-func";
 import { lgammafn_sign } from "@lib/special/gamma";
 
@@ -31,7 +31,7 @@ export default decorateWithLogger(function pnbeta_raw(this: LoggerEnhanced, x: n
     let sumq;
 
     if (ncp < 0 || a <= 0 || b <= 0) {
-        this?.printer?.(DomainError, pnbeta_raw.name)
+        this?.error(interplateDomainErrorTemplate, pnbeta_raw.name)
         return NaN;
     }
 
@@ -66,10 +66,10 @@ export default decorateWithLogger(function pnbeta_raw(this: LoggerEnhanced, x: n
     } while (errbd > errmax && j < itrmax + x0);
 
     if (errbd > errmax) {
-        this?.printer?.(PrecisionError, pnbeta_raw.name)
+        this?.error(interpolatePrecisionErrorTemplate, pnbeta_raw.name)
     }
     if (j >= itrmax + x0) {
-        this?.printer?.(ConvergenceError, pnbeta_raw.name)
+        this?.error(interpolateConversionErrorTemplate, pnbeta_raw.name)
     }
 
     return ans;

@@ -1,5 +1,5 @@
 import { LoggerEnhanced, decorateWithLogger } from '@common/upstairs';
-import interplateDomainErrorTemplate from '@lib/errors/interplateDomainErrorTemplate';
+import interplateDomainErrorTemplate from '@lib/errors/interpolateDomainErrorTemplate';
 
 export default decorateWithLogger(function chebyshev_eval(this: LoggerEnhanced, x: number, a: number[], n: number): number {
     let b0: number;

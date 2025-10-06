@@ -1,14 +1,11 @@
-
-
-import createNS from '@common/debug-frontend';
-
-import { ML_ERR_return_NAN2 } from '@common/logger';
 import { globalNorm } from '@rng/global-rng';
 
 import { imax2, imin2, M_1_SQRT_2PI, trunc, log, abs, pow, exp, floor, sqrt, isFinite } from '@lib/r-func';
 import { fsign } from './fsign';
 
 import { exp_rand } from '@dist/exp/sexp';
+import { LoggerEnhanced, decorateWithLogger } from '@common/upstairs';
+import interplateDomainErrorTemplate from '@lib/errors/interpolateDomainErrorTemplate';
 
 const a0 = -0.5;
 const a1 = 0.3333333;
@@ -23,12 +20,12 @@ const one_7 = 0.1428571428571428571;
 const one_12 = 0.0833333333333333333;
 const one_24 = 0.0416666666666666667;
 
-const printer_rpois = createNS('rpois');
+// const printer_rpois = createNS('rpois');
 
 /* Factorial Table (0:9)! */
 const fact = [1, 1, 2, 6, 24, 120, 720, 5040, 40320, 362880];
 
-export function rpoisOne(lambda: number): number {
+export default decorateWithLogger(function rpois(this: LoggerEnhanced, lambda: number): number {
     const rng = globalNorm();
 
     /* In Original C code these are static (why? perf improvement?) --- persistent between calls for same lambda : */
@@ -69,7 +66,8 @@ export function rpoisOne(lambda: number): number {
     let kflag = 0;
 
     if (!isFinite(lambda) || lambda < 0) {
-        return ML_ERR_return_NAN2(printer_rpois);
+        this?.info(interplateDomainErrorTemplate, rpois.name);
+        return NaN;
     }
     if (lambda === 0) return 0;
 
@@ -229,4 +227,4 @@ export function rpoisOne(lambda: number): number {
         } /* t > -.67.. */
     }
     return pois;
-}
+});

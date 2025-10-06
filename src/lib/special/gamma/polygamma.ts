@@ -120,7 +120,7 @@
  *    Routines called: Rf_d1mach, Rf_i1mach.
  */
 
-import createNS from '@common/debug-frontend';
+// import createNS from '@common/debug-frontend';
 import {
     DBL_MANT_DIG,
     DBL_MAX_EXP,
@@ -141,7 +141,7 @@ import {
     round
 } from '@lib/r-func';
 
-const printer = createNS('dpsifn');
+// const printer = createNS('dpsifn');
 
 
 
@@ -521,7 +521,7 @@ function dpsifn(
         return;
     } // goto capture end
     //L20:
-    printer(L20 ? 'goto L20 was set!' : 'goto L20 was not set');
+    // TODO: printer(L20 ? 'goto L20 was set!' : 'goto L20 was not set');
 
     if (!L30) {
         for (i = 1; i <= nx; i++) {
@@ -553,7 +553,7 @@ function dpsifn(
     return NaN
 #endif
 */
-const print_psigamma = createNS('psigamma');
+// const print_psigamma = createNS('psigamma');
 
 function _render(
     x: number,
@@ -584,7 +584,7 @@ export function psigamma(x: number, deriv: number): number {
     deriv = round(deriv);
     const n = deriv >> 0;
     if (n > n_max) {
-        print_psigamma('"deriv = %d > %d (= n_max)', n, n_max);
+        // TODO: print_psigamma('"deriv = %d > %d (= n_max)', n, n_max);
     }
     return _render(
         x,

@@ -1,5 +1,5 @@
-import DomainError from "@lib/errors/DomainError";
-import { LoggerEnhanced, decorateWithLogger } from "./debug-frontend";
+import interplateDomainErrorTemplate from "@lib/errors/interpolateDomainErrorTemplate";
+import { LoggerEnhanced, decorateWithLogger } from "./upstairs";
 
 export default decorateWithLogger(function R_Q_P01_boundaries(
     this: LoggerEnhanced,
@@ -11,7 +11,7 @@ export default decorateWithLogger(function R_Q_P01_boundaries(
 ): number | undefined {
     if (log_p) {
         if (p > 0) {
-            this?.printer?.(DomainError, R_Q_P01_boundaries.name)
+            this?.error?.(interplateDomainErrorTemplate, R_Q_P01_boundaries.name)
             return NaN;
         }
         if (p === 0) {
@@ -24,7 +24,7 @@ export default decorateWithLogger(function R_Q_P01_boundaries(
     } else {
         /* !log_p */
         if (p < 0 || p > 1) {
-            this?.printer?.(DomainError, R_Q_P01_boundaries.name)
+            this?.error?.(interplateDomainErrorTemplate, R_Q_P01_boundaries.name)
             return NaN;
         }
         if (p === 0) {

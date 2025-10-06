@@ -1,6 +1,6 @@
-import createNS from '@common/debug-frontend';
+// import createNS from '@common/debug-frontend';
 
-import { ML_ERR_return_NAN2 } from '@common/logger';
+// import { ML_ERR_return_NAN2 } from '@common/logger';
 
 import { M_LN_SQRT_2PI } from '@lib/r-func';
 
@@ -8,7 +8,7 @@ import { gamma } from '@special/gamma';
 import { lgammafn_sign } from '@special/gamma/lgammafn_sign';
 import { lgammacor } from '@special/gamma/lgammacor';
 
-const printer = createNS('lbeta');
+// const printer = createNS('lbeta');
 
 function lbeta(a: number, b: number): number {
     let corr: number;
@@ -22,7 +22,7 @@ function lbeta(a: number, b: number): number {
 
     // both arguments must be >= 0
     if (p < 0) {
-        printer(DomainError);
+        // printer(DomainError);
         return NaN;
     } else if (p === 0) {
         return Infinity;

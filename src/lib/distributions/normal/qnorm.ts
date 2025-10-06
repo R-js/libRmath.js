@@ -1,13 +1,15 @@
 
 
-import createNS from '@common/debug-frontend';
-import { ML_ERR_return_NAN2, R_Q_P01_boundaries } from '@common/logger';
+// import createNS from '@common/debug-frontend';
+// import { ML_ERR_return_NAN2, R_Q_P01_boundaries } from '@common/logger';
+import R_Q_P01_boundariesV2 from '@common/R_Q_P01_boundariesV2';
 import { R_DT_CIv, R_DT_qIv } from '@dist/exp/expm1';
 import { abs, sqrt, log as _log } from '@lib/r-func';
+import { LoggerEnhanced } from '@common/upstairs';
 
-const printer = createNS('qnorm');
+// const printer = createNS('qnorm');
 
-export function qnorm(p: number, mean = 0, sd = 1, lowerTail = true, logP = false): number {
+export function qnorm(this: LoggerEnhanced, p: number, mean = 0, sd = 1, lowerTail = true, logP = false): number {
     let r;
     let val;
 
@@ -15,12 +17,12 @@ export function qnorm(p: number, mean = 0, sd = 1, lowerTail = true, logP = fals
         return NaN;
     }
 
-    const rc = R_Q_P01_boundaries(lowerTail, logP, p, -Infinity, Infinity);
+    const rc = R_Q_P01_boundariesV2(lowerTail, logP, p, -Infinity, Infinity);
     if (rc !== undefined) {
         return rc;
     }
     if (sd < 0) {
-        printer(DomainError);
+        // printer(DomainError);
         return NaN;
     }
     if (sd === 0) {
@@ -30,7 +32,7 @@ export function qnorm(p: number, mean = 0, sd = 1, lowerTail = true, logP = fals
     const p_ = R_DT_qIv(lowerTail, logP, p); /* real lowerTail prob. p */
     const q = p_ - 0.5;
 
-    printer('qnorm(p=%d, m=%d, s=%d, l.t.= %s, log= %s): q = %d', p, mean, sd, lowerTail, logP, q);
+    this?.info('qnorm(p=%d, m=%d, s=%d, l.t.= %s, log= %s): q = %d', p, mean, sd, lowerTail, logP, q);
 
     /*-- use AS 241 --- */
     /* double ppnd16_(double *p, long *ifault)*/
@@ -81,7 +83,7 @@ export function qnorm(p: number, mean = 0, sd = 1, lowerTail = true, logP = fals
         r = sqrt(-(logP && ((lowerTail && q <= 0) || (!lowerTail && q > 0)) ? p : /* else */ _log(r)));
         /* r = sqrt(-log(r))  <==>  min(p, 1-p) = exp( - r^2 ) */
 
-        printer('close to 0 or 1: r = %7d', r);
+        this?.info('close to 0 or 1: r = %7d', r);
 
         if (r <= 5) {
             /* <==> min(p,1-p) >= exp(-25) ~= 1.3888e-11 */

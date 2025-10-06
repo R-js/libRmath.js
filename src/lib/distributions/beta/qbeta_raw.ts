@@ -1,10 +1,10 @@
-import { LoggerEnhanced, decorateWithLogger } from "@common/debug-frontend";
-import DomainError from "@lib/errors/DomainError";
-import VariableArgumentError from "@lib/errors/VariableArgumentError";
 import { DBL_MANT_DIG, DBL_MIN_EXP, M_LN2, NumArray, R_DT_0, R_DT_1, R_D_half, log, abs, R_pow_di } from "@lib/r-func";
 import { R_DT_CIv, R_DT_Clog, R_DT_log, R_DT_qIv, R_Log1_Exp } from "../exp/expm1";
 import lbeta from "@lib/special/beta/lbeta";
 import pbeta_raw from "./pbeta_raw";
+import { LoggerEnhanced, decorateWithLogger } from "@common/upstairs";
+import interplateDomainErrorTemplate from "@lib/errors/interpolateDomainErrorTemplate";
+import interpolatePrecisionErrorTemplate from "@lib/errors/interpolatePrecisionErrorTemplate";
 
 const MLOGICAL_NA = -1;
 // an "NA_LOGICAL" substitute for Mathlib {only used here, for now}
@@ -135,7 +135,7 @@ export default decorateWithLogger(function qbeta_raw(
     // check alpha {*before* transformation which may all accuracy}:
     if ((log_p && alpha > 0) || (!log_p && (alpha < 0 || alpha > 1))) {
         // alpha is outside
-        this?.printer?.(VariableArgumentError,
+        this?.info(
             'qbeta(alpha=%d, %d, %d, .., log_p=%d): %s%s',
             alpha,
             p,
@@ -145,7 +145,7 @@ export default decorateWithLogger(function qbeta_raw(
             log_p ? '[-Inf, 0]' : '[0,1]'
         );
         // ML_ERR_return_NAN :
-        this?.printer?.(DomainError, qbeta_raw.name);
+        this?.error(interplateDomainErrorTemplate, qbeta_raw.name);
         qb[0] = qb[1] = NaN;
         return;
     }
@@ -153,8 +153,7 @@ export default decorateWithLogger(function qbeta_raw(
     //  p==0, q==0, p = Inf, q = Inf  <==> treat as one- or two-point mass
     if (p === 0 || q === 0 || !isFinite(p) || !isFinite(q)) {
         // We know 0 < T(alpha) < 1 : pbeta() is constant and trivial in {0, 1/2, 1}
-        this?.printer?.(
-            VariableArgumentError,
+        this?.info(
             'qbeta(%d, %d, %d, lower_t=%d, log_p=%d): (p,q)-boundary: trivial',
             alpha,
             p,
@@ -226,8 +225,7 @@ export default decorateWithLogger(function qbeta_raw(
     t = 0.2;
     // FIXME: Factor 0.2 is a bit arbitrary;  '1' is clearly much too much.
 
-    this?.printer?.(
-        VariableArgumentError,
+    this?.info(
         'qbeta(%d, %d, %d, lower_t=%d, log_p=%d):%s   swap_tail=%d, la=%d, u0=%d (bnd: %d (%d)) ',
         alpha,
         p,
@@ -247,7 +245,7 @@ export default decorateWithLogger(function qbeta_raw(
             // ==> use_log_x , too
             if (!use_log_x)
                 // (see if claim above is true)
-                this?.printer?.('qbeta() L_return, u_n=%d;  give_log_q=TRUE but use_log_x=FALSE -- please report!', u_n);
+                this?.info('qbeta() L_return, u_n=%d;  give_log_q=TRUE but use_log_x=FALSE -- please report!', u_n);
             const r = R_Log1_Exp(u_n);
             if (swap_tail) {
                 qb[0] = r;
@@ -267,8 +265,7 @@ export default decorateWithLogger(function qbeta_raw(
                     ? (y - la) * Math.exp(y + logbeta + r * Math.log(xinbta) + t * Math.log1p(-xinbta))
                     : (y - a) * Math.exp(logbeta + r * Math.log(xinbta) + t * Math.log1p(-xinbta));
                 tx = xinbta - w;
-                this?.printer?.(
-                    VariableArgumentError,
+                this?.info(
                     'Final Newton correction(non-log scale): xinbta=%.16g, y=%g, w=%g. => new tx=%.16g\n',
                     xinbta,
                     y,
@@ -299,8 +296,7 @@ export default decorateWithLogger(function qbeta_raw(
     const L_converged = () => {
         //L_converged:
         log_ = log_p || use_log_x; // only for printing
-        this?.printer?.(
-            VariableArgumentError,
+        this?.info(
             ' %s: Final delta(y) = %g%s\n',
             warned ? '_NO_ convergence' : 'converged',
             y - (log_ ? la : a),
@@ -330,8 +326,7 @@ export default decorateWithLogger(function qbeta_raw(
                     la + 2
                 )
             )
-                this?.printer?.(
-                    VariableArgumentError,
+                this?.info(
                     // low accuracy for more platform independent output:
                     'qbeta(a, *) =: x0 with |pbeta(x0,* %s) - alpha| = %d is not accurate',
                     log_ ? ', log_' : '',
@@ -370,8 +365,7 @@ export default decorateWithLogger(function qbeta_raw(
                         : (y - la) * Math.exp(y - u + logbeta + r * u + t * R_Log1_Exp(u));
                 if (!isFinite(w)) break;
                 if (i_pb >= n_N && w * wprev <= 0) prev = Math.max(Math.abs(adj), fpu);
-                this?.printer?.(
-                    VariableArgumentError,
+                this?.info(
                     'N(i=%2d): u=%#20.16g, pb(e^u)=%#12.6g, w=%#15.9g, %s prev=%11g,',
                     i_pb,
                     u,
@@ -389,10 +383,9 @@ export default decorateWithLogger(function qbeta_raw(
                         if (u_n <= 0) {
                             // <==> 0 <  xinbta := e^u  <= 1
                             if (prev <= acu || Math.abs(w) <= acu) {
-                                /* this?.printer?.(" -adj=%g, %s <= acu  ==> convergence\n", */
+                                /* this?.info(" -adj=%g, %s <= acu  ==> convergence\n", */
                                 /*	 -adj, (prev <= acu) ? "prev" : "|w|"); */
-                                this?.printer?.(
-                                    VariableArgumentError,
+                                this?.info(
                                     ' it{in}=%d, -adj=%g, %s <= acu  ==> convergence\n',
                                     i_inn,
                                     -adj,
@@ -409,7 +402,7 @@ export default decorateWithLogger(function qbeta_raw(
                 // (cancellation in (u_n -u) => may differ from adj:
                 const D = Math.min(Math.abs(adj), Math.abs(u_n - u));
                 /* this?.printer?.(" delta(u)=%g\n", u_n - u); */
-                this?.printer?.(VariableArgumentError, ' it{in}=%d, delta(u)=%9.3g, D/|.|=%.3g\n', i_inn, u_n - u, D / Math.abs(u_n + u));
+                this?.info(' it{in}=%d, delta(u)=%9.3g, D/|.|=%.3g\n', i_inn, u_n - u, D / Math.abs(u_n + u));
                 if (D <= 4e-16 * Math.abs(u_n + u)) return; //goto L_converged ;
                 u = u_n;
                 xinbta = Math.exp(u);
@@ -423,7 +416,7 @@ export default decorateWithLogger(function qbeta_raw(
                 if (!isFinite(y) && !(log_p && y === -Infinity)) {
                     // y = -Inf  is ok if(log_p)
                     // ML_ERR_return_NAN :
-                    this?.printer?.(DomainError, qbeta_raw.name);
+                    this?.error(interplateDomainErrorTemplate, qbeta_raw.name);
                     qb[0] = qb[1] = NaN;
                     return;
                 }
@@ -435,8 +428,7 @@ export default decorateWithLogger(function qbeta_raw(
                     ? (y - la) * Math.exp(y + logbeta + r * Math.log(xinbta) + t * Math.log1p(-xinbta))
                     : (y - a) * Math.exp(logbeta + r * Math.log(xinbta) + t * Math.log1p(-xinbta));
                 if (i_pb >= n_N && w * wprev <= 0) prev = Math.max(Math.abs(adj), fpu);
-                this?.printer?.(
-                    VariableArgumentError,
+                this?.info(
                     'N(i=%2d): x0=%d, pb(x0)=%d, w=%d, %s prev=%d,',
                     i_pb,
                     xinbta,
@@ -453,8 +445,7 @@ export default decorateWithLogger(function qbeta_raw(
                         tx = xinbta - adj; // x_{n+1} = x_n - g*w
                         if (0 <= tx && tx <= 1) {
                             if (prev <= acu || Math.abs(w) <= acu) {
-                                this?.printer?.(
-                                    VariableArgumentError,
+                                this?.info(
                                     ' it{in}=%d, delta(x)=%g, %s <= acu  ==> convergence\n',
                                     i_inn,
                                     -adj,
@@ -467,7 +458,7 @@ export default decorateWithLogger(function qbeta_raw(
                     }
                     g /= 3;
                 } //for(i_inn)
-                this?.printer?.(VariableArgumentError, ' it{in}=%d, delta(x)=%g\n', i_inn, tx - xinbta);
+                this?.info(' it{in}=%d, delta(x)=%g\n', i_inn, tx - xinbta);
                 if (Math.abs(tx - xinbta) <= 4e-16 * (tx + xinbta))
                     // "<=" : (.) === 0
                     return; //goto L_converged ;
@@ -480,7 +471,7 @@ export default decorateWithLogger(function qbeta_raw(
 
         /*-- NOT converged: Iteration count --*/
         warned = true;
-        this?.printer?.(DomainError, qbeta_raw.name);
+        this?.error(interpolatePrecisionErrorTemplate, qbeta_raw.name);
     };
 
     if (
@@ -496,10 +487,10 @@ export default decorateWithLogger(function qbeta_raw(
         r = r * Math.exp(u0); // = r*x0
         if (r > -1) {
             u = u0 - Math.log1p(r) / pp;
-            this?.printer?.(VariableArgumentError, 'u1-u0=%d --> choosing u = u1', u - u0);
+            this?.info('u1-u0=%d --> choosing u = u1', u - u0);
         } else {
             u = u0;
-            this?.printer?.(VariableArgumentError, 'cannot cheaply improve u0');
+            this?.info('cannot cheaply improve u0');
         }
         tx = xinbta = Math.exp(u);
         use_log_x = true; // or (u < log_q_cut)  ??
@@ -521,7 +512,7 @@ export default decorateWithLogger(function qbeta_raw(
         t = 1 / (qq + qq - 1);
         h = 2 / (s + t);
         w = (y * Math.sqrt(h + r)) / h - (t - s) * (r + 5.0 / 6.0 - 2.0 / (3 * h));
-        this?.printer?.(VariableArgumentError, 'p,q > 1 => w=%d', w);
+        this?.info('p,q > 1 => w=%d', w);
         if (w > 300) {
             // Math.exp(w+w) is huge or overflows
             t = w + w + Math.log(qq) - Math.log(pp); // = argument of log1pMath.exp(.)
@@ -539,7 +530,7 @@ export default decorateWithLogger(function qbeta_raw(
         t = 1 / (3 * Math.sqrt(qq));
         t = r * R_pow_di(1 + t * (-t + y), 3); // = \chi^2_{alpha} of AS 64
         s = 4 * pp + r - 2; // 4p + 2q - 2 = numerator of new t = (...) / chi^2
-        this?.printer?.(VariableArgumentError, 'min(p,q) <= 1: t=%g', t);
+        this?.info('min(p,q) <= 1: t=%g', t);
         if (t === 0 || (t < 0 && s >= t)) {
             // cannot use chisq approx
             // x0 = 1 - { (1-a)*q*B(p,q) } ^{1/q}    {AS 65}
@@ -549,20 +540,20 @@ export default decorateWithLogger(function qbeta_raw(
              * FIXME: not worth it? Math.log1p(-a) always the same ?? */
             if (swap_tail) l1ma = R_DT_log(lower_tail, log_p, alpha);
             else l1ma = R_DT_Clog(lower_tail, log_p, alpha);
-            this?.printer?.(VariableArgumentError, ' t <= 0 : Math.log1p(-a)=%.15g, better l1ma=%.15g\n', Math.log1p(-a), l1ma);
+            this?.info(' t <= 0 : Math.log1p(-a)=%.15g, better l1ma=%.15g\n', Math.log1p(-a), l1ma);
             const xx: number = (l1ma + Math.log(qq) + logbeta) / qq;
             if (xx <= 0) {
                 xinbta = -Math.expm1(xx);
                 u = R_Log1_Exp(xx); // =  Math.log(xinbta) = Math.log(1 - Math.exp(...A...))
             } else {
                 // xx > 0 ==> 1 - e^xx < 0 .. is nonsense
-                this?.printer?.(VariableArgumentError, ' xx=%g > 0: xinbta:= 1-e^xx < 0\n', xx);
+                this?.info(' xx=%g > 0: xinbta:= 1-e^xx < 0\n', xx);
                 xinbta = 0;
                 u = -Infinity; /// FIXME can do better?
             }
         } else {
             t = s / t;
-            this?.printer?.(VariableArgumentError, ' t > 0 or s < t < 0:  new t = %g ( > 1 ?)\n', t);
+            this?.info(' t > 0 or s < t < 0:  new t = %g ( > 1 ?)\n', t);
             if (t <= 1) {
                 // cannot use chisq, either
                 u = (la + Math.log(pp) + logbeta) / pp;
@@ -584,7 +575,7 @@ export default decorateWithLogger(function qbeta_raw(
         // ==> "swap now" (much less easily)
         // "revert swap" -- and use_log_x
         swap_tail = !swap_tail;
-        this?.printer?.(VariableArgumentError, ' u = %g (e^u = xinbta = %.16g) ==> ', u, xinbta);
+        this?.info(' u = %g (e^u = xinbta = %.16g) ==> ', u, xinbta);
         if (swap_tail) {
             a = R_DT_CIv(lower_tail, log_p, alpha); // needed ?
             la = R_DT_Clog(lower_tail, log_p, alpha);
@@ -596,7 +587,7 @@ export default decorateWithLogger(function qbeta_raw(
             pp = p;
             qq = q;
         }
-        this?.printer?.(VariableArgumentError, '"%s\'; la = %g\n', swap_tail ? 'swap now' : 'swap back', la);
+        this?.info('"%s\'; la = %g\n', swap_tail ? 'swap now' : 'swap back', la);
         // we could redo computations above, but this should be stable
         u = R_Log1_Exp(u);
         xinbta = Math.exp(u);
@@ -613,8 +604,7 @@ export default decorateWithLogger(function qbeta_raw(
     const bad_u = !isFinite(u);
     const bad_init = bad_u || xinbta > p_hi;
 
-    this?.printer?.(
-        VariableArgumentError,
+    this?.info(
         ' -> u = %g, e^u = xinbta = %.16g, (Newton acu=%g%s)\n',
         u,
         xinbta,
@@ -632,7 +622,7 @@ export default decorateWithLogger(function qbeta_raw(
         try at smallest positive number: */
         w = pbeta_raw(DBL_very_MIN, pp, qq, true, log_p);
         if (w > (log_p ? la : a)) {
-            this?.printer?.(VariableArgumentError, ' quantile is left of smallest positive number; "convergence"\n');
+            this?.info(' quantile is left of smallest positive number; "convergence"\n');
             if (log_p || Math.abs(w - a) < Math.abs(0 - a)) {
                 // DBL_very_MIN is better than 0
                 tx = DBL_very_MIN;
@@ -647,7 +637,7 @@ export default decorateWithLogger(function qbeta_raw(
             L_return();
             return;
         } else {
-            this?.printer?.(VariableArgumentError, ' pbeta(smallest pos.) = %g <= %g  --> continuing\n', w, log_p ? la : a);
+            this?.info(' pbeta(smallest pos.) = %g <= %g  --> continuing\n', w, log_p ? la : a);
             if (u < DBL_log_v_MIN) {
                 u = DBL_log_v_MIN; // = Math.log(DBL_very_MIN)
                 xinbta = DBL_very_MIN;
@@ -658,11 +648,11 @@ export default decorateWithLogger(function qbeta_raw(
     /* Sometimes the approximation is negative (and === 0 is also not "ok") */
     if (bad_init && !(use_log_x && tx > 0)) {
         if (u === -Infinity) {
-            this?.printer?.(VariableArgumentError, '  u = -Inf;');
+            this?.info('  u = -Inf;');
             u = M_LN2 * DBL_MIN_EXP;
             xinbta = Number.MIN_VALUE;
         } else {
-            this?.printer?.(VariableArgumentError, ' bad_init: u=%g, xinbta=%g;', u, xinbta);
+            this?.info(' bad_init: u=%g, xinbta=%g;', u, xinbta);
             xinbta =
                 xinbta > 1.1 // i.e. "way off"
                     ? 0.5 // otherwise, keep the respective boundary:
@@ -672,7 +662,7 @@ export default decorateWithLogger(function qbeta_raw(
             if (bad_u) u = Math.log(xinbta);
             // otherwise: not changing "potentially better" u than the above
         }
-        this?.printer?.(VariableArgumentError, ' -> (partly)new u=%g, xinbta=%g\n', u, xinbta);
+        this?.info(' -> (partly)new u=%g, xinbta=%g\n', u, xinbta);
     }
 
     L_Newton();

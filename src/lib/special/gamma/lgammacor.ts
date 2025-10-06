@@ -1,10 +1,8 @@
-import { createObjectNs } from '@common/debug-frontend';
-import { chebyshev_eval } from '@lib/chebyshev/chebyshev';
-import DomainError from '@lib/errors/DomainError';
+import chebyshev_eval from '@lib/chebyshev/chebyshev';
 import UnderflowError from '@lib/errors/UnderflowError'
 
-const domain = 'mlgammecor'
-const printer = createObjectNs(domain);
+// const domain = 'mlgammecor'
+// const printer = createObjectNs(domain);
 
 const algmcs: number[] = [
     +0.1666389480451863247205729650822,
@@ -36,11 +34,11 @@ export function lgammacor(x: number): number {
     //   xmax = DBL_MAX / 48 =  2^1020 / 3
 
     if (x < 10) {
-        printer(DomainError, domain);
+        // printer(DomainError, domain);
         return NaN;
     }
     else if (x >= xmax) {
-        printer(UnderflowError, domain);
+        // printer(UnderflowError, domain);
         // allow to underflow below
     } else if (x < xbig) {
         tmp = 10 / x;

@@ -1,7 +1,6 @@
-import { LoggerEnhanced, decorateWithLogger } from "@common/debug-frontend";
 import { NumberW } from "@common/toms708/NumberW";
-import { Toms708 } from "@common/toms708/toms708";
-import VariableArgumentError from "@lib/errors/VariableArgumentError";
+import Toms708 from "@common/toms708/toms708";
+import { LoggerEnhanced, decorateWithLogger } from "@common/upstairs";
 import { R_DT_0, R_DT_1, log } from "@lib/r-func";
 
 export default decorateWithLogger(function pbeta_raw(this: LoggerEnhanced, x: number, a: number, b: number, lower_tail: boolean, log_p: boolean): number {
@@ -30,13 +29,13 @@ export default decorateWithLogger(function pbeta_raw(this: LoggerEnhanced, x: nu
     const ierr: NumberW = new NumberW(0);
     //====
     //Toms708.bratio(a, b, x, x1, &w, &wc, &ierr, log_p); /* -> ./toms708.c */
-    this?.printer?.(VariableArgumentError, 'before Toms708.bratio, a=%d, b=%d, x=%d, w=%d,wc=%d, ierr=%d', a, b, x, w.val, wc.val, ierr.val);
+    this?.info('before Toms708.bratio, a=%d, b=%d, x=%d, w=%d,wc=%d, ierr=%d', a, b, x, w.val, wc.val, ierr.val);
     Toms708.bratio(a, b, x, x1, w, wc, ierr); /* -> ./toms708.c */
-    this?.printer?.(VariableArgumentError, 'after Toms708.bratio, a=%d, b=%d, x=%d, w=%d,wc=%d, ierr=%d', a, b, x, w.val, wc.val, ierr.val);
+    this?.info('after Toms708.bratio, a=%d, b=%d, x=%d, w=%d,wc=%d, ierr=%d', a, b, x, w.val, wc.val, ierr.val);
     //====
     // ierr in {10,14} <==> bgrat() error code ierr-10 in 1:4; for 1 and 4, warned *there*
     if (ierr.val && ierr.val !== 11 && ierr.val !== 14)
-        this?.printer?.(VariableArgumentError, 'pbeta_raw(%d, a=%d, b=%d, ..) -> bratio() gave error code %d', x, a, b, ierr);
+        this?.info('pbeta_raw(%d, a=%d, b=%d, ..) -> bratio() gave error code %d', x, a, b, ierr);
     if (log_p) {
         w.val = log(w.val);
         wc.val = log(wc.val);

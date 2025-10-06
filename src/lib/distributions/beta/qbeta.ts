@@ -1,6 +1,7 @@
-import DomainError from '@lib/errors/DomainError';
+import { LoggerEnhanced, decorateWithLogger } from '@common/upstairs';
 import qbeta_raw from './qbeta_raw';
-import { LoggerEnhanced, decorateWithLogger } from '@common/debug-frontend';
+import interplateDomainErrorTemplate from '@lib/errors/interpolateDomainErrorTemplate';
+
 
 const USE_LOG_X_CUTOFF = -5;
 //                       --- based on some testing; had = -10
@@ -17,7 +18,7 @@ export default decorateWithLogger(function qbeta(this: LoggerEnhanced, p: number
     }
 
     if (shape1 < 0 || shape2 < 0) {
-        this?.printer?.(DomainError, qbeta.name);
+        this?.error(interplateDomainErrorTemplate, qbeta.name);
         return NaN;
     }
     // allowing p==0 and q==0  <==> treat as one- or two-point mass

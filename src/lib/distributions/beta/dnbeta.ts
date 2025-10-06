@@ -1,8 +1,8 @@
-import { LoggerEnhanced, decorateWithLogger } from '@common/debug-frontend';
 import { R_D__0, R_D_exp, ceil, sqrt } from '@lib/r-func';
 import { dpois_raw } from '@dist/poisson/dpois';
 import dbeta_scalar from './dbeta';
-import DomainError from '@lib/errors/DomainError';
+import { LoggerEnhanced, decorateWithLogger } from '@common/upstairs';
+import interplateDomainErrorTemplate from '@lib/errors/interpolateDomainErrorTemplate';
 
 const eps = 1e-15;
 
@@ -21,12 +21,12 @@ export default decorateWithLogger(function dnbeta(this: LoggerEnhanced, x: numbe
 
     if (isNaN(x) || isNaN(a) || isNaN(b) || isNaN(ncp)) return x + a + b + ncp;
     if (ncp < 0 || a <= 0 || b <= 0) {
-        this?.printer?.(DomainError, dnbeta.name);
+        this?.error(interplateDomainErrorTemplate, dnbeta.name);
         return NaN;
     }
 
     if (!isFinite(a) || !isFinite(b) || !isFinite(ncp)) {
-        this?.printer?.(DomainError, dnbeta.name);
+        this?.error(interplateDomainErrorTemplate, dnbeta.name);
         return NaN;
     }
 

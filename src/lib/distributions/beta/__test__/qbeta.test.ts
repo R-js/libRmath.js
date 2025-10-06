@@ -7,9 +7,9 @@ import { loadData } from '@common/test-helpers/load';
 //app
 import { qbeta } from '..';
 
-import { createObjectLogHarnas } from '@common/debug-backend';
 
 import { describe } from 'vitest';
+import { createObjectLogHarnas } from '@common/downstairs';
 
 describe.concurrent('qbeta', function () {
     it('ranges x ∊ [0, 1], shape1=1, shape2=2', async () => {

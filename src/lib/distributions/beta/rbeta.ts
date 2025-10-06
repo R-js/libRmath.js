@@ -1,5 +1,5 @@
-import { LoggerEnhanced, decorateWithLogger } from '@common/debug-frontend';
-import DomainError from '@lib/errors/DomainError';
+import { LoggerEnhanced, decorateWithLogger } from '@common/upstairs';
+import interplateDomainErrorTemplate from '@lib/errors/interpolateDomainErrorTemplate';
 import { DBL_MAX_EXP, min, max, log } from '@lib/r-func';
 import { globalUni } from '@rng/global-rng';
 
@@ -9,11 +9,11 @@ export default decorateWithLogger(function rbeta(this: LoggerEnhanced, shape1: n
     const rng = globalUni();
 
     if (isNaN(shape1) || isNaN(shape2)) {
-        this?.printer?.(DomainError, rbeta.name);
+        this?.error(interplateDomainErrorTemplate, rbeta.name);
         return NaN;
     }
     if (shape1 < 0 || shape2 < 0) {
-        this?.printer?.(DomainError, rbeta.name);
+        this?.error(interplateDomainErrorTemplate, rbeta.name);
         return NaN;
     }
     if (!isFinite(shape1) && !isFinite(shape2)) {

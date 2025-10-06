@@ -1,11 +1,8 @@
 //app
+import { createObjectLogHarnas } from '@common/downstairs';
 import { rbeta } from '..';
 
 import { globalNorm, globalUni, RNGkind } from '@rng/global-rng';
-
-import { createObjectLogHarnas } from '@common/debug-backend';
-
-const { getStats } = createObjectLogHarnas();
 
 describe('rbeta', function () {
     beforeAll(() => {
@@ -30,6 +27,7 @@ describe('rbeta', function () {
         ]);
     });
     it('scp1=-1, scp2=2', () => {
+        const { getStats } = createObjectLogHarnas();
         const actual = rbeta(1, -1, 2);
         const stats1 = getStats();
         expect(actual).toEqualFloatingPointBinary(NaN);

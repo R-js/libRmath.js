@@ -1,8 +1,8 @@
 import { R_DT_qIv } from '@dist/exp/expm1';
 import pnbeta from './pnbeta';
-import DomainError from '@lib/errors/DomainError';
-import { LoggerEnhanced, decorateWithLogger } from '@common/debug-frontend';
 import R_Q_P01_boundariesV2 from '@common/R_Q_P01_boundariesV2';
+import { LoggerEnhanced, decorateWithLogger } from '@common/upstairs';
+import interplateDomainErrorTemplate from '@lib/errors/interpolateDomainErrorTemplate';
 
 const accu = 1e-15;
 const eps = 1e-14; /* must be > accu */
@@ -18,12 +18,12 @@ export default decorateWithLogger(function qnbeta(this: LoggerEnhanced, p: numbe
     }
 
     if (!isFinite(a)) {
-        this?.printer?.(DomainError, qnbeta.name);
+        this?.error(interplateDomainErrorTemplate, qnbeta.name);
         return NaN;
     }
 
     if (ncp < 0 || a <= 0 || b <= 0) {
-        this?.printer?.(DomainError, qnbeta.name);
+        this?.error(interplateDomainErrorTemplate, qnbeta.name);
         return NaN;
     }
 

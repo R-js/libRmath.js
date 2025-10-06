@@ -1,5 +1,3 @@
-import createNS from '@common/debug-frontend';
-
 import {
     fmod,
     M_LN_SQRT_2PI, // no math alias for this
@@ -10,13 +8,11 @@ import {
     log
 } from '@lib/r-func';
 
-import { ME, ML_ERROR3 } from '@common/logger';
+import { ME } from '@common/logger';
 
 import { sinpi } from '@trig/sinpi';
 import { lgammacor } from './lgammacor';
 import { gammafn } from './gamma_fn';
-
-const printer_sign_lgamma = createNS('lgammafn_sign');
 
 const xmax = 2.5327372760800758e305;
 const dxrel = 1.490116119384765625e-8;
@@ -53,7 +49,7 @@ export function lgammafn_sign(x: number, sgn?: Int32Array): number {
 
     if (x <= 0 && x === trunc(x)) {
         /// Negative integer argument
-        ML_ERROR3(printer_sign_lgamma, ME.ME_RANGE, 'lgamma');
+        // ML_ERROR3(printer_sign_lgamma, ME.ME_RANGE, 'lgamma');
         return ML_POSINF; // +Inf, since lgamma(x) = log|gamma(x)|
     }
 
@@ -65,7 +61,7 @@ export function lgammafn_sign(x: number, sgn?: Int32Array): number {
     //  ELSE  y = |x| > 10 ----------------------
 
     if (y > xmax) {
-        ML_ERROR3(printer_sign_lgamma, ME.ME_RANGE, 'lgamma');
+        // ML_ERROR3(printer_sign_lgamma, ME.ME_RANGE, 'lgamma');
         return ML_POSINF;
     }
 
@@ -93,7 +89,7 @@ export function lgammafn_sign(x: number, sgn?: Int32Array): number {
         // The answer is less than half precision because
         // the argument is too near a negative integer.
 
-        ML_ERROR3(printer_sign_lgamma, ME.ME_PRECISION, 'lgamma');
+        // ML_ERROR3(printer_sign_lgamma, ME.ME_PRECISION, 'lgamma');
     }
     return ans;
 }

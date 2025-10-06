@@ -1,7 +1,7 @@
-import { LoggerEnhanced, decorateWithLogger } from "@common/debug-frontend";
-import PrecisionError from "@lib/errors/PrecisionError";
 import { log, log1p } from "@lib/r-func";
 import pnbeta_raw from "./pnbeta_raw";
+import { LoggerEnhanced, decorateWithLogger } from "@common/upstairs";
+import interpolatePrecisionErrorTemplate from "@lib/errors/interpolatePrecisionErrorTemplate";
 
 // f-distro (pnf) needs this too
 export default decorateWithLogger(function pnbeta2(
@@ -23,10 +23,12 @@ export default decorateWithLogger(function pnbeta2(
         return log_p ? log(ans) : ans;
     } else {
         if (ans > 1 - 1e-10) {
-            this?.printer?.(PrecisionError, pnbeta2.name);
+            this?.warn(interpolatePrecisionErrorTemplate, pnbeta2.name);
         }
 
-        if (ans > 1.0) ans = 1.0; /* Precaution */
+        if (ans > 1.0) {
+            ans = 1.0; /* Precaution */
+        }
         /* include standalone case */
         return log_p ? log1p(-ans) : 1 - ans;
     }

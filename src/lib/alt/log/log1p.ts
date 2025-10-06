@@ -6,7 +6,7 @@ import {
     NEGATIVE_INFINITY,
     EPSILON,
 } from '@lib/r-func';
-import interplateDomainErrorTemplate from '@lib/errors/interplateDomainErrorTemplate';
+import interplateDomainErrorTemplate from '@lib/errors/interpolateDomainErrorTemplate';
 import { LoggerEnhanced, decorateWithLogger } from '@common/upstairs';
 import interpolatePrecisionErrorTemplate from '@lib/errors/interpolatePrecisionErrorTemplate';
 
