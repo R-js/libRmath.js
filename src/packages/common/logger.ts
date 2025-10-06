@@ -1,7 +1,7 @@
-import createNs, { type Printer } from './debug-frontend';
+// const debug_R_Q_P01_boundaries = createNs('R_Q_P01_boundaries');
+// const debug_R_Q_P01_check = createNs('R_Q_P01_check');
 
-const debug_R_Q_P01_boundaries = createNs('R_Q_P01_boundaries');
-const debug_R_Q_P01_check = createNs('R_Q_P01_check');
+import { Printer } from "./upstairs";
 
 export const R_Q_P01_check_domain = 'R_Q_P01_check';
 
@@ -26,22 +26,22 @@ export const mapErr =
 
 /** @deprecated */
 export function ML_ERROR3(printer: Printer, x: ME, arg: string): void {
-    if (!printer.enabled) {
+    /*if (!printer.enabled) {
         return;
     }
     const templateStr = mapErr[x];
     if (templateStr) {
         const err = new Error().stack!
         printer(templateStr, arg, err);
-    }
+    }*/
 }
 
 /* @deprecated */
 export function ML_ERR_return_NAN2(printer: Printer): number {
-    if (printer.enabled) {
-        const stackTrace = new Error().stack! ?? 'there is no stack trace';
-        ML_ERROR3(printer, ME.ME_DOMAIN, stackTrace);
-    }
+    // if (printer.enabled) {
+    //     const stackTrace = new Error().stack! ?? 'there is no stack trace';
+    //     ML_ERROR3(printer, ME.ME_DOMAIN, stackTrace);
+    // }
     return NaN;
 }
 
@@ -55,31 +55,33 @@ export function R_Q_P01_boundaries(
     _LEFT_: number,
     _RIGHT_: number
 ): number | undefined {
-    if (log_p) {
-        if (p > 0) {
-            return ML_ERR_return_NAN2(debug_R_Q_P01_boundaries);
-        }
-        if (p === 0)
-            /* upper bound*/
-            return lower_tail ? _RIGHT_ : _LEFT_;
-        if (p === -Infinity) return lower_tail ? _LEFT_ : _RIGHT_;
-    } else {
-        /* !log_p */
-        if (p < 0 || p > 1) {
-            return ML_ERR_return_NAN2(debug_R_Q_P01_boundaries);
-        }
-        if (p === 0) return lower_tail ? _LEFT_ : _RIGHT_;
-        if (p === 1) return lower_tail ? _RIGHT_ : _LEFT_;
-    }
+    // if (log_p) {
+    //     if (p > 0) {
+    //         return ML_ERR_return_NAN2(debug_R_Q_P01_boundaries);
+    //     }
+    //     if (p === 0)
+    //         /* upper bound*/
+    //         return lower_tail ? _RIGHT_ : _LEFT_;
+    //     if (p === -Infinity) return lower_tail ? _LEFT_ : _RIGHT_;
+    // } else {
+    //     /* !log_p */
+    //     if (p < 0 || p > 1) {
+    //         return ML_ERR_return_NAN2(debug_R_Q_P01_boundaries);
+    //     }
+    //     if (p === 0) return lower_tail ? _LEFT_ : _RIGHT_;
+    //     if (p === 1) return lower_tail ? _RIGHT_ : _LEFT_;
+    // }
+    return NaN;
 }
 
 /**
  * @deprecated
  */
 export function R_Q_P01_check(logP: boolean, p: number): number | undefined {
-    if ((logP && p > 0) || (!logP && (p < 0 || p > 1))) {
-        return ML_ERR_return_NAN2(debug_R_Q_P01_check);
-    }
+    // if ((logP && p > 0) || (!logP && (p < 0 || p > 1))) {
+    //     return ML_ERR_return_NAN2(debug_R_Q_P01_check);
+    // }
+    return;
 }
 
 export function R_Q_P01_checkV2(logP: boolean, p: number): number | undefined {

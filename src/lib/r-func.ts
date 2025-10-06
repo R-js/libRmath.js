@@ -1,4 +1,4 @@
-import { Printer } from "@common/debug-frontend";
+import { Printer } from "@common/upstairs";
 
 const {
     isInteger,

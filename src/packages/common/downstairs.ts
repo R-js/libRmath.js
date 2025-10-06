@@ -1,5 +1,5 @@
-import { register, registerObjectLogger } from '@common/debug-frontend';
 import DefaultObjectLogger from './DefaultObjectLogger';
+import { registerLoggerBackend } from './mailSlot';
 
 export function createDebugObjectLoggerBackend(logs: unknown[], enabledNameSpaces?: Record<string, true>) {
     return function (prefix?: string) {
@@ -49,19 +49,19 @@ export function createStatsFromObjectLogs(logs: { ns: string }[]) {
 
 /** @deprecated */
 export function createLogHarnas() {
-    const logs: LogEntry[] = [];
+    /*const logs: LogEntry[] = [];
     register(createDebugLoggerBackend(logs));
     return {
         logs,
         getStats() {
             return createStatsFromLogs(logs);
         }
-    }
+    }*/
 }
 
-export function createObjectLogHarnas(allowedNS?: Record<string, true>) {
+export function createObjectLogHarnas(prefix = '', allowedNS?: Record<string, true>) {
     const logs: { ns: string }[] = [];
-    registerObjectLogger(createDebugObjectLoggerBackend(logs, allowedNS), /*optional prefix namespace 'stand-alone'*/);
+    registerLoggerBackend(createDebugObjectLoggerBackend(logs, allowedNS)(prefix));
     return {
         logs,
         getStats() {

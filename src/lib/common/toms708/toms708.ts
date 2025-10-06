@@ -1,7 +1,7 @@
-import createNS from '@common/debug-frontend';
+import { LoggerEnhanced, decorateWithLogger } from '@common/upstairs';
 import { NumberW } from './NumberW';
 import { trunc, log, abs, min, pow } from '@lib/r-func';
-const printer_bratio = createNS('Toms708.bratio');
+// const printer_bratio = createNS('Toms708.bratio');
 /**
  * Computes the incomplete beta function
  * <p>
@@ -195,7 +195,9 @@ const xVec = new Float64Array([
     0.3,
 ]);
 
-export class Toms708 {
+export { Toms708 as default };
+
+const Toms708 = {
     /**
      * Computes the incomplete beta function
      * <p>
@@ -209,7 +211,7 @@ export class Toms708 {
      *
      */
 
-    public static alnrel(a: number): number {
+    alnrel(a: number): number {
         //
         // c*********************************************************************72
         // c
@@ -245,9 +247,9 @@ export class Toms708 {
         w = (((p3 * t2 + p2) * t2 + p1) * t2 + 1.0) / (((q3 * t2 + q2) * t2 + q1) * t2 + 1.0);
         return 2.0 * t * w;
         //
-    }
+    },
 
-    public static algdiv(a: number, b: number): number {
+    algdiv(a: number, b: number): number {
         //
         // c*********************************************************************72
         // C
@@ -325,9 +327,9 @@ export class Toms708 {
         if (u <= v) return w - u - v;
 
         return w - v - u;
-    }
+    },
 
-    public static apser(a: number, b: number, x: number, eps: number): number {
+    apser(a: number, b: number, x: number, eps: number): number {
         //
         // c*********************************************************************72
         // c
@@ -377,9 +379,9 @@ export class Toms708 {
         } while (Math.abs(aj) > tol);
         //
         return -(a * (c + s));
-    }
+    },
 
-    public static basym(a: number, b: number, lambda: number, eps: number): number {
+    basym(a: number, b: number, lambda: number, eps: number): number {
         /*c*********************************************************************72
     c
     cc BASYM performs an asymptotic expansion for IX(A,B) for large A and B.
@@ -505,9 +507,9 @@ export class Toms708 {
 
         const u = Math.exp(-Toms708.bcorr(a, b));
         return e0 * t * u * sum;
-    }
+    },
 
-    public static bcorr(a0: number, b0: number): number {
+    bcorr(a0: number, b0: number): number {
         //
         // c*********************************************************************72
         // C
@@ -579,9 +581,9 @@ export class Toms708 {
         t = Math.pow(1.0 / a, 2);
         return (((((c5 * t + c4) * t + c3) * t + c2) * t + c1) * t + c0) / a + w;
         //
-    }
+    },
 
-    public static beta_cdf_values(nData: NumberW, a: NumberW, b: NumberW, x: NumberW, fx: NumberW): void {
+    beta_cdf_values(nData: NumberW, a: NumberW, b: NumberW, x: NumberW, fx: NumberW): void {
         // C*********************************************************************72
         // C
         // Cc BETA_CDF_VALUES returns some values of the Beta  // CDF.
@@ -668,9 +670,9 @@ export class Toms708 {
             x.val = xVec[nData.val - 1];
             fx.val = fxVec[nData.val - 1];
         }
-    }
+    },
 
-    public static betaln(a0: number, b0: number): number {
+    betaln(a0: number, b0: number): number {
         //
         // c*********************************************************************72
         // c
@@ -788,9 +790,9 @@ export class Toms708 {
 
         if (u > v) return -0.5 * log(b) + e + w - u - v;
         else return -0.5 * log(b) + e + w - v - u;
-    }
+    },
 
-    public static bfrac(a: number, b: number, x: number, y: number, lambda: number, eps: number): number {
+    bfrac(a: number, b: number, x: number, y: number, lambda: number, eps: number): number {
         //
         // c*********************************************************************72
         // c
@@ -887,9 +889,9 @@ export class Toms708 {
         dResult *= r;
 
         return dResult;
-    }
+    },
 
-    public static bgrat(a: number, b: number, x: number, y: number, w: NumberW, eps: number, ierr: NumberW): void {
+    bgrat(a: number, b: number, x: number, y: number, w: NumberW, eps: number, ierr: NumberW): void {
         //
         // c*********************************************************************72
         // c
@@ -1023,9 +1025,9 @@ export class Toms708 {
             ierr.val = 1;
             return;
         }
-    }
+    },
 
-    public static brcomp(a: number, b: number, x: number, y: number): number {
+    brcomp(a: number, b: number, x: number, y: number): number {
         // C*********************************************************************72
         // C
         // Cc BRCOMP evaluates X**A*Y**B/BETA(A,B).
@@ -1163,9 +1165,9 @@ export class Toms708 {
 
         const z = Math.exp(-(a * u + b * v));
         return Const * Math.sqrt(b * x0) * z * Math.exp(-Toms708.bcorr(a, b));
-    }
+    },
 
-    public static brcmp1(mu: number, a: number, b: number, x: number, y: number): number {
+    brcmp1(mu: number, a: number, b: number, x: number, y: number): number {
         // C*********************************************************************
         // C
         // C BRCMP1 evaluates EXP(MU) * (X**A*Y**B/BETA(A,B)).
@@ -1309,9 +1311,9 @@ export class Toms708 {
 
         const z = Toms708.esum(mu, -(a * u + b * v));
         return invSqrtPi * Math.sqrt(b * x0) * z * Math.exp(-Toms708.bcorr(a, b));
-    }
+    },
 
-    public static bpser(a: number, b: number, x: number, eps: number): number {
+    bpser(a: number, b: number, x: number, eps: number): number {
         //
         // c*********************************************************************72
         // c
@@ -1436,9 +1438,9 @@ export class Toms708 {
 
         dResult *= 1.0 + a * sum;
         return dResult;
-    }
+    },
 
-    public static bratio(a: number, b: number, x: number, y: number, w: NumberW, w1: NumberW, ierr: NumberW): void {
+    bratio: decorateWithLogger(function bratio(this: LoggerEnhanced, a: number, b: number, x: number, y: number, w: NumberW, w1: NumberW, ierr: NumberW): void {
         //
         // c*********************************************************************72
         // C
@@ -1495,7 +1497,7 @@ export class Toms708 {
         let x0 = 0.0;
         let y0 = 0.0;
         eps = Toms708.spmpar(1);
-        printer_bratio('eps is: %d', eps);
+        this?.info?.('eps is: %d', eps);
         w.val = 0.0;
         w1.val = 0.0;
 
@@ -1889,9 +1891,9 @@ export class Toms708 {
                 return;
             }
         }
-    }
+    }),
 
-    static bup(a: number, b: number, x: number, y: number, n: number, eps: number): number {
+    bup(a: number, b: number, x: number, y: number, n: number, eps: number): number {
         //
         // c*********************************************************************72
         // c
@@ -2018,9 +2020,9 @@ export class Toms708 {
         }
 
         return dResult * w;
-    }
+    },
 
-    public static erf(x: number): number {
+    erf(x: number): number {
         //
         // c*********************************************************************72
         // c
@@ -2114,9 +2116,9 @@ export class Toms708 {
                 }
             }
         }
-    }
+    },
 
-    public static erfc1(ind: number, x: number): number {
+    erfc1(ind: number, x: number): number {
         //
         // c*********************************************************************72
         // c
@@ -2246,9 +2248,9 @@ export class Toms708 {
         if (x < 0.0) dResult = 2.0 - dResult;
 
         return dResult;
-    }
+    },
 
-    public static esum(mu: number, x: number): number {
+    esum(mu: number, x: number): number {
         //
         // c*********************************************************************72
         // c
@@ -2292,9 +2294,8 @@ export class Toms708 {
         }
 
         return Math.exp(w);
-    }
-
-    public static erf_values(nData: NumberW, x: NumberW, fx: NumberW): void {
+    },
+    erf_values(nData: NumberW, x: NumberW, fx: NumberW): void {
         // C*********************************************************************72
         // C
         // C ERF_VALUES returns some values of the ERF or "error" function for testing.
@@ -2383,9 +2384,8 @@ export class Toms708 {
             x.val = xvec[nData.val - 1];
             fx.val = bvec[nData.val - 1];
         }
-    }
-
-    public static exparg(l: number): number {
+    },
+    exparg(l: number): number {
         //
         // c*********************************************************************72
         // c
@@ -2436,9 +2436,8 @@ export class Toms708 {
             m = Toms708.ipmpar(7);
             return 0.99999 * m * lnb;
         }
-    }
-
-    public static fpser(a: number, b: number, x: number, eps: number): number {
+    },
+    fpser(a: number, b: number, x: number, eps: number): number {
         //
         // c*********************************************************************72
         // c
@@ -2497,9 +2496,8 @@ export class Toms708 {
         } while (Math.abs(c) > tol);
         //
         return dResult * (1.0 + a * s);
-    }
-
-    static gam1(a: number): number {
+    },
+    gam1(a: number): number {
         //
         // c*********************************************************************72
         // c
@@ -2590,9 +2588,8 @@ export class Toms708 {
                 return (t * w) / a;
             }
         }
-    }
-
-    public static grat1(a: number, x: number, r: number, p: NumberW, q: NumberW, eps: number): void {
+    },
+    grat1(a: number, x: number, r: number, p: NumberW, q: NumberW, eps: number): void {
         //
         // c*********************************************************************72
         // c
@@ -2731,9 +2728,8 @@ export class Toms708 {
             p.val = 0.5 + (0.5 - q.val);
             return;
         }
-    }
-
-    public static ipmpar(i: number): number {
+    },
+    ipmpar(i: number): number {
         // c*********************************************************************72
         // C
         // cc IPMPAR sets integer machine constants.
@@ -2802,9 +2798,8 @@ export class Toms708 {
         const imach = [2, 31, 2147483647, 2, 24, -125, 128, 53, -1021, 1024];
 
         return imach[i - 1];
-    }
-
-    public static gamma_inc_values(nData: NumberW, a: NumberW, x: NumberW, fx: NumberW): void {
+    },
+    gamma_inc_values(nData: NumberW, a: NumberW, x: NumberW, fx: NumberW): void {
         // C *********************************************************************72
         // C
         // C  GAMMA_INC_VALUES returns some values of the incomplete Gamma function.
@@ -2944,9 +2939,8 @@ export class Toms708 {
             x.val = xVec[nData.val - 1];
             fx.val = fxVec[nData.val - 1];
         }
-    }
-
-    public static gamma_log_values(nData: NumberW, x: NumberW, fx: NumberW): void {
+    },
+    gamma_log_values(nData: NumberW, x: NumberW, fx: NumberW): void {
         // C *********************************************************************72
         // C
         // C  GAMMA_LOG_VALUES returns some values of the Log Gamma function for testing.
@@ -3014,9 +3008,8 @@ export class Toms708 {
             x.val = xvec[nData.val - 1];
             fx.val = bvec[nData.val - 1];
         }
-    }
-
-    public static gamln(a: number): number {
+    },
+    gamln(a: number): number {
         //
         // c*********************************************************************72
         // c
@@ -3073,9 +3066,8 @@ export class Toms708 {
         t = Math.pow(1.0 / a, 2);
         w = (((((c5 * t + c4) * t + c3) * t + c2) * t + c1) * t + c0) / a;
         return d + w + (a - 0.5) * (log(a) - 1.0);
-    }
-
-    public static gamln1(a: number): number {
+    },
+    gamln1(a: number): number {
         //
         // c*********************************************************************72
         // c
@@ -3134,9 +3126,8 @@ export class Toms708 {
             (((((s5 * x + s4) * x + s3) * x + s2) * x + s1) * x + 1.0);
 
         return x * w;
-    }
-
-    public static gsumln(a: number, b: number): number {
+    },
+    gsumln(a: number, b: number): number {
         //
         // c*********************************************************************72
         // c
@@ -3158,9 +3149,8 @@ export class Toms708 {
         if (x <= 1.25) return Toms708.gamln1(x) + Toms708.alnrel(x);
 
         return Toms708.gamln1(x - 1.0) + log(x * (1.0 + x));
-    }
-
-    public static psi(xx: number): number {
+    },
+    psi(xx: number): number {
         //
         // c*********************************************************************72
         // C
@@ -3365,9 +3355,8 @@ export class Toms708 {
         }
 
         return aug + log(x);
-    }
-
-    public static psi_values(n: NumberW, x: NumberW, fx: NumberW): void {
+    },
+    psi_values(n: NumberW, x: NumberW, fx: NumberW): void {
         // C *********************************************************************72
         // C
         // C  PSI_VALUES returns some values of the Psi or Digamma function for testing.
@@ -3435,9 +3424,8 @@ export class Toms708 {
             x.val = xvec[n.val - 1];
             fx.val = fxvec[n.val - 1];
         }
-    }
-
-    public static r4_epsilon(): number {
+    },
+    r4_epsilon(): number {
         // C *********************************************************************72
         // C
         // C R4_EPSILON returns the round off unit for floating arithmetic.
@@ -3476,9 +3464,8 @@ export class Toms708 {
         }
 
         return r;
-    }
-
-    public static rexp(x: number): number {
+    },
+    rexp(x: number): number {
         //
         // c*********************************************************************72
         // c
@@ -3513,9 +3500,8 @@ export class Toms708 {
                 return w * (0.5 + (0.5 - 1.0 / w));
             }
         }
-    }
-
-    public static rlog1(x: number): number {
+    },
+    rlog1(x: number): number {
         //
         // c*********************************************************************72
         // c
@@ -3576,7 +3562,7 @@ export class Toms708 {
 
         return 2.0 * t * (1.0 / (1.0 - r) - r * w) + w1;
         //
-    }
+    },
 
     /**
      * Fortran floating point transfer of sign (SIGN) intrinsic function.
@@ -3594,11 +3580,10 @@ export class Toms708 {
      *  <p>
      *  @author Keith Seymour (seymour@cs.utk.edu)
      */
-    public static sign(a1: number, a2: number): number {
+    sign(a1: number, a2: number): number {
         return a2 >= 0 ? Math.abs(a1) : -Math.abs(a1);
-    }
-
-    public static spmpar(i: number): number {
+    },
+    spmpar(i: number): number {
         //
         // c*********************************************************************72
         // c

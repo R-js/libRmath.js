@@ -1,16 +1,14 @@
 /* want to compile log1p as Rlog1p if HAVE_LOG1P && !HAVE_WORKING_LOG1P */
-import { createObjectNs } from '@common/debug-frontend';
-import { chebyshev_eval } from '../../chebyshev/chebyshev';
+import chebyshev_eval from '../../chebyshev/chebyshev';
 import { abs as fabs, log } from '@lib/r-func';
-
-const printer = createObjectNs('log1p');
 
 import {
     NEGATIVE_INFINITY,
     EPSILON,
 } from '@lib/r-func';
-import DomainError from '@lib/errors/DomainError';
-import PrecisionError from '@lib/errors/PrecisionError';
+import interplateDomainErrorTemplate from '@lib/errors/interplateDomainErrorTemplate';
+import { LoggerEnhanced, decorateWithLogger } from '@common/upstairs';
+import interpolatePrecisionErrorTemplate from '@lib/errors/interpolatePrecisionErrorTemplate';
 
 // series for log1p on the interval -.375 to .375
 //				     with weighted error   6.35e-32
@@ -64,14 +62,14 @@ const alnrcs = [
     +0.63533936180236187354180266666666e-31,
 ];
 
-export default function log1p(x: number): number {
+export default decorateWithLogger(function log1p(this: LoggerEnhanced, x: number): number {
     const nlnrel = 22;
     const xmin = -0.999999985;
 
     if (x === 0) return 0; // speed
     if (x === -1) return NEGATIVE_INFINITY;
     if (x < -1) {
-        printer(DomainError, 'log1p');
+        this?.error(interplateDomainErrorTemplate, log1p.name);
         return NaN;
     }
 
@@ -87,7 +85,7 @@ export default function log1p(x: number): number {
     // else
     if (x < xmin) {
         // answer less than half precision because x too near -1
-        printer(PrecisionError, 'log1p');
+        this?.error(interpolatePrecisionErrorTemplate, log1p.name);
     }
     return log(1 + x);
-}
+});

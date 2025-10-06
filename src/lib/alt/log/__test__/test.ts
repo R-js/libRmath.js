@@ -1,14 +1,11 @@
+import { createObjectLogHarnas } from '@common/downstairs';
 import log1p from '../log1p';
-
-//hypot
-
-import { createObjectLogHarnas } from '@common/debug-backend';
-
-const { getStats } = createObjectLogHarnas({ log1p: true });
+import { unRegisterLoggerBackend } from '@common/mailSlot';
 
 describe('log1p', function () {
     describe('invalid input and edge cases', () => {
         it('x < -1 should be a NaN', () => {
+            const { getStats } = createObjectLogHarnas();
             const l = log1p(-1.5);
             const stats = getStats();
             expect(l).toEqualFloatingPointBinary(NaN);
@@ -16,15 +13,16 @@ describe('log1p', function () {
 
         });
         it('x = -1 should be a -Infinity', () => {
+            unRegisterLoggerBackend()
             const l = log1p(-1);
             expect(l).toEqualFloatingPointBinary(-Infinity);
         });
         it('x < -0.999999985 causes precision failure warning', () => {
-            const stats0 = getStats();
+            const { getStats } = createObjectLogHarnas();
             const l = log1p(-0.999999999);
             const stats1 = getStats();
             expect(l).toEqualFloatingPointBinary(-20.723265865228342);
-            expect(stats1.log1p - stats0.log1p).toBe(1);
+            expect(stats1.log1p).toBe(1);
         });
     });
     describe('fidelity', () => {

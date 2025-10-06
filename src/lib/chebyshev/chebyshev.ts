@@ -1,23 +1,19 @@
-import { createObjectNs } from '@common/debug-frontend';
-import DomainError from '@lib/errors/DomainError';
+import { LoggerEnhanced, decorateWithLogger } from '@common/upstairs';
+import interplateDomainErrorTemplate from '@lib/errors/interplateDomainErrorTemplate';
 
-const domain = 'chebyshev_eval';
-
-const printer = createObjectNs(domain);
-
-export function chebyshev_eval(x: number, a: number[], n: number): number {
+export default decorateWithLogger(function chebyshev_eval(this: LoggerEnhanced, x: number, a: number[], n: number): number {
     let b0: number;
     let b1: number;
     let b2: number;
     let i: number;
 
     if (n < 1 || n > 1000) {
-        printer(DomainError, domain);
+        this?.error(interplateDomainErrorTemplate, chebyshev_eval.name);
         return NaN;
     }
 
     if (x < -1.1 || x > 1.1) {
-        printer(DomainError, domain);
+        this?.error(interplateDomainErrorTemplate, chebyshev_eval.name);
         return NaN;
     }
 
@@ -30,4 +26,4 @@ export function chebyshev_eval(x: number, a: number[], n: number): number {
         b0 = twox * b1 - b2 + a[n - i];
     }
     return (b0 - b2) * 0.5;
-}
+});

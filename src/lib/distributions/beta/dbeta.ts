@@ -1,15 +1,15 @@
-import { LoggerEnhanced, decorateWithLogger } from '@common/debug-frontend';
 import { R_D__0, R_D_exp, R_D_val, log, log1p } from '@lib/r-func';
 import dbinom_raw from '@dist/binomial/dbinom_raw';
 import { lbeta } from '@special/beta';
-import DomainError from '@lib/errors/DomainError';
+import interplateDomainErrorTemplate from '@lib/errors/interplateDomainErrorTemplate';
+import { LoggerEnhanced, decorateWithLogger } from '@common/upstairs';
 
 export default decorateWithLogger(function dbeta(this: LoggerEnhanced, x: number, a: number, b: number, asLog: boolean): number {
     if (isNaN(x) || isNaN(a) || isNaN(b)) {
         return x + a + b;
     }
     if (a < 0 || b < 0) {
-        this?.printer?.(DomainError, dbeta.name);
+        this?.error(interplateDomainErrorTemplate, dbeta.name);
         return NaN;
     }
     if (x < 0 || x > 1) {
