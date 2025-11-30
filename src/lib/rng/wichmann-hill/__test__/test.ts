@@ -2,7 +2,7 @@ import { WichmannHill } from '@rng/wichmann-hill';
 import { samples25fromSeed1234, stateAfterSeed1234, samplesAfterCorrectedSeed } from './fixture';
 
 describe('rng wichman-hill', function () {
-    it('compare 25 samples seed=0', () => {
+    it('compare 25 samples seed=1234', () => {
         const wh = new WichmannHill();
         wh.init(1234);
         const result = wh.randoms(25);

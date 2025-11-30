@@ -1,3 +1,4 @@
+import interpolate from "@lib/interpolate";
 import { Channel, LoggerObjectController } from "./upstairs";
 
 export default class DefaultObjectLogger implements LoggerObjectController {
@@ -7,12 +8,13 @@ export default class DefaultObjectLogger implements LoggerObjectController {
         private readonly logs: unknown[],
         private readonly namespaces?: Record<string, true>
     ) { }
-    send(namespace: string, channel: Channel, interpolated: string): void {
+    send(namespace: string, channel: Channel, formatter: string | ((...args: any[]) => string), ...args: any[]): void {
         if (!this.isEnabled(namespace)) {
             return;
         }
+        const msg = (typeof formatter === 'string') ? interpolate(formatter, ...args) : formatter(...args);
         const finalNamespace = this.prefix ? `${this.prefix}/${namespace}` : namespace;
-        this.logs.push({ ns: finalNamespace, channel, msg: interpolated });
+        this.logs.push({ ns: finalNamespace, channel, msg });
     }
 
     isEnabled(namespace: string): boolean {
